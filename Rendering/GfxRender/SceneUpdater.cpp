@@ -724,7 +724,7 @@ void SceneUpdater::updatePrepare(unsigned long currentFrameNum, const RBX::Frust
 
     updateDynamicParts();
 
-    computeLightingPrepare();
+    //computeLightingPrepare();
 
 	FASTLOG(FLog::GfxClusters, "Scene updater finish");
 }

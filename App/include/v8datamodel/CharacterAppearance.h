@@ -109,19 +109,19 @@ namespace RBX {
 	class BodyColors 
 		 : public DescribedCreatable<BodyColors, LegacyCharacterAppearance, sBodyColors>
 	{
-		BrickColor headColor;
-		BrickColor leftArmColor;
-		BrickColor rightArmColor;
-		BrickColor torsoColor;
-		BrickColor leftLegColor;
-		BrickColor rightLegColor;
+		Color3 headColor;
+		Color3 leftArmColor;
+		Color3 rightArmColor;
+		Color3 torsoColor;
+		Color3 leftLegColor;
+		Color3 rightLegColor;
 	public:
-		static Reflection::BoundProp<BrickColor> prop_HeadColor;
-		static Reflection::BoundProp<BrickColor> prop_LeftArmColor;
-		static Reflection::BoundProp<BrickColor> prop_RightArmColor;
-		static Reflection::BoundProp<BrickColor> prop_TorsoColor;
-		static Reflection::BoundProp<BrickColor> prop_LeftLegColor;
-		static Reflection::BoundProp<BrickColor> prop_RightLegColor;
+		static Reflection::BoundProp<Color3> prop_HeadColor;
+		static Reflection::BoundProp<Color3> prop_LeftArmColor;
+		static Reflection::BoundProp<Color3> prop_RightArmColor;
+		static Reflection::BoundProp<Color3> prop_TorsoColor;
+		static Reflection::BoundProp<Color3> prop_LeftLegColor;
+		static Reflection::BoundProp<Color3> prop_RightLegColor;
 		BodyColors();
 	private:
 		virtual void applyByMyself(Humanoid* humanoid);
@@ -134,9 +134,9 @@ namespace RBX {
 	class Skin 
 		 : public DescribedCreatable<Skin, LegacyCharacterAppearance, sSkin>
 	{
-		BrickColor skinColor;
+		Color3 skinColor;
 	public:
-		static Reflection::BoundProp<BrickColor> prop_skinColor;
+		static Reflection::BoundProp<Color3> prop_skinColor;
 		Skin();
 	private:
 		virtual void applyByMyself(Humanoid* humanoid);

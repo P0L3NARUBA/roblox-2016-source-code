@@ -351,7 +351,7 @@ namespace Graphics
 			
 		// Requested colors from part
 		if (options.flags & GeometryGenerator::Flag_VertexColorPart)
-			return Color4uint8(part->getColor().color3uint8(), alpha);
+			return Color4uint8(part->getColor(), alpha);
 			
 		return Color4uint8(255, 255, 255, alpha);
 	}

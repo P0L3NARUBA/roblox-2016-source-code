@@ -236,7 +236,7 @@ bool RBX::CSGOperations::recalculateMesh(shared_ptr<PartOperation> partOperation
         }
     }
 
-    Color3 partColor = partOperation->getColor3();
+    Color3 partColor = partOperation->getColor();
     CoordinateFrame cFrame = partOperation->getCoordinateFrame();
     Vector3 operationSize = partOperation->getPartSizeUi();
     PartMaterial partMaterial = partOperation->getRenderMaterial();
@@ -250,7 +250,7 @@ bool RBX::CSGOperations::recalculateMesh(shared_ptr<PartOperation> partOperation
     partOperation->setCoordinateFrame(cFrame);
 
     partOperation->setPartSizeXml(operationSize);
-    partOperation->setColor3(partColor);
+    partOperation->setColor(partColor);
     partOperation->setRenderMaterial(partMaterial);
     partOperation->setTransparency(transparency);
 
@@ -402,7 +402,7 @@ bool RBX::CSGOperations::setUnionMesh(shared_ptr<PartOperation> finalPartOperati
               meshData->applyScale(partOperation->getSizeDifference());
 
             if (FFlag::CSGMeshColorToolsEnabled && partOperation->getUsePartColor())
-                meshData->applyColor(Vector3(partOperation->getColor3().r, partOperation->getColor3().g, partOperation->getColor3().b));
+                meshData->applyColor(Vector3(partOperation->getColor().r, partOperation->getColor().g, partOperation->getColor().b));
 
             meshData->applyCoordinateFrame(partOperation->getCoordinateFrame());
         }
@@ -690,7 +690,7 @@ bool RBX::CSGOperations::setNegateMesh(shared_ptr<NegateOperation> negateOperati
         negateOperation->setPartSizeXml(partInstance->getPartSizeUi());
         negateOperation->setInitialSize(negateOperation->getPartSizeUi());
 
-        partInstance->getColor3();
+        partInstance->getColor();
 
         model.reset(CSGMeshFactory::singleton()->createMesh());
 

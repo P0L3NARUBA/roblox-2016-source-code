@@ -471,11 +471,11 @@ public:
 		: EditSelectionVerb(name, dataModel) {}
 	virtual void doIt(IDataState* dataState);
 
-	static RBX::BrickColor getCurrentColor() { return m_currentColor; }
-	static void setCurrentColor(RBX::BrickColor val) { m_currentColor = val; }
+	static RBX::Color3 getCurrentColor() { return m_currentColor; }
+	static void setCurrentColor(RBX::Color3 val) { m_currentColor = val; }
 
 private:
-	static RBX::BrickColor m_currentColor;
+	static RBX::Color3 m_currentColor;
 };
 
 

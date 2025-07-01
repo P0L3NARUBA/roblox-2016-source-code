@@ -4108,7 +4108,7 @@
     </Item>
     <Item class="ReflectionMetadataClass">
       <Properties>
-        <string name="Name">SurfaceLight</string>
+        <string name="Name">AreaLight</string>
         <string name="summary">Makes the parent part emit light in a frustum shape from rectangle defined by part</string>
         <string name="ExplorerOrder">3</string>
         <string name="ExplorerImageIndex">13</string>

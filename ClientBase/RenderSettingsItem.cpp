@@ -40,9 +40,7 @@ namespace RBX
 			:Reflection::EnumDescriptor("GraphicsMode")
 		{
 			addPair(CRenderSettings::AutoGraphicsMode,"Automatic");
-			addPair(CRenderSettings::Direct3D9,"Direct3D9");
             addPair(CRenderSettings::Direct3D11,"Direct3D11");
-			addPair(CRenderSettings::OpenGL,"OpenGL");
 			addPair(CRenderSettings::NoGraphics,"NoGraphics");
 		}
 

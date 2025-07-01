@@ -29,16 +29,16 @@ namespace RBX {
 
 	class FillToolColor 
 	{
-		BrickColor color;
+		Color3 color;
 	public:
-		rbx::signal<void(RBX::BrickColor)> brickColorSignal;
+		rbx::signal<void(RBX::Color3)> colorSignal;
 
 		FillToolColor();
-		RBX::BrickColor get() const {return color;}
-		void set(const RBX::BrickColor& newColor)			{
+		RBX::Color3 get() const {return color;}
+		void set(const RBX::Color3& newColor)			{
 			if (color!=newColor) {
 				color = newColor;
-				brickColorSignal(color);
+				colorSignal(color);
 			}
 		}
 	};

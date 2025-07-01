@@ -146,9 +146,7 @@ namespace RBX
 		public:
 			RenderViewFactory()
 			{
-				ViewBase::RegisterFactory(CRenderSettings::Direct3D9, this);
 				ViewBase::RegisterFactory(CRenderSettings::Direct3D11, this);
-				ViewBase::RegisterFactory(CRenderSettings::OpenGL, this);
 			}
 
 			ViewBase* Create(CRenderSettings::GraphicsMode mode, OSContext* context, CRenderSettings* renderSettings)
@@ -224,9 +222,7 @@ namespace RBX
 		static const unsigned validGraphicsModes = 3;
 		static const GraphicsModeTranslation gGraphicsModesTranslation[validGraphicsModes] =
 		{
-			{ CRenderSettings::Direct3D9, Device::API_Direct3D9 },
 			{ CRenderSettings::Direct3D11, Device::API_Direct3D11},
-			{ CRenderSettings::OpenGL, Device::API_OpenGL}
 		};
 
 		static CoordinateFrame computeVRFrame(const DeviceVR::Pose& pose)
@@ -1422,7 +1418,7 @@ namespace RBX
 
 			if (DeviceContext* context = visualEngine->getDevice()->beginFrame())
 			{
-				visualEngine->getSceneUpdater()->updatePerform();
+				//visualEngine->getSceneUpdater()->updatePerform();
 
 				visualEngine->getMaterialGenerator()->garbageCollectIncremental();
 				visualEngine->getTextureManager()->garbageCollectIncremental();
@@ -1679,7 +1675,7 @@ namespace RBX
 		void RenderView::prepareSceneGraph()
 		{
 			// will populate scenegraph, and trigger resource loads.
-			visualEngine->getSceneUpdater()->setComputeLightingEnabled(false);
+			//visualEngine->getSceneUpdater()->setComputeLightingEnabled(false);
 
 			// wait for all networked resources to load.
 			// do this outside scoped lock because this is the IO/network bound task.
@@ -1733,7 +1729,7 @@ namespace RBX
 					!visualEngine->getSceneUpdater()->arePartsWaitingForAssets(), visualEngine->getTextureCompositor()->isQueueEmpty(), visualEngine->getTextureManager()->isQueueEmpty());
 			} while (!allContentLoaded);
 
-			visualEngine->getSceneUpdater()->setComputeLightingEnabled(true);
+			//visualEngine->getSceneUpdater()->setComputeLightingEnabled(true);
 		}
 
 		void RenderView::renderThumb(unsigned char* data, int width, int height, bool crop, bool allowDolly)

@@ -680,7 +680,7 @@ void FastClusterBinding::onCoordinateFrameChanged()
     
         cluster->invalidateEntity();
         cluster->queueClusterCheck();
-        cluster->markLightingDirty();
+        //cluster->markLightingDirty();
     }
 }
 
@@ -690,7 +690,7 @@ void FastClusterBinding::onSizeChanged()
 
     cluster->invalidateEntity();
     cluster->queueClusterCheck();
-    cluster->markLightingDirty();
+    //cluster->markLightingDirty();
 }
 
 void FastClusterBinding::onTransparencyChanged()
@@ -698,7 +698,7 @@ void FastClusterBinding::onTransparencyChanged()
     FASTLOG3(FLog::RenderFastCluster, "FastCluster[%p]: part %p with binding %p requests transparency change", cluster, partInstance.get(), this);
 
     cluster->invalidateEntity();
-    cluster->markLightingDirty();
+    //cluster->markLightingDirty();
 }
 
 void FastClusterBinding::onSpecialShapeChanged()
@@ -706,7 +706,7 @@ void FastClusterBinding::onSpecialShapeChanged()
     FASTLOG3(FLog::RenderFastCluster, "FastCluster[%p]: part %p with binding %p requests special shape change", cluster, partInstance.get(), this);
 
     cluster->invalidateEntity();
-    cluster->markLightingDirty();
+    //cluster->markLightingDirty();
 }
 
 void FastClusterBinding::unbind()
@@ -940,8 +940,8 @@ void FastCluster::updateEntity(bool assetsUpdated)
     checkBindings();
     
     // invalidate lighting for the old AABB
-    if (lightDirty)
-        invalidateLighting(getWorldBounds());
+    /*if (lightDirty)
+        invalidateLighting(getWorldBounds());*/
     
     // if we don't need this cluster any more, destroy it
     if (parts.empty())
@@ -971,8 +971,8 @@ void FastCluster::updateEntity(bool assetsUpdated)
     updateCoordinateFrame(false);
     
     // invalidate lighting for the new AABB
-    if (lightDirty)
-        invalidateLighting(getWorldBounds());
+    /*if (lightDirty)
+        invalidateLighting(getWorldBounds());*/
         
     // reset light dirty; this means that any pending changes except for the changes in bone transforms have resulted in light invalidation
     lightDirty = false;
@@ -1128,11 +1128,11 @@ void FastCluster::updateCoordinateFrame(bool recalcLocalBounds)
 
     updateWorldBounds(newWorldBB);
 
-    if (bonesChanged)
+    /*if (bonesChanged)
     {
         invalidateLighting(oldWorldBB);
         invalidateLighting(newWorldBB);
-    }
+    }*/
 }
 
 void FastCluster::invalidateLighting(const Extents& bbox)

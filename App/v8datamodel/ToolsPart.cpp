@@ -49,7 +49,7 @@ void PartTool::render3dAdorn(Adorn* adorn)
 
 FillToolColor FillTool::color;
 
-FillToolColor::FillToolColor():color(BrickColor::defaultColor()) {}
+FillToolColor::FillToolColor():color(BrickColor::defaultColor().color3()) {}
 
 shared_ptr<MouseCommand> FillTool::onMouseDown(const shared_ptr<InputObject>& inputObject)
 {

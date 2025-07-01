@@ -441,12 +441,12 @@ public:
     {
         Device* device = visualEngine->getDevice();
 
-        shared_ptr<Renderbuffer> msaaColor = device->createRenderbuffer(Texture::Format_RGBA8, width, height, samples);
+        shared_ptr<Renderbuffer> msaaColor = device->createRenderbuffer(Texture::Format_RGBA16F, width, height, samples);
         shared_ptr<Renderbuffer> msaaDepth = device->createRenderbuffer(Texture::Format_D24S8, width, height, samples);
 
         msaaFB = device->createFramebuffer(msaaColor, msaaDepth);
 
-        msaaResolved = device->createTexture(Texture::Type_2D, Texture::Format_RGBA8, width, height, 1, 1, Texture::Usage_Renderbuffer);
+        msaaResolved = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, width, height, 1, 1, Texture::Usage_Renderbuffer);
         msaaResolvedFB = device->createFramebuffer(msaaResolved->getRenderbuffer(0, 0));
     }
 
@@ -474,17 +474,17 @@ public:
         return msaaFB.get();
     }
 
-	unsigned int getWidth() const
+    unsigned int getWidth() const
 	{
 		return msaaFB->getWidth();
 	}
 
-	unsigned int getHeight() const
+    unsigned int getHeight() const
 	{
 		return msaaFB->getHeight();
 	}
 
-	unsigned int getSamples() const
+    unsigned int getSamples() const
 	{
 		return samples;
 	}
@@ -497,7 +497,7 @@ private:
     shared_ptr<Texture> msaaResolved;
     shared_ptr<Framebuffer> msaaResolvedFB;
 
-	unsigned int samples;
+    unsigned int samples;
 };
 
 class ShadowMap
@@ -958,8 +958,8 @@ void SceneManager::updateMSAA(unsigned width, unsigned height)
         {
     		if (frm->getGBufferSetting())
     		{
-    			unsigned int frmSamples = (frm->GetQualityLevel() >= 19) ? 8 : (frm->GetQualityLevel() >= 17) ? 4 : 2;
-    			unsigned int samples = std::min(device->getCaps().maxSamples, frmSamples);
+                unsigned int frmSamples = (frm->GetQualityLevel() >= 19) ? 8 : (frm->GetQualityLevel() >= 17) ? 4 : 2;
+                unsigned int samples = std::min(device->getCaps().maxSamples, frmSamples);
 
     			if (!msaa || msaa->getWidth() != width || msaa->getHeight() != height || msaa->getSamples() != samples)
     			{
@@ -1020,10 +1020,10 @@ void SceneManager::updateGBuffer(unsigned width, unsigned height)
         try {
             shared_ptr<Renderbuffer> mainDepth = device->createRenderbuffer(Texture::Format_D24S8, width, height, 1);
 
-            gbuffer->mainColor = device->createTexture(Texture::Type_2D, Texture::Format_RGBA8, width, height, 1, 1, Texture::Usage_Renderbuffer);
+            gbuffer->mainColor = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, width, height, 1, 1, Texture::Usage_Renderbuffer);
             gbuffer->mainFB = device->createFramebuffer(gbuffer->mainColor->getRenderbuffer(0, 0), mainDepth);
 
-            gbuffer->gbufferColor = device->createTexture(Texture::Type_2D, Texture::Format_RGBA8, width, height, 1, 1, Texture::Usage_Renderbuffer);
+            gbuffer->gbufferColor = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, width, height, 1, 1, Texture::Usage_Renderbuffer);
             gbuffer->gbufferColorFB = device->createFramebuffer(gbuffer->gbufferColor->getRenderbuffer(0, 0), mainDepth);
 
             gbuffer->gbufferDepth = device->createTexture(Texture::Type_2D, Texture::Format_RGBA8, width, height, 1, 1, Texture::Usage_Renderbuffer);

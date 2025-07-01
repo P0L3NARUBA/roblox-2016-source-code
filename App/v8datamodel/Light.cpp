@@ -16,29 +16,37 @@ namespace RBX {
 const char* const sLight = "Light";
 const char* const sPointLight = "PointLight";
 const char* const sSpotLight = "SpotLight";
-const char* const sSurfaceLight = "SurfaceLight";
+const char* const sAreaLight = "AreaLight";
 
+/* Base Light */
 Reflection::PropDescriptor<Light, bool> Light::prop_Enabled("Enabled", category_Appearance, &Light::getEnabled, &Light::setEnabled);
 Reflection::PropDescriptor<Light, Color3> Light::prop_Color("Color", category_Appearance, &Light::getColor, &Light::setColor);
 Reflection::PropDescriptor<Light, float> Light::prop_Brightness("Brightness", category_Appearance, &Light::getBrightness, &Light::setBrightness);
-Reflection::PropDescriptor<Light, bool> Light::prop_Shadows("Shadows", category_Appearance, &Light::getShadows, &Light::setShadows);
+Reflection::PropDescriptor<Light, float> Light::prop_Range("Range", category_Appearance, &Light::getRange, &Light::setRange);
+Reflection::PropDescriptor<Light, float> Light::prop_Attenuation("Attenuation", category_Appearance, &Light::getAttenuation, &Light::setAttenuation);
 
-Reflection::PropDescriptor<PointLight, float> PointLight::prop_Range("Range", category_Appearance, &PointLight::getRange, &PointLight::setRange);
+Reflection::PropDescriptor<Light, bool> Light::prop_Shadows("Enabled", "Shadows", &Light::getShadows, &Light::setShadows);
+Reflection::PropDescriptor<Light, bool> Light::prop_Colored("Colored", "Shadows", &Light::getColored, &Light::setColored);
 
-Reflection::PropDescriptor<SpotLight, float> SpotLight::prop_Range("Range", category_Appearance, &SpotLight::getRange, &SpotLight::setRange);
-Reflection::PropDescriptor<SpotLight, float> SpotLight::prop_Angle("Angle", category_Appearance, &SpotLight::getAngle, &SpotLight::setAngle);
+/* Spot Light */
+Reflection::PropDescriptor<SpotLight, float> SpotLight::prop_OuterAngle("Outer Angle", category_Appearance, &SpotLight::getOuterAngle, &SpotLight::setOuterAngle);
+Reflection::PropDescriptor<SpotLight, float> SpotLight::prop_InnerAngle("Inner Angle", category_Appearance, &SpotLight::getInnerAngle, &SpotLight::setInnerAngle);
 Reflection::EnumPropDescriptor<SpotLight, NormalId> SpotLight::prop_Face("Face", category_Appearance, &SpotLight::getFace, &SpotLight::setFace);
 
-Reflection::PropDescriptor<SurfaceLight, float> SurfaceLight::prop_Range("Range", category_Appearance, &SurfaceLight::getRange, &SurfaceLight::setRange);
-Reflection::PropDescriptor<SurfaceLight, float> SurfaceLight::prop_Angle("Angle", category_Appearance, &SurfaceLight::getAngle, &SurfaceLight::setAngle);
-Reflection::EnumPropDescriptor<SurfaceLight, NormalId> SurfaceLight::prop_Face("Face", category_Appearance, &SurfaceLight::getFace, &SurfaceLight::setFace);
+/* Area Light */
+Reflection::PropDescriptor<AreaLight, float> AreaLight::prop_OuterAngle("Outer Angle", category_Appearance, &AreaLight::getOuterAngle, &AreaLight::setOuterAngle);
+Reflection::PropDescriptor<AreaLight, float> AreaLight::prop_InnerAngle("Inner Angle", category_Appearance, &AreaLight::getInnerAngle, &AreaLight::setInnerAngle);
+Reflection::EnumPropDescriptor<AreaLight, NormalId> AreaLight::prop_Face("Face", category_Appearance, &AreaLight::getFace, &AreaLight::setFace);
 
 Light::Light(const char* name) 
 	: DescribedNonCreatable<Light, Instance, sLight>(name)
 	, enabled(true)
-	, shadows(false)
 	, color(Color3::white())
-	, brightness(1.f)
+	, brightness(1.0f)
+	, range(16.0f)
+	, attenuation(0.0f)
+	, shadows(false)
+	, colored(false)
 {
     static boost::once_flag flag = BOOST_ONCE_INIT;
     boost::call_once(&sendLightingObjectsStats, flag);
@@ -53,14 +61,6 @@ void Light::setEnabled(bool value)
 	if (enabled != value) {
 		enabled = value;
 		raisePropertyChanged(prop_Enabled);
-	}
-}
-
-void Light::setShadows(bool value)
-{
-	if (shadows != value) {
-		shadows = value;
-        raisePropertyChanged(prop_Shadows);
 	}
 }
 
@@ -82,6 +82,42 @@ void Light::setBrightness(float value)
 	}
 }
 
+void Light::setRange(float value)
+{
+	value = std::min(std::max(value, 0.0f), 512.0f);
+
+	if (range != value) {
+		range = value;
+		raisePropertyChanged(prop_Range);
+	}
+}
+
+void Light::setAttenuation(float value)
+{
+	value = std::min(std::max(value, 0.0f), 1.0f);
+
+	if (attenuation != value) {
+		attenuation = value;
+		raisePropertyChanged(prop_Attenuation);
+	}
+}
+
+void Light::setShadows(bool value)
+{
+	if (shadows != value) {
+		shadows = value;
+		raisePropertyChanged(prop_Shadows);
+	}
+}
+
+void Light::setColored(bool value)
+{
+	if (colored != value) {
+		colored = value;
+		raisePropertyChanged(prop_Colored);
+	}
+}
+
 bool Light::askSetParent(const Instance* parent) const
 {
 	return Instance::isA<PartInstance>(parent);
@@ -94,7 +130,6 @@ bool Light::askAddChild(const Instance* instance) const
 
 PointLight::PointLight() 
 	: DescribedCreatable<PointLight, Light, sPointLight>("PointLight")
-	, range(8.f)
 {
 }
 
@@ -102,21 +137,10 @@ PointLight::~PointLight()
 {
 }
 
-void PointLight::setRange(float value)
-{
-	// Limit range due to rendering constraints
-	value = std::min(std::max(value, 0.f), 60.f);
-
-	if (range != value) {
-		range = value;
-		raisePropertyChanged(prop_Range);
-	}
-}
-
 SpotLight::SpotLight() 
 	: DescribedCreatable<SpotLight, Light, sSpotLight>("SpotLight")
-	, range(16.f)
-	, angle(90.f)
+	, outerAngle(90.0f)
+	, innerAngle(0.0f)
 	, face(NORM_Z_NEG)
 {
 }
@@ -124,25 +148,32 @@ SpotLight::SpotLight()
 SpotLight::~SpotLight()
 {
 }
-
-void SpotLight::setRange(float value)
+        
+void SpotLight::setOuterAngle(float value)
 {
-	// Limit range due to rendering constraints
-	value = std::min(std::max(value, 0.f), 60.f);
-
-	if (range != value) {
-		range = value;
-		raisePropertyChanged(prop_Range);
+	value = std::min(std::max(value, 0.0f), 180.0f);
+	
+	if (outerAngle != value) {
+		outerAngle = value;
+		raisePropertyChanged(prop_OuterAngle);
+	}
+	if (innerAngle > value) {
+		innerAngle = value;
+		raisePropertyChanged(prop_InnerAngle);
 	}
 }
-        
-void SpotLight::setAngle(float value)
+
+void SpotLight::setInnerAngle(float value)
 {
-	value = std::min(std::max(value, 0.f), 180.f);
-	
-	if (angle != value) {
-		angle = value;
-		raisePropertyChanged(prop_Angle);
+	value = std::min(std::max(value, 0.0f), 180.0f);
+
+	if (innerAngle != value) {
+		innerAngle = value;
+		raisePropertyChanged(prop_InnerAngle);
+	}
+	if (outerAngle < value) {
+		outerAngle = value;
+		raisePropertyChanged(prop_OuterAngle);
 	}
 }
 
@@ -154,40 +185,47 @@ void SpotLight::setFace(NormalId value)
 	}
 }
 
-SurfaceLight::SurfaceLight() 
-	: DescribedCreatable<SurfaceLight, Light, sSurfaceLight>("SurfaceLight")
-	, range(16.f)
-	, angle(90.f)
+AreaLight::AreaLight() 
+	: DescribedCreatable<AreaLight, Light, sAreaLight>("AreaLight")
+	, outerAngle(90.0f)
+	, innerAngle(0.0f)
 	, face(NORM_Z_NEG)
 {
 }
 
-SurfaceLight::~SurfaceLight()
+AreaLight::~AreaLight()
 {
 }
 
-void SurfaceLight::setRange(float value)
+void AreaLight::setOuterAngle(float value)
 {
-	// Limit range due to rendering constraints
-	value = std::min(std::max(value, 0.f), 60.f);
+	value = std::min(std::max(value, 0.0f), 180.0f);
 
-	if (range != value) {
-		range = value;
-		raisePropertyChanged(prop_Range);
+	if (outerAngle != value) {
+		outerAngle = value;
+		raisePropertyChanged(prop_OuterAngle);
 	}
-}
-        
-void SurfaceLight::setAngle(float value)
-{
-	value = std::min(std::max(value, 0.f), 180.f);
-	
-	if (angle != value) {
-		angle = value;
-		raisePropertyChanged(prop_Angle);
+	if (innerAngle > value) {
+		innerAngle = value;
+		raisePropertyChanged(prop_InnerAngle);
 	}
 }
 
-void SurfaceLight::setFace(NormalId value)
+void AreaLight::setInnerAngle(float value)
+{
+	value = std::min(std::max(value, 0.0f), 180.0f);
+
+	if (innerAngle != value) {
+		innerAngle = value;
+		raisePropertyChanged(prop_InnerAngle);
+	}
+	if (outerAngle < value) {
+		outerAngle = value;
+		raisePropertyChanged(prop_OuterAngle);
+	}
+}
+
+void AreaLight::setFace(NormalId value)
 {
 	if (face != value) {
 		face = value;

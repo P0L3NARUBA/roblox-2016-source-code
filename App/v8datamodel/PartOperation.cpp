@@ -266,7 +266,7 @@ PartOperation::PartOperation()
 , collisionFidelity(CollisionFidelity_Default)
 {
 	setName( "PartOperation" );
-	setColor3(Color3(1.0f, 1.0f, 1.0f));
+	setColor(Color3(1.0f, 1.0f, 1.0f));
 	setSurfaceType(NORM_Y, NO_SURFACE);
 	setSurfaceType(NORM_Y_NEG, NO_SURFACE);
     formFactor = SYMETRIC;

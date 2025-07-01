@@ -3,40 +3,39 @@
 <p align="center">
 <img alt="GitHub Repo Size" src="https://img.shields.io/github/repo-size/P0L3NARUBA/roblox-2016-source-code">
 <img alt="GitHub Release" src="https://img.shields.io/github/v/release/P0L3NARUBA/roblox-2016-source-code?color=violet">
-<img alt="GitHub Last Commit" src="https://img.shields.io/github/last-commit/P0L3NARUBA/roblox-2016-source-code/master">
+<img alt="GitHub Last Commit" src="https://img.shields.io/github/last-commit/P0L3NARUBA/roblox-2016-source-code/pixel-lighting">
 </p>
 
 # Roblox 2016 Source Code
-This source originates from **robloxsrc.zip** that was spinning around but its hard to find these days.<br>
-After a long effort, this repository has been brought to you on github with lots of changes!<br>
+This is a branch of this source, modified to include a modern lighting engine equivalent to or better than modern Roblox.
+
+Supported graphics APIs are:
+- DirectX 11
+
+DirectX 9 and OpenGL support has been removed.
 
 **To build from the source, refer to [BUILDING.md](/BUILDING.md)**<br>
    - Make sure to read them properly so you wont face with any issues.
 
-**Having any problems? you can get help at [our discord server](https://www.discord.gg/rVrYHdrbsp) or at the [Issues](https://github.com/P0L3NARUBA/roblox-2016-source-code/issues)**<br>
+**Having any problems? You can get help at [our discord server](https://www.discord.gg/rVrYHdrbsp) or at the [issues page](https://github.com/P0L3NARUBA/roblox-2016-source-code/issues)**<br>
 
 **Want to play the game in no time? Check out [Releases](https://github.com/P0L3NARUBA/roblox-2016-source-code/releases/)**<br>
 **NOTE:** You may need [Rocknet](https://github.com/P0L3NARUBA/Rocknet/tree/main) to launch the game.
 
 # Table of Contents
-1. [🪨 Features / Additions](#-features--additions)
-2. [📚 Libraries Used](#-libraries-used)
-3. [🔨 Tools Used](#-tools-used)
-4. [❤️ Contributors / Credits](#%EF%B8%8F-contributors--credits)
-5. [🎯 Current Goals](#-current-goals)
-6. [⚠️ Current Issues](#%EF%B8%8F-current-issues)
+1. [Features / Additions](#-features--additions)
+2. [Libraries Used](#-libraries-used)
+3. [Tools Used](#-tools-used)
+4. [Contributors / Credits](#%EF%B8%8F-contributors--credits)
+5. [Current Goals](#-current-goals)
+6. [Current Issues](#%EF%B8%8F-current-issues)
 
 ---
 
-## 🪨 Features / Additions
-- Added a lot of new features, we're continuing to improve it!
-- Fixed issues that breaks the compilation to make every project works like intended.
-- Cleaned up the whole source to make things easier and not complicated.
-- Changed Splash Screen and Copyright Date(s) just for the sake of it.
-- Reverse Engineered some C# libraries and executables using **[ILSpy](/Tools/ILSpy)** to make their source accessible.
-- Introducing You [Rocknet](https://github.com/P0L3NARUBA/Rocknet/tree/main)! A server made for this particular source.
+## Features / Additions
+- All master-branch features and additions.
 
-## 📚 Libraries Used
+## Libraries Used
 - [Boost](/Contribs/boost_1_56_0) = 1.56.0
 - [cpp-netlib](/Contribs/cpp-netlib-0.11.0-final) = 0.11.0-final
 - [DSBaseClasses](/Contribs/DSBaseClasses) = *unknown*
@@ -53,119 +52,173 @@ After a long effort, this repository has been brought to you on github with lots
 - [mojoshader](/Rendering/ShaderCompiler/mojoshader) = *unknown*
 - [gSOAP](/RCCService/gSOAP/gsoap-2.7) = 2.7.10
 
-## 🔨 Tools Used
+## Tools Used
 - [HxD](/Tools/HxD) = 2.5.0.0
 - [ILSpy](/Tools/ILSpy) = 9.1
 
 ---
 
-## ❤️ Contributors / Credits
+## Contributors / Credits
 See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
 
 ---
 
-## 🎯 Current Goals
-- Backporting/Implementing **Hitius**, **Graphictoria** and **Economy Simulator** Features
-   - [ ] Color3uint8
-     - [ ] Color3.fromRGB()
-   - [ ] R15
-   - [x] :Connect() and :Wait()
-   - [ ] Fix Keyboard Shortcuts
-      - [ ] Reset Character Keybind
-      - [ ] Chat Keybind
-         - Works in Studio but not in the Client 
-      - [ ] Windows Key on WindowsClient
-- [ ] Adding Cyrillic & Non-Latin Languages Support
-   - [ ] UTF/Unicode Support
-      - [ ] New Lua Version (since the newer ones has these) 
-   - [ ] Improving Profanity/Swear Filter
-- [x] New Fonts
-- [x] Supporting Newer Mesh Versions
-- [ ] Dark Theme for the Studio
-- [x] Change the Location of unrelated files inside **content\fonts** folder.
-- [ ] Making Bootstrappers functional as intended 
-- [ ] [Fixing in-game Recorder behaving goofy](https://github.com/P0L3NARUBA/roblox-2016-source-code/blob/db5a53d3a156f30cbde469b801b84b55d65412c6/README.md?plain=1#L154)
-- [ ] 64-bit Support 
-- [x] Uploading the Qt to the Github as issue-free
-   - If you getting `api\qscriptextensionplugin.h(43): Error: Undefined interface` then find a way to fix it for yourself. 
-- [ ] Upgrading RakNet to get rid of RCE exploits
-- Building all the projects within the latest Visual Studio Version **[27/61]** 
-  - **FYI:** Most of them are never tried so expect some misinformations. 
-  - [ ] App
-  - [ ] App.BulletPhysics
-  - [ ] Base
-  - [ ] CoreScriptConverter2
-  - [ ] CSG
-  - [ ] Log
-  - [ ] Network
-  - [ ] qtnribbon
-    - It gives "Designtime build failed for project" error, seems like it has an easy fix though.
-  - [ ] RCCService
-  - [ ] RobloxStudio
-  - [ ] sgCore
-  - [ ] WindowsClient
-  #### 3rd Party / Contribs
-  - [ ] boost.static
-  - [ ] Boost
-    - Needs a newer Boost version.
-  - [ ] cpp-netlib
-  - [x] DSBaseClasses
-  - [ ] Curl
-     - OpenSSL libraries spits unresolved external symbols so these should get updated too.
-  - [ ] Qt
-  - [ ] Openssl  
-  - [ ] SDL2
-    - Windows SDK throws "negative subscript" errors.
-  - [x] zlib
-  - [ ] w3c-libwww
-  #### gSOAP
-  - [x] soapcpp2
-  - [x] wsdl2h
-  #### Rendering
-  - [ ] AppDraw
-  - [ ] GfxBase
-  - [ ] GfxCore
-  - [ ] GfxRender
-  - [ ] graphics3D
-  - [ ] LibOVR
-  - [ ] RbxG3D
-  #### Shaders
-  - [ ] ShaderCompiler
-  #### Installer
-  - [ ] Bootstrapper
-  - [ ] BootstrapperClient
-  - [ ] BootstrapperQTStudio
-  - [ ] RobloxProxy
-  - [x] PrepAllForUpload
-  - [x] BootstrapperClient.PrepForUpload
-  - [x] BootstrapperRccService.PrepForUpload
-  - [x] BootstrapperQTStudio.PrepForUpload
-  - [x] RobloxProxy.PrepForUpload
-  #### Other
-  - [x] IncludeChecker
-  - [x] RbxTestHooks
-  - [x] ScriptSigner
-  - [x] Emcaster
-  - [x] EmcasterTest
-  - [x] EmReciever
-  - [x] Roblox.Common
-  - [x] Roblox.Common.Web
-  - [x] Roblox.Configuration
-  - [x] Roblox.Diagnostics
-  - [x] Roblox.Grid.Arbiter.Common
-  - [x] Roblox.Grid.Client
-  - [x] Roblox.Grid.Common
-  - [x] Roblox.Ssh
-  - [x] Roblox.System
-  - [x] Roblox.WebsiteSettings
-  - [x] Roblox.RccServiceArbiter
-- Being able to build on listed platforms **[1/3]**
-  - [x] Windows
-  - [ ] Android
-  - [ ] MacOS / Unix
+## Current Goals
+### Rendering
+- [ ] HDR color buffer
+- [ ] Proper tonemapping
+   - [ ] ACES
+   - [ ] AgX
+- [ ] Local pixel lights
+- [ ] Directional light shadow-mapping
+   - [ ] Tinted shadows
+- [ ] Local light shadow-mapping
+   - [ ] Tinted shadows
+- [ ] Glass material with real-time refraction
+- [ ] PBR lighting model
+   - [ ] Metalness texture workflow
+   - [ ] GGX specular model
+   - [ ] Oren-Nayar-Fujii diffuse model
+   - [ ] Environment diffuse and specular
+   - [ ] Subsurface scattering
+   - [ ] Automatic shader LODs
+- [ ] Unified light instance
+- [ ] Clustered light culling
+- [ ] Voxel imitation mode
+- [ ] Ambient Occlusion
+- [ ] Advanced post-processing effects
+   - [ ] Depth of Field
+   - [ ] Blur
+   - [ ] Color Correction
+   - [ ] Lens Flare
+   - [ ] Bloom
+      - [ ] Dirt mask
+   - [ ] Volumetric Lighting
+      - [ ] Texture mask
+   - [ ] Chromatic Abberation
+   - [ ] Film Grain
+   - [ ] Edge Detect
+- [ ] Clouds
+- [ ] HDR skybox
+- [ ] Grass
+- [ ] Global illumination
+- [ ] Reflections
+   - [ ] Placeable environment maps
+   - [ ] Screen-space
+- [ ] Reference path tracer
+- [ ] Exposure
+   - [ ] Adaptive
+- [ ] Highlights
+- [ ] Vulkan support
 
-## ⚠️ Current Issues
-- The Roblox in-game Video Recorder is being awful, pixelated and no sounds; just some cracking noises
-   - The audio can be fixed by Turning on the Compatibility Mode to Windows 8 or 7. <br>(for now. it'll be fixed soon.)
+**Ones below will be updated when master branch commits are applied to this branch.**
+### General
+- [ ] Color3uint8
+   - [ ] Color3.fromRGB()
+- [ ] R15
+- [x] :Connect() and :Wait()
+- [ ] Fix keyboard shortcuts
+   - [ ] Reset character keybind
+   - [ ] Chat keybind
+      - Works in Studio but not in client 
+   - [ ] Windows key on WindowsClient
+- [ ] Adding Cyrillic & Non-Latin language support
+   - [ ] UTF/Unicode support
+- [ ] New Lua version
+- [ ] Improving profanity filter
+- [x] New fonts
+- [x] Support for newer mesh versions
+- [ ] Dark Theme for Studio
+- [x] Change the location of unrelated files inside **content\fonts** folder.
+- [ ] Making bootstrappers functional as intended 
+- [ ] Fixing broken in-game recorder
+- [ ] 64-bit support 
+- [x] Uploading Qt to the Github as issue-free
+
+### Building all projects with Visual Studio 2022 **[46/60]**
+   #### Main
+   - [x] App
+   - [x] App.BulletPhysics
+   - [x] Base
+   - [ ] CoreScriptConverter2
+   - [x] CSG
+   - [x] Log
+   - [x] Network
+   - [x] qtnribbon
+   - [ ] RCCService
+   - [x] RobloxStudio
+   - [x] sgCore
+   - [ ] WindowsClient
+
+   #### 3rd Party / Contribs
+   - [x] boost.static
+   - [ ] Boost
+      - Needs a newer Boost version.
+   - [ ] cpp-netlib
+   - [x] DSBaseClasses
+   - [x] libcurl
+      - OpenSSL libraries spits out unresolved external symbols so these should get updated too.
+   - [ ] Qt
+   - [ ] OpenSSL
+   - [x] SDL2
+   - [x] zlib
+   - [ ] w3c-libwww
+
+   #### gSOAP
+   - [x] soapcpp2
+   - [x] wsdl2h
+
+   #### Rendering
+   - [x] AppDraw
+   - [x] GfxBase
+   - [x] GfxCore
+   - [x] GfxRender
+   - [x] graphics3D
+   - [x] LibOVR
+   - [x] RbxG3D
+
+   #### Shaders
+   - [x] ShaderCompiler
+
+   #### Installer
+   - [ ] Bootstrapper
+   - [ ] BootstrapperClient
+   - [ ] BootstrapperQTStudio
+   - [ ] RobloxProxy
+   - [x] PrepAllForUpload
+   - [x] BootstrapperClient.PrepForUpload
+   - [x] BootstrapperRccService.PrepForUpload
+   - [x] BootstrapperQTStudio.PrepForUpload
+   - [x] RobloxProxy.PrepForUpload
+
+   #### Other
+   - [x] IncludeChecker
+   - [x] RbxTestHooks
+   - [x] ScriptSigner
+   - [x] Emcaster
+   - [x] EmcasterTest
+   - [x] EmReciever
+   - [x] Roblox.Common
+   - [x] Roblox.Common.Web
+   - [x] Roblox.Configuration
+   - [x] Roblox.Diagnostics
+   - [x] Roblox.Grid.Arbiter.Common
+   - [x] Roblox.Grid.Client
+   - [x] Roblox.Grid.Common
+   - [x] Roblox.Ssh
+   - [x] Roblox.System
+   - [x] Roblox.WebsiteSettings
+   - [x] Roblox.RccServiceArbiter
+
+### Being able to build on listed platforms **[1/3]**
+- [x] Windows
+- [ ] Android
+- [ ] MacOS / Unix
+
+## Current Issues
+- The Roblox in-game video recorder is pixelated and has no game sound; just some cracking noises.
+- Instances lit with voxel lighting are black, except for when ambient is above zero.
+- Water SSR reflections are incorrect at most angles.
+- Undo and redo does not respect proper Color3 values on instances and will instead snap to the nearest BrickColor value.
 
 ---

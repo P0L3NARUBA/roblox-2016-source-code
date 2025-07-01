@@ -244,7 +244,7 @@ static Reflection::PropDescriptor<MegaClusterInstance, float> desc_WaterWaveSpee
 
 // Properties to make read-only with constant return values
 const bool MegaClusterInstance::kConstArchivable = true;
-const BrickColor MegaClusterInstance::kConstBrickColor = BrickColor();
+const Color3 MegaClusterInstance::kConstColor = Color3();
 const bool MegaClusterInstance::kConstCanCollide = true;
 const float MegaClusterInstance::kConstElasticity(0.3f);
 const float MegaClusterInstance::kConstFriction(0.5f);

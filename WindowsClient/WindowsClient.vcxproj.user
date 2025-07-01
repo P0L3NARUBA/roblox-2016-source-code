@@ -5,7 +5,17 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerCommand>WindowsClient\Win32\Release\RobloxPlayerBeta.exe</LocalDebuggerCommand>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LocalDebuggerCommandArguments>--joinScriptUrl "http://roblox.com/Game/join.ashx?token=494857454146494148494a494a464941574a4649574a464a4941414146415746&amp;id=-1" --authenticationUrl "http://roblox.com/Login/Negotiate.ashx" --authenticationTicket "494857454146494148494a494a464941574a4649574a464a4941414146415746"</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommand>WindowsClient\Win32\Release\RobloxPlayerBeta.exe</LocalDebuggerCommand>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LocalDebuggerCommand>WindowsClient\Win32\Release\RobloxPlayerBeta.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommandArguments>--joinScriptUrl "http://roblox.com/Game/join.ashx?token=494857454146494148494a494a464941574a4649574a464a4941414146415746&amp;id=-1" --authenticationUrl "http://roblox.com/Login/Negotiate.ashx" --authenticationTicket "494857454146494148494a494a464941574a4649574a464a4941414146415746"</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LocalDebuggerCommand>WindowsClient\Win32\Release\RobloxPlayerBeta.exe</LocalDebuggerCommand>
     <LocalDebuggerCommandArguments>--joinScriptUrl "http://roblox.com/Game/join.ashx?token=494857454146494148494a494a464941574a4649574a464a4941414146415746&amp;id=-1" --authenticationUrl "http://roblox.com/Login/Negotiate.ashx" --authenticationTicket "494857454146494148494a494a464941574a4649574a464a4941414146415746"</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>

@@ -223,7 +223,7 @@ void Roblox::globalInit(const QString& urlArg, const QString& ticketArg, RBX::Ht
 
     if (!FFlag::SurfaceLightEnabled)
     {
-        RBX::Reflection::ClassDescriptor* classDesc = &RBX::SurfaceLight::classDescriptor();
+        RBX::Reflection::ClassDescriptor* classDesc = &RBX::AreaLight::classDescriptor();
         RBX::Reflection::Metadata::Class* pMetadataDynamic = RBX::Reflection::Metadata::Reflection::singleton()->get(*classDesc, false);
         if (pMetadataDynamic)
         {

@@ -127,7 +127,8 @@ private:
 	// Streamable data
 
 protected:
-	BrickColor color;
+	Color3 color;
+	BrickColor brickColor;
 	float transparency;
 	float reflectance;
 	float localTransparencyModifier;
@@ -491,13 +492,11 @@ public:
 	float getReflectance() const			{return reflectance;}// if(transparency != 0) return this->reflectance; else return 0; }
 	virtual void setReflectance(float value);
 
-	BrickColor getColor() const				{return color;}
-	virtual void setColor(BrickColor value);
+	Color3 getColor() const					{return color;}
+	virtual void setColor(Color3 value);
 
-	Color3 getColor3() const				{return getColor().color3();}
-	void setColor3(const Color3& value) {
-		setColor(BrickColor::closest(value));
-	}
+	BrickColor getBrickColor() const		{return brickColor;}
+	virtual void setBrickColor(BrickColor value);
 
 	bool getPartLocked() const				{return locked;}
 	virtual void setPartLocked(bool value);

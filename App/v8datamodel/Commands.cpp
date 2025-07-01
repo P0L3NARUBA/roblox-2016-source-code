@@ -1090,7 +1090,7 @@ SetManualJointToInfinite::SetManualJointToInfinite(DataModel* dataModel)
 {
 }
 
-bool applyColor(Instance* instance, RBX::BrickColor color)
+bool applyColor(Instance* instance, RBX::Color3 color)
 {
 	bool applied = false;
 	if (PartInstance* pInstance = dynamic_cast<PartInstance*>(instance))
@@ -1109,7 +1109,7 @@ bool applyColor(Instance* instance, RBX::BrickColor color)
 	return applied;
 }
 
-RBX::BrickColor ColorVerb::m_currentColor = RBX::BrickColor::brick_194;
+RBX::Color3 ColorVerb::m_currentColor = Color3(Color3uint8(163, 162, 165));
 void ColorVerb::doIt( IDataState* dataState )
 {
 	bool applied = false;

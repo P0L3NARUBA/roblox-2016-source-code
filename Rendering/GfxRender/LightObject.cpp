@@ -65,7 +65,7 @@ static Extents computeLightExtents(const Vector3& position, const Vector3& direc
     {
         return Extents::fromCenterRadius(position, pointLight->getRange());
     }
-    else if (SurfaceLight* surfaceLight = light->fastDynamicCast<SurfaceLight>())
+    else if (AreaLight* areaLight = light->fastDynamicCast<AreaLight>())
     {
         Vector3 u = axisU.xyz() * axisU.w;
         Vector3 v = axisV.xyz() * axisV.w;
@@ -75,7 +75,7 @@ static Extents computeLightExtents(const Vector3& position, const Vector3& direc
         for (int i = 0; i < 4; ++i)
         {
             Vector3 c = position + (i & 1 ? 1 : -1) * u + (i & 2 ? 1 : -1) * v;
-            Extents ec = computeConeExtents(c, surfaceLight->getRange(), direction, surfaceLight->getAngle());
+            Extents ec = computeConeExtents(c, areaLight->getRange(), direction, areaLight->getOuterAngle());
 
             e.expandToContain(ec);
         }
@@ -84,7 +84,7 @@ static Extents computeLightExtents(const Vector3& position, const Vector3& direc
     }
     else if (SpotLight* spotLight = light->fastDynamicCast<SpotLight>())
     {
-        return computeConeExtents(position, spotLight->getRange(), direction, spotLight->getAngle());
+        return computeConeExtents(position, spotLight->getRange(), direction, spotLight->getOuterAngle());
     }
     else
     {
@@ -103,9 +103,9 @@ static float getLightRange(Light* light)
     {
         return spotLight->getRange();
     }
-    else if (SurfaceLight* surfaceLight = light->fastDynamicCast<SurfaceLight>())
+    else if (AreaLight* areaLight = light->fastDynamicCast<AreaLight>())
     {
-        return surfaceLight->getRange();
+        return areaLight->getRange();
     }
     else
     {
@@ -114,7 +114,7 @@ static float getLightRange(Light* light)
     }
 }
 
-static void resizeShadowProjection(boost::scoped_array<unsigned char>& data, unsigned int oldSize, unsigned int newSize)
+static void resizeShadowProjection(boost::scoped_array<unsigned char>& data, size_t oldSize, size_t newSize)
 {
     RBXASSERT(newSize > 0);
     RBXASSERT(newSize % 2 == 1); // all resize requests are odd; this simplifies the copy logic below
@@ -238,10 +238,10 @@ void LightObject::updateCoordinateFrame(bool recalcLocalBounds)
         axisU = Vector4();
         axisV = Vector4();
 
-        if (SurfaceLight* surfaceLight = light->fastDynamicCast<SurfaceLight>())
+        if (AreaLight* areaLight = light->fastDynamicCast<AreaLight>())
         {
             Vector4 axis;
-            getBasis(surfaceLight->getFace(), transform.rotation, part->getPartSizeUi() * 0.5f, axis, axisU, axisV);
+            getBasis(areaLight->getFace(), transform.rotation, part->getPartSizeUi() * 0.5f, axis, axisU, axisV);
 
 			position = transform.translation + axis.xyz() * axis.w;
 			direction = axis.xyz();
@@ -265,8 +265,8 @@ void LightObject::updateCoordinateFrame(bool recalcLocalBounds)
         RBXASSERT(!IsInSpatialHash());
     }
 
-    invalidateLighting(oldWorldBB);
-    invalidateLighting(getWorldBounds());
+    //invalidateLighting(oldWorldBB);
+    //invalidateLighting(getWorldBounds());
 }
 
 void LightObject::onCombinedSignalEx(Instance::CombinedSignalType type, const Instance::ICombinedSignalData* data)
@@ -324,7 +324,7 @@ void LightObject::bind(const shared_ptr<RBX::PartInstance>& part, const shared_p
     {
         connections.push_back(part->onDemandWrite()->sleepingChangedSignal.connect(boost::bind(&LightObject::onSleepingChangedEx, this, _1)));
         
-        if (light->fastDynamicCast<SurfaceLight>())
+        if (light->fastDynamicCast<AreaLight>())
             connections.push_back(part->propertyChangedSignal.connect( boost::bind(&LightObject::onParentSizeChangedEx, this, _1)));
 
         // we just connected, so sync up the state.
@@ -348,7 +348,7 @@ void LightObject::invalidateEntity()
     {
         dirty = true;
         
-        getVisualEngine()->getSceneUpdater()->queueInvalidatePart(this);
+        //getVisualEngine()->getSceneUpdater()->queueInvalidatePart(this);
     }
 }
 
@@ -356,7 +356,7 @@ void LightObject::updateEntity(bool assetsUpdated)
 {
     if (connections.empty()) // zombified.
     {
-        invalidateLighting(getWorldBounds());
+        //invalidateLighting(getWorldBounds());
         
 		getVisualEngine()->getSceneUpdater()->destroyAttachment(this);
         return;
@@ -369,17 +369,17 @@ void LightObject::updateEntity(bool assetsUpdated)
 		color = light->getColor();
 		brightness = light->getBrightness();
 
-        if (SurfaceLight* surfaceLight = light->fastDynamicCast<SurfaceLight>())
+        if (AreaLight* areaLight = light->fastDynamicCast<AreaLight>())
         {
 			type = Type_Surface;
-			range = surfaceLight->getRange();
-			angle = surfaceLight->getAngle();
+			range = areaLight->getRange();
+			angle = areaLight->getOuterAngle();
         }
         else if (SpotLight* spotLight = light->fastDynamicCast<SpotLight>())
         {
 			type = Type_Spot;
 			range = spotLight->getRange();
-			angle = spotLight->getAngle();
+			angle = spotLight->getOuterAngle();
         }
 		else if (PointLight* pointLight = light->fastDynamicCast<PointLight>())
 		{

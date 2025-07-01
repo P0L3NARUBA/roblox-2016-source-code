@@ -2487,12 +2487,12 @@ void StudioColorVerb::doIt( RBX::IDataState* dataState )
 {
 	//set color
     RBX::BrickColor selectedBrickColor(NameValueStoreManager::singleton().getValue("actionColorSelector", "user_value").toInt());
-	RBX::ColorVerb::setCurrentColor(selectedBrickColor);
+	RBX::ColorVerb::setCurrentColor(selectedBrickColor.color3());
 
 	if (StudioColorVerb::sColorActionActAsTool)
 	{
 		// color for fill tool
-		RBX::FillTool::color.set(selectedBrickColor);
+		RBX::FillTool::color.set(selectedBrickColor.color3());
 		// execute fill tool
 		RBX::Verb* fillToolVerb = dataModel->getVerb("FillTool");
 		if (fillToolVerb)
@@ -2528,7 +2528,7 @@ void StudioColorVerb::addColorToIcon()
     {
         QAction* pColorAction = colorActions[i];
 
-        QColor selectedQColor = QtUtilities::toQColor(RBX::ColorVerb::getCurrentColor().color3());
+        QColor selectedQColor = QtUtilities::toQColor(RBX::ColorVerb::getCurrentColor());
 
         // Draw the color inside of a filled rectangle on the bottom of the icon
         QPixmap pix = pColorAction->icon().pixmap(pColorAction->icon().availableSizes()[0]);

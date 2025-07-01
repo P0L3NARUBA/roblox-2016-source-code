@@ -209,13 +209,13 @@ void VisualEngine::bindWorkspace(const shared_ptr<DataModel>& dm)
 
 		adorn.reset(new AdornRender(this, dm.get()));
 
-        if (lightGrid)
+        /*if (lightGrid)
         {
             // Clear the grid and do an initial upload of all chunks to ensure texture has correct data
             lightGrid->lightingClearAll();
             lightGrid->lightingUploadAll();
             lightGrid->lightingUploadCommit();
-        }
+        }*/
     }
     else
     {

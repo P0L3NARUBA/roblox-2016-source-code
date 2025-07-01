@@ -245,9 +245,9 @@ namespace RBX {
 	const PropDescriptor<PartInstance, PhysicalProperties> PartInstance::prop_CustomPhysicalProperties("CustomPhysicalProperties", category_Part, &PartInstance::getPhysicalProperties, &PartInstance::setPhysicalProperties);
 
 	// color, transparency, reflectance, anchored, canCollide, locked
-	const PropDescriptor<PartInstance, Color3> PartInstance::prop_Color("Color", category_Appearance, &PartInstance::getColor3, &PartInstance::setColor3, PropertyDescriptor::Functionality(PropertyDescriptor::UI));
-	const PropDescriptor<PartInstance, BrickColor> PartInstance::prop_BrickColor("BrickColor", category_Appearance, &PartInstance::getColor, &PartInstance::setColor);
-	const PropDescriptor<PartInstance, BrickColor> prop_BrickColorDep("brickColor", category_Appearance, &PartInstance::getColor, &PartInstance::setColor, PropertyDescriptor::Attributes::deprecated(PartInstance::prop_BrickColor));
+	const PropDescriptor<PartInstance, Color3> PartInstance::prop_Color("Color", category_Appearance, &PartInstance::getColor, &PartInstance::setColor);//, PropertyDescriptor::Functionality(PropertyDescriptor::UI));
+	const PropDescriptor<PartInstance, BrickColor> PartInstance::prop_BrickColor("BrickColor", category_Appearance, &PartInstance::getBrickColor, &PartInstance::setBrickColor);
+	const PropDescriptor<PartInstance, BrickColor> prop_BrickColorDep("brickColor", category_Appearance, &PartInstance::getBrickColor, &PartInstance::setBrickColor, PropertyDescriptor::Attributes::deprecated(PartInstance::prop_BrickColor));
 	const EnumPropDescriptor<PartInstance, PartMaterial> PartInstance::prop_renderMaterial("Material", category_Appearance, &PartInstance::getRenderMaterial, &PartInstance::setRenderMaterial);
 	const PropDescriptor<PartInstance, float> PartInstance::prop_Transparency("Transparency", category_Appearance, &PartInstance::getTransparencyXml, &PartInstance::setTransparency);
 	// DFFlagNetworkOwnershipRuleReplicates
@@ -425,7 +425,8 @@ namespace RBX {
 		, primitive(new Primitive(Geometry::GEOMETRY_BLOCK))
 		, gfxPart(NULL)
 		, cookie(0)
-		, color(BrickColor::defaultColor())
+		, brickColor(BrickColor::defaultColor())
+		, color(Color3(Color3uint8(163, 162, 165)))
 		, transparency(0.0f)
 		, reflectance(0.0f)
 		, localTransparencyModifier(0.0)
@@ -889,7 +890,7 @@ namespace RBX {
 		return Part(
 			getPartType(),
 			getConstPartPrimitive()->getSize(),
-			Color4(getColor3(), alpha()),
+			Color4(getColor(), alpha()),
 			surf6,
 			calcRenderingCoordinateFrame());
 	}
@@ -2766,14 +2767,22 @@ namespace RBX {
 		}
 	}
 
-	void PartInstance::setColor(BrickColor value)
+	void PartInstance::setColor(Color3 value)
 	{
-		if (value != color)
-		{
-			color = value;
-			raisePropertyChanged(prop_BrickColor);
-			raisePropertyChanged(prop_Color);
-		}
+		color = value;
+		brickColor = BrickColor::closest(value);
+
+		raisePropertyChanged(prop_Color);
+		raisePropertyChanged(prop_BrickColor);
+	}
+
+	void PartInstance::setBrickColor(BrickColor value)
+	{
+		color = value.color3();
+		brickColor = value;
+
+		raisePropertyChanged(prop_Color);
+		raisePropertyChanged(prop_BrickColor);
 	}
 
 	void PartInstance::setFriction(float friction)

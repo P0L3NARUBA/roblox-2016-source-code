@@ -157,3 +157,13 @@ qrc_*.*
 /Client.LegacyAssemblies/Grid/Roblox.Grid.Common/bin/Release
 
 ## END OF GENERAL ##
+*.tlog
+*.lastbuildstate
+*.pch
+*.unsuccessfulbuild
+*.cache
+*.dll
+*.lib
+*.xml
+*.res
+*.txt

@@ -93,10 +93,10 @@ void Pants::setTemplate(TextureId value)
 
 const char *const sSkin = "Skin";
 
-Reflection::BoundProp<BrickColor> Skin::prop_skinColor("SkinColor", category_Appearance, &Skin::skinColor, &Skin::dataChanged);
+Reflection::BoundProp<Color3> Skin::prop_skinColor("SkinColor", category_Appearance, &Skin::skinColor, &Skin::dataChanged);
 
 Skin::Skin()
-:skinColor(BrickColor::brick_226)
+:skinColor(Color3(Color3uint8(253, 234, 141)))
 {
 	setName("Skin");
 }
@@ -119,20 +119,20 @@ void Skin::applyByMyself(Humanoid* humanoid)
 
 const char *const sBodyColors = "BodyColors";
 
-Reflection::BoundProp<BrickColor> BodyColors::prop_HeadColor("HeadColor", category_Appearance, &BodyColors::headColor, &BodyColors::dataChanged);
-Reflection::BoundProp<BrickColor> BodyColors::prop_LeftArmColor("LeftArmColor", category_Appearance, &BodyColors::leftArmColor, &BodyColors::dataChanged);
-Reflection::BoundProp<BrickColor> BodyColors::prop_RightArmColor("RightArmColor", category_Appearance, &BodyColors::rightArmColor, &BodyColors::dataChanged);
-Reflection::BoundProp<BrickColor> BodyColors::prop_TorsoColor("TorsoColor", category_Appearance, &BodyColors::torsoColor, &BodyColors::dataChanged);
-Reflection::BoundProp<BrickColor> BodyColors::prop_LeftLegColor("LeftLegColor", category_Appearance, &BodyColors::leftLegColor, &BodyColors::dataChanged);
-Reflection::BoundProp<BrickColor> BodyColors::prop_RightLegColor("RightLegColor", category_Appearance, &BodyColors::rightLegColor, &BodyColors::dataChanged);
+Reflection::BoundProp<Color3> BodyColors::prop_HeadColor("HeadColor", category_Appearance, &BodyColors::headColor, &BodyColors::dataChanged);
+Reflection::BoundProp<Color3> BodyColors::prop_LeftArmColor("LeftArmColor", category_Appearance, &BodyColors::leftArmColor, &BodyColors::dataChanged);
+Reflection::BoundProp<Color3> BodyColors::prop_RightArmColor("RightArmColor", category_Appearance, &BodyColors::rightArmColor, &BodyColors::dataChanged);
+Reflection::BoundProp<Color3> BodyColors::prop_TorsoColor("TorsoColor", category_Appearance, &BodyColors::torsoColor, &BodyColors::dataChanged);
+Reflection::BoundProp<Color3> BodyColors::prop_LeftLegColor("LeftLegColor", category_Appearance, &BodyColors::leftLegColor, &BodyColors::dataChanged);
+Reflection::BoundProp<Color3> BodyColors::prop_RightLegColor("RightLegColor", category_Appearance, &BodyColors::rightLegColor, &BodyColors::dataChanged);
 
 BodyColors::BodyColors()
-:headColor(BrickColor::brick_226)
-,leftArmColor(BrickColor::brick_226)
-,rightArmColor(BrickColor::brick_226)
-,torsoColor(BrickColor::brick_28)
-,leftLegColor(BrickColor::brick_23)
-,rightLegColor(BrickColor::brick_23)
+:headColor(Color3(Color3uint8(253, 234, 141)))
+,leftArmColor(Color3(Color3uint8(253, 234, 141)))
+,rightArmColor(Color3(Color3uint8(253, 234, 141)))
+,torsoColor(Color3(Color3uint8(40, 127, 71)))
+,leftLegColor(Color3(Color3uint8(13, 105, 172)))
+,rightLegColor(Color3(Color3uint8(13, 105, 172)))
 {
 	setName("Body Colors");
 }

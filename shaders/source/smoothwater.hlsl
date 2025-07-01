@@ -7,16 +7,16 @@
 #define CFG_SPECULAR 2
 #define CFG_GLOSS 900
 
-#define CFG_NORMAL_STRENGTH 0.25
+#define CFG_NORMAL_STRENGTH 0.1
 
 #define CFG_REFRACTION_STRENGTH 0.05
 
 #define CFG_FRESNEL_OFFSET 0.3
 
-#define CFG_SSR_STEPS 8
-#define CFG_SSR_START_DISTANCE 1
-#define CFG_SSR_STEP_CLAMP 0.2
-#define CFG_SSR_DEPTH_CUTOFF 10
+#define CFG_SSR_STEPS 64
+#define CFG_SSR_START_DISTANCE 0.0
+#define CFG_SSR_STEP_CLAMP 0.1
+#define CFG_SSR_DEPTH_CUTOFF 128
 
 // Shader code
 struct Appdata
@@ -274,7 +274,7 @@ float4 WaterPS(VertexOutput IN): COLOR0
 	float3 position = G(CameraPosition) - IN.View_Depth.xyz;
 
 #ifdef PIN_GBUFFER
-    float3 refr = getRefractedColor(IN.PositionScreen, normal, waterColor);
+    float3 refr = getRefractedColor(IN.PositionScreen, flatNormal, waterColor);
 	float3 refl = getReflectedColor(IN.PositionScreen, position, reflect(-view, flatNormal));
 #else
     float3 refr = waterColor;
@@ -284,7 +284,7 @@ float4 WaterPS(VertexOutput IN): COLOR0
     float specularIntensity = CFG_SPECULAR * fade;
     float specularPower = CFG_GLOSS;
 
-	float3 specular = G(Lamp0Color) * (specularIntensity * shadow * (float)(half)pow(saturate(dot(normal, normalize(-G(Lamp0Dir) + view))), specularPower));
+	float3 specular = G(Lamp0Color) * (specularIntensity * shadow * (float)(half)pow(saturate(dot(flatNormal, normalize(-G(Lamp0Dir) + view))), specularPower));
 #else
 	float3 view = normalize(IN.View_Depth.xyz);
 

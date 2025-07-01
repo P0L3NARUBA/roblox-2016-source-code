@@ -618,7 +618,8 @@ PickerFrame* ColorPickerToolButton::getPickerFrame()
 	}
 
 	//set the current color
-	m_pPickerFrame->setSelectedItem(RBX::ColorVerb::getCurrentColor().asInt());
+	//m_pPickerFrame->setSelectedItem(RBX::ColorVerb::getCurrentColor());
+	m_pPickerFrame->setSelectedItem(-1);
 
 	return m_pPickerFrame;
 }
@@ -640,7 +641,8 @@ PickerFrame* FillColorPickerToolButton::getPickerFrame()
 	}
 	else
 	{
-		m_pPickerFrame->setSelectedItem(RBX::FillTool::color.get().asInt());
+		//m_pPickerFrame->setSelectedItem(RBX::FillTool::color.get());
+		m_pPickerFrame->setSelectedItem(-1);
 	}
 
 	return m_pPickerFrame;

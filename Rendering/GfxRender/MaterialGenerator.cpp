@@ -107,14 +107,14 @@ public:
         nameAppend("]");
     }
 
-    void add(const MeshId& mesh, const BrickColor& color)
+    void add(const MeshId& mesh, const Color3& color)
     {
-        layers.push_back(TextureCompositorLayer(mesh, color.color3()));
+        layers.push_back(TextureCompositorLayer(mesh, color));
         
         nameAppend(" C[");
         nameAppend(mesh.toString());
         nameAppend(":");
-        nameAppend(color.asInt());
+        nameAppend(color.toString());
         nameAppend("]");
     }
     

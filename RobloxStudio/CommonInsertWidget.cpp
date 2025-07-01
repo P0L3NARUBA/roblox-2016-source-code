@@ -501,11 +501,11 @@ void InsertObjectWidget::SetObjectDefaultValues(boost::shared_ptr<RBX::Instance>
 	if (RBX::VehicleSeat* vehicleSeat = RBX::Instance::fastDynamicCast<RBX::VehicleSeat>(pObjectToInsert.get()))
 	{
 		vehicleSeat->setPartSizeUi(RBX::Vector3(4, 1, 2));
-		vehicleSeat->setColor(RBX::BrickColor::brickBlack());
+		vehicleSeat->setColor(RBX::BrickColor::brickBlack().color3());
 	}
 
 	if (RBX::Seat* seat = RBX::Instance::fastDynamicCast<RBX::Seat>(pObjectToInsert.get()))
-		seat->setColor(RBX::BrickColor::brickBlack());
+		seat->setColor(RBX::BrickColor::brickBlack().color3());
 
 }
 

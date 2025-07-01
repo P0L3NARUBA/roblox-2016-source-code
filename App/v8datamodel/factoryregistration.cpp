@@ -553,7 +553,7 @@ RBX_REGISTER_CLASS(RBX::Scripting::DebuggerWatch);
 RBX_REGISTER_CLASS(Light);
 RBX_REGISTER_CLASS(PointLight);
 RBX_REGISTER_CLASS(SpotLight);
-RBX_REGISTER_CLASS(SurfaceLight);
+RBX_REGISTER_CLASS(AreaLight);
 RBX_REGISTER_CLASS(LoginService);
 RBX_REGISTER_CLASS(ReplicatedStorage);
 RBX_REGISTER_CLASS(RobloxReplicatedStorage);

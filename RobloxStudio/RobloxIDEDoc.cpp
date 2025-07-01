@@ -326,7 +326,7 @@ void RobloxIDEDoc::initializeNewPlace()
 	partInstance->setTranslationUi(RBX::Vector3(0,-10,0));
     partInstance->setAnchored(true);
     partInstance->setPartLocked(true);
-    partInstance->setColor(RBX::BrickColor::brickDarkGray());
+    partInstance->setColor(RBX::BrickColor::brickDarkGray().color3());
 
     shared_ptr<RBX::DataModel> dataModel = m_CurrentGame->m_Game->getDataModel();
     RBX::DataModel::LegacyLock lock(dataModel, RBX::DataModelJob::Write);
@@ -2117,7 +2117,7 @@ void RobloxIDEDoc::preProcessVerb(const QStringList &tokens)
 		QByteArray ba = tokens[tokens.length()-1].toAscii();
 		const char *c_str = ba.data();
 
-		RBX::FillTool::color.set(RBX::BrickColor::parse(c_str));
+		RBX::FillTool::color.set(RBX::BrickColor::parse(c_str).color3());
 	}
 	//if it is a material change, the second token is the name of the material. check the material action for detail.
 	else if (tokens[0] == "actionMaterial")

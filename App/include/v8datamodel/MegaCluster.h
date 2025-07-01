@@ -157,7 +157,7 @@ public:
 	CLUSTER_CONST_PROP_OVERRIDE(
 		bool, bool, Archivable, Instance, setIsArchivable);
 	CLUSTER_CONST_PROP_OVERRIDE(
-		BrickColor, BrickColor, BrickColor, PartInstance, setColor);
+		Color3, Color3, Color, PartInstance, setColor);
 	CLUSTER_CONST_PROP_OVERRIDE(
 		bool, bool, CanCollide, PartInstance, setCanCollide);
 	CLUSTER_CONST_PROP_OVERRIDE(
