@@ -29,6 +29,12 @@ namespace RBX
 		float getAttenuation() const { return attenuation; }
 		void setAttenuation(float attenuation);
 
+		float getDiffuseFactor() const { return diffuseFactor; }
+		void setDiffuseFactor(float diffuseFactor);
+
+		float getSpecularFactor() const { return specularFactor; }
+		void setSpecularFactor(float specularFactor);
+
 		bool getShadows() const { return shadows; }
 		void setShadows(bool shadows);
 
@@ -40,6 +46,8 @@ namespace RBX
 		static Reflection::PropDescriptor<Light, float> prop_Brightness;
 		static Reflection::PropDescriptor<Light, float> prop_Range;
 		static Reflection::PropDescriptor<Light, float> prop_Attenuation;
+		static Reflection::PropDescriptor<Light, float> prop_DiffuseFactor;
+		static Reflection::PropDescriptor<Light, float> prop_SpecularFactor;
 		static Reflection::PropDescriptor<Light, bool> prop_Shadows;
 		static Reflection::PropDescriptor<Light, bool> prop_Colored;
 
@@ -53,6 +61,8 @@ namespace RBX
         float brightness;
 		float range;
 		float attenuation;
+		float diffuseFactor;
+		float specularFactor;
 		bool shadows;
 		bool colored;
 	};

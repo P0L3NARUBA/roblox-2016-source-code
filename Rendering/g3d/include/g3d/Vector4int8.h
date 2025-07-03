@@ -48,15 +48,15 @@ private:
 
 public:
     // construction
-    inline Vector4int8() : x(0), y(0), z(0), w(0) {}
+    Vector4int8() : x(0), y(0), z(0), w(0) {}
     
-    /** Multiplies the source by 127 and clamps to (-128, 127) when converting */
-    Vector4int8(const Vector4& source);
+    /* Multiplies the source by 127 and clamps to (-128, 127) when converting */
+    Vector4int8(const Vector4& source) : x(source.x), y(source.y), z(source.z), w(source.w) {}
 
-    /** Multiplies the source by 127 and clamps to (-128, 127) when converting */
-    Vector4int8(const Vector3& source, int8 w);
+    /* Multiplies the source by 127 and clamps to (-128, 127) when converting */
+    Vector4int8(const Vector3& source, int8 w) : x(source.x), y(source.y), z(source.z), w(w) {}
 
-    inline Vector4int8(int8 x, int8 y, int8 z, int8 w) : x(x), y(y), z(z), w(w) {}
+    Vector4int8(int8 x, int8 y, int8 z, int8 w) : x(x), y(y), z(z), w(w) {}
 
     // coordinates
     int8 x, y, z, w;

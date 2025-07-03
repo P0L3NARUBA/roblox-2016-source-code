@@ -57,8 +57,13 @@ public:
 	Type getType() const { return type; }
 	const Color3& getColor() const { return color; }
 	float getBrightness() const { return brightness; }
-	float getRange() const { return range; }
-	float getAngle() const { return angle; }
+    float getRange() const { return range; }
+    float getAttenuation() const { return attenuation; }
+    float getDiffuseFactor() const { return diffuseFactor; }
+    float getSpecularFactor() const { return specularFactor; }
+
+    float getOuterAngle() const { return outerAngle; }
+    float getInnerAngle() const { return innerAngle; }
 
 	const Vector3& getPosition() const { return position; }
 	const Vector3& getDirection() const { return direction; }
@@ -100,7 +105,11 @@ private:
     Color3 color;
     float brightness;
     float range;
-    float angle;
+    float outerAngle;
+    float innerAngle;
+    float attenuation;
+    float diffuseFactor;
+    float specularFactor;
 
     bool dirty;
 };

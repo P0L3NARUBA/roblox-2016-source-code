@@ -10,178 +10,182 @@
 
 namespace RBX
 {
-namespace Graphics
-{
+	namespace Graphics
+	{
 
-class Sky;
-class SpatialHashedScene;
-class IndexBuffer;
-class RenderCamera;
-class RenderQueue;
-class VisualEngine;
-class Material;
-class DeviceContext;
-class CullableSceneNode;
-class GeometryBatch;
-class SSAO;
-class MSAA;
-class Glow;
-class Blur;
-class ImageProcess;
-class Framebuffer;
-class EnvMap;
-class BlendState;
-class ShaderProgram;
-class ShadowMap;
+		class Sky;
+		class SpatialHashedScene;
+		class IndexBuffer;
+		class RenderCamera;
+		class RenderQueue;
+		class VisualEngine;
+		class Material;
+		class DeviceContext;
+		class CullableSceneNode;
+		class GeometryBatch;
+		class SSAO;
+		class MSAA;
+		class Glow;
+		class Blur;
+		class ImageProcess;
+		class Framebuffer;
+		class EnvMap;
+		class BlendState;
+		class ShaderProgram;
+		class ShadowMap;
 
-class SceneManager : Resource
-{
-public:
+		class SceneManager : Resource
+		{
+		public:
 
-    struct PostProcessSettings
-    {
-        PostProcessSettings()
-            : brightness(0)
-            , contrast(0)
-            , grayscaleLevel(0)
-            , blurIntensity(0)
-            , tintColor(Color3::white()){}
+			struct PostProcessSettings
+			{
+				PostProcessSettings()
+					: brightness(0)
+					, contrast(0)
+					, grayscaleLevel(0)
+					, blurIntensity(0)
+					, tintColor(Color3::white()) {
+				}
 
-        float brightness;
-        float contrast;
-        float grayscaleLevel;
-        float blurIntensity;
-        Color3 tintColor;
-    };
+				float brightness;
+				float contrast;
+				float grayscaleLevel;
+				float blurIntensity;
+				Color3 tintColor;
+			};
 
-    SceneManager(VisualEngine* visualEngine);
-    ~SceneManager();
+			SceneManager(VisualEngine* visualEngine);
+			~SceneManager();
 
-    SpatialHashedScene* getSpatialHashedScene() { return spatialHashedScene.get(); }
+			SpatialHashedScene* getSpatialHashedScene() { return spatialHashedScene.get(); }
 
-	Sky* getSky() { return sky.get(); }
-    EnvMap* getEnvMap() { return envMap.get(); }
-	SSAO* getSSAO() { return ssao.get(); }
+			Sky* getSky() { return sky.get(); }
+			EnvMap* getEnvMap() { return envMap.get(); }
+			SSAO* getSSAO() { return ssao.get(); }
 
-    const GlobalShaderData& readGlobalShaderData() const { return globalShaderData; }
-    GlobalShaderData& writeGlobalShaderData() { return globalShaderData; }
+			const GlobalShaderData& readGlobalShaderData() const { return globalShaderData; }
+			GlobalShaderData& writeGlobalShaderData() { return globalShaderData; }
+			const GlobalLightList& readGlobalLightList() const { return globalLightList; }
+			GlobalLightList& writeGlobalLightList() { return globalLightList; }
 
-    // set the center of the culling sphere used by the framerate manager.
-	const Vector3& getPointOfInterest() const { return pointOfInterest; }
-    void setPointOfInterest(const Vector3& poi);
+			// set the center of the culling sphere used by the framerate manager.
+			const Vector3& getPointOfInterest() const { return pointOfInterest; }
+			void setPointOfInterest(const Vector3& poi);
 
-    void processSqPartDistance(float distance)
-    {
-        sqMinPartDistance = std::min(sqMinPartDistance, distance);
-    }
+			void processSqPartDistance(float distance)
+			{
+				sqMinPartDistance = std::min(sqMinPartDistance, distance);
+			}
 
-    float getMinumumSqPartDistance() { return sqMinPartDistance; }
-    const Vector3& getMinumumSqDistanceCenter() { return sqMinDistanceCenter; }
+			float getMinumumSqPartDistance() { return sqMinPartDistance; }
+			const Vector3& getMinumumSqDistanceCenter() { return sqMinDistanceCenter; }
 
-    void computeMinimumSqDistance(const RenderCamera& camera);
+			void computeMinimumSqDistance(const RenderCamera& camera);
 
-    void renderScene(DeviceContext* context, Framebuffer* mainFramebuffer, const RenderCamera& camera, unsigned int viewWidth, unsigned int viewHeight);
+			void renderScene(DeviceContext* context, Framebuffer* mainFramebuffer, const RenderCamera& camera, unsigned int viewWidth, unsigned int viewHeight);
 
-    void renderBegin(DeviceContext* context, const RenderCamera& camera, unsigned int viewWidth, unsigned int viewHeight);
-    void renderView(DeviceContext* context, Framebuffer* mainFramebuffer, const RenderCamera& camera, unsigned int viewWidth, unsigned int viewHeight);
-    void renderEnd(DeviceContext* context);
+			void renderBegin(DeviceContext* context, const RenderCamera& camera, unsigned int viewWidth, unsigned int viewHeight);
+			void renderView(DeviceContext* context, Framebuffer* mainFramebuffer, const RenderCamera& camera, unsigned int viewWidth, unsigned int viewHeight);
+			void renderEnd(DeviceContext* context);
 
-    void setSkyEnabled(bool value);
-    void setClearColor(const Color4& value);
-    void setFog(const Color3& color, float rangeBegin, float rangeEnd);
-    void setLighting(const Color3& ambient, const Vector3& keyDirection, const Color3& keyColor, const Color3& fillColor);
-    void trackLightingTimeOfDay(double sec) { curTimeOfDay = sec; }
-    void setPostProcess(float brightness, float contrast, float grayscaleLevel, float blurIntensity, const Color3& tintColor);
+			void setSkyEnabled(bool value);
+			void setClearColor(const Color4& value);
+			void setFog(const Color3& color, float rangeBegin, float rangeEnd);
+			void setLighting(const Color3& ambient, const Vector3& keyDirection, const Color3& keyColor, const Color3& fillColor);
+			void trackLightingTimeOfDay(double sec) { curTimeOfDay = sec; }
+			void setPostProcess(float brightness, float contrast, float grayscaleLevel, float blurIntensity, const Color3& tintColor);
 
-	const GeometryBatch& getFullscreenTriangle() const { return *fullscreenTriangle; }
+			const GeometryBatch& getFullscreenTriangle() const { return *fullscreenTriangle; }
 
-    void onDeviceLost();
+			void onDeviceLost();
 
-    struct GBuffer
-    {
-        shared_ptr<Texture> mainColor;
-        shared_ptr<Framebuffer> mainFB;
+			struct GBuffer
+			{
+				shared_ptr<Texture> mainColor;
+				shared_ptr<Framebuffer> mainFB;
 
-        shared_ptr<Texture> gbufferColor;
-        shared_ptr<Framebuffer> gbufferColorFB;
+				shared_ptr<Texture> gbufferColor;
+				shared_ptr<Framebuffer> gbufferColorFB;
 
-        shared_ptr<Texture> gbufferDepth;
-        shared_ptr<Framebuffer> gbufferDepthFB;
+				shared_ptr<Texture> gbufferDepth;
+				shared_ptr<Framebuffer> gbufferDepthFB;
 
-        shared_ptr<Framebuffer> gbufferFB;
-    };
+				shared_ptr<Framebuffer> gbufferFB;
+			};
 
-    GBuffer* getGBuffer() const { return gbuffer.get(); }
-	const TextureRef& getGBufferColor() const { return gbufferColor; }
-	const TextureRef& getGBufferDepth() const { return gbufferDepth; }
+			GBuffer* getGBuffer() const { return gbuffer.get(); }
+			const TextureRef& getGBufferColor() const { return gbufferColor; }
+			const TextureRef& getGBufferDepth() const { return gbufferDepth; }
 
-	const TextureRef& getShadowMap() const { return shadowMapTexture; }
+			const TextureRef& getShadowMap() const { return shadowMapTexture; }
 
-private: 
-    VisualEngine* visualEngine;
+		private:
+			VisualEngine* visualEngine;
 
-    Vector3 pointOfInterest;
+			Vector3 pointOfInterest;
 
-    float sqMinPartDistance;
-    Vector3 sqMinDistanceCenter;
+			float sqMinPartDistance;
+			Vector3 sqMinDistanceCenter;
 
-    scoped_ptr<SpatialHashedScene> spatialHashedScene;
+			scoped_ptr<SpatialHashedScene> spatialHashedScene;
 
-    std::vector<CullableSceneNode*> renderNodes;
-    scoped_ptr<RenderQueue> renderQueue;
-    scoped_ptr<RenderQueue> shadowRenderQueue;
+			std::vector<CullableSceneNode*> renderNodes;
+			scoped_ptr<RenderQueue> renderQueue;
+			scoped_ptr<RenderQueue> shadowRenderQueue;
 
-    bool skyEnabled;
+			bool skyEnabled;
 
-    Color4 clearColor;
+			Color4 clearColor;
 
-    GlobalShaderData globalShaderData;
+			GlobalShaderData globalShaderData;
+			GlobalLightList globalLightList;
 
-    scoped_ptr<GeometryBatch> fullscreenTriangle;
+			scoped_ptr<GeometryBatch> fullscreenTriangle;
 
-    scoped_ptr<Sky> sky;
+			scoped_ptr<Sky> sky;
 
-    scoped_ptr<GBuffer> gbuffer;
-	TextureRef gbufferColor;
-	TextureRef gbufferDepth;
+			scoped_ptr<GBuffer> gbuffer;
+			TextureRef gbufferColor;
+			TextureRef gbufferDepth;
 
-    scoped_ptr<SSAO> ssao;
-    scoped_ptr<MSAA> msaa;
-	scoped_ptr<Glow> glow;
-    scoped_ptr<Blur> blur;
-    scoped_ptr<EnvMap> envMap;
-    scoped_ptr<ImageProcess> imageProcess;
+			scoped_ptr<SSAO> ssao;
+			scoped_ptr<MSAA> msaa;
+			scoped_ptr<Glow> glow;
+			scoped_ptr<Blur> blur;
+			scoped_ptr<EnvMap> envMap;
+			scoped_ptr<ImageProcess> imageProcess;
 
-    scoped_ptr<ShadowMap> shadowMaps[3];
-    float shadowMapTexelSize;
-    TextureRef shadowMask;
-	TextureRef shadowMapTexture;
+			scoped_ptr<ShadowMap> shadowMaps[3];
+			float shadowMapTexelSize;
+			TextureRef shadowMask;
+			TextureRef shadowMapTexture;
 
-    PostProcessSettings postProcessSettings;
+			PostProcessSettings postProcessSettings;
 
-    double curTimeOfDay;
-    bool   gbufferError; // when set to true, gbuffer is permanently disabled
-	bool   msaaError;
+			double curTimeOfDay;
+			bool   gbufferError; // when set to true, gbuffer is permanently disabled
+			bool   msaaError;
 
-    struct ShadowValues
-    {
-        float intensity;
-    };
-    
-    ShadowValues unsetAndGetShadowValues(DeviceContext* context);
-    void restoreShadows(DeviceContext* context, const ShadowValues& shadowValues);
+			struct ShadowValues
+			{
+				float intensity;
+			};
 
-    void updateMSAA(unsigned width, unsigned height);
+			ShadowValues unsetAndGetShadowValues(DeviceContext* context);
+			void restoreShadows(DeviceContext* context, const ShadowValues& shadowValues);
 
-    void updateGBuffer(unsigned width, unsigned height);
-	void resolveGBuffer(DeviceContext* context, Texture* texture);
+			void updateMSAA(unsigned width, unsigned height);
 
-	void renderShadowMap(DeviceContext* context, ShadowMap* shadowMap);
-    RenderCamera getShadowCamera(const Vector3& center, int shadowMapSize, float shadowRadius, float shadowDepthRadius);
-	void blurShadowMap(DeviceContext* context, ShadowMap* shadowMap);
+			void updateGBuffer(unsigned width, unsigned height);
+			void resolveGBuffer(DeviceContext* context, Texture* texture);
 
-	ShadowMap* pickShadowMap(int qualityLevel) const;
-};
+			void renderShadowMap(DeviceContext* context, ShadowMap* shadowMap);
+			RenderCamera getShadowCamera(const Vector3& center, int shadowMapSize, float shadowRadius, float shadowDepthRadius);
+			void blurShadowMap(DeviceContext* context, ShadowMap* shadowMap);
 
-}
+			ShadowMap* pickShadowMap(int qualityLevel) const;
+		};
+
+	}
 }

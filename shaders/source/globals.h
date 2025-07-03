@@ -1,7 +1,5 @@
-#ifndef GLSL
-struct Globals
+cbuffer Globals : register(b0)
 {
-#endif
     float4x4 ViewProjection;
 
     float4 ViewRight;
@@ -26,19 +24,23 @@ struct Globals
     float4 FadeDistance_GlowFactor;
     float4 OutlineBrightness_ShadowInfo;
 
-	float4 ShadowMatrix0;
-	float4 ShadowMatrix1;
-	float4 ShadowMatrix2;
-#ifndef GLSL
+    float4 ShadowMatrix0;
+    float4 ShadowMatrix1;
+    float4 ShadowMatrix2;
 };
 
-#ifdef DX11
-cbuffer Globals: register( b0 ) { Globals _G; };
-#else
-uniform Globals _G: register(c0);
-#endif
+struct GPULight {
+    float4 Position_Range;
+    float4 Color_Attenuation;
+    float4 Direction_SubSurfaceFac;
+    float4 InnerOuterAngle_DiffSpecFac;
 
-#define G(x) _G.x
-#else
-#define G(x) x
-#endif
+    float4 AxisU;
+    float4 AxisV;
+
+    float4 ShadowsColored_Type_Active;
+};
+
+#define MAX_LIGHTS 1024
+
+StructuredBuffer<GPULight> LightList : register(t15);

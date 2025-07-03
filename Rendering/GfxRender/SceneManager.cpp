@@ -216,10 +216,10 @@ private:
 
 		Device* device = visualEngine->getDevice();
 
-		data->quarterBuffers[0] = device->createTexture(Texture::Type_2D, Texture::Format_RGBA8, width, height, 1, 1, Texture::Usage_Renderbuffer);
+		data->quarterBuffers[0] = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, width, height, 1, 1, Texture::Usage_Renderbuffer);
 		data->quarterFB[0] = device->createFramebuffer(data->quarterBuffers[0]->getRenderbuffer(0, 0));
 
-		data->quarterBuffers[1] = device->createTexture(Texture::Type_2D, Texture::Format_RGBA8, width, height, 1, 1, Texture::Usage_Renderbuffer);
+		data->quarterBuffers[1] = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, width, height, 1, 1, Texture::Usage_Renderbuffer);
 		data->quarterFB[1] = device->createFramebuffer(data->quarterBuffers[1]->getRenderbuffer(0, 0));
 
 		data->width = width;
@@ -302,10 +302,10 @@ private:
 
         Device* device = visualEngine->getDevice();
 
-        data->intermediateTex[0] = device->createTexture(Texture::Type_2D, Texture::Format_RGBA8, width, height, 1, 1, Texture::Usage_Renderbuffer);
+        data->intermediateTex[0] = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, width, height, 1, 1, Texture::Usage_Renderbuffer);
         data->intermediateFB[0] = device->createFramebuffer(data->intermediateTex[0]->getRenderbuffer(0, 0));
 
-        data->intermediateTex[1] = device->createTexture(Texture::Type_2D, Texture::Format_RGBA8, width, height, 1, 1, Texture::Usage_Renderbuffer);
+        data->intermediateTex[1] = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, width, height, 1, 1, Texture::Usage_Renderbuffer);
         data->intermediateFB[1] = device->createFramebuffer(data->intermediateTex[1]->getRenderbuffer(0, 0));
 
         data->width = width;
@@ -380,7 +380,7 @@ public:
 
         context->copyFramebuffer( target, data->intermediateTex.get() );
 
-        if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "ImageProcessFS", BlendState::Mode_PremultipliedAlphaBlend, target->getWidth(), target->getHeight()))
+        if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "ImageProcessFS", BlendState::Mode_None, target->getWidth(), target->getHeight()))
         {
             float params1[4] = {brightness, contrast + 1, grayscaleLevel, 0};
             float params2[4] = {tintColor.r, tintColor.g, tintColor.b, 0};
@@ -407,7 +407,7 @@ private:
 
         Device* device = visualEngine->getDevice();
 
-        data->intermediateTex = device->createTexture(Texture::Type_2D, Texture::Format_RGBA8, width, height, 1, 1, Texture::Usage_Static);
+        data->intermediateTex = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, width, height, 1, 1, Texture::Usage_Static);
 
         data->width = width;
         data->height = height;
@@ -663,13 +663,42 @@ void SceneManager::renderBegin(DeviceContext* context, const RenderCamera& camer
 	sqMinPartDistance = FLT_MAX;
 
     // Get all visible ROPs
+
     renderNodes.clear();
 	spatialHashedScene->queryFrustumOrdered(renderNodes, camera, pointOfInterest, frm);
 
     {
-        RBXPROFILER_SCOPE("Render", "updateRenderQueue");
+        RBXPROFILER_SCOPE("Render", "updateLightList");
 
-        for (CullableSceneNode* node: renderNodes)
+        std::vector<LightObject*> lights;
+        for (CullableSceneNode* node : renderNodes) {
+            LightObject* lobj = static_cast<LightObject*>(node);
+
+            // Cull lights based on brightness
+            if ((lobj->getType() != LightObject::Type_None) && (lobj->getBrightness() > 0.001) && (lobj->getRange() > 0.001) && !(lobj->getColor().isZero()))
+            {
+                lights.push_back(lobj);
+            }
+        }
+
+        /*StandardOut::singleton()->printf(MESSAGE_INFO, "Lights in view: %i", lights.size());
+
+        for (unsigned int i = 0; i < lights.size(); ++i) {
+            StandardOut::singleton()->printf(MESSAGE_INFO, "View Light %i: %f, %f, %f", i, lights[i]->getPosition().x, lights[i]->getPosition().y, lights[i]->getPosition().z);
+        }*/
+
+        globalLightList.populateList(lights);
+        
+        /*StandardOut::singleton()->printf(MESSAGE_INFO, "Lights in list: %i", globalLightList.LightList.size());
+
+        for (unsigned int i = 0; i < globalLightList.LightList.size(); ++i) {
+            StandardOut::singleton()->printf(MESSAGE_INFO, "List Light %i: %f, %f, %f", i, globalLightList.LightList[i].Position_Range.x, globalLightList.LightList[i].Position_Range.y, globalLightList.LightList[i].Position_Range.z);
+        }*/
+
+        context->updateGlobalLightList(globalLightList.LightList.data(), globalLightList.LightList.size() * sizeof(GPULight));
+
+        RBXPROFILER_SCOPE("Render", "updateRenderQueue");
+        for (CullableSceneNode* node : renderNodes)
             node->updateRenderQueue(*renderQueue, camera, RenderQueue::Pass_Default);
     }
 
@@ -1026,7 +1055,7 @@ void SceneManager::updateGBuffer(unsigned width, unsigned height)
             gbuffer->gbufferColor = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, width, height, 1, 1, Texture::Usage_Renderbuffer);
             gbuffer->gbufferColorFB = device->createFramebuffer(gbuffer->gbufferColor->getRenderbuffer(0, 0), mainDepth);
 
-            gbuffer->gbufferDepth = device->createTexture(Texture::Type_2D, Texture::Format_RGBA8, width, height, 1, 1, Texture::Usage_Renderbuffer);
+            gbuffer->gbufferDepth = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, width, height, 1, 1, Texture::Usage_Renderbuffer);
             gbuffer->gbufferDepthFB = device->createFramebuffer(gbuffer->gbufferDepth->getRenderbuffer(0, 0));
 
             std::vector<shared_ptr<Renderbuffer> > gbufferTextures;

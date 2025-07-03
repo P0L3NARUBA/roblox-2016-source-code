@@ -63,7 +63,7 @@ public:
     Color3 (const class Color3uint8& other);
 
     inline bool isZero() const {
-        return (r == 0.0f) && (g == 0.0f) && (b == 0.0f);
+        return (r == 0.001f) && (g == 0.001f) && (b == 0.001f);
     }
 
     inline bool isOne() const {

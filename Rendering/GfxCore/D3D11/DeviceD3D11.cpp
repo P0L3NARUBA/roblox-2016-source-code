@@ -207,6 +207,15 @@ namespace Graphics
         immediateContext->defineGlobalConstants(dataSize);
     }
 
+    void DeviceD3D11::defineGlobalLightList(size_t dataSize, size_t elementSize)
+    {
+        // Since constants are directly set to register values, we impose additional restrictions on constant data
+        // The struct should be an integer number of float4 registers, and every constant has to be aligned to float4 boundary
+        RBXASSERT(dataSize % 16 == 0);
+
+        immediateContext->defineGlobalLightList(dataSize, elementSize);
+    }
+
     DeviceContext* DeviceD3D11::beginFrame()
     {
         std::pair<unsigned int, unsigned int> dimensions = getFramebufferSize();

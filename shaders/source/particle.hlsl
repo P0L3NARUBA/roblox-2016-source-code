@@ -68,22 +68,22 @@ VS_OUTPUT vs( VS_INPUT input )
 	
 	float4 rs = rotScale( scaleRotLifeFlt );
 
-	pos += G(ViewRight) * dot( disp, rs.xy );
-	pos += G(ViewUp) * dot( disp, rs.zw );
+	pos += ViewRight * dot( disp, rs.xy );
+	pos += ViewUp * dot( disp, rs.zw );
 
-        float4 pos2 = pos + G(ViewDir)*zOffset.x; // Z-offset position in world space
+        float4 pos2 = pos + ViewDir*zOffset.x; // Z-offset position in world space
 
-        o.pos = mul( G(ViewProjection), pos );
+        o.pos = mul( ViewProjection, pos );
 	
 	o.uvFog.xy = input.disp.xy;
 	o.uvFog.y = 1 - o.uvFog.y;
-	o.uvFog.z = (G(FogParams).z - o.pos.w) * G(FogParams).w;
+	o.uvFog.z = (FogParams.z - o.pos.w) * FogParams.w;
 	
 	o.colorLookup.x = 1 - max( 0, min(1, scaleRotLifeFlt.w ) );
 	o.colorLookup.y = (float)input.cline.x * (1.0 / 32767.0f);
 
 
-        pos2 = mul( G(ViewProjection), pos2 ); // Z-offset position in clip space
+        pos2 = mul( ViewProjection, pos2 ); // Z-offset position in clip space
         o.pos.z = pos2.z * o.pos.w/pos2.w;     // Only need z
         
 
@@ -119,7 +119,7 @@ float4 psModulate( VS_OUTPUT input ) : COLOR0 // #1
 	result.rgb = texcolor.rgb * vcolor.rgb;
 	result.a   = texcolor.a   * vcolor.a;
 	
-	result.rgb = lerp( G(FogColor).rgb, result.rgb, saturate( input.uvFog.zzz ) );
+	result.rgb = lerp( FogColor.rgb, result.rgb, saturate( input.uvFog.zzz ) );
 	return result;
 }
 
@@ -203,20 +203,20 @@ VS_OUTPUT2 vsCustom( VS_INPUT2 input )
 
 	float4 rs = rotScale( scaleRotLifeFlt );
 
-	pos += G(ViewRight) * dot( disp, rs.xy );
-	pos += G(ViewUp) * dot( disp, rs.zw );
+	pos += ViewRight * dot( disp, rs.xy );
+	pos += ViewUp * dot( disp, rs.zw );
 	
-       float4 pos2 = pos + G(ViewDir)*zOffset.x; // Z-offset position in world space
+       float4 pos2 = pos + ViewDir*zOffset.x; // Z-offset position in world space
 
-	o.pos = mul( G(ViewProjection), pos );
+	o.pos = mul( ViewProjection, pos );
 	
 	o.uvFog.xy = input.disp.xy;
 	o.uvFog.y = 1 - o.uvFog.y;
-	o.uvFog.z = (G(FogParams).z - o.pos.w) * G(FogParams).w;
+	o.uvFog.z = (FogParams.z - o.pos.w) * FogParams.w;
 	
 	o.color = input.color * (1/255.0f);
        
-		pos2 = mul( G(ViewProjection), pos2 ); // Z-offset position in clip space
+		pos2 = mul( ViewProjection, pos2 ); // Z-offset position in clip space
         o.pos.z = pos2.z * o.pos.w/pos2.w;     // Only need z
 
 	

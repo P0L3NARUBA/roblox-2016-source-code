@@ -93,7 +93,7 @@ Surface surfaceShader(SurfaceInput IN, float2 fade2)
     surface.albedo = albedo;
     surface.normal = normal;
     surface.specular = specfade.r;
-    surface.gloss = specfade.g;
+    surface.gloss = CFG_GLOSS_SCALE;
     surface.reflectance = specular.g * fade * (CFG_REFLECTION_SCALE);
 
 	return surface;

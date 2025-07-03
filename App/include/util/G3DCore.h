@@ -8,8 +8,9 @@
 #include "G3D/Vector4.h"
 #include "G3D/Matrix3.h"
 #include "G3D/Matrix4.h"
-#include "G3D/Vector3int16.h"
 #include "G3D/Vector2int16.h"
+#include "G3D/Vector3int16.h"
+#include "G3D/Vector4int8.h"
 #include "G3D/Color4uint8.h"
 #include "G3D/Color3uint8.h"
 #include "G3D/CoordinateFrame.h"
@@ -38,6 +39,7 @@ namespace RBX {
 	typedef G3D::Vector4 Vector4;
 	typedef G3D::Vector2int16 Vector2int16;
 	typedef G3D::Vector3int16 Vector3int16;
+	typedef G3D::Vector4int8 Vector4int8;
 	typedef G3D::Color4uint8 Color4uint8;
 	typedef G3D::Color3uint8 Color3uint8;
 	typedef G3D::Matrix3 Matrix3;

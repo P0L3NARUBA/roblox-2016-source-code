@@ -395,21 +395,15 @@ public:
 
     enum ShaderProfile
     {
-        shaderProfile_DX_9,
         shaderProfile_DX_11,
         shaderProfile_DX_11_DURANGO,
-        shaderProfile_DX_11_9_3,
         shaderProfile_Count
     };
 
     static ShaderProfile getD3DProfile(const std::string& target)
     {
-        if (target == "d3d9")
-            return shaderProfile_DX_9;
         if (target == "d3d11")
             return shaderProfile_DX_11;
-        if (target == "d3d11_level_9_3")
-            return shaderProfile_DX_11_9_3;
         if (target == "d3d11_durango")
             return shaderProfile_DX_11_DURANGO;
 
@@ -419,7 +413,7 @@ public:
 
     static bool isX86Profile(ShaderProfile profile)
     {
-        static const ShaderProfile kX86Profiles[] = { shaderProfile_DX_9, shaderProfile_DX_11_9_3, shaderProfile_DX_11 };
+        static const ShaderProfile kX86Profiles[] = { shaderProfile_DX_11 };
 
         for (int i = 0; i < ARRAYSIZE(kX86Profiles); ++i)
             if (profile == kX86Profiles[i])
@@ -520,22 +514,11 @@ public:
     {
         switch (shaderProfile)
         {
-        case ShaderCompilerD3D::shaderProfile_DX_9:
-        {
-            targetOut = originalTarget;
-            return;
-        }
         case ShaderCompilerD3D::shaderProfile_DX_11_DURANGO:
         case ShaderCompilerD3D::shaderProfile_DX_11:
         {
             std::string shaderType = originalTarget.substr(0, 2);
-            targetOut = shaderType + "_5_0";
-            return;
-        }
-        case ShaderCompilerD3D::shaderProfile_DX_11_9_3:
-        {
-            std::string shaderType = originalTarget.substr(0, 2);
-            targetOut = shaderType + "_4_0_level_9_3";
+            targetOut = shaderType + "_5_1";
             return;
         }
         default:
@@ -1077,20 +1060,12 @@ int compilePacks(int argc, char** argv)
 
             switch (profileD3D)
             {
-            case ShaderCompilerD3D::shaderProfile_DX_9:
-                if (!compilePack(folder, target, "", &compiler))
-                    return 1;
-                break;
             case ShaderCompilerD3D::shaderProfile_DX_11:
                 if (!compilePack(folder, target, "DX11", &compiler))
                     return 1;
                 break;
             case ShaderCompilerD3D::shaderProfile_DX_11_DURANGO:
                 if (!compilePack(folder, target, "DX11 DURANGO", &compiler))
-                    return 1;
-                break;
-            case ShaderCompilerD3D::shaderProfile_DX_11_9_3:
-                if (!compilePack(folder, target, "DX11 WIN_MOBILE", &compiler))
                     return 1;
                 break;
             default:

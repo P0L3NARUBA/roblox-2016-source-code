@@ -1344,11 +1344,6 @@ void Camera::doFly(const NavKeys& nav, int steps)
 	}
 }
 
-float Camera::nearPlaneZ() const 
-{
-	return -0.5f;
-}
-
 float Camera::getImagePlaneDepth() const 
 {
 	// The image plane depth has been pre-computed for 

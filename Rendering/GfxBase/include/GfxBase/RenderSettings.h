@@ -179,7 +179,7 @@ public:
 	// FRM would like to report latest setting. Subclass is free to ignore it
 	virtual void setAutoQualityLevel(int level) {}
 
-	float getMaxFrameRate() const { return 60.0f; }
+	float getMaxFrameRate() const { return 240.0f; }
 	float getMinFrameRate() const { return 30.0f; }
 
 	bool getDrawConnectors() const { return drawConnectors; }

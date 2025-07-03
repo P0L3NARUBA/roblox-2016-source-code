@@ -6,8 +6,7 @@
 
 #include "Util/RobloxGoogleAnalytics.h"
 
-static void sendLightingObjectsStats()
-{
+static void sendLightingObjectsStats() {
 	RBX::RobloxGoogleAnalytics::trackEvent(GA_CATEGORY_GAME, "LightingObjects");
 }
 
@@ -24,8 +23,10 @@ Reflection::PropDescriptor<Light, Color3> Light::prop_Color("Color", category_Ap
 Reflection::PropDescriptor<Light, float> Light::prop_Brightness("Brightness", category_Appearance, &Light::getBrightness, &Light::setBrightness);
 Reflection::PropDescriptor<Light, float> Light::prop_Range("Range", category_Appearance, &Light::getRange, &Light::setRange);
 Reflection::PropDescriptor<Light, float> Light::prop_Attenuation("Attenuation", category_Appearance, &Light::getAttenuation, &Light::setAttenuation);
+Reflection::PropDescriptor<Light, float> Light::prop_DiffuseFactor("Diffuse Factor", category_Appearance, &Light::getDiffuseFactor, &Light::setDiffuseFactor);
+Reflection::PropDescriptor<Light, float> Light::prop_SpecularFactor("Specular Factor", category_Appearance, &Light::getSpecularFactor, &Light::setSpecularFactor);
 
-Reflection::PropDescriptor<Light, bool> Light::prop_Shadows("Enabled", "Shadows", &Light::getShadows, &Light::setShadows);
+Reflection::PropDescriptor<Light, bool> Light::prop_Shadows("Cast", "Shadows", &Light::getShadows, &Light::setShadows);
 Reflection::PropDescriptor<Light, bool> Light::prop_Colored("Colored", "Shadows", &Light::getColored, &Light::setColored);
 
 /* Spot Light */
@@ -45,6 +46,8 @@ Light::Light(const char* name)
 	, brightness(1.0f)
 	, range(16.0f)
 	, attenuation(0.0f)
+	, diffuseFactor(1.0f)
+	, specularFactor(1.0f)
 	, shadows(false)
 	, colored(false)
 {
@@ -99,6 +102,26 @@ void Light::setAttenuation(float value)
 	if (attenuation != value) {
 		attenuation = value;
 		raisePropertyChanged(prop_Attenuation);
+	}
+}
+
+void Light::setDiffuseFactor(float value)
+{
+	value = std::min(std::max(value, 0.0f), 1.0f);
+
+	if (diffuseFactor != value) {
+		diffuseFactor = value;
+		raisePropertyChanged(prop_DiffuseFactor);
+	}
+}
+
+void Light::setSpecularFactor(float value)
+{
+	value = std::min(std::max(value, 0.0f), 1.0f);
+
+	if (specularFactor != value) {
+		specularFactor = value;
+		raisePropertyChanged(prop_SpecularFactor);
 	}
 }
 
@@ -187,7 +210,7 @@ void SpotLight::setFace(NormalId value)
 
 AreaLight::AreaLight() 
 	: DescribedCreatable<AreaLight, Light, sAreaLight>("AreaLight")
-	, outerAngle(90.0f)
+	, outerAngle(180.0f)
 	, innerAngle(0.0f)
 	, face(NORM_Z_NEG)
 {

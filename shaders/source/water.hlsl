@@ -29,7 +29,7 @@ uniform float4 WaterColor; // deep water color
 
 float  fadeFactor( float3 wspos )
 {
-	return saturate( -0.4f + 1.4f*length( G(CameraPosition) - wspos.xyz ) * G(FadeDistance_GlowFactor).y );
+	return saturate( -0.4f + 1.4f*length( CameraPosition - wspos.xyz ) * FadeDistance_GlowFactor.y );
 }
 
 float  wave( float4 wspos )
@@ -109,16 +109,16 @@ V2P water_vs(
 	tcselect.x = dot( abs( normal.yxz ), wspostc.xzx );
 	tcselect.y = dot( abs( normal.yxz ), wspostc.zyy );
 
-	o.pos       = mul( G(ViewProjection), wspos );
+	o.pos       = mul( ViewProjection, wspos );
 	o.tc0Fog.xy = tcselect * .05f;
-	o.tc0Fog.z  = saturate( (G(FogParams).z - o.pos.w) * G(FogParams).w );
+	o.tc0Fog.z  = saturate( (FogParams.z - o.pos.w) * FogParams.w );
 	o.tc0Fog.w  = LODBIAS;
 
 	o.light = lgridPrepareSample(lgridOffset(wspos.xyz, wsnrm.xyz));
 	
 	o.fade.x = fadeFactor( wspos.xyz );
-	o.fade.y = (1-o.fade.x) *  saturate( dot( wsnrm, -G(Lamp0Dir) ) ) * 100;
-	o.fade.z =  1 - 0.9*saturate1( exp( -0.005 * length( G(CameraPosition) - wspos.xyz ) ) );
+	o.fade.y = (1-o.fade.x) *  saturate( dot( wsnrm, -Lamp0Dir ) ) * 100;
+	o.fade.z =  1 - 0.9*saturate1( exp( -0.005 * length( CameraPosition - wspos.xyz ) ) );
 	
 	return o;
 }
@@ -188,8 +188,8 @@ float4 water_ps( V2P v ) : COLOR0
 	
 	N3 = lerp( N3, N2, v.fade.z );
 
-	float3 L = /*normalize*/(-G(Lamp0Dir).xyz);
-	float3 E = normalize( G(CameraPosition) - v.wspos.xyz );
+	float3 L = /*normalize*/(-Lamp0Dir.xyz);
+	float3 E = normalize( CameraPosition - v.wspos.xyz );
 
 	float4 light = lgridSample(TEXTURE(LightMap), TEXTURE(LightMapLookup), v.light.xyz);
 	
@@ -209,7 +209,7 @@ float4 water_ps( V2P v ) : COLOR0
 #endif
 
 	float3 result = lerp( diffuse, env, fre ) + specular.xxx;
-	result = lerp( G(FogColor).rgb, result, v.tc0Fog.z );
+	result = lerp( FogColor.rgb, result, v.tc0Fog.z );
 		
 	return float4( result, 1 );
 }

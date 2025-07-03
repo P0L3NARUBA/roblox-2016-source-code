@@ -150,7 +150,11 @@ LightObject::LightObject(VisualEngine* visualEngine)
 	, type(Type_None)
     , brightness(0)
     , range(0)
-    , angle(0)
+    , outerAngle(0)
+    , innerAngle(0)
+    , attenuation(0)
+    , diffuseFactor(0)
+    , specularFactor(0)
     , dirty(false)
 {
 }
@@ -265,8 +269,8 @@ void LightObject::updateCoordinateFrame(bool recalcLocalBounds)
         RBXASSERT(!IsInSpatialHash());
     }
 
-    //invalidateLighting(oldWorldBB);
-    //invalidateLighting(getWorldBounds());
+    invalidateLighting(oldWorldBB);
+    invalidateLighting(getWorldBounds());
 }
 
 void LightObject::onCombinedSignalEx(Instance::CombinedSignalType type, const Instance::ICombinedSignalData* data)
@@ -348,15 +352,19 @@ void LightObject::invalidateEntity()
     {
         dirty = true;
         
-        //getVisualEngine()->getSceneUpdater()->queueInvalidatePart(this);
+        getVisualEngine()->getSceneUpdater()->queueInvalidatePart(this);
     }
+}
+
+float cosHalfAngle(float value) {
+    return sqrt((1.0 + cos(value * (3.14 / 180.0))) / 2.0);
 }
 
 void LightObject::updateEntity(bool assetsUpdated)
 {
     if (connections.empty()) // zombified.
     {
-        //invalidateLighting(getWorldBounds());
+        invalidateLighting(getWorldBounds());
         
 		getVisualEngine()->getSceneUpdater()->destroyAttachment(this);
         return;
@@ -368,24 +376,28 @@ void LightObject::updateEntity(bool assetsUpdated)
 	{
 		color = light->getColor();
 		brightness = light->getBrightness();
+        range = light->getRange();
+        attenuation = light->getAttenuation();
+        diffuseFactor = light->getDiffuseFactor();
+        specularFactor = light->getSpecularFactor();
 
         if (AreaLight* areaLight = light->fastDynamicCast<AreaLight>())
         {
 			type = Type_Surface;
-			range = areaLight->getRange();
-			angle = areaLight->getOuterAngle();
+			outerAngle = cosHalfAngle(areaLight->getOuterAngle());
+            innerAngle = cosHalfAngle(areaLight->getInnerAngle());
         }
         else if (SpotLight* spotLight = light->fastDynamicCast<SpotLight>())
         {
 			type = Type_Spot;
-			range = spotLight->getRange();
-			angle = spotLight->getOuterAngle();
+            outerAngle = cosHalfAngle(spotLight->getOuterAngle());
+            innerAngle = cosHalfAngle(spotLight->getInnerAngle());
         }
 		else if (PointLight* pointLight = light->fastDynamicCast<PointLight>())
 		{
 			type = Type_Point;
-			range = pointLight->getRange();
-            angle = 0;
+            outerAngle = 1;
+            innerAngle = 1;
 		}
 		else
 		{

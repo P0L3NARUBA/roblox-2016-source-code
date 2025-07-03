@@ -57,17 +57,17 @@ VertexOutput AdornSelfLitVSGeneric(Appdata IN, float ambient)
     float4 position = mul(WorldMatrix, IN.Position);
     float3 normal = normalize(mul((float3x3)WorldMatrix, IN.Normal));
 
-    float3 light = normalize(G(CameraPosition).xyz - position.xyz);
+    float3 light = normalize(CameraPosition.xyz - position.xyz);
     float ndotl = saturate(dot(normal, light));
 
     float lighting = ambient + (1 - ambient) * ndotl;
     float specular = pow(ndotl, 64.0);
 
-    OUT.HPosition = mul(G(ViewProjection), mul(WorldMatrix, IN.Position));
+    OUT.HPosition = mul(ViewProjection, mul(WorldMatrix, IN.Position));
     OUT.Uv = IN.Uv;
     OUT.Color = float4(Color.rgb * lighting + specular, Color.a);
 
-    OUT.FogFactor = (G(FogParams).z - OUT.HPosition.w) * G(FogParams).w;
+    OUT.FogFactor = (FogParams.z - OUT.HPosition.w) * FogParams.w;
 
     return OUT;
 }
@@ -90,17 +90,17 @@ VertexOutput AdornVS(Appdata IN)
 
 #ifdef PIN_LIGHTING
     float3 normal = normalize(mul((float3x3)WorldMatrix, IN.Normal));
-    float ndotl = dot(normal, -G(Lamp0Dir));
-    float3 lighting = G(AmbientColor) + saturate(ndotl) * G(Lamp0Color) + saturate(-ndotl) * G(Lamp1Color);
+    float ndotl = dot(normal, -Lamp0Dir);
+    float3 lighting = AmbientColor + saturate(ndotl) * Lamp0Color + saturate(-ndotl) * Lamp1Color;
 #else
     float3 lighting = 1;
 #endif
 
-    OUT.HPosition = mul(G(ViewProjection), position);
+    OUT.HPosition = mul(ViewProjection, position);
     OUT.Uv = IN.Uv;
     OUT.Color = float4(Color.rgb * lighting, Color.a);
 
-    OUT.FogFactor = (G(FogParams).z - OUT.HPosition.w) * G(FogParams).w;
+    OUT.FogFactor = (FogParams.z - OUT.HPosition.w) * FogParams.w;
 
     return OUT;
 }
@@ -111,7 +111,7 @@ float4 AdornPS(VertexOutput IN): COLOR0
 {
     float4 result = tex2D(DiffuseMap, IN.Uv) * IN.Color;
 
-    result.rgb = lerp(G(FogColor), result.rgb, saturate(IN.FogFactor));
+    result.rgb = lerp(FogColor, result.rgb, saturate(IN.FogFactor));
 
     return result;
 }
@@ -128,7 +128,7 @@ AALineVertexOutput AdornAALineVS(Appdata IN)
     float4 endPosW = mul(WorldMatrix, float4(-1, 0, 0, 1));
 
     // Compute view-space w
-    float w = dot(G(ViewProjection)[3], float4(position.xyz, 1.0f));
+    float w = dot(ViewProjection[3], float4(position.xyz, 1.0f));
 
     // radius in pixels + constant because line has to be little bit bigget to perform anti aliasing
     float radius = PixelInfo.w + 2;
@@ -136,23 +136,23 @@ AALineVertexOutput AdornAALineVS(Appdata IN)
     // scale the way that line has same size on screen
     if (length(position - startPosW) < length(position - endPosW))
     {
-        float w = dot(G(ViewProjection)[3], float4(startPosW.xyz, 1.0f));
+        float w = dot(ViewProjection[3], float4(startPosW.xyz, 1.0f));
         float pixel_radius =  radius * w * PixelInfo.x;
         position.xyz = startPosW.xyz + normal * pixel_radius;
     }
     else
     {
-        float w = dot(G(ViewProjection)[3], float4(endPosW.xyz, 1.0f));
+        float w = dot(ViewProjection[3], float4(endPosW.xyz, 1.0f));
         float pixel_radius = radius * w * PixelInfo.x;
         position.xyz = endPosW.xyz + normal * pixel_radius;
     }
 
     // output for PS
-    OUT.HPosition = mul(G(ViewProjection), position);
+    OUT.HPosition = mul(ViewProjection, position);
     OUT.Position = OUT.HPosition; 
-    OUT.Start = mul(G(ViewProjection), startPosW);
-    OUT.End = mul(G(ViewProjection), endPosW);
-    OUT.FogFactor = (G(FogParams).z - OUT.HPosition.w) * G(FogParams).w;
+    OUT.Start = mul(ViewProjection, startPosW);
+    OUT.End = mul(ViewProjection, endPosW);
+    OUT.FogFactor = (FogParams.z - OUT.HPosition.w) * FogParams.w;
 
     // screen ratio
     OUT.Position.y *= PixelInfo.z;
@@ -202,7 +202,7 @@ float4 AdornAALinePS(AALineVertexOutput IN): COLOR0
     result.a = pow( saturate(1 - result.a), 1/2.2);
     result.a = 1 - result.a;
 
-    result.rgb = lerp(G(FogColor), result.rgb, saturate(IN.FogFactor));
+    result.rgb = lerp(FogColor, result.rgb, saturate(IN.FogFactor));
     return result;
 
 }
@@ -213,7 +213,7 @@ OutlineVertexOutput AdornOutlineVS(Appdata IN)
 
     float4 position = mul(WorldMatrix, IN.Position);
 
-    OUT.HPosition = mul(G(ViewProjection), position);
+    OUT.HPosition = mul(ViewProjection, position);
 
     OUT.Color = Color;
 	OUT.Position = position;
@@ -226,7 +226,7 @@ OutlineVertexOutput AdornOutlineVS(Appdata IN)
 float4 AdornOutlinePS(OutlineVertexOutput IN): COLOR0
 {
 	float3 rayO = IN.Position.xyz - IN.CenterRadius.xyz;
-	float3 rayD = normalize(IN.Position.xyz - G(CameraPosition));
+	float3 rayD = normalize(IN.Position.xyz - CameraPosition);
 
 	// magnitude(rayO + t * rayD) = radius
 	// t^2 + bt + c = radius

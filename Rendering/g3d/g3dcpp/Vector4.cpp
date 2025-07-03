@@ -18,7 +18,7 @@
 
 namespace G3D {
 
-Vector4::Vector4(const Vector4int8& v) : x(v.x / 127.0f), y(v.y / 127.0f), z(v.z / 127.0f), w(v.w / 127.0f) {
+Vector4::Vector4(const class Vector4int8& v) : x(v.x / 127.0f), y(v.y / 127.0f), z(v.z / 127.0f), w(v.w / 127.0f) {
 }
 
 
@@ -50,6 +50,13 @@ Vector4::Vector4(const class Color4& c) {
     y = c.g;
     z = c.b;
     w = c.a;
+}
+
+Vector4::Vector4(const class Color3& c, float f) {
+    x = c.r;
+    y = c.g;
+    z = c.b;
+    w = f;
 }
 
 

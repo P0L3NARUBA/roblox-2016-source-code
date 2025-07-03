@@ -12,10 +12,10 @@ This is a branch of this source, modified to include a modern lighting engine eq
 Supported graphics APIs are:
 - DirectX 11
 
-DirectX 9 and OpenGL support has been removed.
+DirectX 9 and OpenGL is unsupported.
 
 **To build from the source, refer to [BUILDING.md](/BUILDING.md)**<br>
-   - Make sure to read them properly so you wont face with any issues.
+   - Make sure to read them properly so you don't face any issues.
 
 **Having any problems? You can get help at [our discord server](https://www.discord.gg/rVrYHdrbsp) or at the [issues page](https://github.com/P0L3NARUBA/roblox-2016-source-code/issues)**<br>
 
@@ -65,21 +65,24 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
 
 ## Current Goals
 ### Rendering
-- [ ] HDR color buffer
+- [x] HDR color buffer
 - [ ] Proper tonemapping
-   - [ ] ACES
+   - [ ] Reinhard
+   - [x] ACES
    - [ ] AgX
-- [ ] Local pixel lights
+- [x] Local pixel lights
 - [ ] Directional light shadow-mapping
-   - [ ] Tinted shadows
+   - [ ] Tinting
 - [ ] Local light shadow-mapping
-   - [ ] Tinted shadows
+   - [ ] Tinting
 - [ ] Glass material with real-time refraction
 - [ ] PBR lighting model
    - [ ] Metalness texture workflow
-   - [ ] GGX specular model
-   - [ ] Oren-Nayar-Fujii diffuse model
+   - [x] GGX specular model
+   - [x] Oren-Nayar-Fujii diffuse model
    - [ ] Environment diffuse and specular
+   - [ ] Clearcoat
+   - [ ] Parallax occlusion mapping
    - [ ] Subsurface scattering
    - [ ] Automatic shader LODs
 - [ ] Unified light instance
@@ -97,9 +100,9 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
       - [ ] Texture mask
    - [ ] Chromatic Abberation
    - [ ] Film Grain
-   - [ ] Edge Detect
+   - [ ] Edge Detection
 - [ ] Clouds
-- [ ] HDR skybox
+- [ ] HDR skybox support
 - [ ] Grass
 - [ ] Global illumination
 - [ ] Reflections
@@ -109,6 +112,8 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
 - [ ] Exposure
    - [ ] Adaptive
 - [ ] Highlights
+- [ ] GPU Particles
+   - [ ] Physics simulation
 - [ ] Vulkan support
 
 **Ones below will be updated when master branch commits are applied to this branch.**
@@ -217,8 +222,9 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
 
 ## Current Issues
 - The Roblox in-game video recorder is pixelated and has no game sound; just some cracking noises.
-- Instances lit with voxel lighting are black, except for when ambient is above zero.
-- Water SSR reflections are incorrect at most angles.
+- Certain transparent renderables are either black or not rendered entirely.
+- Tonemapping is only applied when an active ColorCorrection instance is present.
+- Blur instance results in broken visuals.
 - Undo and redo does not respect proper Color3 values on instances and will instead snap to the nearest BrickColor value.
 
 ---

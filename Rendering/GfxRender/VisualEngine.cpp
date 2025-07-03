@@ -63,6 +63,7 @@ VisualEngine::VisualEngine(Device* device, CRenderSettings* settings)
     FASTLOG1(FLog::Graphics, "Video memory size: %lld", SystemUtil::getVideoMemory());
 
     GlobalShaderData::define(device);
+    GlobalLightList::define(device);
 
     // load shaders
     shaderManager.reset(new ShaderManager(this));

@@ -36,6 +36,7 @@ public:
     virtual void setDefaultAnisotropy(unsigned int value) = 0;
 
     virtual void updateGlobalConstants(const void* data, size_t dataSize) = 0;
+    virtual void updateGlobalLightList(const void* data, size_t dataSize) = 0;
 
     virtual void bindFramebuffer(Framebuffer* buffer) = 0;
     virtual void clearFramebuffer(unsigned int mask, const float color[4], float depth, unsigned int stencil) = 0;
@@ -164,6 +165,7 @@ public:
 	virtual void setVR(bool enabled) = 0;
 
     virtual void defineGlobalConstants(size_t dataSize, const std::vector<ShaderGlobalConstant>& constants) = 0;
+    virtual void defineGlobalLightList(size_t dataSize, size_t elementSize) = 0;
 
     virtual std::string getAPIName() = 0;
     virtual std::string getFeatureLevel() = 0;

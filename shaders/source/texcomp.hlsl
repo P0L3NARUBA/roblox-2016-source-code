@@ -16,7 +16,7 @@ VertexOutput TexCompVS(Appdata IN)
 {
     VertexOutput OUT = (VertexOutput)0;
 
-    OUT.HPosition = mul(G(ViewProjection), IN.Position);
+    OUT.HPosition = mul(ViewProjection, IN.Position);
     OUT.Uv = IN.Uv;
 
     return OUT;

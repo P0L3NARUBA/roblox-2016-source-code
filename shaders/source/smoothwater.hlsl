@@ -7,16 +7,16 @@
 #define CFG_SPECULAR 2
 #define CFG_GLOSS 900
 
-#define CFG_NORMAL_STRENGTH 0.1
+#define CFG_NORMAL_STRENGTH 0.25
 
 #define CFG_REFRACTION_STRENGTH 0.05
 
 #define CFG_FRESNEL_OFFSET 0.3
 
-#define CFG_SSR_STEPS 64
-#define CFG_SSR_START_DISTANCE 0.0
-#define CFG_SSR_STEP_CLAMP 0.1
-#define CFG_SSR_DEPTH_CUTOFF 128
+#define CFG_SSR_STEPS 8
+#define CFG_SSR_START_DISTANCE 1
+#define CFG_SSR_STEP_CLAMP 0.2
+#define CFG_SSR_DEPTH_CUTOFF 10
 
 // Shader code
 struct Appdata
@@ -105,14 +105,14 @@ VertexOutput WaterVS(Appdata IN)
     float waveFactor = dot(weights, IN.Material0.xyz) * (1.0 / 255.0);
 
 #ifdef PIN_HQ
-	float fade = saturate0(1 - dot(posWorld - G(CameraPosition), -G(ViewDir).xyz) * G(FadeDistance_GlowFactor).y);
+	float fade = saturate0(1 - dot(posWorld - CameraPosition, -ViewDir.xyz) * FadeDistance_GlowFactor.y);
 
 	posWorld = displacePosition(posWorld, waveFactor * fade);
 #endif
 
-	OUT.HPosition = mul(G(ViewProjection), float4(posWorld, 1));
+	OUT.HPosition = mul(ViewProjection, float4(posWorld, 1));
 
-    OUT.LightPosition_Fog = float4(lgridPrepareSample(lgridOffset(posWorld, normalWorld)), (G(FogParams).z - OUT.HPosition.w) * G(FogParams).w);
+    OUT.LightPosition_Fog = float4(lgridPrepareSample(lgridOffset(posWorld, normalWorld)), (FogParams.z - OUT.HPosition.w) * FogParams.w);
 
     OUT.Uv0 = getUV(posWorld, IN.Material1.x, IN.Normal.w);
     OUT.Uv1 = getUV(posWorld, IN.Material1.y, IN.Material0.w);
@@ -122,7 +122,7 @@ VertexOutput WaterVS(Appdata IN)
     OUT.Weights_Wave.w = waveFactor;
 
 	OUT.Normal = normalWorld;
-    OUT.View_Depth = float4(G(CameraPosition) - posWorld, OUT.HPosition.w);
+    OUT.View_Depth = float4(CameraPosition - posWorld, OUT.HPosition.w);
 	OUT.Tangents = float3(IN.Material1.xyz) > 7.5; // side vs top
 
 #ifdef PIN_HQ
@@ -207,7 +207,7 @@ float3 getReflectedColor(float4 cpos, float3 wpos, float3 R)
 	float diffclamp = cpos.w * CFG_SSR_STEP_CLAMP;
 
 	float4 Pproj = cpos;
-	float4 Rproj = clipToScreen(mul(G(ViewProjection), float4(R, 0)));
+	float4 Rproj = clipToScreen(mul(ViewProjection, float4(R, 0)));
 
 #ifndef GLSL
 	[unroll]
@@ -265,16 +265,16 @@ float4 WaterPS(VertexOutput IN): COLOR0
 	float3 waterColor = WaterColor.rgb;
 
 #ifdef PIN_HQ
-	float fade = saturate0(1 - IN.View_Depth.w * G(FadeDistance_GlowFactor).y);
+	float fade = saturate0(1 - IN.View_Depth.w * FadeDistance_GlowFactor.y);
 
 	float3 view = normalize(IN.View_Depth.xyz);
 
 	float fre = fresnel(dot(flatNormal, view)) * IN.Weights_Wave.w;
 
-	float3 position = G(CameraPosition) - IN.View_Depth.xyz;
+	float3 position = CameraPosition - IN.View_Depth.xyz;
 
 #ifdef PIN_GBUFFER
-    float3 refr = getRefractedColor(IN.PositionScreen, flatNormal, waterColor);
+    float3 refr = getRefractedColor(IN.PositionScreen, normal, waterColor);
 	float3 refl = getReflectedColor(IN.PositionScreen, position, reflect(-view, flatNormal));
 #else
     float3 refr = waterColor;
@@ -284,7 +284,7 @@ float4 WaterPS(VertexOutput IN): COLOR0
     float specularIntensity = CFG_SPECULAR * fade;
     float specularPower = CFG_GLOSS;
 
-	float3 specular = G(Lamp0Color) * (specularIntensity * shadow * (float)(half)pow(saturate(dot(flatNormal, normalize(-G(Lamp0Dir) + view))), specularPower));
+	float3 specular = Lamp0Color * (specularIntensity * shadow * (float)(half)pow(saturate(dot(normal, normalize(-Lamp0Dir + view))), specularPower));
 #else
 	float3 view = normalize(IN.View_Depth.xyz);
 
@@ -299,12 +299,12 @@ float4 WaterPS(VertexOutput IN): COLOR0
 
     // Combine
 	float4 result;
-    result.rgb = lerp(refr, refl, fre) * (G(AmbientColor).rgb + G(Lamp0Color).rgb * shadow + light.rgb) + specular;
+    result.rgb = lerp(refr, refl, fre) * (AmbientColor.rgb + Lamp0Color.rgb * shadow + light.rgb) + specular;
     result.a = 1;
 
     float fogAlpha = saturate(IN.LightPosition_Fog.w);
 
-    result.rgb = lerp(G(FogColor), result.rgb, fogAlpha);
+    result.rgb = lerp(FogColor, result.rgb, fogAlpha);
 
 	return result;
 }

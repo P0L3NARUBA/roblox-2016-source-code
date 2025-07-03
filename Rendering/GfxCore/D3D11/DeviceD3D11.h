@@ -64,6 +64,7 @@ public:
 
     void defineGlobalConstants(size_t dataSize);
     unsigned getGlobalDataSize() { return globalDataSize; }
+    void defineGlobalLightList(size_t dataSize, size_t elementSize);
 
     void clearStates();
 
@@ -73,6 +74,7 @@ public:
     void invalidateCachedTexture(Texture* texture);
 
     virtual void updateGlobalConstants(const void* data, size_t dataSize);
+    virtual void updateGlobalLightList(const void* data, size_t dataSize);
 
     virtual void setDefaultAnisotropy(unsigned int value);
 
@@ -123,6 +125,8 @@ protected:
     ID3D11DeviceContext*    immediateContext11;
 
     ID3D11Buffer* globalsConstantBuffer;
+    ID3D11Buffer* globalsLightListBuffer;
+    ID3D11ShaderResourceView* globalsLightListResource;
     size_t globalDataSize;
 
     unsigned int defaultAnisotropy;
@@ -188,6 +192,7 @@ public:
 	virtual void setVR(bool enabled);
 
     virtual void defineGlobalConstants(size_t dataSize, const std::vector<ShaderGlobalConstant>& constants);
+    virtual void defineGlobalLightList(size_t dataSize, size_t elementSize);
 
     virtual std::string getAPIName() { return "DirectX 11"; }
     virtual std::string getFeatureLevel(){ return shaderProfile == shaderProfile_DX11 ? "D3D11" : "D3D11_9.3"; }

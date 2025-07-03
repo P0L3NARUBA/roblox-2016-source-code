@@ -35,7 +35,7 @@ VertexOutput ShadowVS(Appdata IN)
 	float3 posWorld = IN.Position.xyz;
 #endif
 
-	OUT.HPosition = mul(G(ViewProjection), float4(posWorld, 1));
+	OUT.HPosition = mul(ViewProjection, float4(posWorld, 1));
 
     OUT.PosLightSpace = shadowPrepareSample(posWorld);
 

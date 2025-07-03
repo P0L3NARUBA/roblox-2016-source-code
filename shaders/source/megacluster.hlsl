@@ -46,30 +46,30 @@ VertexOutput MegaClusterVS(Appdata IN)
 	float3 posWorld = mul(WorldMatrix, IN.Position).xyz;
     float3 normalWorld = Normal;
 
-	OUT.HPosition = mul(G(ViewProjection), float4(posWorld, 1));
+	OUT.HPosition = mul(ViewProjection, float4(posWorld, 1));
 
     float blend = OUT.HPosition.w / 200;
 
-    OUT.LightPosition_Fog = float4(lgridPrepareSample(lgridOffset(posWorld, normalWorld)), (G(FogParams).z - OUT.HPosition.w) * G(FogParams).w);
+    OUT.LightPosition_Fog = float4(lgridPrepareSample(lgridOffset(posWorld, normalWorld)), (FogParams.z - OUT.HPosition.w) * FogParams.w);
 
     OUT.UvHigh_EdgeDistance1.xy = UV.xy;
     OUT.UvLow_EdgeDistance2.xy = UV.zw;
 
 #ifdef PIN_HQ
-    OUT.View_Depth = float4(posWorld, OUT.HPosition.w * G(FadeDistance_GlowFactor).y);
-    float4 edgeDistances = IN.EdgeDistances*G(FadeDistance_GlowFactor).z + 0.5 * OUT.View_Depth.w;
+    OUT.View_Depth = float4(posWorld, OUT.HPosition.w * FadeDistance_GlowFactor.y);
+    float4 edgeDistances = IN.EdgeDistances*FadeDistance_GlowFactor.z + 0.5 * OUT.View_Depth.w;
 
     OUT.UvHigh_EdgeDistance1.zw = edgeDistances.xy;
     OUT.UvLow_EdgeDistance2.zw = edgeDistances.zw;
 
-    OUT.View_Depth.xyz = G(CameraPosition).xyz - posWorld;
+    OUT.View_Depth.xyz = CameraPosition.xyz - posWorld;
     OUT.Normal_Blend = float4(Normal, blend);
     // decode tangent
     OUT.Tangent = (IN.Tangent - 127.0) / 127.0;
 #else
     // IF LQ shading is performed in VS
-    float ndotl = dot(normalWorld, -G(Lamp0Dir));
-    float3 diffuse = saturate(ndotl) * G(Lamp0Color) + max(-ndotl, 0) * G(Lamp1Color);
+    float ndotl = dot(normalWorld, -Lamp0Dir);
+    float3 diffuse = saturate(ndotl) * Lamp0Color + max(-ndotl, 0) * Lamp1Color;
 
     OUT.Diffuse_Blend = float4(diffuse, blend);
 #endif
@@ -111,18 +111,18 @@ void MegaClusterPS(VertexOutput IN,
     float3 nmap = nmapUnpack(normalMapSample);
     float3 normal = normalize(nmap.x * IN.Tangent.xyz + nmap.y * bitangent + nmap.z * IN.Normal_Blend.xyz);
 
-    float ndotl = dot(normal, -G(Lamp0Dir));
-    float3 diffuseIntensity = saturate0(ndotl) * G(Lamp0Color) + max(-ndotl, 0) * G(Lamp1Color);
+    float ndotl = dot(normal, -Lamp0Dir);
+    float3 diffuseIntensity = saturate0(ndotl) * Lamp0Color + max(-ndotl, 0) * Lamp1Color;
     float specularIntensity = step(0, ndotl) * specularMapSample.r;
     float specularPower = specularMapSample.g * 255 + 0.01;
 
     // Compute diffuse and specular and combine them
-    float3 diffuse =  (G(AmbientColor) + diffuseIntensity * shadow + light.rgb) * albedo.rgb;
-    float3 specular = G(Lamp0Color) * (specularIntensity * shadow * (float)(half)pow(saturate(dot(normal, normalize(-G(Lamp0Dir) + normalize(IN.View_Depth.xyz)))), specularPower));
+    float3 diffuse =  (AmbientColor + diffuseIntensity * shadow + light.rgb) * albedo.rgb;
+    float3 specular = Lamp0Color * (specularIntensity * shadow * (float)(half)pow(saturate(dot(normal, normalize(-Lamp0Dir + normalize(IN.View_Depth.xyz)))), specularPower));
     oColor0.rgb = diffuse + specular;
 
     // apply outlines
-    float outlineFade = saturate1(IN.View_Depth.w * G(OutlineBrightness_ShadowInfo).x + G(OutlineBrightness_ShadowInfo).y);
+    float outlineFade = saturate1(IN.View_Depth.w * OutlineBrightness_ShadowInfo.x + OutlineBrightness_ShadowInfo.y);
     float2 minIntermediate = min(IN.UvHigh_EdgeDistance1.wz, IN.UvLow_EdgeDistance2.wz);
     float minEdgesPlus = min(minIntermediate.x, minIntermediate.y) / IN.View_Depth.w;
     oColor0.rgb *= saturate1(outlineFade * (1.5 - minEdgesPlus) + minEdgesPlus);
@@ -133,7 +133,7 @@ void MegaClusterPS(VertexOutput IN,
      float3 albedo = lerp(high.rgb, low.rgb, saturate1(IN.Diffuse_Blend.a));
 
     // Compute diffuse term
-    float3 diffuse = (G(AmbientColor) + IN.Diffuse_Blend.rgb * shadow + light.rgb) * albedo.rgb;
+    float3 diffuse = (AmbientColor + IN.Diffuse_Blend.rgb * shadow + light.rgb) * albedo.rgb;
 
     // Combine
     oColor0.rgb = diffuse;
@@ -143,9 +143,9 @@ void MegaClusterPS(VertexOutput IN,
 
     float fogAlpha = saturate(IN.LightPosition_Fog.w);
 
-    oColor0.rgb = lerp(G(FogColor), oColor0.rgb, fogAlpha);
+    oColor0.rgb = lerp(FogColor, oColor0.rgb, fogAlpha);
 
 #ifdef PIN_GBUFFER
-    oColor1 = gbufferPack(IN.View_Depth.w*G(FadeDistance_GlowFactor).x, diffuse.rgb, 0, fogAlpha);
+    oColor1 = gbufferPack(IN.View_Depth.w*FadeDistance_GlowFactor.x, diffuse.rgb, 0, fogAlpha);
 #endif
 }

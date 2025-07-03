@@ -1599,18 +1599,18 @@ void LightGrid::lightingUpdateLightScratch(const LightGridChunk& chunk, const Ex
         {
             lightingComputeShadowMask(chunk, extentsMin, extentsMax, position, *lobj->getShadowMap());
             
-            SIMDCALL(lightingUpdateSpotLightScratch, <true>(extentsMin, extentsMax, position, range, lobj->getDirection(), lobj->getAngle(), color, intensity));
+            SIMDCALL(lightingUpdateSpotLightScratch, <true>(extentsMin, extentsMax, position, range, lobj->getDirection(), lobj->getOuterAngle(), color, intensity));
         }
         else
         {
-            SIMDCALL(lightingUpdateSpotLightScratch, <false>(extentsMin, extentsMax, position, range, lobj->getDirection(), lobj->getAngle(), color, intensity));
+            SIMDCALL(lightingUpdateSpotLightScratch, <false>(extentsMin, extentsMax, position, range, lobj->getDirection(), lobj->getOuterAngle(), color, intensity));
         }
     }
     else if (lobj->getType() == LightObject::Type_Surface)
     {
         Vector4 axisU = lobj->getAxisU() / Vector4(1, 1, 1, 4);
         Vector4 axisV = lobj->getAxisV() / Vector4(1, 1, 1, 4);
-        SIMDCALL(lightingUpdateSurfaceLightScratch, <false>(extentsMin, extentsMax, position, range, lobj->getDirection(), lobj->getAngle(), axisU, axisV, color, intensity));
+        SIMDCALL(lightingUpdateSurfaceLightScratch, <false>(extentsMin, extentsMax, position, range, lobj->getDirection(), lobj->getOuterAngle(), axisU, axisV, color, intensity));
     }
     else
     {

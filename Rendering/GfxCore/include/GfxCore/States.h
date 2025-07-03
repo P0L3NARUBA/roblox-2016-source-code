@@ -181,6 +181,8 @@ public:
         Function_Always,
         Function_Less,
         Function_LessEqual,
+        Function_Greater,
+        Function_GreaterEqual,
 
         Function_Count
 	};

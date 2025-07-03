@@ -6,8 +6,8 @@
 
 #define CFG_BUMP_INTENSITY              0.5
 
-#define CFG_SPECULAR					0.4
-#define CFG_GLOSS						9
+#define CFG_SPECULAR					0.6
+#define CFG_GLOSS						0.6
 
 #define CFG_NORMAL_SHADOW_SCALE         0.1
 

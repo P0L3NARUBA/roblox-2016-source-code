@@ -51,6 +51,7 @@ public:
     Vector4(float afCoordinate[4]);
     Vector4(const Vector4& rkVector);
     Vector4(const class Color4& c);
+    Vector4(const class Color3& c, float f);
     Vector4(const Vector3& rkVector, float fW);
     Vector4(const Vector2& v1, const Vector2& v2);
     Vector4(const Vector2& v1, float fz, float fw);

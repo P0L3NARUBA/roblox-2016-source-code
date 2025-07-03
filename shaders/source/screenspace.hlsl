@@ -93,11 +93,21 @@ VertexOutput_4uv downsample4x4_vs(float4 p: POSITION)
     return OUT;
 }
 
+float3 ACESFilm(float3 x) {
+	float a = 2.51f;
+	float b = 0.03f;
+	float c = 2.43f;
+	float d = 0.59f;
+	float e = 0.14f;
+
+	return saturate((x*(a*x+b))/(x*(c*x+d)+e));
+}
+
 float4 imageProcess_ps( VertexOutput IN ) : COLOR0
 {
 	float3 color = tex2D(Texture, IN.uv).rgb;
 
-	float4 tintColor = float4(Params2.xyz,1);
+	float3 tintColor = Params2.xyz;
 	//float4 tintColor = float4(18.0 / 255.0, 58.0 / 255.0, 80.0 / 255.0, 1);
 	float contrast = Params1.y;
 	float brightness = Params1.x;
@@ -106,7 +116,7 @@ float4 imageProcess_ps( VertexOutput IN ) : COLOR0
 	color = contrast*(color - 0.5) + 0.5 + brightness;
 	float grayscale = (color.r + color.g + color.g) / 3.0;
 
-	return lerp(float4(color.rgb,1), float4(grayscale.xxx,1), grayscaleLvl) * tintColor;
+	return float4(ACESFilm(lerp(color.rgb, grayscale.xxx, grayscaleLvl) * tintColor), 1.0);
 }
 
 float4 gauss(float samples, float2 uv)
@@ -134,7 +144,7 @@ float4 gauss(float samples, float2 uv)
 	}
 
 	// Since the above is an approximation of the integral with step functions, normalization compensates for the error
-	return (result / weight);
+	return max(result / weight, 0.0) / 4.0;
 }
 
 

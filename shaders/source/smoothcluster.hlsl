@@ -56,9 +56,9 @@ VertexOutput TerrainVS(Appdata IN)
 	float3 posWorld = IN.Position.xyz * WorldMatrixArray[0].w + WorldMatrixArray[0].xyz;
     float3 normalWorld = IN.Normal.xyz * (1.0 / 127.0) - 1.0;
 
-	OUT.HPosition = mul(G(ViewProjection), float4(posWorld, 1));
+	OUT.HPosition = mul(ViewProjection, float4(posWorld, 1));
 
-    OUT.LightPosition_Fog = float4(lgridPrepareSample(lgridOffset(posWorld, normalWorld)), (G(FogParams).z - OUT.HPosition.w) * G(FogParams).w);
+    OUT.LightPosition_Fog = float4(lgridPrepareSample(lgridOffset(posWorld, normalWorld)), (FogParams.z - OUT.HPosition.w) * FogParams.w);
 
     OUT.PosLightSpace = shadowPrepareSample(posWorld);
 
@@ -74,11 +74,11 @@ VertexOutput TerrainVS(Appdata IN)
 
 #ifdef PIN_HQ
 	OUT.Normal = normalWorld;
-    OUT.View_Depth = float4(G(CameraPosition) - posWorld, OUT.HPosition.w);
+    OUT.View_Depth = float4(CameraPosition - posWorld, OUT.HPosition.w);
 	OUT.Tangents = float3(IN.Material1.xyz) > 7.5; // side vs top
 #else
-    float ndotl = dot(normalWorld, -G(Lamp0Dir));
-    float3 diffuse = max(ndotl, 0) * G(Lamp0Color) + max(-ndotl, 0) * G(Lamp1Color);
+    float ndotl = dot(normalWorld, -Lamp0Dir);
+    float3 diffuse = max(ndotl, 0) * Lamp0Color + max(-ndotl, 0) * Lamp1Color;
 
     OUT.Diffuse = diffuse;
 #endif
@@ -132,7 +132,7 @@ void TerrainPS(VertexOutput IN,
     float4 albedo = sampleBlend(TEXTURE(AlbedoMap), IN.Uv0, IN.Uv1, IN.Uv2, w);
 
 #ifdef PIN_HQ
-	float fade = saturate0(1 - IN.View_Depth.w * G(FadeDistance_GlowFactor).y);
+	float fade = saturate0(1 - IN.View_Depth.w * FadeDistance_GlowFactor.y);
 
 #ifndef PIN_GBUFFER
 	float3 normal = IN.Normal;
@@ -142,19 +142,19 @@ void TerrainPS(VertexOutput IN,
 
 	float4 params = sampleBlend(TEXTURE(SpecularMap), IN.Uv0, IN.Uv1, IN.Uv2, w);
 
-    float ndotl = dot(normal, -G(Lamp0Dir));
+    float ndotl = dot(normal, -Lamp0Dir);
 
     // Compute diffuse term
-    float3 diffuse = (G(AmbientColor) + (saturate(ndotl) * G(Lamp0Color) + max(-ndotl, 0) * G(Lamp1Color)) * shadow + light.rgb + params.b * 2) * albedo.rgb;
+    float3 diffuse = (AmbientColor + (saturate(ndotl) * Lamp0Color + max(-ndotl, 0) * Lamp1Color) * shadow + light.rgb + params.b * 2) * albedo.rgb;
 
 	// Compute specular term
     float specularIntensity = step(0, ndotl) * params.r * fade;
     float specularPower = params.g * 128 + 0.01;
 
-	float3 specular = G(Lamp0Color) * (specularIntensity * shadow * (float)(half)pow(saturate(dot(normal, normalize(-G(Lamp0Dir) + normalize(IN.View_Depth.xyz)))), specularPower));
+	float3 specular = Lamp0Color * (specularIntensity * shadow * (float)(half)pow(saturate(dot(normal, normalize(-Lamp0Dir + normalize(IN.View_Depth.xyz)))), specularPower));
 #else
     // Compute diffuse term
-    float3 diffuse = (G(AmbientColor) + IN.Diffuse * shadow + light.rgb) * albedo.rgb;
+    float3 diffuse = (AmbientColor + IN.Diffuse * shadow + light.rgb) * albedo.rgb;
 
 	// Compute specular term
 	float3 specular = 0;
@@ -166,7 +166,7 @@ void TerrainPS(VertexOutput IN,
 
     float fogAlpha = saturate(IN.LightPosition_Fog.w);
 
-    oColor0.rgb = lerp(G(FogColor), oColor0.rgb, fogAlpha);
+    oColor0.rgb = lerp(FogColor, oColor0.rgb, fogAlpha);
 
 #ifdef PIN_GBUFFER
     oColor1 = gbufferPack(IN.View_Depth.w, diffuse.rgb, specular.rgb, fogAlpha);

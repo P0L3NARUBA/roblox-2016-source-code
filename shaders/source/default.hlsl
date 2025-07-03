@@ -38,6 +38,7 @@ struct VertexOutput
     #endif
 
     float4 PosLightSpace_Reflectance: TEXCOORD6;
+    float4 WorldPosition : TEXCOORD7;
 };
 
 #ifdef PIN_SKINNED
@@ -77,28 +78,30 @@ VertexOutput DefaultVS(Appdata IN, out float4 HPosition: POSITION)
     float specularIntensity = IN.Extra.g / 255.f;
     float specularPower = IN.Extra.b;
 
-    float ndotl = dot(normalWorld, -G(Lamp0Dir));
+    float ndotl = dot(normalWorld, -Lamp0Dir);
 
 #ifdef PIN_HQ
     // We'll calculate specular in pixel shader
     float2 lt = float2(saturate(ndotl), (ndotl > 0));
 #else
     // Using lit here improves performance on software vertex shader implementations
-    float2 lt = lit(ndotl, dot(normalize(-G(Lamp0Dir) + normalize(G(CameraPosition).xyz - posWorld.xyz)), normalWorld), specularPower).yz;
+    float2 lt = lit(ndotl, dot(normalize(-Lamp0Dir + normalize(CameraPosition.xyz - posWorld.xyz)), normalWorld), specularPower).yz;
 #endif
 
-	HPosition = mul(G(ViewProjection), float4(posWorld, 1));
+	HPosition = mul(ViewProjection, float4(posWorld, 1));
 
 	OUT.Uv_EdgeDistance1.xy = IN.Uv;
 	OUT.UvStuds_EdgeDistance2.xy = IN.UvStuds;
 	
     OUT.Color = color;
-    OUT.LightPosition_Fog = float4(lgridPrepareSample(lgridOffset(posWorld, normalWorld)), (G(FogParams).z - HPosition.w) * G(FogParams).w);
+    OUT.LightPosition_Fog = float4(lgridPrepareSample(lgridOffset(posWorld, normalWorld)), (FogParams.z - HPosition.w) * FogParams.w);
 
-	OUT.View_Depth = float4(G(CameraPosition).xyz - posWorld, HPosition.w);
+	OUT.View_Depth = float4(CameraPosition.xyz - posWorld, HPosition.w);
+
+    OUT.WorldPosition = float4(posWorld, 1.0);
 
     #if defined(PIN_HQ) || defined(PIN_REFLECTION)
-	    float4 edgeDistances = IN.EdgeDistances*G(FadeDistance_GlowFactor).z + 0.5 * OUT.View_Depth.w  * G(FadeDistance_GlowFactor).y;
+	    float4 edgeDistances = IN.EdgeDistances*FadeDistance_GlowFactor.z + 0.5 * OUT.View_Depth.w  * FadeDistance_GlowFactor.y;
 		
 	    OUT.Uv_EdgeDistance1.zw = edgeDistances.xy;
 	    OUT.UvStuds_EdgeDistance2.zw = edgeDistances.zw;
@@ -115,7 +118,7 @@ VertexOutput DefaultVS(Appdata IN, out float4 HPosition: POSITION)
 
         OUT.Tangent = tangent;
     #else
-        float3 diffuse = lt.x * G(Lamp0Color) + max(-ndotl, 0) * G(Lamp1Color);
+        float3 diffuse = lt.x * Lamp0Color + max(-ndotl, 0) * Lamp1Color;
 
         OUT.Diffuse_Specular = float4(diffuse, lt.y * specularIntensity);
     #endif
@@ -161,7 +164,7 @@ Surface surfaceShaderExec(VertexOutput IN)
 
     float2 fade;
 	fade.x = saturate0(1 - IN.View_Depth.w * LQMAT_FADE_FACTOR );
-	fade.y = saturate0(1 - IN.View_Depth.w * G(FadeDistance_GlowFactor).y );
+	fade.y = saturate0(1 - IN.View_Depth.w * FadeDistance_GlowFactor.y );
 
     return surfaceShader(SIN, fade);
 }
@@ -228,9 +231,9 @@ void DefaultPS(VertexOutput IN,
     float3 bitangent = cross(IN.Normal_SpecPower.xyz, IN.Tangent.xyz);
     float3 normal = normalize(surface.normal.x * IN.Tangent.xyz + surface.normal.y * bitangent + surface.normal.z * IN.Normal_SpecPower.xyz);
 
-    float ndotl = dot(normal, -G(Lamp0Dir));
+    float ndotl = dot(normal, -Lamp0Dir);
 
-    float3 diffuseIntensity = saturate0(ndotl) * G(Lamp0Color) + max(-ndotl, 0) * G(Lamp1Color);
+    float3 diffuseIntensity = saturate0(ndotl) * Lamp0Color + max(-ndotl, 0) * Lamp1Color;
     float specularIntensity = step(0, ndotl) * surface.specular;
     float specularPower = surface.gloss;
 
@@ -280,7 +283,7 @@ void DefaultPS(VertexOutput IN,
 #endif
 
     float4 light = lgridSample(TEXTURE(LightMap), TEXTURE(LightMapLookup), IN.LightPosition_Fog.xyz);
-	float shadow = shadowSample(TEXTURE(ShadowMap), IN.PosLightSpace_Reflectance.xyz, light.a);
+	float shadow = 1.0; //shadowSample(TEXTURE(ShadowMap), IN.PosLightSpace_Reflectance.xyz, light.a);
 
     // Compute reflection term
 #if defined(PIN_SURFACE) || defined(PIN_REFLECTION)
@@ -290,13 +293,53 @@ void DefaultPS(VertexOutput IN,
 #endif
     
     // Compute diffuse term
-    float3 diffuse = (G(AmbientColor) + diffuseIntensity * shadow + light.rgb) * albedo.rgb;
+    float3 diffuse = 0.0;//(AmbientColor + diffuseIntensity * shadow + light.rgb) * albedo.rgb;
 
     // Compute specular term
 #ifdef PIN_HQ
-    float3 specular = G(Lamp0Color) * (specularIntensity * shadow * (float)(half)pow(saturate(dot(normal, normalize(-G(Lamp0Dir) + normalize(IN.View_Depth.xyz)))), specularPower));
+    float3 viewDirection = normalize(IN.View_Depth.xyz);
+    float uNDV = dot(normal, viewDirection);
+    float NDV = (clamp(uNDV, -1.0, 1.0) + 1.0) / 2.0;
+
+    float3 specular = Lamp0Color * Lighting(1.0, 1.0, normal, -Lamp0Dir, viewDirection, NDV, 1.0, albedo.rgb, specularPower, 1.46); //(specularIntensity * shadow * (float)(half)pow(saturate(dot(normal, normalize(-Lamp0Dir + viewDirection))), specularPower));
+
+    uint numberOfLights, stride;
+    LightList.GetDimensions(numberOfLights, stride);
+
+    for (int i = 0; i < numberOfLights; ++i) {
+        GPULight Light = LightList[i];
+        int LightActive = int(Light.ShadowsColored_Type_Active.a);
+
+        if (LightActive != 1)
+            break;
+
+        float3 LightPosition = Light.Position_Range.xyz;
+        float3 LightColour = Light.Color_Attenuation.xyz;
+        float3 LightDirection = normalize(LightPosition - IN.WorldPosition.xyz);
+        float Range = Light.Position_Range.w;
+        float2 InnerOuterAngleCos = Light.InnerOuterAngle_DiffSpecFac.xy;
+        float2 DiffSpecScale = Light.InnerOuterAngle_DiffSpecFac.zw;
+        
+        float AngleFalloff = 1.0;
+
+        if (InnerOuterAngleCos.y < 1.0)
+        {
+            float theta = dot(LightDirection, normalize(-Light.Direction_SubSurfaceFac.xyz));
+            float Epsilon = max(InnerOuterAngleCos.x - 0.001, InnerOuterAngleCos.y) + 0.001;
+
+            AngleFalloff = smoothstep(InnerOuterAngleCos.y, Epsilon, theta);
+        }
+
+        float Distance = length(LightPosition - IN.WorldPosition.xyz);
+        float LinearFalloff = saturate(1.0 - Distance / Range) * AngleFalloff;
+        float Attenuation = 1.0 / (1.0 + Light.Color_Attenuation.w * Distance * Distance);
+
+        if (LinearFalloff > 0.0) {
+            specular += Lighting(DiffSpecScale.x, DiffSpecScale.y, normal, LightDirection, viewDirection, NDV, Attenuation, albedo.rgb, specularPower, 1.46) * shadow * LightColour * LinearFalloff;
+        }
+    }
 #else
-    float3 specular = G(Lamp0Color) * (specularIntensity * shadow);
+    float3 specular = Lamp0Color * (specularIntensity * shadow);
 #endif
 
     // Combine
@@ -304,8 +347,8 @@ void DefaultPS(VertexOutput IN,
     oColor0.a   = albedo.a;
 
 #ifdef PIN_HQ
-	float ViewDepthMul = IN.View_Depth.w * G(FadeDistance_GlowFactor).y;
-	float outlineFade = saturate1( ViewDepthMul * G(OutlineBrightness_ShadowInfo).x + G(OutlineBrightness_ShadowInfo).y);
+	float ViewDepthMul = IN.View_Depth.w * FadeDistance_GlowFactor.y;
+	float outlineFade = saturate1( ViewDepthMul * OutlineBrightness_ShadowInfo.x + OutlineBrightness_ShadowInfo.y);
 	float2 minIntermediate = min(IN.Uv_EdgeDistance1.wz, IN.UvStuds_EdgeDistance2.wz);
 	float minEdgesPlus = min(minIntermediate.x, minIntermediate.y) / ViewDepthMul;
 	oColor0.rgb *= saturate1(outlineFade *(1.5 - minEdgesPlus) + minEdgesPlus);
@@ -314,13 +357,13 @@ void DefaultPS(VertexOutput IN,
     float fogAlpha = saturate(IN.LightPosition_Fog.w);
 
 #ifdef PIN_NEON
-    oColor0.rgb = IN.Color.rgb * G(FadeDistance_GlowFactor).w;
+    oColor0.rgb = pow(IN.Color.rgb, 2.2) * 4.0 * FadeDistance_GlowFactor.w;
     oColor0.a = 1 - fogAlpha * IN.Color.a;
     diffuse.rgb = 0;
     specular.rgb = 0;
 #endif
 
-    oColor0.rgb = lerp(G(FogColor), oColor0.rgb, fogAlpha);
+    oColor0.rgb = lerp(FogColor, oColor0.rgb, fogAlpha);
 
 #ifdef PIN_GBUFFER
     oColor1 = gbufferPack(IN.View_Depth.w, diffuse.rgb, specular.rgb, fogAlpha);

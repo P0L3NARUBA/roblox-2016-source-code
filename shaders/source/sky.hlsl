@@ -27,7 +27,7 @@ VertexOutput SkyVS(Appdata IN)
 
     float4 wpos = mul(WorldMatrix, IN.Position);
 
-    OUT.HPosition = mul(G(ViewProjection), wpos);
+    OUT.HPosition = mul(ViewProjection, wpos);
 
 #ifndef GLSLES
     // snap to far plane to prevent scene-sky intersections
@@ -49,5 +49,10 @@ TEX_DECLARE2D(DiffuseMap, 0);
 
 float4 SkyPS(VertexOutput IN): COLOR0
 {
-    return tex2D(DiffuseMap, IN.Uv) * IN.Color;
+    float4 skybox = tex2D(DiffuseMap, IN.Uv) * IN.Color;
+
+    float3 Brightness = skybox.rgb;
+	Brightness = ((Brightness / (1.0 - min(Brightness, 0.999))) / 8.0);
+
+    return float4(skybox.rgb + Brightness, skybox.a);
 }

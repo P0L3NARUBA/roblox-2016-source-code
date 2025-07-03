@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Util/G3DCore.h"
+#include "LightObject.h"
 
 namespace RBX
 {
@@ -43,19 +44,23 @@ namespace RBX
 		};
 
 		struct GPULight {
-			Vector4 Position_Attenuation;
+			Vector4 Position_Range;
 			Vector4 Color_Attenuation;
-			Vector4 Direction_Range;
+			Vector4 Direction_SubSurfaceFac;
 			Vector4 InnerOuterAngle_DiffSpecFac;
 
 			Vector4 AxisU;
 			Vector4 AxisV;
-
-			Vector4 ShadowsColored_Type_Unused;
+			
+			Vector4 ShadowsColored_Type_Active;
 		};
 		
 		struct GlobalLightList {
 			std::vector<GPULight> LightList;
+
+			static void define(Device* device);
+
+			void populateList(const std::vector<LightObject*> lights);
 		};
 	}
 }

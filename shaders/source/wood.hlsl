@@ -1,8 +1,8 @@
 #define CFG_TEXTURE_TILING              1
 
 #define CFG_DIFFUSE_SCALE               1
-#define CFG_SPECULAR_SCALE              2
-#define CFG_GLOSS_SCALE                 256
+#define CFG_SPECULAR_SCALE              0
+#define CFG_GLOSS_SCALE                 0.5
 #define CFG_REFLECTION_SCALE          	0
 
 #define CFG_NORMAL_SHADOW_SCALE         0.3

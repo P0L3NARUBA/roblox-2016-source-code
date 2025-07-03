@@ -26,14 +26,14 @@ VertexOutput UIVS(Appdata IN)
 {
     VertexOutput OUT = (VertexOutput)0;
 
-    OUT.HPosition = mul(G(ViewProjection), IN.Position);
+    OUT.HPosition = mul(ViewProjection, IN.Position);
     OUT.HPosition.z -= UIParams.w; // against z-fighting
 
     OUT.Uv = IN.Uv;
     OUT.Color = IN.Color;
 
 #if defined(PIN_FOG)
-    OUT.FogFactor = (G(FogParams).z - OUT.HPosition.w) * G(FogParams).w;
+    OUT.FogFactor = (FogParams.z - OUT.HPosition.w) * FogParams.w;
 #endif
 
     return OUT;
@@ -51,7 +51,7 @@ float4 UIPS(VertexOutput IN): COLOR0
     float4 result = IN.Color * base;
 
 #if defined(PIN_FOG)
-    result.rgb = lerp(G(FogColor), result.rgb, saturate(IN.FogFactor));
+    result.rgb = lerp(FogColor, result.rgb, saturate(IN.FogFactor));
 #endif
 
    return result;
