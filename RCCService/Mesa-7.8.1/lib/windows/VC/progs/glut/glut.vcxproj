@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug Static CRT|Win32">
+      <Configuration>Debug Static CRT</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release Static CRT|Win32">
+      <Configuration>Release Static CRT</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <ProjectGuid>{0234F0D2-C8A6-4C4D-93E7-0E2248049C67}</ProjectGuid>
+    <RootNamespace>glut</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>17.0.36220.23</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>GLUT32</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Debug/glut.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../../../../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;_DLL;_USRDLL;GLUT_EXPORTS;MESA;BUILD_GL32;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>winmm.lib;opengl32.lib;glu32.lib;gdi32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)GLUT32.dll</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>$(TargetDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>..\..\..\..\src\glut\glx\glut.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(TargetDir)GLUT32.pdb</ProgramDatabaseFile>
+    </Link>
+    <PostBuildEvent>
+      <Command>if not exist ..\..\..\..\lib md ..\..\..\..\lib
+copy "$(TargetDir)GLUT32.LIB" ..\..\..\..\lib
+copy "$(TargetDir)GLUT32.DLL" ..\..\..\..\lib
+if exist ..\..\..\..\progs\demos copy "$(TargetDir)GLUT32.DLL" ..\..\..\..\progs\demos
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Release/glut.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>../../../../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_DLL;_USRDLL;GLUT_EXPORTS;MESA;BUILD_GL32;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeaderOutputFile>.\Release/glut.pch</PrecompiledHeaderOutputFile>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>winmm.lib;opengl32.lib;glu32.lib;gdi32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)GLUT32.dll</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>$(TargetDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>..\..\..\..\src\glut\glx\glut.def</ModuleDefinitionFile>
+    </Link>
+    <PostBuildEvent>
+      <Command>if not exist ..\..\..\..\lib md ..\..\..\..\lib
+copy "$(TargetDir)GLUT32.LIB" ..\..\..\..\lib
+copy "$(TargetDir)GLUT32.DLL" ..\..\..\..\lib
+if exist ..\..\..\..\progs\demos copy "$(TargetDir)GLUT32.DLL" ..\..\..\..\progs\demos
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Static CRT|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Debug/glut.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../../../../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;_USRDLL;GLUT_EXPORTS;MESA;BUILD_GL32;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>winmm.lib;opengl32.lib;glu32.lib;gdi32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)GLUT32.dll</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>$(TargetDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>..\..\..\..\src\glut\glx\glut.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(TargetDir)GLUT32.pdb</ProgramDatabaseFile>
+    </Link>
+    <PostBuildEvent>
+      <Command>if not exist ..\..\..\..\lib md ..\..\..\..\lib
+copy "$(TargetDir)GLUT32.LIB" ..\..\..\..\lib
+copy "$(TargetDir)GLUT32.DLL" ..\..\..\..\lib
+if exist ..\..\..\..\progs\demos copy "$(TargetDir)GLUT32.DLL" ..\..\..\..\progs\demos
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Static CRT|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Release/glut.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>../../../../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_USRDLL;GLUT_EXPORTS;MESA;BUILD_GL32;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeaderOutputFile>.\Release/glut.pch</PrecompiledHeaderOutputFile>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>winmm.lib;opengl32.lib;glu32.lib;gdi32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)GLUT32.dll</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>$(TargetDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>..\..\..\..\src\glut\glx\glut.def</ModuleDefinitionFile>
+    </Link>
+    <PostBuildEvent>
+      <Command>if not exist ..\..\..\..\lib md ..\..\..\..\lib
+copy "$(TargetDir)GLUT32.LIB" ..\..\..\..\lib
+copy "$(TargetDir)GLUT32.DLL" ..\..\..\..\lib
+if exist ..\..\..\..\progs\demos copy "$(TargetDir)GLUT32.DLL" ..\..\..\..\progs\demos
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_8x13.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_9x15.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_bitmap.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_bwidth.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_cindex.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_cmap.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_cursor.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_dials.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_dstr.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_event.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_ext.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_fcb.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_fullscrn.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_gamemode.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_get.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_hel10.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_hel12.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_hel18.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_init.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_input.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_joy.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_key.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_keyctrl.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_keyup.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_mesa.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_modifier.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_mroman.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_overlay.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_ppm.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_roman.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_shapes.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_space.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_stroke.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_swap.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_swidth.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_tablet.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_teapot.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_tr10.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_tr24.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_util.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_vidresize.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_warp.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_win.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\glut_winmisc.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\win32_glx.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\win32_menu.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\win32_util.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\win32_winproc.c" />
+    <ClCompile Include="..\..\..\..\src\glut\glx\win32_x11.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\src\glut\glx\glutbitmap.h" />
+    <ClInclude Include="..\..\..\..\src\glut\glx\glutint.h" />
+    <ClInclude Include="..\..\..\..\src\glut\glx\glutstroke.h" />
+    <ClInclude Include="..\..\..\..\src\glut\glx\glutwin32.h" />
+    <ClInclude Include="..\..\..\..\src\glut\glx\stroke.h" />
+    <ClInclude Include="..\..\..\..\src\glut\glx\win32_glx.h" />
+    <ClInclude Include="..\..\..\..\src\glut\glx\win32_x11.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

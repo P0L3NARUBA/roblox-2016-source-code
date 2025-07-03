@@ -560,7 +560,7 @@ std::string Replicator::getRakStatsString(int verbosityLevel)
 {
 	char buffer[10000];
 	buffer[0] = 0;
-	StatisticsToString(getRakNetStats(), buffer, verbosityLevel);
+	void StatisticsToString(const RakNetStatistics * stats, char* buffer, int verbosityLevel);
 	return buffer;
 }
 

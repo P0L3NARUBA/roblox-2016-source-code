@@ -312,6 +312,54 @@
   <ItemGroup>
     <PublishDLLDependency Include="gameserver.txt" />
     <PublishDLLDependency Include="..\fmod\win32\fmod.dll" />
+    <PublishDLLDependency Include="Mesa-7.8.1\lib\Debug\GLU32.dll">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='NoOpt|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseTest|Win32'">true</ExcludedFromBuild>
+    </PublishDLLDependency>
+    <PublishDLLDependency Include="Mesa-7.8.1\lib\Debug\GLU32.pdb">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='NoOpt|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseTest|Win32'">true</ExcludedFromBuild>
+    </PublishDLLDependency>
+    <PublishDLLDependency Include="Mesa-7.8.1\lib\Debug\OPENGL32.dll">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='NoOpt|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseTest|Win32'">true</ExcludedFromBuild>
+    </PublishDLLDependency>
+    <PublishDLLDependency Include="Mesa-7.8.1\lib\Debug\OPENGL32.pdb">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='NoOpt|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseTest|Win32'">true</ExcludedFromBuild>
+    </PublishDLLDependency>
+    <PublishDLLDependency Include="Mesa-7.8.1\lib\Debug\OSMESA32.dll">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='NoOpt|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseTest|Win32'">true</ExcludedFromBuild>
+    </PublishDLLDependency>
+    <PublishDLLDependency Include="Mesa-7.8.1\lib\Debug\OSMESA32.pdb">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='NoOpt|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseTest|Win32'">true</ExcludedFromBuild>
+    </PublishDLLDependency>
+    <PublishDLLDependency Include="Mesa-7.8.1\lib\Release\GLU32.dll">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </PublishDLLDependency>
+    <PublishDLLDependency Include="Mesa-7.8.1\lib\Release\GLU32.pdb">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </PublishDLLDependency>
+    <PublishDLLDependency Include="Mesa-7.8.1\lib\Release\OPENGL32.dll">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </PublishDLLDependency>
+    <PublishDLLDependency Include="Mesa-7.8.1\lib\Release\OPENGL32.pdb">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </PublishDLLDependency>
+    <PublishDLLDependency Include="Mesa-7.8.1\lib\Release\OSMESA32.dll">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </PublishDLLDependency>
+    <PublishDLLDependency Include="Mesa-7.8.1\lib\Release\OSMESA32.pdb">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </PublishDLLDependency>
     <PublishDLLDependency Include="..\openssl\libeay32.dll" />
     <PublishDLLDependency Include="..\openssl\ssleay32.dll" />
     <PublishDLLDependency Include="..\VMProtect\VMProtectSDK32.dll" />
