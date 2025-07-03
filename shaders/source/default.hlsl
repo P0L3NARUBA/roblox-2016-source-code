@@ -332,7 +332,7 @@ void DefaultPS(VertexOutput IN,
 
         float Distance = length(LightPosition - IN.WorldPosition.xyz);
         float LinearFalloff = saturate(1.0 - Distance / Range) * AngleFalloff;
-        float Attenuation = 1.0 / (1.0 + Light.Color_Attenuation.w * Distance * Distance);
+        float Attenuation = 1.0 / (1.0 + Light.Color_Attenuation.w * Distance);
 
         if (LinearFalloff > 0.0) {
             specular += max(Lighting(DiffSpecScale.x, DiffSpecScale.y, normal, LightDirection, viewDirection, NDV, Attenuation, albedo.rgb, specularPower, 1.46) * shadow * LightColour * LinearFalloff, 0.0);

@@ -13,10 +13,10 @@
 
 #define CFG_FRESNEL_OFFSET 0.3
 
-#define CFG_SSR_STEPS 8
-#define CFG_SSR_START_DISTANCE 1
-#define CFG_SSR_STEP_CLAMP 0.2
-#define CFG_SSR_DEPTH_CUTOFF 10
+#define CFG_SSR_STEPS 64
+#define CFG_SSR_START_DISTANCE 0.0
+#define CFG_SSR_STEP_CLAMP 0.1
+#define CFG_SSR_DEPTH_CUTOFF 50.0
 
 // Shader code
 struct Appdata
