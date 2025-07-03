@@ -293,7 +293,7 @@ void DefaultPS(VertexOutput IN,
 #endif
     
     // Compute diffuse term
-    float3 diffuse = 0.0;//(AmbientColor + diffuseIntensity * shadow + light.rgb) * albedo.rgb;
+    float3 diffuse = AmbientColor * albedo.rgb;
 
     // Compute specular term
 #ifdef PIN_HQ
@@ -335,7 +335,7 @@ void DefaultPS(VertexOutput IN,
         float Attenuation = 1.0 / (1.0 + Light.Color_Attenuation.w * Distance * Distance);
 
         if (LinearFalloff > 0.0) {
-            specular += Lighting(DiffSpecScale.x, DiffSpecScale.y, normal, LightDirection, viewDirection, NDV, Attenuation, albedo.rgb, specularPower, 1.46) * shadow * LightColour * LinearFalloff;
+            specular += max(Lighting(DiffSpecScale.x, DiffSpecScale.y, normal, LightDirection, viewDirection, NDV, Attenuation, albedo.rgb, specularPower, 1.46) * shadow * LightColour * LinearFalloff, 0.0);
         }
     }
 #else

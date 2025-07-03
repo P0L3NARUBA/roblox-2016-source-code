@@ -225,6 +225,11 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
 - Certain transparent renderables are either black or not rendered entirely.
 - Tonemapping is only applied when an active ColorCorrection instance is present.
 - Blur instance results in broken visuals.
+- Outdoor Ambient does nothing.
+- Significant depth precision issues.
+- Occasional lights consisting of garbage data and getting past all legitimacy checks may result in buggy visuals.
+- Anti-Aliasing is broken.
+- Outdoor environment map generation is broken, as well as lacking highlight reconstruction.
 - Undo and redo does not respect proper Color3 values on instances and will instead snap to the nearest BrickColor value.
 
 ---
