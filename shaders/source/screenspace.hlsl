@@ -109,18 +109,18 @@ float3 ACESFilm(float3 x) {
 
 float4 imageProcess_ps( VertexOutput IN ) : COLOR0
 {
-	float3 color = tex2D(Texture, IN.uv).rgb;
+	float3 color = ACESFilm(tex2D(Texture, IN.uv).rgb);
 
 	float3 tintColor = Params2.xyz;
-	//float4 tintColor = float4(18.0 / 255.0, 58.0 / 255.0, 80.0 / 255.0, 1);
 	float contrast = Params1.y;
 	float brightness = Params1.x;
-	float grayscaleLvl = Params1.z;
+	float grayscaleLvl = -Params1.z;
 
-	color = contrast*(color - 0.5) + 0.5 + brightness;
-	float grayscale = (color.r + color.g + color.g) / 3.0;
+	color = contrast * (color - 0.5) + 0.5 + brightness;
+	float grayscale = dot(color, float3(0.2126, 0.7152, 0.0722));
+	float3 separate = lerp(color.rgb, grayscale.xxx, grayscaleLvl) * tintColor;
 
-	return float4(ACESFilm(lerp(color.rgb, grayscale.xxx, grayscaleLvl) * tintColor), 1.0);
+	return float4(separate, 1.0);
 }
 
 float4 gauss(float samples, float2 uv)
@@ -151,21 +151,33 @@ float4 gauss(float samples, float2 uv)
 	return max(result / weight, 0.0) / 4.0;
 }
 
+float4 box(float samples, float2 uv)
+{
+	int steps = int((samples - 1.0) * 0.5);
+	float2 step = Params1.xy;
+	float4 result = float4(0.0, 0.0, 0.0, 0.0);
 
+	for (int i = -steps; i <= steps; ++i)
+	{
+		result += tex2D(Texture, uv + step * i);
+	}
+
+	return max(result / samples, 0.0);
+}
 
 float4 blur3_ps(VertexOutput IN): COLOR0
 {
-	return gauss(3, IN.uv);
+	return box(3, IN.uv);
 }
 
 float4 blur5_ps(VertexOutput IN): COLOR0
 {
-	return gauss(5, IN.uv);
+	return box(5, IN.uv);
 }
 
 float4 blur7_ps(VertexOutput IN): COLOR0
 {
-	return gauss(7, IN.uv);
+	return box(7, IN.uv);
 }
 
 float4 glowApply_ps( VertexOutput IN ) : COLOR0

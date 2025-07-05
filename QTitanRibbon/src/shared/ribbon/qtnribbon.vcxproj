@@ -49,7 +49,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\roblox_build</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\roblox_build\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">release\</IntDir>
     <PlatformToolSet>v110</PlatformToolSet>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">qtnribbon</TargetName>

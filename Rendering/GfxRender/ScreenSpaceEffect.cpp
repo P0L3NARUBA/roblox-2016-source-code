@@ -64,7 +64,7 @@ namespace Graphics
 
         if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", nameFS.c_str(), BlendState::Mode_None, intermediateFB->getWidth(), intermediateFB->getHeight()))
         {
-            float params[] = { 1.f / texture->getWidth(), 0, strength, 0 };
+            float params[] = { 1.0f / texture->getWidth(), 0, strength, 0 };
             context->setConstant(program->getConstantHandle("Params1"), params, 1);
             context->bindTexture(0, texture, SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 
@@ -75,9 +75,9 @@ namespace Graphics
 
         if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", nameFS.c_str(), BlendState::Mode_None, fb->getWidth(), fb->getHeight()))
         {
-            context->bindTexture(0, intermediate, SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
-            float params[] = { 0, 1.f / texture->getHeight(), strength, 1 };
+            float params[] = { 0, 1.0f / texture->getHeight(), strength, 1 };
             context->setConstant(program->getConstantHandle("Params1"), params, 1);
+            context->bindTexture(0, intermediate, SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 
             ScreenSpaceEffect::renderFullscreenEnd(context, visualEngine);
         }

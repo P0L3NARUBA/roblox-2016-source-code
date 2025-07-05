@@ -148,8 +148,6 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <MultiProcessorCompilation>
-      </MultiProcessorCompilation>
       <Optimization>Full</Optimization>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <MinimalRebuild>true</MinimalRebuild>
@@ -179,8 +177,6 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <MultiProcessorCompilation>
-      </MultiProcessorCompilation>
       <Optimization>Full</Optimization>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
     </ClCompile>

@@ -169,3 +169,10 @@ qrc_*.*
 *.txt
 *.lib
 *.exe
+RobloxStudio/ui_AddEmulationDevDialog.h
+RobloxStudio/ui_AutoSave.h
+RobloxStudio/ui_ManageEmulationDevDialog.h
+RobloxStudio/ui_PairRbxDevDialog.h
+RobloxStudio/ui_RBXMainWindow.h
+RobloxStudio/ui_Roblox Studio 2013 dialog.h
+RobloxStudio/ui_TeamCreate.h

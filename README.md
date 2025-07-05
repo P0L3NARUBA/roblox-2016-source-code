@@ -104,12 +104,12 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
 - [ ] Advanced post-processing effects
    - [ ] Depth of Field
    - [ ] Blur
-      - [ ] Box
+      - [x] Box
       - [ ] Gaussian
       - [ ] Directional
       - [ ] Radial
    - [ ] Motion Blur
-   - [ ] Color Correction
+   - [x] Color Correction
    - [ ] Lens Flare
    - [ ] Bloom
       - [ ] Dirt mask
@@ -245,11 +245,10 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
 ## Current Issues
 - Certain transparent renderables are either black or not rendered entirely.
 - Bloom does not render.
-- Blur instance does not render.
 - SSAO does not render.
+- Material shaders switch to a low quality version far too soon.
 - Outdoor Ambient does nothing.
 - Occasional lights consisting of garbage data and getting past all legitimacy checks may result in buggy visuals.
-- Anti-Aliasing is broken.
 - Outdoor environment map generation is broken, as well as lacking highlight reconstruction.
 - Undo and redo does not respect proper Color3 values on instances and will instead snap to the nearest BrickColor value.
 

@@ -241,7 +241,7 @@ namespace RBX
 			Blur(VisualEngine* visualEngine)
 				: visualEngine(visualEngine)
 				, blurError(false)
-				, blurStrentgh(8)
+				, blurStrength(8)
 			{
 
 			}
@@ -250,7 +250,7 @@ namespace RBX
 
 			void update(unsigned width, unsigned height, const SceneManager::PostProcessSettings& pps)
 			{
-				blurStrentgh = pps.blurIntensity;
+				blurStrength = pps.blurIntensity;
 
 				if (data && !blurNeeded())
 				{
@@ -277,14 +277,15 @@ namespace RBX
 			{
 				if (!data) return;
 
-				ScreenSpaceEffect::renderBlur(context, visualEngine, bufferToBlur, data->intermediateFB[0].get(), inTexture, data->intermediateTex[0].get(), blurStrentgh);
+				ScreenSpaceEffect::renderBlur(context, visualEngine, bufferToBlur, data->intermediateFB[0].get(), inTexture, data->intermediateTex[0].get(), blurStrength);
 			}
 
 			void render(DeviceContext* context, Framebuffer* bufferToBlur)
 			{
 				if (!data) return;
+
 				context->copyFramebuffer(bufferToBlur, data->intermediateTex[0].get());
-				ScreenSpaceEffect::renderBlur(context, visualEngine, bufferToBlur, data->intermediateFB[1].get(), data->intermediateTex[0].get(), data->intermediateTex[1].get(), blurStrentgh);
+				ScreenSpaceEffect::renderBlur(context, visualEngine, bufferToBlur, data->intermediateFB[1].get(), data->intermediateTex[0].get(), data->intermediateTex[1].get(), blurStrength);
 			}
 
 		private:
@@ -316,14 +317,14 @@ namespace RBX
 
 			bool blurNeeded()
 			{
-				return blurStrentgh > FLT_EPSILON;
+				return blurStrength > FLT_EPSILON;
 			}
 
 			scoped_ptr<Data> data;
 			bool blurError;
 			VisualEngine* visualEngine;
 
-			float blurStrentgh;
+			float blurStrength;
 		};
 
 		class ImageProcess
@@ -434,13 +435,13 @@ namespace RBX
 
 				msaaFB = device->createFramebuffer(msaaColor, msaaDepth);
 
-				msaaResolved = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, width, height, 1, 1, Texture::Usage_Renderbuffer);
-				msaaResolvedFB = device->createFramebuffer(msaaResolved->getRenderbuffer(0, 0));
+				/*msaaResolved = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, width, height, 1, 1, Texture::Usage_Renderbuffer);
+				msaaResolvedFB = device->createFramebuffer(msaaResolved->getRenderbuffer(0, 0));*/
 			}
 
-			void renderResolve(DeviceContext* context)
+			void renderResolve(DeviceContext* context, Framebuffer* multisampledSource, Framebuffer* target)
 			{
-				context->resolveFramebuffer(msaaFB.get(), msaaResolvedFB.get(), DeviceContext::Buffer_Color);
+				context->resolveFramebuffer(multisampledSource, target, DeviceContext::Buffer_Color);
 			}
 
 			void renderComposit(DeviceContext* context)
@@ -532,7 +533,7 @@ namespace RBX
 			renderQueue.reset(new RenderQueue());
 
 			fullscreenTriangle.reset(new GeometryBatch(createFullscreenTriangle(device), Geometry::Primitive_Triangles, 3, 3));
-
+			
 			sky.reset(new Sky(visualEngine));
 			ssao.reset(new SSAO(visualEngine));
 			glow.reset(new Glow(visualEngine));
@@ -610,26 +611,8 @@ namespace RBX
 			FrameRateManager* frm = visualEngine->getFrameRateManager();
 			RenderStats* stats = visualEngine->getRenderStats();
 
-			if (msaa) {
-				updateMSAA(viewWidth, viewHeight);
-			}
-
 			updateMain(viewWidth, viewHeight);
-
-			//updateGBuffer(viewWidth, viewHeight);
-
-			/*if (gbuffer)
-			{
-				gbufferColor.updateAllRefs(gbuffer->gbufferColor);
-				gbufferDepth.updateAllRefs(gbuffer->gbufferDepth);
-			}
-			else
-			{
-				TextureManager* textureManager = visualEngine->getTextureManager();
-
-				gbufferColor.updateAllRefs(textureManager->getFallbackTexture(TextureManager::Fallback_Black));
-				gbufferDepth.updateAllRefs(textureManager->getFallbackTexture(TextureManager::Fallback_White));
-			}*/
+			updateMSAA(viewWidth, viewHeight);
 
 			// prepare UI
 			visualEngine->getVertexStreamer()->renderPrepare();
@@ -740,20 +723,7 @@ namespace RBX
 				RBXPROFILER_SCOPE("Render", "Clear");
 				RBXPROFILER_SCOPE("GPU", "Clear");
 
-				/*if (gbuffer)
-				{
-					const float clearDepthColor[] = { 0, 0, 0, 0 };
-
-					context->bindFramebuffer(gbuffer->gbufferColorFB.get());
-					context->clearFramebuffer(DeviceContext::Buffer_Color, &clearColor.r, 0.0f, 0);
-
-					context->bindFramebuffer(gbuffer->gbufferDepthFB.get());
-					context->clearFramebuffer(DeviceContext::Buffer_Color, clearDepthColor, 0.0f, 0);
-
-					context->bindFramebuffer(gbuffer->gbufferFB.get());
-					context->clearFramebuffer(DeviceContext::Buffer_Depth | DeviceContext::Buffer_Stencil, NULL, 0.0f, 0);
-				}
-				else*/ if (msaa)
+				if (msaa)
 				{
 					context->bindFramebuffer(msaa->getFramebuffer());
 					context->clearFramebuffer(DeviceContext::Buffer_Color | DeviceContext::Buffer_Depth | DeviceContext::Buffer_Stencil, &clearColor.r, 0.0f, 0);
@@ -777,9 +747,6 @@ namespace RBX
 			{
 				RBXPROFILER_SCOPE("Render", "Opaque Decals");
 				RBXPROFILER_SCOPE("GPU", "Opaque Decals");
-
-				/*if (gbuffer)
-					context->bindFramebuffer(gbuffer->gbufferColorFB.get());*/
 
 				renderObjects(context, renderQueue->getGroup(RenderQueue::Id_OpaqueDecals), RenderQueueGroup::Sort_Material, stats->passScene, "Id_OpaqueDecals");
 			}
@@ -823,9 +790,6 @@ namespace RBX
 				RBXPROFILER_SCOPE("Render", "Transparent Decals");
 				RBXPROFILER_SCOPE("GPU", "Transparent Decals");
 
-				/*if (gbuffer)
-					context->bindFramebuffer(gbuffer->gbufferColorFB.get());*/
-
 				renderObjects(context, renderQueue->getGroup(RenderQueue::Id_TransparentDecals), RenderQueueGroup::Sort_Material, stats->passScene, "Id_TransparentDecals");
 			}
 
@@ -857,11 +821,7 @@ namespace RBX
 				RBXPROFILER_SCOPE("Render", "MSAA");
 				RBXPROFILER_SCOPE("GPU", "MSAA");
 
-				msaa->renderResolve(context);
-
-				context->bindFramebuffer(main->mainFB.get());
-
-				msaa->renderComposit(context);
+				msaa->renderResolve(context, msaa->getFramebuffer(), main->mainFB.get());
 			}
 
 			/* Bloom */
@@ -876,14 +836,12 @@ namespace RBX
 			}*/
 
 			/* Blur */
-			if (false)
+			if (blur)
 			{
 				RBXPROFILER_SCOPE("Render", "Blur");
 				RBXPROFILER_SCOPE("GPU", "Blur");
 
-				/*if (gbuffer)
-					blur->render(context, gbuffer->mainFB.get(), gbuffer->mainColor.get());
-				else*/
+				context->bindFramebuffer(main->mainFB.get());
 
 				blur->render(context, main->mainFB.get());
 			}
@@ -893,9 +851,6 @@ namespace RBX
 				RBXPROFILER_SCOPE("Render", "Tonemapping");
 				RBXPROFILER_SCOPE("GPU", "Tonemapping");
 
-				/*if (gbuffer)
-					imageProcess->render(context, gbuffer->mainFB.get());
-				else*/
 				context->bindFramebuffer(mainFramebuffer);
 
 				imageProcess->render(context, main->mainFB.get());
@@ -911,19 +866,6 @@ namespace RBX
 				else
 					visualEngine->getVertexStreamer()->render2D(context, viewWidth, viewHeight, stats->passUI);
 			}
-
-			/*if (ssao)
-			{
-				context->bindFramebuffer(mainFramebuffer);
-
-				ssao->renderComposit(context);
-			}
-			else if (gbuffer)
-			{
-				context->bindFramebuffer(mainFramebuffer);
-
-				resolveGBuffer(context, gbuffer->mainColor.get());
-			}*/
 		}
 
 		void SceneManager::renderEnd(DeviceContext* context)
