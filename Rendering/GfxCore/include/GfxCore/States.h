@@ -248,6 +248,7 @@ public:
 	{
         Address_Wrap,
         Address_Clamp,
+        Address_Border,
 
         Address_Count
 	};

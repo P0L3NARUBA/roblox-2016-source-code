@@ -55,7 +55,8 @@ namespace Graphics
     static const D3D11_TEXTURE_ADDRESS_MODE gSamplerAddressD3D11[SamplerState::Address_Count] =
     {
         D3D11_TEXTURE_ADDRESS_WRAP,
-        D3D11_TEXTURE_ADDRESS_CLAMP
+        D3D11_TEXTURE_ADDRESS_CLAMP,
+        D3D11_TEXTURE_ADDRESS_BORDER
     };
 
     DeviceContextD3D11::DeviceContextD3D11(Device* device, ID3D11DeviceContext* deviceContext11)

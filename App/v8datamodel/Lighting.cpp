@@ -2,7 +2,6 @@
 
 #include "v8datamodel/lighting.h"
 #include "v8datamodel/sky.h"
-#include "v8datamodel/BlurEffect.h"
 
 #include "Util/RobloxGoogleAnalytics.h"
 

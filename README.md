@@ -111,7 +111,7 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
    - [ ] Motion Blur
    - [x] Color Correction
    - [ ] Lens Flare
-   - [ ] Bloom
+   - [x] Bloom
       - [ ] Dirt mask
    - [ ] Volumetric Lighting
       - [ ] Texture mask
@@ -244,7 +244,7 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
 
 ## Current Issues
 - Certain transparent renderables are either black or not rendered entirely.
-- Bloom does not render.
+- Changing bloom settings in the BloomEffect instance does not affect actual bloom.
 - SSAO does not render.
 - Material shaders switch to a low quality version far too soon.
 - Outdoor Ambient does nothing.

@@ -22,6 +22,7 @@
 
 // POST EFFECT IMPORTS //
 #include "V8DataModel/PostEffect.h"
+#include "V8DataModel/BloomEffect.h"
 #include "V8DataModel/BlurEffect.h"
 #include "V8DataModel/ColorCorrectionEffect.h"
 
@@ -1517,11 +1518,13 @@ namespace RBX
 
 		RenderStats& RenderView::getRenderStats() { return *visualEngine->getRenderStats(); }
 
-		extern float blurIntensity = 0;
-		extern float brightness = 0;
-		extern float contrast = 0;
-		extern float grayscaleLevel = 0;
-		extern Color3 tintColor = Color3(1, 1, 1);
+		extern float bloomIntensity = 0.0f;
+		extern int bloomSize = 0;
+		extern float blurIntensity = 0.0f;
+		extern float brightness = 0.0f;
+		extern float contrast = 0.0f;
+		extern float grayscaleLevel = 0.0f;
+		extern Color3 tintColor = Color3(1.0f, 1.0f, 1.0f);
 
 		void RenderView::presetLighting(RBX::Lighting* l, const RBX::Color3& extraAmbient, float skylightFactor)
 		{
@@ -1565,11 +1568,13 @@ namespace RBX
 		{
 			SceneManager* smgr = visualEngine->getSceneManager();
 
-			blurIntensity = 0;
-			tintColor = Color3(1, 1, 1);
-			grayscaleLevel = 0;
-			contrast = 0;
-			brightness = 0;
+			bloomIntensity = 0.0f;
+			bloomSize = 0;
+			blurIntensity = 0.0f;
+			tintColor = Color3(1.0f, 1.0f, 1.0f);
+			grayscaleLevel = 0.0f;
+			contrast = 0.0f;
+			brightness = 0.0f;
 
 			if (shared_ptr<const Instances> children = l->getChildren2())
 			{
@@ -1577,7 +1582,14 @@ namespace RBX
 				for (Instances::const_iterator iter = children->begin(); iter != end; ++iter)
 				{
 					std::string className = (*iter)->getClassNameStr();
-					if (className == "BlurEffect") {
+					if (className == "BloomEffect") {
+						auto bloomEffectInstance = boost::dynamic_pointer_cast<BloomEffect>((*iter));
+						if (bloomEffectInstance && bloomEffectInstance->getEnabled() && bloomIntensity < bloomEffectInstance->getIntensity() && bloomSize < bloomEffectInstance->getSize()) {
+							bloomIntensity = bloomEffectInstance->getIntensity();
+							bloomSize = bloomEffectInstance->getSize();
+						}
+					}
+					else if (className == "BlurEffect") {
 						auto blurEffectInstance = boost::dynamic_pointer_cast<BlurEffect>((*iter));
 						if (blurEffectInstance && blurEffectInstance->getEnabled() && blurIntensity < blurEffectInstance->getSize()) {
 							blurIntensity = blurEffectInstance->getSize();

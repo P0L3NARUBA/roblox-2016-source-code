@@ -124,88 +124,136 @@ namespace RBX
 			return device->createGeometry(layout, vb, shared_ptr<IndexBuffer>());
 		}
 
-		class Glow
+		class Bloom
 		{
 		public:
-			Glow(VisualEngine* visualEngine)
+			Bloom(VisualEngine* visualEngine)
 				: visualEngine(visualEngine)
-				, blurError(false)
-				, glowStrength(2.2f)
+				, bloomError(false)
+				, bloomIntensity(1.0f)
+				, bloomSize(5)
 			{
-
 			}
 
 			bool valid() { return data.get() != NULL; }
-			float getGlowIntensity() { return glowStrength; }
 
-			void update(unsigned width, unsigned height, bool gBufferExists)
+			float getIntensity() { return bloomIntensity; }
+
+			void update(unsigned width, unsigned height, const SceneManager::PostProcessSettings& pps)
 			{
-				if (data && (!gBufferExists))
+				if (data && !bloomNeeded())
 				{
 					data.reset();
 				}
 				else
 				{
-					unsigned widthOver4 = width / 4;
-					unsigned heightOver4 = height / 4;
-
-					if (!blurError && gBufferExists && (!data.get() || data->width != widthOver4 || data->height != heightOver4))
+					if (!bloomError && (!data.get() || data->width != width || data->height != height || bloomSize != pps.bloomSize))
 					{
 						try
 						{
-							data.reset(createData(widthOver4, heightOver4));
+							data.reset(createData(width, height));
 						}
 						catch (const RBX::base_exception&)
 						{
-							blurError = true;
+							bloomError = true;
 							data.reset();
 						}
 					}
 				}
 			}
 
-			void computeBlur(DeviceContext* context, Texture* glowIntensity)
+			void render(DeviceContext* context, Texture* source)
 			{
-				if (!data) return;
-
-				PIX_SCOPE(context, "GlowComputeBlur");
-				RBXPROFILER_SCOPE("Render", "glowCompute");
-				RBXPROFILER_SCOPE("GPU", "glowCompute");
-
-				context->bindFramebuffer(data->quarterFB[0].get());
-
-				if (ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "DownSample4x4VS", "DownSample4x4GlowFS", BlendState::Mode_None, data->quarterFB[0]->getWidth(), data->quarterFB[0]->getHeight()))
+				/* Initial Fetch */
 				{
-					context->bindTexture(0, glowIntensity, SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
-					ScreenSpaceEffect::renderFullscreenEnd(context, visualEngine);
+					context->bindFramebuffer(data->bloomFB.get());
+
+					int width = source->getWidth();
+					int height = source->getHeight();
+
+					if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "InitialBloomDownsampleFS", BlendState::Mode_None, width, height))
+					{
+						float params1[4] = { width, height, bloomSize + 1, 0.0 };
+						context->setConstant(program->getConstantHandle("Params1"), &params1[0], 1);
+						context->bindTexture(0, source, SamplerState(SamplerState::Filter_Point, SamplerState::Address_Border));
+
+						ScreenSpaceEffect::renderFullscreenEnd(context, visualEngine);
+					}
 				}
 
-				ScreenSpaceEffect::renderBlur(context, visualEngine, data->quarterFB[0].get(), data->quarterFB[1].get(), data->quarterBuffers[0].get(), data->quarterBuffers[1].get(), 3);
+				/* Downsampling */
+				for (int i = 0; i < bloomSize; ++i) {
+					context->bindFramebuffer(data->bloomFBs[i].get());
+
+					Texture* texture = (i == 0) ? data->bloomBuffer.get() : data->bloomBuffers[i - 1].get();
+					int width = texture->getWidth();
+					int height = texture->getHeight();
+
+					if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "BloomDownsampleFS", BlendState::Mode_None, width, height))
+					{
+						float params1[4] = { width, height, bloomSize + 1, 0.0 };
+						context->setConstant(program->getConstantHandle("Params1"), &params1[0], 1);
+						context->bindTexture(0, texture, SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Border));
+
+						ScreenSpaceEffect::renderFullscreenEnd(context, visualEngine);
+					}
+				}
+
+				float filterSize = 0.002f;
+
+				/* Upsampling */
+				for (int i = bloomSize - 1; i > 0; --i) {
+					context->bindFramebuffer(data->bloomFBs[i - 1].get());
+
+					Texture* texture = data->bloomBuffers[i - 1].get();
+					int width = texture->getWidth();
+					int height = texture->getHeight();
+
+					if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "BloomUpsampleFS", BlendState::Mode_Additive, width, height))
+					{
+						float params1[4] = { filterSize, filterSize * (width / height), 0.0, 0.0 };
+						context->setConstant(program->getConstantHandle("Params1"), &params1[0], 1);
+						context->bindTexture(0, data->bloomBuffers[i].get(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+
+						ScreenSpaceEffect::renderFullscreenEnd(context, visualEngine);
+					}
+
+					//filterSize *= 0.5;
+				}
+
+				/* Final Upsample */
+				{
+					context->bindFramebuffer(data->bloomFB.get());
+
+					Texture* texture = data->bloomBuffer.get();
+					int width = texture->getWidth();
+					int height = texture->getHeight();
+
+					if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "BloomUpsampleFS", BlendState::Mode_Additive, width, height))
+					{
+						float params1[4] = { 0.005, 0.005 * (width / height), 0.0, 0.0 };
+						context->setConstant(program->getConstantHandle("Params1"), &params1[0], 1);
+						context->bindTexture(0, data->bloomBuffers[0].get(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+
+						ScreenSpaceEffect::renderFullscreenEnd(context, visualEngine);
+					}
+				}
 			}
 
-			void applyBlur(DeviceContext* context, Framebuffer* target)
+			Texture* getTexture() const
 			{
-				if (!data) return;
-
-				PIX_SCOPE(context, "ApplyBlur");
-				RBXPROFILER_SCOPE("Render", "glowApply");
-				RBXPROFILER_SCOPE("GPU", "glowApply");
-
-				if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "GlowApplyFS", BlendState::Mode_PremultipliedAlphaBlend, target->getWidth(), target->getHeight()))
-				{
-					float params[4] = { glowStrength, 0, 0, 0 };
-					context->setConstant(program->getConstantHandle("Params1"), &params[0], 1);
-					context->bindTexture(0, data->quarterBuffers[0].get(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
-
-					ScreenSpaceEffect::renderFullscreenEnd(context, visualEngine);
-				}
+				return data->bloomBuffer.get();
 			}
 
 		private:
 			struct Data
 			{
-				shared_ptr<Texture> quarterBuffers[2];
-				shared_ptr<Framebuffer> quarterFB[2];
+				shared_ptr<Texture> bloomBuffer;
+				shared_ptr<Framebuffer> bloomFB;
+
+				shared_ptr<Texture> bloomBuffers[6];
+				shared_ptr<Framebuffer> bloomFBs[6];
+
 				unsigned width;
 				unsigned height;
 			};
@@ -216,20 +264,71 @@ namespace RBX
 
 				Device* device = visualEngine->getDevice();
 
-				data->quarterBuffers[0] = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, width, height, 1, 1, Texture::Usage_Renderbuffer);
-				data->quarterFB[0] = device->createFramebuffer(data->quarterBuffers[0]->getRenderbuffer(0, 0));
-
-				data->quarterBuffers[1] = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, width, height, 1, 1, Texture::Usage_Renderbuffer);
-				data->quarterFB[1] = device->createFramebuffer(data->quarterBuffers[1]->getRenderbuffer(0, 0));
+				data->bloomBuffer = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, width, height, 1, 1, Texture::Usage_Renderbuffer);
+				data->bloomFB = device->createFramebuffer(data->bloomBuffer->getRenderbuffer(0, 0));
 
 				data->width = width;
 				data->height = height;
 
+				if (bloomSize > 0) {
+					unsigned newWidth = unsigned(float(width) / 2.0f);
+					unsigned newHeight = unsigned(float(height) / 2.0f);
+
+					data->bloomBuffers[0] = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, newWidth, newHeight, 1, 1, Texture::Usage_Renderbuffer);
+					data->bloomFBs[0] = device->createFramebuffer(data->bloomBuffers[0]->getRenderbuffer(0, 0));
+				}
+
+				if (bloomSize > 1) {
+					unsigned newWidth = unsigned(float(width) / 4.0f);
+					unsigned newHeight = unsigned(float(height) / 4.0f);;
+
+					data->bloomBuffers[1] = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, newWidth, newHeight, 1, 1, Texture::Usage_Renderbuffer);
+					data->bloomFBs[1] = device->createFramebuffer(data->bloomBuffers[1]->getRenderbuffer(0, 0));
+				}
+
+				if (bloomSize > 2) {
+					unsigned newWidth = unsigned(float(width) / 8.0f);
+					unsigned newHeight = unsigned(float(height) / 8.0f);;
+
+					data->bloomBuffers[2] = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, newWidth, newHeight, 1, 1, Texture::Usage_Renderbuffer);
+					data->bloomFBs[2] = device->createFramebuffer(data->bloomBuffers[2]->getRenderbuffer(0, 0));
+				}
+
+				if (bloomSize > 3) {
+					unsigned newWidth = unsigned(float(width) / 16.0f);
+					unsigned newHeight = unsigned(float(height) / 16.0f);;
+
+					data->bloomBuffers[3] = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, newWidth, newHeight, 1, 1, Texture::Usage_Renderbuffer);
+					data->bloomFBs[3] = device->createFramebuffer(data->bloomBuffers[3]->getRenderbuffer(0, 0));
+				}
+
+				if (bloomSize > 4) {
+					unsigned newWidth = unsigned(float(width) / 32.0f);
+					unsigned newHeight = unsigned(float(height) / 32.0f);;
+
+					data->bloomBuffers[4] = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, newWidth, newHeight, 1, 1, Texture::Usage_Renderbuffer);
+					data->bloomFBs[4] = device->createFramebuffer(data->bloomBuffers[4]->getRenderbuffer(0, 0));
+				}
+
+				if (bloomSize > 5) {
+					unsigned newWidth = unsigned(float(width) / 64.0f);
+					unsigned newHeight = unsigned(float(height) / 64.0f);;
+
+					data->bloomBuffers[5] = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, newWidth, newHeight, 1, 1, Texture::Usage_Renderbuffer);
+					data->bloomFBs[5] = device->createFramebuffer(data->bloomBuffers[5]->getRenderbuffer(0, 0));
+				}
+
 				return data;
 			}
 
-			float glowStrength;
-			bool blurError;
+			bool bloomNeeded()
+			{
+				return bloomIntensity > FLT_EPSILON || bloomSize == 0;
+			}
+
+			float bloomIntensity;
+			int bloomSize;
+			bool bloomError;
 			scoped_ptr<Data> data;
 			VisualEngine* visualEngine;
 		};
@@ -243,7 +342,6 @@ namespace RBX
 				, blurError(false)
 				, blurStrength(8)
 			{
-
 			}
 
 			bool valid() { return data != NULL; }
@@ -365,17 +463,34 @@ namespace RBX
 				}
 			}
 
-			void render(DeviceContext* context, Framebuffer* source)
+			void render(DeviceContext* context, Texture* source, Bloom* bloom)
 			{
-				context->copyFramebuffer(source, data->intermediateTex.get());
+				std::string nameFS = "Tonemap";
 
-				if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "ImageProcessFS", BlendState::Mode_None, source->getWidth(), source->getHeight()))
+				float bloomIntensity = 0.0f;
+
+				if (processingNeeded()) {
+					nameFS += "ColorCorrection";
+				}
+				if (bloom) {
+					nameFS += "Bloom";
+
+					bloomIntensity = bloom->getIntensity() / 10.0f;
+				}
+
+				nameFS += "FS";
+
+				if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", nameFS.c_str(), BlendState::Mode_None, source->getWidth(), source->getHeight()))
 				{
-					float params1[4] = { brightness, contrast + 1, grayscaleLevel, 0 };
+					float params1[4] = { brightness, contrast + 1.0f, grayscaleLevel, bloomIntensity };
 					float params2[4] = { tintColor.r, tintColor.g, tintColor.b, 0 };
 					context->setConstant(program->getConstantHandle("Params1"), &params1[0], 1);
 					context->setConstant(program->getConstantHandle("Params2"), &params2[0], 1);
-					context->bindTexture(0, data->intermediateTex.get(), SamplerState(SamplerState::Filter_Point, SamplerState::Address_Clamp));
+					context->bindTexture(0, source, SamplerState(SamplerState::Filter_Point, SamplerState::Address_Clamp));
+
+					if (bloom) {
+						context->bindTexture(2, bloom->getTexture(), SamplerState(SamplerState::Filter_Point, SamplerState::Address_Clamp));
+					}
 
 					ScreenSpaceEffect::renderFullscreenEnd(context, visualEngine);
 				}
@@ -533,21 +648,13 @@ namespace RBX
 			renderQueue.reset(new RenderQueue());
 
 			fullscreenTriangle.reset(new GeometryBatch(createFullscreenTriangle(device), Geometry::Primitive_Triangles, 3, 3));
-			
+
 			sky.reset(new Sky(visualEngine));
 			ssao.reset(new SSAO(visualEngine));
-			glow.reset(new Glow(visualEngine));
+			bloom.reset(new Bloom(visualEngine));
 			blur.reset(new Blur(visualEngine));
 			envMap.reset(new EnvMap(visualEngine));
 			imageProcess.reset(new ImageProcess(visualEngine));
-
-			/*if (!FFlag::RenderVR)
-			{
-				if (device->getCaps().retina)
-				{
-					msaa.reset(new MSAA(visualEngine, framebuffer->getWidth() / 2, framebuffer->getHeight() / 2, 4));
-				}
-			}*/
 
 			shadowRenderQueue.reset(new RenderQueue());
 
@@ -676,17 +783,7 @@ namespace RBX
 			// Flush particle vertex buffer; it's being filled in particle emitter updateRenderQueue
 			visualEngine->getEmitterSharedState()->flush();
 
-			// Update glow targets if we need them
-			/*if (FFlag::GlowEnabled)
-			{
-				glow->update(viewWidth, viewHeight, gbuffer.get() != NULL);
-				globalShaderData.FadeDistance_GlowFactor.w = glow->valid() ? 1 : glow->getGlowIntensity();
-			}
-			else
-			{
-				globalShaderData.FadeDistance_GlowFactor.w = glow->getGlowIntensity();
-			}*/
-
+			bloom->update(viewWidth, viewHeight, postProcessSettings);
 			blur->update(viewWidth, viewHeight, postProcessSettings);
 			imageProcess->update(viewWidth, viewHeight, postProcessSettings);
 
@@ -824,17 +921,6 @@ namespace RBX
 				msaa->renderResolve(context, msaa->getFramebuffer(), main->mainFB.get());
 			}
 
-			/* Bloom */
-			/*if (FFlag::GlowEnabled && glow->valid() && gbuffer && renderQueue->getFeatures() & RenderQueue::Features_Glow)
-			{
-				RBXPROFILER_SCOPE("Render", "Bloom");
-				RBXPROFILER_SCOPE("GPU", "Bloom");
-
-				glow->computeBlur(context, gbuffer->mainColor.get());
-				context->bindFramebuffer(mainFramebuffer);
-				glow->applyBlur(context, mainFramebuffer);
-			}*/
-
 			/* Blur */
 			if (blur)
 			{
@@ -846,6 +932,15 @@ namespace RBX
 				blur->render(context, main->mainFB.get());
 			}
 
+			/* Bloom */
+			if (bloom)
+			{
+				RBXPROFILER_SCOPE("Render", "Bloom");
+				RBXPROFILER_SCOPE("GPU", "Bloom");
+
+				bloom->render(context, main->mainColor.get());
+			}
+
 			/* Tonemapping */
 			{
 				RBXPROFILER_SCOPE("Render", "Tonemapping");
@@ -853,7 +948,7 @@ namespace RBX
 
 				context->bindFramebuffer(mainFramebuffer);
 
-				imageProcess->render(context, main->mainFB.get());
+				imageProcess->render(context, main->mainColor.get(), bloom.get());
 			}
 
 			/* Screen UI */

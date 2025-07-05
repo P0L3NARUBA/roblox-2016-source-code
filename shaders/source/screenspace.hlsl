@@ -2,6 +2,7 @@
 
 TEX_DECLARE2D(Texture, 0);
 TEX_DECLARE2D(Mask, 1);
+TEX_DECLARE2D(BloomTexture, 2);
 
 // .xy = gbuffer width/height, .zw = inverse gbuffer width/height
 uniform float4 TextureSize;
@@ -107,20 +108,116 @@ float3 ACESFilm(float3 x) {
 	return saturate((x*(a*x+b))/(x*(c*x+d)+e));
 }
 
-float4 imageProcess_ps( VertexOutput IN ) : COLOR0
-{
-	float3 color = ACESFilm(tex2D(Texture, IN.uv).rgb);
+float3 Tonemapping(inout float3 color) {
+	color = ACESFilm(color);
 
-	float3 tintColor = Params2.xyz;
-	float contrast = Params1.y;
-	float brightness = Params1.x;
-	float grayscaleLvl = -Params1.z;
+	return color;
+}
+
+float3 ColorCorrection(inout float3 color, in float3 params1, in float3 params2) {
+	float3 tintColor = params2.xyz;
+	float brightness = params1.x;
+	float contrast = params1.y;
+	float grayscaleLvl = params1.z;
 
 	color = contrast * (color - 0.5) + 0.5 + brightness;
 	float grayscale = dot(color, float3(0.2126, 0.7152, 0.0722));
-	float3 separate = lerp(color.rgb, grayscale.xxx, grayscaleLvl) * tintColor;
 
-	return float4(separate, 1.0);
+	return lerp(color.rgb, grayscale.xxx, grayscaleLvl) * tintColor;
+}
+
+float4 tonemapping_ps( VertexOutput IN ) : COLOR0 {
+	float3 color = tex2D(Texture, IN.uv).rgb;
+
+	Tonemapping(color);
+
+	return float4(color, 1.0);
+}
+
+float4 tonemappingCorrection_ps( VertexOutput IN ) : COLOR0 {
+	float3 color = tex2D(Texture, IN.uv).rgb;
+
+	Tonemapping(color);
+	ColorCorrection(color, Params1.xyz, Params2.xyz);
+
+	return float4(color, 1.0);
+}
+
+float4 tonemappingBloom_ps( VertexOutput IN ) : COLOR0 {
+	float3 color = lerp(tex2D(Texture, IN.uv).rgb, tex2D(BloomTexture, IN.uv).rgb, Params1.w);
+
+	Tonemapping(color);
+
+	return float4(color, 1.0);
+}
+
+float4 tonemappingBloomCorrection_ps( VertexOutput IN ) : COLOR0 {
+	float3 color = lerp(tex2D(Texture, IN.uv).rgb, tex2D(BloomTexture, IN.uv).rgb, Params1.w);
+
+	Tonemapping(color);
+	ColorCorrection(color, Params1.xyz, Params2.xyz);
+
+	return float4(color, 1.0);
+}
+
+float4 initialBloomDownsample_ps( VertexOutput IN ) : COLOR0 {
+	return float4(max(tex2D(Texture, IN.uv).rgb, 0.0) / Params1.z, 1.0);
+}
+
+float4 bloomDownsample_ps( VertexOutput IN ) : COLOR0 {
+	float2 texCoord = IN.uv;
+    float2 srcTexelSize = 4.0 / Params1.xy;
+    float x = srcTexelSize.x;
+    float y = srcTexelSize.y;
+
+    float3 a = tex2D(Texture, float2(texCoord.x - x * 2.0, texCoord.y + y * 2.0)).rgb;
+    float3 b = tex2D(Texture, float2(texCoord.x          , texCoord.y + y * 2.0)).rgb;
+    float3 c = tex2D(Texture, float2(texCoord.x + x * 2.0, texCoord.y + y * 2.0)).rgb;
+
+    float3 d = tex2D(Texture, float2(texCoord.x - x * 2.0, texCoord.y          )).rgb;
+    float3 e = tex2D(Texture, float2(texCoord.x          , texCoord.y          )).rgb;
+    float3 f = tex2D(Texture, float2(texCoord.x + x * 2.0, texCoord.y          )).rgb;
+
+    float3 g = tex2D(Texture, float2(texCoord.x - x * 2.0, texCoord.y - y * 2.0)).rgb;
+    float3 h = tex2D(Texture, float2(texCoord.x          , texCoord.y - y * 2.0)).rgb;
+    float3 i = tex2D(Texture, float2(texCoord.x + x * 2.0, texCoord.y - y * 2.0)).rgb;
+
+    float3 j = tex2D(Texture, float2(texCoord.x - x      , texCoord.y + y      )).rgb;
+    float3 k = tex2D(Texture, float2(texCoord.x + x      , texCoord.y + y      )).rgb;
+    float3 l = tex2D(Texture, float2(texCoord.x - x      , texCoord.y - y      )).rgb;
+    float3 m = tex2D(Texture, float2(texCoord.x + x      , texCoord.y - y      )).rgb;
+
+    float3 downsample = e * 0.125;
+    downsample += (a + c + g + i) * 0.03125;
+    downsample += (b + d + f + h) * 0.0625;
+    downsample += (j + k + l + m) * 0.125;
+
+	return float4(downsample, 1.0);
+}
+
+float4 bloomUpsample_ps( VertexOutput IN ) : COLOR0 {
+	float2 texCoord = IN.uv;
+    float x = Params1.x;
+    float y = Params1.y;
+
+    float3 a = tex2D(Texture, float2(texCoord.x - x, texCoord.y + y)).rgb;
+    float3 b = tex2D(Texture, float2(texCoord.x    , texCoord.y + y)).rgb;
+    float3 c = tex2D(Texture, float2(texCoord.x + x, texCoord.y + y)).rgb;
+
+    float3 d = tex2D(Texture, float2(texCoord.x - x, texCoord.y    )).rgb;
+    float3 e = tex2D(Texture, float2(texCoord.x    , texCoord.y    )).rgb;
+    float3 f = tex2D(Texture, float2(texCoord.x + x, texCoord.y    )).rgb;
+
+    float3 g = tex2D(Texture, float2(texCoord.x - x, texCoord.y - y)).rgb;
+    float3 h = tex2D(Texture, float2(texCoord.x    , texCoord.y - y)).rgb;
+    float3 i = tex2D(Texture, float2(texCoord.x + x, texCoord.y - y)).rgb;
+
+    float3 upsample = e * 4.0;
+    upsample += (b + d + f + h) * 2.0;
+    upsample += (a + c + g + i);
+    upsample *= 1.0 / 16.0;
+
+	return float4(upsample, 1.0);
 }
 
 float4 gauss(float samples, float2 uv)
@@ -128,7 +225,7 @@ float4 gauss(float samples, float2 uv)
 	float2 step = Params1.xy;
 	float sigma = Params1.z;
 
-	float sigmaN1 = 1 / sqrt(2 * 3.1415926 * sigma * sigma);
+	float sigmaN1 = 1 / sqrt(2 * 3.1415927 * sigma * sigma);
 	float sigmaN2 = 1 / (2 * sigma * sigma);
 
 	// First sample is in the center and accounts for our pixel

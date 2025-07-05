@@ -25,7 +25,7 @@ namespace RBX
 		class GeometryBatch;
 		class SSAO;
 		class MSAA;
-		class Glow;
+		class Bloom;
 		class Blur;
 		class ImageProcess;
 		class Framebuffer;
@@ -41,10 +41,12 @@ namespace RBX
 			struct PostProcessSettings
 			{
 				PostProcessSettings()
-					: brightness(0)
-					, contrast(0)
-					, grayscaleLevel(0)
-					, blurIntensity(0)
+					: brightness(0.0f)
+					, contrast(0.0f)
+					, grayscaleLevel(0.0f)
+					, blurIntensity(0.0f)
+					, bloomIntensity(0.0f)
+					, bloomSize(0)
 					, tintColor(Color3::white()) {
 				}
 
@@ -52,6 +54,8 @@ namespace RBX
 				float contrast;
 				float grayscaleLevel;
 				float blurIntensity;
+				float bloomIntensity;
+				int bloomSize;
 				Color3 tintColor;
 			};
 
@@ -162,7 +166,7 @@ namespace RBX
 
 			scoped_ptr<SSAO> ssao;
 			scoped_ptr<MSAA> msaa;
-			scoped_ptr<Glow> glow;
+			scoped_ptr<Bloom> bloom;
 			scoped_ptr<Blur> blur;
 			scoped_ptr<EnvMap> envMap;
 			scoped_ptr<ImageProcess> imageProcess;

@@ -221,6 +221,7 @@
 #include "v8datamodel/ColorSequence.h"
 
 #include "v8datamodel/PostEffect.h"
+#include "v8datamodel/BloomEffect.h"
 #include "v8datamodel/BlurEffect.h"
 #include "v8datamodel/ColorCorrectionEffect.h"
 
@@ -428,6 +429,7 @@ RBX_REGISTER_CLASS(TouchInputService);
 
 // Post FX
 RBX_REGISTER_CLASS(PostEffect);
+RBX_REGISTER_CLASS(BloomEffect);
 RBX_REGISTER_CLASS(BlurEffect);
 RBX_REGISTER_CLASS(ColorCorrectionEffect);
 

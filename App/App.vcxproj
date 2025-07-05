@@ -862,6 +862,7 @@ cmd /c "exit /b 0"</Command>
     <ClCompile Include="v8datamodel\AssetService.cpp" />
     <ClCompile Include="v8datamodel\Attachment.cpp" />
     <ClCompile Include="v8datamodel\BaseRenderJob.cpp" />
+    <ClCompile Include="v8datamodel\BloomEffect.cpp" />
     <ClCompile Include="v8datamodel\BlurEffect.cpp" />
     <ClCompile Include="v8datamodel\ColorCorrectionEffect.cpp" />
     <ClCompile Include="v8datamodel\ColorSequence.cpp" />
@@ -2805,6 +2806,7 @@ cmd /c "exit /b 0"</Command>
     <ClInclude Include="include\v8datamodel\AssetService.h" />
     <ClInclude Include="include\v8datamodel\Attachment.h" />
     <ClInclude Include="include\v8datamodel\BaseRenderJob.h" />
+    <ClInclude Include="include\v8datamodel\BloomEffect.h" />
     <ClInclude Include="include\v8datamodel\BlurEffect.h" />
     <ClInclude Include="include\v8datamodel\ColorCorrectionEffect.h" />
     <ClInclude Include="include\v8datamodel\ColorSequence.h" />
