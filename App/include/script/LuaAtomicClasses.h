@@ -235,7 +235,7 @@ namespace RBX {
 
 		private:
 			static int newColor3(lua_State* L);
-			static int newRGBColor3(lua_State* L);
+			static int newColor3FromRGB(lua_State* L);
 			static int newHSVColor3(lua_State* L);
 			static int newHexColor3(lua_State* L);
 			static const luaL_reg classLibrary[];

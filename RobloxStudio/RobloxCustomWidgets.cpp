@@ -6,7 +6,7 @@
 #include "stdafx.h"
 #include "RobloxCustomWidgets.h"
 
-// Qt Headers
+ // Qt Headers
 #include <QPainter>
 #include <QApplication>
 #include <QMouseEvent>
@@ -57,53 +57,53 @@
 const QRectF ColorPickerFrame::m_selectionRectangleAdjustment = QRectF(-2, -2, 3, 3);
 const QRectF ColorPickerFrame::m_secondaryRectangleAdjustment = QRectF(-1, -1, 0, 0);
 
-ColorPickerFrame::ColorPickerFrame(QWidget *parent)
-: PickerFrame(parent)
-, m_selectedColorIndex(12)
-, m_hoveredColorIndex(12)
-, m_closeOnMouseRelease(false)
+ColorPickerFrame::ColorPickerFrame(QWidget* parent)
+	: PickerFrame(parent)
+	, m_selectedColorIndex(12)
+	, m_hoveredColorIndex(12)
+	, m_closeOnMouseRelease(false)
 {
 	int maxPolygonsInARow = getMaxPolygonsInARow();
-	int numRows(maxPolygonsInARow), numCols(2*maxPolygonsInARow - 1), numColorsUsed(0);
+	int numRows(maxPolygonsInARow), numCols(2 * maxPolygonsInARow - 1), numColorsUsed(0);
 	QPolygonF polygon;
-        
-    m_colorsInfo.reserve(RBX::BrickColor::colorPalette().size());
-		
+
+	m_colorsInfo.reserve(RBX::BrickColor::colorPalette().size());
+
 	for (int row = 0; row < numRows; row++)
 		for (int col = 0; col < numCols; col++)
 		{
-			if((qAbs(numRows/2 - row) + qAbs(numCols/2 - col) < maxPolygonsInARow) && (row % 2 == col % 2))
+			if ((qAbs(numRows / 2 - row) + qAbs(numCols / 2 - col) < maxPolygonsInARow) && (row % 2 == col % 2))
 			{
 				polygon = getPolygon(PolygonSize_Normal);
-				polygon.translate(qSqrt(3)/2 * (COLOR_POLY_SIDE + COLOR_POLY_DIFF) * col + 18, (COLOR_POLY_SIDE + COLOR_POLY_DIFF) * 1.5 * row + 24);
+				polygon.translate(qSqrt(3) / 2 * (COLOR_POLY_SIDE + COLOR_POLY_DIFF) * col + 18, (COLOR_POLY_SIDE + COLOR_POLY_DIFF) * 1.5 * row + 24);
 
 				RBX::BrickColor bColor = RBX::BrickColor::colorPalette().operator[](numColorsUsed++);
-				m_colorsInfo.push_back(ColorKeyInfo(QColor(bColor.color3uint8().r, bColor.color3uint8().g, bColor.color3uint8().b), 
-						                            polygon, 
-						                            bColor.name().c_str(),
-													bColor.asInt()));
+				m_colorsInfo.push_back(ColorKeyInfo(QColor(bColor.color3uint8().r, bColor.color3uint8().g, bColor.color3uint8().b),
+					polygon,
+					bColor.name().c_str(),
+					bColor.asInt()));
 			}
 		}
 
-	static RBX::BrickColor::Number lowerLineColorIDs[12] = {RBX::BrickColor::brick_199, RBX::BrickColor::brick_194, RBX::BrickColor::roblox_1002, 
-			                                                RBX::BrickColor::brick_325, RBX::BrickColor::brick_348, RBX::BrickColor::brick_26, 
-															RBX::BrickColor::brick_302, RBX::BrickColor::brick_311, RBX::BrickColor::brick_320,  
-															RBX::BrickColor::brick_335, RBX::BrickColor::roblox_1001, RBX::BrickColor::brick_1};
+	static RBX::BrickColor::Number lowerLineColorIDs[12] = { RBX::BrickColor::brick_199, RBX::BrickColor::brick_194, RBX::BrickColor::roblox_1002,
+															RBX::BrickColor::brick_325, RBX::BrickColor::brick_348, RBX::BrickColor::brick_26,
+															RBX::BrickColor::brick_302, RBX::BrickColor::brick_311, RBX::BrickColor::brick_320,
+															RBX::BrickColor::brick_335, RBX::BrickColor::roblox_1001, RBX::BrickColor::brick_1 };
 
-	int colorCount = RBX::BrickColor::colorPalette().size(), lowerLineColorCount = 0; 
-	
+	int colorCount = RBX::BrickColor::colorPalette().size(), lowerLineColorCount = 0;
+
 	for (int ii = 0; ii < numCols - 1; ++ii)
 	{
 		if (!(ii % 2))
 			continue;
-				
+
 		polygon = getPolygon(PolygonSize_Normal);
-		polygon.translate(qSqrt(3)/2 * (COLOR_POLY_SIDE + COLOR_POLY_DIFF) * ii + 18, (COLOR_POLY_SIDE + COLOR_POLY_DIFF) * 1.5 * numRows + 24 + 4);
+		polygon.translate(qSqrt(3) / 2 * (COLOR_POLY_SIDE + COLOR_POLY_DIFF) * ii + 18, (COLOR_POLY_SIDE + COLOR_POLY_DIFF) * 1.5 * numRows + 24 + 4);
 
 		RBX::BrickColor bColor;
 		if (numColorsUsed < colorCount)
 			bColor = RBX::BrickColor::colorPalette().operator[](numColorsUsed++);
-		else 
+		else
 			bColor = RBX::BrickColor(lowerLineColorIDs[lowerLineColorCount++]);
 
 		m_colorsInfo.push_back(ColorKeyInfo(QColor(bColor.color3uint8().r, bColor.color3uint8().g, bColor.color3uint8().b), polygon, bColor.name().c_str(), bColor.asInt()));
@@ -113,7 +113,7 @@ ColorPickerFrame::ColorPickerFrame(QWidget *parent)
 	m_selectedColorIndex = 123;
 	m_hoveredColorIndex = 123;
 
-	int width  = maxPolygonsInARow * 2 * (qSqrt(3)/2 * (COLOR_POLY_SIDE + COLOR_POLY_DIFF)) + 8;
+	int width = maxPolygonsInARow * 2 * (qSqrt(3) / 2 * (COLOR_POLY_SIDE + COLOR_POLY_DIFF)) + 8;
 	int height = (maxPolygonsInARow + 1) * (COLOR_POLY_SIDE + COLOR_POLY_DIFF) * 1.5 + MARGIN_Y + 20;
 
 	resize(width, height);
@@ -122,7 +122,7 @@ ColorPickerFrame::ColorPickerFrame(QWidget *parent)
 void ColorPickerFrame::setSelectedItemQString(QString selectedItem)
 {
 	m_selectedColorIndex = -1;
-	for(int index = 0; index < (int)m_colorsInfo.size(); index++)
+	for (int index = 0; index < (int)m_colorsInfo.size(); index++)
 	{
 		if (m_colorsInfo[index].colorName == selectedItem)
 		{
@@ -134,12 +134,14 @@ void ColorPickerFrame::setSelectedItemQString(QString selectedItem)
 }
 
 QString ColorPickerFrame::getSelectedItemQString()
-{	return m_selectedColorIndex < 0 ? QString("") : m_colorsInfo[m_selectedColorIndex].colorName; }
+{
+	return m_selectedColorIndex < 0 ? QString("") : m_colorsInfo[m_selectedColorIndex].colorName;
+}
 
 void ColorPickerFrame::setSelectedItem(int selectedItem)
 {
 	m_selectedColorIndex = -1;
-	for(size_t index = 0; index < m_colorsInfo.size(); index++)
+	for (size_t index = 0; index < m_colorsInfo.size(); index++)
 	{
 		if (m_colorsInfo[index].colorValue == selectedItem)
 		{
@@ -151,30 +153,32 @@ void ColorPickerFrame::setSelectedItem(int selectedItem)
 }
 
 int ColorPickerFrame::getSelectedItem()
-{	return m_selectedColorIndex < 0 ? -1 : m_colorsInfo[m_selectedColorIndex].colorValue; }
+{
+	return m_selectedColorIndex < 0 ? -1 : m_colorsInfo[m_selectedColorIndex].colorValue;
+}
 
 void ColorPickerFrame::setSelectedIndex(int index)
 {
 	m_selectedColorIndex = -1;
-	if (index >=0 && index < (int)m_colorsInfo.size())
+	if (index >= 0 && index < (int)m_colorsInfo.size())
 		m_selectedColorIndex = index;
 }
 
 int ColorPickerFrame::getSelectedIndex()
 {
-	if (m_selectedColorIndex >=0 && m_selectedColorIndex < (int)m_colorsInfo.size())
+	if (m_selectedColorIndex >= 0 && m_selectedColorIndex < (int)m_colorsInfo.size())
 		return m_selectedColorIndex;
 	return -1;
 }
 
-void ColorPickerFrame::paintEvent(QPaintEvent *)
+void ColorPickerFrame::paintEvent(QPaintEvent*)
 {
-	QPainter painter( this );
+	QPainter painter(this);
 	painter.save();
 
 	painter.setPen(QPen(Qt::black));
 	painter.drawRect(1, 1, width() - 1, height() - 1);
-	painter.fillRect( QRect(1, 1, width() - 1, height() - 1), QApplication::palette().window());
+	painter.fillRect(QRect(1, 1, width() - 1, height() - 1), QApplication::palette().window());
 
 	paintPolygonGrid(painter);
 	painter.restore();
@@ -189,28 +193,28 @@ void ColorPickerFrame::mousePressEvent(QMouseEvent* evt)
 
 		Q_EMIT currentBrickColorChanged(m_colorsInfo[colorIndex].colorValue);
 	}
-    
-    // Ideally, we would like to close the picker here. We can't, because then
-    // MouseRelease event goes to the window below it and messes up the logic there.
-    // Instead, we raise a flag that the picker should close on MouseRelease and
-    // then close it there.
-    m_closeOnMouseRelease = true;
+
+	// Ideally, we would like to close the picker here. We can't, because then
+	// MouseRelease event goes to the window below it and messes up the logic there.
+	// Instead, we raise a flag that the picker should close on MouseRelease and
+	// then close it there.
+	m_closeOnMouseRelease = true;
 }
 
-void ColorPickerFrame::mouseReleaseEvent(QMouseEvent *event)
+void ColorPickerFrame::mouseReleaseEvent(QMouseEvent* event)
 {
-    if (m_closeOnMouseRelease)
-    {
-        this->close();
-        m_closeOnMouseRelease = false;
-    }
-}
-
-bool ColorPickerFrame::event(QEvent *evt)
-{
-	if (evt->type() == QEvent::ToolTip) 
+	if (m_closeOnMouseRelease)
 	{
-		QHelpEvent *helpEvent = static_cast<QHelpEvent *>(evt);
+		this->close();
+		m_closeOnMouseRelease = false;
+	}
+}
+
+bool ColorPickerFrame::event(QEvent* evt)
+{
+	if (evt->type() == QEvent::ToolTip)
+	{
+		QHelpEvent* helpEvent = static_cast<QHelpEvent*>(evt);
 		int colorIndex = getColorIndex(helpEvent->pos());
 
 		if (colorIndex >= 0)
@@ -231,9 +235,9 @@ bool ColorPickerFrame::event(QEvent *evt)
 
 int ColorPickerFrame::getColorIndex(const QPoint& pos)
 {
-	for(int index = 0; index < (int)m_colorsInfo.size(); index++)
+	for (int index = 0; index < (int)m_colorsInfo.size(); index++)
 	{
-		if(m_colorsInfo[index].polygon.containsPoint(pos, Qt::OddEvenFill))
+		if (m_colorsInfo[index].polygon.containsPoint(pos, Qt::OddEvenFill))
 			return index;
 	}
 
@@ -245,8 +249,8 @@ void ColorPickerFrame::paintPolygonGrid(QPainter& painter)
 	painter.setRenderHint(QPainter::Antialiasing, true);
 	painter.setRenderHint(QPainter::HighQualityAntialiasing, true);
 
-	bool itemHovered = false;	
-	for(size_t colorIndex = 0; colorIndex < m_colorsInfo.size(); colorIndex++)
+	bool itemHovered = false;
+	for (size_t colorIndex = 0; colorIndex < m_colorsInfo.size(); colorIndex++)
 	{
 		painter.setPen(QPen(Qt::black, 2));
 		painter.drawPolyline(m_colorsInfo[colorIndex].polygon);
@@ -262,7 +266,7 @@ void ColorPickerFrame::paintPolygonGrid(QPainter& painter)
 			painter.drawPolyline(m_colorsInfo[colorIndex].polygon);
 
 			QPolygonF smaller(getPolygon(PolygonSize_Small));
-			smaller.translate((m_colorsInfo[colorIndex].polygon[4] + m_colorsInfo[colorIndex].polygon[1])/2);
+			smaller.translate((m_colorsInfo[colorIndex].polygon[4] + m_colorsInfo[colorIndex].polygon[1]) / 2);
 			painter.setPen(QPen(Qt::yellow, 2));
 			painter.drawPolyline(smaller);
 		}
@@ -275,14 +279,14 @@ void ColorPickerFrame::paintPolygonGrid(QPainter& painter)
 			painter.drawPolyline(m_colorsInfo[colorIndex].polygon);
 
 			QPolygonF smaller(getPolygon(PolygonSize_Small));
-			smaller.translate((m_colorsInfo[colorIndex].polygon[4] + m_colorsInfo[colorIndex].polygon[1])/2);
+			smaller.translate((m_colorsInfo[colorIndex].polygon[4] + m_colorsInfo[colorIndex].polygon[1]) / 2);
 			painter.setPen(QPen(Qt::white, 2));
 			painter.drawPolyline(smaller);
 
 			if (colorIndex != m_hoveredColorIndex)
 			{
 				m_hoveredColorIndex = colorIndex;
-				Q_EMIT currentBrickColorChanged(m_colorsInfo[m_hoveredColorIndex].colorValue);				
+				Q_EMIT currentBrickColorChanged(m_colorsInfo[m_hoveredColorIndex].colorValue);
 			}
 		}
 	}
@@ -300,7 +304,7 @@ int ColorPickerFrame::getMaxPolygonsInARow()
 	int temp = 3, result = 0;
 	while (true)
 	{
-		if ((temp*temp - temp/2*(temp/2+1)) > colorCount)
+		if ((temp * temp - temp / 2 * (temp / 2 + 1)) > colorCount)
 			break;
 		result = temp;
 		temp += 2;
@@ -311,9 +315,9 @@ int ColorPickerFrame::getMaxPolygonsInARow()
 static QPolygonF getPolygonFromSide(int side)
 {
 	QPolygonF polygon;
-	qreal dx = qSqrt(3)/2 * side;
-	polygon << QPointF(dx, -side/2) << QPointF(0, -side) << QPointF(-dx, -side/2)
-		    << QPointF(-dx, side/2) << QPointF(0, side) << QPointF(dx, side/2) << QPointF(dx, -side/2);
+	qreal dx = qSqrt(3) / 2 * side;
+	polygon << QPointF(dx, -side / 2) << QPointF(0, -side) << QPointF(-dx, -side / 2)
+		<< QPointF(-dx, side / 2) << QPointF(0, side) << QPointF(dx, side / 2) << QPointF(dx, -side / 2);
 	return polygon;
 }
 
@@ -324,15 +328,15 @@ QPolygonF ColorPickerFrame::getPolygon(PolygonSize polySize)
 		static QPolygonF smallPolygon(getPolygonFromSide(COLOR_POLY_SIDE - COLOR_POLY_DIFF));
 		return smallPolygon;
 	}
-	
+
 	RBXASSERT(polySize == PolygonSize_Normal);
 	static QPolygonF normalPolygon(getPolygonFromSide(COLOR_POLY_SIDE));
 	return normalPolygon;
 }
 
-MaterialPickerFrame::MaterialPickerFrame( QWidget *parent ) 
-: PickerFrame(parent)
-, m_selectedMaterial(0)
+MaterialPickerFrame::MaterialPickerFrame(QWidget* parent)
+	: PickerFrame(parent)
+	, m_selectedMaterial(0)
 {
 	m_materialValues.append(RBX::PLASTIC_MATERIAL);
 	m_materialValues.append(RBX::WOOD_MATERIAL);
@@ -352,29 +356,29 @@ MaterialPickerFrame::MaterialPickerFrame( QWidget *parent )
 	m_materialValues.append(RBX::MARBLE_MATERIAL);
 	m_materialValues.append(RBX::PEBBLE_MATERIAL);
 	m_materialValues.append(RBX::COBBLESTONE_MATERIAL);
-	m_materialValues.append(RBX::SMOOTH_PLASTIC_MATERIAL);	
-	
+	m_materialValues.append(RBX::SMOOTH_PLASTIC_MATERIAL);
+
 	//create individual images
 	QImage materialsImage(":/images/MaterialPalette.PNG");
 
-    int materialWidth = materialsImage.width();
+	int materialWidth = materialsImage.width();
 
-    for (int count=0; count < qFloor(materialWidth / MAT_IMAGE_SIZE); count++)
-		m_materialImages.append(materialsImage.copy(MAT_IMAGE_SIZE*count, 0, MAT_IMAGE_SIZE, MAT_IMAGE_SIZE));
+	for (int count = 0; count < qFloor(materialWidth / MAT_IMAGE_SIZE); count++)
+		m_materialImages.append(materialsImage.copy(MAT_IMAGE_SIZE * count, 0, MAT_IMAGE_SIZE, MAT_IMAGE_SIZE));
 
 	//resize frame with the created image size taking margins into consideration
-    int width = (qMin(MATERIAL_COLS, m_materialImages.size()) * (MATERIAL_SPACE + MAT_IMAGE_SIZE)) + (MARGIN_X * 4) - MATERIAL_SPACE;
-    int height = (qCeil((float)m_materialImages.size() / (float)MATERIAL_COLS) * (MATERIAL_SPACE + MAT_IMAGE_SIZE)) + (MARGIN_Y * 4) - MATERIAL_SPACE;
+	int width = (qMin(MATERIAL_COLS, m_materialImages.size()) * (MATERIAL_SPACE + MAT_IMAGE_SIZE)) + (MARGIN_X * 4) - MATERIAL_SPACE;
+	int height = (qCeil((float)m_materialImages.size() / (float)MATERIAL_COLS) * (MATERIAL_SPACE + MAT_IMAGE_SIZE)) + (MARGIN_Y * 4) - MATERIAL_SPACE;
 
-    resize(width, height);
+	resize(width, height);
 }
 
 void MaterialPickerFrame::setSelectedItemQString(const QString& selectedItem)
 {
 	m_selectedMaterial = -1;
-	for(int index = 0; index < m_materialNames.count(); index++)
+	for (int index = 0; index < m_materialNames.count(); index++)
 	{
-		if(m_materialNames[index] == selectedItem)
+		if (m_materialNames[index] == selectedItem)
 		{
 			m_selectedMaterial = index;
 			break;
@@ -383,14 +387,16 @@ void MaterialPickerFrame::setSelectedItemQString(const QString& selectedItem)
 }
 
 QString MaterialPickerFrame::getSelectedItemQString()
-{	return m_selectedMaterial < 0 ? QString("") : m_materialNames[m_selectedMaterial]; }
+{
+	return m_selectedMaterial < 0 ? QString("") : m_materialNames[m_selectedMaterial];
+}
 
 void MaterialPickerFrame::setSelectedItem(int selectedItem)
 {
 	m_selectedMaterial = -1;
-	for(int index = 0; index < m_materialValues.count(); index++)
+	for (int index = 0; index < m_materialValues.count(); index++)
 	{
-		if(m_materialValues[index] == selectedItem)
+		if (m_materialValues[index] == selectedItem)
 		{
 			m_selectedMaterial = index;
 			break;
@@ -399,46 +405,48 @@ void MaterialPickerFrame::setSelectedItem(int selectedItem)
 }
 
 int  MaterialPickerFrame::getSelectedItem()
-{	return m_selectedMaterial < 0 ? -1 : m_materialValues[m_selectedMaterial]; }
+{
+	return m_selectedMaterial < 0 ? -1 : m_materialValues[m_selectedMaterial];
+}
 
 void MaterialPickerFrame::paintEvent(QPaintEvent*)
 {
-    QPainter painter(this);
-    painter.save();
+	QPainter painter(this);
+	painter.save();
 
-    painter.fillRect(QRect(1, 1, width() - 1, height() - 1), QApplication::palette().window());
+	painter.fillRect(QRect(1, 1, width() - 1, height() - 1), QApplication::palette().window());
 
-    QPointF mousePos = this->mapFromGlobal(QCursor::pos());
+	QPointF mousePos = this->mapFromGlobal(QCursor::pos());
 
-    for (int materialIndex = 0; materialIndex < m_materialImages.size(); materialIndex++)
-    {
-        int xOffset = (2 * MARGIN_X) + (materialIndex % MATERIAL_COLS) * (MAT_IMAGE_SIZE + MATERIAL_SPACE);
-        int yOffset = (2 * MARGIN_Y) + (materialIndex / MATERIAL_COLS) * (MAT_IMAGE_SIZE + MATERIAL_SPACE);
+	for (int materialIndex = 0; materialIndex < m_materialImages.size(); materialIndex++)
+	{
+		int xOffset = (2 * MARGIN_X) + (materialIndex % MATERIAL_COLS) * (MAT_IMAGE_SIZE + MATERIAL_SPACE);
+		int yOffset = (2 * MARGIN_Y) + (materialIndex / MATERIAL_COLS) * (MAT_IMAGE_SIZE + MATERIAL_SPACE);
 
-        painter.setPen(QPen(Qt::black, 1));
-        painter.drawRect(xOffset, yOffset, 26, 26);
+		painter.setPen(QPen(Qt::black, 1));
+		painter.drawRect(xOffset, yOffset, 26, 26);
 
-        painter.drawImage(xOffset, yOffset, m_materialImages.at(materialIndex));
+		painter.drawImage(xOffset, yOffset, m_materialImages.at(materialIndex));
 
-        QRectF currentMaterialRect(xOffset, yOffset, MAT_IMAGE_SIZE, MAT_IMAGE_SIZE);
+		QRectF currentMaterialRect(xOffset, yOffset, MAT_IMAGE_SIZE, MAT_IMAGE_SIZE);
 
-        if (materialIndex == m_selectedMaterial)
-        {
-            painter.setPen(QPen(Qt::red, 1));
-            painter.drawRect(currentMaterialRect.adjusted(-MATERIAL_SPACE / 2, -MATERIAL_SPACE / 2, MATERIAL_SPACE / 2, MATERIAL_SPACE / 2));
-        }
+		if (materialIndex == m_selectedMaterial)
+		{
+			painter.setPen(QPen(Qt::red, 1));
+			painter.drawRect(currentMaterialRect.adjusted(-MATERIAL_SPACE / 2, -MATERIAL_SPACE / 2, MATERIAL_SPACE / 2, MATERIAL_SPACE / 2));
+		}
 
-        if(currentMaterialRect.contains(mousePos))
-        {
-            painter.setPen(QPen(Qt::blue, 1));
-            painter.drawRect(currentMaterialRect.adjusted(-MATERIAL_SPACE / 2, -MATERIAL_SPACE / 2, MATERIAL_SPACE / 2, MATERIAL_SPACE / 2));
-        }
-    }
+		if (currentMaterialRect.contains(mousePos))
+		{
+			painter.setPen(QPen(Qt::blue, 1));
+			painter.drawRect(currentMaterialRect.adjusted(-MATERIAL_SPACE / 2, -MATERIAL_SPACE / 2, MATERIAL_SPACE / 2, MATERIAL_SPACE / 2));
+		}
+	}
 
-    painter.restore();
+	painter.restore();
 }
 
-void MaterialPickerFrame::mousePressEvent(QMouseEvent *evt)
+void MaterialPickerFrame::mousePressEvent(QMouseEvent* evt)
 {
 	int materialIndex = getMaterialIndex(evt->pos());
 	if (materialIndex >= 0)
@@ -446,15 +454,15 @@ void MaterialPickerFrame::mousePressEvent(QMouseEvent *evt)
 		m_selectedMaterial = materialIndex;
 		Q_EMIT currentMaterialChanged(m_materialValues[materialIndex]);
 	}
-	
+
 	this->close();
 }
 
-bool MaterialPickerFrame::event(QEvent *evt)
+bool MaterialPickerFrame::event(QEvent* evt)
 {
-	if (evt->type() == QEvent::ToolTip) 
+	if (evt->type() == QEvent::ToolTip)
 	{
-		QHelpEvent *helpEvent = static_cast<QHelpEvent *>(evt);
+		QHelpEvent* helpEvent = static_cast<QHelpEvent*>(evt);
 		int materialIndex = getMaterialIndex(helpEvent->pos());
 		if (materialIndex >= 0)
 		{
@@ -472,9 +480,9 @@ bool MaterialPickerFrame::event(QEvent *evt)
 
 int MaterialPickerFrame::getMaterialIndex(const QPoint& pos)
 {
-	if(rect().contains(pos)) 
+	if (rect().contains(pos))
 	{
-		int materialIndex = ((pos.x() - MARGIN_X)/(MAT_IMAGE_SIZE + MATERIAL_SPACE)) + MATERIAL_COLS * ((pos.y() - MARGIN_Y)/(MAT_IMAGE_SIZE + MATERIAL_SPACE));
+		int materialIndex = ((pos.x() - MARGIN_X) / (MAT_IMAGE_SIZE + MATERIAL_SPACE)) + MATERIAL_COLS * ((pos.y() - MARGIN_Y) / (MAT_IMAGE_SIZE + MATERIAL_SPACE));
 
 		if (materialIndex >= 0 && materialIndex < m_materialValues.size())
 			return materialIndex;
@@ -483,11 +491,11 @@ int MaterialPickerFrame::getMaterialIndex(const QPoint& pos)
 	return -1;
 }
 
-CustomToolButton::CustomToolButton(QWidget *parent) 
-: QToolButton(parent)
-, m_pPickerFrame(NULL)
-, m_bMenuButtonPressed(false)
-, m_toolButtonStyle(Qt::ToolButtonIconOnly)
+CustomToolButton::CustomToolButton(QWidget* parent)
+	: QToolButton(parent)
+	, m_pPickerFrame(NULL)
+	, m_bMenuButtonPressed(false)
+	, m_toolButtonStyle(Qt::ToolButtonIconOnly)
 {
 	setPopupMode(QToolButton::MenuButtonPopup);
 }
@@ -496,7 +504,7 @@ CustomToolButton::~CustomToolButton()
 {
 }
 
-void CustomToolButton::paintEvent (QPaintEvent *evt)
+void CustomToolButton::paintEvent(QPaintEvent* evt)
 {
 	if (!m_bMenuButtonPressed)
 	{
@@ -509,42 +517,42 @@ void CustomToolButton::paintEvent (QPaintEvent *evt)
 	initStyleOptions(&styleOptions);
 
 	//draw tool button appropriately
-	QStylePainter pPainter(this);	
+	QStylePainter pPainter(this);
 	pPainter.drawComplexControl(QStyle::CC_ToolButton, styleOptions);
 }
 
-void CustomToolButton::mousePressEvent ( QMouseEvent *e )
-{	
-	if (e->button() == Qt::LeftButton) 
+void CustomToolButton::mousePressEvent(QMouseEvent* e)
+{
+	if (e->button() == Qt::LeftButton)
 	{
 		QStyleOptionToolButton styleOption;
 		initStyleOption(&styleOption);
 
-        QRect popupRect = style()->subControlRect(QStyle::CC_ToolButton, &styleOption, QStyle::SC_ToolButtonMenu, this);
-        if (popupRect.isValid() && popupRect.contains(e->pos())) 
+		QRect popupRect = style()->subControlRect(QStyle::CC_ToolButton, &styleOption, QStyle::SC_ToolButtonMenu, this);
+		if (popupRect.isValid() && popupRect.contains(e->pos()))
 		{
 			showPopupFrame();
 			return;
-        }
-    }
+		}
+	}
 
-	QToolButton::mousePressEvent(e);	
+	QToolButton::mousePressEvent(e);
 }
 
-void CustomToolButton::initStyleOptions(QStyleOptionToolButton *pOption)
-{	
+void CustomToolButton::initStyleOptions(QStyleOptionToolButton* pOption)
+{
 	if (!pOption)
 		return;
 
 	pOption->initFrom(this);
-    
+
 	pOption->icon = icon();
 	pOption->iconSize = iconSize();
 	pOption->pos = pos();
 	pOption->font = font();
-    pOption->text = text();
+	pOption->text = text();
 
-	pOption->features = QStyleOptionToolButton::HasMenu|QStyleOptionToolButton::MenuButtonPopup;		
+	pOption->features = QStyleOptionToolButton::HasMenu | QStyleOptionToolButton::MenuButtonPopup;
 	pOption->subControls = QStyle::SC_ToolButtonMenu;
 
 	pOption->activeSubControls = QStyle::SC_ToolButtonMenu;
@@ -555,7 +563,7 @@ void CustomToolButton::initStyleOptions(QStyleOptionToolButton *pOption)
 
 void CustomToolButton::showPopupFrame()
 {
-	PickerFrame *pPickerFrame = getPickerFrame();
+	PickerFrame* pPickerFrame = getPickerFrame();
 	if (!pPickerFrame)
 		return;
 
@@ -568,27 +576,27 @@ void CustomToolButton::showPopupFrame()
 	pPickerFrame->move(getPopupLocation(pPickerFrame->size()));
 	pPickerFrame->show();
 	repaint();
-	
+
 	Q_EMIT frameShown();
 
 	//start event loop
 	eventLoop.exec();
-	
+
 	Q_EMIT frameHidden();
 
 	m_bMenuButtonPressed = false;
 	repaint();
 }
 
-QPoint CustomToolButton::getPopupLocation(const QSize &pickerFrameSize)
+QPoint CustomToolButton::getPopupLocation(const QSize& pickerFrameSize)
 {
 	QPoint location;
 	QRect screen = QApplication::desktop()->availableGeometry(this);
 	QRect rect = this->rect();
 
-	if (mapToGlobal(QPoint(0, rect.bottom())).y() + pickerFrameSize.height() <= screen.height()) 
-		location = mapToGlobal(rect.bottomLeft()); 
-	else 
+	if (mapToGlobal(QPoint(0, rect.bottom())).y() + pickerFrameSize.height() <= screen.height())
+		location = mapToGlobal(rect.bottomLeft());
+	else
 		location = mapToGlobal(rect.topLeft() - QPoint(0, pickerFrameSize.height()));
 
 	location.rx() = qMax(screen.left(), qMin(location.x(), screen.right() - pickerFrameSize.width()));
@@ -603,7 +611,7 @@ PickerFrame* MaterialPickerToolButton::getPickerFrame()
 	if (!m_pPickerFrame)
 	{
 		m_pPickerFrame = new MaterialPickerFrame(this);
-		connect(m_pPickerFrame, SIGNAL(changed(const QString &)), this, SIGNAL(changed(const QString &)));
+		connect(m_pPickerFrame, SIGNAL(changed(const QString&)), this, SIGNAL(changed(const QString&)));
 	}
 
 	return m_pPickerFrame;
@@ -614,7 +622,7 @@ PickerFrame* ColorPickerToolButton::getPickerFrame()
 	if (!m_pPickerFrame)
 	{
 		m_pPickerFrame = new ColorPickerFrame(this);
-		connect(m_pPickerFrame, SIGNAL(changed(const QString &)), this, SIGNAL(changed(const QString &)));
+		connect(m_pPickerFrame, SIGNAL(changed(const QString&)), this, SIGNAL(changed(const QString&)));
 	}
 
 	//set the current color
@@ -629,7 +637,7 @@ PickerFrame* FillColorPickerToolButton::getPickerFrame()
 	if (!m_pPickerFrame)
 	{
 		m_pPickerFrame = new ColorPickerFrame(this);
-		connect(m_pPickerFrame, SIGNAL(changed(const QString &)), this, SLOT(onPickerFrameChanged(const QString &)));
+		connect(m_pPickerFrame, SIGNAL(changed(const QString&)), this, SLOT(onPickerFrameChanged(const QString&)));
 		// just in case picker frame gets deleted in between!
 		connect(m_pPickerFrame, SIGNAL(destroyed()), this, SLOT(onPickerFrameDestroyed()));
 	}
@@ -656,42 +664,44 @@ void FillColorPickerToolButton::onPickerFrameChanged(const QString& selectedColo
 }
 
 void FillColorPickerToolButton::onPickerFrameDestroyed()
-{ m_pPickerFrame = NULL; }
-
-PopupLaunchEditor::PopupLaunchEditor(PropertyItem *pParentItem, QWidget *pParent, const QIcon &itemIcon, const QString &labelText, int buttonWidth, QWidget *proxyWidget)
-: QWidget(pParent)
-, m_pParentItem(pParentItem)
 {
-	QHBoxLayout *pLayout = new QHBoxLayout(this);
+	m_pPickerFrame = NULL;
+}
+
+PopupLaunchEditor::PopupLaunchEditor(PropertyItem* pParentItem, QWidget* pParent, const QIcon& itemIcon, const QString& labelText, int buttonWidth, QWidget* proxyWidget)
+	: QWidget(pParent)
+	, m_pParentItem(pParentItem)
+{
+	QHBoxLayout* pLayout = new QHBoxLayout(this);
 
 	QPixmap pix = itemIcon.pixmap(QSize(16, 16));
 
-	QToolButton *pButton = new QToolButton(this);
+	QToolButton* pButton = new QToolButton(this);
 	pButton->setText(tr("..."));
 	pButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Ignored);
 	pButton->setFixedWidth(buttonWidth);
 
 	if (!pix.isNull())
 		pButton->setIcon(QIcon(pix));
-	
+
 	pLayout->addWidget(pButton);
 	pLayout->setMargin(0);
 	pLayout->setSpacing(4);
-	
+
 	if (proxyWidget)
 	{
 		pLayout->addWidget(proxyWidget);
 	}
-	else 
+	else
 	{
-		QLabel *pTextLabel  = new QLabel(labelText, this);
+		QLabel* pTextLabel = new QLabel(labelText, this);
 		pTextLabel->setSizePolicy(QSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored));
 		pLayout->addWidget(pTextLabel);
 	}
 
 	setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
 	setFocusProxy(proxyWidget ? proxyWidget : pButton);
-	
+
 	connect(pButton, SIGNAL(clicked()), this, SLOT(onButtonClicked()));
 	connect(proxyWidget, SIGNAL(editingFinished()), this, SLOT(onEditFinished()));
 }
@@ -714,16 +724,20 @@ void PopupLaunchEditor::onButtonClicked()
 	}
 }
 
-SignalConnector::SignalConnector(PropertyItem *pPropertyItem)
-: m_pPropertyItem(pPropertyItem)
+SignalConnector::SignalConnector(PropertyItem* pPropertyItem)
+	: m_pPropertyItem(pPropertyItem)
 {
 }
 
-bool SignalConnector::connectSignalArg1(QObject *pSender, const char * signal)
-{	return connect(pSender, signal, this, SLOT(genericSlotArg1(const QString &))); }
+bool SignalConnector::connectSignalArg1(QObject* pSender, const char* signal)
+{
+	return connect(pSender, signal, this, SLOT(genericSlotArg1(const QString&)));
+}
 
-void SignalConnector::genericSlotArg1(const QString &arg)
-{ 	m_pPropertyItem->onEvent(sender(), arg); }
+void SignalConnector::genericSlotArg1(const QString& arg)
+{
+	m_pPropertyItem->onEvent(sender(), arg);
+}
 
 ImagePickerWidget::ImagePickerWidget(QWidget* parent)
 	: PickerFrame(parent)
@@ -751,7 +765,7 @@ QString ImagePickerWidget::getImageUrl(const QString& lastValue, const QPoint& l
 	topLayout->addWidget(lineEdit, 0, 1);
 
 	QObject::connect(lineEdit, SIGNAL(returnPressed()),
-		             this,     SLOT  (acceptLineEditValue()));
+		this, SLOT(acceptLineEditValue()));
 
 	QListWidget* scrollList = new QListWidget(this);
 
@@ -795,8 +809,8 @@ QString ImagePickerWidget::getImageUrl(const QString& lastValue, const QPoint& l
 	addItem->setSizeHint(QSize(-1, 64));
 	scrollList->addItem(addItem);
 
-	QObject::connect(scrollList, SIGNAL(itemClicked          (QListWidgetItem*)),
-		             this,       SLOT  (handleListItemClicked(QListWidgetItem*)));
+	QObject::connect(scrollList, SIGNAL(itemClicked(QListWidgetItem*)),
+		this, SLOT(handleListItemClicked(QListWidgetItem*)));
 
 	topLayout->addWidget(scrollList, 1, 0, 1, 2);
 
@@ -869,37 +883,37 @@ void ImagePickerWidget::handleListItemClicked(QListWidgetItem* item)
 //////////////////////////////////////////////////////////////////////////
 
 
-NumberSequencePropertyWidget::NumberSequencePropertyWidget( QWidget* parent, Callbacks* c ): QWidget(parent), cb(c)
+NumberSequencePropertyWidget::NumberSequencePropertyWidget(QWidget* parent, Callbacks* c) : QWidget(parent), cb(c)
 {
-    textEditor = new QLineEdit( "<ns text>" );
-    editButton = new QPushButton( "..." );
-    editButton->setFixedWidth(30);
+	textEditor = new QLineEdit("<ns text>");
+	editButton = new QPushButton("...");
+	editButton->setFixedWidth(30);
 
-    QGridLayout* layout = new QGridLayout(); // [Text] | [...]
-    layout->addWidget(textEditor, 0, 0);
-    layout->addWidget(editButton, 0, 1);
-    layout->setMargin(0);
-    layout->setSpacing(0);
-    layout->setContentsMargins(0,0,0,0);
+	QGridLayout* layout = new QGridLayout(); // [Text] | [...]
+	layout->addWidget(textEditor, 0, 0);
+	layout->addWidget(editButton, 0, 1);
+	layout->setMargin(0);
+	layout->setSpacing(0);
+	layout->setContentsMargins(0, 0, 0, 0);
 
-    this->setContentsMargins(0,0,0,0);
-    this->setLayout(layout);
-    this->setFocusProxy(textEditor);
+	this->setContentsMargins(0, 0, 0, 0);
+	this->setLayout(layout);
+	this->setFocusProxy(textEditor);
 
-    connect( textEditor, SIGNAL(editingFinished()), this, SLOT(onText()) );
-    connect( editButton, SIGNAL(clicked(bool)), this, SLOT(onButton(bool)) );
+	connect(textEditor, SIGNAL(editingFinished()), this, SLOT(onText()));
+	connect(editButton, SIGNAL(clicked(bool)), this, SLOT(onButton(bool)));
 }
 
 
 
 void NumberSequencePropertyWidget::onText()
 {
-    cb->onTextAccepted();
+	cb->onTextAccepted();
 }
 
 void NumberSequencePropertyWidget::onButton(bool)
 {
-    cb->onCurveClicked();
+	cb->onCurveClicked();
 }
 //--------------------------------------------------------------------------------------------
 // PartSelectionTool
@@ -918,7 +932,7 @@ void PartSelectionTool::onMouseHover(const shared_ptr<RBX::InputObject>& inputOb
 	RBX::PartInstance* pPartHoveredOver = getPart(workspace, inputObject);
 	partHoveredOverSignal(pPartHoveredOver, isValid);
 
-    setHighlightPart( isValid ? shared_from(pPartHoveredOver) : boost::shared_ptr<RBX::PartInstance>());
+	setHighlightPart(isValid ? shared_from(pPartHoveredOver) : boost::shared_ptr<RBX::PartInstance>());
 }
 
 shared_ptr<RBX::MouseCommand> PartSelectionTool::onMouseDown(const shared_ptr<RBX::InputObject>& inputObject)
@@ -944,9 +958,9 @@ void PartSelectionTool::render3dAdorn(RBX::Adorn* adorn)
 	RBX::MouseCommand::render3dAdorn(adorn);
 	if (m_pHighlightPart)
 	{
-	      RBX::Draw::selectionBox(m_pHighlightPart->getPart(), adorn, 
-								  RBX::ModelInstance::primaryPartHoverOverColor(), 
-								  RBX::ModelInstance::primaryPartLineThickness());
+		RBX::Draw::selectionBox(m_pHighlightPart->getPart(), adorn,
+			RBX::ModelInstance::primaryPartHoverOverColor(),
+			RBX::ModelInstance::primaryPartLineThickness());
 	}
 }
 
@@ -954,41 +968,41 @@ void PartSelectionTool::render3dAdorn(RBX::Adorn* adorn)
 // PrimaryPartSelectionEditor
 //--------------------------------------------------------------------------------------------
 PrimaryPartSelectionEditor::PrimaryPartSelectionEditor(QWidget* parent, PropertyItem* pPropertyItem, const QString& labelText, boost::shared_ptr<RBX::ModelInstance> instance)
-: QWidget(parent)
-, m_pPrimaryPartPropertyItem(pPropertyItem)
-, m_pModelInstance(instance)
+	: QWidget(parent)
+	, m_pPrimaryPartPropertyItem(pPropertyItem)
+	, m_pModelInstance(instance)
 {
 	setStatusTip(tr("Select Primary Part"));
 
-	QHBoxLayout *pLayout = new QHBoxLayout(this);
-	
-	QLabel *pTextLabel  = new QLabel(labelText, this);
+	QHBoxLayout* pLayout = new QHBoxLayout(this);
+
+	QLabel* pTextLabel = new QLabel(labelText, this);
 	pTextLabel->setSizePolicy(QSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored));
 	pLayout->addWidget(pTextLabel);
 
-	QToolButton *pRemoveButton = new QToolButton(this);
+	QToolButton* pRemoveButton = new QToolButton(this);
 	pRemoveButton->setObjectName("removeButton");
 	pRemoveButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Ignored);
 	pRemoveButton->setFixedWidth(20);
 	pRemoveButton->setIcon(QIcon(":/16x16/images/Studio 2.0 icons/16x16/delete_x_16_h.png"));
 	pRemoveButton->setToolTip(tr("Remove Primary Part"));
-	
+
 	pLayout->addWidget(pRemoveButton);
 	pLayout->setMargin(0);
 	pLayout->setSpacing(4);
 
 	setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
 	setFocusProxy(pRemoveButton);
-	
+
 	connect(pRemoveButton, SIGNAL(clicked()), this, SLOT(onButtonClicked()));
 
 	RBX::Workspace* workspace = RobloxDocManager::Instance().getPlayDoc()->getDataModel()->getWorkspace();
 	m_pSelectionTool = RBX::Creatable<RBX::MouseCommand>::create<PartSelectionTool>(workspace);
 	workspace->setMouseCommand(m_pSelectionTool);
 
-	m_cPartSelectedConnection = m_pSelectionTool->partSelectedSignal.connect( boost::bind(&PrimaryPartSelectionEditor::onPartSelected, this, _1) );
-	m_cPartHoveredOverConnection = m_pSelectionTool->partHoveredOverSignal.connect( boost::bind(&PrimaryPartSelectionEditor::onPartHoveredOver, this, _1, _2) );
-	
+	m_cPartSelectedConnection = m_pSelectionTool->partSelectedSignal.connect(boost::bind(&PrimaryPartSelectionEditor::onPartSelected, this, _1));
+	m_cPartHoveredOverConnection = m_pSelectionTool->partHoveredOverSignal.connect(boost::bind(&PrimaryPartSelectionEditor::onPartHoveredOver, this, _1, _2));
+
 	RobloxTreeWidget* pTreeWidget = UpdateUIManager::Instance().getViewWidget<RobloxExplorerWidget>(eDW_OBJECT_EXPLORER).getTreeWidget();
 	if (pTreeWidget)
 		pTreeWidget->setInstanceSelectionHandler(this);
@@ -1019,7 +1033,7 @@ PrimaryPartSelectionEditor::~PrimaryPartSelectionEditor()
 	}
 }
 
-bool PrimaryPartSelectionEditor::eventFilter(QObject* watched,QEvent* evt)
+bool PrimaryPartSelectionEditor::eventFilter(QObject* watched, QEvent* evt)
 {
 	if ((evt->type() == QEvent::ActionChanged) && (RobloxDocManager::Instance().getPlayDoc()))
 	{
@@ -1034,7 +1048,7 @@ bool PrimaryPartSelectionEditor::eventFilter(QObject* watched,QEvent* evt)
 				deleteLater();
 		}
 	}
-	else if ((evt->type() == QEvent::KeyRelease) && (static_cast<QKeyEvent *>(evt)->key() == Qt::Key_Escape))
+	else if ((evt->type() == QEvent::KeyRelease) && (static_cast<QKeyEvent*>(evt)->key() == Qt::Key_Escape))
 	{
 		deleteLater();
 	}
@@ -1062,7 +1076,9 @@ void PrimaryPartSelectionEditor::onPartHoveredOver(RBX::PartInstance* pPart, boo
 }
 
 void PrimaryPartSelectionEditor::onInstanceSelected(boost::shared_ptr<RBX::Instance> instance)
-{  setPrimaryPart(RBX::Instance::fastDynamicCast<RBX::PartInstance>(instance.get())); }
+{
+	setPrimaryPart(RBX::Instance::fastDynamicCast<RBX::PartInstance>(instance.get()));
+}
 
 void PrimaryPartSelectionEditor::onInstanceHovered(boost::shared_ptr<RBX::Instance> instance)
 {
@@ -1077,7 +1093,9 @@ void PrimaryPartSelectionEditor::onPartSelected(RBX::PartInstance* pPart)
 }
 
 void PrimaryPartSelectionEditor::onButtonClicked()
-{  m_pPrimaryPartPropertyItem->buttonClicked(sender()->objectName()); }
+{
+	m_pPrimaryPartPropertyItem->buttonClicked(sender()->objectName());
+}
 
 bool PrimaryPartSelectionEditor::setPrimaryPart(RBX::PartInstance* pPart)
 {

@@ -85,7 +85,7 @@ namespace RBX {
 
 		const luaL_reg Color3Bridge::classLibrary[] = {
 			{"new", newColor3},
-			{"fromRGB", newRGBColor3},
+			{"fromRGB", newColor3FromRGB},
 			{"fromHSV", newHSVColor3},
 			{"fromHex", newHexColor3},
 			{NULL, NULL}
@@ -162,14 +162,14 @@ namespace RBX {
 			return 1;
 		}
 
-		int Color3Bridge::newRGBColor3(lua_State* L)
+		int Color3Bridge::newColor3FromRGB(lua_State* L)
 		{
 			float color[3];
 
 			// There should be up to 3 numerical parameters (r,g,b). Following Lua conventions ignore others and use 0 for missing
 			int count = std::min(3, lua_gettop(L));
 			for (int i = 0; i < count; i++)
-				color[i] = lua_tofloat(L, i + 1) / 255;
+				color[i] = lua_tofloat(L, i + 1) / 255.0f;
 			for (int i = count; i < 3; i++)
 				color[i] = 0.0;
 			pushNewObject(L, color);

@@ -40,7 +40,6 @@
 #include "Network/Players.h"
 #include "Network/api.h"
 #include "v8world/ContactManager.h"
-#include "Network/NetworkOwner.h"
 #include "script/ScriptContext.h"
 #include "script/LuaInstanceBridge.h"
 
@@ -3315,4 +3314,3 @@ namespace RBX {
 	}
 
 } // namespace
-

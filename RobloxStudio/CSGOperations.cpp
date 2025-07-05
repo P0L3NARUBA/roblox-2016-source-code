@@ -21,16 +21,16 @@ FASTFLAGVARIABLE(StudioCSGChildDataNoSizeLimit, false)
 FASTFLAGVARIABLE(CSGNewTriangulateFallBack, true)
 FASTFLAGVARIABLE(CSGDelayParentingOperationToEnd, false)
 
-RBX::CSGOperations::CSGOperations( DataModel* pDatamodel, MessageCallback failedFun )
-  : mDatamodel(pDatamodel)
-  , operationFailed(failedFun)
+RBX::CSGOperations::CSGOperations(DataModel* pDatamodel, MessageCallback failedFun)
+    : mDatamodel(pDatamodel)
+    , operationFailed(failedFun)
 {
 }
 
 bool RBX::CSGOperations::doUnion(
     std::vector<boost::shared_ptr<RBX::Instance> >::const_iterator start,
     std::vector<boost::shared_ptr<RBX::Instance> >::const_iterator end,
-    boost::shared_ptr<PartOperation>& partOperation )
+    boost::shared_ptr<PartOperation>& partOperation)
 {
     bool allNeg = true;
     for (Instances::const_iterator iter = start; iter != end; ++iter)
@@ -48,19 +48,19 @@ bool RBX::CSGOperations::doUnion(
             partOperation = Creatable<Instance>::create<NegateOperation>();
         else
             partOperation = Creatable<Instance>::create<UnionOperation>();
-		if (!FFlag::CSGDelayParentingOperationToEnd)
-			partOperation->setParent(mDatamodel->getWorkspace());
+        if (!FFlag::CSGDelayParentingOperationToEnd)
+            partOperation->setParent(mDatamodel->getWorkspace());
     }
-    catch (std::exception &)
+    catch (std::exception&)
     {
         return false;
     }
 
-	Instance* newOperationParent = NULL;
-	if (FFlag::CSGDelayParentingOperationToEnd)
-	{
-		newOperationParent = getCommonParentOrWorkspace(start, end);
-	}
+    Instance* newOperationParent = NULL;
+    if (FFlag::CSGDelayParentingOperationToEnd)
+    {
+        newOperationParent = getCommonParentOrWorkspace(start, end);
+    }
 
     //Convert to mesh
     if (!setUnionMesh(partOperation, start, end, false))
@@ -73,39 +73,39 @@ bool RBX::CSGOperations::doUnion(
     CSGDictionaryService* dictionaryService = ServiceProvider::create< CSGDictionaryService >(mDatamodel);
     NonReplicatedCSGDictionaryService* nrDictionaryService = ServiceProvider::create<NonReplicatedCSGDictionaryService>(mDatamodel);
 
-	if (FFlag::CSGDelayParentingOperationToEnd)
-	{
-		Instances selectionCopy(start, end);
-		for (auto iter : selectionCopy)
-		{
-			iter->setParent(partOperation.get());
+    if (FFlag::CSGDelayParentingOperationToEnd)
+    {
+        Instances selectionCopy(start, end);
+        for (auto iter : selectionCopy)
+        {
+            iter->setParent(partOperation.get());
 
-			if (shared_ptr<PartOperation> partOp = RBX::Instance::fastSharedDynamicCast<PartOperation>(iter))
-			{
-				dictionaryService->retrieveData(*partOp);
-				nrDictionaryService->retrieveData(*partOp);
+            if (shared_ptr<PartOperation> partOp = RBX::Instance::fastSharedDynamicCast<PartOperation>(iter))
+            {
+                dictionaryService->retrieveData(*partOp);
+                nrDictionaryService->retrieveData(*partOp);
 
-				partOp->setMeshData(RBX::BinaryString(""));
-				partOp->setPhysicsData(RBX::BinaryString(""));
-			}
-		}
-	}
-	else
-	{
-		for (RBX::Instances::const_iterator iter = start; iter != end; ++iter)
-		{
-			(*iter)->setParent(partOperation.get());
+                partOp->setMeshData(RBX::BinaryString(""));
+                partOp->setPhysicsData(RBX::BinaryString(""));
+            }
+        }
+    }
+    else
+    {
+        for (RBX::Instances::const_iterator iter = start; iter != end; ++iter)
+        {
+            (*iter)->setParent(partOperation.get());
 
-			if (shared_ptr<PartOperation> partOp = RBX::Instance::fastSharedDynamicCast<PartOperation>(*iter))
-			{
-				dictionaryService->retrieveData(*partOp);
-				nrDictionaryService->retrieveData(*partOp);
+            if (shared_ptr<PartOperation> partOp = RBX::Instance::fastSharedDynamicCast<PartOperation>(*iter))
+            {
+                dictionaryService->retrieveData(*partOp);
+                nrDictionaryService->retrieveData(*partOp);
 
-				partOp->setMeshData(RBX::BinaryString(""));
-				partOp->setPhysicsData(RBX::BinaryString(""));
-			}
-		}
-	}
+                partOp->setMeshData(RBX::BinaryString(""));
+                partOp->setPhysicsData(RBX::BinaryString(""));
+            }
+        }
+    }
 
     //Serialize children
     std::stringstream ss;
@@ -116,7 +116,7 @@ bool RBX::CSGOperations::doUnion(
     if (!FFlag::StudioCSGChildDataNoSizeLimit && childDataBinaryStr.value().size() > PartOperation::getMaximumMeshStreamSize())
     {
         char buf[128];
-        sprintf( buf, "This union is too complex.  There is a %d triangle limit for unions.  Please undo the last change.", (int)RBX::PartOperation::getMaximumTriangleCount());
+        sprintf(buf, "This union is too complex.  There is a %d triangle limit for unions.  Please undo the last change.", (int)RBX::PartOperation::getMaximumTriangleCount());
         partOperation->setParent(NULL);
         partOperation = boost::shared_ptr<RBX::PartOperation>();
         operationFailed("Union Rejected", buf);
@@ -125,24 +125,24 @@ bool RBX::CSGOperations::doUnion(
 
     partOperation->setChildData(childDataBinaryStr);
 
-	if (!FFlag::CSGDelayParentingOperationToEnd)
-	{
-		dictionaryService->storeData(*partOperation);
-		nrDictionaryService->storeData(*partOperation);
-	}
+    if (!FFlag::CSGDelayParentingOperationToEnd)
+    {
+        dictionaryService->storeData(*partOperation);
+        nrDictionaryService->storeData(*partOperation);
+    }
 
     dictionaryService->insertMesh(*partOperation);
 
     //Remove Children
-    while(partOperation->numChildren())
+    while (partOperation->numChildren())
         partOperation->getChild(0)->setParent(NULL);
 
-	if (FFlag::CSGDelayParentingOperationToEnd)
-	{
-		RBXASSERT(partOperation->getParent() == NULL);
-		RBXASSERT(newOperationParent != NULL);
-		partOperation->setParent(newOperationParent);
-	}
+    if (FFlag::CSGDelayParentingOperationToEnd)
+    {
+        RBXASSERT(partOperation->getParent() == NULL);
+        RBXASSERT(newOperationParent != NULL);
+        partOperation->setParent(newOperationParent);
+    }
 
     return true;
 }
@@ -150,7 +150,7 @@ bool RBX::CSGOperations::doUnion(
 bool RBX::CSGOperations::doNegate(
     std::vector<boost::shared_ptr<RBX::Instance> >::const_iterator start,
     std::vector<boost::shared_ptr<RBX::Instance> >::const_iterator end,
-    std::vector<shared_ptr<RBX::Instance> >& toSelect )
+    std::vector<shared_ptr<RBX::Instance> >& toSelect)
 {
     std::vector<shared_ptr<RBX::Instance> > toRemove;
 
@@ -172,7 +172,7 @@ bool RBX::CSGOperations::doNegate(
 bool RBX::CSGOperations::doSeparate(
     std::vector<boost::shared_ptr<RBX::Instance> >::const_iterator start,
     std::vector<boost::shared_ptr<RBX::Instance> >::const_iterator end,
-    std::vector<shared_ptr<RBX::Instance> >& ungroupedItems )
+    std::vector<shared_ptr<RBX::Instance> >& ungroupedItems)
 {
     // First make a copy of the selection list
     Instances itemsToUngroup;
@@ -185,8 +185,8 @@ bool RBX::CSGOperations::doSeparate(
     // Now iterate over the objects to be ungrouped and ungroup them
     Instances itemsToDelete;
     bool didSomething = false;
-    for ( Instances::const_iterator iter = itemsToUngroup.begin(); iter !=  itemsToUngroup.end(); iter++ )
-        didSomething |= separate( (*iter), ungroupedItems, itemsToDelete );
+    for (Instances::const_iterator iter = itemsToUngroup.begin(); iter != itemsToUngroup.end(); iter++)
+        didSomething |= separate((*iter), ungroupedItems, itemsToDelete);
 
     if (didSomething)
     {
@@ -258,7 +258,7 @@ bool RBX::CSGOperations::recalculateMesh(shared_ptr<PartOperation> partOperation
 }
 
 bool RBX::CSGOperations::createPartMesh(PartInstance* part, CSGMesh* modelData)
-{    
+{
     std::vector<Graphics::GeometryGenerator::Vertex> vertices;
     std::vector<unsigned short> indices;
 
@@ -267,7 +267,7 @@ bool RBX::CSGOperations::createPartMesh(PartInstance* part, CSGMesh* modelData)
 
     {
         Graphics::GeometryGenerator geomGen;
-        
+
         geomGen.addCSGPrimitive(part);
 
         vertices.resize(geomGen.getVertexCount());
@@ -283,7 +283,7 @@ bool RBX::CSGOperations::createPartMesh(PartInstance* part, CSGMesh* modelData)
         Graphics::GeometryGenerator geomGen(&vertices[0], &indices[0]);
         geomGen.addCSGPrimitive(part);
     }
-    
+
     for (size_t i = 0; i < vertices.size(); i++)
     {
         meshVertices[i].pos = vertices[i].pos;
@@ -318,8 +318,8 @@ void RBX::CSGOperations::resetInstanceCFrame(
 }
 
 static void warnIfChildInstance(shared_ptr<RBX::Instance> instance,
-                                shared_ptr<RBX::PartInstance> partInstance,
-                                const std::string& operationType)
+    shared_ptr<RBX::PartInstance> partInstance,
+    const std::string& operationType)
 {
     if (instance->fastDynamicCast<RBX::DataModelMesh>())
         return;
@@ -335,9 +335,9 @@ void RBX::CSGOperations::warnIfChildInstances(shared_ptr<PartInstance> partInsta
 const char* RBX::CSGOperations::unionFailedMsg = "This union is not currently solvable.  Try offseting the parts from each other or try unioning each part individually.";
 
 bool RBX::CSGOperations::setUnionMesh(shared_ptr<PartOperation> finalPartOperation,
-                                      std::vector<boost::shared_ptr<Instance> >::const_iterator start,
-                                      std::vector<boost::shared_ptr<Instance> >::const_iterator end,
-                                      bool isChildRecalculation)
+    std::vector<boost::shared_ptr<Instance> >::const_iterator start,
+    std::vector<boost::shared_ptr<Instance> >::const_iterator end,
+    bool isChildRecalculation)
 {
     boost::scoped_ptr<CSGMesh> positiveMesh;
     boost::scoped_ptr<CSGMesh> negativeMesh;
@@ -355,11 +355,11 @@ bool RBX::CSGOperations::setUnionMesh(shared_ptr<PartOperation> finalPartOperati
 
     for (std::vector<boost::shared_ptr<Instance> >::const_iterator iter = start; iter != end; ++iter)
     {
-		if (!FFlag::CSGDelayParentingOperationToEnd)
-		{
-			if (parentToSet != (*iter)->getParent())
-				parentToSet = NULL;
-		}
+        if (!FFlag::CSGDelayParentingOperationToEnd)
+        {
+            if (parentToSet != (*iter)->getParent())
+                parentToSet = NULL;
+        }
 
         if (shared_ptr<PartInstance> partInstance = Instance::fastSharedDynamicCast<PartInstance>(*iter))
         {
@@ -399,7 +399,7 @@ bool RBX::CSGOperations::setUnionMesh(shared_ptr<PartOperation> finalPartOperati
 
             meshData.reset(partOperation->getMesh()->clone());
 
-              meshData->applyScale(partOperation->getSizeDifference());
+            meshData->applyScale(partOperation->getSizeDifference());
 
             if (FFlag::CSGMeshColorToolsEnabled && partOperation->getUsePartColor())
                 meshData->applyColor(Vector3(partOperation->getColor().r, partOperation->getColor().g, partOperation->getColor().b));
@@ -421,10 +421,10 @@ bool RBX::CSGOperations::setUnionMesh(shared_ptr<PartOperation> finalPartOperati
                 finalPartOperation->setCanCollide(unionOperation->getCanCollide());
                 finalPartOperation->setElasticity(unionOperation->getElasticity());
                 finalPartOperation->setFriction(unionOperation->getFriction());
-				if (DFFlag::MaterialPropertiesEnabled)
-				{
-					finalPartOperation->setPhysicalProperties(unionOperation->getPhysicalProperties());
-				}
+                if (DFFlag::MaterialPropertiesEnabled)
+                {
+                    finalPartOperation->setPhysicalProperties(unionOperation->getPhysicalProperties());
+                }
                 positiveMesh.swap(meshData);
             }
             else
@@ -472,11 +472,11 @@ bool RBX::CSGOperations::setUnionMesh(shared_ptr<PartOperation> finalPartOperati
                 finalPartOperation->setCanCollide(partInstance->getCanCollide());
                 finalPartOperation->setElasticity(partInstance->getElasticity());
                 finalPartOperation->setFriction(partInstance->getFriction());
-				if (DFFlag::MaterialPropertiesEnabled)
-				{
-					finalPartOperation->setPhysicalProperties(partInstance->getPhysicalProperties());
-				}
-                
+                if (DFFlag::MaterialPropertiesEnabled)
+                {
+                    finalPartOperation->setPhysicalProperties(partInstance->getPhysicalProperties());
+                }
+
                 positiveMesh.reset(CSGMeshFactory::singleton()->createMesh());
 
                 bool partMeshCreated = createPartMesh(partInstance.get(), positiveMesh.get());
@@ -564,7 +564,7 @@ bool RBX::CSGOperations::setUnionMesh(shared_ptr<PartOperation> finalPartOperati
         operationFailed("Union Unsolvable -8", unionFailedMsg);
         return false;
     }
-    if ( !positiveMesh->newTriangulate() )
+    if (!positiveMesh->newTriangulate())
     {
         if (FFlag::CSGNewTriangulateFallBack)
             positiveMesh->triangulate();
@@ -582,25 +582,25 @@ bool RBX::CSGOperations::setUnionMesh(shared_ptr<PartOperation> finalPartOperati
     if (numTriangles > PartOperation::getMaximumTriangleCount())
     {
         char buf[128];
-        sprintf( buf, "This union would be %d triangles.  There is a %d triangle limit for unions.", (int)numTriangles, (int)PartOperation::getMaximumTriangleCount());
+        sprintf(buf, "This union would be %d triangles.  There is a %d triangle limit for unions.", (int)numTriangles, (int)PartOperation::getMaximumTriangleCount());
         if (!isChildRecalculation)
             resetInstanceCFrame(start, end, originalCFrames);
         finalPartOperation->setParent(NULL);
         operationFailed("Union Rejected", buf);
         return false;
     }
-    
+
     if (positiveMesh->toBinaryString().size() > PartOperation::getMaximumMeshStreamSize())
     {
         char buf[128];
-        sprintf( buf, "This union is too complex.  There is a %d triangle limit for unions.", (int)PartOperation::getMaximumTriangleCount());
+        sprintf(buf, "This union is too complex.  There is a %d triangle limit for unions.", (int)PartOperation::getMaximumTriangleCount());
         if (!isChildRecalculation)
             resetInstanceCFrame(start, end, originalCFrames);
         finalPartOperation->setParent(NULL);
         operationFailed("Union Rejected", buf);
         return false;
     }
-    
+
     G3D::Vector3 trans = positiveMesh->extentsCenter();
     finalPartOperation->setCoordinateFrame(trans);
 
@@ -613,7 +613,7 @@ bool RBX::CSGOperations::setUnionMesh(shared_ptr<PartOperation> finalPartOperati
             partInstance->setCoordinateFrame(tmpFrame);
         }
     }
-	if (!FFlag::CSGDelayParentingOperationToEnd && dataModel)
+    if (!FFlag::CSGDelayParentingOperationToEnd && dataModel)
         finalPartOperation->setParent(parentToSet != NULL ? parentToSet : dataModel->getWorkspace());
     finalPartOperation->setPartSizeXml(positiveMesh->extentsSize());
     finalPartOperation->setInitialSize(finalPartOperation->getPartSizeUi());
@@ -652,11 +652,11 @@ bool RBX::CSGOperations::setNegateMesh(shared_ptr<NegateOperation> negateOperati
 {
     boost::scoped_ptr<CSGMesh> model;
 
-	CSGDictionaryService* dictionaryService = FFlag::CSGDelayParentingOperationToEnd ?
-		mDatamodel->create<CSGDictionaryService>() :
-		ServiceProvider::create< CSGDictionaryService >(DataModel::get(negateOperation.get()));
-	NonReplicatedCSGDictionaryService* nrDictionaryService = FFlag::CSGDelayParentingOperationToEnd ?
-		mDatamodel->create<NonReplicatedCSGDictionaryService>() : ServiceProvider::create<NonReplicatedCSGDictionaryService>(DataModel::get(negateOperation.get()));
+    CSGDictionaryService* dictionaryService = FFlag::CSGDelayParentingOperationToEnd ?
+        mDatamodel->create<CSGDictionaryService>() :
+        ServiceProvider::create< CSGDictionaryService >(DataModel::get(negateOperation.get()));
+    NonReplicatedCSGDictionaryService* nrDictionaryService = FFlag::CSGDelayParentingOperationToEnd ?
+        mDatamodel->create<NonReplicatedCSGDictionaryService>() : ServiceProvider::create<NonReplicatedCSGDictionaryService>(DataModel::get(negateOperation.get()));
 
     if (shared_ptr<PartInstance> partInstance = Instance::fastSharedDynamicCast<PartInstance>(instance))
         partInstance->destroyJoints();
@@ -721,8 +721,8 @@ bool RBX::CSGOperations::setNegateMesh(shared_ptr<NegateOperation> negateOperati
         partInstance->setCoordinateFrame(tmpFrame);
     }
 
-    
-    if ( !model->newTriangulate() )
+
+    if (!model->newTriangulate())
     {
         if (FFlag::CSGNewTriangulateFallBack)
             model->triangulate();
@@ -743,9 +743,9 @@ bool RBX::CSGOperations::setNegateMesh(shared_ptr<NegateOperation> negateOperati
 }
 
 bool RBX::CSGOperations::negateSelection(Instances& toRemove,
-                                         Instances& toSelect,
-                                         std::vector<boost::shared_ptr<Instance> >::const_iterator start, 
-                                         std::vector<boost::shared_ptr<Instance> >::const_iterator end)
+    Instances& toSelect,
+    std::vector<boost::shared_ptr<Instance> >::const_iterator start,
+    std::vector<boost::shared_ptr<Instance> >::const_iterator end)
 {
     CSGDictionaryService* dictionaryService = ServiceProvider::create< CSGDictionaryService >(mDatamodel);
     NonReplicatedCSGDictionaryService* nrDictionaryService = ServiceProvider::create<NonReplicatedCSGDictionaryService>(mDatamodel);
@@ -774,7 +774,7 @@ bool RBX::CSGOperations::negateSelection(Instances& toRemove,
 
             Instances separatedItems;
             Instances itemsToDelete;
-            bool didSomething = separate( negateOperation, separatedItems, itemsToDelete );
+            bool didSomething = separate(negateOperation, separatedItems, itemsToDelete);
 
             if (didSomething)
             {
@@ -790,11 +790,11 @@ bool RBX::CSGOperations::negateSelection(Instances& toRemove,
             try
             {
                 negateOperation = NegateOperation::createInstance();
-				if (!FFlag::CSGDelayParentingOperationToEnd)
-					negateOperation->setParent(pInst->getParent());
+                if (!FFlag::CSGDelayParentingOperationToEnd)
+                    negateOperation->setParent(pInst->getParent());
                 toSelect.push_back(negateOperation);
             }
-            catch (std::exception &)
+            catch (std::exception&)
             {
                 operationFailed("Error", "Could not create part instance.");
                 return false;
@@ -820,21 +820,21 @@ bool RBX::CSGOperations::negateSelection(Instances& toRemove,
             shared_ptr<ModelInstance> groupInstance = ModelInstance::createInstance();
             shared_ptr<Instance> dupe = pInst->clone(SerializationCreator);
             dupe->setParent(groupInstance.get());
-            
+
             std::stringstream ss;
             SerializerBinary::serialize(ss, groupInstance.get());
             negateOperation->setChildData(BinaryString(ss.str()));
             groupInstance->setParent(NULL);
 
-			if (FFlag::CSGDelayParentingOperationToEnd)
-			{
-				negateOperation->setParent(pInst->getParent());
-			}
-			else
-			{
-	            dictionaryService->storeData(*negateOperation);
-		        nrDictionaryService->storeData(*negateOperation);
-			}
+            if (FFlag::CSGDelayParentingOperationToEnd)
+            {
+                negateOperation->setParent(pInst->getParent());
+            }
+            else
+            {
+                dictionaryService->storeData(*negateOperation);
+                nrDictionaryService->storeData(*negateOperation);
+            }
 
             toRemove.push_back(pInst);
         }
@@ -844,8 +844,8 @@ bool RBX::CSGOperations::negateSelection(Instances& toRemove,
 }
 
 bool RBX::CSGOperations::separate(const shared_ptr<Instance>& wInstance,
-                                  Instances &separatedItems,
-                                  Instances &itemsToDelete)
+    Instances& separatedItems,
+    Instances& itemsToDelete)
 {
     CSGDictionaryService* dictionaryService = ServiceProvider::create<CSGDictionaryService>(DataModel::get(wInstance.get()));
     NonReplicatedCSGDictionaryService* nrDictionaryService = ServiceProvider::create<NonReplicatedCSGDictionaryService>(DataModel::get(wInstance.get()));
@@ -906,16 +906,16 @@ bool RBX::CSGOperations::separate(const shared_ptr<Instance>& wInstance,
 }
 
 RBX::Instance* RBX::CSGOperations::getCommonParentOrWorkspace(Instances::const_iterator start,
-	Instances::const_iterator end)
+    Instances::const_iterator end)
 {
-	Instance* parentMatch = (*start)->getParent();
-	for (Instances::const_iterator itr = start; itr != end; ++itr)
-	{
-		if (parentMatch != (*itr)->getParent())
-		{
-			parentMatch = mDatamodel->getWorkspace();
-			break;
-		}
-	}
-	return parentMatch;
+    Instance* parentMatch = (*start)->getParent();
+    for (Instances::const_iterator itr = start; itr != end; ++itr)
+    {
+        if (parentMatch != (*itr)->getParent())
+        {
+            parentMatch = mDatamodel->getWorkspace();
+            break;
+        }
+    }
+    return parentMatch;
 }

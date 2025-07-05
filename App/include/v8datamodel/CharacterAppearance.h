@@ -13,7 +13,7 @@ namespace RBX {
 	extern const char* const sCharacterAppearance;
 	class RBXBaseClass CharacterAppearance
 		:public DescribedNonCreatable<CharacterAppearance, Instance, sCharacterAppearance>
-		,public IModelModifier
+		, public IModelModifier
 	{
 	private:
 		typedef Instance Super;
@@ -34,7 +34,7 @@ namespace RBX {
 		typedef CharacterAppearance Super;
 
 	public:
-		
+
 		// Hack: This apply() function is ugly, but necessary because
 		//       this class changes properties of other objects (like
 		//       Part colors and Decal images).  However, to avoid
@@ -44,9 +44,9 @@ namespace RBX {
 	};
 
 	// Old-style T-shirts
-	extern const char *const sShirtGraphic;
+	extern const char* const sShirtGraphic;
 	class ShirtGraphic
-		 : public DescribedCreatable<ShirtGraphic, LegacyCharacterAppearance, sShirtGraphic>
+		: public DescribedCreatable<ShirtGraphic, LegacyCharacterAppearance, sShirtGraphic>
 	{
 	public:
 		TextureId graphic;
@@ -60,9 +60,9 @@ namespace RBX {
 		}
 	};
 
-	extern const char *const sClothing;
+	extern const char* const sClothing;
 	class Clothing
-		 : public DescribedNonCreatable<Clothing, CharacterAppearance, sClothing>
+		: public DescribedNonCreatable<Clothing, CharacterAppearance, sClothing>
 	{
 		friend class CharacterAppearance;
 	public:
@@ -83,9 +83,9 @@ namespace RBX {
 		}
 	};
 
-	extern const char *const sPants;
+	extern const char* const sPants;
 	class Pants
-		 : public DescribedCreatable<Pants, Clothing, sPants>
+		: public DescribedCreatable<Pants, Clothing, sPants>
 	{
 	public:
 		Pants();
@@ -94,9 +94,9 @@ namespace RBX {
 		void setTemplate(TextureId value);
 	};
 
-	extern const char *const sShirt;
+	extern const char* const sShirt;
 	class Shirt
-		 : public DescribedCreatable<Shirt, Clothing, sShirt>
+		: public DescribedCreatable<Shirt, Clothing, sShirt>
 	{
 	public:
 		Shirt();
@@ -105,9 +105,9 @@ namespace RBX {
 		void setTemplate(TextureId value);
 	};
 
-	extern const char *const sBodyColors;
-	class BodyColors 
-		 : public DescribedCreatable<BodyColors, LegacyCharacterAppearance, sBodyColors>
+	extern const char* const sBodyColors;
+	class BodyColors
+		: public DescribedCreatable<BodyColors, LegacyCharacterAppearance, sBodyColors>
 	{
 		Color3 headColor;
 		Color3 leftArmColor;
@@ -130,9 +130,9 @@ namespace RBX {
 		}
 	};
 
-	extern const char *const sSkin;
-	class Skin 
-		 : public DescribedCreatable<Skin, LegacyCharacterAppearance, sSkin>
+	extern const char* const sSkin;
+	class Skin
+		: public DescribedCreatable<Skin, LegacyCharacterAppearance, sSkin>
 	{
 		Color3 skinColor;
 	public:
