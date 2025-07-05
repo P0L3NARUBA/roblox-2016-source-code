@@ -247,6 +247,7 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
 - Bloom does not render.
 - Blur instance does not render.
 - SSAO does not render.
+- Material shaders switch to a low quality version far too soon.
 - Outdoor Ambient does nothing.
 - Occasional lights consisting of garbage data and getting past all legitimacy checks may result in buggy visuals.
 - Anti-Aliasing is broken.
