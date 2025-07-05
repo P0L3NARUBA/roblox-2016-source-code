@@ -29,7 +29,7 @@ namespace Graphics
         for (unsigned int mode = 2; mode <= D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT; mode *= 2)
         {
             unsigned maxQualityLevel;
-            HRESULT hr = device11->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, mode, &maxQualityLevel);
+            HRESULT hr = device11->CheckMultisampleQualityLevels(DXGI_FORMAT_R16G16B16A16_FLOAT, mode, &maxQualityLevel);
             RBXASSERT(SUCCEEDED(hr));
             if (maxQualityLevel <= 0)
                 break;
@@ -88,12 +88,12 @@ namespace Graphics
         caps.supportsTexturePVR = false;
         caps.supportsTextureHalfFloat = true; //DXGI_FORMAT_R16G16B16A16_FLOAT is always supported on DX11 HW (including featureLvl 10 - 9.3)
         caps.supportsTexture3D = true;
-        caps.supportsTextureNPOT = shaderProfile == shaderProfile_DX11_level_9_3 ? false : true;
+        caps.supportsTextureNPOT = true;
         caps.supportsTextureETC1 = false;
 
 		caps.supportsTexturePartialMipChain = true;
 
-        caps.maxDrawBuffers = shaderProfile == shaderProfile_DX11_level_9_3 ? 4 : 8;
+        caps.maxDrawBuffers = 8;
         caps.maxSamples = getMaxSamplesSupported(device11);
         caps.maxTextureSize = D3D11_REQ_TEXTURE2D_U_OR_V_DIMENSION;
 		caps.maxTextureUnits = 16;
@@ -173,10 +173,10 @@ namespace Graphics
         colorBuffers.push_back(backBufferRB);
 
         // Create depth stencil
-        shared_ptr<Renderbuffer> depthStencil = shared_ptr<Renderbuffer>(new RenderbufferD3D11(this, Texture::Format_D24S8, width, height, 1));
+        //shared_ptr<Renderbuffer> depthStencil = shared_ptr<Renderbuffer>(new RenderbufferD3D11(this, Texture::Format_D32F, width, height, 1));
 
         // create frame buffer
-        mainFramebuffer.reset(new FramebufferD3D11(this, colorBuffers, depthStencil));
+        mainFramebuffer.reset(new FramebufferD3D11(this, colorBuffers, NULL));
     }
 
     DeviceD3D11::~DeviceD3D11()

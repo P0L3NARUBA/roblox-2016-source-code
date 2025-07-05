@@ -1755,8 +1755,8 @@ namespace RBX
 				modifyThumbnailCamera(visualEngine.get(), allowDolly);
 			}
 
-			shared_ptr<Renderbuffer> color = visualEngine->getDevice()->createRenderbuffer(Texture::Format_RGBA8, width, height, 1);
-			shared_ptr<Renderbuffer> depth = visualEngine->getDevice()->createRenderbuffer(Texture::Format_D24S8, width, height, 1);
+			shared_ptr<Renderbuffer> color = visualEngine->getDevice()->createRenderbuffer(Texture::Format_RGBA16F, width, height, 1);
+			shared_ptr<Renderbuffer> depth = visualEngine->getDevice()->createRenderbuffer(Texture::Format_D32F, width, height, 1);
 			shared_ptr<Framebuffer> framebuffer = visualEngine->getDevice()->createFramebuffer(color, depth);
 
 			renderPerformImpl(0.f, framebuffer.get());

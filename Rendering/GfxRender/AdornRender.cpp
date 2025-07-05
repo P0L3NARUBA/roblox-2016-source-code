@@ -759,9 +759,6 @@ void AdornRender::finishRenderPass()
 
 void AdornRender::render(DeviceContext* context, RenderPassStats& stats)
 {
-    RBXPROFILER_SCOPE("Render", "Adorns");
-    RBXPROFILER_SCOPE("GPU", "Adorns");
-
     shared_ptr<Texture> defaultTexture = visualEngine->getTextureManager()->getFallbackTexture(TextureManager::Fallback_White);
 	RBXASSERT(defaultTexture);
 
@@ -769,7 +766,7 @@ void AdornRender::render(DeviceContext* context, RenderPassStats& stats)
 
 	context->bindTexture(0, defaultTexture.get(), SamplerState::Filter_Linear);
 
-    context->setDepthState(DepthState(DepthState::Function_LessEqual, true));
+    context->setDepthState(DepthState(DepthState::Function_GreaterEqual, true));
 	context->setRasterizerState(RasterizerState::Cull_Back);
 	context->setBlendState(BlendState::Mode_None);
 
@@ -847,7 +844,7 @@ void AdornRender::renderMeshes(DeviceContext* context, const std::vector<AdornMe
 		const AdornMesh& mesh = meshes[i];
 
 		if (mesh.zIndex >= 0)
-			context->setDepthState(DepthState(mesh.alwaysOnTop ? DepthState::Function_Always : DepthState::Function_LessEqual, false));
+			context->setDepthState(DepthState(mesh.alwaysOnTop ? DepthState::Function_Always : DepthState::Function_GreaterEqual, false));
 
 		if (i == 0 || currentMaterial != mesh.material)
 		{

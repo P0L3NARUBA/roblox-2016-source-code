@@ -231,7 +231,7 @@ void Sky::render(DeviceContext* context, const RenderCamera& camera, bool drawSt
         context->bindProgram(program.get());
 
         context->setRasterizerState(RasterizerState::Cull_None);
-        context->setDepthState(DepthState(DepthState::Function_LessEqual, false));
+        context->setDepthState(DepthState(DepthState::Function_GreaterEqual, false));
 
         // Render sky surface, if loaded
         if (1)

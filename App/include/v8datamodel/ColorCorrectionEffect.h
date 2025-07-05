@@ -1,36 +1,39 @@
 #pragma once
 
-#include "v8datamodel/InputObject.h"
-#include "v8datamodel/Lighting.h"
-#include "V8Tree/instance.h"
+#include "V8Tree/Instance.h"
 #include "PostEffect.h"
 
 namespace RBX {
 	extern const char* const sColorCorrectionEffect;
-	class ColorCorrectionEffect : public DescribedCreatable<ColorCorrectionEffect, PostEffect, sColorCorrectionEffect, Reflection::ClassDescriptor::PERSISTENT>
+
+	class ColorCorrectionEffect : public DescribedCreatable<ColorCorrectionEffect, PostEffect, sColorCorrectionEffect>
+
 	{
-	private:
-		typedef DescribedCreatable<ColorCorrectionEffect, PostEffect, sColorCorrectionEffect, Reflection::ClassDescriptor::PERSISTENT> Super;
 	public:
 		ColorCorrectionEffect();
+		virtual ~ColorCorrectionEffect();
 
-		void setBrightness(int value);
-		int getBrightness() const { return Brightness; }
+		float getBrightness() const { return brightness; }
+		void setBrightness(float value);
 
-		void setContrast(int value);
-		int getContrast() const { return Contrast; }
+		float getContrast() const { return contrast; }
+		void setContrast(float value);
 
-		void setSaturation(int value);
-		int getSaturation() const { return Saturation; }
+		float getSaturation() const { return saturation; }
+		void setSaturation(float value);
 
+		Color3 getTintColor() const { return tintColor; }
 		void setTintColor(Color3 value);
-		Color3 getTintColor() const { return TintColor; }
 
-		bool isActive;
-	protected:
-		int Brightness;
-		int Contrast;
-		int Saturation;
-		Color3 TintColor;
+		static Reflection::PropDescriptor<ColorCorrectionEffect, float> prop_Brightness;
+		static Reflection::PropDescriptor<ColorCorrectionEffect, float> prop_Contrast;
+		static Reflection::PropDescriptor<ColorCorrectionEffect, float> prop_Saturation;
+		static Reflection::PropDescriptor<ColorCorrectionEffect, Color3> prop_TintColor;
+
+	private:
+		float brightness;
+		float contrast;
+		float saturation;
+		Color3 tintColor;
 	};
 }

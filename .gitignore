@@ -167,3 +167,5 @@ qrc_*.*
 *.xml
 *.res
 *.txt
+*.lib
+*.exe

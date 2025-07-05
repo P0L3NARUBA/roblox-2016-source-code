@@ -28,7 +28,7 @@ static Reflection::BoundFuncDesc<Lighting, void(double)> func_SetMinutesAfterMid
 static Reflection::BoundFuncDesc<Lighting, double()> func_dep_GetMinutesAfterMidnight(&Lighting::getMinutesAfterMidnight, "getMinutesAfterMidnight", Security::None, Reflection::Descriptor::Attributes::deprecated(func_GetMinutesAfterMidnight));
 static Reflection::BoundFuncDesc<Lighting, void(double)> func_dep_SetMinutesAfterMidnight(&Lighting::setMinutesAfterMidnight, "setMinutesAfterMidnight", "minutes", Security::None, Reflection::Descriptor::Attributes::deprecated(func_SetMinutesAfterMidnight));
 
-static Reflection::PropDescriptor<Lighting, G3D::Color3> desc_ShadowColor("ShadowColor", category_Appearance, &Lighting::getShadowColor, &Lighting::setShadowColor, Reflection::PropertyDescriptor::HIDDEN_SCRIPTING);
+static Reflection::PropDescriptor<Lighting, G3D::Color3> desc_ShadowColor("ShadowColor", category_Appearance, &Lighting::getShadowColor, &Lighting::setShadowColor, Reflection::PropertyDescriptor::LEGACY_SCRIPTING);
 static Reflection::PropDescriptor<Lighting, G3D::Color3> desc_FogColor("FogColor", "Fog", &Lighting::getFogColor, &Lighting::setFogColor);
 static Reflection::PropDescriptor<Lighting, float> desc_FogStart("FogStart", "Fog", &Lighting::getFogStart, &Lighting::setFogStart);
 static Reflection::PropDescriptor<Lighting, float> desc_FogEnd("FogEnd", "Fog", &Lighting::getFogEnd, &Lighting::setFogEnd);
@@ -36,12 +36,12 @@ static Reflection::PropDescriptor<Lighting, float> desc_FogEnd("FogEnd", "Fog", 
 static Reflection::PropDescriptor<Lighting, bool> desc_GlobalShadows("GlobalShadows", category_Appearance, &Lighting::getGlobalShadows, &Lighting::setGlobalShadows);
 
 Reflection::BoundProp<float> Lighting::desc_GlobalBrightness("Brightness", category_Appearance, &Lighting::globalBrightness, &Lighting::onPropChanged);
-Reflection::BoundProp<G3D::Color3> Lighting::desc_TopColorShift("ColorShift_Top", category_Appearance, &Lighting::topColorShift, &Lighting::onPropChanged);
-Reflection::BoundProp<G3D::Color3> Lighting::desc_BottomColorShift("ColorShift_Bottom", category_Appearance, &Lighting::bottomColorShift, &Lighting::onPropChanged, Reflection::PropertyDescriptor::HIDDEN_SCRIPTING);
+Reflection::BoundProp<G3D::Color3> Lighting::desc_TopColorShift("Sun Color", category_Appearance, &Lighting::topColorShift, &Lighting::onPropChanged);
+Reflection::BoundProp<G3D::Color3> Lighting::desc_BottomColorShift("ColorShift_Bottom", category_Appearance, &Lighting::bottomColorShift, &Lighting::onPropChanged, Reflection::PropertyDescriptor::LEGACY_SCRIPTING);
 Reflection::BoundProp<G3D::Color3> Lighting::desc_GlobalAmbient("Ambient", category_Appearance, &Lighting::globalAmbient, &Lighting::onPropChanged);
 Reflection::BoundProp<G3D::Color3> Lighting::desc_GlobalOutdoorAmbient("OutdoorAmbient", category_Appearance, &Lighting::globalOutdoorAmbient, &Lighting::onPropChanged);
 
-Reflection::BoundProp<bool> Lighting::desc_Outlines("Outlines", category_Appearance, &Lighting::outlines, &Lighting::onPropChanged, Reflection::PropertyDescriptor::HIDDEN_SCRIPTING);
+Reflection::BoundProp<bool> Lighting::desc_Outlines("Outlines", category_Appearance, &Lighting::outlines, &Lighting::onPropChanged, Reflection::PropertyDescriptor::LEGACY_SCRIPTING);
 REFLECTION_END();
 
 const char* const RBX::sLighting = "Lighting";

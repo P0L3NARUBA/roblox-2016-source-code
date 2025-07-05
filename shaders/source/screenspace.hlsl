@@ -93,6 +93,10 @@ VertexOutput_4uv downsample4x4_vs(float4 p: POSITION)
     return OUT;
 }
 
+float3 ReinhardSimple(float3 x) {
+	return x / (x + 1.0);
+}
+
 float3 ACESFilm(float3 x) {
 	float a = 2.51f;
 	float b = 0.03f;

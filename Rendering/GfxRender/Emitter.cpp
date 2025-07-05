@@ -664,7 +664,7 @@ void Emitter::setAppearance(const Appearance& a, const std::string& context)
     if( !teq ) return;
 
     RasterizerState rs(RasterizerState::Cull_None, 0);
-    DepthState ds(DepthState::Function_LessEqual, false, DepthState::Stencil_None);
+    DepthState ds(DepthState::Function_GreaterEqual, false, DepthState::Stencil_None);
     
     teq->setRasterizerState(rs);
     teq->setDepthState(ds);

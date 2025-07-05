@@ -29,6 +29,8 @@ namespace Graphics
         DXGI_FORMAT_UNKNOWN,
         DXGI_FORMAT_D16_UNORM,
         DXGI_FORMAT_D24_UNORM_S8_UINT,
+        DXGI_FORMAT_D32_FLOAT,
+        DXGI_FORMAT_D32_FLOAT_S8X24_UINT,
     };
 
     struct TextureUsageD3D11

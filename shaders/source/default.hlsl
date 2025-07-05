@@ -357,8 +357,8 @@ void DefaultPS(VertexOutput IN,
     float fogAlpha = saturate(IN.LightPosition_Fog.w);
 
 #ifdef PIN_NEON
-    oColor0.rgb = pow(IN.Color.rgb, 2.2) * 4.0 * FadeDistance_GlowFactor.w;
-    oColor0.a = 1 - fogAlpha * IN.Color.a;
+    oColor0.rgb = pow(IN.Color.rgb, 2.2) * 4.0;
+    oColor0.a = IN.Color.a;
     diffuse.rgb = 0;
     specular.rgb = 0;
 #endif

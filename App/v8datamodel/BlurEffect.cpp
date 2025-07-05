@@ -2,24 +2,28 @@
 #include "V8DataModel/BlurEffect.h"
 
 namespace RBX {
-	const char* const  sBlurEffect = "BlurEffect";
 
-	REFLECTION_BEGIN();
-	static const Reflection::PropDescriptor<BlurEffect, int>	prop_size("Size", category_Data, &BlurEffect::getSize, &BlurEffect::setSize);
-	REFLECTION_END();
+	const char* const sBlurEffect = "BlurEffect";
 
-	int Size = 8;
-	bool isActive = false; // it has to be in lighting for now
+	Reflection::PropDescriptor<BlurEffect, int> BlurEffect::prop_Size("Size", category_Appearance, &BlurEffect::getSize, &BlurEffect::setSize);
 
 	BlurEffect::BlurEffect()
-		:DescribedCreatable<BlurEffect, PostEffect, sBlurEffect, Reflection::ClassDescriptor::PERSISTENT>("BlurEffect")
+		: DescribedCreatable<BlurEffect, PostEffect, sBlurEffect>("BlurEffect")
+		, size(8)
+	{
+	}
+
+	BlurEffect::~BlurEffect()
 	{
 	}
 
 	void BlurEffect::setSize(int value)
 	{
-		RBXASSERT(isFinite(value));
-		Size = value;
-		raisePropertyChanged(prop_size);
+		value = std::min(std::max(value, 0), 56);
+
+		if (size != value) {
+			size = value;
+			raisePropertyChanged(prop_Size);
+		}
 	}
 }

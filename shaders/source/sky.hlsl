@@ -29,17 +29,13 @@ VertexOutput SkyVS(Appdata IN)
 
     OUT.HPosition = mul(ViewProjection, wpos);
 
-#ifndef GLSLES
-    // snap to far plane to prevent scene-sky intersections
-    // small offset is needed to prevent 0/0 division in case w=0, which causes rasterization issues
-    // some mobile chips (hello, Vivante!) don't like it
-    OUT.HPosition.z = OUT.HPosition.w - 1.f / 16;
-#endif
+    // Snap to furthest depth to prevent scene-sky intersections
+    OUT.HPosition.z = 0.0;
 
     OUT.PSize = 2.0; // star size
 
     OUT.Uv = IN.Uv;
-    OUT.Color = IN.Color * lerp(Color2,Color,wpos.y/1700);
+    OUT.Color = IN.Color * lerp(Color2, Color, wpos.y / 1700);
     //OUT.Color = IN.Color * Color;
 
     return OUT;
@@ -52,7 +48,7 @@ float4 SkyPS(VertexOutput IN): COLOR0
     float4 skybox = tex2D(DiffuseMap, IN.Uv) * IN.Color;
 
     float3 Brightness = skybox.rgb;
-	Brightness = ((Brightness / (1.0 - min(Brightness, 0.999))) / 8.0);
+	Brightness = ((Brightness / (1.0 - Brightness * 0.9875)) / 8.0);
 
     return float4(skybox.rgb + Brightness, skybox.a);
 }

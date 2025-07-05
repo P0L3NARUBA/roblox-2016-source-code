@@ -184,7 +184,7 @@ void VertexStreamer::renderInternal(DeviceContext* context, CoordinateSpace coor
     
     context->setRasterizerState(RasterizerState::Cull_Back);
     context->setBlendState(BlendState(BlendState::Mode_AlphaBlend));
-    context->setDepthState(DepthState(coordinateSpace == CS_WorldSpace ? DepthState::Function_LessEqual : DepthState::Function_Always, false));
+    context->setDepthState(DepthState(coordinateSpace == CS_WorldSpace ? DepthState::Function_GreaterEqual : DepthState::Function_Always, false));
 
     // Only required for FFP
     context->setWorldTransforms4x3(NULL, 0);
@@ -199,7 +199,7 @@ void VertexStreamer::renderInternal(DeviceContext* context, CoordinateSpace coor
 		const VertexChunk& currChunk = coordinateSpace == CS_WorldSpaceNoDepth ? *worldSpaceZDepthLayers[renderIndex][i] : chunks[coordinateSpace][i];
 
 		if (currChunk.index >= 0)
-			context->setDepthState(DepthState(currChunk.alwaysOnTop ? DepthState::Function_Always : DepthState::Function_LessEqual, false));
+			context->setDepthState(DepthState(currChunk.alwaysOnTop ? DepthState::Function_Always : DepthState::Function_GreaterEqual, false));
 
         Texture* texture = currChunk.texture.get();
         

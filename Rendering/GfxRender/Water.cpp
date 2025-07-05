@@ -169,7 +169,7 @@ void Water::update(DataModel* dataModel, float dt)
 			
 			SceneManager* sceneManager = visualEngine->getSceneManager();
 			
-			sceneManager->setSkyEnabled(false);
+			//sceneManager->setSkyEnabled(false);
 			sceneManager->setClearColor(Color4(waterColor));
 			sceneManager->setFog(waterColor, fogStart, fogEnd);
 		}
@@ -199,7 +199,7 @@ void Water::update(DataModel* dataModel, float dt)
         {
             SceneManager* sceneManager = visualEngine->getSceneManager();
 
-            sceneManager->setSkyEnabled(false);
+            //sceneManager->setSkyEnabled(false);
             sceneManager->setClearColor(Color4(kWaterColor));
             sceneManager->setFog(kWaterColor, -50, 60);
         }
@@ -214,7 +214,7 @@ void Water::update(DataModel* dataModel, float dt)
         float freq  = 0.2f;
         float speed = 1.1f;
         float height = 0.15f;
-        float phase = fmodf(currentTime * speed * 9, 2*3.1415926f / freq);
+        float phase = fmodf(currentTime * speed * 9, 2*3.1415927f / freq);
     	double ratio = frame - floor(frame);
 
         if (legacyMaterial)

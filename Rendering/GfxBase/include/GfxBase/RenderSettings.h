@@ -26,8 +26,6 @@ public:
 		UnknownGraphicsMode = 0,
 		AutoGraphicsMode = 1,
         Direct3D11 = 2,
-		Direct3D9 = 3,
-		OpenGL,
 		NoGraphics
 	} GraphicsMode;
 
@@ -179,7 +177,7 @@ public:
 	// FRM would like to report latest setting. Subclass is free to ignore it
 	virtual void setAutoQualityLevel(int level) {}
 
-	float getMaxFrameRate() const { return 240.0f; }
+	float getMaxFrameRate() const { return 1000.0f; }
 	float getMinFrameRate() const { return 30.0f; }
 
 	bool getDrawConnectors() const { return drawConnectors; }

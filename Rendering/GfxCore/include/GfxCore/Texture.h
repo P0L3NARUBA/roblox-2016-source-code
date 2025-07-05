@@ -63,6 +63,8 @@ public:
         Format_ETC1,
         Format_D16,
         Format_D24S8,
+        Format_D32F,
+        Format_D32FS8X24,
 
         Format_Count
 	};

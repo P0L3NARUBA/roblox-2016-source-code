@@ -2,50 +2,56 @@
 #include "V8DataModel/ColorCorrectionEffect.h"
 
 namespace RBX {
+
 	const char* const sColorCorrectionEffect = "ColorCorrectionEffect";
 
-	REFLECTION_BEGIN();
-	static const Reflection::PropDescriptor<ColorCorrectionEffect, int>	prop_brightness("Brightness", category_Data, &ColorCorrectionEffect::getBrightness, &ColorCorrectionEffect::setBrightness);
-	static const Reflection::PropDescriptor<ColorCorrectionEffect, int>	prop_contrast("Contrast", category_Data, &ColorCorrectionEffect::getContrast, &ColorCorrectionEffect::setContrast);
-	static const Reflection::PropDescriptor<ColorCorrectionEffect, int>	prop_saturation("Saturation", category_Data, &ColorCorrectionEffect::getSaturation, &ColorCorrectionEffect::setSaturation);
-	static const Reflection::PropDescriptor<ColorCorrectionEffect, Color3>	prop_tintcolor("TintColor", category_Data, &ColorCorrectionEffect::getTintColor, &ColorCorrectionEffect::setTintColor);
-	REFLECTION_END();
-
-	int Brightness = 0;
-	int Contrast = 0;
-	int Saturation = 0;
-	Color3 TintColor = Color3(1, 1, 1);
-
+	Reflection::PropDescriptor<ColorCorrectionEffect, float> ColorCorrectionEffect::prop_Brightness("Brightness", category_Appearance, &ColorCorrectionEffect::getBrightness, &ColorCorrectionEffect::setBrightness);
+	Reflection::PropDescriptor<ColorCorrectionEffect, float> ColorCorrectionEffect::prop_Contrast("Contrast", category_Appearance, &ColorCorrectionEffect::getContrast, &ColorCorrectionEffect::setContrast);
+	Reflection::PropDescriptor<ColorCorrectionEffect, float> ColorCorrectionEffect::prop_Saturation("Saturation", category_Appearance, &ColorCorrectionEffect::getSaturation, &ColorCorrectionEffect::setSaturation);
+	Reflection::PropDescriptor<ColorCorrectionEffect, Color3> ColorCorrectionEffect::prop_TintColor("Tint Color", category_Appearance, &ColorCorrectionEffect::getTintColor, &ColorCorrectionEffect::setTintColor);
+	
 	ColorCorrectionEffect::ColorCorrectionEffect()
-		:DescribedCreatable<ColorCorrectionEffect, PostEffect, sColorCorrectionEffect, Reflection::ClassDescriptor::PERSISTENT>("ColorCorrectionEffect")
+		:DescribedCreatable<ColorCorrectionEffect, PostEffect, sColorCorrectionEffect>("ColorCorrectionEffect")
+		, brightness(0.0f)
+		, contrast(0.0f)
+		, saturation(0.0f)
+		, tintColor(Color3(1.0f, 1.0f, 1.0f))
 	{
-		setName(sColorCorrectionEffect);
 	}
 
-	void ColorCorrectionEffect::setBrightness(int value)
+	ColorCorrectionEffect::~ColorCorrectionEffect()
 	{
-		RBXASSERT(isFinite(value));
-		Brightness = value;
-		raisePropertyChanged(prop_brightness);
 	}
 
-	void ColorCorrectionEffect::setContrast(int value)
+	void ColorCorrectionEffect::setBrightness(float value)
 	{
-		RBXASSERT(isFinite(value));
-		Contrast = value;
-		raisePropertyChanged(prop_contrast);
+		if (brightness != value) {
+			brightness = value;
+			raisePropertyChanged(prop_Brightness);
+		}
 	}
 
-	void ColorCorrectionEffect::setSaturation(int value)
+	void ColorCorrectionEffect::setContrast(float value)
 	{
-		RBXASSERT(isFinite(value));
-		Saturation = value;
-		raisePropertyChanged(prop_saturation);
+		if (contrast != value) {
+			contrast = value;
+			raisePropertyChanged(prop_Contrast);
+		}
+	}
+
+	void ColorCorrectionEffect::setSaturation(float value)
+	{
+		if (saturation != value) {
+			saturation = value;
+			raisePropertyChanged(prop_Saturation);
+		}
 	}
 
 	void ColorCorrectionEffect::setTintColor(Color3 value)
 	{
-		TintColor = value;
-		raisePropertyChanged(prop_tintcolor);
+		if (tintColor != value) {
+			tintColor = value;
+			raisePropertyChanged(prop_TintColor);
+		}
 	}
 }

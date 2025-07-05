@@ -149,7 +149,7 @@ namespace Graphics
 		{
 			D3D11_RENDER_TARGET_VIEW_DESC descRTV = {};
 			descRTV.Format = static_cast<DXGI_FORMAT>(TextureD3D11::getInternalFormat(format));
-			descRTV.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+            descRTV.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 
 			ID3D11RenderTargetView* renderTargetView = NULL;
 			HRESULT hr = device11->CreateRenderTargetView(texture, &descRTV, &renderTargetView);
@@ -246,7 +246,7 @@ namespace Graphics
         ID3D11Resource* resource;
         RenderbufferD3D11* color0 = static_cast<RenderbufferD3D11*>(color[0].get());
         color0->getObject()->GetResource(&resource);
-        RBXASSERT(color0->getFormat() == Texture::Format_RGBA8);
+        RBXASSERT(color0->getFormat() == Texture::Format_RGBA16F);
 
         // copy resource to tex
         context11->CopyResource(tempTex, resource);

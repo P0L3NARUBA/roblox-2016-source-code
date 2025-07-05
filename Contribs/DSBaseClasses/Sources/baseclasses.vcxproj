@@ -100,10 +100,11 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <CallingConvention>StdCall</CallingConvention>
       <CompileAs>Default</CompileAs>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
     </ClCompile>
     <Lib>
       <AdditionalOptions>..\..\SDK\lib\strmiids.lib  /nodefaultlib  %(AdditionalOptions)</AdditionalOptions>
-      <OutputFile>..\Lib\strmbase.lib</OutputFile>
+      <OutputFile>..\Lib\strmbased.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
     <ResourceCompile>

@@ -1724,28 +1724,13 @@ static RBX::ViewBase* createGameWindow(QOgreWidget *pQtWrapperWindow)
 	{
 	case RBX::CRenderSettings::NoGraphics:
 		break;
-	case RBX::CRenderSettings::OpenGL:
-		graphicsModeName = "gfx_gl";
-		modes.push_back(graphicsMode);
-		break;
-#ifdef _WIN32
-	case RBX::CRenderSettings::Direct3D9:
-		graphicsModeName = "gfx_d3d9";
-		modes.push_back(graphicsMode);
-		break;
     case RBX::CRenderSettings::Direct3D11:
         graphicsModeName = "gfx_d3d11";
         modes.push_back(graphicsMode);
         break;
-#endif
 	default:
 		graphicsModeName = "gfx_all";
-#ifdef _WIN32
-        if (FFlag::DirectX11Enable)
-            modes.push_back(RBX::CRenderSettings::Direct3D11);
-		modes.push_back(RBX::CRenderSettings::Direct3D9);
-#endif
-		modes.push_back(RBX::CRenderSettings::OpenGL);
+        modes.push_back(RBX::CRenderSettings::Direct3D11);
 		break;
 	}
 

@@ -31,7 +31,7 @@ EnvMap::EnvMap(VisualEngine* ve): Resource(ve->getDevice())
     envmapLastTimeOfDay = 0;
     setDebugName("Global envmap");
 
-    texture = dev->createTexture(Texture::Type_Cube, Texture::Format_RGBA8, kCubemapSize, kCubemapSize, 1, Texture::getMaxMipCount(kCubemapSize,kCubemapSize,1), Texture::Usage_Renderbuffer);
+    texture = dev->createTexture(Texture::Type_Cube, Texture::Format_RGBA16F, kCubemapSize, kCubemapSize, 1, Texture::getMaxMipCount(kCubemapSize,kCubemapSize,1), Texture::Usage_Renderbuffer);
     for (int j=0; j<6; ++j)
     {
         shared_ptr<Renderbuffer> rb = texture.getTexture()->getRenderbuffer(j, 0);

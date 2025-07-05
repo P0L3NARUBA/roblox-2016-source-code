@@ -34,6 +34,8 @@ static const FormatDescription gTextureFormats[Texture::Format_Count] =
     { 4, true, false },
 	{ 16, false, true },
 	{ 32, false, true },
+    { 32, false, true },
+    { 64, false, true },
 };
 
 TextureRegion::TextureRegion()

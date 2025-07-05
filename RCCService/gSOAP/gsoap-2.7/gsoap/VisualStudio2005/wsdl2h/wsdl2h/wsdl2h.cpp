@@ -111,7 +111,7 @@ char serviceformat[]       = "//gsoap %-4s service %s:\t%s %s\n";
 char paraformat[]          = "    %-35s%s%s%s";
 char anonformat[]          = "    %-35s%s_%s%s";
 
-char copyrightnotice[] = "\n**  The gSOAP WSDL parser for C and C++ "VERSION"\n**  Copyright (C) 2000-2008 Robert van Engelen, Genivia Inc.\n**  All Rights Reserved. This product is provided \"as is\", without any warranty.\n**  The gSOAP WSDL parser is released under one of the following two licenses:\n**  GPL or the commercial license by Genivia Inc. Use option -l for more info.\n\n";
+char copyrightnotice[] = "\n**  The gSOAP WSDL parser for C and C++ 'VERSION'\n**  Copyright (C) 2000-2008 Robert van Engelen, Genivia Inc.\n**  All Rights Reserved. This product is provided \"as is\", without any warranty.\n**  The gSOAP WSDL parser is released under one of the following two licenses:\n**  GPL or the commercial license by Genivia Inc. Use option -l for more info.\n\n";
 
 char licensenotice[]   = "\
 --------------------------------------------------------------------------------\n\

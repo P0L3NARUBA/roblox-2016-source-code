@@ -114,6 +114,13 @@ namespace RBX
 				shared_ptr<Framebuffer> gbufferFB;
 			};
 
+			struct Main
+			{
+				shared_ptr<Texture> mainColor;
+				shared_ptr<Texture> mainDepth;
+				shared_ptr<Framebuffer> mainFB;
+			};
+
 			GBuffer* getGBuffer() const { return gbuffer.get(); }
 			const TextureRef& getGBufferColor() const { return gbufferColor; }
 			const TextureRef& getGBufferDepth() const { return gbufferDepth; }
@@ -145,6 +152,10 @@ namespace RBX
 
 			scoped_ptr<Sky> sky;
 
+			scoped_ptr<Main> main;
+			TextureRef mainColor;
+			TextureRef mainDepth;
+
 			scoped_ptr<GBuffer> gbuffer;
 			TextureRef gbufferColor;
 			TextureRef gbufferDepth;
@@ -174,6 +185,8 @@ namespace RBX
 
 			ShadowValues unsetAndGetShadowValues(DeviceContext* context);
 			void restoreShadows(DeviceContext* context, const ShadowValues& shadowValues);
+
+			void updateMain(unsigned width, unsigned height);
 
 			void updateMSAA(unsigned width, unsigned height);
 

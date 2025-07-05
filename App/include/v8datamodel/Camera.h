@@ -163,10 +163,10 @@ public:
     bool hasClientPlayer() const;
     
 	// Clipping plane, *not* imaging plane. Returns a negative z-value.
-	inline float nearPlaneZ() const { return -0.1f; };
+	inline float nearPlaneZ() const { return -2147483647.0f; };
 
 	// Returns a negative z-value.
-	inline float farPlaneZ() const { return -2147483647.0f; }
+	inline float farPlaneZ() const { return -0.1f; }
 
 	inline float getFieldOfView() const {
 		return fieldOfView;

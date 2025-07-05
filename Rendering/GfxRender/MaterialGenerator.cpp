@@ -562,7 +562,7 @@ static void setupTechnique(Technique& technique, unsigned int flags, bool hasGlo
             technique.setBlendState(BlendState::Mode_AlphaBlend);
 
 		
-        technique.setDepthState(DepthState(DepthState::Function_LessEqual, false));
+        technique.setDepthState(DepthState(DepthState::Function_GreaterEqual, false));
 	}
 	else if (FFlag::GlowEnabled && hasGlow)
 	{

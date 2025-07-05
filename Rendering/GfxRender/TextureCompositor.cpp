@@ -965,7 +965,7 @@ shared_ptr<Framebuffer> TextureCompositor::getOrCreateFramebufer(const shared_pt
     }
             
     // create a new framebuffer
-	shared_ptr<Texture> rt = visualEngine->getDevice()->createTexture(Texture::Type_2D, Texture::Format_RGBA8, texture->getWidth(), texture->getHeight(), 1, 1, Texture::Usage_Renderbuffer);
+	shared_ptr<Texture> rt = visualEngine->getDevice()->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, texture->getWidth(), texture->getHeight(), 1, 1, Texture::Usage_Renderbuffer);
 	shared_ptr<Framebuffer> framebuffer = visualEngine->getDevice()->createFramebuffer(rt->getRenderbuffer(0, 0));
     
     // we make sure RTs are always alive to minimize stalls (there should be <3 Mb of them anyway)

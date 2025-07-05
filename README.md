@@ -33,7 +33,7 @@ DirectX 9 and OpenGL is unsupported.
 ---
 
 ## Features / Additions
-- All master-branch features and additions.
+- A modern lighting engine, aimed to be greater than even Roblox's modern lighting engine.
 
 ## Libraries Used
 - [Boost](/Contribs/boost_1_56_0) = 1.56.0
@@ -51,6 +51,9 @@ DirectX 9 and OpenGL is unsupported.
 - [hlsl2glslfork](/Rendering/ShaderCompiler/hlsl2glslfork) = *unknown*
 - [mojoshader](/Rendering/ShaderCompiler/mojoshader) = *unknown*
 - [gSOAP](/RCCService/gSOAP/gsoap-2.7) = 2.7.10
+- [RakNet](/Network/raknet) = 5 
+- [Mesa](/RCCService/Mesa-7.8.1) = 7.8.1
+- [TBB](/TBB_4_1) = 4.1
 
 ## Tools Used
 - [HxD](/Tools/HxD) = 2.5.0.0
@@ -67,8 +70,9 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
 ### Rendering
 - [x] HDR color buffer
 - [ ] Proper tonemapping
-   - [ ] Reinhard
+   - [ ] Reinhard Simple
    - [x] ACES
+   - [ ] Khronos PBR Neutral
    - [ ] AgX
 - [x] Local pixel lights
 - [ ] Directional light shadow-mapping
@@ -86,12 +90,25 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
    - [ ] Subsurface scattering
    - [ ] Automatic shader LODs
 - [ ] Unified light instance
+   - [ ] Point
+   - [ ] Sphere
+   - [ ] Line
+   - [ ] Tube
+   - [ ] Disk
+   - [ ] Plane
 - [ ] Clustered light culling
 - [ ] Voxel imitation mode
 - [ ] Ambient Occlusion
+   - [ ] Screen-space
+   - [ ] Distance field
 - [ ] Advanced post-processing effects
    - [ ] Depth of Field
    - [ ] Blur
+      - [ ] Box
+      - [ ] Gaussian
+      - [ ] Directional
+      - [ ] Radial
+   - [ ] Motion Blur
    - [ ] Color Correction
    - [ ] Lens Flare
    - [ ] Bloom
@@ -112,14 +129,19 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
 - [ ] Exposure
    - [ ] Adaptive
 - [ ] Highlights
+   - [ ] Variable thickness
+   - [ ] Antialiased
+- [ ] Occlusion Culling
 - [ ] GPU Particles
    - [ ] Physics simulation
-- [ ] Vulkan support
+- [ ] API support
+   - [x] DirectX 11
+   - [ ] Vulkan
+   - [ ] OpenGL ES 3.1+
 
-**Ones below will be updated when master branch commits are applied to this branch.**
 ### General
-- [ ] Color3uint8
-   - [ ] Color3.fromRGB()
+- [x] Color3uint8
+   - [x] Color3.fromRGB()
 - [ ] R15
 - [x] :Connect() and :Wait()
 - [ ] Fix keyboard shortcuts
@@ -127,6 +149,7 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
    - [ ] Chat keybind
       - Works in Studio but not in client 
    - [ ] Windows key on WindowsClient
+- [x] New fonts
 - [ ] Adding Cyrillic & Non-Latin language support
    - [ ] UTF/Unicode support
 - [ ] New Lua version
@@ -135,17 +158,15 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
 - [x] Support for newer mesh versions
 - [ ] Dark Theme for Studio
 - [x] Change the location of unrelated files inside **content\fonts** folder.
-- [ ] Making bootstrappers functional as intended 
-- [ ] Fixing broken in-game recorder
-- [ ] 64-bit support 
-- [x] Uploading Qt to the Github as issue-free
+- [ ] Making bootstrappers functional as intended
+- [ ] 64-bit support
 
-### Building all projects with Visual Studio 2022 **[46/60]**
+### Projects that successfully build with Visual Studio 2022 **VERIFIED: [26/59]**
    #### Main
    - [x] App
    - [x] App.BulletPhysics
    - [x] Base
-   - [ ] CoreScriptConverter2
+   - [x] CoreScriptConverter2
    - [x] CSG
    - [x] Log
    - [x] Network
@@ -153,7 +174,7 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
    - [ ] RCCService
    - [x] RobloxStudio
    - [x] sgCore
-   - [ ] WindowsClient
+   - [x] WindowsClient
 
    #### 3rd Party / Contribs
    - [x] boost.static
@@ -162,12 +183,12 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
    - [ ] cpp-netlib
    - [x] DSBaseClasses
    - [x] libcurl
-      - OpenSSL libraries spits out unresolved external symbols so these should get updated too.
    - [ ] Qt
    - [ ] OpenSSL
    - [x] SDL2
    - [x] zlib
    - [ ] w3c-libwww
+   - [ ] mesa
 
    #### gSOAP
    - [x] soapcpp2
@@ -190,43 +211,43 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
    - [ ] BootstrapperClient
    - [ ] BootstrapperQTStudio
    - [ ] RobloxProxy
-   - [x] PrepAllForUpload
-   - [x] BootstrapperClient.PrepForUpload
-   - [x] BootstrapperRccService.PrepForUpload
-   - [x] BootstrapperQTStudio.PrepForUpload
-   - [x] RobloxProxy.PrepForUpload
+   - [ ] PrepAllForUpload
+   - [ ] BootstrapperClient.PrepForUpload
+   - [ ] BootstrapperRccService.PrepForUpload
+   - [ ] BootstrapperQTStudio.PrepForUpload
+   - [ ] RobloxProxy.PrepForUpload
 
    #### Other
-   - [x] IncludeChecker
-   - [x] RbxTestHooks
-   - [x] ScriptSigner
-   - [x] Emcaster
-   - [x] EmcasterTest
-   - [x] EmReciever
-   - [x] Roblox.Common
-   - [x] Roblox.Common.Web
-   - [x] Roblox.Configuration
-   - [x] Roblox.Diagnostics
-   - [x] Roblox.Grid.Arbiter.Common
-   - [x] Roblox.Grid.Client
-   - [x] Roblox.Grid.Common
-   - [x] Roblox.Ssh
-   - [x] Roblox.System
-   - [x] Roblox.WebsiteSettings
-   - [x] Roblox.RccServiceArbiter
+   - [ ] IncludeChecker
+   - [ ] RbxTestHooks
+   - [ ] ScriptSigner
+   - [ ] Emcaster
+   - [ ] EmcasterTest
+   - [ ] EmReciever
+   - [ ] Roblox.Common
+   - [ ] Roblox.Common.Web
+   - [ ] Roblox.Configuration
+   - [ ] Roblox.Diagnostics
+   - [ ] Roblox.Grid.Arbiter.Common
+   - [ ] Roblox.Grid.Client
+   - [ ] Roblox.Grid.Common
+   - [ ] Roblox.Ssh
+   - [ ] Roblox.System
+   - [ ] Roblox.WebsiteSettings
+   - [ ] Roblox.RccServiceArbiter
 
-### Being able to build on listed platforms **[1/3]**
+### Builds on listed platforms **VERIFIED: [1/3]**
 - [x] Windows
 - [ ] Android
 - [ ] MacOS / Unix
+- [ ] Linux
 
 ## Current Issues
-- The Roblox in-game video recorder is pixelated and has no game sound; just some cracking noises.
 - Certain transparent renderables are either black or not rendered entirely.
-- Tonemapping is only applied when an active ColorCorrection instance is present.
-- Blur instance results in broken visuals.
+- Bloom does not render.
+- Blur instance does not render.
+- SSAO does not render.
 - Outdoor Ambient does nothing.
-- Significant depth precision issues.
 - Occasional lights consisting of garbage data and getting past all legitimacy checks may result in buggy visuals.
 - Anti-Aliasing is broken.
 - Outdoor environment map generation is broken, as well as lacking highlight reconstruction.

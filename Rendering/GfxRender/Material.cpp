@@ -12,7 +12,7 @@ Technique::Technique(const shared_ptr<ShaderProgram>& program, unsigned int lodI
 	: lodIndex(lodIndex)
     , pass(pass)
 	, rasterizerState(RasterizerState::Cull_Back)
-	, depthState(DepthState::Function_LessEqual, true)
+	, depthState(DepthState::Function_GreaterEqual, true)
 	, blendState(BlendState::Mode_None)
     , program(program)
 {
