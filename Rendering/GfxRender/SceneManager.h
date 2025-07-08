@@ -70,6 +70,8 @@ namespace RBX
 
 			const GlobalShaderData& readGlobalShaderData() const { return globalShaderData; }
 			GlobalShaderData& writeGlobalShaderData() { return globalShaderData; }
+			const GlobalProcessingData& readGlobalProcessingData() const { return globalProcessingData; }
+			GlobalProcessingData& writeGlobalProcessingData() { return globalProcessingData; }
 			const GlobalLightList& readGlobalLightList() const { return globalLightList; }
 			GlobalLightList& writeGlobalLightList() { return globalLightList; }
 
@@ -95,16 +97,16 @@ namespace RBX
 
 			void setSkyEnabled(bool value);
 			void setClearColor(const Color4& value);
-			void setFog(const Color3& color, float rangeBegin, float rangeEnd);
-			void setLighting(const Color3& ambient, const Vector3& keyDirection, const Color3& keyColor, const Color3& fillColor);
+			void setFog(const Color3& color, const Vector4& fogParams);
+			void setLighting(const Color3& ambient, const Color3& outdoorAmbient, const Vector3& keyDirection, const Color3& keyColor);
 			void trackLightingTimeOfDay(double sec) { curTimeOfDay = sec; }
-			void setPostProcess(float brightness, float contrast, float grayscaleLevel, float blurIntensity, const Color3& tintColor);
+			void setPostProcess(float brightness, float contrast, float grayscaleLevel, float blurIntensity, const Color3& tintColor, float bloomIntensity, int bloomSize);
 
 			const GeometryBatch& getFullscreenTriangle() const { return *fullscreenTriangle; }
 
 			void onDeviceLost();
 
-			struct GBuffer
+			/*struct GBuffer
 			{
 				shared_ptr<Texture> mainColor;
 				shared_ptr<Framebuffer> mainFB;
@@ -116,7 +118,7 @@ namespace RBX
 				shared_ptr<Framebuffer> gbufferDepthFB;
 
 				shared_ptr<Framebuffer> gbufferFB;
-			};
+			};*/
 
 			struct Main
 			{
@@ -125,11 +127,11 @@ namespace RBX
 				shared_ptr<Framebuffer> mainFB;
 			};
 
-			GBuffer* getGBuffer() const { return gbuffer.get(); }
+			/*GBuffer* getGBuffer() const { return gbuffer.get(); }
 			const TextureRef& getGBufferColor() const { return gbufferColor; }
 			const TextureRef& getGBufferDepth() const { return gbufferDepth; }
 
-			const TextureRef& getShadowMap() const { return shadowMapTexture; }
+			const TextureRef& getShadowMap() const { return shadowMapTexture; }*/
 
 		private:
 			VisualEngine* visualEngine;
@@ -150,6 +152,7 @@ namespace RBX
 			Color4 clearColor;
 
 			GlobalShaderData globalShaderData;
+			GlobalProcessingData globalProcessingData;
 			GlobalLightList globalLightList;
 
 			scoped_ptr<GeometryBatch> fullscreenTriangle;
@@ -160,9 +163,9 @@ namespace RBX
 			TextureRef mainColor;
 			TextureRef mainDepth;
 
-			scoped_ptr<GBuffer> gbuffer;
+			/*scoped_ptr<GBuffer> gbuffer;
 			TextureRef gbufferColor;
-			TextureRef gbufferDepth;
+			TextureRef gbufferDepth;*/
 
 			scoped_ptr<SSAO> ssao;
 			scoped_ptr<MSAA> msaa;
@@ -171,10 +174,10 @@ namespace RBX
 			scoped_ptr<EnvMap> envMap;
 			scoped_ptr<ImageProcess> imageProcess;
 
-			scoped_ptr<ShadowMap> shadowMaps[3];
+			/*scoped_ptr<ShadowMap> shadowMaps[3];
 			float shadowMapTexelSize;
 			TextureRef shadowMask;
-			TextureRef shadowMapTexture;
+			TextureRef shadowMapTexture;*/
 
 			PostProcessSettings postProcessSettings;
 
@@ -187,21 +190,21 @@ namespace RBX
 				float intensity;
 			};
 
-			ShadowValues unsetAndGetShadowValues(DeviceContext* context);
-			void restoreShadows(DeviceContext* context, const ShadowValues& shadowValues);
+			/*ShadowValues unsetAndGetShadowValues(DeviceContext* context);
+			void restoreShadows(DeviceContext* context, const ShadowValues& shadowValues);*/
 
 			void updateMain(unsigned width, unsigned height);
 
 			void updateMSAA(unsigned width, unsigned height);
 
-			void updateGBuffer(unsigned width, unsigned height);
+			/*void updateGBuffer(unsigned width, unsigned height);
 			void resolveGBuffer(DeviceContext* context, Texture* texture);
 
 			void renderShadowMap(DeviceContext* context, ShadowMap* shadowMap);
 			RenderCamera getShadowCamera(const Vector3& center, int shadowMapSize, float shadowRadius, float shadowDepthRadius);
 			void blurShadowMap(DeviceContext* context, ShadowMap* shadowMap);
 
-			ShadowMap* pickShadowMap(int qualityLevel) const;
+			ShadowMap* pickShadowMap(int qualityLevel) const;*/
 		};
 
 	}

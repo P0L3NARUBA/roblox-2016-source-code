@@ -64,6 +64,7 @@ public:
 
     void defineGlobalConstants(size_t dataSize);
     unsigned getGlobalDataSize() { return globalDataSize; }
+    void defineGlobalProcessingData(size_t dataSize);
     void defineGlobalLightList(size_t dataSize, size_t elementSize);
 
     void clearStates();
@@ -74,6 +75,7 @@ public:
     void invalidateCachedTexture(Texture* texture);
 
     virtual void updateGlobalConstants(const void* data, size_t dataSize);
+    virtual void updateGlobalProcessingData(const void* data, size_t dataSize);
     virtual void updateGlobalLightList(const void* data, size_t dataSize);
 
     virtual void setDefaultAnisotropy(unsigned int value);
@@ -125,6 +127,7 @@ protected:
     ID3D11DeviceContext*    immediateContext11;
 
     ID3D11Buffer* globalsConstantBuffer;
+    ID3D11Buffer* globalsProcessingDataBuffer;
     ID3D11Buffer* globalsLightListBuffer;
     ID3D11ShaderResourceView* globalsLightListResource;
     size_t globalDataSize;
@@ -191,7 +194,8 @@ public:
 	virtual DeviceVR* getVR();
 	virtual void setVR(bool enabled);
 
-    virtual void defineGlobalConstants(size_t dataSize, const std::vector<ShaderGlobalConstant>& constants);
+    virtual void defineGlobalConstants(size_t dataSize);
+    virtual void defineGlobalProcessingData(size_t dataSize);
     virtual void defineGlobalLightList(size_t dataSize, size_t elementSize);
 
     virtual std::string getAPIName() { return "DirectX 11"; }
@@ -202,6 +206,8 @@ public:
 
     virtual shared_ptr<VertexShader> createVertexShader(const std::vector<char>& bytecode);
     virtual shared_ptr<FragmentShader> createFragmentShader(const std::vector<char>& bytecode);
+    virtual shared_ptr<ComputeShader> createComputeShader(const std::vector<char>& bytecode);
+    virtual shared_ptr<GeometryShader> createGeometryShader(const std::vector<char>& bytecode);
     virtual shared_ptr<ShaderProgram> createShaderProgram(const shared_ptr<VertexShader>& vertexShader, const shared_ptr<FragmentShader>& fragmentShader);
     virtual shared_ptr<ShaderProgram> createShaderProgramFFP();
 

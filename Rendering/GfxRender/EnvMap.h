@@ -22,11 +22,11 @@ public:
     const TextureRef& getTexture() const { return texture; }
 
     void update(DeviceContext* context, double gameTime);
-    void markDirty(bool veryDirty = false);
+    //void markDirty(bool veryDirty = false);
 
 private:
 
-    void incrementalUpdate(DeviceContext* context);
+    //void incrementalUpdate(DeviceContext* context);
     void fullUpdate(DeviceContext* context);
 private:
 
@@ -50,7 +50,7 @@ private:
 
     void renderFace(DeviceContext* context, int face);
     virtual void onDeviceRestored();
-    void clearDirty();
+    //void clearDirty();
 };
 
 }} // ns

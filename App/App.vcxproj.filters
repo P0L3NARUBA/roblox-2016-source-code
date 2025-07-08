@@ -1785,7 +1785,7 @@
       <Filter>Source Files\V8DataModel Source</Filter>
     </ClCompile>
     <ClCompile Include="v8datamodel\BloomEffect.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\V8DataModel Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -3683,7 +3683,7 @@
       <Filter>Header Files\V8DataModel Header</Filter>
     </ClInclude>
     <ClInclude Include="include\v8datamodel\BloomEffect.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\V8DataModel Header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

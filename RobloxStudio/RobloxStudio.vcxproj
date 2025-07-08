@@ -147,7 +147,7 @@
     </Link>
     <PostBuildEvent>
       <Message>Copy Plugins</Message>
-      <Command>rm -r "$(ProjectDir)$(OutDir)imageformats"
+      <Command>rmdir "$(ProjectDir)$(OutDir)imageformats"
 mkdir "$(ProjectDir)$(OutDir)imageformats"
 mkdir "$(ProjectDir)$(OutDir)imageformats\imageformats"
 copy /Y $(CONTRIB_PATH)\Qt\4.8.5\win_VS2012\plugins\imageformats\qgif4.dll $(ProjectDir)$(OutDir)imageformats\imageformats
@@ -155,7 +155,7 @@ copy /Y $(CONTRIB_PATH)\Qt\4.8.5\win_VS2012\plugins\imageformats\qjpeg4.dll $(Pr
 copy /Y "$(SolutionDir)CSG\sgCore\sgCore.dll" $(ProjectDir)$(OutDir)
 copy /Y "$(SolutionDir)QTitanRibbon\roblox_build\qtnribbon3.dll" $(ProjectDir)$(OutDir)
 
-rm -r "$(ProjectDir)$(OutDir)BuiltInPlugins"
+rmdir "$(ProjectDir)$(OutDir)BuiltInPlugins"
 mkdir "$(ProjectDir)$(OutDir)BuiltInPlugins"
 xcopy /E /Y "$(SolutionDir)BuiltInPlugins" "$(ProjectDir)$(OutDir)BuiltInPlugins\"
 

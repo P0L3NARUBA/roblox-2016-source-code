@@ -27,6 +27,24 @@ FragmentShader::~FragmentShader()
 {
 }
 
+ComputeShader::ComputeShader(Device* device)
+    : Resource(device)
+{
+}
+
+ComputeShader::~ComputeShader()
+{
+}
+
+GeometryShader::GeometryShader(Device* device)
+    : Resource(device)
+{
+}
+
+GeometryShader::~GeometryShader()
+{
+}
+
 ShaderProgram::ShaderProgram(Device* device, const shared_ptr<VertexShader>& vertexShader, const shared_ptr<FragmentShader>& fragmentShader)
 	: Resource(device)
     , vertexShader(vertexShader)

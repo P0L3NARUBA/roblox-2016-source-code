@@ -46,16 +46,26 @@ public:
     };
 
     enum Format
-	{
+    {
         Format_L8,
         Format_LA8,
         Format_RGB5A1,
         Format_RGBA8,
+        Format_R11G11B10F,
         Format_RG16,
+        Format_RG16F,
         Format_RGBA16F,
-        Format_BC1,
-        Format_BC2,
-        Format_BC3,
+        Format_BC1,      /* R5  G6  B5  A1        */
+        Format_BC1_SRGB, /* R5  G6  B5  A1  | sRGB */
+        Format_BC2,      /* R5  G6  B5  A4        */
+        Format_BC2_SRGB, /* R5  G6  B5  A4  | sRGB */
+        Format_BC3,      /* R5  G6  B5  A8        */
+        Format_BC3_SRGB, /* R5  G6  B5  A8  | sRGB */
+        Format_BC4,      /* R8  --- --- ---       */
+        Format_BC5,      /* R8  G8  --- ---       */
+        Format_BC6UF,    /* R16 G16 B16 ---       */
+        Format_BC7,      /* R-- G-- B-- A--       */
+        Format_BC7_SRGB, /* R-- G-- B-- A--       */
         Format_PVRTC_RGB2,
         Format_PVRTC_RGBA2,
         Format_PVRTC_RGB4,

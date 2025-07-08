@@ -72,6 +72,7 @@ namespace Graphics
         , cachedBlendState(BlendState::Mode_None)
         , cachedDepthState(DepthState::Function_Always, false)
         , globalsConstantBuffer(NULL)
+        , globalsProcessingDataBuffer(NULL)
         , globalsLightListBuffer(NULL)
         , d3d9(NULL)
     {
@@ -112,6 +113,7 @@ namespace Graphics
 
         ReleaseCheck(immediateContext11);
         ReleaseCheck(globalsConstantBuffer);
+        ReleaseCheck(globalsProcessingDataBuffer);
         ReleaseCheck(globalsLightListBuffer);
 
         for (RasterizerStateHash::iterator it = rasterizerStateHash.begin(); it != rasterizerStateHash.end(); ++it)
@@ -145,7 +147,25 @@ namespace Graphics
 
         globalDataSize = dataSize;
 
-        HRESULT hr = device11->CreateBuffer( &bd, NULL, &globalsConstantBuffer );
+        HRESULT hr = device11->CreateBuffer(&bd, NULL, &globalsConstantBuffer);
+        RBXASSERT(SUCCEEDED(hr));
+    }
+
+    void DeviceContextD3D11::defineGlobalProcessingData(size_t dataSize)
+    {
+        RBXASSERT(globalsProcessingDataBuffer == NULL);
+        if (globalsProcessingDataBuffer)
+            return;
+
+        D3D11_BUFFER_DESC bd = {};
+        bd.Usage = D3D11_USAGE_DEFAULT;
+        bd.ByteWidth = dataSize;
+        bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+        bd.CPUAccessFlags = 0;
+        bd.StructureByteStride = 0;
+        bd.MiscFlags = 0;
+
+        HRESULT hr = device11->CreateBuffer(&bd, NULL, &globalsProcessingDataBuffer);
         RBXASSERT(SUCCEEDED(hr));
     }
 
@@ -186,6 +206,14 @@ namespace Graphics
         immediateContext11->PSSetConstantBuffers( 0, 1, &globalsConstantBuffer);
     }
 
+    void DeviceContextD3D11::updateGlobalProcessingData(const void* data, size_t dataSize)
+    {
+        immediateContext11->UpdateSubresource(globalsProcessingDataBuffer, 0, NULL, data, 0, 0);
+
+        immediateContext11->VSSetConstantBuffers(0, 1, &globalsProcessingDataBuffer);
+        immediateContext11->PSSetConstantBuffers(0, 1, &globalsProcessingDataBuffer);
+    }
+
     void DeviceContextD3D11::updateGlobalLightList(const void *data, size_t dataSize)
     {
         D3D11_MAPPED_SUBRESOURCE mappedResource2;
@@ -196,7 +224,7 @@ namespace Graphics
         
         immediateContext11->Unmap(globalsLightListBuffer, 0);
 
-        immediateContext11->PSSetShaderResources(15, 1, &globalsLightListResource);
+        immediateContext11->PSSetShaderResources(31, 1, &globalsLightListResource);
     }
 
     void DeviceContextD3D11::bindFramebuffer(Framebuffer* buffer)

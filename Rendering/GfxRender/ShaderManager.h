@@ -7,43 +7,51 @@
 
 namespace RBX
 {
-namespace Graphics
-{
+	namespace Graphics
+	{
 
-class VertexShader;
-class FragmentShader;
-class ShaderProgram;
-class VisualEngine;
+		class VertexShader;
+		class FragmentShader;
+		class ComputeShader;
+		class GeometryShader;
+		class ShaderProgram;
+		class VisualEngine;
 
-class ShaderManager
-{
-public:
-    ShaderManager(VisualEngine* visualEngine);
-    ~ShaderManager();
-    
-    void loadShaders(const std::string& folder, const std::string& language, bool consoleOutput);
+		class ShaderManager
+		{
+		public:
+			ShaderManager(VisualEngine* visualEngine);
+			~ShaderManager();
 
-    shared_ptr<ShaderProgram> getProgram(const std::string& vsName, const std::string& fsName);
+			void loadShaders(const std::string& folder, const std::string& language, bool consoleOutput);
 
-    shared_ptr<ShaderProgram> getProgramOrFFP(const std::string& vsName, const std::string& fsName);
-    shared_ptr<ShaderProgram> getProgramFFP();
+			shared_ptr<ShaderProgram> getProgram(const std::string& vsName, const std::string& fsName);
 
-private:
-    VisualEngine* visualEngine;
+			shared_ptr<ShaderProgram> getProgramOrFFP(const std::string& vsName, const std::string& fsName);
+			shared_ptr<ShaderProgram> getProgramFFP();
 
-    typedef boost::unordered_map<std::string, shared_ptr<VertexShader> > VertexShaders;
-    VertexShaders vertexShaders;
+		private:
+			VisualEngine* visualEngine;
 
-    typedef boost::unordered_map<std::string, shared_ptr<FragmentShader> > FragmentShaders;
-    FragmentShaders fragmentShaders;
+			typedef boost::unordered_map<std::string, shared_ptr<VertexShader> > VertexShaders;
+			VertexShaders vertexShaders;
 
-    typedef boost::unordered_map<std::string, shared_ptr<ShaderProgram> > ShaderPrograms;
-    ShaderPrograms shaderPrograms;
+			typedef boost::unordered_map<std::string, shared_ptr<FragmentShader> > FragmentShaders;
+			FragmentShaders fragmentShaders;
 
-    shared_ptr<ShaderProgram> shaderProgramFFP;
+			typedef boost::unordered_map<std::string, shared_ptr<ComputeShader> > ComputeShaders;
+			ComputeShaders computeShaders;
 
-    shared_ptr<ShaderProgram> createProgram(const std::string& name, const std::string& vsName, const std::string& fsName);
-};
+			typedef boost::unordered_map<std::string, shared_ptr<GeometryShader> > GeometryShaders;
+			GeometryShaders geometryShaders;
 
-}
+			typedef boost::unordered_map<std::string, shared_ptr<ShaderProgram> > ShaderPrograms;
+			ShaderPrograms shaderPrograms;
+
+			shared_ptr<ShaderProgram> shaderProgramFFP;
+
+			shared_ptr<ShaderProgram> createProgram(const std::string& name, const std::string& vsName, const std::string& fsName);
+		};
+
+	}
 }

@@ -130,7 +130,7 @@ void Block::init()
     
 	// Make sure we have token references for the default part size so that it never goes away
 	// This resolves the issue of slow Block structure construction happening every time we create a part
-	Vector3 initialSize = Vector3(4.0f, 1.2f, 2.0f);
+	Vector3 initialSize = Vector3(4.0f, 1.0f, 2.0f);
 
 	static BlockMeshPool::Token meshToken = BlockMeshPool::getToken(initialSize);
 	static BlockCornersPool::Token cornersToken = BlockCornersPool::getToken(initialSize);

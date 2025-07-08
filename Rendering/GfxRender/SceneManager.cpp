@@ -137,10 +137,13 @@ namespace RBX
 
 			bool valid() { return data.get() != NULL; }
 
-			float getIntensity() { return bloomIntensity; }
+			float getIntensity() const { return bloomIntensity; }
 
 			void update(unsigned width, unsigned height, const SceneManager::PostProcessSettings& pps)
 			{
+				bloomIntensity = pps.bloomIntensity;
+				bloomSize = pps.bloomSize;
+
 				if (data && !bloomNeeded())
 				{
 					data.reset();
@@ -164,6 +167,8 @@ namespace RBX
 
 			void render(DeviceContext* context, Texture* source)
 			{
+				float totalBloomSize = bloomSize + 1;
+
 				/* Initial Fetch */
 				{
 					context->bindFramebuffer(data->bloomFB.get());
@@ -173,7 +178,7 @@ namespace RBX
 
 					if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "InitialBloomDownsampleFS", BlendState::Mode_None, width, height))
 					{
-						float params1[4] = { width, height, bloomSize + 1, 0.0 };
+						float params1[4] = { 1.0 / float(width), 1.0 / float(height), totalBloomSize, 0.0 };
 						context->setConstant(program->getConstantHandle("Params1"), &params1[0], 1);
 						context->bindTexture(0, source, SamplerState(SamplerState::Filter_Point, SamplerState::Address_Border));
 
@@ -191,7 +196,7 @@ namespace RBX
 
 					if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "BloomDownsampleFS", BlendState::Mode_None, width, height))
 					{
-						float params1[4] = { width, height, bloomSize + 1, 0.0 };
+						float params1[4] = { 1.0 / float(width), 1.0 / float(height), totalBloomSize, 0.0 };
 						context->setConstant(program->getConstantHandle("Params1"), &params1[0], 1);
 						context->bindTexture(0, texture, SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Border));
 
@@ -199,7 +204,7 @@ namespace RBX
 					}
 				}
 
-				float filterSize = 0.002f;
+				float filterSize = 0.0005f * totalBloomSize;
 
 				/* Upsampling */
 				for (int i = bloomSize - 1; i > 0; --i) {
@@ -211,14 +216,14 @@ namespace RBX
 
 					if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "BloomUpsampleFS", BlendState::Mode_Additive, width, height))
 					{
-						float params1[4] = { filterSize, filterSize * (width / height), 0.0, 0.0 };
+						float params1[4] = { filterSize, filterSize * (width / height), totalBloomSize, 0.0 };
 						context->setConstant(program->getConstantHandle("Params1"), &params1[0], 1);
 						context->bindTexture(0, data->bloomBuffers[i].get(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 
 						ScreenSpaceEffect::renderFullscreenEnd(context, visualEngine);
 					}
 
-					//filterSize *= 0.5;
+					filterSize *= 0.5;
 				}
 
 				/* Final Upsample */
@@ -231,7 +236,7 @@ namespace RBX
 
 					if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "BloomUpsampleFS", BlendState::Mode_Additive, width, height))
 					{
-						float params1[4] = { 0.005, 0.005 * (width / height), 0.0, 0.0 };
+						float params1[4] = { filterSize, filterSize * (width / height), totalBloomSize, 0.0 };
 						context->setConstant(program->getConstantHandle("Params1"), &params1[0], 1);
 						context->bindTexture(0, data->bloomBuffers[0].get(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 
@@ -251,8 +256,8 @@ namespace RBX
 				shared_ptr<Texture> bloomBuffer;
 				shared_ptr<Framebuffer> bloomFB;
 
-				shared_ptr<Texture> bloomBuffers[6];
-				shared_ptr<Framebuffer> bloomFBs[6];
+				std::vector<shared_ptr<Texture>> bloomBuffers;
+				std::vector<shared_ptr<Framebuffer>> bloomFBs;
 
 				unsigned width;
 				unsigned height;
@@ -270,59 +275,21 @@ namespace RBX
 				data->width = width;
 				data->height = height;
 
-				if (bloomSize > 0) {
-					unsigned newWidth = unsigned(float(width) / 2.0f);
-					unsigned newHeight = unsigned(float(height) / 2.0f);
+				unsigned newWidth = width;
+				unsigned newHeight = height;
 
-					data->bloomBuffers[0] = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, newWidth, newHeight, 1, 1, Texture::Usage_Renderbuffer);
-					data->bloomFBs[0] = device->createFramebuffer(data->bloomBuffers[0]->getRenderbuffer(0, 0));
-				}
+				for (int i = 0; i < bloomSize; ++i) {
+					newWidth = std::max(unsigned(float(newWidth) / 2.0f), 16u);
+					newHeight = std::max(unsigned(float(newHeight) / 2.0f), 16u);
 
-				if (bloomSize > 1) {
-					unsigned newWidth = unsigned(float(width) / 4.0f);
-					unsigned newHeight = unsigned(float(height) / 4.0f);;
-
-					data->bloomBuffers[1] = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, newWidth, newHeight, 1, 1, Texture::Usage_Renderbuffer);
-					data->bloomFBs[1] = device->createFramebuffer(data->bloomBuffers[1]->getRenderbuffer(0, 0));
-				}
-
-				if (bloomSize > 2) {
-					unsigned newWidth = unsigned(float(width) / 8.0f);
-					unsigned newHeight = unsigned(float(height) / 8.0f);;
-
-					data->bloomBuffers[2] = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, newWidth, newHeight, 1, 1, Texture::Usage_Renderbuffer);
-					data->bloomFBs[2] = device->createFramebuffer(data->bloomBuffers[2]->getRenderbuffer(0, 0));
-				}
-
-				if (bloomSize > 3) {
-					unsigned newWidth = unsigned(float(width) / 16.0f);
-					unsigned newHeight = unsigned(float(height) / 16.0f);;
-
-					data->bloomBuffers[3] = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, newWidth, newHeight, 1, 1, Texture::Usage_Renderbuffer);
-					data->bloomFBs[3] = device->createFramebuffer(data->bloomBuffers[3]->getRenderbuffer(0, 0));
-				}
-
-				if (bloomSize > 4) {
-					unsigned newWidth = unsigned(float(width) / 32.0f);
-					unsigned newHeight = unsigned(float(height) / 32.0f);;
-
-					data->bloomBuffers[4] = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, newWidth, newHeight, 1, 1, Texture::Usage_Renderbuffer);
-					data->bloomFBs[4] = device->createFramebuffer(data->bloomBuffers[4]->getRenderbuffer(0, 0));
-				}
-
-				if (bloomSize > 5) {
-					unsigned newWidth = unsigned(float(width) / 64.0f);
-					unsigned newHeight = unsigned(float(height) / 64.0f);;
-
-					data->bloomBuffers[5] = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, newWidth, newHeight, 1, 1, Texture::Usage_Renderbuffer);
-					data->bloomFBs[5] = device->createFramebuffer(data->bloomBuffers[5]->getRenderbuffer(0, 0));
+					data->bloomBuffers.push_back(device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, newWidth, newHeight, 1, 1, Texture::Usage_Renderbuffer));
+					data->bloomFBs.push_back(device->createFramebuffer(data->bloomBuffers[i]->getRenderbuffer(0, 0)));
 				}
 
 				return data;
 			}
 
-			bool bloomNeeded()
-			{
+			bool bloomNeeded() const {
 				return bloomIntensity > FLT_EPSILON || bloomSize == 0;
 			}
 
@@ -344,7 +311,7 @@ namespace RBX
 			{
 			}
 
-			bool valid() { return data != NULL; }
+			bool valid() const { return data != NULL; }
 
 			void update(unsigned width, unsigned height, const SceneManager::PostProcessSettings& pps)
 			{
@@ -413,8 +380,7 @@ namespace RBX
 				return data;
 			}
 
-			bool blurNeeded()
-			{
+			bool blurNeeded() const {
 				return blurStrength > FLT_EPSILON;
 			}
 
@@ -440,7 +406,7 @@ namespace RBX
 
 			}
 
-			bool valid() { return data != NULL; }
+			bool valid() const { return data != NULL; }
 
 			void update(unsigned width, unsigned height, const SceneManager::PostProcessSettings& pps)
 			{
@@ -559,7 +525,7 @@ namespace RBX
 				context->resolveFramebuffer(multisampledSource, target, DeviceContext::Buffer_Color);
 			}
 
-			void renderComposit(DeviceContext* context)
+			/*void renderComposit(DeviceContext* context)
 			{
 				const float clearColor[] = { 0, 0, 0, 1 };
 
@@ -571,7 +537,7 @@ namespace RBX
 
 					ScreenSpaceEffect::renderFullscreenEnd(context, visualEngine);
 				}
-			}
+			}*/
 
 			Framebuffer* getFramebuffer() const
 			{
@@ -604,7 +570,7 @@ namespace RBX
 			unsigned int samples;
 		};
 
-		class ShadowMap
+		/*class ShadowMap
 		{
 		public:
 			ShadowMap(VisualEngine* visualEngine, Texture::Format format, int size)
@@ -631,7 +597,7 @@ namespace RBX
 
 			shared_ptr<Texture> shadowMap[2];
 			shared_ptr<Framebuffer> shadowMapFB[2];
-		};
+		};*/
 
 		SceneManager::SceneManager(VisualEngine* visualEngine)
 			: Resource(visualEngine->getDevice())
@@ -656,7 +622,7 @@ namespace RBX
 			envMap.reset(new EnvMap(visualEngine));
 			imageProcess.reset(new ImageProcess(visualEngine));
 
-			shadowRenderQueue.reset(new RenderQueue());
+			/*shadowRenderQueue.reset(new RenderQueue());
 
 			shadowMask = visualEngine->getTextureManager()->load(ContentId("rbxasset://textures/shadowmask.png"), TextureManager::Fallback_Black);
 
@@ -683,7 +649,7 @@ namespace RBX
 			// Create dummy GBuffer textures so that materials can have passes that reference them
 			gbufferColor = shared_ptr<Texture>();
 			gbufferDepth = shared_ptr<Texture>();
-			shadowMapTexture = shared_ptr<Texture>();
+			shadowMapTexture = shared_ptr<Texture>();*/
 		}
 
 		SceneManager::~SceneManager()
@@ -732,7 +698,7 @@ namespace RBX
 			envMap->update(context, curTimeOfDay);
 
 			// Update SSAO
-			ssao->update(frm->getSSAOLevel(), viewWidth, viewHeight);
+			//ssao->update(frm->getSSAOLevel(), viewWidth, viewHeight);
 
 			// Prepare for stats gathering
 			stats->passTotal = stats->passScene = stats->passShadow = stats->passUI = stats->pass3DAdorns = RenderPassStats();
@@ -788,7 +754,7 @@ namespace RBX
 			imageProcess->update(viewWidth, viewHeight, postProcessSettings);
 
 			// Render shadow map
-			ShadowMap* shadowMap = pickShadowMap(frm->GetQualityLevel());
+			/*ShadowMap* shadowMap = pickShadowMap(frm->GetQualityLevel());
 
 			if (shadowMap)
 			{
@@ -801,7 +767,7 @@ namespace RBX
 				globalShaderData.OutlineBrightness_ShadowInfo.w = 0;
 
 				shadowMapTexture.updateAllRefs(shared_ptr<Texture>());
-			}
+			}*/
 		}
 
 		void SceneManager::renderView(DeviceContext* context, Framebuffer* mainFramebuffer, const RenderCamera& camera, unsigned int viewWidth, unsigned int viewHeight)
@@ -813,7 +779,7 @@ namespace RBX
 
 			context->updateGlobalConstants(&globalShaderData, sizeof(globalShaderData));
 
-			SSAO* ssao = this->ssao->isActive() ? this->ssao.get() : NULL;
+			//SSAO* ssao = this->ssao->isActive() ? this->ssao.get() : NULL;
 
 			/* Clear */
 			{
@@ -913,8 +879,7 @@ namespace RBX
 			}
 
 			/* MSAA Resolve */
-			if (msaa)
-			{
+			if (msaa) {
 				RBXPROFILER_SCOPE("Render", "MSAA");
 				RBXPROFILER_SCOPE("GPU", "MSAA");
 
@@ -922,19 +887,17 @@ namespace RBX
 			}
 
 			/* Blur */
-			if (blur)
-			{
+			/*if (blur) {
 				RBXPROFILER_SCOPE("Render", "Blur");
 				RBXPROFILER_SCOPE("GPU", "Blur");
 
 				context->bindFramebuffer(main->mainFB.get());
 
 				blur->render(context, main->mainFB.get());
-			}
+			}*/
 
 			/* Bloom */
-			if (bloom)
-			{
+			if (bloom) {
 				RBXPROFILER_SCOPE("Render", "Bloom");
 				RBXPROFILER_SCOPE("GPU", "Bloom");
 
@@ -975,7 +938,7 @@ namespace RBX
 			stats->passTotal = stats->passScene + stats->passShadow + stats->passUI + stats->pass3DAdorns;
 		}
 
-		SceneManager::ShadowValues SceneManager::unsetAndGetShadowValues(DeviceContext* context)
+		/*SceneManager::ShadowValues SceneManager::unsetAndGetShadowValues(DeviceContext* context)
 		{
 			ShadowValues values = { globalShaderData.OutlineBrightness_ShadowInfo.w };
 
@@ -991,7 +954,7 @@ namespace RBX
 			globalShaderData.OutlineBrightness_ShadowInfo.w = shadowValues.intensity;
 
 			context->updateGlobalConstants(&globalShaderData, sizeof(globalShaderData));
-		}
+		}*/
 
 		void SceneManager::setPointOfInterest(const Vector3& poi)
 		{
@@ -1008,27 +971,29 @@ namespace RBX
 			clearColor = value;
 		}
 
-		void SceneManager::setFog(const Color3& color, float rangeBegin, float rangeEnd)
+		void SceneManager::setFog(const Color3& color, const Vector4& fogParams)
 		{
-			globalShaderData.FogColor = Color4(color);
-			globalShaderData.FogParams = Vector4(0, rangeBegin, rangeEnd, (rangeBegin != rangeEnd) ? 1 / (rangeEnd - rangeBegin) : 0);
+			globalShaderData.FogColor_unused = Color4(color);
+			globalShaderData.FogParams_unused = fogParams;
 		}
 
-		void SceneManager::setLighting(const Color3& ambient, const Vector3& keyDirection, const Color3& keyColor, const Color3& fillColor)
+		void SceneManager::setLighting(const Color3& ambient, const Color3& outdoorAmbient, const Vector3& keyDirection, const Color3& keyColor)
 		{
-			globalShaderData.AmbientColor = Color4(ambient);
-			globalShaderData.Lamp0Color = Color4(keyColor);
-			globalShaderData.Lamp0Dir = Vector4(keyDirection, 0);
-			globalShaderData.Lamp1Color = Color4(fillColor);
+			globalShaderData.AmbientColor_EnvDiffuse = Color4(ambient, globalShaderData.AmbientColor_EnvDiffuse.w);
+			globalShaderData.OutdoorAmbientColor_EnvSpecular = Color4(outdoorAmbient, globalShaderData.OutdoorAmbientColor_EnvSpecular.w);
+			globalShaderData.KeyColor_KeyShadowDistance = Color4(keyColor, globalShaderData.KeyColor_KeyShadowDistance.w);
+			globalShaderData.KeyDirection_unused = Vector4(keyDirection, globalShaderData.KeyDirection_unused.w);
 		}
 
-		void SceneManager::setPostProcess(float brightness, float contrast, float grayscaleLevel, float blurIntensity, const Color3& tintColor)
+		void SceneManager::setPostProcess(float brightness, float contrast, float grayscaleLevel, float blurIntensity, const Color3& tintColor, float bloomIntensity, int bloomSize)
 		{
 			postProcessSettings.brightness = brightness;
 			postProcessSettings.contrast = contrast;
 			postProcessSettings.grayscaleLevel = grayscaleLevel;
 			postProcessSettings.blurIntensity = blurIntensity;
 			postProcessSettings.tintColor = tintColor;
+			postProcessSettings.bloomIntensity = bloomIntensity;
+			postProcessSettings.bloomSize = bloomSize;
 		}
 
 		void SceneManager::updateMain(unsigned width, unsigned height)
@@ -1115,7 +1080,7 @@ namespace RBX
 			}
 		}
 
-		void SceneManager::updateGBuffer(unsigned width, unsigned height)
+		/*void SceneManager::updateGBuffer(unsigned width, unsigned height)
 		{
 			if (gbufferError || msaa)
 			{
@@ -1327,7 +1292,7 @@ namespace RBX
 				return shadowMaps[1].get();
 
 			return shadowMaps[0].get();
-		}
+		}*/
 
 	}
 }

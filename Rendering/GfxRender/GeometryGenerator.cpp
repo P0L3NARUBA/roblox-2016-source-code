@@ -2396,7 +2396,7 @@ namespace Graphics
     {
         bool randomizeColor = false;
         if (Lighting* lighting = visualEngine->getLighting())
-            randomizeColor = lighting->getOutlines();
+            randomizeColor = lighting->getOutlines_deprecated();
 
         if (randomizeColor)
         {

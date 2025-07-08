@@ -8,6 +8,7 @@
 
 # Roblox 2016 Source Code
 This is a branch of this source, modified to include a modern lighting engine equivalent to or better than modern Roblox.
+Only Studio is verified functioning and the one recommended to use.
 
 Supported graphics APIs are:
 - DirectX 11
@@ -134,6 +135,12 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
 - [ ] Occlusion Culling
 - [ ] GPU Particles
    - [ ] Physics simulation
+- [ ] Signed distance field generation
+- [ ] Fog
+   - [ ] Sun influence
+   - [ ] Skybox
+   - [ ] Height-based
+- [ ] Completely revamped terrain
 - [ ] API support
    - [x] DirectX 11
    - [ ] Vulkan

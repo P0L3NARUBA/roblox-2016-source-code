@@ -266,7 +266,7 @@ namespace RBX
 			, lightingValid(false)
 			, doScreenshot(false)
 			, adornsEnabled(true)
-			, outlinesEnabled(true)
+			, outlinesEnabled(false)
 			, fogEndCurrentFRM(10000)
 			, fogEndTargetFRM(10000)
 			, frameDataCallback(FrameDataCallback())
@@ -454,7 +454,9 @@ namespace RBX
 
 			RBX::Lighting* lighting = ServiceProvider::create<RBX::Lighting>(dataModel.get());
 
-			if (FFlag::RenderFixFog)
+			visualEngine->getSceneManager()->setFog(lighting->getFogColor(), lighting->getFogStart(), lighting->getFogEnd());
+
+			/*if (FFlag::RenderFixFog)
 			{
 				float currDeltaFRM = fogEndTargetFRM - fogEndCurrentFRM;
 				if (currDeltaFRM > 0)
@@ -490,7 +492,7 @@ namespace RBX
 				fogStart = G3D::clamp(fogStart, 0.0f, fogEnd - 0.1f);
 
 				visualEngine->getSceneManager()->setFog(lighting->getFogColor(), fogStart, fogEnd);
-			}
+			}*/
 		}
 
 		void RenderView::updateLighting(Lighting* lighting)
@@ -516,7 +518,7 @@ namespace RBX
 					}
 
 					// Update clear color for time-of-day
-					lighting->setClearColor(lighting->getSkyParameters().skyAmbient);
+					//lighting->setClearColor(lighting->getSkyParameters().skyAmbient);
 				}
 
 				// Lighting
@@ -1009,8 +1011,8 @@ namespace RBX
 			float shadowFade = powf(G3D::clamp(lighting->getSkyParameters().lightDirection.unit().y, 0.f, 1.f), 1.f / 4);
 			float shadowIntensity = shadowFade * (FInt::RenderShadowIntensity / 100.f);
 
-			globalShaderData.FadeDistance_GlowFactor = Vector4(shadingDistance, 1.f / shadingDistance, outlineScaling, globalShaderData.FadeDistance_GlowFactor.w);
-			globalShaderData.OutlineBrightness_ShadowInfo = Vector4(brightnessMulFactor, brightnessAddFactor, 0, shadowIntensity);
+			/*globalShaderData.FadeDistance_GlowFactor = Vector4(shadingDistance, 1.f / shadingDistance, outlineScaling, globalShaderData.FadeDistance_GlowFactor.w);
+			globalShaderData.OutlineBrightness_ShadowInfo = Vector4(brightnessMulFactor, brightnessAddFactor, 0, shadowIntensity);*/
 
 			FASTLOG(FLog::ViewRbxBase, "Render prepare end");
 			prepareTime = timer.delta().msec();
@@ -1528,39 +1530,38 @@ namespace RBX
 
 		void RenderView::presetLighting(RBX::Lighting* l, const RBX::Color3& extraAmbient, float skylightFactor)
 		{
-			outlinesEnabled = l->getOutlines();
-
 			const G3D::LightingParameters& skyParameters = l->getSkyParameters();
 			SceneManager* smgr = visualEngine->getSceneManager();
 
-			Color3 bottomColorShift = l->getBottomColorShift();
-			Color3 topColorShift = l->getTopColorShift();
+			Vector3 topColorShift = Color3::toHSV(l->getSunColorShift());
+			topColorShift.y = topColorShift.y * topColorShift.z;
+			topColorShift.z = 1.0f;
 
-			float bottomShiftBase = (bottomColorShift.r + bottomColorShift.g + bottomColorShift.b) * 0.3333f;
-			Color3 bottomAdjustment = bottomColorShift - Color3(bottomShiftBase, bottomShiftBase, bottomShiftBase);
+			/*Color3 bottomColorShift = l->getBottomColorShift();
 
 			float topShiftBase = (topColorShift.r + topColorShift.g + topColorShift.b) * 0.3333f;
 			Color3 topAdjustment = topColorShift - Color3(topShiftBase, topShiftBase, topShiftBase);
+			
+			float bottomShiftBase = (bottomColorShift.r + bottomColorShift.g + bottomColorShift.b) * 0.3333f;
+			Color3 bottomAdjustment = bottomColorShift - Color3(bottomShiftBase, bottomShiftBase, bottomShiftBase);*/
 
-			float globalBrightness = G3D::clamp(l->getGlobalBrightness(), 0.05f, 5.0f);
+			float globalBrightness = l->getSunBrightness();
 
-			Vector3 sunDirection = -skyParameters.lightDirection.unit();
-			Color3 sunColor = skyParameters.lightColor * 0.9f;
+			Vector3 keyDirection = -skyParameters.lightDirection.unit();
+			Color3 keyColor = skyParameters.lightColor * Color3::fromHSV(topColorShift);
 
-			Color3 ambientColor = l->getGlobalAmbient() + extraAmbient;
+			Color3 ambientColor = l->getGlobalAmbient();
+			Color3 outdoorAmbientColor = l->getGlobalOutdoorAmbient();
 
-			Color3 keyLightColor = sunColor * globalBrightness;
-			keyLightColor += topAdjustment * keyLightColor.length();
-			keyLightColor *= skylightFactor;
+			Color3 keyLightColor = keyColor * globalBrightness;
+			/*keyLightColor += topAdjustment * keyLightColor.length();
+			keyLightColor *= skylightFactor;*/
 
-			Color3 fillLightColor = sunColor * globalBrightness * 0.4f;
+			/*Color3 fillLightColor = sunColor * globalBrightness * 0.4f;
 			fillLightColor += bottomAdjustment * fillLightColor.length();
-			fillLightColor *= skylightFactor;
+			fillLightColor *= skylightFactor;*/
 
-			// also update postprocess while at it?
-			//BlurEffect* foundBlur = l->fastDynamicCast<BlurEffect>();
-
-			smgr->setLighting(ambientColor, sunDirection, keyLightColor.min(Color3::white()), fillLightColor.min(Color3::white()));
+			smgr->setLighting(ambientColor, outdoorAmbientColor, keyDirection, keyLightColor);
 		}
 
 		//void RenderView::presetPostProcess(RBX::PlatformService* platformService)
@@ -1582,8 +1583,10 @@ namespace RBX
 				for (Instances::const_iterator iter = children->begin(); iter != end; ++iter)
 				{
 					std::string className = (*iter)->getClassNameStr();
+
 					if (className == "BloomEffect") {
 						auto bloomEffectInstance = boost::dynamic_pointer_cast<BloomEffect>((*iter));
+
 						if (bloomEffectInstance && bloomEffectInstance->getEnabled() && bloomIntensity < bloomEffectInstance->getIntensity() && bloomSize < bloomEffectInstance->getSize()) {
 							bloomIntensity = bloomEffectInstance->getIntensity();
 							bloomSize = bloomEffectInstance->getSize();
@@ -1591,12 +1594,14 @@ namespace RBX
 					}
 					else if (className == "BlurEffect") {
 						auto blurEffectInstance = boost::dynamic_pointer_cast<BlurEffect>((*iter));
+
 						if (blurEffectInstance && blurEffectInstance->getEnabled() && blurIntensity < blurEffectInstance->getSize()) {
 							blurIntensity = blurEffectInstance->getSize();
 						}
 					}
 					else if (className == "ColorCorrectionEffect") {
 						auto colorCorrectionInstance = boost::dynamic_pointer_cast<ColorCorrectionEffect>((*iter));
+
 						if (colorCorrectionInstance && colorCorrectionInstance->getEnabled()) {
 							if (tintColor == Color3(1, 1, 1)) {
 								tintColor = colorCorrectionInstance->getTintColor();
@@ -1609,7 +1614,7 @@ namespace RBX
 				}
 			}
 
-			smgr->setPostProcess(brightness, contrast, grayscaleLevel, blurIntensity, tintColor);
+			smgr->setPostProcess(brightness, contrast, grayscaleLevel, blurIntensity, tintColor, bloomIntensity, bloomSize);
 		}
 
 		static void waitForContent(RBX::ContentProvider* contentProvider)

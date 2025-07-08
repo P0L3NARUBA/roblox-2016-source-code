@@ -91,7 +91,7 @@ public:
 	};
 
 	static float plateHeight()	{return 0.4f;}
-	static float brickHeight()	{return 1.2f;}
+	static float brickHeight()	{return 1.0f;}
 
 	static float cameraTransparentDistance()	{return 3.0f;}
 	static float cameraTranslucentDistance()	{return 6.0f;}
@@ -283,7 +283,7 @@ public:
 	static bool nonNullInWorkspace(const shared_ptr<PartInstance>& part);
 
 	//PartInstance();								
-	PartInstance(const Vector3& initialSize = Vector3(4.0f, 1.2f, 2.0f));
+	PartInstance(const Vector3& initialSize = Vector3(4.0f, 1.0f, 2.0f));
 	virtual ~PartInstance();
 
 	virtual bool hasThreeDimensionalSize()          {return true;}

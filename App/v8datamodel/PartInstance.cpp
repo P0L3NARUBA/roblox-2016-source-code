@@ -246,7 +246,7 @@ namespace RBX {
 	// color, transparency, reflectance, anchored, canCollide, locked
 	const PropDescriptor<PartInstance, Color3> PartInstance::prop_Color("Color", category_Appearance, &PartInstance::getColor, &PartInstance::setColor);//, PropertyDescriptor::Functionality(PropertyDescriptor::UI));
 	const PropDescriptor<PartInstance, BrickColor> PartInstance::prop_BrickColor("BrickColor", category_Appearance, &PartInstance::getBrickColor, &PartInstance::setBrickColor);
-	const PropDescriptor<PartInstance, BrickColor> prop_BrickColorDep("brickColor", category_Appearance, &PartInstance::getBrickColor, &PartInstance::setBrickColor, PropertyDescriptor::Attributes::deprecated(PartInstance::prop_BrickColor));
+	const PropDescriptor<PartInstance, BrickColor> prop_BrickColorDep("brickColor", category_Appearance, &PartInstance::getBrickColor, &PartInstance::setBrickColor, PropertyDescriptor::Attributes::deprecated(PartInstance::prop_BrickColor, Reflection::PropertyDescriptor::LEGACY_SCRIPTING));
 	const EnumPropDescriptor<PartInstance, PartMaterial> PartInstance::prop_renderMaterial("Material", category_Appearance, &PartInstance::getRenderMaterial, &PartInstance::setRenderMaterial);
 	const PropDescriptor<PartInstance, float> PartInstance::prop_Transparency("Transparency", category_Appearance, &PartInstance::getTransparencyXml, &PartInstance::setTransparency);
 	// DFFlagNetworkOwnershipRuleReplicates
@@ -256,7 +256,7 @@ namespace RBX {
 	//static const EnumPropDescriptor<PartInstance, NetworkOwnership> prop_networkOwnershipRule("NetworkOwnershipRule", category_Behavior, &PartInstance::getNetworkOwnershipRule, &PartInstance::setNetworkOwnershipRule, PropertyDescriptor::REPLICATE_ONLY);
 	//Client side only LocalTransparencyModifier property
 	const PropDescriptor<PartInstance, float> PartInstance::prop_LocalTransparencyModifier("LocalTransparencyModifier", category_Data, &PartInstance::getLocalTransparencyModifier, &PartInstance::setLocalTransparencyModifier, PropertyDescriptor::HIDDEN_SCRIPTING);
-	const PropDescriptor<PartInstance, float> PartInstance::prop_Reflectance("Reflectance", category_Appearance, &PartInstance::getReflectance, &PartInstance::setReflectance);
+	const PropDescriptor<PartInstance, float> PartInstance::prop_Reflectance("Reflectance", category_Appearance, &PartInstance::getReflectance, &PartInstance::setReflectance, Reflection::PropertyDescriptor::LEGACY_SCRIPTING);
 	const PropDescriptor<PartInstance, bool> PartInstance::prop_Locked("Locked", category_Behavior, &PartInstance::getPartLocked, &PartInstance::setPartLocked);
 	const PropDescriptor<PartInstance, bool> PartInstance::prop_Anchored("Anchored", category_Behavior, &PartInstance::getAnchored, &PartInstance::setAnchored);
 	const PropDescriptor<PartInstance, bool> PartInstance::prop_CanCollide("CanCollide", category_Behavior, &PartInstance::getCanCollide, &PartInstance::setCanCollide);
@@ -2768,20 +2768,32 @@ namespace RBX {
 
 	void PartInstance::setColor(Color3 value)
 	{
-		color = value;
-		brickColor = BrickColor::closest(value);
+		BrickColor closestBrickColor = BrickColor::closest(value);
 
-		raisePropertyChanged(prop_Color);
-		raisePropertyChanged(prop_BrickColor);
+		if (brickColor != closestBrickColor) {
+			brickColor = closestBrickColor;
+
+			raisePropertyChanged(prop_BrickColor);
+		}
+		if (color != value) {
+			color = value;
+
+			raisePropertyChanged(prop_Color);
+		}
 	}
 
 	void PartInstance::setBrickColor(BrickColor value)
 	{
-		color = value.color3();
-		brickColor = value;
+		if (color != value.color3()) {
+			color = value.color3();
 
-		raisePropertyChanged(prop_Color);
-		raisePropertyChanged(prop_BrickColor);
+			raisePropertyChanged(prop_Color);
+		}
+		if (brickColor != value) {
+			brickColor = value;
+
+			raisePropertyChanged(prop_BrickColor);
+		}
 	}
 
 	void PartInstance::setFriction(float friction)

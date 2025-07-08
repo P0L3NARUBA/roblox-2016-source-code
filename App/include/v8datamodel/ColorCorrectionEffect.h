@@ -25,15 +25,22 @@ namespace RBX {
 		Color3 getTintColor() const { return tintColor; }
 		void setTintColor(Color3 value);
 
+		Color3 getTintColor_deprecated() const { return tintColor_deprecated; }
+		void setTintColor_deprecated(Color3 value);
+
 		static Reflection::PropDescriptor<ColorCorrectionEffect, float> prop_Brightness;
 		static Reflection::PropDescriptor<ColorCorrectionEffect, float> prop_Contrast;
 		static Reflection::PropDescriptor<ColorCorrectionEffect, float> prop_Saturation;
 		static Reflection::PropDescriptor<ColorCorrectionEffect, Color3> prop_TintColor;
+
+		static Reflection::PropDescriptor<ColorCorrectionEffect, Color3> prop_TintColor_deprecated;
 
 	private:
 		float brightness;
 		float contrast;
 		float saturation;
 		Color3 tintColor;
+
+		Color3 tintColor_deprecated;
 	};
 }

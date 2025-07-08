@@ -11,40 +11,40 @@ namespace RBX
 		class RenderCamera;
 
 		struct GlobalShaderData {
+			/* Camera */
 			Matrix4 ViewProjection;
 			Vector4 ViewRight;
 			Vector4 ViewUp;
-			Vector4 ViewDir;
+			Vector4 ViewDirection;
 			Vector4 CameraPosition;
 
-			Vector4 AmbientColor;
-			Vector4 Lamp0Color;
-			Vector4 Lamp0Dir;
-			Vector4 Lamp1Color;
+			/* Environment */
+			Vector4 AmbientColor_EnvDiffuse;
+			Vector4 OutdoorAmbientColor_EnvSpecular;
 
-			Vector4 FogColor;
-			Vector4 FogParams;
+			/* Sun */
+			Vector4 KeyColor_KeyShadowDistance;
+			Vector4 KeyDirection_unused;
+			Vector4 KeyCascade[4];
 
-			Vector4 LightBorder;
-			Vector4 LightConfig0;
-			Vector4 LightConfig1;
-			Vector4 LightConfig2;
-			Vector4 LightConfig3;
-
-			Vector4 FadeDistance_GlowFactor;
-			Vector4 OutlineBrightness_ShadowInfo;
-
-			Vector4 ShadowMatrix0;
-			Vector4 ShadowMatrix1;
-			Vector4 ShadowMatrix2;
+			/* Fog */
+			Vector4 FogColor_unused;
+			Vector4 FogParams_unused; /* x = Density, y = Sun Influence, z = Uses Skybox, w = 0.0 */
 
 			static void define(Device* device);
 
 			void setCamera(const RenderCamera& camera);
 		};
 
+		struct GlobalProcessingData {
+			Vector4 TextureSize_ViewportScale;
+			Vector4 Exposure_Gamma_InverseGamma_Unused;
+
+			static void define(Device* device);
+		};
+
 		struct GPULight {
-			Vector4 Position_Range;
+			Vector4 Position_RangeSquared;
 			Vector4 Color_Attenuation;
 			Vector4 Direction_SubSurfaceFac;
 			Vector4 InnerOuterAngle_DiffSpecFac;

@@ -806,7 +806,7 @@ void SceneUpdater::setComputeLightingEnabled(bool value)
 
 void SceneUpdater::onPropertyChanged(const RBX::Reflection::PropertyDescriptor* descriptor)
 {
-    if (*descriptor==Lighting::desc_Outlines)
+    if (*descriptor==Lighting::prop_Outlines_deprecated)
     {
         invalidateAllFastClusters();
     } 
@@ -903,7 +903,7 @@ void SceneUpdater::computeLightingPrepare()
 
                 if (lighting->getGlobalShadows())
                 {
-                    lgrid->setSkyAmbient(Color3uint8(lighting->getSkyAmbient()));
+                    lgrid->setSkyAmbient(Color3uint8(lighting->getGlobalAmbient()));
                 }
                 else
                 {

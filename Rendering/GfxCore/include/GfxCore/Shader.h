@@ -32,6 +32,28 @@ protected:
 	FragmentShader(Device* device);
 };
 
+class ComputeShader : public Resource
+{
+public:
+    ~ComputeShader();
+
+    virtual void reloadBytecode(const std::vector<char>& bytecode) = 0;
+
+protected:
+    ComputeShader(Device* device);
+};
+
+class GeometryShader : public Resource
+{
+public:
+    ~GeometryShader();
+
+    virtual void reloadBytecode(const std::vector<char>& bytecode) = 0;
+
+protected:
+    GeometryShader(Device* device);
+};
+
 class ShaderProgram: public Resource
 {
 public:
