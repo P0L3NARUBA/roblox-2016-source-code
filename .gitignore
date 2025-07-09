@@ -32,6 +32,7 @@ UpgradeLog*.htm
 ## Personal Files & Folders
 /Client_2016_Dev.sln
 /Extras/
+/Tools/
 
 # Ignore precompiled shaders
 /shaders/shaders_*.pack
