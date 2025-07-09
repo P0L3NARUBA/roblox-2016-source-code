@@ -25,14 +25,25 @@ namespace Graphics
 
 static const unsigned int kVertexBufferMaxCount = 512*1024;
 
-VertexStreamer::VertexStreamer(VisualEngine* visualEngine)
+VertexStreamer::VertexStreamer(VisualEngine* visualEngine, bool hasNormal, bool hasAdvancedNormal, bool isInstanced)
     : visualEngine(visualEngine)
 {
     std::vector<VertexLayout::Element> elements;
-    elements.push_back(VertexLayout::Element(0, offsetof(Vertex, pos), VertexLayout::Format_Float3, VertexLayout::Semantic_Position));
-    elements.push_back(VertexLayout::Element(0, offsetof(Vertex, color), VertexLayout::Format_Color, VertexLayout::Semantic_Color));
-    elements.push_back(VertexLayout::Element(0, offsetof(Vertex, uv), VertexLayout::Format_Float2, VertexLayout::Semantic_Texture));
+    elements.push_back(VertexLayout::Element(0, offsetof(Vertex, Position), VertexLayout::Format_Float4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
+    elements.push_back(VertexLayout::Element(0, offsetof(Vertex, UV), VertexLayout::Format_Float2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture));
+    elements.push_back(VertexLayout::Element(0, offsetof(Vertex, Color), VertexLayout::Format_Float4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Color));
 
+    if (hasAdvancedNormal) {
+        elements.push_back(VertexLayout::Element(0, offsetof(Vertex, Tangent), VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Tangent));
+        elements.push_back(VertexLayout::Element(0, offsetof(Vertex, Bitangent), VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Bitangent));
+    }
+    if (hasNormal) {
+        elements.push_back(VertexLayout::Element(0, offsetof(Vertex, Normal), VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Normal));
+    }
+    if (isInstanced) {
+        elements.push_back(VertexLayout::Element(0, offsetof(Vertex, InstanceId), VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Normal));
+    }
+    
     vertexLayout = visualEngine->getDevice()->createVertexLayout(elements);
 
 	const DeviceCaps& caps = visualEngine->getDevice()->getCaps();
@@ -276,14 +287,14 @@ void VertexStreamer::rectBlt(
     if (prepareChunk(texptr, Geometry::Primitive_Triangles, 6, CS_ScreenSpace, batchTexType, ignoreTexture))
 	{
         float z = 0;
-        unsigned int color = packColor(color4, colorOrderBGR);
+        //unsigned int color = packColor(color4, colorOrderBGR);
 
-		vertexData.push_back(Vertex(Vector3(x0y1.x, x0y1.y, z), color, Vector2(tex0.x, tex1.y)));
-        vertexData.push_back(Vertex(Vector3(x1y0.x, x1y0.y, z), color, Vector2(tex1.x, tex0.y)));
-        vertexData.push_back(Vertex(Vector3(x0y0.x, x0y0.y, z), color, Vector2(tex0.x, tex0.y)));
-        vertexData.push_back(Vertex(Vector3(x0y1.x, x0y1.y, z), color, Vector2(tex0.x, tex1.y)));
-        vertexData.push_back(Vertex(Vector3(x1y1.x, x1y1.y, z), color, Vector2(tex1.x, tex1.y)));
-        vertexData.push_back(Vertex(Vector3(x1y0.x, x1y0.y, z), color, Vector2(tex1.x, tex0.y)));
+		vertexData.push_back(Vertex(Vector4(x0y1.x, x0y1.y, z, 0.0f), Vector2(tex0.x, tex1.y), color4));
+        vertexData.push_back(Vertex(Vector4(x1y0.x, x1y0.y, z, 0.0f), Vector2(tex1.x, tex0.y), color4));
+        vertexData.push_back(Vertex(Vector4(x0y0.x, x0y0.y, z, 0.0f), Vector2(tex0.x, tex0.y), color4));
+        vertexData.push_back(Vertex(Vector4(x0y1.x, x0y1.y, z, 0.0f), Vector2(tex0.x, tex1.y), color4));
+        vertexData.push_back(Vertex(Vector4(x1y1.x, x1y1.y, z, 0.0f), Vector2(tex1.x, tex1.y), color4));
+        vertexData.push_back(Vertex(Vector4(x1y0.x, x1y0.y, z, 0.0f), Vector2(tex1.x, tex0.y), color4));
 	}
 } 
 
@@ -293,14 +304,14 @@ void VertexStreamer::spriteBlt3D(const shared_ptr<Texture>& texptr, const Color4
 {
     if (prepareChunk(texptr, Geometry::Primitive_Triangles, 6, alwaysOnTop || zIndex >= 0 ? CS_WorldSpaceNoDepth : CS_WorldSpace, batchTexType, false, zIndex, alwaysOnTop))
 	{
-        unsigned int color = packColor(color4, colorOrderBGR);
+        //unsigned int color = packColor(color4, colorOrderBGR);
 
-        vertexData.push_back(Vertex(x0y1, color, Vector2(tex0.x, tex1.y)));
-        vertexData.push_back(Vertex(x1y0, color, Vector2(tex1.x, tex0.y)));
-        vertexData.push_back(Vertex(x0y0, color, Vector2(tex0.x, tex0.y)));
-        vertexData.push_back(Vertex(x0y1, color, Vector2(tex0.x, tex1.y)));
-        vertexData.push_back(Vertex(x1y1, color, Vector2(tex1.x, tex1.y)));
-        vertexData.push_back(Vertex(x1y0, color, Vector2(tex1.x, tex0.y)));
+        vertexData.push_back(Vertex(Vector4(x0y1, 0.0f), Vector2(tex0.x, tex1.y), color4));
+        vertexData.push_back(Vertex(Vector4(x1y0, 0.0f), Vector2(tex1.x, tex0.y), color4));
+        vertexData.push_back(Vertex(Vector4(x0y0, 0.0f), Vector2(tex0.x, tex0.y), color4));
+        vertexData.push_back(Vertex(Vector4(x0y1, 0.0f), Vector2(tex0.x, tex1.y), color4));
+        vertexData.push_back(Vertex(Vector4(x1y1, 0.0f), Vector2(tex1.x, tex1.y), color4));
+        vertexData.push_back(Vertex(Vector4(x1y0, 0.0f), Vector2(tex1.x, tex0.y), color4));
 	}
 }
 
@@ -308,13 +319,13 @@ void VertexStreamer::triangleList2d(const Color4& color4, const Vector2* v, int 
 {
     if (prepareChunk(shared_ptr<Texture>(), Geometry::Primitive_Triangles, icount, CS_ScreenSpace, BatchTextureType_Color))
 	{
-        unsigned int color = packColor(color4, colorOrderBGR);
+        //unsigned int color = packColor(color4, colorOrderBGR);
 
         RBXASSERT(icount % 3 == 0);
         //todo: we currently just ignore the nice indexing work done. todo: support indexing.
         for (int i = 0; i < icount; ++i)
         {
-			vertexData.push_back(Vertex(Vector3(v[indices[i]],0), color, Vector2()));
+			vertexData.push_back(Vertex(Vector4(v[indices[i]], 0.0f, 0.0f), Vector2(), color4));
         }
 	}
 }
@@ -323,13 +334,13 @@ void VertexStreamer::triangleList(const Color4& color4, const CoordinateFrame& c
 {
     if (prepareChunk(shared_ptr<Texture>(), Geometry::Primitive_Triangles, icount, CS_WorldSpace, BatchTextureType_Color ))
 	{
-        unsigned int color = packColor(color4, colorOrderBGR);
+        //unsigned int color = packColor(color4, colorOrderBGR);
 
         RBXASSERT(icount % 3 == 0);
         //todo: we currently just ignore the nice indexing work done. todo: support indexing.
         for (int i = 0; i < icount; ++i)
         {
-			vertexData.push_back(Vertex(cframe.pointToWorldSpace(v[indices[i]]), color, Vector2()));
+			vertexData.push_back(Vertex(Vector4(cframe.pointToWorldSpace(v[indices[i]]), 0.0f), Vector2(), color4));
         }
 	}
 }
@@ -339,10 +350,10 @@ void VertexStreamer::line(float x1, float y1, float x2, float y2, const Color4& 
     if (prepareChunk(shared_ptr<Texture>(), Geometry::Primitive_Lines, 2, CS_ScreenSpace, BatchTextureType_Color))
 	{
         float z = 0;
-        unsigned int color = packColor(color4, colorOrderBGR);
+        //unsigned int color = packColor(color4, colorOrderBGR);
 
-        vertexData.push_back(Vertex(Vector3(x1, y1, z), color, Vector2()));
-        vertexData.push_back(Vertex(Vector3(x2, y2, z), color, Vector2()));
+        vertexData.push_back(Vertex(Vector4(x1, y1, z, 0.0f), Vector2(), color4));
+        vertexData.push_back(Vertex(Vector4(x2, y2, z, 0.0f), Vector2(), color4));
 	}
 }
 
@@ -352,8 +363,8 @@ void VertexStreamer::line3d(float x1, float y1, float z1, float x2, float y2, fl
 	{
         unsigned int color = packColor(color4, colorOrderBGR);
 
-        vertexData.push_back(Vertex(Vector3(x1, y1, z1), color, Vector2()));
-        vertexData.push_back(Vertex(Vector3(x2, y2, z2), color, Vector2()));
+        vertexData.push_back(Vertex(Vector4(x1, y1, z1, 0.0f), Vector2(), color4));
+        vertexData.push_back(Vertex(Vector4(x2, y2, z2, 0.0f), Vector2(), color4));
 	}
 }
 

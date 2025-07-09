@@ -1,6 +1,5 @@
 #ifdef GLOBALS
-cbuffer Globals : register(b0)
-{
+cbuffer Globals : register(b0) {
     float4x4 ViewProjection;
     float4 ViewRight;
     float4 ViewUp;
@@ -20,11 +19,34 @@ cbuffer Globals : register(b0)
 #endif
 
 #ifdef PROCESSING
-cbuffer Processing : register(b1)
-{
+cbuffer Processing : register(b0) {
     float4 TextureSize_ViewportScale;
     float4 Exposure_Gamma_InverseGamma_Unused;
+	float4 Parameters1;
+	float4 Parameters2;
 };
+#endif
+
+#ifdef MATERIAL
+struct MaterialData {
+    float4 AlbedoEnabled_RoughnessOverride_MetalnessOverride_EmissionOverride;
+	float4 ClearcoatEnabled_NormalMapEnabled_AmbientOcclusionEnabled_ParallaxEnabled;
+	float4 CCTintOverride_CCNormalsEnabled;
+	float2 CCFactorOverride_CCRoughnessOverride;
+    float2 padding;
+};
+
+cbuffer MaterialData : register(b1) {
+    MaterialData MaterialsData[1024];
+};
+#endif
+
+#ifdef INSTANCED
+struct ModelMatrix {
+    float4x4 Model;
+};
+
+StructuredBuffer<ModelMatrix> ModelMatrixes : register(t30);
 #endif
 
 #ifdef LIGHT_LIST

@@ -45,10 +45,24 @@ GeometryShader::~GeometryShader()
 {
 }
 
+ShaderProgram::ShaderProgram(Device* device, const shared_ptr<VertexShader>& vertexShader, const shared_ptr<GeometryShader>& geometryShader, const shared_ptr<FragmentShader>& fragmentShader)
+    : Resource(device)
+    , vertexShader(vertexShader)
+    , geometryShader(geometryShader)
+    , fragmentShader(fragmentShader)
+{
+}
+
 ShaderProgram::ShaderProgram(Device* device, const shared_ptr<VertexShader>& vertexShader, const shared_ptr<FragmentShader>& fragmentShader)
 	: Resource(device)
     , vertexShader(vertexShader)
     , fragmentShader(fragmentShader)
+{
+}
+
+ShaderProgram::ShaderProgram(Device* device, const shared_ptr<ComputeShader>& computeShader)
+    : Resource(device)
+    , computeShader(computeShader)
 {
 }
 

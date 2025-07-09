@@ -144,9 +144,7 @@ namespace Graphics
         return -1;
     }
 
-    static ID3D11VertexShader* createVertexShader(Device* device, const std::vector<char>& bytecode,
-        std::vector<shared_ptr<CBufferD3D11>>& cbuffers, int& uniformsCBuffer, unsigned& maxWorldTransforms, int& worldMatCBuffer, int& uniformWorldMatrix, int& uniformWorldMatrixArray)
-    {
+    static ID3D11VertexShader* createVertexShader(Device* device, const std::vector<char>& bytecode, std::vector<shared_ptr<CBufferD3D11>>& cbuffers, int& uniformsCBuffer, unsigned& maxWorldTransforms, int& worldMatCBuffer, int& uniformWorldMatrix, int& uniformWorldMatrixArray) {
         DeviceContextD3D11* context = static_cast<DeviceD3D11*>(device)->getImmediateContextD3D11();
         ID3D11Device* device11 = static_cast<DeviceD3D11*>(device)->getDevice11();
 
@@ -178,9 +176,7 @@ namespace Graphics
         return vertexShader;
     }
 
-    static ID3D11PixelShader* createPixelShader(Device* device, const std::vector<char>& bytecode,
-        std::vector<shared_ptr<CBufferD3D11>>& cbuffers, int& uniformsCBuffer, unsigned int& samplerMask)
-    {
+    static ID3D11PixelShader* createPixelShader(Device* device, const std::vector<char>& bytecode, std::vector<shared_ptr<CBufferD3D11>>& cbuffers, int& uniformsCBuffer, unsigned int& samplerMask) {
         DeviceContextD3D11* context = static_cast<DeviceD3D11*>(device)->getImmediateContextD3D11();
         ID3D11Device* device11 = static_cast<DeviceD3D11*>(device)->getDevice11();
 
@@ -192,6 +188,26 @@ namespace Graphics
         RBXASSERT(SUCCEEDED(hr));
 
         return pixelShader;
+    }
+
+    static ID3D11ComputeShader* createComputeShader(Device* device, const std::vector<char>& bytecode, std::vector<shared_ptr<CBufferD3D11>>& cbuffers, int& uniformsCBuffer) {
+        ID3D11Device* device11 = static_cast<DeviceD3D11*>(device)->getDevice11();
+
+        ID3D11ComputeShader* computeShader = NULL;
+        HRESULT hr = device11->CreateComputeShader(bytecode.data(), bytecode.size(), NULL, &computeShader);
+        RBXASSERT(SUCCEEDED(hr));
+
+        return computeShader;
+    }
+
+    static ID3D11GeometryShader* createGeometryShader(Device* device, const std::vector<char>& bytecode, std::vector<shared_ptr<CBufferD3D11>>& cbuffers, int& uniformsCBuffer) {
+        ID3D11Device* device11 = static_cast<DeviceD3D11*>(device)->getDevice11();
+
+        ID3D11GeometryShader* geometryShader = NULL;
+        HRESULT hr = device11->CreateGeometryShader(bytecode.data(), bytecode.size(), NULL, &geometryShader);
+        RBXASSERT(SUCCEEDED(hr));
+
+        return geometryShader;
     }
 
     const UniformD3D11& CBufferD3D11::getUniform(int id) const
@@ -374,6 +390,22 @@ namespace Graphics
         object = createPixelShader(device, bytecode, cBuffers, uniformsBufferId, samplerMask);
     }
 
+    ComputeShaderD3D11::ComputeShaderD3D11(Device* device, const std::vector<char>& bytecode)
+        : ComputeShader(device)
+        , BaseShaderD3D11(bytecode)
+        , object(NULL)
+    {
+        object = createComputeShader(device, bytecode, cBuffers, uniformsBufferId);
+    }
+
+    GeometryShaderD3D11::GeometryShaderD3D11(Device* device, const std::vector<char>& bytecode)
+        : GeometryShader(device)
+        , BaseShaderD3D11(bytecode)
+        , object(NULL)
+    {
+        object = createGeometryShader(device, bytecode, cBuffers, uniformsBufferId);
+    }
+
     void FragmentShaderD3D11::reloadBytecode(const std::vector<char>& bytecode)
     {
         ID3D11PixelShader* newObject = createPixelShader(device, bytecode, cBuffers, uniformsBufferId, samplerMask);
@@ -383,16 +415,26 @@ namespace Graphics
         this->bytecode = bytecode;
     }
 
-    FragmentShaderD3D11::~FragmentShaderD3D11()
-    {
-        ReleaseCheck(object);
-    }
-
     VertexShaderD3D11::~VertexShaderD3D11()
     {
         ReleaseCheck(object);
         for (InputLayoutMap::iterator it = inputLayoutMap.begin(); it != inputLayoutMap.end(); ++it)
             ReleaseCheck(it->second);
+    }
+
+    FragmentShaderD3D11::~FragmentShaderD3D11()
+    {
+        ReleaseCheck(object);
+    }
+
+    ComputeShaderD3D11::~ComputeShaderD3D11()
+    {
+        ReleaseCheck(object);
+    }
+
+    GeometryShaderD3D11::~GeometryShaderD3D11()
+    {
+        ReleaseCheck(object);
     }
 
     static void verifyShaderSignatures(const VertexShaderD3D11* vs, const FragmentShaderD3D11* fs)
@@ -443,12 +485,22 @@ namespace Graphics
         ReleaseCheck(reflectionFS11);
     }
 
+    ShaderProgramD3D11::ShaderProgramD3D11(Device* device, const shared_ptr<VertexShader>& vertexShader, const shared_ptr<GeometryShader>& geometryShader, const shared_ptr<FragmentShader>& fragmentShader)
+        : ShaderProgram(device, vertexShader, geometryShader, fragmentShader)
+    {
+    }
+
     ShaderProgramD3D11::ShaderProgramD3D11(Device* device, const shared_ptr<VertexShader>& vertexShader, const shared_ptr<FragmentShader>& fragmentShader)
         : ShaderProgram(device, vertexShader, fragmentShader)
     {
 #ifdef __RBX_NOT_RELEASE
        verifyShaderSignatures(static_cast<VertexShaderD3D11*>(vertexShader.get()), static_cast<FragmentShaderD3D11*>(fragmentShader.get()));
 #endif
+    }
+
+    ShaderProgramD3D11::ShaderProgramD3D11(Device* device, const shared_ptr<ComputeShader>& computeShader)
+        : ShaderProgram(device, computeShader)
+    {
     }
 
     ShaderProgramD3D11::~ShaderProgramD3D11()
@@ -585,11 +637,6 @@ namespace Graphics
 
         D3D_SHADER_MACRO  macroDX11 = {"DX11", "1"};
         macros.push_back(macroDX11);
-        if (device11->getShaderProfile() == DeviceD3D11::shaderProfile_DX11_level_9_3)
-        {
-            D3D_SHADER_MACRO  macroWinMobile= {"WIN_MOBILE", "1"};
-            macros.push_back(macroWinMobile);
-        }
         D3D_SHADER_MACRO  macroEnd = {};
         macros.push_back(macroEnd);
 
@@ -627,7 +674,7 @@ namespace Graphics
         case DeviceD3D11::shaderProfile_DX11:
             {
                 std::string shaderType = originalTarget.substr(0, 2);
-                targetOut = shaderType + "_5_0";
+                targetOut = shaderType + "_5_1";
                 return;
             }
         case DeviceD3D11::shaderProfile_DX11_level_9_3:
@@ -641,15 +688,6 @@ namespace Graphics
         }
     }
 
-    bool needsBackwardCompatibility(const std::string& target)
-    {
-        char reqShaderProfile = target[3];
-
-        // our shaders are written in DX9 target and lower. Backwards compatibility is needed for newer targets and doesn't
-        // hurt when shader is written in DX10 or DX11 target, then it doesn't do anything
-        return reqShaderProfile >= '4';
-    }
-
     std::vector<char> ShaderProgramD3D11::createShaderBytecode(const std::string& source, const std::string& target, const DeviceD3D11* device11, const std::string& entrypoint)
     {
         TypeD3DCompile D3DCompile = loadShaderCompiler();
@@ -659,9 +697,6 @@ namespace Graphics
 
         std::string realTarget;
         translateShaderProfile(target, device11->getShaderProfile(), realTarget);
-
-        if (needsBackwardCompatibility(realTarget))
-            flags |= D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY;
 
         ID3DBlob* bytecode = NULL;
         ID3DBlob* messages = NULL;

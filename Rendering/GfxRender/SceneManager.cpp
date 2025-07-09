@@ -106,17 +106,25 @@ namespace RBX
 		static shared_ptr<Geometry> createFullscreenTriangle(Device* device)
 		{
 			std::vector<VertexLayout::Element> elements;
-			elements.push_back(VertexLayout::Element(0, 0, VertexLayout::Format_Float3, VertexLayout::Semantic_Position));
+			elements.push_back(VertexLayout::Element(0, 0, VertexLayout::Format_Float4, VertexLayout::Semantic_Position));
+			elements.push_back(VertexLayout::Element(0, 0, VertexLayout::Format_Float2, VertexLayout::Semantic_Position));
+			elements.push_back(VertexLayout::Element(0, 0, VertexLayout::Format_Float4, VertexLayout::Semantic_Position));
 
 			shared_ptr<VertexLayout> layout = device->createVertexLayout(elements);
 
-			shared_ptr<VertexBuffer> vb = device->createVertexBuffer(sizeof(Vector3), 3, GeometryBuffer::Usage_Static);
+			shared_ptr<VertexBuffer> vb = device->createVertexBuffer(sizeof(Vector4), 3, GeometryBuffer::Usage_Static);
 
-			Vector3 vertices[] =
+			/* 1 - - 2 */
+			/* - - - - */
+			/* - - - - */
+			/* 3 - - 4 */
+			
+			Vertex vertices[4] =
 			{
-				Vector3(-1, -1, 0),
-				Vector3(-1, +3, 0),
-				Vector3(+3, -1, 0),
+				Vertex(Vector4(-1.0, -1.0, 0.0, 0.0), Vector2(0.0, 0.0), Color4(1.0, 1.0, 1.0, 1.0)),
+				Vertex(Vector4( 1.0, -1.0, 0.0, 0.0), Vector2(1.0, 0.0), Color4(1.0, 1.0, 1.0, 1.0)),
+				Vertex(Vector4(-1.0,  1.0, 0.0, 0.0), Vector2(0.0, 1.0), Color4(1.0, 1.0, 1.0, 1.0)),
+				Vertex(Vector4( 1.0,  1.0, 0.0, 0.0), Vector2(1.0, 1.0), Color4(1.0, 1.0, 1.0, 1.0)),
 			};
 
 			vb->upload(0, vertices, sizeof(vertices));
@@ -525,20 +533,6 @@ namespace RBX
 				context->resolveFramebuffer(multisampledSource, target, DeviceContext::Buffer_Color);
 			}
 
-			/*void renderComposit(DeviceContext* context)
-			{
-				const float clearColor[] = { 0, 0, 0, 1 };
-
-				context->clearFramebuffer(DeviceContext::Buffer_Color | DeviceContext::Buffer_Depth | DeviceContext::Buffer_Stencil, clearColor, 1.f, 0);
-
-				if (ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "PassThroughFS", BlendState::Mode_None, msaaFB->getWidth(), msaaFB->getHeight()))
-				{
-					context->bindTexture(0, msaaResolved.get(), SamplerState(SamplerState::Filter_Point, SamplerState::Address_Clamp));
-
-					ScreenSpaceEffect::renderFullscreenEnd(context, visualEngine);
-				}
-			}*/
-
 			Framebuffer* getFramebuffer() const
 			{
 				return msaaFB.get();
@@ -803,7 +797,7 @@ namespace RBX
 				RBXPROFILER_SCOPE("Render", "Opaque Geometry");
 				RBXPROFILER_SCOPE("GPU", "Opaque Geometry");
 
-				renderObjects(context, renderQueue->getGroup(RenderQueue::Id_Opaque), RenderQueueGroup::Sort_Material, stats->passScene, "Id_Opaque");
+				renderObjects(context, renderQueue->getGroup(RenderQueue::Id_Opaque), RenderQueueGroup::Sort_Distance, stats->passScene, "Id_Opaque");
 			}
 
 			/* Opaque Decals */
@@ -811,7 +805,7 @@ namespace RBX
 				RBXPROFILER_SCOPE("Render", "Opaque Decals");
 				RBXPROFILER_SCOPE("GPU", "Opaque Decals");
 
-				renderObjects(context, renderQueue->getGroup(RenderQueue::Id_OpaqueDecals), RenderQueueGroup::Sort_Material, stats->passScene, "Id_OpaqueDecals");
+				renderObjects(context, renderQueue->getGroup(RenderQueue::Id_OpaqueDecals), RenderQueueGroup::Sort_Distance, stats->passScene, "Id_OpaqueDecals");
 			}
 
 			/* SSAO */
@@ -840,24 +834,24 @@ namespace RBX
 			}
 
 			/* Transparent Geometry */
-			{
+			/*{
 				RBXPROFILER_SCOPE("Render", "Transparent Geometry");
 				RBXPROFILER_SCOPE("GPU", "Transparent Geometry");
 
 				renderObjects(context, renderQueue->getGroup(RenderQueue::Id_TransparentUnsorted), RenderQueueGroup::Sort_Material, stats->passScene, "Id_TransparentUnsorted");
 				renderObjects(context, renderQueue->getGroup(RenderQueue::Id_Transparent), RenderQueueGroup::Sort_Distance, stats->passScene, "Id_Transparent");
-			}
+			}*/
 
 			/* Transparent Decals */
-			{
+			/*{
 				RBXPROFILER_SCOPE("Render", "Transparent Decals");
 				RBXPROFILER_SCOPE("GPU", "Transparent Decals");
 
 				renderObjects(context, renderQueue->getGroup(RenderQueue::Id_TransparentDecals), RenderQueueGroup::Sort_Material, stats->passScene, "Id_TransparentDecals");
-			}
+			}*/
 
 			/* World UI */
-			{
+			/*{
 				RBXPROFILER_SCOPE("Render", "3D UI");
 				RBXPROFILER_SCOPE("GPU", "3D UI");
 
@@ -868,15 +862,15 @@ namespace RBX
 					visualEngine->getAdorn()->renderNoDepth(context, stats->pass3DAdorns, renderIndex);
 					visualEngine->getVertexStreamer()->render3DNoDepth(context, camera, stats->pass3DAdorns, renderIndex);
 				}
-			}
+			}*/
 
 			/* 3D Adornments */
-			{
+			/*{
 				RBXPROFILER_SCOPE("Render", "Adorns");
 				RBXPROFILER_SCOPE("GPU", "Adorns");
 
 				visualEngine->getAdorn()->render(context, stats->pass3DAdorns);
-			}
+			}*/
 
 			/* MSAA Resolve */
 			if (msaa) {

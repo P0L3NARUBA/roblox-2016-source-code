@@ -190,8 +190,7 @@ namespace RBX
 
 					const PackEntryFile* entry = shaderPack.findEntry(name.GetString());
 
-					if (reloadShaders)
-					{
+					if (reloadShaders) {
 						std::string shaderSource = device->createShaderSource(source.GetString(), getStringOrEmpty(defines), boost::bind(loadShaderFile, sourceFolder, _1));
 
 						char md5[16];
@@ -202,8 +201,7 @@ namespace RBX
 						else
 							shaderBytecode = device->createShaderBytecode(shaderSource, target.GetString(), entrypoint.GetString());
 					}
-					else
-					{
+					else {
 						if (!entry)
 							throw RBX::runtime_error("Error: failed to find shader %s in pack", name.GetString());
 
@@ -211,12 +209,10 @@ namespace RBX
 					}
 
 					if (isVertex) {
-						if (reloadShaders && vertexShaders.count(name.GetString()))
-						{
+						if (reloadShaders && vertexShaders.count(name.GetString())) {
 							vertexShaders[name.GetString()]->reloadBytecode(shaderBytecode);
 						}
-						else
-						{
+						else {
 							shared_ptr<VertexShader> shader = device->createVertexShader(shaderBytecode);
 
 							shader->setDebugName(name.GetString());
@@ -225,12 +221,10 @@ namespace RBX
 						}
 					}
 					else if (isPixel) {
-						if (reloadShaders && fragmentShaders.count(name.GetString()))
-						{
+						if (reloadShaders && fragmentShaders.count(name.GetString())) {
 							fragmentShaders[name.GetString()]->reloadBytecode(shaderBytecode);
 						}
-						else
-						{
+						else {
 							shared_ptr<FragmentShader> shader = device->createFragmentShader(shaderBytecode);
 
 							shader->setDebugName(name.GetString());
@@ -239,12 +233,10 @@ namespace RBX
 						}
 					}
 					else if (isCompute) {
-						if (reloadShaders && computeShaders.count(name.GetString()))
-						{
+						if (reloadShaders && computeShaders.count(name.GetString())) {
 							computeShaders[name.GetString()]->reloadBytecode(shaderBytecode);
 						}
-						else
-						{
+						else {
 							shared_ptr<ComputeShader> shader = device->createComputeShader(shaderBytecode);
 
 							shader->setDebugName(name.GetString());
@@ -253,12 +245,10 @@ namespace RBX
 						}
 					}
 					else if (isGeometry) {
-						if (reloadShaders && geometryShaders.count(name.GetString()))
-						{
+						if (reloadShaders && geometryShaders.count(name.GetString())) {
 							geometryShaders[name.GetString()]->reloadBytecode(shaderBytecode);
 						}
-						else
-						{
+						else {
 							shared_ptr<GeometryShader> shader = device->createGeometryShader(shaderBytecode);
 
 							shader->setDebugName(name.GetString());
@@ -294,6 +284,24 @@ namespace RBX
 			FASTLOG3(FLog::Graphics, "Compiled %d VS, %d FS, %d CS, and %d GS in %d ms", vertexShaders.size(), fragmentShaders.size(), computeShaders.size(), geometryShaders.size(), static_cast<int>(timer.delta().msec()));
 		}
 
+		shared_ptr<ShaderProgram> ShaderManager::getProgram(const std::string& vsName, const std::string& gsName, const std::string& fsName)
+		{
+			std::string key;
+			key.reserve(vsName.size() + 1 + gsName.size() + 1 + fsName.size());
+			key += vsName;
+			key += '*';
+			key += gsName;
+			key += '*';
+			key += fsName;
+
+			ShaderPrograms::iterator it = shaderPrograms.find(key);
+
+			if (it != shaderPrograms.end())
+				return it->second;
+
+			return shaderPrograms[key] = createProgram(key, vsName, gsName, fsName);
+		}
+
 		shared_ptr<ShaderProgram> ShaderManager::getProgram(const std::string& vsName, const std::string& fsName)
 		{
 			std::string key;
@@ -308,6 +316,20 @@ namespace RBX
 				return it->second;
 
 			return shaderPrograms[key] = createProgram(key, vsName, fsName);
+		}
+
+		shared_ptr<ShaderProgram> ShaderManager::getProgram(const std::string& csName)
+		{
+			std::string key;
+			key.reserve(csName.size());
+			key += csName;
+
+			ShaderPrograms::iterator it = shaderPrograms.find(key);
+
+			if (it != shaderPrograms.end())
+				return it->second;
+
+			return shaderPrograms[key] = createProgram(key, csName);
 		}
 
 		shared_ptr<ShaderProgram> ShaderManager::getProgramOrFFP(const std::string& vsName, const std::string& fsName)
@@ -327,6 +349,40 @@ namespace RBX
 			return shaderProgramFFP;
 		}
 
+		shared_ptr<ShaderProgram> ShaderManager::createProgram(const std::string& name, const std::string& vsName, const std::string& gsName, const std::string& fsName)
+		{
+			VertexShaders::iterator vsit = vertexShaders.find(vsName);
+
+			if (vsit == vertexShaders.end())
+				return shared_ptr<ShaderProgram>();
+
+			GeometryShaders::iterator gsit = geometryShaders.find(gsName);
+
+			if (gsit == geometryShaders.end())
+				return shared_ptr<ShaderProgram>();
+
+			FragmentShaders::iterator fsit = fragmentShaders.find(fsName);
+
+			if (fsit == fragmentShaders.end())
+				return shared_ptr<ShaderProgram>();
+
+			try
+			{
+				shared_ptr<ShaderProgram> result = visualEngine->getDevice()->createShaderProgram(vsit->second, gsit->second, fsit->second);
+
+				result->setDebugName(name);
+
+				return result;
+			}
+			catch (const RBX::base_exception& e)
+			{
+				FASTLOGS(FLog::Graphics, "Error: failed to link shader program %s", vsName + "/" + gsName + "/" + fsName);
+				ShaderProgram::dumpToFLog(e.what(), FLog::Graphics);
+
+				return shared_ptr<ShaderProgram>();
+			}
+		}
+
 		shared_ptr<ShaderProgram> ShaderManager::createProgram(const std::string& name, const std::string& vsName, const std::string& fsName)
 		{
 			VertexShaders::iterator vsit = vertexShaders.find(vsName);
@@ -337,16 +393,6 @@ namespace RBX
 			FragmentShaders::iterator fsit = fragmentShaders.find(fsName);
 
 			if (fsit == fragmentShaders.end())
-				return shared_ptr<ShaderProgram>();
-
-			ComputeShaders::iterator csit = computeShaders.find(vsName);
-
-			if (csit == computeShaders.end())
-				return shared_ptr<ShaderProgram>();
-
-			GeometryShaders::iterator gsit = geometryShaders.find(fsName);
-
-			if (gsit == geometryShaders.end())
 				return shared_ptr<ShaderProgram>();
 
 			try
@@ -360,6 +406,30 @@ namespace RBX
 			catch (const RBX::base_exception& e)
 			{
 				FASTLOGS(FLog::Graphics, "Error: failed to link shader program %s", vsName + "/" + fsName);
+				ShaderProgram::dumpToFLog(e.what(), FLog::Graphics);
+
+				return shared_ptr<ShaderProgram>();
+			}
+		}
+
+		shared_ptr<ShaderProgram> ShaderManager::createProgram(const std::string& name, const std::string& csName)
+		{
+			ComputeShaders::iterator csit = computeShaders.find(csName);
+
+			if (csit == computeShaders.end())
+				return shared_ptr<ShaderProgram>();
+
+			try
+			{
+				shared_ptr<ShaderProgram> result = visualEngine->getDevice()->createShaderProgram(csit->second);
+
+				result->setDebugName(name);
+
+				return result;
+			}
+			catch (const RBX::base_exception& e)
+			{
+				FASTLOGS(FLog::Graphics, "Error: failed to link shader program %s", csName);
 				ShaderProgram::dumpToFLog(e.what(), FLog::Graphics);
 
 				return shared_ptr<ShaderProgram>();

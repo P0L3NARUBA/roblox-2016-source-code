@@ -2623,74 +2623,104 @@
 			<Item class="ReflectionMetadataProperties">
 				<Item class="ReflectionMetadataMember">
 					<Properties>
-						<string name="Name">Ambient</string>
-						<string name="summary">The hue of the global lighting.  Changing this changes the color tint of all objects in the Workspace.</string>
-					</Properties>
-				</Item>
-				<Item class="ReflectionMetadataMember">
-					<Properties>
 						<string name="Name">Brightness</string>
-						<string name="summary">How much global light each Part in the Workspace receives. Standard range is 0 to 1 (0 being little light), but can be increased all the way to 5 (colors start to be appear very different at this value).</string>
+						<string name="summary">How bright the sun/moon light is.</string>
 					</Properties>
 				</Item>
 				<Item class="ReflectionMetadataMember">
 					<Properties>
-						<string name="Name">ColorShift_Bottom</string>
-						<string name="summary">The hue of global lighting on the bottom surfaces of an object.</string>
+						<string name="Name">Color Shift</string>
+						<string name="summary">Hue and saturation shift to the sun/moon light.</string>
 					</Properties>
 				</Item>
 				<Item class="ReflectionMetadataMember">
 					<Properties>
-						<string name="Name">ColorShift_Top</string>
-						<string name="summary">The hue of global lighting on the top surfaces of an object.</string>
+						<string name="Name">Cast Shadows</string>
+						<string name="summary">Toggle whether the sun/moon casts shadows.</string>
 					</Properties>
 				</Item>
 				<Item class="ReflectionMetadataMember">
 					<Properties>
-						<string name="Name">FogColor</string>
-						<string name="summary">A Color3 value that changes the hue of distance fog.</string>
+						<string name="Name">Ambient</string>
+						<string name="summary">Light that is universally added to the scene.</string>
 					</Properties>
 				</Item>
 				<Item class="ReflectionMetadataMember">
 					<Properties>
-						<string name="Name">FogEnd</string>
-						<string name="summary">The distance at which fog completely blocks your vision. This distance is relative to the camera position. Units are in studs</string>
+						<string name="Name">Outdoor Ambient</string>
+						<string name="summary">Light that is added to outdoor areas.</string>
 					</Properties>
 				</Item>
 				<Item class="ReflectionMetadataMember">
 					<Properties>
-						<string name="Name">FogStart</string>
-						<string name="summary">The distance at which the fog gradient begins. This distance is relative to the camera position. Units are in studs.</string>
+						<string name="Name">Env. Diffuse Factor</string>
+						<string name="summary">Factor by which environment maps add to the diffuse portion of the scene.</string>
 					</Properties>
 				</Item>
 				<Item class="ReflectionMetadataMember">
 					<Properties>
-						<string name="Name">GeographicLatitude</string>
-						<string name="summary">The latitude position the level is placed at.  This affects sun position. &lt;a href="http://wiki.roblox.com/wiki/index.php/GeographicLatitude" target="_blank"&gt;More info&lt;/a&gt;</string>
+						<string name="Name">Env. Specular Factor</string>
+						<string name="summary">Factor by which environment maps add to the specular portion of the scene.</string>
 					</Properties>
 				</Item>
 				<Item class="ReflectionMetadataMember">
 					<Properties>
-						<string name="Name">GlobalShadows</string>
-						<string name="summary">Flag enabling shadows from sun and moon in the place</string>
+						<string name="Name">Env. Diffuse Factor</string>
+						<string name="summary">Factor by which environment maps affect the diffuse portion of the scene.</string>
 					</Properties>
 				</Item>
 				<Item class="ReflectionMetadataMember">
 					<Properties>
-						<string name="Name">OutdoorAmbient</string>
-						<string name="summary">Effective ambient value for outdoors, effectively shadow color outdoors (requires GlobalShadows enabled)</string>
+						<string name="Name">Global Shadows</string>
+						<string name="summary">Toggle whether shadowing is enabled for objects occluded from skylight.</string>
 					</Properties>
 				</Item>
 				<Item class="ReflectionMetadataMember">
 					<Properties>
-						<string name="Name">Outlines</string>
-						<string name="summary">Flag enabling or disabling outlines on parts and terrain</string>
+						<string name="Name">SSAO</string>
+						<string name="summary">Toggle whether SSAO is enabled. Useful for art styles that detriment from this effect.</string>
 					</Properties>
 				</Item>
 				<Item class="ReflectionMetadataMember">
 					<Properties>
-						<string name="Name">ShadowColor</string>
-						<string name="summary">Color the shadows appear as. Shadows are drawn mostly for characters, but depending on the lighting will also show for Parts in the Workspace.  Rendering settings can also affect if shadows are drawn.</string>
+						<string name="Name">Affect Skybox</string>
+						<string name="summary">Toggle whether fog renders over the sky. Does not affect skybox contribution to fog.</string>
+					</Properties>
+				</Item>
+				<Item class="ReflectionMetadataMember">
+					<Properties>
+						<string name="Name">Color</string>
+						<string name="summary">Color used for fog when skybox contribution is disabled.</string>
+					</Properties>
+				</Item>
+				<Item class="ReflectionMetadataMember">
+					<Properties>
+						<string name="Name">Density</string>
+						<string name="summary">Density of fog.</string>
+					</Properties>
+				</Item>
+				<Item class="ReflectionMetadataMember">
+					<Properties>
+						<string name="Name">Use Skybox</string>
+						<string name="summary">Whether fog color is inherited from the skybox, rather than the Color property.</string>
+					</Properties>
+				</Item>
+				<Item class="ReflectionMetadataMember">
+					<Properties>
+						<string name="Name">Sun Influence</string>
+						<string name="summary">Influence of the sun on fog. Affect Skybox is recommended if this is above 0.</string>
+					</Properties>
+				</Item>
+				<Item class="ReflectionMetadataMember">
+					<Properties>
+						<string name="Name">Automatic</string>
+						<string name="summary">Toggle whether exposure automatically shifts depending on the brightness of the scene.</string>
+					</Properties>
+				</Item>
+				<Item class="ReflectionMetadataMember">
+					<Properties>
+						<string name="Name">Exposure</string>
+						<string name="summary">Adjust the brightness of the scene. Incrementing by 1 doubles brightness, while decrementing by 1 halves brightness.</string>
 					</Properties>
 				</Item>
 				<Item class="ReflectionMetadataMember">

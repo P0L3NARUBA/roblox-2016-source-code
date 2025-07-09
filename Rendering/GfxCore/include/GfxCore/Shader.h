@@ -67,10 +67,14 @@ public:
     static void dumpToFLog(const std::string& text, int channel);
 
 protected:
+    ShaderProgram(Device* device, const shared_ptr<VertexShader>& vertexShader, const shared_ptr<GeometryShader>& geometryShader, const shared_ptr<FragmentShader>& fragmentShader);
 	ShaderProgram(Device* device, const shared_ptr<VertexShader>& vertexShader, const shared_ptr<FragmentShader>& fragmentShader);
+    ShaderProgram(Device* device, const shared_ptr<ComputeShader>& computeShader);
 
     shared_ptr<VertexShader> vertexShader;
     shared_ptr<FragmentShader> fragmentShader;
+    shared_ptr<ComputeShader> computeShader;
+    shared_ptr<GeometryShader> geometryShader;
 };
 
 struct ShaderGlobalConstant

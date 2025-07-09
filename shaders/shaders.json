@@ -29,7 +29,7 @@
 
     { "name": "SkyVS", "source": "sky.hlsl", "target": "vs_5_1", "entrypoint": "SkyVS" },
     { "name": "SkyFS", "source": "sky.hlsl", "target": "ps_5_1", "entrypoint": "SkyPS" },
-    { "name": "SkyFaceFS", "source": "sky.hlsl", "target": "ps_5_1", "entrypoint": "SkyFacePS" },
+    { "name": "SkyFaceFS", "source": "sky.hlsl", "target": "ps_5_1", "entrypoint": "SkyFacePS", "defines": "SINGLE_FACE" },
     { "name": "TexCompVS", "source": "texcomp.hlsl", "target": "vs_5_1", "entrypoint": "TexCompVS" },
     { "name": "TexCompFS", "source": "texcomp.hlsl", "target": "ps_5_1", "entrypoint": "TexCompPS" },
     { "name": "TexCompPMAFS", "source": "texcomp.hlsl", "target": "ps_5_1", "entrypoint": "TexCompPMAPS" },

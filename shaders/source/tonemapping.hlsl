@@ -3,8 +3,9 @@
 #include "buffers.h"
 #include "common.h"
 
+TEX_DECLARE2D(Main, 0);
 #ifdef BLOOM
-TEX_DECLARE2D(BloomTexture, 1);
+TEX_DECLARE2D(Bloom, 1);
 #endif
 
 float3 ReinhardSimple(float3 x) {
@@ -36,10 +37,10 @@ float3 Tonemapping(inout float3 color) {
 }
 
 float3 ColorCorrection(inout float3 color) {
-	float3 tintColor = Params2.xyz;
-	float brightness = Params1.x;
-	float contrast = Params1.y;
-	float grayscaleLvl = Params1.z;
+	float3 tintColor = Parameters2.xyz;
+	float brightness = Parameters1.x;
+	float contrast = Parameters1.y;
+	float grayscaleLvl = Parameters1.z;
 
 	color = contrast * (color - 0.5) + 0.5 + brightness;
 	float grayscale = dot(color, float3(0.2126, 0.7152, 0.0722));
@@ -47,11 +48,11 @@ float3 ColorCorrection(inout float3 color) {
 	return lerp(color.rgb, grayscale.xxx, grayscaleLvl) * tintColor;
 }
 
-float4 TonemappingPS( BasicVertexOutput IN, out float4 OUT : SV_TARGET ) {
+float4 TonemappingPS( BasicVertexOutput IN ) : SV_TARGET {
 	#ifdef BLOOM
-	float3 color = lerp(tex2D(Texture, IN.UV).rgb, tex2D(BloomTexture, IN.UV).rgb, Params1.w);
+	float3 color = lerp(MainTexture.Sample(MainSampler, IN.UV).rgb, BloomTexture.Sample(BloomSampler, IN.UV).rgb, Params1.w);
 	#else
-	float3 color = tex2D(Texture, IN.UV).rgb;
+	float3 color = MainTexture.Sample(MainSampler, IN.UV).rgb;
 	#endif
 
 	Tonemapping(color);
@@ -60,5 +61,5 @@ float4 TonemappingPS( BasicVertexOutput IN, out float4 OUT : SV_TARGET ) {
 	ColorCorrection(color);
 	#endif
 
-	OUT = float4(color, 1.0);
+	return float4(color, 1.0);
 }

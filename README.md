@@ -10,6 +10,8 @@
 This is a branch of this source, modified to include a modern lighting engine equivalent to or better than modern Roblox.
 Only Studio is verified functioning and the one recommended to use.
 
+**RENDERING PIPELINE REVAMP IN PROGRESS, THIS DOES NOT CURRENTLY FUNCTION.**
+
 Supported graphics APIs are:
 - DirectX 11
 
@@ -250,10 +252,6 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
 - [ ] Linux
 
 ## Current Issues
-- Certain transparent renderables are either black or not rendered entirely.
-- Changing bloom settings in the BloomEffect instance does not affect actual bloom.
-- SSAO does not render.
-- Material shaders switch to a low quality version far too soon.
 - Outdoor Ambient does nothing.
 - Occasional lights consisting of garbage data and getting past all legitimacy checks may result in buggy visuals.
 - Outdoor environment map generation is broken, as well as lacking highlight reconstruction.

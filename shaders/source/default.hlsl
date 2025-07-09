@@ -1,46 +1,55 @@
 #define GLOBALS
+#define INSTANCED
 
 #include "buffers.h"
 #include "common.h"
 
 /* Vertex Shaders */
-BasicMaterialVertexOutput BasicMaterialVS(BasicMaterialAppData IN) {
+BasicMaterialVertexOutput BasicMaterialVS(InstancedBasicMaterialAppData IN) {
     BasicMaterialVertexOutput OUT;
+
+    float4x4 ModelMatrix = ModelMatrixes[IN.InstanceID].Model;
+
+    OUT.Position = mul(float4(IN.Position.xyz, 1.0), ModelMatrix);
+    OUT.Position = mul(OUT.Position, ViewProjection);
 
     OUT.UV = IN.UV;
     OUT.Color = IN.Color;
-    OUT.Normal = normalize(float3(ModelMatrix * float4(IN.Normal, 0.0)));
-    OUT.Position = ModelMatrix * ViewProjection * float4(IN.Position, 1.0);
+    OUT.Normal = normalize(mul((float3x3)ModelMatrix, IN.Normal));
+    OUT.MaterialID = IN.MaterialID;
 
     return OUT;
 }
 
-MaterialVertexOutput MaterialVS(MaterialAppData IN) {
+MaterialVertexOutput MaterialVS(InstancedMaterialAppData IN) {
     MaterialVertexOutput OUT;
+
+    float4x4 ModelMatrix = ModelMatrixes[IN.InstanceID].Model;
+
+    OUT.Position = mul(float4(IN.Position.xyz, 1.0), ModelMatrix);
+    OUT.Position = mul(OUT.Position, ViewProjection);
 
     OUT.UV = IN.UV;
     OUT.Color = IN.Color;
 
-    float3 Normal = normalize(float3(ModelMatrix * float4(IN.Normal, 0.0)));
-    float3 Tangent = normalize(float3(ModelMatrix * float4(IN.Tangent, 0.0)));
+    float3 Normal = normalize(mul((float3x3)ModelMatrix, IN.Normal));
+    float3 Tangent = normalize(mul((float3x3)ModelMatrix, IN.Tangent));
     Tangent = normalize(Tangent - dot(Tangent, Normal) * Normal);
 
     OUT.Tangent = Tangent;
     OUT.Bitangent = cross(Normal, Tangent);
     OUT.Normal = Normal;
-
-    OUT.Position = ModelMatrix * ViewProjection * float4(IN.Position, 1.0);
+    OUT.MaterialID = IN.MaterialID;
 
     return OUT;
 }
 
 /* Pixel Shader */
-void DefaultPS(BasicMaterialVertexOutput IN) : SV_TARGET {
+float4 DefaultPS(BasicMaterialVertexOutput IN) : SV_TARGET {
     return float4(1.0, 0.0, 1.0, 1.0);
 }
 
-
-void DefaultMaterialPS(VertexOutput IN, out float4 OUT : SV_TARGET) {
+/*void DefaultMaterialPS(VertexOutput IN, out float4 OUT : SV_TARGET) {
     // Compute albedo term
 #ifdef PIN_SURFACE
     Surface surface = surfaceShaderExec(IN);
@@ -187,4 +196,4 @@ void DefaultMaterialPS(VertexOutput IN, out float4 OUT : SV_TARGET) {
 #ifdef PIN_GBUFFER
     oColor1 = gbufferPack(IN.View_Depth.w, diffuse.rgb, specular.rgb, fogAlpha);
 #endif
-}
+}*/

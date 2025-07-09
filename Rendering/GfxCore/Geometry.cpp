@@ -7,10 +7,11 @@ namespace RBX
 namespace Graphics
 {
 
-VertexLayout::Element::Element(unsigned int stream, unsigned int offset, Format format, Semantic semantic, unsigned int semanticIndex)
+VertexLayout::Element::Element(unsigned int stream, unsigned int offset, Format format, Input input, Semantic semantic, unsigned int semanticIndex)
     : stream(stream)
     , offset(offset)
     , format(format)
+    , input(input)
     , semantic(semantic)
     , semanticIndex(semanticIndex)
 {

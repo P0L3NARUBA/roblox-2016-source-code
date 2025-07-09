@@ -1,9 +1,8 @@
 #include "common.h"
 
-TEX_DECLARE2D(Texture, 0);
+TEX_DECLARE2D(Main, 0);
 
-BasicVertexOutput PassThroughVS( BasicAppData IN )
-{
+BasicVertexOutput PassThroughVS( BasicAppData IN ) {
     BasicVertexOutput OUT;
 	
     OUT.UV = IN.UV;
@@ -13,9 +12,8 @@ BasicVertexOutput PassThroughVS( BasicAppData IN )
     return OUT;
 }
 
-float4 PassThroughPS( BasicVertexOutput IN ) : SV_TARGET
-{
-	return tex2D(Texture, IN.uv);
+float4 PassThroughPS( BasicVertexOutput IN ) : SV_TARGET {
+	return MainTexture.Sample(MainSampler, IN.UV);
 }
 
 /*float4 gauss(float samples, float2 uv)
@@ -44,7 +42,7 @@ float4 PassThroughPS( BasicVertexOutput IN ) : SV_TARGET
 
 	// Since the above is an approximation of the integral with step functions, normalization compensates for the error
 	return max(result / weight, 0.0) / 4.0;
-}*/
+}
 
 float4 box(float samples, float2 uv)
 {
@@ -73,4 +71,4 @@ float4 blur5_ps(BasicVertexOutput IN): COLOR0
 float4 blur7_ps(BasicVertexOutput IN): COLOR0
 {
 	return box(7, IN.uv);
-}
+}*/

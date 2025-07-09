@@ -75,12 +75,12 @@ void Technique::apply(DeviceContext* context) const
 	context->setDepthState(depthState);
 	context->setBlendState(blendState);
 
-	context->bindProgram(program.get());
+	//context->bindProgram(program.get());
 
     unsigned int mask = 0;
     unsigned int samplerMask = program->getSamplerMask();
 
-    for (size_t i = 0; i < textures.size(); ++i)
+    /*for (size_t i = 0; i < textures.size(); ++i)
 	{
         const TextureUnit& tu = textures[i];
 		const shared_ptr<Texture>& tex = tu.texture.getTexture();
@@ -98,7 +98,7 @@ void Technique::apply(DeviceContext* context) const
         const Constant& c = constants[i];
 
         context->setConstant(c.handle, &c.value.x, 1);
-	}
+	}*/
 
     // Verify that we set all samplers that the shader expected
 	RBXASSERT((samplerMask & mask) == samplerMask);

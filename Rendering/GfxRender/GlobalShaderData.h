@@ -39,6 +39,32 @@ namespace RBX
 		struct GlobalProcessingData {
 			Vector4 TextureSize_ViewportScale;
 			Vector4 Exposure_Gamma_InverseGamma_Unused;
+			Vector4 Parameters1;
+			Vector4 Parameters2;
+
+			static void define(Device* device);
+		};
+
+		struct MaterialData {
+			Vector4 AlbedoEnabled_RoughnessOverride_MetalnessOverride_EmissionOverride; // -1 means use textures, anything 0 - 1 is an override
+			Vector4 ClearcoatEnabled_NormalMapEnabled_AmbientOcclusionEnabled_ParallaxEnabled;
+			Vector4 CCTintOverride_CCNormalsEnabled;
+			Vector2 CCFactorOverride_CCRoughnessOverride;
+			Vector2 padding;
+		};
+
+		struct GlobalMaterialData {
+			MaterialData Materials[1024];
+
+			static void define(Device* device);
+		};
+
+		struct ModelMatrix {
+			Matrix4 Model;
+		};
+
+		struct ModelMatrixes {
+			std::vector<ModelMatrix> Model;
 
 			static void define(Device* device);
 		};

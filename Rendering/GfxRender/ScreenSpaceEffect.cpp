@@ -21,14 +21,14 @@ namespace Graphics
         
         if (program)
         {
-            const float textureSize[] = { fbWidth, fbHeight, 1 / (float)fbWidth, 1 / (float)fbHeight };
+            //const float textureSize[] = { fbWidth, fbHeight, 1 / (float)fbWidth, 1 / (float)fbHeight };
 
             context->setRasterizerState(RasterizerState::Cull_None);
             context->setBlendState(blendState);
             context->setDepthState(DepthState(DepthState::Function_Always, false));
 
             context->bindProgram(program);
-            context->setConstant(program->getConstantHandle("TextureSize"), textureSize, 1);
+            //context->setConstant(program->getConstantHandle("TextureSize"), textureSize, 1);
         }
 
         return program;

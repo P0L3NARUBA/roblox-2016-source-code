@@ -417,10 +417,10 @@ static const char* getMaterialName(PartMaterial material)
     switch (material)
     {
 	case PLASTIC_MATERIAL: return "Plastic";
-	case SMOOTH_PLASTIC_MATERIAL: return "SmoothPlastic";
+	case SMOOTH_PLASTIC_MATERIAL: return "Smooth Plastic";
 	case NEON_MATERIAL: return "Neon";
 	case WOOD_MATERIAL: return "Wood";
-    case WOODPLANKS_MATERIAL: return "WoodPlanks";
+    case WOODPLANKS_MATERIAL: return "Wood Planks";
     case MARBLE_MATERIAL: return "Marble";
     case SLATE_MATERIAL: return "Slate";
     case CONCRETE_MATERIAL: return "Concrete";
@@ -428,7 +428,7 @@ static const char* getMaterialName(PartMaterial material)
     case BRICK_MATERIAL: return "Brick";
     case PEBBLE_MATERIAL: return "Pebble";
     case RUST_MATERIAL: return "Rust";
-    case DIAMONDPLATE_MATERIAL: return "Diamondplate";
+    case DIAMONDPLATE_MATERIAL: return "Diamond plate";
     case ALUMINUM_MATERIAL: return "Aluminum";
     case METAL_MATERIAL: return "Metal";
     case GRASS_MATERIAL: return "Grass";
@@ -447,26 +447,26 @@ static int getMaterialId(PartMaterial material, bool reflectance)
 {
     switch (material)
     {
-    case PLASTIC_MATERIAL: return 0 + reflectance;
-    case SMOOTH_PLASTIC_MATERIAL: return 2 + reflectance;
-    case WOOD_MATERIAL: return 4;
-    case WOODPLANKS_MATERIAL: return 5;
-    case MARBLE_MATERIAL: return 6;
-    case SLATE_MATERIAL: return 7;
-    case CONCRETE_MATERIAL: return 8;
-    case GRANITE_MATERIAL: return 9;
-    case BRICK_MATERIAL: return 10;
-    case PEBBLE_MATERIAL: return 11;
-    case COBBLESTONE_MATERIAL: return 12;
-    case RUST_MATERIAL: return 13;
-    case DIAMONDPLATE_MATERIAL: return 14;
-    case ALUMINUM_MATERIAL: return 15;
-    case METAL_MATERIAL: return 16;
-    case GRASS_MATERIAL: return 17;
-    case SAND_MATERIAL: return 18;
-    case FABRIC_MATERIAL: return 19;
-    case ICE_MATERIAL: return 20;
-	case NEON_MATERIAL: return 21;
+    case PLASTIC_MATERIAL: return 0;
+    case SMOOTH_PLASTIC_MATERIAL: return 1;
+    case WOOD_MATERIAL: return 2;
+    case WOODPLANKS_MATERIAL: return 3;
+    case MARBLE_MATERIAL: return 4;
+    case SLATE_MATERIAL: return 5;
+    case CONCRETE_MATERIAL: return 6;
+    case GRANITE_MATERIAL: return 7;
+    case BRICK_MATERIAL: return 8;
+    case PEBBLE_MATERIAL: return 9;
+    case COBBLESTONE_MATERIAL: return 10;
+    case RUST_MATERIAL: return 11;
+    case DIAMONDPLATE_MATERIAL: return 12;
+    case ALUMINUM_MATERIAL: return 13;
+    case METAL_MATERIAL: return 14;
+    case GRASS_MATERIAL: return 15;
+    case SAND_MATERIAL: return 16;
+    case FABRIC_MATERIAL: return 17;
+    case ICE_MATERIAL: return 18;
+	case NEON_MATERIAL: return 19;
 
     default:
 		return -1;

@@ -65,6 +65,8 @@ public:
     void defineGlobalConstants(size_t dataSize);
     unsigned getGlobalDataSize() { return globalDataSize; }
     void defineGlobalProcessingData(size_t dataSize);
+    void defineGlobalMaterialData(size_t dataSize);
+    void defineInstancedModelMatrixes(size_t dataSize, size_t elementSize);
     void defineGlobalLightList(size_t dataSize, size_t elementSize);
 
     void clearStates();
@@ -76,6 +78,8 @@ public:
 
     virtual void updateGlobalConstants(const void* data, size_t dataSize);
     virtual void updateGlobalProcessingData(const void* data, size_t dataSize);
+    virtual void updateGlobalMaterialData(const void* data, size_t dataSize);
+    virtual void updateInstancedModelMatrixes(const void* data, size_t dataSize);
     virtual void updateGlobalLightList(const void* data, size_t dataSize);
 
     virtual void setDefaultAnisotropy(unsigned int value);
@@ -128,7 +132,10 @@ protected:
 
     ID3D11Buffer* globalsConstantBuffer;
     ID3D11Buffer* globalsProcessingDataBuffer;
+    ID3D11Buffer* globalsMaterialDataBuffer;
+    ID3D11Buffer* instancedModelMatrixesBuffer;
     ID3D11Buffer* globalsLightListBuffer;
+    ID3D11ShaderResourceView* instancedModelMatrixesResource;
     ID3D11ShaderResourceView* globalsLightListResource;
     size_t globalDataSize;
 
@@ -196,11 +203,13 @@ public:
 
     virtual void defineGlobalConstants(size_t dataSize);
     virtual void defineGlobalProcessingData(size_t dataSize);
+    virtual void defineGlobalMaterialData(size_t dataSize);
+    virtual void defineInstancedModelMatrixes(size_t dataSize, size_t elementSize);
     virtual void defineGlobalLightList(size_t dataSize, size_t elementSize);
 
     virtual std::string getAPIName() { return "DirectX 11"; }
-    virtual std::string getFeatureLevel(){ return shaderProfile == shaderProfile_DX11 ? "D3D11" : "D3D11_9.3"; }
-    virtual std::string getShadingLanguage(){ return shaderProfile == shaderProfile_DX11 ? "hlsl11" : "hlsl11_level_9_3"; }
+    virtual std::string getFeatureLevel(){ return "D3D11"; }
+    virtual std::string getShadingLanguage(){ return "hlsl11"; }
     virtual std::string createShaderSource(const std::string& path, const std::string& defines, boost::function<std::string (const std::string&)> fileCallback);
     virtual std::vector<char> createShaderBytecode(const std::string& source, const std::string& target, const std::string& entrypoint);
 
@@ -208,7 +217,9 @@ public:
     virtual shared_ptr<FragmentShader> createFragmentShader(const std::vector<char>& bytecode);
     virtual shared_ptr<ComputeShader> createComputeShader(const std::vector<char>& bytecode);
     virtual shared_ptr<GeometryShader> createGeometryShader(const std::vector<char>& bytecode);
+    virtual shared_ptr<ShaderProgram> createShaderProgram(const shared_ptr<VertexShader>& vertexShader, const shared_ptr<GeometryShader>& geometryShader, const shared_ptr<FragmentShader>& fragmentShader);
     virtual shared_ptr<ShaderProgram> createShaderProgram(const shared_ptr<VertexShader>& vertexShader, const shared_ptr<FragmentShader>& fragmentShader);
+    virtual shared_ptr<ShaderProgram> createShaderProgram(const shared_ptr<ComputeShader>& computeShader);
     virtual shared_ptr<ShaderProgram> createShaderProgramFFP();
 
     virtual shared_ptr<VertexBuffer> createVertexBuffer(size_t elementSize, size_t elementCount, GeometryBuffer::Usage usage);

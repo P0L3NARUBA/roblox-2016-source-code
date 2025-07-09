@@ -28,7 +28,6 @@
 #include "AppDraw/HitTest.h"
 #include "Util/Math.h"
 #include "Util/Color.h"
-#include "util/RobloxGoogleAnalytics.h"
 #include "Network/NetworkOwner.h"
 #include "G3D/CollisionDetection.h"
 #include "v8datamodel/PartCookie.h"
@@ -129,14 +128,12 @@ namespace RBX {
 	// Old files used PVInstance::"CoordinateFrame", "Velocity" and "RotVel", but
 	// no files really had any legacy velocity data - the Velocity field here will pick up the Velocity of old PVInstances for parts
 
-	REFLECTION_BEGIN();
 	const PropDescriptor<PartInstance, CoordinateFrame> PartInstance::prop_CFrame("CFrame", category_Data, &PartInstance::getCoordinateFrame, &PartInstance::setCoordinateFrameRoot);
 	static const PropDescriptor<PartInstance, Vector3> prop_PositionUi("Position", category_Data, &PartInstance::getTranslationUi, &PartInstance::setTranslationUi, PropertyDescriptor::UI);
 	static const PropDescriptor<PartInstance, Vector3> prop_RotationUi("Rotation", category_Data, &PartInstance::getRotationUi, &PartInstance::setRotationUi, PropertyDescriptor::UI);
 	const PropDescriptor<PartInstance, Vector3> PartInstance::prop_Velocity("Velocity", category_Data, &PartInstance::getLinearVelocity, &PartInstance::setLinearVelocity);
 	const PropDescriptor<PartInstance, Vector3> PartInstance::prop_RotVelocity("RotVelocity", category_Data, &PartInstance::getRotationalVelocity, &PartInstance::setRotationalVelocityRoot);
 	static const PropDescriptor<PartInstance, float> prop_Density("SpecificGravity", category_Data, &PartInstance::getSpecificGravity, NULL, Reflection::PropertyDescriptor::UI);
-	REFLECTION_END();
 
 	//////////////////////////
 
@@ -170,8 +167,8 @@ namespace RBX {
 			addPair(WOOD_MATERIAL, "Wood");
 			addPair(SLATE_MATERIAL, "Slate");
 			addPair(CONCRETE_MATERIAL, "Concrete");
-			addPair(RUST_MATERIAL, "CorrodedMetal");
-			addPair(DIAMONDPLATE_MATERIAL, "DiamondPlate");
+			addPair(RUST_MATERIAL, "Corroded Metal");
+			addPair(DIAMONDPLATE_MATERIAL, "Diamond Plate");
 			addPair(ALUMINUM_MATERIAL, "Foil");
 			addPair(GRASS_MATERIAL, "Grass");
 			addPair(ICE_MATERIAL, "Ice");
@@ -181,9 +178,9 @@ namespace RBX {
 			addPair(PEBBLE_MATERIAL, "Pebble");
 			addPair(SAND_MATERIAL, "Sand");
 			addPair(FABRIC_MATERIAL, "Fabric");
-			addPair(SMOOTH_PLASTIC_MATERIAL, "SmoothPlastic");
+			addPair(SMOOTH_PLASTIC_MATERIAL, "Smooth Plastic");
 			addPair(METAL_MATERIAL, "Metal");
-			addPair(WOODPLANKS_MATERIAL, "WoodPlanks");
+			addPair(WOODPLANKS_MATERIAL, "Wood Planks");
 			addPair(COBBLESTONE_MATERIAL, "Cobblestone");
 			addPair(AIR_MATERIAL, "Air");
 			addPair(WATER_MATERIAL, "Water");
@@ -195,7 +192,7 @@ namespace RBX {
 			addPair(MUD_MATERIAL, "Mud");
 			addPair(BASALT_MATERIAL, "Basalt");
 			addPair(GROUND_MATERIAL, "Ground");
-			addPair(CRACKED_LAVA_MATERIAL, "CrackedLava");
+			addPair(CRACKED_LAVA_MATERIAL, "Cracked Lava");
 			addPair(NEON_MATERIAL, "Neon");
 
 			addLegacyName("Corroded Metal", RUST_MATERIAL);
@@ -622,25 +619,12 @@ namespace RBX {
 				!Math::fuzzyEq(part->getElasticity(), PartInstance::defaultElasticity(), Math::epsilonf())));
 	}
 
-
-	void convertPartsToNewGANotify(DataModel* dataModel)
-	{
-		RobloxGoogleAnalytics::trackEvent(GA_CATEGORY_GAME, "PartInstance_ConvertToNewPhysicalProp",
-			boost::lexical_cast<std::string>(dataModel->getPlaceID()).c_str(), 0, false);
-	}
-
 	void PartInstance::convertToNewPhysicalPropRecursive(RBX::Instance* instance)
 	{
 		if (PartInstance* part = Instance::fastDynamicCast<PartInstance>(instance))
 		{
 			if (partIsLegacyCustomPhysProperties(part))
 			{
-				if (DataModel* dm = DataModel::get(part))
-				{
-					static boost::once_flag flag = BOOST_ONCE_INIT;
-					boost::call_once(flag, boost::bind(&convertPartsToNewGANotify, dm));
-				}
-
 				PhysicalProperties defaultProperty = MaterialProperties::getPrimitivePhysicalProperties(part->getPartPrimitive());
 				PhysicalProperties physicalProperty = PhysicalProperties(defaultProperty.getDensity(), part->getFriction(), part->getElasticity());
 				part->setPhysicalProperties(physicalProperty);
@@ -2537,18 +2521,6 @@ namespace RBX {
 				// Do nothing, PLAY SOLO
 				return;
 			}
-			if (DataModel* dm = DataModel::get(this))
-			{
-				static boost::once_flag flag = BOOST_ONCE_INIT;
-				boost::call_once(flag, boost::bind(&RobloxGoogleAnalytics::trackEvent, GA_CATEGORY_GAME, "PartInstance_SetNetworkOwnerScript",
-					boost::lexical_cast<std::string>(dm->getPlaceID()).c_str(), 0, false));
-
-				if (!player)
-				{
-					boost::call_once(flag, boost::bind(&RobloxGoogleAnalytics::trackEvent, GA_CATEGORY_GAME, "PartInstance_SetNetworkOwnerScript_TOSERVER",
-						boost::lexical_cast<std::string>(dm->getPlaceID()).c_str(), 0, false));
-				}
-			}
 
 			RBX::SystemAddress ownerAddress;
 			if (player)
@@ -2581,13 +2553,6 @@ namespace RBX {
 		{
 			if (Network::Players::serverIsPresent(this))
 			{
-				if (DataModel* dm = DataModel::get(this))
-				{
-					static boost::once_flag flag = BOOST_ONCE_INIT;
-					boost::call_once(flag, boost::bind(&RobloxGoogleAnalytics::trackEvent, GA_CATEGORY_GAME, "PartInstance_GetNetworkOwnerScript",
-						boost::lexical_cast<std::string>(dm->getPlaceID()).c_str(), 0, false));
-				}
-
 				RBX::SystemAddress networkOwner = rootPrim->getNetworkOwner();
 				shared_ptr<Instance> player = Network::Players::findPlayerWithAddress(networkOwner, this);
 				return player;

@@ -1,15 +1,22 @@
+#define GLOBALS
+
+#include "buffers.h"
 #include "common.h"
 
+#ifdef SINGLE_FACE
+TEX_DECLARE2D(SkyboxFace, 0);
+#else
 TEX_DECLARECUBE(Skybox, 0);
+#endif
 
 struct SkyAppData {
+    float4 Position  : POSITION;
     float3 UVW       : TEXCOORD;
-    float3 Position  : POSITION;
 };
 
 struct SkyVertexOutput {
-    float3 UVW      : TEXCOORD;
     float4 Position : SV_POSITION;
+    float3 UVW      : TEXCOORD;
 };
 
 SkyVertexOutput SkyVS(SkyAppData IN) {
@@ -17,18 +24,18 @@ SkyVertexOutput SkyVS(SkyAppData IN) {
 
     OUT.UVW = IN.Position.xyz;
 
-    OUT.Position = ViewProjection * float4(IN.Position, 1.0);
+    OUT.Position = mul(float4(IN.Position.xyz, 1.0), ViewProjection);
     OUT.Position.z = 0.0;
 
     return OUT;
 }
 
 float4 SkyPS(SkyVertexOutput IN) : SV_TARGET {
-    return float4(texCUBE(Skybox, IN.UVW).rgb, 1.0);
+    return float4(SkyboxTexture.Sample(SkyboxSampler, IN.UVW).rgb, 1.0);
 }
 
 float4 SkyFacePS(BasicVertexOutput IN) : SV_TARGET {
-    float3 Skybox = tex2D(SkyboxFace, IN.UV).rgb * IN.Color;
+    float3 Skybox = SkyboxFaceTexture.Sample(SkyboxFaceSampler, IN.UV).rgb * IN.Color;
     float3 Brightness = (Skybox / (1.0 - Skybox * 0.9875)) / 8.0;
 
     return float4(Skybox + Brightness, 1.0);

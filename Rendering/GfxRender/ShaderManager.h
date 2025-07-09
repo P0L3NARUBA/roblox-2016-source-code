@@ -25,7 +25,9 @@ namespace RBX
 
 			void loadShaders(const std::string& folder, const std::string& language, bool consoleOutput);
 
+			shared_ptr<ShaderProgram> getProgram(const std::string& vsName, const std::string& gsName, const std::string& fsName);
 			shared_ptr<ShaderProgram> getProgram(const std::string& vsName, const std::string& fsName);
+			shared_ptr<ShaderProgram> getProgram(const std::string& csName);
 
 			shared_ptr<ShaderProgram> getProgramOrFFP(const std::string& vsName, const std::string& fsName);
 			shared_ptr<ShaderProgram> getProgramFFP();
@@ -50,7 +52,9 @@ namespace RBX
 
 			shared_ptr<ShaderProgram> shaderProgramFFP;
 
+			shared_ptr<ShaderProgram> createProgram(const std::string& name, const std::string& vsName, const std::string& gsName, const std::string& fsName);
 			shared_ptr<ShaderProgram> createProgram(const std::string& name, const std::string& vsName, const std::string& fsName);
+			shared_ptr<ShaderProgram> createProgram(const std::string& name, const std::string& csName);
 		};
 
 	}

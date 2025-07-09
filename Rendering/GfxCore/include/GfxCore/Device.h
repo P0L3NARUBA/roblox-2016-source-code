@@ -166,6 +166,8 @@ public:
 
     virtual void defineGlobalConstants(size_t dataSize) = 0;
     virtual void defineGlobalProcessingData(size_t dataSize) = 0;
+    virtual void defineGlobalMaterialData(size_t dataSize) = 0;
+    virtual void defineInstancedModelMatrixes(size_t dataSize, size_t elementSize) = 0;
     virtual void defineGlobalLightList(size_t dataSize, size_t elementSize) = 0;
 
     virtual std::string getAPIName() = 0;
@@ -178,7 +180,9 @@ public:
     virtual shared_ptr<FragmentShader> createFragmentShader(const std::vector<char>& bytecode) = 0;
     virtual shared_ptr<ComputeShader> createComputeShader(const std::vector<char>& bytecode) = 0;
     virtual shared_ptr<GeometryShader> createGeometryShader(const std::vector<char>& bytecode) = 0;
+    virtual shared_ptr<ShaderProgram> createShaderProgram(const shared_ptr<VertexShader>& vertexShader, const shared_ptr<GeometryShader>& geometryShade, const shared_ptr<FragmentShader>& fragmentShader) = 0;
     virtual shared_ptr<ShaderProgram> createShaderProgram(const shared_ptr<VertexShader>& vertexShader, const shared_ptr<FragmentShader>& fragmentShader) = 0;
+    virtual shared_ptr<ShaderProgram> createShaderProgram(const shared_ptr<ComputeShader>& computeShader) = 0;
     virtual shared_ptr<ShaderProgram> createShaderProgramFFP() = 0;
 
     virtual shared_ptr<VertexBuffer> createVertexBuffer(size_t elementSize, size_t elementCount, GeometryBuffer::Usage usage) = 0;

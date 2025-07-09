@@ -28,6 +28,14 @@ namespace RBX
 			device->defineGlobalProcessingData(sizeof(GlobalProcessingData));
 		}
 
+		void GlobalMaterialData::define(Device* device) {
+			device->defineGlobalMaterialData(sizeof(GlobalMaterialData));
+		}
+
+		void ModelMatrixes::define(Device* device) {
+			device->defineInstancedModelMatrixes(sizeof(ModelMatrix) * 1024u, sizeof(ModelMatrix));
+		}
+
 		void GlobalLightList::define(Device* device) {
 			device->defineGlobalLightList(sizeof(GPULight) * 1024u, sizeof(GPULight));
 		}

@@ -73,6 +73,7 @@ namespace Graphics
         , cachedDepthState(DepthState::Function_Always, false)
         , globalsConstantBuffer(NULL)
         , globalsProcessingDataBuffer(NULL)
+        , globalsMaterialDataBuffer(NULL)
         , globalsLightListBuffer(NULL)
         , d3d9(NULL)
     {
@@ -169,6 +170,51 @@ namespace Graphics
         RBXASSERT(SUCCEEDED(hr));
     }
 
+    void DeviceContextD3D11::defineGlobalMaterialData(size_t dataSize)
+    {
+        RBXASSERT(globalsMaterialDataBuffer == NULL);
+        if (globalsMaterialDataBuffer)
+            return;
+
+        D3D11_BUFFER_DESC bd = {};
+        bd.Usage = D3D11_USAGE_DEFAULT;
+        bd.ByteWidth = dataSize;
+        bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+        bd.CPUAccessFlags = 0;
+        bd.StructureByteStride = 0;
+        bd.MiscFlags = 0;
+
+        HRESULT hr = device11->CreateBuffer(&bd, NULL, &globalsMaterialDataBuffer);
+        RBXASSERT(SUCCEEDED(hr));
+    }
+
+    void DeviceContextD3D11::defineInstancedModelMatrixes(size_t dataSize, size_t elementSize)
+    {
+        RBXASSERT(instancedModelMatrixesBuffer == NULL);
+        if (instancedModelMatrixesBuffer)
+            return;
+
+        D3D11_BUFFER_DESC bd = {};
+        bd.Usage = D3D11_USAGE_DYNAMIC;
+        bd.ByteWidth = dataSize;
+        bd.StructureByteStride = elementSize;
+        bd.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+        bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+        bd.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+
+        HRESULT hr = device11->CreateBuffer(&bd, NULL, &instancedModelMatrixesBuffer);
+        RBXASSERT(SUCCEEDED(hr));
+
+        D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
+        srvd.Format = DXGI_FORMAT_UNKNOWN;
+        srvd.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
+        srvd.Buffer.FirstElement = 0;
+        srvd.Buffer.NumElements = 1024;
+
+        hr = device11->CreateShaderResourceView(instancedModelMatrixesBuffer, &srvd, &instancedModelMatrixesResource);
+        RBXASSERT(SUCCEEDED(hr));
+    }
+
     void DeviceContextD3D11::defineGlobalLightList(size_t dataSize, size_t elementSize)
     {
         RBXASSERT(globalsLightListBuffer == NULL);
@@ -210,8 +256,29 @@ namespace Graphics
     {
         immediateContext11->UpdateSubresource(globalsProcessingDataBuffer, 0, NULL, data, 0, 0);
 
-        immediateContext11->VSSetConstantBuffers(0, 1, &globalsProcessingDataBuffer);
+        //immediateContext11->VSSetConstantBuffers(0, 1, &globalsProcessingDataBuffer);
         immediateContext11->PSSetConstantBuffers(0, 1, &globalsProcessingDataBuffer);
+    }
+
+    void DeviceContextD3D11::updateGlobalMaterialData(const void* data, size_t dataSize)
+    {
+        immediateContext11->UpdateSubresource(globalsMaterialDataBuffer, 0, NULL, data, 0, 0);
+
+        //immediateContext11->VSSetConstantBuffers(0, 1, &globalsMaterialDataBuffer);
+        immediateContext11->PSSetConstantBuffers(1, 1, &globalsMaterialDataBuffer);
+    }
+
+    void DeviceContextD3D11::updateInstancedModelMatrixes(const void* data, size_t dataSize)
+    {
+        D3D11_MAPPED_SUBRESOURCE mappedResource2;
+        HRESULT hr = immediateContext11->Map(instancedModelMatrixesBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource2);
+        RBXASSERT(SUCCEEDED(hr));
+
+        memcpy(mappedResource2.pData, data, dataSize);
+
+        immediateContext11->Unmap(instancedModelMatrixesBuffer, 0);
+
+        immediateContext11->PSSetShaderResources(31, 1, &instancedModelMatrixesResource);
     }
 
     void DeviceContextD3D11::updateGlobalLightList(const void *data, size_t dataSize)

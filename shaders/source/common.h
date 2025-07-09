@@ -1,53 +1,95 @@
-#define EPSILON = 0.0001;
-#define PI 3.14159;
+#define EPSILON 0.0001
+#define PI 3.14159
 
-#define TEX_DECLARE2D(name, reg) SamplerState name##Sampler: register(s##reg); Texture2D<float4> name##Texture: register(t##reg)
-#define TEX_DECLARE3D(name, reg) SamplerState name##Sampler: register(s##reg); Texture3D<float4> name##Texture: register(t##reg)
-#define TEX_DECLARECUBE(name, reg) SamplerState name##Sampler: register(s##reg); TextureCube<float4> name##Texture: register(t##reg)
+#define TEX_DECLARE2D(name, slot)                \
+    Texture2D name##Texture : register(t##slot); \
+    SamplerState name##Sampler : register(s##slot)
+#define TEX_DECLARE3D(name, slot)                \
+    Texture3D name##Texture : register(t##slot); \
+    SamplerState name##Sampler : register(s##slot)
+#define TEX_DECLARECUBE(name, slot)                \
+    TextureCube name##Texture : register(t##slot); \
+    SamplerState name##Sampler : register(s##slot)
+
+#ifndef EXCLUDE_STRUCTS
+#define EXCLUDE_STRUCTS
 
 struct BasicAppData {
-    float2 UV        : TEXCOORD;
-    float3 Color     : COLOR;
-    float3 Position  : POSITION;
+    float4 Position : POSITION;
+    float2 UV       : TEXCOORD;
+    float4 Color    : COLOR;
 };
 
 struct BasicMaterialAppData {
+    float4 Position : POSITION;
     float2 UV       : TEXCOORD;
     float4 Color    : COLOR;
     float3 Normal   : NORMAL;
-    float3 Position : POSITION;
 };
 
 struct MaterialAppData {
+    float4 Position  : POSITION;
     float2 UV        : TEXCOORD;
     float4 Color     : COLOR;
     float3 Tangent   : TANGENT;
     float3 Bitangent : BINORMAL;
     float3 Normal    : NORMAL;
-    float3 Position  : POSITION;
+};
+
+struct InstancedBasicAppData {
+    float4 Position : POSITION;
+    float2 UV       : TEXCOORD;
+    float4 Color    : COLOR;
+    uint InstanceID : SV_InstanceID;
+    uint MaterialID;
+};
+
+struct InstancedBasicMaterialAppData {
+    float4 Position : POSITION;
+    float2 UV       : TEXCOORD;
+    float4 Color    : COLOR;
+    float3 Normal   : NORMAL;
+    uint InstanceID : SV_InstanceID;
+    uint MaterialID;
+};
+
+struct InstancedMaterialAppData {
+    float4 Position  : POSITION;
+    float2 UV        : TEXCOORD;
+    float4 Color     : COLOR;
+    float3 Tangent   : TANGENT;
+    float3 Bitangent : BINORMAL;
+    float3 Normal    : NORMAL;
+    uint InstanceID  : SV_InstanceID;
+    uint MaterialID;
 };
 
 struct BasicVertexOutput {
-    float2 UV       : TEXCOORD;
-    float3 Color     : COLOR;
     float4 Position : SV_POSITION;
+    float2 UV       : TEXCOORD;
+    float4 Color    : COLOR;
+    uint MaterialID;
 };
 
 struct BasicMaterialVertexOutput {
-    float2 UV       : TEXCOORD;
-    float4 Color    : COLOR;
-	float3 Normal   : NORMAL;
-    float4 Position : SV_POSITION;
+    centroid float4 Position : SV_POSITION;
+    float2 UV                : TEXCOORD;
+    float4 Color             : COLOR;
+    float3 Normal            : NORMAL;
+    uint MaterialID;
 };
 
 struct MaterialVertexOutput {
-    float2 UV        : TEXCOORD;
-    float4 Color     : COLOR;
-	float3 Tangent   : TANGENT;
-	float3 Bitangent : BINORMAL;
-	float3 Normal    : NORMAL;
-    float4 Position  : SV_POSITION;
+    centroid float4 Position : SV_POSITION;
+    float2 UV                : TEXCOORD;
+    float4 Color             : COLOR;
+    float3 Tangent           : TANGENT;
+    float3 Bitangent         : BINORMAL;
+    float3 Normal            : NORMAL;
+    uint MaterialID;
 };
+
+#endif
 
 /*
 // GLSLES has limited number of vertex shader registers so we have to use less bones
@@ -69,7 +111,7 @@ float saturate1(float v) { return saturate(v); }
 #define WANG_SUBSET_SCALE 1
 #endif
 
-#define GBUFFER_MAX_DEPTH 500.0f 
+#define GBUFFER_MAX_DEPTH 500.0f
 
 
 #ifndef DX11
@@ -124,7 +166,7 @@ float saturate1(float v) { return saturate(v); }
 void getWang(float unused, float2 uv, float tiling, out float2 wangUv, out float4 wangUVDerivatives)
 {
     wangUv = uv * WANG_SUBSET_SCALE;
-    wangUVDerivatives = float4(0, 0, 0, 0);    // not used in this mode 
+    wangUVDerivatives = float4(0, 0, 0, 0);    // not used in this mode
 }
 float4 sampleWang(TEXTURE_IN_2D(s), float2 uv, float4 wangUVDerivatives)
 {

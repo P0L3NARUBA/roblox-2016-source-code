@@ -352,9 +352,6 @@
     <ClInclude Include="RenderCamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Emitter.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="SpatialHashedScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -367,17 +364,8 @@
     <ClInclude Include="ObjectExporter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EnvMap.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ExplosionEmitter.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="SmoothCluster.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CustomEmitter.h">
-      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="ScreenSpaceEffect.h">
       <Filter>Header Files</Filter>
@@ -405,6 +393,18 @@
     </ClInclude>
     <ClInclude Include="freetype\include\freetype\config\ftstdlib.h">
       <Filter>Freetype\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Emitter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomEmitter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ExplosionEmitter.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

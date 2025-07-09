@@ -93,10 +93,10 @@ namespace RBX
 
 			caps.supportsTexturePartialMipChain = true;
 
-			caps.maxDrawBuffers = 8;
+			caps.maxDrawBuffers = 15;
 			caps.maxSamples = getMaxSamplesSupported(device11);
 			caps.maxTextureSize = D3D11_REQ_TEXTURE2D_U_OR_V_DIMENSION;
-			caps.maxTextureUnits = 16;
+			caps.maxTextureUnits = 32;
 
 			caps.colorOrderBGR = false;
 			caps.needsHalfPixelOffset = false;
@@ -212,6 +212,24 @@ namespace RBX
 			RBXASSERT(dataSize % 16 == 0);
 
 			immediateContext->defineGlobalProcessingData(dataSize);
+		}
+
+		void DeviceD3D11::defineGlobalMaterialData(size_t dataSize)
+		{
+			// Since constants are directly set to register values, we impose additional restrictions on constant data
+			// The struct should be an integer number of float4 registers, and every constant has to be aligned to float4 boundary
+			RBXASSERT(dataSize % 16 == 0);
+
+			immediateContext->defineGlobalMaterialData(dataSize);
+		}
+
+		void DeviceD3D11::defineInstancedModelMatrixes(size_t dataSize, size_t elementSize)
+		{
+			// Since constants are directly set to register values, we impose additional restrictions on constant data
+			// The struct should be an integer number of float4 registers, and every constant has to be aligned to float4 boundary
+			RBXASSERT(dataSize % 16 == 0);
+
+			immediateContext->defineInstancedModelMatrixes(dataSize, elementSize);
 		}
 
 		void DeviceD3D11::defineGlobalLightList(size_t dataSize, size_t elementSize)
@@ -371,9 +389,6 @@ namespace RBX
 			std::string dx11Defines = defines;
 			dx11Defines += " DX11";
 
-			if (getShaderProfile() == DeviceD3D11::shaderProfile_DX11_level_9_3)
-				dx11Defines += " WIN_MOBILE";
-
 			return ShaderProgramD3D11::createShaderSource(path, dx11Defines, this, fileCallback);
 		}
 
@@ -402,9 +417,19 @@ namespace RBX
 			return shared_ptr<GeometryShader>(new GeometryShaderD3D11(this, bytecode));
 		}
 
+		shared_ptr<ShaderProgram> DeviceD3D11::createShaderProgram(const shared_ptr<VertexShader>& vertexShader, const shared_ptr<GeometryShader>& geometryShader, const shared_ptr<FragmentShader>& fragmentShader)
+		{
+			return shared_ptr<ShaderProgram>(new ShaderProgramD3D11(this, vertexShader, geometryShader, fragmentShader));
+		}
+
 		shared_ptr<ShaderProgram> DeviceD3D11::createShaderProgram(const shared_ptr<VertexShader>& vertexShader, const shared_ptr<FragmentShader>& fragmentShader)
 		{
 			return shared_ptr<ShaderProgram>(new ShaderProgramD3D11(this, vertexShader, fragmentShader));
+		}
+
+		shared_ptr<ShaderProgram> DeviceD3D11::createShaderProgram(const shared_ptr<ComputeShader>& computeShader)
+		{
+			return shared_ptr<ShaderProgram>(new ShaderProgramD3D11(this, computeShader));
 		}
 
 		shared_ptr<ShaderProgram> DeviceD3D11::createShaderProgramFFP()
