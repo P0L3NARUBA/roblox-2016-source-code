@@ -59,8 +59,8 @@ DirectX 9 and OpenGL is unsupported.
 - [TBB](/TBB_4_1) = 4.1
 
 ## Tools Used
-- [HxD](/Tools/HxD) = 2.5.0.0
-- [ILSpy](/Tools/ILSpy) = 9.1
+- [HxD](https://mh-nexus.de/en/downloads.php?product=HxD20)
+- [ILSpy](https://github.com/icsharpcode/ILSpy/releases)
 
 ---
 
@@ -156,7 +156,6 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
 - [ ] Fix keyboard shortcuts
    - [ ] Reset character keybind
    - [ ] Chat keybind
-      - Works in Studio but not in client 
    - [ ] Windows key on WindowsClient
 - [x] New fonts
 - [ ] Adding Cyrillic & Non-Latin language support
@@ -165,7 +164,7 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
 - [ ] Improving profanity filter
 - [x] New fonts
 - [x] Support for newer mesh versions
-- [ ] Dark Theme for Studio
+- [ ] Dark Mode for Studio
 - [x] Change the location of unrelated files inside **content\fonts** folder.
 - [ ] Making bootstrappers functional as intended
 - [ ] 64-bit support
