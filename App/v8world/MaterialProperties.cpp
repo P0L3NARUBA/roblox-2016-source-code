@@ -24,7 +24,7 @@ FASTINTVARIABLE(PhysicalPropDensity_PEBBLE_MATERIAL,			2403)
 FASTINTVARIABLE(PhysicalPropDensity_COBBLESTONE_MATERIAL,		2691)
 FASTINTVARIABLE(PhysicalPropDensity_RUST_MATERIAL,				7850)
 FASTINTVARIABLE(PhysicalPropDensity_DIAMONDPLATE_MATERIAL,		7850)
-FASTINTVARIABLE(PhysicalPropDensity_ALUMINUM_MATERIAL,			7700)
+FASTINTVARIABLE(PhysicalPropDensity_FOIL_MATERIAL,			7700)
 FASTINTVARIABLE(PhysicalPropDensity_METAL_MATERIAL,				7850)
 FASTINTVARIABLE(PhysicalPropDensity_GRASS_MATERIAL,				900)
 FASTINTVARIABLE(PhysicalPropDensity_SAND_MATERIAL,				1602)
@@ -56,7 +56,7 @@ FASTINTVARIABLE(PhysicalPropFriction_PEBBLE_MATERIAL,			400)
 FASTINTVARIABLE(PhysicalPropFriction_COBBLESTONE_MATERIAL,		500)
 FASTINTVARIABLE(PhysicalPropFriction_RUST_MATERIAL,				700)
 FASTINTVARIABLE(PhysicalPropFriction_DIAMONDPLATE_MATERIAL,		350)
-FASTINTVARIABLE(PhysicalPropFriction_ALUMINUM_MATERIAL,			400)
+FASTINTVARIABLE(PhysicalPropFriction_FOIL_MATERIAL,			400)
 FASTINTVARIABLE(PhysicalPropFriction_METAL_MATERIAL,			400)
 FASTINTVARIABLE(PhysicalPropFriction_GRASS_MATERIAL,			400)
 FASTINTVARIABLE(PhysicalPropFriction_SAND_MATERIAL,				500)
@@ -87,7 +87,7 @@ FASTINTVARIABLE(PhysicalPropElasticity_PEBBLE_MATERIAL,			170)
 FASTINTVARIABLE(PhysicalPropElasticity_COBBLESTONE_MATERIAL,	170)
 FASTINTVARIABLE(PhysicalPropElasticity_RUST_MATERIAL,			200)
 FASTINTVARIABLE(PhysicalPropElasticity_DIAMONDPLATE_MATERIAL,	250)
-FASTINTVARIABLE(PhysicalPropElasticity_ALUMINUM_MATERIAL,		250)
+FASTINTVARIABLE(PhysicalPropElasticity_FOIL_MATERIAL,		250)
 FASTINTVARIABLE(PhysicalPropElasticity_METAL_MATERIAL,			250)
 FASTINTVARIABLE(PhysicalPropElasticity_GRASS_MATERIAL,			100)
 FASTINTVARIABLE(PhysicalPropElasticity_SAND_MATERIAL,			50)
@@ -118,7 +118,7 @@ FASTINTVARIABLE(PhysicalPropFWeight_PEBBLE_MATERIAL,			1000)
 FASTINTVARIABLE(PhysicalPropFWeight_COBBLESTONE_MATERIAL,		1000)
 FASTINTVARIABLE(PhysicalPropFWeight_RUST_MATERIAL,				1000)
 FASTINTVARIABLE(PhysicalPropFWeight_DIAMONDPLATE_MATERIAL,		1000)
-FASTINTVARIABLE(PhysicalPropFWeight_ALUMINUM_MATERIAL,			1000)
+FASTINTVARIABLE(PhysicalPropFWeight_FOIL_MATERIAL,			1000)
 FASTINTVARIABLE(PhysicalPropFWeight_METAL_MATERIAL,				1000)
 FASTINTVARIABLE(PhysicalPropFWeight_GRASS_MATERIAL,				1000)
 FASTINTVARIABLE(PhysicalPropFWeight_SAND_MATERIAL,				5000)
@@ -149,7 +149,7 @@ FASTINTVARIABLE(PhysicalPropEWeight_PEBBLE_MATERIAL,			1000)
 FASTINTVARIABLE(PhysicalPropEWeight_COBBLESTONE_MATERIAL,		1000)
 FASTINTVARIABLE(PhysicalPropEWeight_RUST_MATERIAL,				1000)
 FASTINTVARIABLE(PhysicalPropEWeight_DIAMONDPLATE_MATERIAL,		1000)
-FASTINTVARIABLE(PhysicalPropEWeight_ALUMINUM_MATERIAL,			1000)
+FASTINTVARIABLE(PhysicalPropEWeight_FOIL_MATERIAL,			1000)
 FASTINTVARIABLE(PhysicalPropEWeight_METAL_MATERIAL,				1000)
 FASTINTVARIABLE(PhysicalPropEWeight_GRASS_MATERIAL,				1000)
 FASTINTVARIABLE(PhysicalPropEWeight_SAND_MATERIAL,				1000)
@@ -280,7 +280,7 @@ float MaterialProperties::getDefaultMaterialFriction(PartMaterial material)
 			case COBBLESTONE_MATERIAL:    return getPropertyValueFromFlag(FInt::PhysicalPropFriction_COBBLESTONE_MATERIAL);
 			case RUST_MATERIAL:			  return getPropertyValueFromFlag(FInt::PhysicalPropFriction_RUST_MATERIAL);	//IRON
 			case DIAMONDPLATE_MATERIAL:	  return getPropertyValueFromFlag(FInt::PhysicalPropFriction_DIAMONDPLATE_MATERIAL);  //GUESS: based on Aluminum and Steel experimental data.
-			case ALUMINUM_MATERIAL:       return getPropertyValueFromFlag(FInt::PhysicalPropFriction_ALUMINUM_MATERIAL);  //GUESS: Manually tested small bricks of Aluminum
+			case FOIL_MATERIAL:       return getPropertyValueFromFlag(FInt::PhysicalPropFriction_FOIL_MATERIAL);  //GUESS: Manually tested small bricks of Aluminum
 			case METAL_MATERIAL:          return getPropertyValueFromFlag(FInt::PhysicalPropFriction_METAL_MATERIAL);	//STEEL
 			case GRASS_MATERIAL:          return getPropertyValueFromFlag(FInt::PhysicalPropFriction_GRASS_MATERIAL);
 			case SAND_MATERIAL:           return getPropertyValueFromFlag(FInt::PhysicalPropFriction_SAND_MATERIAL);
@@ -323,7 +323,7 @@ float MaterialProperties::getDefaultMaterialFriction(PartMaterial material)
 			case COBBLESTONE_MATERIAL:    return 0.50;
 			case RUST_MATERIAL:			  return 0.70;	//IRON
 			case DIAMONDPLATE_MATERIAL:	  return 0.35;  //GUESS: based on Aluminum and Steel experimental data.
-			case ALUMINUM_MATERIAL:       return 0.40;  //GUESS: Manually tested small bricks of Aluminum
+			case FOIL_MATERIAL:       return 0.40;  //GUESS: Manually tested small bricks of Aluminum
 			case METAL_MATERIAL:          return 0.40;	//STEEL
 			case GRASS_MATERIAL:          return 0.40;
 			case SAND_MATERIAL:           return 0.50;
@@ -366,7 +366,7 @@ float MaterialProperties::getDefaultMaterialFrictionWeight(PartMaterial material
 			case COBBLESTONE_MATERIAL:    return getPropertyValueFromFlag(FInt::PhysicalPropFWeight_COBBLESTONE_MATERIAL);
 			case RUST_MATERIAL:			  return getPropertyValueFromFlag(FInt::PhysicalPropFWeight_RUST_MATERIAL);	//IRON
 			case DIAMONDPLATE_MATERIAL:	  return getPropertyValueFromFlag(FInt::PhysicalPropFWeight_DIAMONDPLATE_MATERIAL);  //GUESS: based on Aluminum and Steel experimental data.
-			case ALUMINUM_MATERIAL:       return getPropertyValueFromFlag(FInt::PhysicalPropFWeight_ALUMINUM_MATERIAL);  //GUESS: Manually tested small bricks of Aluminum
+			case FOIL_MATERIAL:       return getPropertyValueFromFlag(FInt::PhysicalPropFWeight_FOIL_MATERIAL);  //GUESS: Manually tested small bricks of Aluminum
 			case METAL_MATERIAL:          return getPropertyValueFromFlag(FInt::PhysicalPropFWeight_METAL_MATERIAL);	//STEEL
 			case GRASS_MATERIAL:          return getPropertyValueFromFlag(FInt::PhysicalPropFWeight_GRASS_MATERIAL);
 			case SAND_MATERIAL:           return getPropertyValueFromFlag(FInt::PhysicalPropFWeight_SAND_MATERIAL);
@@ -431,7 +431,7 @@ float MaterialProperties::getDefaultMaterialElasticity(PartMaterial material)
 			case COBBLESTONE_MATERIAL:    return getPropertyValueFromFlag(FInt::PhysicalPropElasticity_COBBLESTONE_MATERIAL);
 			case RUST_MATERIAL:			  return getPropertyValueFromFlag(FInt::PhysicalPropElasticity_RUST_MATERIAL);	//IRON
 			case DIAMONDPLATE_MATERIAL:	  return getPropertyValueFromFlag(FInt::PhysicalPropElasticity_DIAMONDPLATE_MATERIAL);  //GUESS: based on Aluminum and Steel experimental data.
-			case ALUMINUM_MATERIAL:       return getPropertyValueFromFlag(FInt::PhysicalPropElasticity_ALUMINUM_MATERIAL);  //GUESS: Manually tested small bricks of Aluminum
+			case FOIL_MATERIAL:       return getPropertyValueFromFlag(FInt::PhysicalPropElasticity_FOIL_MATERIAL);  //GUESS: Manually tested small bricks of Aluminum
 			case METAL_MATERIAL:          return getPropertyValueFromFlag(FInt::PhysicalPropElasticity_METAL_MATERIAL);	//STEEL
 			case GRASS_MATERIAL:          return getPropertyValueFromFlag(FInt::PhysicalPropElasticity_GRASS_MATERIAL);
 			case SAND_MATERIAL:           return getPropertyValueFromFlag(FInt::PhysicalPropElasticity_SAND_MATERIAL);
@@ -472,7 +472,7 @@ float MaterialProperties::getDefaultMaterialElasticity(PartMaterial material)
 			case COBBLESTONE_MATERIAL:    return 0.17;
 			case RUST_MATERIAL:			  return 0.20;	
 			case DIAMONDPLATE_MATERIAL:	  return 0.25;
-			case ALUMINUM_MATERIAL:       return 0.25;  
+			case FOIL_MATERIAL:       return 0.25;  
 			case METAL_MATERIAL:          return 0.25;	
 			case GRASS_MATERIAL:          return 0.10;
 			case SAND_MATERIAL:           return 0.05;
@@ -515,7 +515,7 @@ float MaterialProperties::getDefaultMaterialElasticityWeight(PartMaterial materi
 			case COBBLESTONE_MATERIAL:    return getPropertyValueFromFlag(FInt::PhysicalPropEWeight_COBBLESTONE_MATERIAL);
 			case RUST_MATERIAL:			  return getPropertyValueFromFlag(FInt::PhysicalPropEWeight_RUST_MATERIAL);	//IRON
 			case DIAMONDPLATE_MATERIAL:	  return getPropertyValueFromFlag(FInt::PhysicalPropEWeight_DIAMONDPLATE_MATERIAL);  //GUESS: based on Aluminum and Steel experimental data.
-			case ALUMINUM_MATERIAL:       return getPropertyValueFromFlag(FInt::PhysicalPropEWeight_ALUMINUM_MATERIAL);  //GUESS: Manually tested small bricks of Aluminum
+			case FOIL_MATERIAL:       return getPropertyValueFromFlag(FInt::PhysicalPropEWeight_FOIL_MATERIAL);  //GUESS: Manually tested small bricks of Aluminum
 			case METAL_MATERIAL:          return getPropertyValueFromFlag(FInt::PhysicalPropEWeight_METAL_MATERIAL);	//STEEL
 			case GRASS_MATERIAL:          return getPropertyValueFromFlag(FInt::PhysicalPropEWeight_GRASS_MATERIAL);
 			case SAND_MATERIAL:           return getPropertyValueFromFlag(FInt::PhysicalPropEWeight_SAND_MATERIAL);
@@ -575,7 +575,7 @@ float MaterialProperties::getDefaultMaterialDensity(PartMaterial material)
 			case COBBLESTONE_MATERIAL:    return getPropertyValueFromFlag(FInt::PhysicalPropDensity_COBBLESTONE_MATERIAL);
 			case RUST_MATERIAL:			  return getPropertyValueFromFlag(FInt::PhysicalPropDensity_RUST_MATERIAL);	//IRON
 			case DIAMONDPLATE_MATERIAL:	  return getPropertyValueFromFlag(FInt::PhysicalPropDensity_DIAMONDPLATE_MATERIAL);  //GUESS: based on Aluminum and Steel experimental data.
-			case ALUMINUM_MATERIAL:       return getPropertyValueFromFlag(FInt::PhysicalPropDensity_ALUMINUM_MATERIAL);  //GUESS: Manually tested small bricks of Aluminum
+			case FOIL_MATERIAL:       return getPropertyValueFromFlag(FInt::PhysicalPropDensity_FOIL_MATERIAL);  //GUESS: Manually tested small bricks of Aluminum
 			case METAL_MATERIAL:          return getPropertyValueFromFlag(FInt::PhysicalPropDensity_METAL_MATERIAL);	//STEEL
 			case GRASS_MATERIAL:          return getPropertyValueFromFlag(FInt::PhysicalPropDensity_GRASS_MATERIAL);
 			case SAND_MATERIAL:           return getPropertyValueFromFlag(FInt::PhysicalPropDensity_SAND_MATERIAL);
@@ -615,7 +615,7 @@ float MaterialProperties::getDefaultMaterialDensity(PartMaterial material)
 			case COBBLESTONE_MATERIAL: return 2.691;
 			case RUST_MATERIAL: return 7.850;
 			case DIAMONDPLATE_MATERIAL: return 7.850;
-			case ALUMINUM_MATERIAL: return 7.700;
+			case FOIL_MATERIAL: return 7.700;
 			case METAL_MATERIAL: return 7.850;
 			case GRASS_MATERIAL: return 0.9;
 			case SAND_MATERIAL: return 1.602;

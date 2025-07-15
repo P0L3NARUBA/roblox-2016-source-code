@@ -169,7 +169,7 @@ namespace RBX {
 			addPair(CONCRETE_MATERIAL, "Concrete");
 			addPair(RUST_MATERIAL, "Corroded Metal");
 			addPair(DIAMONDPLATE_MATERIAL, "Diamond Plate");
-			addPair(ALUMINUM_MATERIAL, "Foil");
+			addPair(FOIL_MATERIAL, "Foil");
 			addPair(GRASS_MATERIAL, "Grass");
 			addPair(ICE_MATERIAL, "Ice");
 			addPair(MARBLE_MATERIAL, "Marble");
@@ -196,7 +196,7 @@ namespace RBX {
 			addPair(NEON_MATERIAL, "Neon");
 
 			addLegacyName("Corroded Metal", RUST_MATERIAL);
-			addLegacyName("Aluminum", ALUMINUM_MATERIAL);
+			addLegacyName("Aluminum", FOIL_MATERIAL);
 		}
 
 		template<>
@@ -393,7 +393,7 @@ namespace RBX {
 		case COBBLESTONE_MATERIAL: return 2.691;
 		case RUST_MATERIAL: return 7.850;
 		case DIAMONDPLATE_MATERIAL: return 7.850;
-		case ALUMINUM_MATERIAL: return 7.700;
+		case FOIL_MATERIAL: return 7.700;
 		case METAL_MATERIAL: return 7.850;
 		case GRASS_MATERIAL: return 0.9;
 		case SAND_MATERIAL: return 1.602;

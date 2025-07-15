@@ -78,11 +78,11 @@ struct ParticleVertex
 
 static const VertexLayout::Element kVertexDecl[] =   
 {
-    VertexLayout::Element(0, offsetof(ParticleVertex, x),      VertexLayout::Format_Float3, VertexLayout::Semantic_Position, 0),
-    VertexLayout::Element(0, offsetof(ParticleVertex, scaleRotLifeq), VertexLayout::Format_Short4, VertexLayout::Semantic_Texture,  0),
-    VertexLayout::Element(0, offsetof(ParticleVertex, disp),   VertexLayout::Format_Short2, VertexLayout::Semantic_Texture,  1),
-    VertexLayout::Element(0, offsetof(ParticleVertex, cline),  VertexLayout::Format_Short2, VertexLayout::Semantic_Texture,  2),
-    VertexLayout::Element(0, offsetof(ParticleVertex, color),  VertexLayout::Format_UByte4, VertexLayout::Semantic_Texture,  3),
+    VertexLayout::Element(0, offsetof(ParticleVertex, x),      VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position, 0),
+    VertexLayout::Element(0, offsetof(ParticleVertex, scaleRotLifeq), VertexLayout::Format_Short4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture,  0),
+    VertexLayout::Element(0, offsetof(ParticleVertex, disp),   VertexLayout::Format_Short2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture,  1),
+    VertexLayout::Element(0, offsetof(ParticleVertex, cline),  VertexLayout::Format_Short2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture,  2),
+    VertexLayout::Element(0, offsetof(ParticleVertex, color),  VertexLayout::Format_UByte4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture,  3),
 };
 
 /*

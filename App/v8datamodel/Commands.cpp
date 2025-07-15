@@ -1187,7 +1187,7 @@ PartMaterial MaterialVerb::parseMaterial(const std::string materialString)
 	}
 	else if(materialString == "Foil")
 	{
-		return RBX::ALUMINUM_MATERIAL;
+		return RBX::FOIL_MATERIAL;
 	}
 	else if(materialString == "Grass")
 	{

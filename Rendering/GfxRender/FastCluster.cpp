@@ -166,7 +166,7 @@ public:
             
     unsigned int finalize(FastCluster* cluster, FastClusterSharedGeometry& sharedGeometry)
     {
-        GeometryGenerator::Vertex* sharedVertexData = NULL;			
+        Vertex* sharedVertexData = NULL;			
         unsigned short* sharedIndexData = NULL;
         unsigned int sharedVertexOffset = 0;
         unsigned int sharedIndexOffset = 0;
@@ -209,7 +209,7 @@ public:
         {
             setupSharedGeometry(sharedGeometry, sharedVertexCount, sharedIndexCount, cluster->isFW());
             
-            sharedVertexData = static_cast<GeometryGenerator::Vertex*>(sharedGeometry.vertexBuffer->lock(GeometryBuffer::Lock_Discard));
+            sharedVertexData = static_cast<Vertex*>(sharedGeometry.vertexBuffer->lock(GeometryBuffer::Lock_Discard));
             sharedIndexData = static_cast<unsigned short*>(sharedGeometry.indexBuffer->lock(GeometryBuffer::Lock_Discard));
         }
         else
@@ -390,27 +390,13 @@ private:
         {
             std::vector<VertexLayout::Element> elements;
 
-            elements.push_back(VertexLayout::Element(0, offsetof(GeometryGenerator::Vertex, pos), VertexLayout::Format_Float3, VertexLayout::Semantic_Position));
-            elements.push_back(VertexLayout::Element(0, offsetof(GeometryGenerator::Vertex, normal), VertexLayout::Format_Float3, VertexLayout::Semantic_Normal));
-            
-            elements.push_back(VertexLayout::Element(0, offsetof(GeometryGenerator::Vertex, color), VertexLayout::Format_Color, VertexLayout::Semantic_Color, 0));
+            elements.push_back(VertexLayout::Element(0, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
+            elements.push_back(VertexLayout::Element(0, 12u, VertexLayout::Format_Float2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture));
+            elements.push_back(VertexLayout::Element(0, 20u, VertexLayout::Format_Float4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Color));
+            elements.push_back(VertexLayout::Element(0, 36u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Normal));
+            elements.push_back(VertexLayout::Element(0, 48u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Tangent, 2));
 
-            bool useShaders = visualEngine->getRenderCaps()->getSkinningBoneCount() > 0;
-                
-            if (useShaders)
-			{
-                elements.push_back(VertexLayout::Element(0, offsetof(GeometryGenerator::Vertex, extra), VertexLayout::Format_UByte4, VertexLayout::Semantic_Color, 1));
-			}
-			else
-			{
-                elements.push_back(VertexLayout::Element(0, offsetof(GeometryGenerator::Vertex, extra), VertexLayout::Format_Color, VertexLayout::Semantic_Color, 1));
-            }
-            
-            elements.push_back(VertexLayout::Element(0, offsetof(GeometryGenerator::Vertex, uv), VertexLayout::Format_Float2, VertexLayout::Semantic_Texture, 0));
-            elements.push_back(VertexLayout::Element(0, offsetof(GeometryGenerator::Vertex, uvStuds), VertexLayout::Format_Float2, VertexLayout::Semantic_Texture, 1));
-            
-            elements.push_back(VertexLayout::Element(0, offsetof(GeometryGenerator::Vertex, tangent), VertexLayout::Format_Float3, VertexLayout::Semantic_Texture, 2));
-            elements.push_back(VertexLayout::Element(0, offsetof(GeometryGenerator::Vertex, edgeDistances), VertexLayout::Format_Float4, VertexLayout::Semantic_Texture, 3));
+            //bool useShaders = visualEngine->getRenderCaps()->getSkinningBoneCount() > 0;
 
             p = visualEngine->getDevice()->createVertexLayout(elements);
             RBXASSERT(p);
@@ -432,7 +418,7 @@ private:
         // Create vertex buffer
         if (!sharedGeometry.vertexBuffer || !canUseBuffer(sharedGeometry.vertexBuffer->getElementCount(), vertexCount))
         {
-            sharedGeometry.vertexBuffer = visualEngine->getDevice()->createVertexBuffer(sizeof(GeometryGenerator::Vertex), vertexCount, GeometryBuffer::Usage_Static);
+            sharedGeometry.vertexBuffer = visualEngine->getDevice()->createVertexBuffer(sizeof(Vertex), vertexCount, GeometryBuffer::Usage_Static);
         }
         
         // Create index buffer
@@ -463,7 +449,7 @@ private:
         }
     }
     
-    Extents generateBatchGeometry(const MaterialGroup& mg, const Batch& batch, GeometryGenerator::Vertex* vbptr, unsigned short* ibptr, unsigned int vertexOffset, std::vector<unsigned int>& instanceVertexCount, bool isFW)
+    Extents generateBatchGeometry(const MaterialGroup& mg, const Batch& batch, Vertex* vbptr, unsigned short* ibptr, unsigned int vertexOffset, std::vector<unsigned int>& instanceVertexCount, bool isFW)
     {
 		RBXPROFILER_SCOPE("Render", "generateBatchGeometry");
 
@@ -501,11 +487,6 @@ private:
                 boundsMax = boundsMax.max(partBounds.high());
             }
         }
-
-        // Patch stud UVs for FFP
-		if (visualEngine->getDevice()->getCaps().supportsFFP && (mg.materialResultFlags & MaterialGenerator::Result_UsesTexture) == 0)
-			for (unsigned int i = vertexOffset; i < generator.getVertexCount(); ++i)
-				vbptr[i].uv = vbptr[i].uvStuds;
         
         RBXASSERT(generator.getVertexCount() == batch.counter.getVertexCount() + vertexOffset && generator.getIndexCount() == batch.counter.getIndexCount());
         

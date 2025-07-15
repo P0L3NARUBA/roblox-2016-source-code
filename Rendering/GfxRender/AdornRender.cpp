@@ -345,9 +345,9 @@ AdornRender::AdornRender(VisualEngine* visualEngine, const DataModel* dataModel)
     , currentTextureType(BatchTextureType_Color)
 {
 	std::vector<VertexLayout::Element> elements;
-	elements.push_back(VertexLayout::Element(0, offsetof(AdornVertex, position), VertexLayout::Format_Float3, VertexLayout::Semantic_Position));
-	elements.push_back(VertexLayout::Element(0, offsetof(AdornVertex, uv), VertexLayout::Format_Float2, VertexLayout::Semantic_Texture));
-	elements.push_back(VertexLayout::Element(0, offsetof(AdornVertex, normal), VertexLayout::Format_Float3, VertexLayout::Semantic_Normal));
+	elements.push_back(VertexLayout::Element(0, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
+	elements.push_back(VertexLayout::Element(0, 12u, VertexLayout::Format_Float2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture));
+	elements.push_back(VertexLayout::Element(0, 20u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Normal));
 
 	shared_ptr<VertexLayout> layout = visualEngine->getDevice()->createVertexLayout(elements);
 

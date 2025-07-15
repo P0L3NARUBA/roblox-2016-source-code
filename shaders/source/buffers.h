@@ -13,8 +13,8 @@ cbuffer Globals : register(b0) {
     float4 KeyDirection_unused;
     float4 KeyCascade[4];
 
-    float4 FogColor;
-    float4 FogParams;
+    float4 FogColor_Density;
+    float4 FogParams_unused;
 };
 #endif
 

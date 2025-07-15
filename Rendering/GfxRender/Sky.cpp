@@ -28,8 +28,8 @@ namespace RBX
 	namespace Graphics
 	{
 
-		static const float kSunSize = 1000 / 2;
-		static const float kMoonSize = 500 / 2;
+		static const float kSunSize = 25;
+		static const float kMoonSize = 50;
 		static const float kSkySize = 2700;
 		static const float kStarDistance = 2500;
 		static const int kStarTwinkleRate = 40;
@@ -67,18 +67,17 @@ namespace RBX
 		struct SkyVertex
 		{
 			Vector3 position;
-			unsigned int color;
-			Vector2 texcoord;
+			Vector3 texcoord;
 		};
 
 		static GeometryBatch* createQuad(Device* device, const shared_ptr<VertexLayout>& layout)
 		{
 			SkyVertex vertices[] =
 			{
-				{ Vector3(-1, -1, 0), 0xffffffff, Vector2(0, 1) },
-				{ Vector3(-1, +1, 0), 0xffffffff, Vector2(0, 0) },
-				{ Vector3(+1, -1, 0), 0xffffffff, Vector2(1, 1) },
-				{ Vector3(+1, +1, 0), 0xffffffff, Vector2(1, 0) },
+				{ Vector3(-1, -1, 0), Vector3(0, 1, 0) },
+				{ Vector3(-1, +1, 0), Vector3(0, 0, 0) },
+				{ Vector3(+1, -1, 0), Vector3(1, 1, 0) },
+				{ Vector3(+1, +1, 0), Vector3(1, 0, 0) },
 			};
 
 			shared_ptr<VertexBuffer> vb = device->createVertexBuffer(sizeof(SkyVertex), ARRAYSIZE(vertices), GeometryBuffer::Usage_Static);
@@ -118,9 +117,9 @@ namespace RBX
 			, readyState(false)
 		{
 			std::vector<VertexLayout::Element> elements;
-			elements.push_back(VertexLayout::Element(0, offsetof(SkyVertex, position), VertexLayout::Format_Float3, VertexLayout::Semantic_Position));
-			elements.push_back(VertexLayout::Element(0, offsetof(SkyVertex, color), VertexLayout::Format_Color, VertexLayout::Semantic_Color));
-			elements.push_back(VertexLayout::Element(0, offsetof(SkyVertex, texcoord), VertexLayout::Format_Float2, VertexLayout::Semantic_Texture));
+			elements.push_back(VertexLayout::Element(0, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
+			elements.push_back(VertexLayout::Element(0, 12u, VertexLayout::Format_Float2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture));
+			elements.push_back(VertexLayout::Element(0, 20u, VertexLayout::Format_Float4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Color));
 
 			layout = visualEngine->getDevice()->createVertexLayout(elements);
 
@@ -131,8 +130,8 @@ namespace RBX
 				loadSkyBoxDefault(skyBox);
 
 			// preload sun/mon
-			sun = visualEngine->getTextureManager()->load(ContentId("rbxasset://sky/sun.jpg"), TextureManager::Fallback_BlackTransparent);
-			moon = visualEngine->getTextureManager()->load(ContentId("rbxasset://sky/moon.jpg"), TextureManager::Fallback_BlackTransparent);
+			sun = visualEngine->getTextureManager()->load(ContentId("rbxasset://sky/sun.dds"), TextureManager::Fallback_BlackTransparent);
+			moon = visualEngine->getTextureManager()->load(ContentId("rbxasset://sky/moon.dds"), TextureManager::Fallback_BlackTransparent);
 		}
 
 		Sky::~Sky()
@@ -214,10 +213,11 @@ namespace RBX
 			PIX_SCOPE(context, "Sky");
 
 			Texture* texture = skyBox[face].getTexture().get();
+			std::string namefs = (true) ? "PassThroughPS" : "SkyFacePS";
 
-			if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "SkyFaceFS", BlendState::Mode_None, texture->getWidth(), texture->getHeight()))
+			if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", namefs.c_str(), BlendState::Mode_None, texture->getWidth(), texture->getHeight()))
 			{
-				context->bindTexture(0, texture, SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+				context->bindTexture(0, texture, SamplerState(SamplerState::Filter_Point, SamplerState::Address_Wrap));
 
 				ScreenSpaceEffect::renderFullscreenEnd(context, visualEngine);
 			}
@@ -274,38 +274,8 @@ namespace RBX
 					}
 				}
 
-				// Render sun/moon
-				if (drawSunMoon)
-				{
-					PIX_SCOPE(context, "Sun/moon");
-					context->setBlendState(BlendState::Mode_Additive);
-
-					Matrix4 sunTransform = getBillboardTransform(camera, camera.getPosition() + sunPosition * kSkySize, kSunSize);
-
-					context->setConstant(colorHandle, &sunColor.r, 1);
-					context->setConstant(color2Handle, &sunColor.r, 1);
-
-					context->bindTexture(0, sun.getTexture().get(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
-
-					context->setWorldTransforms4x3(sunTransform[0], 1);
-					context->draw(*quad);
-					context->draw(*quad);
-					context->draw(*quad);
-
-					PIX_MARKER(context, "Moon:");
-
-					Matrix4 moonTransform = getBillboardTransform(camera, camera.getPosition() + moonPosition * kSkySize, kMoonSize);
-
-					context->setConstant(colorHandle, &moonColor.r, 1);
-
-					context->bindTexture(0, moon.getTexture().get(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
-
-					context->setWorldTransforms4x3(moonTransform[0], 1);
-					context->draw(*quad);
-				}
-
 				// Render stars
-				if (drawStars && starLight != Brightness_None && (starsNormal.batch || starsTwinkle.batch))
+				/*if (drawStars && starLight != Brightness_None && (starsNormal.batch || starsTwinkle.batch))
 				{
 					PIX_SCOPE(context, "Stars");
 					context->setBlendState(BlendState::Mode_AlphaBlend);
@@ -325,6 +295,37 @@ namespace RBX
 
 					if (starLight != Brightness_Dim && starsTwinkle.batch)
 						context->draw(*starsTwinkle.batch);
+				}*/
+
+				// Render sun/moon
+				if (drawSunMoon)
+				{
+					PIX_SCOPE(context, "Sun");
+					context->setBlendState(BlendState::Mode_Additive);
+
+					Matrix4 sunTransform = getBillboardTransform(camera, camera.getPosition() + sunPosition * kSkySize, kSunSize);
+
+					//context->setConstant(colorHandle, &sunColor.r, 1);
+					//context->setConstant(color2Handle, &sunColor.r, 1);
+
+					context->bindTexture(0, sun.getTexture().get(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+
+					context->setWorldTransforms4x3(sunTransform[0], 1);
+					context->draw(*quad);
+					/*context->draw(*quad);
+					context->draw(*quad);*/
+
+					PIX_MARKER(context, "Moon");
+					context->setBlendState(BlendState::Mode_AlphaBlend);
+
+					Matrix4 moonTransform = getBillboardTransform(camera, camera.getPosition() + moonPosition * kSkySize, kMoonSize);
+
+					//context->setConstant(colorHandle, &moonColor.r, 1);
+
+					context->bindTexture(0, moon.getTexture().get(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+
+					context->setWorldTransforms4x3(moonTransform[0], 1);
+					context->draw(*quad);
 				}
 			}
 		}
@@ -445,7 +446,7 @@ namespace RBX
 
 				float tnum = G3D::uniformRandom(0.0, 1.0);
 
-				if (tnum < 0.15)
+				/*if (tnum < 0.15)
 					vertices[i].color = packColor(Color4(1.0, 0.80f, 0.70f, intensity), colorOrderBGR);	// yellow (15%)
 				else if (tnum < 0.55)
 					vertices[i].color = packColor(Color4(1.0, 1.0, 1.0, intensity), colorOrderBGR);   // white (40%)
@@ -454,7 +455,7 @@ namespace RBX
 				else
 					vertices[i].color = packColor(Color4(0.75f, 0.50f, 1.0, intensity), colorOrderBGR);	// purple (20%)
 
-				vertices[i].texcoord = Vector2(0, 0);
+				vertices[i].texcoord = Vector2(0, 0);*/
 			}
 
 			data.buffer->unlock();
@@ -481,7 +482,7 @@ namespace RBX
 
 				float tnum = G3D::uniformRandom(0.0, 1.0);
 
-				if (tnum < 0.15)
+				/*if (tnum < 0.15)
 					vertices[i].color = packColor(Color4(1.0, 0.80f, 0.70f, intensity), colorOrderBGR);	// yellow (15%)
 				else if (tnum < 0.55)
 					vertices[i].color = packColor(Color4(1.0, 1.0, 1.0, intensity), colorOrderBGR);   // white (40%)
@@ -490,7 +491,7 @@ namespace RBX
 				else
 					vertices[i].color = packColor(Color4(0.75f, 0.50f, 1.0, intensity), colorOrderBGR);	// purple (20%)
 
-				vertices[i].texcoord = Vector2(0, 0);
+				vertices[i].texcoord = Vector2(0, 0);*/
 			}
 
 			data.buffer->unlock();

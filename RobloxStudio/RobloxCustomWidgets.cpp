@@ -346,7 +346,7 @@ MaterialPickerFrame::MaterialPickerFrame(QWidget* parent)
 	m_materialValues.append(RBX::METAL_MATERIAL);
 	m_materialValues.append(RBX::RUST_MATERIAL);
 	m_materialValues.append(RBX::DIAMONDPLATE_MATERIAL);
-	m_materialValues.append(RBX::ALUMINUM_MATERIAL);
+	m_materialValues.append(RBX::FOIL_MATERIAL);
 	m_materialValues.append(RBX::GRASS_MATERIAL);
 	m_materialValues.append(RBX::ICE_MATERIAL);
 	m_materialValues.append(RBX::BRICK_MATERIAL);

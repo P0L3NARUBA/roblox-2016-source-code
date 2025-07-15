@@ -97,7 +97,7 @@ namespace RBX
 
 			void setSkyEnabled(bool value);
 			void setClearColor(const Color4& value);
-			void setFog(const Color3& color, const Vector4& fogParams);
+			void setFog(const Color3& color, float density, float sunInfluence, bool usesSkybox, bool affectsSkybox);
 			void setLighting(const Color3& ambient, const Color3& outdoorAmbient, const Vector3& keyDirection, const Color3& keyColor);
 			void trackLightingTimeOfDay(double sec) { curTimeOfDay = sec; }
 			void setPostProcess(float brightness, float contrast, float grayscaleLevel, float blurIntensity, const Color3& tintColor, float bloomIntensity, int bloomSize);

@@ -10,7 +10,7 @@ TEX_DECLARECUBE(Skybox, 0);
 #endif
 
 struct SkyAppData {
-    float4 Position  : POSITION;
+    float3 Position  : POSITION;
     float3 UVW       : TEXCOORD;
 };
 
@@ -22,7 +22,7 @@ struct SkyVertexOutput {
 SkyVertexOutput SkyVS(SkyAppData IN) {
     SkyVertexOutput OUT;
 
-    OUT.UVW = IN.Position.xyz;
+    OUT.UVW = IN.UVW;
 
     OUT.Position = mul(float4(IN.Position.xyz, 1.0), ViewProjection);
     OUT.Position.z = 0.0;

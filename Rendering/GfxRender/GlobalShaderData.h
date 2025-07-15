@@ -28,8 +28,8 @@ namespace RBX
 			Vector4 KeyCascade[4];
 
 			/* Fog */
-			Vector4 FogColor_unused;
-			Vector4 FogParams_unused; /* x = Density, y = Sun Influence, z = Uses Skybox, w = 0.0 */
+			Vector4 FogColor_Density;	/* x = Color.r,       y = Color.g,     z = Color.b,        w = Density */
+			Vector4 FogParams;			/* x = Sun Influence, y = Uses Skybox, z = Affects Skybox, w = 0.0     */
 
 			static void define(Device* device);
 

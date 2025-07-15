@@ -210,10 +210,10 @@ const shared_ptr<VertexLayout>& SmoothClusterBase::getVertexLayout()
 
 		using namespace Voxel2::Mesher;
         
-		elements.push_back(VertexLayout::Element(0, offsetof(GraphicsVertexPacked, position), VertexLayout::Format_Short4, VertexLayout::Semantic_Position));
-		elements.push_back(VertexLayout::Element(0, offsetof(GraphicsVertexPacked, normal), VertexLayout::Format_UByte4, VertexLayout::Semantic_Normal));
-		elements.push_back(VertexLayout::Element(0, offsetof(GraphicsVertexPacked, material0), VertexLayout::Format_UByte4, VertexLayout::Semantic_Texture, 0));
-		elements.push_back(VertexLayout::Element(0, offsetof(GraphicsVertexPacked, material1), VertexLayout::Format_UByte4, VertexLayout::Semantic_Texture, 1));
+		elements.push_back(VertexLayout::Element(0, offsetof(GraphicsVertexPacked, position), VertexLayout::Format_Short4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
+		elements.push_back(VertexLayout::Element(0, offsetof(GraphicsVertexPacked, normal), VertexLayout::Format_UByte4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Normal));
+		elements.push_back(VertexLayout::Element(0, offsetof(GraphicsVertexPacked, material0), VertexLayout::Format_UByte4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture, 0));
+		elements.push_back(VertexLayout::Element(0, offsetof(GraphicsVertexPacked, material1), VertexLayout::Format_UByte4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture, 1));
 
         vertexLayout = visualEngine->getDevice()->createVertexLayout(elements);
         RBXASSERT(vertexLayout);

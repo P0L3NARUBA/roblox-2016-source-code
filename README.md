@@ -77,18 +77,20 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
    - [ ] Legacy
    - [ ] Reinhard Simple
    - [x] ACES
-   - [ ] Khronos PBR Neutral
+   - [ ] [Khronos PBR Neutral](https://github.com/KhronosGroup/ToneMapping/blob/main/PBR_Neutral/README.md#pbr-neutral-specification)
    - [ ] AgX
 - [x] Local pixel lights
 - [ ] Directional light shadow-mapping
+   - [ ] Cascades
    - [ ] Tinting
 - [ ] Local light shadow-mapping
    - [ ] Tinting
+- [ ] Moment shadow map filtering
 - [ ] Glass material with real-time refraction
 - [ ] PBR lighting model
-   - [ ] Metalness texture workflow
+   - [x] Metalness texture workflow
    - [x] GGX specular model
-   - [x] Oren-Nayar-Fujii diffuse model
+   - [x] [Oren-Nayar-Fujii diffuse model](https://mimosa-pudica.net/improved-oren-nayar.html)
    - [ ] Environment diffuse and specular
    - [ ] Clearcoat
    - [ ] Parallax occlusion mapping
@@ -101,11 +103,14 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
    - [ ] Tube
    - [ ] Disk
    - [ ] Plane
-- [ ] Clustered Light Culling
-- [ ] Voxel imitation mode
+- [ ] [IES light profiles](https://dev.epicgames.com/documentation/en-us/unreal-engine/using-ies-light-profiles-in-unreal-engine)
+- [ ] [Clustered Light Culling](https://www.aortiz.me/2018/12/21/CG.html)
+- [ ] GPU Voxels
+   - [ ] Cascades
+   - [ ] Local lights
 - [ ] Ambient Occlusion
-   - [ ] Screen-space
-   - [ ] Distance field
+   - [ ] [Screen-space](https://developer.nvidia.com/rendering-technologies/horizon-based-ambient-occlusion-plus)
+   - [ ] [Distance field](https://dev.epicgames.com/documentation/en-us/unreal-engine/distance-field-ambient-occlusion-in-unreal-engine)
 - [ ] Advanced post-processing effects
    - [ ] Depth of Field
    - [ ] Blur
@@ -124,30 +129,36 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
    - [ ] Film Grain
    - [ ] Edge Detection
 - [ ] Clouds
-- [ ] HDR skybox support
+- [ ] Modern skybox system
+   - [ ] HDRI support
+   - [ ] Highlight reconstruction
+   - [ ] Decoupled celestial bodies
+   - [ ] Custom time-based color shifting
+   - [ ] Rotation
 - [ ] Dynamic Grass
 - [ ] Global illumination
 - [ ] Reflections
    - [ ] Placeable environment maps
+      - [ ] Parallax correction
    - [ ] Screen-space
 - [ ] Reference path tracer
 - [ ] Exposure
    - [ ] Adaptive
-- [ ] Highlights
+- [ ] [Highlights](https://bgolus.medium.com/the-quest-for-very-wide-outlines-ba82ed442cd9)
    - [ ] Variable thickness
    - [ ] Anti-aliased
 - [ ] Occlusion Culling
 - [ ] GPU Particles
    - [ ] Physics simulation
-- [ ] Signed distance field generation
-- [ ] Fog
+- [ ] [Signed distance field generation](https://github.com/InteractiveComputerGraphics/TriangleMeshDistance)
+- [ ] [Fog](https://iquilezles.org/articles/fog/)
    - [ ] Sun influence
    - [ ] Skybox
    - [ ] Height-based
 - [ ] Revamped terrain
 - [ ] Projected decals
 - [ ] Material variants
-   - [ ] Alpha mode
+   - [ ] [Alpha mode](https://create.roblox.com/docs/art/modeling/surface-appearance#alpha-modes)
       - [ ] Transparency
       - [ ] Overlay
       - [ ] Tinting
@@ -166,6 +177,7 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
    - [ ] Deferred
       - [ ] MSAA support
 - [ ] Proper VR Support
+- [ ] [New physics engine](https://graphics.cs.utah.edu/research/projects/avbd/)
 - [ ] API support
    - [x] DirectX 11
    - [ ] Vulkan

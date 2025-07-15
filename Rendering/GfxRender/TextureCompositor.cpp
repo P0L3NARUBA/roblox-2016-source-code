@@ -163,8 +163,8 @@ public:
 		: visualEngine(visualEngine)
 	{
 		std::vector<VertexLayout::Element> elements;
-		elements.push_back(VertexLayout::Element(0, offsetof(Vertex, position), VertexLayout::Format_Float3, VertexLayout::Semantic_Position));
-		elements.push_back(VertexLayout::Element(0, offsetof(Vertex, uv), VertexLayout::Format_Float2, VertexLayout::Semantic_Texture));
+		elements.push_back(VertexLayout::Element(0, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
+		elements.push_back(VertexLayout::Element(0, 12u, VertexLayout::Format_Float2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture));
 
 		layout = visualEngine->getDevice()->createVertexLayout(elements);
 	}

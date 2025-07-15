@@ -30,9 +30,9 @@ VertexStreamer::VertexStreamer(VisualEngine* visualEngine)
     : visualEngine(visualEngine)
 {
     std::vector<VertexLayout::Element> elements;
-    elements.push_back(VertexLayout::Element(0, offsetof(Vertex, Position), VertexLayout::Format_Float4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
-    elements.push_back(VertexLayout::Element(0, offsetof(Vertex, UV), VertexLayout::Format_Float2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture));
-    elements.push_back(VertexLayout::Element(0, offsetof(Vertex, Color), VertexLayout::Format_Float4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Color));
+    elements.push_back(VertexLayout::Element(0, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
+    elements.push_back(VertexLayout::Element(0, 12u, VertexLayout::Format_Float2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture));
+    elements.push_back(VertexLayout::Element(0, 20u, VertexLayout::Format_Float4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Color));
     
     vertexLayout = visualEngine->getDevice()->createVertexLayout(elements);
 

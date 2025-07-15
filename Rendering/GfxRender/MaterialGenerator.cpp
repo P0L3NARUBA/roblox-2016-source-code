@@ -2,7 +2,7 @@
 #include "MaterialGenerator.h"
 
 #include "GfxBase/PartIdentifier.h"
-#include "GfxBase/GfxPart.h"
+//#include "GfxBase/GfxPart.h"
 
 #include "TextureCompositor.h"
 #include "TextureManager.h"
@@ -12,17 +12,17 @@
 #include "v8datamodel/CharacterMesh.h"
 #include "v8datamodel/Decal.h"
 #include "v8datamodel/SpecialMesh.h"
-#include "v8datamodel/ContentProvider.h"
+//#include "v8datamodel/ContentProvider.h"
 #include "v8datamodel/Accoutrement.h"
-#include "v8datamodel/BlockMesh.h"
-#include "v8datamodel/CylinderMesh.h"
+//#include "v8datamodel/BlockMesh.h"
+//#include "v8datamodel/CylinderMesh.h"
 #include "v8datamodel/PartCookie.h"
 
 
 #include "Material.h"
 #include "ShaderManager.h"
-#include "TextureManager.h"
-#include "LightGrid.h"
+//#include "TextureManager.h"
+//#include "LightGrid.h"
 #include "util/SafeToLower.h"
 
 #include "GfxCore/Device.h"
@@ -405,13 +405,6 @@ static std::pair<std::pair<TextureRef, TextureCompositor::JobHandle>, G3D::Vecto
     return std::make_pair(texture, cfg.second);
 }
 
-static bool isWangTilling(PartMaterial material)
-{
-    if (material == COBBLESTONE_MATERIAL || FFlag::ForceWangTiles)
-        return true;
-    return false;
-}
-
 static const char* getMaterialName(PartMaterial material)
 {
     switch (material)
@@ -429,7 +422,7 @@ static const char* getMaterialName(PartMaterial material)
     case PEBBLE_MATERIAL: return "Pebble";
     case RUST_MATERIAL: return "Rust";
     case DIAMONDPLATE_MATERIAL: return "Diamond plate";
-    case ALUMINUM_MATERIAL: return "Aluminum";
+    case FOIL_MATERIAL: return "Aluminum";
     case METAL_MATERIAL: return "Metal";
     case GRASS_MATERIAL: return "Grass";
 	case SAND_MATERIAL: return "Sand";
@@ -460,7 +453,7 @@ static int getMaterialId(PartMaterial material, bool reflectance)
     case COBBLESTONE_MATERIAL: return 10;
     case RUST_MATERIAL: return 11;
     case DIAMONDPLATE_MATERIAL: return 12;
-    case ALUMINUM_MATERIAL: return 13;
+    case FOIL_MATERIAL: return 13;
     case METAL_MATERIAL: return 14;
     case GRASS_MATERIAL: return 15;
     case SAND_MATERIAL: return 16;
@@ -475,13 +468,11 @@ static int getMaterialId(PartMaterial material, bool reflectance)
 
 static Vector4 getLQMatFarTilingFactor(PartMaterial material)
 {
-    if (isWangTilling(material)) return Vector4(1,1,1,1);
-
     switch (material)
     {
     case GRANITE_MATERIAL:
     case SLATE_MATERIAL:
-    case ALUMINUM_MATERIAL:
+    case FOIL_MATERIAL:
     case CONCRETE_MATERIAL:
     case ICE_MATERIAL:
     case GRASS_MATERIAL:
@@ -629,11 +620,11 @@ static void setupCommonTextures(VisualEngine* visualEngine, Technique& technique
     technique.setTexture(1, sceneManager->getShadowMapArray(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 
     /* Area Light LTCs */
-    technique.setTexture(2, tm->load(ContentId("rbxasset://textures/ltc1LUT.dds"), TextureManager::Fallback_None), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
-    technique.setTexture(3, tm->load(ContentId("rbxasset://textures/ltc2LUT.dds"), TextureManager::Fallback_None), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+    technique.setTexture(2, tm->load(ContentId("rbxasset://textures/ltc1LUT" + kTextureExtension), TextureManager::Fallback_None), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+    technique.setTexture(3, tm->load(ContentId("rbxasset://textures/ltc2LUT" + kTextureExtension), TextureManager::Fallback_None), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 
     /* Environment BRDF */
-    technique.setTexture(4, tm->load(ContentId("rbxasset://textures/brdfLUT.dds"), TextureManager::Fallback_None), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+    technique.setTexture(4, tm->load(ContentId("rbxasset://textures/brdfLUT" + kTextureExtension), TextureManager::Fallback_None), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 
     /* Ambient Occlusion */
     technique.setTexture(5, sceneManager->getAmbientOcclusion(), SamplerState(SamplerState::Filter_Point, SamplerState::Address_Clamp));
@@ -753,13 +744,12 @@ shared_ptr<Material> MaterialGenerator::createRenderMaterial(unsigned int flags,
     // Create material
     shared_ptr<Material> material(new Material());
     
-    ContentId studs("rbxasset://textures/studs.dds");
+    //ContentId studs("rbxasset://textures/studs.dds");
 
 	TextureManager* tm = visualEngine->getTextureManager();
 
 	std::string materialName = getMaterialName(renderMaterial);
     
-    bool isWang = isWangTilling(renderMaterial);
     bool hasGlow = renderMaterial == NEON_MATERIAL;
 
 	std::string materialNameReflectance = materialName + (reflectance ? "Reflection" : "");
@@ -777,7 +767,7 @@ shared_ptr<Material> MaterialGenerator::createRenderMaterial(unsigned int flags,
 
             setupTechnique(technique, flags, hasGlow);
 
-            technique.setTexture(0, tm->load(studs, TextureManager::Fallback_Gray), SamplerState::Filter_Anisotropic);
+            //technique.setTexture(0, tm->load(studs, TextureManager::Fallback_Gray), SamplerState::Filter_Anisotropic);
 
             setupCommonTextures(visualEngine, technique);
             setupMaterialTextures(visualEngine, technique, renderMaterial, materialName);
@@ -791,7 +781,7 @@ shared_ptr<Material> MaterialGenerator::createRenderMaterial(unsigned int flags,
 
 		setupTechnique(technique, flags, hasGlow);
 
-        technique.setTexture(0, tm->load(studs, TextureManager::Fallback_Gray), SamplerState::Filter_Anisotropic);
+        //technique.setTexture(0, tm->load(studs, TextureManager::Fallback_Gray), SamplerState::Filter_Anisotropic);
 
         setupCommonTextures(visualEngine, technique);
         setupMaterialTextures(visualEngine, technique, renderMaterial, materialName);
@@ -818,15 +808,7 @@ shared_ptr<Material> MaterialGenerator::createRenderMaterial(unsigned int flags,
         }
     default:
         {
-            if (isWang)
-            {
-                if (visualEngine->getShaderManager()->getProgram(lodVS, "LowQMaterialWangFS"))
-                    lodFS = "LowQMaterialWangFS";
-                else
-                    lodFS = "LowQMaterialWangFallbackFS";
-            }
-            else
-                lodFS = "LowQMaterialFS";
+            lodFS = "LowQMaterialFS";
 
             break;
         }
@@ -838,7 +820,7 @@ shared_ptr<Material> MaterialGenerator::createRenderMaterial(unsigned int flags,
 
         setupTechnique(technique, flags, hasGlow);
 
-        technique.setTexture(0, tm->load(ContentId(studs), TextureManager::Fallback_Gray), SamplerState::Filter_Linear);
+        //technique.setTexture(0, tm->load(ContentId(studs), TextureManager::Fallback_Gray), SamplerState::Filter_Linear);
 
         setupCommonTextures(visualEngine, technique);
         
@@ -1059,7 +1041,7 @@ Vector2int16 MaterialGenerator::getSpecular(PartMaterial material)
     case COBBLESTONE_MATERIAL: return Vector2int16(54, 22);
     case RUST_MATERIAL: return Vector2int16(89, 103);
     case DIAMONDPLATE_MATERIAL: return Vector2int16(230, 160);
-    case ALUMINUM_MATERIAL: return Vector2int16(238, 240);
+    case FOIL_MATERIAL: return Vector2int16(238, 240);
     case METAL_MATERIAL: return Vector2int16(204, 120);
     case GRASS_MATERIAL: return Vector2int16(43, 18);
     case SAND_MATERIAL: return Vector2int16(18, 6);
@@ -1119,7 +1101,7 @@ float MaterialGenerator::getTiling(PartMaterial material)
 {
     switch (material)
     {
-    case PLASTIC_MATERIAL: return 1.3f;
+    case PLASTIC_MATERIAL: return 1.0f;
     case SMOOTH_PLASTIC_MATERIAL: return 1.0f;
 	case NEON_MATERIAL: return 1.0f;
     case WOOD_MATERIAL: return 0.2f;
@@ -1132,19 +1114,13 @@ float MaterialGenerator::getTiling(PartMaterial material)
     case PEBBLE_MATERIAL: return 0.1f;
     case RUST_MATERIAL: return 0.1f;
     case DIAMONDPLATE_MATERIAL: return 0.2f;
-    case ALUMINUM_MATERIAL: return 0.1f;
+    case FOIL_MATERIAL: return 0.1f;
     case METAL_MATERIAL: return 0.2f;
     case GRASS_MATERIAL: return 0.15f;
     case SAND_MATERIAL: return 0.1f;
     case FABRIC_MATERIAL: return 0.15f;
     case ICE_MATERIAL: return 0.1f;
-    case COBBLESTONE_MATERIAL:
-        {
-            if (isWangTilling(material))
-                return 0.27f * 0.25f;
-            else
-                return 0.2f;
-        }
+    case COBBLESTONE_MATERIAL: return 0.2f;
     default:
         RBXASSERT(0); // You missed new material
         return 1.0f;

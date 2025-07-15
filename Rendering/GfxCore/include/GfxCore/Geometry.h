@@ -26,15 +26,15 @@ namespace RBX
 
 			enum Format
 			{
-				Format_UInt1,
-				Format_Float1,
-				Format_Float2,
-				Format_Float3,
-				Format_Float4,
-				Format_Short2,
-				Format_Short4,
-				Format_UByte4,
-				Format_Color,
+				Format_UInt1,	/* 4  bytes */
+				Format_Float1,	/* 4  bytes */
+				Format_Float2,	/* 8  bytes */
+				Format_Float3,	/* 12 bytes */
+				Format_Float4,	/* 16 bytes */
+				Format_Short2,	/* 4  bytes */
+				Format_Short4,	/* 8  bytes */
+				Format_UByte4,	/* 4  bytes */
+				Format_Color,	/* 4  bytes */
 
 				Format_Count
 			};

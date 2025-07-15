@@ -107,9 +107,9 @@ namespace RBX
 		static shared_ptr<Geometry> createFullscreenTriangle(Device* device)
 		{
 			std::vector<VertexLayout::Element> elements;
-			elements.push_back(VertexLayout::Element(0, 0, VertexLayout::Format_Float4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
-			elements.push_back(VertexLayout::Element(0, 0, VertexLayout::Format_Float2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
-			elements.push_back(VertexLayout::Element(0, 0, VertexLayout::Format_Float4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
+			elements.push_back(VertexLayout::Element(0, 0, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
+			elements.push_back(VertexLayout::Element(0, 12u, VertexLayout::Format_Float2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture));
+			elements.push_back(VertexLayout::Element(0, 20u, VertexLayout::Format_Float4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Color));
 
 			shared_ptr<VertexLayout> layout = device->createVertexLayout(elements);
 
@@ -976,10 +976,10 @@ namespace RBX
 			clearColor = value;
 		}
 
-		void SceneManager::setFog(const Color3& color, const Vector4& fogParams)
+		void SceneManager::setFog(const Color3& color, float density, float sunInfluence, bool usesSkybox, bool affectsSkybox)
 		{
-			globalShaderData.FogColor_unused = Color4(color);
-			globalShaderData.FogParams_unused = fogParams;
+			globalShaderData.FogColor_Density = Color4(color, density);
+			globalShaderData.FogParams = Vector4(sunInfluence, float(usesSkybox), float(affectsSkybox), 0.0);
 		}
 
 		void SceneManager::setLighting(const Color3& ambient, const Color3& outdoorAmbient, const Vector3& keyDirection, const Color3& keyColor)

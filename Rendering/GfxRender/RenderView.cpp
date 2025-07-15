@@ -389,7 +389,7 @@ namespace RBX
 				service->reloadShadersSignal.connect(boost::bind(&RenderView::reloadShaders, this));
 
 				// default fog
-				fogEndCurrentFRM = fogEndTargetFRM = lighting->getFogEnd();
+				fogEndCurrentFRM = fogEndTargetFRM = lighting->getFogDensity();
 
 				visualEngine->getSettings()->setDrawConnectors(dataModel->isStudio());
 			}
@@ -450,11 +450,11 @@ namespace RBX
 
 		void RenderView::updateFog()
 		{
-			static const float TAU = 0.04f; // dampening factor as in:   exp( -x * TAU )
+			//static const float TAU = 0.04f; // dampening factor as in:   exp( -x * TAU )
 
 			RBX::Lighting* lighting = ServiceProvider::create<RBX::Lighting>(dataModel.get());
 
-			visualEngine->getSceneManager()->setFog(lighting->getFogColor(), lighting->getFogStart(), lighting->getFogEnd());
+			visualEngine->getSceneManager()->setFog(lighting->getFogColor(), lighting->getFogDensity(), lighting->getFogSunInfluence(), lighting->getFogSkybox(), lighting->getFogAffectSkybox());
 
 			/*if (FFlag::RenderFixFog)
 			{
@@ -1192,9 +1192,9 @@ namespace RBX
 				colorOrderBGR = device->getCaps().colorOrderBGR;
 
 				std::vector<VertexLayout::Element> elements;
-				elements.push_back(VertexLayout::Element(0, offsetof(Vertex, x), VertexLayout::Format_Float2, VertexLayout::Semantic_Position));
-				elements.push_back(VertexLayout::Element(0, offsetof(Vertex, u), VertexLayout::Format_Float2, VertexLayout::Semantic_Texture));
-				elements.push_back(VertexLayout::Element(0, offsetof(Vertex, color), VertexLayout::Format_Color, VertexLayout::Semantic_Color));
+				elements.push_back(VertexLayout::Element(0, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
+				elements.push_back(VertexLayout::Element(0, 12u, VertexLayout::Format_Float2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture));
+				elements.push_back(VertexLayout::Element(0, 20u, VertexLayout::Format_Float4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Color));
 
 				layout = device->createVertexLayout(elements);
 
