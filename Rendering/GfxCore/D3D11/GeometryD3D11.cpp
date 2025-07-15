@@ -266,7 +266,7 @@ namespace RBX
 				}
 			}
 
-			(*programCache)->uploadConstantBuffers();
+			//(*programCache)->uploadConstantBuffers();
 
 			context11->IASetPrimitiveTopology(gGeometryPrimitiveD3D11[primitive]);
 

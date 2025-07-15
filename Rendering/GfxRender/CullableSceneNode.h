@@ -6,80 +6,80 @@
 #include "RenderQueue.h"
 
 namespace RBX
-{	
+{
 	class Contact;
 }
 
 namespace RBX
 {
-namespace Graphics
-{
+	namespace Graphics
+	{
 
-class RenderCamera;
-class RenderQueue;
-class VisualEngine;
+		class RenderCamera;
+		class RenderQueue;
+		class VisualEngine;
 
-class SpatialHashNode;
+		class SpatialHashNode;
 
-class CullableSceneNode: public RBX::GfxPart
-{
-public:
-    static const bool hasGetFirstContact = false; // simulate __if_exists
-    static RBX::Contact* getContact(CullableSceneNode* p0, CullableSceneNode* p1) {RBXASSERT(0); return NULL;}  // shouldn't be called if hasGetFirstContact is false
-    static RBX::Contact* getFirstContact() { RBXASSERT(NULL); return NULL;}
-    static RBX::Contact* getNextContact(RBX::Contact* prev) { RBXASSERT(NULL); return NULL;}
-    static int getNumContacts(){ RBXASSERT(NULL); return 0; }
-    static CullableSceneNode* getContactOther(int id){ RBXASSERT(NULL); return NULL; }
+		class CullableSceneNode : public RBX::GfxPart
+		{
+		public:
+			static const bool hasGetFirstContact = false; // simulate __if_exists
+			static RBX::Contact* getContact(CullableSceneNode* p0, CullableSceneNode* p1) { RBXASSERT(0); return NULL; }  // shouldn't be called if hasGetFirstContact is false
+			static RBX::Contact* getFirstContact() { RBXASSERT(NULL); return NULL; }
+			static RBX::Contact* getNextContact(RBX::Contact* prev) { RBXASSERT(NULL); return NULL; }
+			static int getNumContacts() { RBXASSERT(NULL); return 0; }
+			static CullableSceneNode* getContactOther(int id) { RBXASSERT(NULL); return NULL; }
 
-    bool requestFixed() const { return false; }
-    const Extents& getFastFuzzyExtents() { return worldBounds; }
+			bool requestFixed() const { return false; }
+			const Extents& getFastFuzzyExtents() { return worldBounds; }
 
-public:
-    enum CullMode
-    {
-        CullMode_None,
-        CullMode_Simple,
-        CullMode_SpatialHash,
-    };
-    
-    enum Flags
-    {
-        Flags_LightObject = 1 << 0,
-        Flags_ShadowCaster = 1 << 1,
-    };
+		public:
+			enum CullMode
+			{
+				CullMode_None,
+				CullMode_Simple,
+				CullMode_SpatialHash,
+			};
 
-    CullableSceneNode(VisualEngine* visualEngine, CullMode cullMode, unsigned int flags);
-    ~CullableSceneNode();
+			enum Flags
+			{
+				Flags_LightObject = 1 << 0,
+				Flags_ShadowCaster = 1 << 1,
+			};
 
-    void setBlockCount(int blockCount) { this->blockCount = blockCount; }
+			CullableSceneNode(VisualEngine* visualEngine, CullMode cullMode, unsigned int flags);
+			~CullableSceneNode();
 
-    virtual void updateRenderQueue(RenderQueue& queue, const RenderCamera& camera, RenderQueue::Pass pass);
+			void setBlockCount(int blockCount) { this->blockCount = blockCount; }
 
-    float getSqDistanceToFocus() const { return sqDistanceToFocus; }
+			virtual void updateRenderQueue(RenderQueue& queue, const RenderCamera& camera, RenderQueue::Pass pass);
 
-    const Extents& getWorldBounds() const { return worldBounds; }
+			float getSqDistanceToFocus() const { return sqDistanceToFocus; }
 
-    void updateWorldBounds(const Extents& aabb);
+			const Extents& getWorldBounds() const { return worldBounds; }
 
-    VisualEngine* getVisualEngine() const { return visualEngine; }
-    
-    unsigned int getFlags() const { return flags; }
+			void updateWorldBounds(const Extents& aabb);
 
-    bool updateIsCulledByFRM();
+			VisualEngine* getVisualEngine() const { return visualEngine; }
 
-    Vector3 getCenter() const override { return worldBounds.center(); }
+			unsigned int getFlags() const { return flags; }
 
-private:
-    VisualEngine* visualEngine;
+			bool updateIsCulledByFRM();
 
-    CullMode cullMode;
-    unsigned int flags;
+			Vector3 getCenter() const override { return worldBounds.center(); }
 
-    int blockCount;
-    float sqDistanceToFocus;
+		private:
+			VisualEngine* visualEngine;
 
-    Extents worldBounds;
-};
+			CullMode cullMode;
+			unsigned int flags;
 
-}
+			int blockCount;
+			float sqDistanceToFocus;
+
+			Extents worldBounds;
+		};
+
+	}
 }

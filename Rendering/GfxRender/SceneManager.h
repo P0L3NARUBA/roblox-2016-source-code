@@ -127,6 +127,14 @@ namespace RBX
 				shared_ptr<Framebuffer> mainFB;
 			};
 
+			const TextureRef& getShadowMapAtlas() const { return shadowMapAtlas; }
+			const TextureRef& getShadowMapArray() const { return shadowMapArray; }
+
+			const TextureRef& getAmbientOcclusion() const { return ambientOcclusion; }
+
+			const TextureRef& getIndoorCubemapA() const { return indoorCubemapA; }
+			const TextureRef& getIndoorCubemapB() const { return indoorCubemapB; }
+
 			/*GBuffer* getGBuffer() const { return gbuffer.get(); }
 			const TextureRef& getGBufferColor() const { return gbufferColor; }
 			const TextureRef& getGBufferDepth() const { return gbufferDepth; }
@@ -155,6 +163,8 @@ namespace RBX
 			GlobalProcessingData globalProcessingData;
 			GlobalLightList globalLightList;
 
+			ModelMatrixes modelMatrixes;
+
 			scoped_ptr<GeometryBatch> fullscreenTriangle;
 
 			scoped_ptr<Sky> sky;
@@ -174,6 +184,14 @@ namespace RBX
 			scoped_ptr<EnvMap> envMap;
 			scoped_ptr<ImageProcess> imageProcess;
 
+			TextureRef shadowMapAtlas;
+			TextureRef shadowMapArray;
+
+			TextureRef ambientOcclusion;
+
+			TextureRef indoorCubemapA;
+			TextureRef indoorCubemapB;
+
 			/*scoped_ptr<ShadowMap> shadowMaps[3];
 			float shadowMapTexelSize;
 			TextureRef shadowMask;
@@ -182,7 +200,7 @@ namespace RBX
 			PostProcessSettings postProcessSettings;
 
 			double curTimeOfDay;
-			bool   gbufferError; // when set to true, gbuffer is permanently disabled
+			//bool   gbufferError; // when set to true, gbuffer is permanently disabled
 			bool   msaaError;
 
 			struct ShadowValues

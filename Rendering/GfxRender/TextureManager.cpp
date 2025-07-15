@@ -175,11 +175,7 @@ TextureManager::TextureManager(VisualEngine* visualEngine)
 	fallbackTextures[Fallback_BlackTransparent] = createSingleColorTexture(0, 0, 0, 0);
 
     // Normal maps use BC3N encoding on all platforms except iOS
-#ifdef RBX_PLATFORM_IOS
-    fallbackTextures[Fallback_NormalMap] = createSingleColorTexture(128, 128, 255, 0);
-#else
-    fallbackTextures[Fallback_NormalMap] = createSingleColorTexture(255, 128, 0, 128);
-#endif
+    fallbackTextures[Fallback_NormalMap] = createSingleColorTexture(128, 128, 255, 255);
 
 	fallbackTextures[Fallback_Reflection] = createSingleColorTexture(0, 0, 0, 255, /* cube= */ true);
 

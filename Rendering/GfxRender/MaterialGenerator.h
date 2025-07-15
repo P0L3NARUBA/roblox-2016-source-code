@@ -110,7 +110,7 @@ private:
     Result createMaterialForPart(PartInstance* part, const HumanoidIdentifier* hi, unsigned int flags);
     Result createMaterialForDecal(Decal* decal, unsigned int flags);
 
-    TextureRef  wangTilesTex;
+    //TextureRef  wangTilesTex;
 };
 
 }

@@ -33,7 +33,7 @@ namespace RBX
 		}
 
 		void ModelMatrixes::define(Device* device) {
-			device->defineInstancedModelMatrixes(sizeof(ModelMatrix) * 1024u, sizeof(ModelMatrix));
+			device->defineInstancedModelMatrixes(sizeof(ModelMatrix) * 8192u, sizeof(ModelMatrix));
 		}
 
 		void GlobalLightList::define(Device* device) {
@@ -56,29 +56,15 @@ namespace RBX
 				float attenuation = light->getAttenuation();
 				gpuLight.Color_Attenuation = Vector4(color.r * brightness, color.g * brightness, color.b * brightness, attenuation * attenuation * attenuation);
 				gpuLight.Direction_SubSurfaceFac = Vector4(light->getDirection(), 0.0);
-				gpuLight.InnerOuterAngle_DiffSpecFac = Vector4(light->getInnerAngle(), light->getOuterAngle(), light->getDiffuseFactor(), light->getSpecularFactor());
+				gpuLight.InnerOuterAngle = Vector2(light->getInnerAngle(), light->getOuterAngle());
+				gpuLight.DiffSpecFac = Vector2(light->getDiffuseFactor(), light->getSpecularFactor());
 
 				gpuLight.AxisU = light->getAxisU();
 				gpuLight.AxisV = light->getAxisV();
 
-				gpuLight.ShadowsColored_Type_Active = Vector4(0, 0, 0, 1);
+				gpuLight.ShadowsColored = Vector2(0, 0);
+				gpuLight.Type_unused = Vector2(0, 0);
 				
-				LightList.push_back(gpuLight);
-			}
-
-			for (size_t i = maxSize; i < 1024; ++i) {
-				GPULight gpuLight;
-
-				gpuLight.Position_RangeSquared = Vector4(0.0, 0.0, 0.0, 0.0);
-				gpuLight.Color_Attenuation = Vector4(0.0, 0.0, 0.0, 0.0);
-				gpuLight.Direction_SubSurfaceFac = Vector4(0.0, 0.0, 0.0, 0.0);
-				gpuLight.InnerOuterAngle_DiffSpecFac = Vector4(0.0, 0.0, 0.0, 0.0);
-
-				gpuLight.AxisU = Vector4(0.0, 0.0, 0.0, 0.0);;
-				gpuLight.AxisV = Vector4(0.0, 0.0, 0.0, 0.0);;
-
-				gpuLight.ShadowsColored_Type_Active = Vector4(0.0, 0.0, 0.0, 0.0);
-
 				LightList.push_back(gpuLight);
 			}
 		};

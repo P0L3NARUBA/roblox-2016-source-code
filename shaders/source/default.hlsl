@@ -5,6 +5,17 @@
 #include "common.h"
 
 /* Vertex Shaders */
+BasicMaterialVertexOutput DepthOnlyVS(InstancedBasicMaterialAppData IN) {
+    BasicMaterialVertexOutput OUT;
+
+    float4x4 ModelMatrix = ModelMatrixes[IN.InstanceID].Model;
+
+    OUT.Position = mul(float4(IN.Position.xyz, 1.0), ModelMatrix);
+    OUT.Position = mul(OUT.Position, ViewProjection);
+
+    return OUT;
+}
+
 BasicMaterialVertexOutput BasicMaterialVS(InstancedBasicMaterialAppData IN) {
     BasicMaterialVertexOutput OUT;
 
@@ -45,6 +56,9 @@ MaterialVertexOutput MaterialVS(InstancedMaterialAppData IN) {
 }
 
 /* Pixel Shader */
+void BlankPS(BasicMaterialVertexOutput IN) : SV_TARGET {
+}
+
 float4 DefaultPS(BasicMaterialVertexOutput IN) : SV_TARGET {
     return float4(1.0, 0.0, 1.0, 1.0);
 }

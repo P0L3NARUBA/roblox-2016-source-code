@@ -38,12 +38,20 @@ namespace RBX {
         const TextureId&  getSkyboxFt() const { return skyFt; }
        
 		static Reflection::PropDescriptor<Sky, int> prop_StarCount;
+		static Reflection::BoundProp<bool> prop_CelestialBodiesShown;
+
+		static Reflection::PropDescriptor<Sky, TextureId> prop_Up;
+		static Reflection::PropDescriptor<Sky, TextureId> prop_Left;
+		static Reflection::PropDescriptor<Sky, TextureId> prop_Right;
+		static Reflection::PropDescriptor<Sky, TextureId> prop_Back;
+		static Reflection::PropDescriptor<Sky, TextureId> prop_Front;
+		static Reflection::PropDescriptor<Sky, TextureId> prop_Down;
+
 		static Reflection::PropDescriptor<Sky, TextureId> prop_SkyUp;
 		static Reflection::PropDescriptor<Sky, TextureId> prop_SkyLf;
 		static Reflection::PropDescriptor<Sky, TextureId> prop_SkyRt;
 		static Reflection::PropDescriptor<Sky, TextureId> prop_SkyBk;
-        static Reflection::PropDescriptor<Sky, TextureId> prop_SkyFt;
+		static Reflection::PropDescriptor<Sky, TextureId> prop_SkyFt;
 		static Reflection::PropDescriptor<Sky, TextureId> prop_SkyDn;
-		static Reflection::BoundProp<bool> prop_CelestialBodiesShown;
 	};
 }

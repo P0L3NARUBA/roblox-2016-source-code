@@ -15,29 +15,28 @@
 #define EXCLUDE_STRUCTS
 
 struct BasicAppData {
-    float4 Position : POSITION;
+    float3 Position : POSITION;
     float2 UV       : TEXCOORD;
     float4 Color    : COLOR;
 };
 
 struct BasicMaterialAppData {
-    float4 Position : POSITION;
+    float3 Position : POSITION;
     float2 UV       : TEXCOORD;
     float4 Color    : COLOR;
     float3 Normal   : NORMAL;
 };
 
 struct MaterialAppData {
-    float4 Position  : POSITION;
+    float3 Position  : POSITION;
     float2 UV        : TEXCOORD;
     float4 Color     : COLOR;
     float3 Tangent   : TANGENT;
-    float3 Bitangent : BINORMAL;
     float3 Normal    : NORMAL;
 };
 
 struct InstancedBasicAppData {
-    float4 Position : POSITION;
+    float3 Position : POSITION;
     float2 UV       : TEXCOORD;
     float4 Color    : COLOR;
     uint InstanceID : SV_InstanceID;
@@ -45,7 +44,7 @@ struct InstancedBasicAppData {
 };
 
 struct InstancedBasicMaterialAppData {
-    float4 Position : POSITION;
+    float3 Position : POSITION;
     float2 UV       : TEXCOORD;
     float4 Color    : COLOR;
     float3 Normal   : NORMAL;
@@ -54,12 +53,11 @@ struct InstancedBasicMaterialAppData {
 };
 
 struct InstancedMaterialAppData {
-    float4 Position  : POSITION;
+    float3 Position  : POSITION;
     float2 UV        : TEXCOORD;
     float4 Color     : COLOR;
-    float3 Tangent   : TANGENT;
-    float3 Bitangent : BINORMAL;
     float3 Normal    : NORMAL;
+    float3 Tangent   : TANGENT;
     uint InstanceID  : SV_InstanceID;
     uint MaterialID;
 };

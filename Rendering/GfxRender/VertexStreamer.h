@@ -26,49 +26,10 @@ namespace RBX
 		class Texture;
 		class RenderCamera;
 
-		struct Vertex
-		{
-			Vertex(const RBX::Vector4& Position, const RBX::Vector2& UV, const RBX::Color4& Color)
-				: Position(Position)
-				, Color(Color)
-				, UV(UV)
-			{
-			}
-
-			Vertex(const RBX::Vector4& Position, const RBX::Vector2& UV, const RBX::Color4& Color, const RBX::Vector3& Normal)
-				: Position(Position)
-				, UV(UV)
-				, Color(Color)
-				, Normal(Normal)
-			{
-			}
-
-			Vertex(const RBX::Vector4& Position, const RBX::Vector2& UV, const RBX::Color4& Color, const RBX::Vector3& Tangent, const RBX::Vector3& Bitangent, const RBX::Vector3& Normal)
-				: Position(Position)
-				, UV(UV)
-				, Color(Color)
-				, Tangent(Tangent)
-				, Bitangent(Bitangent)
-				, Normal(Normal)
-			{
-			}
-
-			Vertex() {}
-
-			RBX::Vector4 Position;
-			RBX::Vector2 UV;
-			RBX::Color4 Color;
-			RBX::Vector3 Tangent;
-			RBX::Vector3 Bitangent;
-			RBX::Vector3 Normal;
-			unsigned int InstanceID;
-			unsigned int MaterialID;
-		};
-
 		class VertexStreamer
 		{
 		public:
-			VertexStreamer(VisualEngine* visualEngine, bool hasNormal, bool hasAdvancedNormal, bool isInstanced);
+			VertexStreamer(VisualEngine* visualEngine);
 			~VertexStreamer();
 
 			void renderPrepare();

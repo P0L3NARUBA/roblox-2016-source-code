@@ -61,6 +61,7 @@ DirectX 9 and OpenGL is unsupported.
 ## Tools Used
 - [HxD](https://mh-nexus.de/en/downloads.php?product=HxD20)
 - [ILSpy](https://github.com/icsharpcode/ILSpy/releases)
+- [rbxsigner](/Tools/rbxsigner) = *unknown*
 
 ---
 
@@ -72,7 +73,8 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
 ## Current Goals
 ### Rendering
 - [x] HDR color buffer
-- [ ] Proper tonemapping
+- [ ] Tonemapping
+   - [ ] Legacy
    - [ ] Reinhard Simple
    - [x] ACES
    - [ ] Khronos PBR Neutral
@@ -99,7 +101,7 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
    - [ ] Tube
    - [ ] Disk
    - [ ] Plane
-- [ ] Clustered light culling
+- [ ] Clustered Light Culling
 - [ ] Voxel imitation mode
 - [ ] Ambient Occlusion
    - [ ] Screen-space
@@ -123,7 +125,7 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
    - [ ] Edge Detection
 - [ ] Clouds
 - [ ] HDR skybox support
-- [ ] Grass
+- [ ] Dynamic Grass
 - [ ] Global illumination
 - [ ] Reflections
    - [ ] Placeable environment maps
@@ -133,7 +135,7 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
    - [ ] Adaptive
 - [ ] Highlights
    - [ ] Variable thickness
-   - [ ] Antialiased
+   - [ ] Anti-aliased
 - [ ] Occlusion Culling
 - [ ] GPU Particles
    - [ ] Physics simulation
@@ -142,7 +144,28 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
    - [ ] Sun influence
    - [ ] Skybox
    - [ ] Height-based
-- [ ] Completely revamped terrain
+- [ ] Revamped terrain
+- [ ] Projected decals
+- [ ] Material variants
+   - [ ] Alpha mode
+      - [ ] Transparency
+      - [ ] Overlay
+      - [ ] Tinting
+   - [ ] Resampling mode
+      - [ ] Closest
+      - [ ] Linear
+      - [ ] Cubic
+   - [ ] Tiling size
+   - [ ] Tiling mode
+      - [ ] Regular
+      - [ ] Organic
+      - [ ] Rot. Organic
+   - [ ] Layering
+- [ ] Rendering modes
+   - [ ] Forward+
+   - [ ] Deferred
+      - [ ] MSAA support
+- [ ] Proper VR Support
 - [ ] API support
    - [x] DirectX 11
    - [ ] Vulkan

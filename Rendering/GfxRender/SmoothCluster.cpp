@@ -246,7 +246,7 @@ static void setupTextures(VisualEngine* visualEngine, Technique& technique)
 	if (lodIndex < 2)
 		technique.setTexture(2, tm->load(ContentId("rbxasset://terrain/specular" + kTextureExtension), TextureManager::Fallback_Black), SamplerState::Filter_Linear);
 
-	technique.setTexture(3, sceneManager->getEnvMap()->getTexture(), SamplerState::Filter_Linear);
+	technique.setTexture(3, sceneManager->getEnvMap()->getOutdoorTexture(), SamplerState::Filter_Linear);
 
     if (lightGrid)
     {

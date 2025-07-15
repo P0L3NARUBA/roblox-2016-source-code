@@ -31,9 +31,10 @@ cbuffer Processing : register(b0) {
 struct MaterialData {
     float4 AlbedoEnabled_RoughnessOverride_MetalnessOverride_EmissionOverride;
 	float4 ClearcoatEnabled_NormalMapEnabled_AmbientOcclusionEnabled_ParallaxEnabled;
-	float4 CCTintOverride_CCNormalsEnabled;
-	float2 CCFactorOverride_CCRoughnessOverride;
     float2 padding;
+    
+	float2 CCFactorOverride_CCRoughnessOverride;
+	float4 CCTintOverride_CCNormalsEnabled;
 };
 
 cbuffer MaterialData : register(b1) {
@@ -54,12 +55,14 @@ struct GPULight {
     float4 Position_RangeSquared;
     float4 Color_Attenuation;
     float4 Direction_SubSurfaceFac;
-    float4 InnerOuterAngle_DiffSpecFac;
+    float2 InnerOuterAngle;
+    float2 DiffSpecFac;
 
     float4 AxisU;
     float4 AxisV;
 
-    float4 ShadowsColored_Type_Active;
+    float2 Type_unused;
+    float2 ShadowsColored;
 };
 
 StructuredBuffer<GPULight> LightList : register(t31);

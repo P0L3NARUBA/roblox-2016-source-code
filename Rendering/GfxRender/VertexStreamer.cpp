@@ -5,6 +5,7 @@
 #include "SceneManager.h"
 #include "ShaderManager.h"
 #include "TextureManager.h"
+#include "Vertex.h"
 
 #include "Util.h"
 
@@ -25,24 +26,13 @@ namespace Graphics
 
 static const unsigned int kVertexBufferMaxCount = 512*1024;
 
-VertexStreamer::VertexStreamer(VisualEngine* visualEngine, bool hasNormal, bool hasAdvancedNormal, bool isInstanced)
+VertexStreamer::VertexStreamer(VisualEngine* visualEngine)
     : visualEngine(visualEngine)
 {
     std::vector<VertexLayout::Element> elements;
     elements.push_back(VertexLayout::Element(0, offsetof(Vertex, Position), VertexLayout::Format_Float4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
     elements.push_back(VertexLayout::Element(0, offsetof(Vertex, UV), VertexLayout::Format_Float2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture));
     elements.push_back(VertexLayout::Element(0, offsetof(Vertex, Color), VertexLayout::Format_Float4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Color));
-
-    if (hasAdvancedNormal) {
-        elements.push_back(VertexLayout::Element(0, offsetof(Vertex, Tangent), VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Tangent));
-        elements.push_back(VertexLayout::Element(0, offsetof(Vertex, Bitangent), VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Bitangent));
-    }
-    if (hasNormal) {
-        elements.push_back(VertexLayout::Element(0, offsetof(Vertex, Normal), VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Normal));
-    }
-    if (isInstanced) {
-        elements.push_back(VertexLayout::Element(0, offsetof(Vertex, InstanceId), VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Normal));
-    }
     
     vertexLayout = visualEngine->getDevice()->createVertexLayout(elements);
 
@@ -289,12 +279,12 @@ void VertexStreamer::rectBlt(
         float z = 0;
         //unsigned int color = packColor(color4, colorOrderBGR);
 
-		vertexData.push_back(Vertex(Vector4(x0y1.x, x0y1.y, z, 0.0f), Vector2(tex0.x, tex1.y), color4));
-        vertexData.push_back(Vertex(Vector4(x1y0.x, x1y0.y, z, 0.0f), Vector2(tex1.x, tex0.y), color4));
-        vertexData.push_back(Vertex(Vector4(x0y0.x, x0y0.y, z, 0.0f), Vector2(tex0.x, tex0.y), color4));
-        vertexData.push_back(Vertex(Vector4(x0y1.x, x0y1.y, z, 0.0f), Vector2(tex0.x, tex1.y), color4));
-        vertexData.push_back(Vertex(Vector4(x1y1.x, x1y1.y, z, 0.0f), Vector2(tex1.x, tex1.y), color4));
-        vertexData.push_back(Vertex(Vector4(x1y0.x, x1y0.y, z, 0.0f), Vector2(tex1.x, tex0.y), color4));
+		vertexData.push_back(Vertex(Vector3(x0y1.x, x0y1.y, z), Vector2(tex0.x, tex1.y), color4));
+        vertexData.push_back(Vertex(Vector3(x1y0.x, x1y0.y, z), Vector2(tex1.x, tex0.y), color4));
+        vertexData.push_back(Vertex(Vector3(x0y0.x, x0y0.y, z), Vector2(tex0.x, tex0.y), color4));
+        vertexData.push_back(Vertex(Vector3(x0y1.x, x0y1.y, z), Vector2(tex0.x, tex1.y), color4));
+        vertexData.push_back(Vertex(Vector3(x1y1.x, x1y1.y, z), Vector2(tex1.x, tex1.y), color4));
+        vertexData.push_back(Vertex(Vector3(x1y0.x, x1y0.y, z), Vector2(tex1.x, tex0.y), color4));
 	}
 } 
 
@@ -306,12 +296,12 @@ void VertexStreamer::spriteBlt3D(const shared_ptr<Texture>& texptr, const Color4
 	{
         //unsigned int color = packColor(color4, colorOrderBGR);
 
-        vertexData.push_back(Vertex(Vector4(x0y1, 0.0f), Vector2(tex0.x, tex1.y), color4));
-        vertexData.push_back(Vertex(Vector4(x1y0, 0.0f), Vector2(tex1.x, tex0.y), color4));
-        vertexData.push_back(Vertex(Vector4(x0y0, 0.0f), Vector2(tex0.x, tex0.y), color4));
-        vertexData.push_back(Vertex(Vector4(x0y1, 0.0f), Vector2(tex0.x, tex1.y), color4));
-        vertexData.push_back(Vertex(Vector4(x1y1, 0.0f), Vector2(tex1.x, tex1.y), color4));
-        vertexData.push_back(Vertex(Vector4(x1y0, 0.0f), Vector2(tex1.x, tex0.y), color4));
+        vertexData.push_back(Vertex(Vector3(x0y1), Vector2(tex0.x, tex1.y), color4));
+        vertexData.push_back(Vertex(Vector3(x1y0), Vector2(tex1.x, tex0.y), color4));
+        vertexData.push_back(Vertex(Vector3(x0y0), Vector2(tex0.x, tex0.y), color4));
+        vertexData.push_back(Vertex(Vector3(x0y1), Vector2(tex0.x, tex1.y), color4));
+        vertexData.push_back(Vertex(Vector3(x1y1), Vector2(tex1.x, tex1.y), color4));
+        vertexData.push_back(Vertex(Vector3(x1y0), Vector2(tex1.x, tex0.y), color4));
 	}
 }
 
@@ -325,7 +315,7 @@ void VertexStreamer::triangleList2d(const Color4& color4, const Vector2* v, int 
         //todo: we currently just ignore the nice indexing work done. todo: support indexing.
         for (int i = 0; i < icount; ++i)
         {
-			vertexData.push_back(Vertex(Vector4(v[indices[i]], 0.0f, 0.0f), Vector2(), color4));
+			vertexData.push_back(Vertex(Vector3(v[indices[i]], 0.0f), Vector2(), color4));
         }
 	}
 }
@@ -340,7 +330,7 @@ void VertexStreamer::triangleList(const Color4& color4, const CoordinateFrame& c
         //todo: we currently just ignore the nice indexing work done. todo: support indexing.
         for (int i = 0; i < icount; ++i)
         {
-			vertexData.push_back(Vertex(Vector4(cframe.pointToWorldSpace(v[indices[i]]), 0.0f), Vector2(), color4));
+			vertexData.push_back(Vertex(Vector3(cframe.pointToWorldSpace(v[indices[i]])), Vector2(), color4));
         }
 	}
 }
@@ -352,8 +342,8 @@ void VertexStreamer::line(float x1, float y1, float x2, float y2, const Color4& 
         float z = 0;
         //unsigned int color = packColor(color4, colorOrderBGR);
 
-        vertexData.push_back(Vertex(Vector4(x1, y1, z, 0.0f), Vector2(), color4));
-        vertexData.push_back(Vertex(Vector4(x2, y2, z, 0.0f), Vector2(), color4));
+        vertexData.push_back(Vertex(Vector3(x1, y1, z), Vector2(), color4));
+        vertexData.push_back(Vertex(Vector3(x2, y2, z), Vector2(), color4));
 	}
 }
 
@@ -363,8 +353,8 @@ void VertexStreamer::line3d(float x1, float y1, float z1, float x2, float y2, fl
 	{
         unsigned int color = packColor(color4, colorOrderBGR);
 
-        vertexData.push_back(Vertex(Vector4(x1, y1, z1, 0.0f), Vector2(), color4));
-        vertexData.push_back(Vertex(Vector4(x2, y2, z2, 0.0f), Vector2(), color4));
+        vertexData.push_back(Vertex(Vector3(x1, y1, z1), Vector2(), color4));
+        vertexData.push_back(Vertex(Vector3(x2, y2, z2), Vector2(), color4));
 	}
 }
 

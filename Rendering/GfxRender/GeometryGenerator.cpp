@@ -176,24 +176,18 @@ namespace Graphics
 	inline
 #endif
 	void fillVertex(
-		GeometryGenerator::Vertex& r, 
-		const Vector3& pos, 
-		const Vector3& normal, 
-		const Vector2& uv, 
-		const Vector2& uvStuds, 
-		const Color4uint8& color, 
-		const Color4uint8& extra, 
-		const Vector3& tangent, 
-		const Vector4& edgeDistances = Vector4(NO_OUTLINES, NO_OUTLINES, NO_OUTLINES, NO_OUTLINES))
+		Vertex& r, 
+		const Vector3& Position,
+		const Vector2& UV,
+		const Color4& Color,
+		const Vector3& Normal,
+		const Vector3& Tangent)
 	{
-		r.pos = pos;
-		r.normal = normal;
-		r.uv = uv;
-		r.uvStuds = uvStuds;
-		r.color = color;
-		r.extra = extra;
-		r.tangent = tangent;
-		r.edgeDistances = edgeDistances;
+		r.Position = Position;
+		r.UV = UV;
+		r.Color = Color;
+		r.Normal = Normal;
+		r.Tangent = Tangent;
 	}
 	
 	inline void fillQuadIndices(unsigned short* r, size_t offset, unsigned int i00, unsigned int i10, unsigned int i01, unsigned int i11)
@@ -602,8 +596,7 @@ namespace Graphics
 		
 		if (!mVertices) return;
 
-		Color4uint8 color = getColor(part, decal, specialShape, options, 0, false);
-		Color4uint8 extra = getExtra(part, options);
+		Color4 color = Color4(getColor(part, decal, specialShape, options, 0, false));
 		Vector3 scale = getMeshScale(part, specialShape, humanoidIdentifier);
 
 		const CoordinateFrame& cframe = options.cframe;
@@ -627,15 +620,15 @@ namespace Graphics
 				
 				float headY = (sv.vy > 0) ? (sv.vy * scale.x + headCylinderExtents) : (sv.vy * scale.x - headCylinderExtents);
 					
-                Vector3 pos;
+                Vector3 Position;
                 if (FFlag::FixMeshOffset)
-				    pos = cframe.pointToWorldSpace(Vector3(sv.vx * scale.x, headY, sv.vz * scale.z) + offset);
+					Position = cframe.pointToWorldSpace(Vector3(sv.vx * scale.x, headY, sv.vz * scale.z) + offset);
                 else
-                    pos = cframe.pointToWorldSpace(Vector3(sv.vx * scale.x, headY, sv.vz * scale.z)) + offset;
+					Position = cframe.pointToWorldSpace(Vector3(sv.vx * scale.x, headY, sv.vz * scale.z)) + offset;
+
+				Vector3 normal = cframe.vectorToWorldSpace(Vector3(sv.nx, sv.ny, sv.nz));
 				
-				fillVertex(v, pos, cframe.vectorToWorldSpace(Vector3(sv.nx, sv.ny, sv.nz)), 
-					transformUV(Vector2(sv.tu, sv.tv), options), Vector2(0.0f,0.0f),
-					color, extra, Vector3());
+				fillVertex(v, Position, transformUV(Vector2(sv.tu, sv.tv), options), color, normal, Vector3());
 			}
 		}
 		else
@@ -645,15 +638,15 @@ namespace Graphics
 				Vertex& v = vertices[vertexOffset + i];
 				const FileMeshVertexNormalTexture3d& sv = data->vnts[i];
 				
-                Vector3 pos;
+				Vector3 Position;
                 if (FFlag::FixMeshOffset)
-                    pos = cframe.pointToWorldSpace(Vector3(sv.vx * scale.x, sv.vy * scale.y, sv.vz * scale.z) + offset);
+					Position = cframe.pointToWorldSpace(Vector3(sv.vx * scale.x, sv.vy * scale.y, sv.vz * scale.z) + offset);
                 else
-                    pos = cframe.pointToWorldSpace(Vector3(sv.vx * scale.x, sv.vy * scale.y, sv.vz * scale.z)) + offset;
-				
-				fillVertex(v, pos, cframe.vectorToWorldSpace(Vector3(sv.nx, sv.ny, sv.nz)), 
-					transformUV(Vector2(sv.tu, sv.tv), options), Vector2(0.0f,0.0f), 
-					color, extra, Vector3());
+					Position = cframe.pointToWorldSpace(Vector3(sv.vx * scale.x, sv.vy * scale.y, sv.vz * scale.z)) + offset;
+
+				Vector3 normal = cframe.vectorToWorldSpace(Vector3(sv.nx, sv.ny, sv.nz));
+
+				fillVertex(v, Position, transformUV(Vector2(sv.tu, sv.tv), options), color, normal, Vector3());
 			}
 		}
 		
@@ -1042,8 +1035,7 @@ namespace Graphics
 
 		if (!mVertices) return;
 
-		Color4uint8 color = getColor(part, decal, NULL, options, randomSeed, true);
-		Color4uint8 extra = getExtra(part, options);
+		Color4 color = Color4(getColor(part, decal, NULL, options, randomSeed, true));
 
 		float radius = primaryDimension/2;
 
@@ -1165,9 +1157,8 @@ namespace Graphics
 
 						Vector3 tangent = (worldNormal*dot(tangents[face],worldNormal) - tangents[face]).direction();
 						
-						fillVertex(vertices[vertexOffset + vertexCounter], options.cframe.translation + worldOffset + center, worldNormal, 
-							mainCoordsV * surfaceTiling, studsV, 
-							color, extra, tangent);
+						fillVertex(vertices[vertexOffset + vertexCounter], options.cframe.translation + worldOffset + center, mainCoordsV * surfaceTiling, color, worldNormal, tangent);
+
 						vertexCounter++;
 						worlsPosV += worldDirV;
 						studsV.x -= studOffsetU;
@@ -1715,8 +1706,7 @@ namespace Graphics
 		
 		if (!mVertices) return;
 
-		Color4uint8 color = getColor(part, decal, NULL, options, randomSeed, true);
-		Color4uint8 extra = getExtra(part, options);
+		Color4 color = Color4(getColor(part, decal, NULL, options, randomSeed, true));
 		
 		const CoordinateFrame& cframe = options.cframe;
 		
@@ -1785,11 +1775,11 @@ namespace Graphics
 			// If the block ignores studs (block meshes), then the Texture UV generation should not take size into account as well.
 			Vector2 uv = getDecalUV(decal, size, /* ignoreSurfaceType= */ ignoreMaterialsStuds);
 			
-			fillVertex(vertices[vertexOffset + 0], corners[faces[face][0]], normals[face], Vector2(uv.x, 0), Vector2(), color, extra, Vector3());
-			fillVertex(vertices[vertexOffset + 1], corners[faces[face][1]], normals[face], Vector2(0, 0), Vector2(), color, extra, Vector3());
-			fillVertex(vertices[vertexOffset + 2], corners[faces[face][2]], normals[face], Vector2(uv.x, uv.y), Vector2(), color, extra, Vector3());
-			fillVertex(vertices[vertexOffset + 3], corners[faces[face][3]], normals[face], Vector2(0, uv.y), Vector2(), color, extra, Vector3());
-			
+			fillVertex(vertices[vertexOffset + 0], corners[faces[face][0]], Vector2(uv.x, 0), color, normals[face], Vector3());
+			fillVertex(vertices[vertexOffset + 1], corners[faces[face][1]], Vector2(0, 0), color, normals[face], Vector3());
+			fillVertex(vertices[vertexOffset + 2], corners[faces[face][2]], Vector2(uv.x, uv.y), color, normals[face], Vector3());
+			fillVertex(vertices[vertexOffset + 3], corners[faces[face][3]], Vector2(0, uv.y), color, normals[face], Vector3());
+
 			fillQuadIndices(&indices[indexOffset], vertexOffset, 0, 1, 2, 3);
 										
 			for (int i = 0; i < 4; ++i)
@@ -1863,11 +1853,11 @@ namespace Graphics
 
 					Vector4 nextEdgeOffset = edgeOffset + Vector4(0,0,TESSELATION_PIECE, -TESSELATION_PIECE);
 
-					fillVertex(vertices[vertexOffset + faceCounter * 4 + 0], start0 + offset, normals[face], uvs[0] * surfaceTiling, uvStuds[0], color, extra, tangents[face], edge0 + edgeOffset);
-					fillVertex(vertices[vertexOffset + faceCounter * 4 + 1], start1 + offset, normals[face], uvs[1] * surfaceTiling, uvStuds[1], color, extra, tangents[face], edge1 + edgeOffset);
-					fillVertex(vertices[vertexOffset + faceCounter * 4 + 2], start0 + nextOffset, normals[face], uvs[2] * surfaceTiling, uvStuds[2], color, extra, tangents[face], edge0 + nextEdgeOffset);
-					fillVertex(vertices[vertexOffset + faceCounter * 4 + 3], start1 + nextOffset, normals[face], uvs[3] * surfaceTiling, uvStuds[3], color, extra, tangents[face], edge1 + nextEdgeOffset);
-				
+					fillVertex(vertices[vertexOffset + faceCounter * 4 + 0], start0 + offset, uvs[0] * surfaceTiling, color, normals[face], tangents[face]);
+					fillVertex(vertices[vertexOffset + faceCounter * 4 + 1], start1 + offset, uvs[1] * surfaceTiling, color, normals[face], tangents[face]);
+					fillVertex(vertices[vertexOffset + faceCounter * 4 + 2], start0 + nextOffset, uvs[2] * surfaceTiling, color, normals[face], tangents[face]);
+					fillVertex(vertices[vertexOffset + faceCounter * 4 + 3], start1 + nextOffset, uvs[3] * surfaceTiling, color, normals[face], tangents[face]);
+
 					uvs[0].y = uvs[2].y;
 					uvs[1].y = uvs[3].y;
 					uvs[2].y += TESSELATION_PIECE;
@@ -1894,11 +1884,11 @@ namespace Graphics
 
 					Vector4 finalEdgeOffset = startEdgeOffset + Vector4(0,0, quadLength, -quadLength);
 
-					fillVertex(vertices[vertexOffset + faceCounter * 4 + 0], start0 + offset, normals[face], uvs[0] * surfaceTiling, uvStuds[0], color, extra, tangents[face], edge0 + edgeOffset);
-					fillVertex(vertices[vertexOffset + faceCounter * 4 + 1], start1 + offset, normals[face], uvs[1] * surfaceTiling, uvStuds[1], color, extra, tangents[face], edge1 + edgeOffset);
-					fillVertex(vertices[vertexOffset + faceCounter * 4 + 2], corners[desc.end0], normals[face], uv2 * surfaceTiling, uvStuds2, color, extra, tangents[face], edge0 + finalEdgeOffset);
-					fillVertex(vertices[vertexOffset + faceCounter * 4 + 3], corners[desc.end1], normals[face], uv3 * surfaceTiling, uvStuds3, color, extra, tangents[face], edge1 + finalEdgeOffset);
-					
+					fillVertex(vertices[vertexOffset + faceCounter * 4 + 0], start0 + offset, uvs[0] * surfaceTiling, color, normals[face], tangents[face]);
+					fillVertex(vertices[vertexOffset + faceCounter * 4 + 1], start1 + offset, uvs[1] * surfaceTiling, color, normals[face], tangents[face]);
+					fillVertex(vertices[vertexOffset + faceCounter * 4 + 2], corners[desc.end0], uv2 * surfaceTiling, color, normals[face], tangents[face]);
+					fillVertex(vertices[vertexOffset + faceCounter * 4 + 3], corners[desc.end1], uv3 * surfaceTiling, color, normals[face], tangents[face]);
+
 					fillQuadIndices(&indices[indexOffset + faceCounter * 6], vertexOffset + faceCounter * 4, 0, 1, 2, 3);
 					faceCounter++;
 				}
@@ -1923,8 +1913,7 @@ namespace Graphics
 		
 		if (!mVertices) return;
 
-		Color4uint8 color = getColor(part, decal, NULL, options, randomSeed, false);
-		Color4uint8 extra = getExtra(part, options);
+		Color4 color = Color4(getColor(part, decal, NULL, options, randomSeed, false));
 		
 		const CoordinateFrame& cframe = options.cframe;
 		
@@ -1994,11 +1983,11 @@ namespace Graphics
 
 			Vector3 normal = cframe.vectorToWorldSpace(normals[face]);
 			
-			fillVertex(vertices[vertexOffset + 0], cframe.pointToWorldSpace(corners[faces[face][0]]), normal, Vector2(uv.x, 0), Vector2(), color, extra, Vector3());
-			fillVertex(vertices[vertexOffset + 1], cframe.pointToWorldSpace(corners[faces[face][1]]), normal, Vector2(0, 0), Vector2(), color, extra, Vector3());
-			fillVertex(vertices[vertexOffset + 2], cframe.pointToWorldSpace(corners[faces[face][2]]), normal, Vector2(uv.x, uv.y), Vector2(), color, extra, Vector3());
-			fillVertex(vertices[vertexOffset + 3], cframe.pointToWorldSpace(corners[faces[face][3]]), normal, Vector2(0, uv.y), Vector2(), color, extra, Vector3());
-			
+			fillVertex(vertices[vertexOffset + 0], cframe.pointToWorldSpace(corners[faces[face][0]]), Vector2(uv.x, 0), color, normal, Vector3());
+			fillVertex(vertices[vertexOffset + 1], cframe.pointToWorldSpace(corners[faces[face][1]]), Vector2(0, 0), color, normal, Vector3());
+			fillVertex(vertices[vertexOffset + 2], cframe.pointToWorldSpace(corners[faces[face][2]]), Vector2(uv.x, uv.y), color, normal, Vector3());
+			fillVertex(vertices[vertexOffset + 3], cframe.pointToWorldSpace(corners[faces[face][3]]), Vector2(0, uv.y), color, normal, Vector3());
+
 			fillQuadIndices(&indices[indexOffset], vertexOffset, 0, 1, 2, 3);
 										
 			for (int i = 0; i < 4; ++i)
@@ -2021,11 +2010,11 @@ namespace Graphics
 				Vector3 normal = cframe.vectorToWorldSpace(normals[face]);
 				Vector3 tangent = cframe.vectorToWorldSpace(tangents[face]);
 		
-				fillVertex(vertices[vertexOffset + faceCounter * 4 + 0], cframe.pointToWorldSpace(start0), normal, (surfaceOffset + Vector2(uTiling, 0)) * surfaceTiling, Vector2(), color, extra, tangent);
-				fillVertex(vertices[vertexOffset + faceCounter * 4 + 1], cframe.pointToWorldSpace(start1), normal, surfaceOffset * surfaceTiling, Vector2(), color, extra, tangent);
-				fillVertex(vertices[vertexOffset + faceCounter * 4 + 2], cframe.pointToWorldSpace(end0), normal, (surfaceOffset + Vector2(uTiling, vTiling)) * surfaceTiling, Vector2(), color, extra, tangent);
-				fillVertex(vertices[vertexOffset + faceCounter * 4 + 3], cframe.pointToWorldSpace(end1), normal, (surfaceOffset + Vector2(0, vTiling)) * surfaceTiling, Vector2(), color, extra, tangent);
-					
+				fillVertex(vertices[vertexOffset + faceCounter * 4 + 0], cframe.pointToWorldSpace(start0), (surfaceOffset + Vector2(uTiling, 0)) * surfaceTiling, color, normal, tangent);
+				fillVertex(vertices[vertexOffset + faceCounter * 4 + 1], cframe.pointToWorldSpace(start1), surfaceOffset * surfaceTiling, color, normal, tangent);
+				fillVertex(vertices[vertexOffset + faceCounter * 4 + 2], cframe.pointToWorldSpace(end0), (surfaceOffset + Vector2(uTiling, vTiling)) * surfaceTiling, color, normal, tangent);
+				fillVertex(vertices[vertexOffset + faceCounter * 4 + 3], cframe.pointToWorldSpace(end1), (surfaceOffset + Vector2(0, vTiling)) * surfaceTiling, color, normal, tangent);
+
 				fillQuadIndices(&indices[indexOffset + faceCounter * 6], vertexOffset + faceCounter * 4, 0, 1, 2, 3);
 
 				faceCounter++;
@@ -2040,7 +2029,7 @@ namespace Graphics
 	
 	struct TrussQuadBuilder
 	{
-		GeometryGenerator::Vertex* vertices;
+		Vertex* vertices;
 		unsigned short* indices;
 		unsigned int vertexOffset;
 		unsigned int indexOffset;
@@ -2048,14 +2037,13 @@ namespace Graphics
 		Vector3* bboxMin;
 		Vector3* bboxMax;
 		
-		Color4uint8 color;
-		Color4uint8 extra;
+		Color4 color;
 		
 		CoordinateFrame cframe;
 		Vector2 surfaceOffset;
         float surfaceTiling;
 		
-		TrussQuadBuilder(GeometryGenerator::Vertex* vertices, unsigned short* indices, unsigned int vertexOffset, unsigned int indexOffset, Vector3* bboxMin, Vector3* bboxMax, const Vector3& size, PartInstance* part, const GeometryGenerator::Options& options, unsigned int randomSeed)
+		TrussQuadBuilder(Vertex* vertices, unsigned short* indices, unsigned int vertexOffset, unsigned int indexOffset, Vector3* bboxMin, Vector3* bboxMax, const Vector3& size, PartInstance* part, const GeometryGenerator::Options& options, unsigned int randomSeed)
 		{
 			this->vertices = vertices;
 			this->indices = indices;
@@ -2064,8 +2052,7 @@ namespace Graphics
 			this->bboxMin = bboxMin;
 			this->bboxMax = bboxMax;
 			
-			color = getColor(part, NULL, NULL, options, randomSeed, false);
-			extra = getExtra(part, options);
+			color = Color4(getColor(part, NULL, NULL, options, randomSeed, false));
 			
 			cframe = options.cframe;
 			
@@ -2086,11 +2073,11 @@ namespace Graphics
 				Vector3 normal = cframe.vectorToWorldSpace(localNormal);
 				Vector3 tangent = cframe.vectorToWorldSpace(udir);
 				
-				fillVertex(vertices[vertexOffset + 0], cframe.pointToWorldSpace(corner0), normal, (surfaceOffset + Vector2(dot(corner0, udir), dot(corner0, vdir))) * surfaceTiling, Vector2(), color, extra, tangent);
-				fillVertex(vertices[vertexOffset + 1], cframe.pointToWorldSpace(corner1), normal, (surfaceOffset + Vector2(dot(corner1, udir), dot(corner1, vdir))) * surfaceTiling, Vector2(), color, extra, tangent);
-				fillVertex(vertices[vertexOffset + 2], cframe.pointToWorldSpace(corner2), normal, (surfaceOffset + Vector2(dot(corner2, udir), dot(corner2, vdir))) * surfaceTiling, Vector2(), color, extra, tangent);
-				fillVertex(vertices[vertexOffset + 3], cframe.pointToWorldSpace(corner3), normal, (surfaceOffset + Vector2(dot(corner3, udir), dot(corner3, vdir))) * surfaceTiling, Vector2(), color, extra, tangent);
-				
+				fillVertex(vertices[vertexOffset + 0], cframe.pointToWorldSpace(corner0), (surfaceOffset + Vector2(dot(corner0, udir), dot(corner0, vdir))) * surfaceTiling, color, normal, tangent);
+				fillVertex(vertices[vertexOffset + 1], cframe.pointToWorldSpace(corner1), (surfaceOffset + Vector2(dot(corner1, udir), dot(corner1, vdir))) * surfaceTiling, color, normal, tangent);
+				fillVertex(vertices[vertexOffset + 2], cframe.pointToWorldSpace(corner2), (surfaceOffset + Vector2(dot(corner2, udir), dot(corner2, vdir))) * surfaceTiling, color, normal, tangent);
+				fillVertex(vertices[vertexOffset + 3], cframe.pointToWorldSpace(corner3), (surfaceOffset + Vector2(dot(corner3, udir), dot(corner3, vdir))) * surfaceTiling, color, normal, tangent);
+
 				fillQuadIndices(&indices[indexOffset], vertexOffset, 0, 1, 2, 3);
 				
 				extendBounds(*bboxMin, *bboxMax, cframe.pointToWorldSpace(corner0));
@@ -2585,7 +2572,7 @@ namespace Graphics
 			Vector3 pos = vert.pos * scale;
 			Vector3 normal = vert.normal;
             Vector3 tangent = vert.tangent;
-            Color4uint8 vertColor = partColor;
+            Color4 vertColor = Color4(partColor);
            
             if (!isNegate && !usePartColor && !decal)
 			{
@@ -2645,7 +2632,7 @@ namespace Graphics
             normal = cframe.vectorToWorldSpace(normal);
 			tangent = cframe.vectorToWorldSpace(tangent);
 
-            fillVertex(vertices[vertexOffset + vi], pos, normal, uv, uvStuds, vertColor /*Color4uint8(rand() % 255, rand() % 255, rand() % 255, 255)*/, extra, tangent);
+            fillVertex(vertices[vertexOffset + vi], pos, uv, vertColor, normal, tangent);
 		}
 
 		for (size_t ii = 0; ii < meshIndices.size(); ii++)
@@ -2716,7 +2703,7 @@ namespace Graphics
                 normal = cframe.vectorToWorldSpace(normal);
                 tangent = cframe.vectorToWorldSpace(tangent);
 
-                fillVertex(vertices[vertexOffset + vertId], pos, normal, uv, uvStuds, vertColor , extra, tangent);
+                fillVertex(vertices[vertexOffset + vertId], pos, uv, vertColor, normal, tangent);
                 vertId++;
             }
 
@@ -2825,10 +2812,10 @@ namespace Graphics
 		for (unsigned int face = 0; face < numfaces; face++)
 		{
 			unsigned int internalOffset = face*4;
-			fillVertex(vertices[internalOffset + vertexOffset + 0], corners[faces[face][0]], normal, uv,uv, color, extra, Vector3());
-			fillVertex(vertices[internalOffset + vertexOffset + 1], corners[faces[face][1]], normal, uv,uv, color, extra, Vector3());
-			fillVertex(vertices[internalOffset + vertexOffset + 2], corners[faces[face][2]], normal, uv,uv, color, extra, Vector3());
-			fillVertex(vertices[internalOffset + vertexOffset + 3], corners[faces[face][3]], normal, uv,uv, color, extra, Vector3());
+			fillVertex(vertices[internalOffset + vertexOffset + 0], corners[faces[face][0]], uv, color, normal, Vector3());
+			fillVertex(vertices[internalOffset + vertexOffset + 1], corners[faces[face][1]], uv, color, normal, Vector3());
+			fillVertex(vertices[internalOffset + vertexOffset + 2], corners[faces[face][2]], uv, color, normal, Vector3());
+			fillVertex(vertices[internalOffset + vertexOffset + 3], corners[faces[face][3]], uv, color, normal, Vector3());
 
 			unsigned int internalIndexOffset = face*6;
 			fillQuadIndices(&indices[internalIndexOffset + indexOffset], internalOffset + vertexOffset, 0, 1, 2, 3);
@@ -2885,8 +2872,8 @@ namespace Graphics
 
 		for (unsigned int i = 0; i < meshConvexes.size(); i++)
 		{
-			const RBX::Color4uint8 color = RBX::Color4uint8(randGen.value() % 255, randGen.value() % 255, randGen.value() % 255, 100);
-
+			const RBX::Color4 color = RBX::Color4((randGen.value() % 255) / 255, (randGen.value() % 255) / 255, (randGen.value() % 255) / 255, 0.4);
+			
 			for (unsigned int j = 0; j < meshConvexes[i].vertices.size(); j++)
 			{
 				Vector3 pos;
@@ -2914,7 +2901,7 @@ namespace Graphics
 				pos = cframe.pointToWorldSpace(pos);
 				normal = cframe.vectorToWorldSpace(normal);
 				tangent = cframe.vectorToWorldSpace(tangent);
-				fillVertex(vertices[vertexOffset + childVertexOffset + j], pos, normal, uv,uv, color, extra, tangent);
+				fillVertex(vertices[vertexOffset + childVertexOffset + j], pos, uv, color, normal, tangent);
 			}
 			for (unsigned int j = 0; j < meshConvexes[i].indices.size(); j++)
 			{

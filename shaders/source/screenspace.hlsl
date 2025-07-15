@@ -13,7 +13,7 @@ BasicVertexOutput PassThroughVS( BasicAppData IN ) {
 }
 
 float4 PassThroughPS( BasicVertexOutput IN ) : SV_TARGET {
-	return MainTexture.Sample(MainSampler, IN.UV);
+	return MainTexture.Sample(MainSampler, IN.UV) * IN.Color;
 }
 
 /*float4 gauss(float samples, float2 uv)

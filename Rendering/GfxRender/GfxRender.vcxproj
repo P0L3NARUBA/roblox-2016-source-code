@@ -257,6 +257,7 @@
     <ClInclude Include="TypesetterBitmap.h" />
     <ClInclude Include="TypesetterDynamic.h" />
     <ClInclude Include="Util.h" />
+    <ClInclude Include="Vertex.h" />
     <ClInclude Include="VertexStreamer.h" />
     <ClInclude Include="VisualEngine.h" />
     <ClInclude Include="Water.h" />

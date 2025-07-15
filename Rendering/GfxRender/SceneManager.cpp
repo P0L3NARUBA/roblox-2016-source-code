@@ -9,6 +9,7 @@
 #include "SpatialHashedScene.h"
 #include "AdornRender.h"
 #include "VertexStreamer.h"
+#include "Vertex.h"
 
 #include "FastCluster.h"
 #include "Sky.h"
@@ -106,9 +107,9 @@ namespace RBX
 		static shared_ptr<Geometry> createFullscreenTriangle(Device* device)
 		{
 			std::vector<VertexLayout::Element> elements;
-			elements.push_back(VertexLayout::Element(0, 0, VertexLayout::Format_Float4, VertexLayout::Semantic_Position));
-			elements.push_back(VertexLayout::Element(0, 0, VertexLayout::Format_Float2, VertexLayout::Semantic_Position));
-			elements.push_back(VertexLayout::Element(0, 0, VertexLayout::Format_Float4, VertexLayout::Semantic_Position));
+			elements.push_back(VertexLayout::Element(0, 0, VertexLayout::Format_Float4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
+			elements.push_back(VertexLayout::Element(0, 0, VertexLayout::Format_Float2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
+			elements.push_back(VertexLayout::Element(0, 0, VertexLayout::Format_Float4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
 
 			shared_ptr<VertexLayout> layout = device->createVertexLayout(elements);
 
@@ -118,13 +119,13 @@ namespace RBX
 			/* - - - - */
 			/* - - - - */
 			/* 3 - - 4 */
-			
+
 			Vertex vertices[4] =
 			{
-				Vertex(Vector4(-1.0, -1.0, 0.0, 0.0), Vector2(0.0, 0.0), Color4(1.0, 1.0, 1.0, 1.0)),
-				Vertex(Vector4( 1.0, -1.0, 0.0, 0.0), Vector2(1.0, 0.0), Color4(1.0, 1.0, 1.0, 1.0)),
-				Vertex(Vector4(-1.0,  1.0, 0.0, 0.0), Vector2(0.0, 1.0), Color4(1.0, 1.0, 1.0, 1.0)),
-				Vertex(Vector4( 1.0,  1.0, 0.0, 0.0), Vector2(1.0, 1.0), Color4(1.0, 1.0, 1.0, 1.0)),
+				Vertex(Vector3(-1.0, -1.0, 0.0), Vector2(0.0, 0.0), Color4(1.0, 1.0, 1.0, 1.0)),
+				Vertex(Vector3(1.0, -1.0, 0.0), Vector2(1.0, 0.0), Color4(1.0, 1.0, 1.0, 1.0)),
+				Vertex(Vector3(-1.0,  1.0, 0.0), Vector2(0.0, 1.0), Color4(1.0, 1.0, 1.0, 1.0)),
+				Vertex(Vector3(1.0,  1.0, 0.0), Vector2(1.0, 1.0), Color4(1.0, 1.0, 1.0, 1.0)),
 			};
 
 			vb->upload(0, vertices, sizeof(vertices));
@@ -598,7 +599,6 @@ namespace RBX
 			, visualEngine(visualEngine)
 			, sqMinPartDistance(FLT_MAX)
 			, skyEnabled(true)
-			, gbufferError(false)
 			, msaaError(false)
 			, postProcessSettings(PostProcessSettings())
 		{
@@ -610,7 +610,7 @@ namespace RBX
 			fullscreenTriangle.reset(new GeometryBatch(createFullscreenTriangle(device), Geometry::Primitive_Triangles, 3, 3));
 
 			sky.reset(new Sky(visualEngine));
-			ssao.reset(new SSAO(visualEngine));
+			//ssao.reset(new SSAO(visualEngine));
 			bloom.reset(new Bloom(visualEngine));
 			blur.reset(new Blur(visualEngine));
 			envMap.reset(new EnvMap(visualEngine));
@@ -644,6 +644,12 @@ namespace RBX
 			gbufferColor = shared_ptr<Texture>();
 			gbufferDepth = shared_ptr<Texture>();
 			shadowMapTexture = shared_ptr<Texture>();*/
+
+			shadowMapAtlas = shared_ptr<Texture>();
+			shadowMapArray = shared_ptr<Texture>();
+			ambientOcclusion = shared_ptr<Texture>();
+			indoorCubemapA = shared_ptr<Texture>();
+			//indoorCubemapB = shared_ptr<Texture>();
 		}
 
 		SceneManager::~SceneManager()
@@ -712,10 +718,15 @@ namespace RBX
 				for (CullableSceneNode* node : renderNodes) {
 					LightObject* lobj = static_cast<LightObject*>(node);
 
-					// Cull lights based on brightness
-					if ((lobj->getType() != LightObject::Type_None) && (lobj->getBrightness() > 0.001) && (lobj->getRange() > 0.001) && !(lobj->getColor().isZero()))
-					{
-						lights.push_back(lobj);
+					if (lobj) {
+						// Cull lights based on brightness, range and color
+						if ((lobj->getType() != LightObject::Type_None) && (lobj->getBrightness() > 0.001) && (lobj->getRange() > 0.001) && !(lobj->getColor().isZero()))
+						{
+							lights.push_back(lobj);
+						}
+					}
+					else {
+						node->updateRenderQueue(*renderQueue, camera, RenderQueue::Pass_Default);
 					}
 				}
 
@@ -735,9 +746,9 @@ namespace RBX
 
 				context->updateGlobalLightList(globalLightList.LightList.data(), globalLightList.LightList.size() * sizeof(GPULight));
 
-				RBXPROFILER_SCOPE("Render", "updateRenderQueue");
+				/*RBXPROFILER_SCOPE("Render", "updateRenderQueue");
 				for (CullableSceneNode* node : renderNodes)
-					node->updateRenderQueue(*renderQueue, camera, RenderQueue::Pass_Default);
+					node->updateRenderQueue(*renderQueue, camera, RenderQueue::Pass_Default);*/
 			}
 
 			// Flush particle vertex buffer; it's being filled in particle emitter updateRenderQueue
@@ -801,12 +812,12 @@ namespace RBX
 			}
 
 			/* Opaque Decals */
-			{
+			/*{
 				RBXPROFILER_SCOPE("Render", "Opaque Decals");
 				RBXPROFILER_SCOPE("GPU", "Opaque Decals");
 
 				renderObjects(context, renderQueue->getGroup(RenderQueue::Id_OpaqueDecals), RenderQueueGroup::Sort_Distance, stats->passScene, "Id_OpaqueDecals");
-			}
+			}*/
 
 			/* SSAO */
 			/*if (ssao)
@@ -1005,20 +1016,17 @@ namespace RBX
 					shared_ptr<Renderbuffer> mainDepth = device->createRenderbuffer(Texture::Format_D32F, width, height, 1);
 
 					main->mainColor = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, width, height, 1, 1, Texture::Usage_Renderbuffer);
-					//main->mainDepth = device->createTexture(Texture::Type_2D, Texture::Format_D32F, width, height, 1, 1, Texture::Usage_Renderbuffer);
 
 					std::vector<shared_ptr<Renderbuffer> > mainTextures;
 					mainTextures.push_back(main->mainColor->getRenderbuffer(0, 0));
 
 					main->mainFB = device->createFramebuffer(mainTextures, mainDepth);
-					//main->mainFB = device->createFramebuffer(main->mainColor->getRenderbuffer(0, 0), main->mainDepth->getRenderbuffer(0, 0));
 				}
 				catch (RBX::base_exception& e)
 				{
 					FASTLOGS(FLog::Graphics, "Error initializing Main: %s", e.what());
 
 					main.reset();
-					//gbufferError = true; // and do not try any further
 				}
 			}
 		}

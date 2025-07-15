@@ -244,7 +244,7 @@ static void setupTechnique(Technique& technique, VisualEngine* visualEngine, con
 
     technique.setTexture(0, nm0, SamplerState::Filter_Linear);
     technique.setTexture(1, nm1, SamplerState::Filter_Linear);
-    technique.setTexture(2, visualEngine->getSceneManager()->getEnvMap()->getTexture(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp) );
+    technique.setTexture(2, visualEngine->getSceneManager()->getEnvMap()->getOutdoorTexture(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp) );
 
     if (lightGrid)
     {

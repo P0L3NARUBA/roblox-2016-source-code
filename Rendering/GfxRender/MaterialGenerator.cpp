@@ -589,7 +589,7 @@ static void setupSmoothPlasticTextures(VisualEngine* visualEngine, Technique& te
 	technique.setTexture(5, tm->getFallbackTexture(TextureManager::Fallback_White), SamplerState::Filter_Linear);
 }
 
-static void setupComplexMaterialTextures(VisualEngine* visualEngine, Technique& technique, const std::string& materialName, const TextureRef* wangTileTex)
+static void setupComplexMaterialTextures(VisualEngine* visualEngine, Technique& technique, const std::string& materialName)
 {
     TextureManager* tm = visualEngine->getTextureManager();
     std::string texturePath = "rbxasset://textures/" + materialName + "/";
@@ -600,13 +600,13 @@ static void setupComplexMaterialTextures(VisualEngine* visualEngine, Technique& 
 	technique.setTexture(6, tm->load(ContentId(texturePath + "normal" + kTextureExtension), TextureManager::Fallback_NormalMap), SamplerState::Filter_Anisotropic);
 	technique.setTexture(7, tm->load(ContentId(texturePath + "specular" + kTextureExtension), TextureManager::Fallback_Black), SamplerState::Filter_Anisotropic);
 
-	if (wangTileTex)
+	/*if (wangTileTex)
         technique.setTexture(8, *wangTileTex, SamplerState::Filter_Point);
     else
-	    technique.setTexture(8, tm->load(ContentId(texturePath + "normaldetail" + kTextureExtension), TextureManager::Fallback_NormalMap), SamplerState::Filter_Anisotropic);
+	    technique.setTexture(8, tm->load(ContentId(texturePath + "normaldetail" + kTextureExtension), TextureManager::Fallback_NormalMap), SamplerState::Filter_Anisotropic);*/
 }
 
-static void setupLQMaterialTextures(VisualEngine* visualEngine, Technique& technique, const std::string& materialName, const TextureRef* wangTileTex)
+static void setupLQMaterialTextures(VisualEngine* visualEngine, Technique& technique, const std::string& materialName)
 {
     TextureManager* tm = visualEngine->getTextureManager();
     std::string texturePath = "rbxasset://textures/" + materialName + "/";
@@ -615,39 +615,43 @@ static void setupLQMaterialTextures(VisualEngine* visualEngine, Technique& techn
 
     technique.setTexture(5, tm->load(ContentId(texturePath + "diffuse" + kTextureExtension), TextureManager::Fallback_White), SamplerState::Filter_Linear);
 
-    if (wangTileTex)
-        technique.setTexture(8, *wangTileTex, SamplerState::Filter_Point);
+    /*if (wangTileTex)
+        technique.setTexture(8, *wangTileTex, SamplerState::Filter_Point);*/
 }
 
 static void setupCommonTextures(VisualEngine* visualEngine, Technique& technique)
 {
-    LightGrid* lightGrid = visualEngine->getLightGrid();
+    TextureManager* tm = visualEngine->getTextureManager();
 	SceneManager* sceneManager = visualEngine->getSceneManager();
 
-	if (lightGrid && lightGrid->hasTexture())
-	{
-        technique.setTexture(1, lightGrid->getTexture(), SamplerState::Filter_Linear);
-		technique.setTexture(2, lightGrid->getLookupTexture(), SamplerState(SamplerState::Filter_Point, SamplerState::Address_Clamp));
-	}
-	else
-	{
-        technique.setTexture(1, shared_ptr<Texture>(), SamplerState::Filter_Linear);
-        technique.setTexture(2, shared_ptr<Texture>(), SamplerState::Filter_Point);
-	}
+    /* Shadow Maps */
+    technique.setTexture(0, sceneManager->getShadowMapAtlas(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+    technique.setTexture(1, sceneManager->getShadowMapArray(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 
-	technique.setTexture(3, sceneManager->getShadowMap(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+    /* Area Light LTCs */
+    technique.setTexture(2, tm->load(ContentId("rbxasset://textures/ltc1LUT.dds"), TextureManager::Fallback_None), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+    technique.setTexture(3, tm->load(ContentId("rbxasset://textures/ltc2LUT.dds"), TextureManager::Fallback_None), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 
-	technique.setTexture(4, sceneManager->getEnvMap()->getTexture(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+    /* Environment BRDF */
+    technique.setTexture(4, tm->load(ContentId("rbxasset://textures/brdfLUT.dds"), TextureManager::Fallback_None), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+
+    /* Ambient Occlusion */
+    technique.setTexture(5, sceneManager->getAmbientOcclusion(), SamplerState(SamplerState::Filter_Point, SamplerState::Address_Clamp));
+
+    /* Cubemaps */
+	technique.setTexture(6, sceneManager->getEnvMap()->getOutdoorTexture(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Wrap));
+    technique.setTexture(7, sceneManager->getEnvMap()->getIndoorATexture(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Wrap));
+    technique.setTexture(8, sceneManager->getEnvMap()->getIndoorBTexture(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Wrap));
 }
 
-static void setupMaterialTextures(VisualEngine* ve, Technique& technique, PartMaterial renderMaterial, const std::string& materialName, const TextureRef* wangTileTex)
+static void setupMaterialTextures(VisualEngine* ve, Technique& technique, PartMaterial renderMaterial, const std::string& materialName)
 {
 	if (renderMaterial == PLASTIC_MATERIAL)
         setupPlasticTextures(ve, technique);
     else if (renderMaterial == SMOOTH_PLASTIC_MATERIAL || renderMaterial == NEON_MATERIAL)
         setupSmoothPlasticTextures(ve, technique);
     else
-        setupComplexMaterialTextures(ve, technique, materialName, wangTileTex);
+        setupComplexMaterialTextures(ve, technique, materialName);
 }
 
 MaterialGenerator::TexturedMaterialCache::TexturedMaterialCache()
@@ -659,7 +663,7 @@ MaterialGenerator::MaterialGenerator(VisualEngine* visualEngine)
     : visualEngine(visualEngine)
     , compositCache(NULL, TextureCompositor::JobHandle())
 {
-    wangTilesTex = visualEngine->getTextureManager()->load(ContentId("rbxasset://textures/wangIndex.dds"), TextureManager::Fallback_Black);
+    //wangTilesTex = visualEngine->getTextureManager()->load(ContentId("rbxasset://textures/wangIndex.dds"), TextureManager::Fallback_Black);
 }
 
 shared_ptr<Material> MaterialGenerator::createBaseMaterial(unsigned int flags)
@@ -776,7 +780,7 @@ shared_ptr<Material> MaterialGenerator::createRenderMaterial(unsigned int flags,
             technique.setTexture(0, tm->load(studs, TextureManager::Fallback_Gray), SamplerState::Filter_Anisotropic);
 
             setupCommonTextures(visualEngine, technique);
-            setupMaterialTextures(visualEngine, technique, renderMaterial, materialName, isWang ? &wangTilesTex : NULL);
+            setupMaterialTextures(visualEngine, technique, renderMaterial, materialName);
 
             material->addTechnique(technique);
         }
@@ -790,7 +794,7 @@ shared_ptr<Material> MaterialGenerator::createRenderMaterial(unsigned int flags,
         technique.setTexture(0, tm->load(studs, TextureManager::Fallback_Gray), SamplerState::Filter_Anisotropic);
 
         setupCommonTextures(visualEngine, technique);
-        setupMaterialTextures(visualEngine, technique, renderMaterial, materialName, isWang ? &wangTilesTex : NULL);
+        setupMaterialTextures(visualEngine, technique, renderMaterial, materialName);
 
         material->addTechnique(technique);
     }
@@ -842,7 +846,7 @@ shared_ptr<Material> MaterialGenerator::createRenderMaterial(unsigned int flags,
             setupSmoothPlasticTextures(visualEngine, technique);
         else
         {
-            setupLQMaterialTextures(visualEngine, technique, materialName, isWang ? &wangTilesTex : NULL);
+            setupLQMaterialTextures(visualEngine, technique, materialName);
             technique.setConstant( "LqmatFarTilingFactor", getLQMatFarTilingFactor(renderMaterial) );
         }
 
@@ -1116,8 +1120,8 @@ float MaterialGenerator::getTiling(PartMaterial material)
     switch (material)
     {
     case PLASTIC_MATERIAL: return 1.3f;
-    case SMOOTH_PLASTIC_MATERIAL: return 1.f;
-	case NEON_MATERIAL: return 1.f;
+    case SMOOTH_PLASTIC_MATERIAL: return 1.0f;
+	case NEON_MATERIAL: return 1.0f;
     case WOOD_MATERIAL: return 0.2f;
     case WOODPLANKS_MATERIAL: return 0.2f;
     case MARBLE_MATERIAL: return 0.1f;
@@ -1143,7 +1147,7 @@ float MaterialGenerator::getTiling(PartMaterial material)
         }
     default:
         RBXASSERT(0); // You missed new material
-        return 1.f;
+        return 1.0f;
     }
 }
 

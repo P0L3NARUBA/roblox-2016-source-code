@@ -4,15 +4,16 @@
 
 /* Main Textures */
 TEX_DECLARE2D(ShadowAtlas, 0);
+TEX_DECLARE2D(SunShadowArray, 1);
 #ifdef AREA_LIGHTS
-TEX_DECLARE2D(LTC1, 1);
-TEX_DECLARE2D(LTC2, 2);
+TEX_DECLARE2D(LTC1, 2);
+TEX_DECLARE2D(LTC2, 3);
 #endif
-TEX_DECLARE2D(EnvironmentBRDF, 3);
-TEX_DECLARE2D(AmbientOcclusion, 4);
-TEX_DECLARECUBE(OutdoorCubemap, 5);
-TEX_DECLARECUBE(IndoorCubemapA, 6);
-//TEX_DECLARECUBE(IndoorCubemapB, 7);
+TEX_DECLARE2D(EnvironmentBRDF, 4);
+TEX_DECLARE2D(AmbientOcclusion, 5);
+TEX_DECLARECUBE(OutdoorCubemap, 6);
+TEX_DECLARECUBE(IndoorCubemapA, 7);
+TEX_DECLARECUBE(IndoorCubemapB, 8);
 
 /* Material Textures */
 TEX_DECLARE3D(Albedo, 10);      /* R: Albedo.r           , G: Albedo.g         , B: Albedo.b         , A: Alpha             */
@@ -34,23 +35,33 @@ float4 MaterialPS(MaterialVertexOutput IN) : SV_TARGET {
     int4 MaterialParametersB = int4(MaterialsData[MaterialIndex].ClearcoatEnabled_NormalMapEnabled_AmbientOcclusionEnabled_ParallaxEnabled);
 
     float4 Albedo = (int(MaterialParametersA.x) == 1) ? IN.Color * AlbedoTexture.Sample(AlbedoSampler, UVW) : IN.Color;
-    float4 MatValues = MatValuesTexture.Sample(MatValuesSampler, UVW);
-    float Roughness = MatValues.x;
-    float Metalness = 1.0 - MatValues.y;
-    float LocalAO = MatValues.z;
-    float Height = MatValues.w;
 
-    float3 Normal = IN.Normal;
+    float Roughness;
+    float Metalness;
+    float LocalAO;
+    float Height;
 
-    if (MaterialParametersB.y == 1) {
-        float3x3 TBN = float3x3(IN.Tangent, IN.Bitangent, Normal);
+    if (all(int2(MaterialParametersA.yz) == -1) && all(MaterialParametersB.zw == 1)) {
+        float4 MatValues = MatValuesTexture.Sample(MatValuesSampler, UVW);
 
-        Normal = normalize(mul(TBN, NormalMapTexture.Sample(NormalMapSampler, UVW).xyz * 2.0 - 1.0));
+        // Ternary operators don't cause branching in HLSL
+        Roughness = (int(MaterialParametersA.y) == -1) ? MatValues.x : MaterialParametersA.y;
+        Metalness = 1.0 - ((int(MaterialParametersA.z) == -1) ? MatValues.y : MaterialParametersA.z);
+        LocalAO = (int(MaterialParametersB.z) == 1) ? MatValues.z : 1.0;
+        Height = MatValues.w; // If parallax is disabled, the code responsible for parallax won't run and thus this can be set to whatever
     }
+    else {
+        Roughness = MaterialParametersA.y;
+        Metalness = 1.0 - MaterialParametersA.z;
+        LocalAO = 1.0;
+        Height = 0.0; // Same case as above
+    }
+
+    float3 Normal = (MaterialParametersB.y == 1) ? normalize(mul(float3x3(IN.Tangent, IN.Bitangent, IN.Normal), NormalMapTexture.Sample(NormalMapSampler, UVW).xyz * 2.0 - 1.0)) : IN.Normal;
 
     float3 ViewDirection = normalize(CameraPosition.xyz - IN.Position.xyz);
 	float uNDV = dot(Normal, ViewDirection);
-	float NDV = (clamp(uNDV, -1.0, 1.0) + 1.0) / 2.0;
+	float NDV = saturate(uNDV * 0.5 + 0.5); // Multiply-add is a single instruction so we do this instead of (+ 1.0) / 2.0
 
     float3 TotalLight = float3(0.0, 0.0, 0.0);
 

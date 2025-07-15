@@ -6,6 +6,8 @@
 
 #include "rbx/Debug.h"
 
+#include "Vertex.h"
+
 namespace RBX
 {
     class CSGMesh;
@@ -30,19 +32,6 @@ namespace Graphics
 	class GeometryGenerator
 	{
 	public:
-		struct Vertex
-		{
-			Vector3 pos;
-			Vector3 normal;
-			Color4uint8 color;
-			Color4uint8 extra; // red = bone index; green = specular intensity; blue = specular power, alpha = reflectance
-			Vector2 uv;
-			Vector2 uvStuds;
-			
-			Vector3 tangent;
-			Vector4 edgeDistances;
-		};
-	
 		enum GenerationFlags
 		{
 			// use vertex color from part

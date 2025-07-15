@@ -162,9 +162,6 @@ namespace RBX
 		else if (*descriptor==PartInstance::prop_renderMaterial) {
 			invalidateEntity();
 		}
-		else if (*descriptor==PartInstance::prop_Reflectance) {
-			invalidateEntity();
-		}
 		else if (*descriptor==BasicPartInstance::prop_shapeXml) {
 			invalidateEntity();
 		}
