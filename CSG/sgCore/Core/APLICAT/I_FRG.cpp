@@ -38,7 +38,7 @@ static BOOL cr_path_obj(lpLISTH listh,lpLISTH list_path)
 	lpGEO_PATH path;
 	D_POINT	mn, mx;
 
-	if ( (hpath = o_alloc(OPATH)) == NULL ) return FALSE;
+	if ( (hpath = o_alloc(OPATH)) == nullptr ) return FALSE;
 
 	obj = (lpOBJ)hpath;
 	path = (lpGEO_PATH)obj->geo_data;
@@ -59,13 +59,13 @@ static BOOL cr_path_obj(lpLISTH listh,lpLISTH list_path)
 	}
 	else
 	{
-		if (set_flat_on_path(hpath, NULL))
+		if (set_flat_on_path(hpath, nullptr))
 			obj->status |= ST_FLAT;
 		else      
 			obj->status &= ~ST_FLAT;
 	}
-	//if (!set_flat_on_path(hpath, NULL)) goto err;
-  if (test_self_cross_path(hpath,NULL) == OSTRUE) {
+	//if (!set_flat_on_path(hpath, nullptr)) goto err;
+  if (test_self_cross_path(hpath,nullptr) == OSTRUE) {
 		obj = (lpOBJ)hpath;
     obj->status |= ST_SIMPLE;
   }
@@ -78,6 +78,6 @@ static BOOL cr_path_obj(lpLISTH listh,lpLISTH list_path)
 	attach_item_tail(listh,hpath);
 	return TRUE;
 err:
-	o_free(hpath, NULL);
+	o_free(hpath, nullptr);
 	return FALSE;
 }

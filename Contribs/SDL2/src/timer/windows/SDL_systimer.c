@@ -87,7 +87,7 @@ SDL_TicksInit(void)
     /* if we didn't set a precision, set it high. This affects lots of things
        on Windows besides the SDL timers, like audio callbacks, etc. */
     SDL_AddHintCallback(SDL_HINT_TIMER_RESOLUTION,
-                        SDL_TimerResolutionChanged, NULL);
+                        SDL_TimerResolutionChanged, nullptr);
 
     /* Set first ticks value */
     /* QueryPerformanceCounter has had problems in the past, but lots of games
@@ -109,7 +109,7 @@ SDL_TicksQuit(void)
 {
     if (!hires_timer_available) {
         SDL_DelHintCallback(SDL_HINT_TIMER_RESOLUTION,
-                            SDL_TimerResolutionChanged, NULL);
+                            SDL_TimerResolutionChanged, nullptr);
     }
 
     SDL_SetSystemTimerResolution(0);  /* always release our timer resolution request. */

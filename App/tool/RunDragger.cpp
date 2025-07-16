@@ -33,7 +33,7 @@ void RunDragger::SnapInfo::updateSurfaceFromHit()
 	{
         mySurfaceId = snap->getGeometry()->closestSurfaceToPoint(hitInSnap);
 		if (mySurfaceId == (size_t)-1)
-			snap = NULL;
+			snap = nullptr;
 	}
 }
 
@@ -86,8 +86,8 @@ float RunDragger::SnapInfo::hitOutsideExtents()
 }
 
 RunDragger::RunDragger()
-	: workspace(NULL)
-	, drag(NULL)
+	: workspace(nullptr)
+	, drag(nullptr)
 {}
 
 RunDragger::~RunDragger()
@@ -107,7 +107,7 @@ void RunDragger::snapInfoFromSnapPart()
 	}
 	else {
 		// snap part deleted while dragging probably multiplayer...
-		snapInfo.snap = NULL;
+		snapInfo.snap = nullptr;
 	}
 }
 
@@ -450,7 +450,7 @@ bool RunDragger::fallOffPart(bool& snapped)
 
     G3D::Array<size_t> triedSurfaces;
 
-	while ((snapInfo.snap != NULL) && fallOffEdge()) 
+	while ((snapInfo.snap != nullptr) && fallOffEdge()) 
 	{
 		triedSurfaces.append(snapInfo.mySurfaceId);
 		snapInfo = createSnapSurface(snapInfo.snap, &triedSurfaces);	// ignore this surface
@@ -458,7 +458,7 @@ bool RunDragger::fallOffPart(bool& snapped)
 			snapped = moveDragPart();
 		}
 	}
-	return (snapInfo.snap == NULL);
+	return (snapInfo.snap == nullptr);
 }
 
 bool RunDragger::colliding()
@@ -727,7 +727,7 @@ CoordinateFrame RunDragger::getSnapSurfaceCoord()
 		Array< tried snap parts this step >
 			append current part if any
 
-		If snap part too far – set to NULL
+		If snap part too far – set to nullptr
 
 		Existing Snap Part?
 			NO - If no snap part, try to find one + snap surface
@@ -745,7 +745,7 @@ CoordinateFrame RunDragger::getSnapSurfaceCoord()
 
 				4.	If not adjacent, shoot a ray (if head – make sure close enough)
 
-				5.	NULL – no snap part found
+				5.	nullptr – no snap part found
 
 				Confirm the part is not too far away if head
 

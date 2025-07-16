@@ -132,7 +132,7 @@ bool RBX::Network::NetworkFilter::filterNew( Instance* instance, Instance* paren
 
 bool RBX::Network::NetworkFilter::filterDelete( Instance* instance, FilterResult& result )
 {
-	if (filterParent(instance, NULL, result))
+	if (filterParent(instance, nullptr, result))
 		return true;
 
 	return false;
@@ -190,7 +190,7 @@ bool RBX::Network::NetworkFilter::filterEvent( Instance* instance, const Reflect
 boost::unordered_set<std::string> StrictNetworkFilter::propertyWhiteList;
 boost::unordered_set<std::string> StrictNetworkFilter::eventWhiteList;
 
-StrictNetworkFilter::StrictNetworkFilter(Replicator* replicator) : replicator(replicator), instanceBeingRemovedFromLocalPlayer(NULL)
+StrictNetworkFilter::StrictNetworkFilter(Replicator* replicator) : replicator(replicator), instanceBeingRemovedFromLocalPlayer(nullptr)
 {
 	// these lists should only contain scriptable properties or events, all non-scriptable (REPLICATE_ONLY) items are not filtered
 
@@ -214,7 +214,7 @@ StrictNetworkFilter::StrictNetworkFilter(Replicator* replicator) : replicator(re
 
 void StrictNetworkFilter::onChildRemoved(Instance* removed, const Instance* oldParent)
 {
-	instanceBeingRemovedFromLocalPlayer = NULL;
+	instanceBeingRemovedFromLocalPlayer = nullptr;
 
 	if (Player* player = replicator->findTargetPlayer())
 	{
@@ -282,7 +282,7 @@ FilterResult StrictNetworkFilter::filterParent(Instance* instance, Instance* new
 {
 	FilterResult result = Reject;
 
-	RBX::Weld* weld = NULL;
+	RBX::Weld* weld = nullptr;
 	weld = Instance::fastDynamicCast<RBX::Weld>(instance);
 
 	if (instance == instanceBeingRemovedFromLocalPlayer)
@@ -322,7 +322,7 @@ FilterResult StrictNetworkFilter::filterParent(Instance* instance, Instance* new
 	}
 
 	// this should be set in onChildRemoved, which should happen right before filterParent, so reset after ever use
-	instanceBeingRemovedFromLocalPlayer = NULL; 
+	instanceBeingRemovedFromLocalPlayer = nullptr; 
 
 	return result;
 }

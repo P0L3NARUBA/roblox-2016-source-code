@@ -18,7 +18,7 @@ BOOL bo_line_object(lpD_POINT pb, lpD_POINT pe, hOBJ hobj,
 										lpVDIM point)
 {
 	short 					i;
-	lpOBJ					obj;//nb  = NULL;
+	lpOBJ					obj;//nb  = nullptr;
 	lpGEO_BREP  	lpgeobrep;
 	MATR					matr, matr_inv;
 	REGION_3D   	gab_obj;
@@ -94,7 +94,7 @@ static OSCAN_COD line_scan(hOBJ hobj, lpSCAN_CONTROL lpsc)
 	lpLINE_DATA	data;
 
 	if (ctrl_c_press) { 							 
-		put_message(CTRL_C_PRESS, NULL, 0);
+		put_message(CTRL_C_PRESS, nullptr, 0);
 		return OSFALSE;
 	}
 

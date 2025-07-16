@@ -24,7 +24,7 @@ Surface::Surface(
 {
 }
 
-Surface::Surface() : partInstance(NULL), surfId(NORM_X)
+Surface::Surface() : partInstance(nullptr), surfId(NORM_X)
 {
 
 }
@@ -125,11 +125,11 @@ public:
 	{
 		if (DFFlag::UseRemoveTypeIDTricks)
 		{
-			debugAssertM(dynamic_cast<const PartInstance*>(instance)!=NULL, instance->getClassName().toString());
+			debugAssertM(dynamic_cast<const PartInstance*>(instance)!=nullptr, instance->getClassName().toString());
 		}
 		else
 		{
-			debugAssertM(dynamic_cast<const PartInstance*>(instance)!=NULL, typeid(*instance).name());
+			debugAssertM(dynamic_cast<const PartInstance*>(instance)!=nullptr, typeid(*instance).name());
 		}
 		//return (static_cast<const PartInstance*>(instance)->getSurfaces()[face].*get)();
 		const PartInstance* part = static_cast<const PartInstance*>(instance);
@@ -139,11 +139,11 @@ public:
 	{
 		if (DFFlag::UseRemoveTypeIDTricks)
 		{
-			debugAssertM(dynamic_cast<PartInstance*>(instance)!=NULL, instance->getClassName().toString());
+			debugAssertM(dynamic_cast<PartInstance*>(instance)!=nullptr, instance->getClassName().toString());
 		}
 		else
 		{
-			debugAssertM(dynamic_cast<PartInstance*>(instance)!=NULL, typeid(*instance).name());
+			debugAssertM(dynamic_cast<PartInstance*>(instance)!=nullptr, typeid(*instance).name());
 		}
 		//(static_cast<PartInstance*>(instance)->getSurfaces()[face].*set)(value);
 		PartInstance* part = static_cast<PartInstance*>(instance);

@@ -181,7 +181,7 @@ void FloorWire::computeSurfacePosition(const shared_ptr<PartInstance>& part,
 	int surfaceId;
 	Surface surface = part->getSurface(ray, surfaceId);
 
-	if (surface.getPartInstance() == NULL) {
+	if (surface.getPartInstance() == nullptr) {
 		return;
 	}
 
@@ -243,7 +243,7 @@ bool FloorWire::incrementalBuildSegments(const Workspace* workspace,
 	Vector3 hitPoint;
 	FilterHumanoidParts filterHumanoidParts;
 	Primitive* hitPrimitive = contactManager->getHit(hitRay,
-			NULL, &filterHumanoidParts,
+			nullptr, &filterHumanoidParts,
 			hitPoint);
 
 	float achievableDelta = moveInX ? deltaGoal.x : deltaGoal.z;
@@ -303,7 +303,7 @@ void FloorWire::buildTrailSegments(const Workspace* workspace,
 	Vector3 hitPoint;
 	FilterHumanoidParts filterHumanoidParts;
 	Primitive* ground = contactManager->getHit(downAtFromPosition,
-			NULL, &filterHumanoidParts,
+			nullptr, &filterHumanoidParts,
 			hitPoint);
 
 	out->push_back(fromPosition);

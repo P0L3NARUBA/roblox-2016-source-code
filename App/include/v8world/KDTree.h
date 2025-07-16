@@ -54,7 +54,7 @@ struct KDTree
         const KDTree* tree;
         unsigned int triangle;
 
-        RayResult(): fraction(1), tree(NULL), triangle(0)
+        RayResult(): fraction(1), tree(nullptr), triangle(0)
         {
         }
 

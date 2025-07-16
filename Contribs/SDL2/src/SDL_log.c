@@ -60,10 +60,10 @@ static SDL_LogPriority SDL_assert_priority = DEFAULT_ASSERT_PRIORITY;
 static SDL_LogPriority SDL_application_priority = DEFAULT_APPLICATION_PRIORITY;
 static SDL_LogPriority SDL_test_priority = DEFAULT_TEST_PRIORITY;
 static SDL_LogOutputFunction SDL_log_function = SDL_LogOutput;
-static void *SDL_log_userdata = NULL;
+static void *SDL_log_userdata = nullptr;
 
 static const char *SDL_priority_prefixes[SDL_NUM_LOG_PRIORITIES] = {
-    NULL,
+    nullptr,
     "VERBOSE",
     "DEBUG",
     "INFO",
@@ -309,7 +309,7 @@ SDL_LogMessageV(int category, SDL_LogPriority priority, const char *fmt, va_list
 static int consoleAttached = 0;
 
 /* Handle to stderr output of console. */
-static HANDLE stderrHandle = NULL;
+static HANDLE stderrHandle = nullptr;
 #endif
 
 static void
@@ -369,7 +369,7 @@ SDL_LogOutput(void *userdata, int category, SDL_LogPriority priority,
 #ifndef __WINRT__
         /* Screen output to stderr, if console was attached. */
         if (consoleAttached == 1) {
-                if (!WriteConsole(stderrHandle, tstr, lstrlen(tstr), &charsWritten, NULL)) {
+                if (!WriteConsole(stderrHandle, tstr, lstrlen(tstr), &charsWritten, nullptr)) {
                     OutputDebugString(TEXT("Error calling WriteConsole\r\n"));
                     if (GetLastError() == ERROR_NOT_ENOUGH_MEMORY) {
                         OutputDebugString(TEXT("Insufficient heap memory to write message\r\n"));

@@ -85,7 +85,7 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
    - [ ] Tinting
 - [ ] Local light shadow-mapping
    - [ ] Tinting
-- [ ] Moment shadow map filtering
+- [ ] [Moment shadow map filtering](https://github.com/TheRealMJP/Shadows/blob/master/Shadows/MSM.hlsl)
 - [ ] Glass material with real-time refraction
 - [ ] PBR lighting model
    - [x] Metalness texture workflow
@@ -109,8 +109,8 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
    - [ ] Cascades
    - [ ] Local lights
 - [ ] Ambient Occlusion
-   - [ ] [Screen-space](https://developer.nvidia.com/rendering-technologies/horizon-based-ambient-occlusion-plus)
-   - [ ] [Distance field](https://dev.epicgames.com/documentation/en-us/unreal-engine/distance-field-ambient-occlusion-in-unreal-engine)
+   - [ ] [Screen-space](https://ar5iv.labs.arxiv.org/html/2301.11376)
+   - [ ] [Distance fields](https://dev.epicgames.com/documentation/en-us/unreal-engine/distance-field-ambient-occlusion-in-unreal-engine)
 - [ ] Advanced post-processing effects
    - [ ] Depth of Field
    - [ ] Blur
@@ -174,8 +174,9 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
    - [ ] Layering
 - [ ] Rendering modes
    - [ ] Forward+
+      - [ ] Early depth pass
    - [ ] Deferred
-      - [ ] MSAA support
+      - [ ] [MSAA support](https://docs.nvidia.com/gameworks/content/gameworkslibrary/graphicssamples/d3d_samples/antialiaseddeferredrendering.htm)
 - [ ] Proper VR Support
 - [ ] [New physics engine](https://graphics.cs.utah.edu/research/projects/avbd/)
 - [ ] API support

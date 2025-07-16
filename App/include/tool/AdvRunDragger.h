@@ -32,7 +32,7 @@ namespace RBX {
 			Vector3							hitWorld;
 			Vector3							lastDragSnap;
 			SnapInfo() 
-				: snap(NULL)
+				: snap(nullptr)
 				, surface(NORM_UNDEFINED)
 				, mySurfaceId((size_t)-1)
 				, hitWorld(Vector3::inf())
@@ -83,7 +83,7 @@ namespace RBX {
 		bool                                 handleMultipleParts;
 		CoordinateFrame                      tempOriginalCF;
 
-		SnapInfo createSnapSurface(Primitive* snap, G3D::Array<size_t>* ignore = NULL);
+		SnapInfo createSnapSurface(Primitive* snap, G3D::Array<size_t>* ignore = nullptr);
 		bool moveDragPart();
 		bool snapDragPart(bool supressGridSettings = false);
 		bool pushDragPart(const Vector3& snapNormal);

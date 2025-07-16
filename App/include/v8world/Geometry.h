@@ -39,7 +39,7 @@ namespace RBX {
 						COLLIDE_POLY,
 						COLLIDE_BULLET } CollideType;
 
-		Geometry() : bulletCollisionObject(NULL)
+		Geometry() : bulletCollisionObject(nullptr)
 		{}
 
 		virtual ~Geometry() 

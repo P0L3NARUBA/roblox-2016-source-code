@@ -493,7 +493,7 @@ int MaterialPickerFrame::getMaterialIndex(const QPoint& pos)
 
 CustomToolButton::CustomToolButton(QWidget* parent)
 	: QToolButton(parent)
-	, m_pPickerFrame(NULL)
+	, m_pPickerFrame(nullptr)
 	, m_bMenuButtonPressed(false)
 	, m_toolButtonStyle(Qt::ToolButtonIconOnly)
 {
@@ -665,7 +665,7 @@ void FillColorPickerToolButton::onPickerFrameChanged(const QString& selectedColo
 
 void FillColorPickerToolButton::onPickerFrameDestroyed()
 {
-	m_pPickerFrame = NULL;
+	m_pPickerFrame = nullptr;
 }
 
 PopupLaunchEditor::PopupLaunchEditor(PropertyItem* pParentItem, QWidget* pParent, const QIcon& itemIcon, const QString& labelText, int buttonWidth, QWidget* proxyWidget)
@@ -1028,7 +1028,7 @@ PrimaryPartSelectionEditor::~PrimaryPartSelectionEditor()
 		if (pTreeWidget)
 		{
 			pTreeWidget->selectionModel()->clearSelection();
-			pTreeWidget->setInstanceSelectionHandler(NULL);
+			pTreeWidget->setInstanceSelectionHandler(nullptr);
 		}
 	}
 }
@@ -1113,7 +1113,7 @@ bool PrimaryPartSelectionEditor::setPrimaryPart(RBX::PartInstance* pPart)
 		// set primary part
 		m_pModelInstance->setPrimaryPartSetByUser(pPart);
 		// update property item
-		m_pPrimaryPartPropertyItem->setModelData(NULL);
+		m_pPrimaryPartPropertyItem->setModelData(nullptr);
 
 		return true;
 	}

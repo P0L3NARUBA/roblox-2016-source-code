@@ -23,7 +23,7 @@ BOOL bo_points(hOBJ hobj_l, hOBJ hobj_b, lpVDIM points, CODE_OPERATION code_oper
 							 lpLISTH	listh)
 {
 	REGION_3D   	gabb, gabl, gab;
-	hOBJ					hobj1 = NULL;
+	hOBJ					hobj1 = nullptr;
 	SCAN_CONTROL  sc;
 	POINT_DATA		cd;
 	OSCAN_COD			cod;
@@ -138,7 +138,7 @@ static OSCAN_COD point_scan(hOBJ hobj, lpSCAN_CONTROL lpsc)
 					lpgeo_arc1->ve = lpgeo_arc->ve;
 					lpgeo_arc1->angle += lpgeo_arc->angle;
 					calc_arc_ab(lpgeo_arc1);
-					o_free(h_first, NULL);
+					o_free(h_first, nullptr);
 				}
 			}
 			break;
@@ -208,7 +208,7 @@ static OSCAN_COD point_scan(hOBJ hobj, lpSCAN_CONTROL lpsc)
 					obj = (lpOBJ)hobj_new;
 					if (count == 32000) {
 						
-						if ((hobj1 = o_alloc(OFRAME)) == NULL) {
+						if ((hobj1 = o_alloc(OFRAME)) == nullptr) {
 							return OSFALSE;
 						}
 						obj1 = (lpOBJ)hobj1;
@@ -219,7 +219,7 @@ static OSCAN_COD point_scan(hOBJ hobj, lpSCAN_CONTROL lpsc)
 						((lpGEO_FRAME)obj1->geo_data)->vld = vld;
 						o_hcunit(((lpGEO_FRAME)obj1->geo_data)->matr);
 						if (!get_object_limits(hobj1, &min, &max) ) {
-							o_free(hobj1,NULL);
+							o_free(hobj1,nullptr);
 							return OSFALSE;
 						}
 						obj1 = (lpOBJ)hobj1;
@@ -237,12 +237,12 @@ static OSCAN_COD point_scan(hOBJ hobj, lpSCAN_CONTROL lpsc)
 					if ( !add_vld_data(&vld, sizeof(obj->lthickness),&obj->lthickness)) goto err;
 					if ( !add_vld_data(&vld, geo_size[obj->type],obj->geo_data)) goto err;
 					count++;
-					o_free(hobj_new, NULL);
+					o_free(hobj_new, nullptr);
 					hobj_new = hnext;
 				}
 			}
 
-			if ((hobj1 = o_alloc(OFRAME)) == NULL) return OSFALSE;
+			if ((hobj1 = o_alloc(OFRAME)) == nullptr) return OSFALSE;
 			obj1 = (lpOBJ)hobj1;
 			obj1->color = lpsc->color;    					
 			obj1->ltype = lpsc->ltype;    					
@@ -251,7 +251,7 @@ static OSCAN_COD point_scan(hOBJ hobj, lpSCAN_CONTROL lpsc)
 			((lpGEO_FRAME)obj1->geo_data)->vld = vld;
 			o_hcunit(((lpGEO_FRAME)obj1->geo_data)->matr);
 			if (!get_object_limits(hobj1, &min, &max) ) {
-				o_free(hobj1,NULL);
+				o_free(hobj1,nullptr);
 				return OSFALSE;
 			}
 			obj1 = (lpOBJ)hobj1;
@@ -355,7 +355,7 @@ OSCAN_COD b_sub_line(lpGEO_LINE line, lpSCAN_CONTROL lpsc)
 		}
 		if ( answer == NP_OUT && data->key == SUB ||
 				(answer == NP_IN || answer == NP_ON) && data->key == INTER ) { 
-			if((hline = o_alloc(OLINE)) == NULL) {
+			if((hline = o_alloc(OLINE)) == nullptr) {
 				end_rw(&points);
 				rt = OSFALSE;
 				goto end;
@@ -390,7 +390,7 @@ OSCAN_COD b_sub_arc(lpGEO_ARC arc, lpREGION_3D gab_arc, lpSCAN_CONTROL lpsc)
 	OSCAN_COD					rt = OSTRUE;
 	NP_TYPE_POINT 		answer;
 	lpOBJ							obj;
-	hOBJ							harc;//nb  = NULL;
+	hOBJ							harc;//nb  = nullptr;
 
 	data = (lpPOINT_DATA)(lpsc->data);
 	if (!init_vdim(&points,sizeof(BO_INTER_POINT))) {	rt=OSFALSE; goto end;}
@@ -443,7 +443,7 @@ OSCAN_COD b_sub_arc(lpGEO_ARC arc, lpREGION_3D gab_arc, lpSCAN_CONTROL lpsc)
 		}
 		if ( answer == NP_OUT && data->key == SUB ||
 				(answer == NP_IN || answer == NP_ON) && data->key == INTER ) { 
-			if((harc = o_alloc(OARC)) == NULL) {
+			if((harc = o_alloc(OARC)) == nullptr) {
 				end_rw(&points);
 				rt = OSFALSE;
 				goto end;
@@ -521,7 +521,7 @@ static OSCAN_COD b_sub_spline(lpGEO_SPLINE spline, lpSCAN_CONTROL lpsc){
 	short 							i, j, j1, k, l, num_elem, ipp, span, span_base=60;
 	short								tes1, tes2, span_base1=10;
 	sgFloat						t, t1, t_beg, dist, bound[2], tmp_bound, t_sply;
-	sgFloat						*t_intersec/*=NULL*/;
+	sgFloat						*t_intersec/*=nullptr*/;
 	SPLY_DAT					sply_dat;
 	lpPOINT_DATA			data;
 	VDIM							points, points1;
@@ -531,11 +531,11 @@ static OSCAN_COD b_sub_spline(lpGEO_SPLINE spline, lpSCAN_CONTROL lpsc){
 	lpGEO_SPLINE			geo_spline;
 	NP_TYPE_POINT 		answer;
 	lpOBJ							obj;
-	hOBJ							hspline = NULL;
+	hOBJ							hspline = nullptr;
 
 	data = (lpPOINT_DATA)(lpsc->data);
 
-	if((t_intersec=(sgFloat*)SGMalloc(100*sizeof(sgFloat))) == NULL ) return rt;
+	if((t_intersec=(sgFloat*)SGMalloc(100*sizeof(sgFloat))) == nullptr ) return rt;
 	l=0;
 
 //found beginning point for intersection
@@ -638,7 +638,7 @@ static OSCAN_COD b_sub_spline(lpGEO_SPLINE spline, lpSCAN_CONTROL lpsc){
 		if ( answer == NP_OUT	 && data->key == SUB ||
 				(answer == NP_IN || answer == NP_ON) && data->key == INTER
 				){ // create new sply
-			if((hspline = o_alloc(OSPLINE)) == NULL) goto end2;
+			if((hspline = o_alloc(OSPLINE)) == nullptr) goto end2;
 			obj = (lpOBJ)hspline;
 			obj->color = lpsc->color;    					// Color
 			obj->ltype = lpsc->ltype;    					// Line Type

@@ -32,7 +32,7 @@ static BOOL dimtext_pre_place(lpGEO_DIM geo, lpDIMLN_GEO dg,
 BOOL test_dim_to_invert(lpGEO_DIM geo);
 void set_dimln_geo(lpGEO_DIM geo, lpDIMLN_GEO dlgeo);
 
-lpDIMINFO   dim_info = NULL;
+lpDIMINFO   dim_info = nullptr;
 
 
 BOOL draw_geo_dim(lpGEO_DIM geo,
@@ -67,9 +67,9 @@ ULONG        len;
 
 	if(!geo->dtstyle.font || !geo->dtstyle.text) return FALSE;
 
-	if((font = (FONT*)alloc_and_get_ft_value(geo->dtstyle.font, &len)) == NULL)
+	if((font = (FONT*)alloc_and_get_ft_value(geo->dtstyle.font, &len)) == nullptr)
 		return FALSE;
-	if((text = (UCHAR*)alloc_and_get_ft_value(geo->dtstyle.text, &len)) == NULL){
+	if((text = (UCHAR*)alloc_and_get_ft_value(geo->dtstyle.text, &len)) == nullptr){
 		SGFree(font);
 		return FALSE;
 	}
@@ -736,9 +736,9 @@ short     i, numpnt, numtp = 0;
 	UCHAR        *text;
 	ULONG        len;
 	if(!gdim->dtstyle.font || !gdim->dtstyle.text) return;
-	if((font = (FONT*)alloc_and_get_ft_value(gdim->dtstyle.font, &len)) == NULL)
+	if((font = (FONT*)alloc_and_get_ft_value(gdim->dtstyle.font, &len)) == nullptr)
 		return;
-	if((text = (UCHAR*)alloc_and_get_ft_value(gdim->dtstyle.text, &len)) == NULL){
+	if((text = (UCHAR*)alloc_and_get_ft_value(gdim->dtstyle.text, &len)) == nullptr){
 		SGFree(font);
 		return;
 	}
@@ -1062,7 +1062,7 @@ lpTSTYLE style;
 	get_dimt_str4((char*)dimtext, str);
 
 	t = strstr(str[0], DIM_AUTO_SUBST);
-	if(t != NULL){ //    
+	if(t != nullptr){ //    
 		cs = *t;
 		*t = 0;
 		strcpy(strvalue, str[0]);
@@ -1083,12 +1083,12 @@ lpTSTYLE style;
 		strcpy(strvalue, str[0]);
 	}
 	//     +-
-	if(str[1] != NULL && str[2] != NULL){
+	if(str[1] != nullptr && str[2] != nullptr){
 		if(*(str[1]) == '+' && *(str[2]) == '-' && !strcmp(str[1] + 1, str[2] + 1)){
 			//  
 			strcat(strvalue, "%%p");
 			strcat(strvalue, str[1] + 1);
-			str[1] = str[2] = NULL;
+			str[1] = str[2] = nullptr;
 		}
 	}
 	str[0] = strvalue;
@@ -1130,7 +1130,7 @@ lpTSTYLE style;
 	}
 	ret = TRUE;
 metend:
-	if(t != NULL) *t = cs;
+	if(t != nullptr) *t = cs;
 	return ret;
 }
 
@@ -1216,7 +1216,7 @@ void get_dimt_str4(char *dimtext, char **str)
 BOOL  flag = FALSE;
 short i;
 
-	str[0] = str[1] = str[2] = str[3] = NULL;
+	str[0] = str[1] = str[2] = str[3] = nullptr;
 
 	if(*dimtext == ML_S_C) {
 		flag = TRUE;
@@ -1252,7 +1252,7 @@ ULONG n;
 		c++;
 	}
 	for(i = 0; i < n; i++){
-		strcpy(c, ((str[i] == NULL) ? "" : str[i]));
+		strcpy(c, ((str[i] == nullptr) ? "" : str[i]));
 		c += (strlen(c) + 1);
 	}
 	if(n > 1)	*c = ML_S_C;
@@ -1325,7 +1325,7 @@ void free_dim_info(void)
 {
 	if(dim_info){
 		SGFree(dim_info);
-		dim_info = NULL;
+		dim_info = nullptr;
 	}
 }
 

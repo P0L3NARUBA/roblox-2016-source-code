@@ -85,7 +85,7 @@ Instance* Animator::getRootInstance()
 		return getParent()->getParent();
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 void Animator::setupClumpChangedListener(Instance* rootInstance)
@@ -109,7 +109,7 @@ void Animator::reloadAnimation(shared_ptr<AnimationTrackState> animationTrackSta
 
 float Animator::getGameTime() const 
 {
-    RunService* runservice = NULL;
+    RunService* runservice = nullptr;
 	runservice = ServiceProvider::find<RunService>(getParent());
 
     if(runservice)
@@ -223,10 +223,10 @@ void Animator::onStepped(const Stepped& event)
 
 	// checking to see if the server should take control of this object - NPC humanoid
 	PartInstance* part = testForServerLockPart.get();
-	if (part != NULL && activeAnimations.size() > 0 && Time::now<Time::Fast>() > serverLockTimer) {
+	if (part != nullptr && activeAnimations.size() > 0 && Time::now<Time::Fast>() > serverLockTimer) {
 		Primitive* prim = part->getPartPrimitive();
 		Assembly* a = prim->getAssembly();
-		if (a != NULL) {
+		if (a != nullptr) {
 			prim = a->getAssemblyPrimitive();
 			part = PartInstance::fromPrimitive(prim);
 		}
@@ -285,7 +285,7 @@ void Animator::onStepped(const Stepped& event)
 		for(size_t i = 0; i < idle.size(); ++i)
 		{
 			shared_ptr<Instance> pInst = idle[i].joint.first.lock();
-			if (pInst != NULL) 
+			if (pInst != nullptr) 
 			{
 				idle[i].joint.second->applyPose(idle[i].pose);
 			}
@@ -295,7 +295,7 @@ void Animator::onStepped(const Stepped& event)
 	{
 		for(size_t i = 0; i < animatableJoints.size(); ++i)
 		{
-			if (animatableJoints[i].first.lock() != NULL) 
+			if (animatableJoints[i].first.lock() != nullptr) 
 			{
 				animatableJoints[i].second->applyPose(CachedPose());
 			}
@@ -314,7 +314,7 @@ void Animator::onStepped(const Stepped& event)
 
 /*override*/ void Animator::verifySetParent(const Instance* instance) const
 {
-    if (instance == NULL || fastDynamicCast<Humanoid>(instance) || fastDynamicCast<AnimationController>(instance))
+    if (instance == nullptr || fastDynamicCast<Humanoid>(instance) || fastDynamicCast<AnimationController>(instance))
     {
         Super::verifySetParent(instance);
     }
@@ -326,7 +326,7 @@ void Animator::onStepped(const Stepped& event)
 
 /*override*/ bool Animator::askAddChild(const Instance* instance) const 
 { 
-	return Instance::fastDynamicCast<AnimationTrackState>(instance)  != NULL; 
+	return Instance::fastDynamicCast<AnimationTrackState>(instance)  != nullptr; 
 }
 
 void Animator::onAncestorChanged(const AncestorChanged& event)
@@ -380,10 +380,10 @@ void Animator::onEvent_ClumpChanged(shared_ptr<Instance> instance)
 
 void Animator::onEvent_AncestorModified()
 {
-	descentdantAdded = NULL;
-	descentdantRemoved = NULL;
-	ancestorChanged = NULL;
-	clumpChangedConnection = NULL;
+	descentdantAdded = nullptr;
+	descentdantRemoved = nullptr;
+	ancestorChanged = nullptr;
+	clumpChangedConnection = nullptr;
 
     Instance* figure = getRootInstance();
 

@@ -142,7 +142,7 @@
     /* find variants like `A.swash', `e.final', etc.            */
     {
       const char*  p   = glyph_name;
-      const char*  dot = NULL;
+      const char*  dot = nullptr;
 
 
       for ( ; *p; p++ )
@@ -312,7 +312,7 @@
 
     /* we first allocate the table */
     table->num_maps = 0;
-    table->maps     = NULL;
+    table->maps     = nullptr;
 
     if ( !FT_NEW_ARRAY( table->maps, num_glyphs + EXTRA_GLYPH_LIST_SIZE ) )
     {
@@ -398,7 +398,7 @@
   ps_unicodes_char_index( PS_Unicodes  table,
                           FT_UInt32    unicode )
   {
-    PS_UniMap  *min, *max, *mid, *result = NULL;
+    PS_UniMap  *min, *max, *mid, *result = nullptr;
 
 
     /* Perform a binary search on the table. */
@@ -540,10 +540,10 @@
 
   FT_DEFINE_SERVICE_PSCMAPSREC(
     pscmaps_interface,
-    NULL,                                               /* unicode_value         */
-    NULL,                                               /* unicodes_init         */
-    NULL,                                               /* unicodes_char_index   */
-    NULL,                                               /* unicodes_char_next    */
+    nullptr,                                               /* unicode_value         */
+    nullptr,                                               /* unicodes_init         */
+    nullptr,                                               /* unicodes_char_index   */
+    nullptr,                                               /* unicodes_char_next    */
 
     (PS_Macintosh_NameFunc)    ps_get_macintosh_name,   /* macintosh_name        */
     (PS_Adobe_Std_StringsFunc) ps_get_standard_strings, /* adobe_std_strings     */
@@ -569,10 +569,10 @@
 
 
     if ( !module )
-      return NULL;
+      return nullptr;
     library = module->library;
     if ( !library )
-      return NULL;
+      return nullptr;
 #else
     FT_UNUSED( module );
 #endif
@@ -584,7 +584,7 @@
 
 
 #ifndef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
-#define PUT_PS_NAMES_SERVICE( a )  NULL
+#define PUT_PS_NAMES_SERVICE( a )  nullptr
 #else
 #define PUT_PS_NAMES_SERVICE( a )  a
 #endif
@@ -601,8 +601,8 @@
 
     PUT_PS_NAMES_SERVICE(
       (void*)&PSCMAPS_INTERFACE_GET ),   /* module specific interface */
-    (FT_Module_Constructor)NULL,
-    (FT_Module_Destructor) NULL,
+    (FT_Module_Constructor)nullptr,
+    (FT_Module_Destructor) nullptr,
     (FT_Module_Requester)  PUT_PS_NAMES_SERVICE( psnames_get_service ) )
 
 

@@ -229,8 +229,8 @@ struct SmoothClusterGeometry::ChunkMesh
 	ChunkMesh(const Vector3int32& id)
 		: id(id)
         , state(State_Dummy)
-		, tree(NULL)
-        , treeNode(NULL)
+		, tree(nullptr)
+        , treeNode(nullptr)
 	{
 	}
 
@@ -287,15 +287,15 @@ struct SmoothClusterGeometry::ChunkMesh
 		{
 			tree->remove(treeNode);
 
-            treeNode = NULL;
+            treeNode = nullptr;
 		}
 	}
 };
 
 SmoothClusterGeometry::SmoothClusterGeometry(Primitive* p)
 	: myPrim(p)
-    , grid(NULL)
-	, bulletChunksTree(NULL)
+    , grid(nullptr)
+	, bulletChunksTree(nullptr)
 	, gcChunkCountLast(0)
 	, gcUnusedMemory(0)
 	, gcUnusedMemoryNext(0)

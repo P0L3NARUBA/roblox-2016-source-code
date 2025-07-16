@@ -31,7 +31,7 @@
  * Curl_convert_clone() returns a malloced copy of the source string (if
  * returning CURLE_OK), with the data converted to network format.
  *
- * If no conversion was needed *outbuf may be NULL.
+ * If no conversion was needed *outbuf may be nullptr.
  */
 CURLcode Curl_convert_clone(struct SessionHandle *data,
                             const char *indata,

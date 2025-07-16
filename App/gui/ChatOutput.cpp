@@ -68,12 +68,12 @@ PlayerChatLine::PlayerChatLine(ChatType chatType, boost::shared_ptr<Network::Pla
 		// If this is a team game, make the color of the text be the team color of the speaker
 		Teams *teams = ServiceProvider::find<Teams>(player.get());
 
-		if(teams != NULL && teams->isTeamGame())
+		if(teams != nullptr && teams->isTeamGame())
 		{
 			if(player->getNeutral() == false) 
 			{
 				Team *t = teams->getTeamFromPlayer(player.get());
-				if (t != NULL) 
+				if (t != nullptr) 
 					userColor = t->getTeamColor().color3(); 
 				else
 					userColor = G3D::Color3::black();
@@ -180,7 +180,7 @@ static shared_ptr<GuiObject> createChatImposter(const std::string& filePrefix, c
 
 ChatOutput::ChatOutput() 
 : time(0.0)
-, players(NULL)
+, players(nullptr)
 {
 	{
 		chatBubble[ChatLine::WHITE] = createChatBubbleMain("ui/dialog_white");
@@ -308,7 +308,7 @@ bool ChatOutput::removeExpired()
 		if(playerfifo.empty())
 		{
 			if(shared_ptr<BillboardGui> billlboardGui = it->second.billboardGui.lock())
-				billlboardGui->setParent(NULL);
+				billlboardGui->setParent(nullptr);
 
 			characterSortedMsg.erase(it++);
 		}
@@ -385,7 +385,7 @@ void ChatOutput::onGameChatMessage(boost::shared_ptr<Instance> origin, const std
 		return;
 
 	Network::Player* local = players->getLocalPlayer();
-	bool fromOthers = local != NULL && (local->getCharacter() != origin.get());
+	bool fromOthers = local != nullptr && (local->getCharacter() != origin.get());
 
 	ChatLine::BubbleColor bubbleColor = ChatLine::WHITE;
 	switch(color)
@@ -414,7 +414,7 @@ void ChatOutput::onPlayerChatMessage(const Network::ChatMessage& event)
 	}
 
 	Network::Player* local = players->getLocalPlayer();
-	bool fromOthers = local != NULL && (event.source.get() != local);
+	bool fromOthers = local != nullptr && (event.source.get() != local);
 
 	ChatLine::ChatType chatType = ChatLine::PLAYER_CHAT;
 	switch(event.chatType)
@@ -474,7 +474,7 @@ void ChatOutput::renderBubbleImposters(Adorn* adorn, weak_ptr<const Instance> we
 	if(!workspace)
 		return;
 
-	ViewportBillboarder viewportBillboarder(Vector3(0,0,0), Vector3(0,0,0), Vector2(0,0), UDim2(3,0, 3.6, 0), NULL /*work in actual pixel space*/);
+	ViewportBillboarder viewportBillboarder(Vector3(0,0,0), Vector3(0,0,0), Vector2(0,0), UDim2(3,0, 3.6, 0), nullptr /*work in actual pixel space*/);
     viewportBillboarder.update(adorn->getViewport(), *workspace->getConstCamera(), head.get()->getPartSizeXml(), head.get()->calcRenderingCoordinateFrame());
 	if(!viewportBillboarder.isVisibleAndValid())
 	{
@@ -521,7 +521,7 @@ void ChatOutput::renderBubbles(Adorn* adorn, weak_ptr<const Instance> weakOwner,
 												/// is to ensure that there is no re-layouting of text as we move away
 										 		/// we will align bottom of text to top of viewport. this means that the vertical dimention is only usefull for adjusting the size of the bubble arrow.
 
-	ViewportBillboarder viewportBillboarder(extentsOffset, studsOffset, Vector2::zero(), size, NULL /*work in actual pixel space*/);
+	ViewportBillboarder viewportBillboarder(extentsOffset, studsOffset, Vector2::zero(), size, nullptr /*work in actual pixel space*/);
     viewportBillboarder.update(adorn->getViewport(), *workspace->getConstCamera(), head.get()->getPartSizeXml(), head.get()->calcRenderingCoordinateFrame());
 
 	AdornBillboarder adornView(adorn, viewportBillboarder);
@@ -644,7 +644,7 @@ void ChatOutput::render2d_bubbleStyle(Adorn* adorn, bool playerBubbleChat)
 	Vector3 extentsOffset;
 	Vector3 studsOffset;
 
-	Workspace* workspace = NULL;
+	Workspace* workspace = nullptr;
 
 	for(CharacterChatMap::iterator it = characterSortedMsg.begin(); it != characterSortedMsg.end(); ++it)
 	{
@@ -652,7 +652,7 @@ void ChatOutput::render2d_bubbleStyle(Adorn* adorn, bool playerBubbleChat)
 
 		if(shared_ptr<BillboardGui> billboardGui = it->second.billboardGui.lock())
 		{
-			billboardGui->setRenderFunction(NULL);
+			billboardGui->setRenderFunction(nullptr);
 		}
 
 		it->second.isVisible = false;
@@ -661,7 +661,7 @@ void ChatOutput::render2d_bubbleStyle(Adorn* adorn, bool playerBubbleChat)
 		if(playerfifo.empty())
 			continue;
 
-		PartInstance* head = NULL;
+		PartInstance* head = nullptr;
 		if(boost::shared_ptr<Instance> instance = playerfifo[0]->origin.lock())
 		{
 			switch(playerfifo[0]->chatType)

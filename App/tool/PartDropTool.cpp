@@ -43,7 +43,7 @@ PartDropTool::PartDropTool(	PartInstance* mousePart,
 //{
 //	Super::onMouseUp(inputObject);
 //	releaseCapture();
-//	return NULL;
+//	return nullptr;
 //}
 
 void PartDropTool::onMouseDelta(const shared_ptr<InputObject>& inputObject)

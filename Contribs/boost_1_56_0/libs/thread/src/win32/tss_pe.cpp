@@ -95,7 +95,7 @@ extern "C" const IMAGE_TLS_DIRECTORY32 _tls_used __attribute__ ((section(".rdata
 
 extern "C" {
 extern BOOL (WINAPI * const _pRawDllMainOrig)(HANDLE, DWORD, LPVOID);
-extern BOOL (WINAPI * const _pDefaultRawDllMainOrig)(HANDLE, DWORD, LPVOID) = NULL;
+extern BOOL (WINAPI * const _pDefaultRawDllMainOrig)(HANDLE, DWORD, LPVOID) = nullptr;
 #if defined (_M_IX86)
 #pragma comment(linker, "/alternatename:__pRawDllMainOrig=__pDefaultRawDllMainOrig")
 #elif defined (_M_X64) || defined (_M_ARM)

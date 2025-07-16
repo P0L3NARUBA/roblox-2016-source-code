@@ -60,7 +60,7 @@ CBaseReferenceClock::CBaseReferenceClock( TCHAR *pName, LPUNKNOWN pUnk, HRESULT 
 , m_rtLastGotTime(0)
 , m_TimerResolution(0)
 , m_bAbort( FALSE )
-, m_pSchedule( pShed ? pShed : new CAMSchedule(CreateEvent(NULL, FALSE, FALSE, NULL)) )
+, m_pSchedule( pShed ? pShed : new CAMSchedule(CreateEvent(nullptr, FALSE, FALSE, nullptr)) )
 , m_hThread(0)
 {
 
@@ -91,7 +91,7 @@ CBaseReferenceClock::CBaseReferenceClock( TCHAR *pName, LPUNKNOWN pUnk, HRESULT 
 	if ( !pShed )
 	{
 	    DWORD ThreadID;
-	    m_hThread = ::CreateThread(NULL,                  // Security attributes
+	    m_hThread = ::CreateThread(nullptr,                  // Security attributes
 				       (DWORD) 0,             // Initial stack size
 				       AdviseThreadFunction,  // Thread start address
 				       (LPVOID) this,         // Thread parameter

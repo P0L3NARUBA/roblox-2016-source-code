@@ -76,7 +76,7 @@ const UserInputBase* Controller::getHardwareDevice() const
 	const ControllerService* controllerService = Instance::fastDynamicCast<ControllerService>(getParent());
 	RBXASSERT(controllerService == ServiceProvider::find<ControllerService>(this));
 
-	return controllerService ? controllerService->getHardwareDevice() : NULL;
+	return controllerService ? controllerService->getHardwareDevice() : nullptr;
 }
 
 extern const char *const sButtonBindingWidget = "ButtonBindingWidget";
@@ -239,7 +239,7 @@ void ButtonBindingWidget::render2d(Adorn* adorn)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 Controller::Controller()
 : IStepped(StepType_HighPriority),
-  dataModel(NULL)
+  dataModel(nullptr)
 {
 	FASTLOG1(FLog::ISteppedLifetime, "Controller created - %p", this);
 }
@@ -296,7 +296,7 @@ void Controller::unbindButton(Button button)
 	BoundButtonSet::iterator it = boundButtons.find(button);
 	if(it != boundButtons.end())
 	{
-		it->second.guiWidget->setParent(NULL);
+		it->second.guiWidget->setParent(nullptr);
 		boundButtons.erase(it);
 	}
 }
@@ -477,7 +477,7 @@ void HumanoidController::updateCamera( const Stepped& event, const NavKeys& nav 
 
 
 ControllerService::ControllerService() 
-: hardwareDevice(NULL) 
+: hardwareDevice(nullptr) 
 {
 	shared_ptr<HumanoidController> humanoidController = Creatable<Instance>::create<HumanoidController>();
 	humanoidController->setParent(this);

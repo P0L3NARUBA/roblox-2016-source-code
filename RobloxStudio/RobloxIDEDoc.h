@@ -153,7 +153,7 @@ public:
 	{
 		if (m_CurrentGame && m_CurrentGame->m_Game && m_CurrentGame->m_Game->getDataModel())
 			return m_CurrentGame->m_Game->getDataModel().get();
-		return NULL;
+		return nullptr;
 	}
 	shared_ptr<RBX::DataModel> getEditDataModel() const
 	{
@@ -288,7 +288,7 @@ private:
 	void preFetchResources();
 
     void toggleStats(const QString& stats);
-    void setStatsEnabled(const QString& stats,bool enabled, QAction* verbAction = NULL);
+    void setStatsEnabled(const QString& stats,bool enabled, QAction* verbAction = nullptr);
 
     void createOptionalDMServices();
 	

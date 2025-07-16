@@ -101,7 +101,7 @@ inflate_stream(struct connectdata *conn,
   /* Dynamically allocate a buffer for decompression because it's uncommonly
      large to hold on the stack */
   decomp = malloc(DSIZ);
-  if(decomp == NULL) {
+  if(decomp == nullptr) {
     return exit_zlib(z, &k->zlib_init, CURLE_OUT_OF_MEMORY);
   }
 
@@ -351,7 +351,7 @@ Curl_unencode_gzip_write(struct connectdata *conn,
        */
       z->avail_in = (uInt)nread;
       z->next_in = malloc(z->avail_in);
-      if(z->next_in == NULL) {
+      if(z->next_in == nullptr) {
         return exit_zlib(z, &k->zlib_init, CURLE_OUT_OF_MEMORY);
       }
       memcpy(z->next_in, k->str, z->avail_in);
@@ -375,7 +375,7 @@ Curl_unencode_gzip_write(struct connectdata *conn,
 
     z->avail_in += (uInt)nread;
     z->next_in = realloc(z->next_in, z->avail_in);
-    if(z->next_in == NULL) {
+    if(z->next_in == nullptr) {
       free(oldblock);
       return exit_zlib(z, &k->zlib_init, CURLE_OUT_OF_MEMORY);
     }

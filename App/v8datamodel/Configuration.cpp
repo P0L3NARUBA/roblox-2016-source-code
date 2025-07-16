@@ -19,7 +19,7 @@ Configuration::Configuration()
 
 bool Configuration::askForbidChild(const Instance* instance) const
 {
-	return (dynamic_cast<const IValue*>(instance) == NULL);
+	return (dynamic_cast<const IValue*>(instance) == nullptr);
 }
 
 bool Configuration::askSetParent(const Instance* instance) const

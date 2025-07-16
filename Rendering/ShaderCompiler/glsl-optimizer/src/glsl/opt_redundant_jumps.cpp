@@ -67,7 +67,7 @@ redundant_jumps_visitor::visit_leave(ir_if *ir)
    ir_instruction *const last_else =
       (ir_instruction *) ir->else_instructions.get_tail();
 
-   if ((last_then == NULL) || (last_else == NULL))
+   if ((last_then == nullptr) || (last_else == nullptr))
       return visit_continue;
 
    if ((last_then->ir_type != ir_type_loop_jump)

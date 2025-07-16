@@ -8,7 +8,7 @@ BOOL load_csg(lpBUFFER_DAT bd,hCSG * hcsg1)
 
 	if( load_data(bd,sizeof(size),&size) != sizeof(size))  return FALSE;
 	if ( size == 0xFFFF ) return TRUE;
-	if ( (hcsg=SGMalloc(size+2)) == NULL) return FALSE;
+	if ( (hcsg=SGMalloc(size+2)) == nullptr) return FALSE;
 	csg = (lpCSG)hcsg;
 	csg->size = size;
 	if( load_data(bd,size,csg->data) != size)  goto err;

@@ -64,15 +64,15 @@ shared_ptr<const Instances> Pose::getSubPoses()
 }
 void Pose::addSubPose(shared_ptr<Instance> pose)
 {
-	if (pose != NULL) {
+	if (pose != nullptr) {
 		pose->setParent(this);
 	}
 }
 void Pose::removeSubPose(shared_ptr<Instance> pose)
 {
-	if (pose != NULL) {
+	if (pose != nullptr) {
 		if(pose->getParent() == this){
-			pose->setParent(NULL);
+			pose->setParent(nullptr);
 		}
 	}
 }
@@ -87,7 +87,7 @@ Keyframe* Pose::findKeyframeParent()
 	if(pose)
 		return pose->findKeyframeParent();
 	else
-		return NULL;
+		return nullptr;
 }
 void Pose::invalidate()
 {

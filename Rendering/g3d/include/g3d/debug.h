@@ -40,7 +40,7 @@ inline bool isValidHeapPointer(const void* x) {
         return 
             (x != (void*)0xcccccccc) && (x != (void*)0xdeadbeef) && (x != (void*)0xfeeefeee);
     #else
-        return x != NULL;
+        return x != nullptr;
     #endif
 }
 
@@ -53,7 +53,7 @@ inline bool isValidPointer(const void* x) {
     #ifdef _MSC_VER
         return x != ((void*)0xcccccccc) && (x != (void*)0xdeadbeef) && (x != (void*)0xfeeefeee);
     #else
-        return x != NULL;
+        return x != nullptr;
     #endif
 }
 

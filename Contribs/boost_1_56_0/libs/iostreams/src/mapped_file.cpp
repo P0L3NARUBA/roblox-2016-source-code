@@ -129,7 +129,7 @@ void mapped_file_impl::resize(stream_offset new_size)
     if (!unmap_file())
         cleanup_and_throw("failed unmapping file");
 #ifdef BOOST_IOSTREAMS_WINDOWS
-    stream_offset offset = ::SetFilePointer(handle_, 0, NULL, FILE_CURRENT);
+    stream_offset offset = ::SetFilePointer(handle_, 0, nullptr, FILE_CURRENT);
     if (offset == INVALID_SET_FILE_POINTER && ::GetLastError() != NO_ERROR)
          cleanup_and_throw("failed querying file pointer");
     LONG sizehigh = (new_size >> (sizeof(LONG) * 8));
@@ -184,18 +184,18 @@ void mapped_file_impl::open_file(param_type p)
             p.path.c_wstr(),
             dwDesiredAccess,
             FILE_SHARE_READ,
-            NULL,
+            nullptr,
             dwCreationDisposition,
             dwFlagsandAttributes,
-            NULL ) :
+            nullptr ) :
         ::CreateFileA( 
             p.path.c_str(),
             dwDesiredAccess,
             FILE_SHARE_READ,
-            NULL,
+            nullptr,
             dwCreationDisposition,
             dwFlagsandAttributes,
-            NULL );
+            nullptr );
     if (handle_ == INVALID_HANDLE_VALUE)
         cleanup_and_throw("failed opening file");
 
@@ -301,12 +301,12 @@ void mapped_file_impl::try_map_file(param_type p)
     mapped_handle_ = 
         ::CreateFileMappingA( 
             handle_, 
-            NULL,
+            nullptr,
             protect,
             0, 
             0, 
-            NULL );
-    if (mapped_handle_ == NULL)
+            nullptr );
+    if (mapped_handle_ == nullptr)
         cleanup_and_throw("failed create mapping");
 
     // Access data
@@ -360,7 +360,7 @@ bool mapped_file_impl::unmap_file()
     bool error = false;
     error = !::UnmapViewOfFile(data_) || error;
     error = !::CloseHandle(mapped_handle_) || error;
-    mapped_handle_ = NULL;
+    mapped_handle_ = nullptr;
     return !error;
 #else
     return ::munmap(data_, size_) == 0;
@@ -374,7 +374,7 @@ void mapped_file_impl::clear(bool error)
     size_ = 0;
 #ifdef BOOST_IOSTREAMS_WINDOWS
     handle_ = INVALID_HANDLE_VALUE;
-    mapped_handle_ = NULL;
+    mapped_handle_ = nullptr;
 #else
     handle_ = 0;
 #endif
@@ -387,7 +387,7 @@ void mapped_file_impl::cleanup_and_throw(const char* msg)
 {
 #ifdef BOOST_IOSTREAMS_WINDOWS
     DWORD error = GetLastError();
-    if (mapped_handle_ != NULL)
+    if (mapped_handle_ != nullptr)
         ::CloseHandle(mapped_handle_);
     if (handle_ != INVALID_HANDLE_VALUE)
         ::CloseHandle(handle_);

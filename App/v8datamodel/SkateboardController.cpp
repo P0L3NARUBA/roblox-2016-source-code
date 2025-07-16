@@ -21,8 +21,8 @@ namespace RBX {
 const char* const sSkateboardController = "SkateboardController";
 
 REFLECTION_BEGIN();
-static const Reflection::PropDescriptor<SkateboardController, float> propThrottle("Throttle", "Axes", &SkateboardController::getThrottle, NULL, Reflection::PropertyDescriptor::UI);
-static const Reflection::PropDescriptor<SkateboardController, float> propSteer("Steer", "Axes", &SkateboardController::getSteer, NULL, Reflection::PropertyDescriptor::UI);
+static const Reflection::PropDescriptor<SkateboardController, float> propThrottle("Throttle", "Axes", &SkateboardController::getThrottle, nullptr, Reflection::PropertyDescriptor::UI);
+static const Reflection::PropDescriptor<SkateboardController, float> propSteer("Steer", "Axes", &SkateboardController::getSteer, nullptr, Reflection::PropertyDescriptor::UI);
 static Reflection::EventDesc<SkateboardController, void(std::string)>	event_AxisChanged(&SkateboardController::axisChangedSignal, "AxisChanged", "axis");
 REFLECTION_END();
 

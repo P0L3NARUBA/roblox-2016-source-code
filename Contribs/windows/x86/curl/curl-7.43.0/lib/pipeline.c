@@ -194,7 +194,7 @@ CURLMcode Curl_pipeline_set_site_blacklist(char **sites,
                                            struct curl_llist **list_ptr)
 {
   struct curl_llist *old_list = *list_ptr;
-  struct curl_llist *new_list = NULL;
+  struct curl_llist *new_list = nullptr;
 
   if(sites) {
     new_list = Curl_llist_alloc((curl_llist_dtor) site_blacklist_llist_dtor);
@@ -209,14 +209,14 @@ CURLMcode Curl_pipeline_set_site_blacklist(char **sites,
 
       hostname = strdup(*sites);
       if(!hostname) {
-        Curl_llist_destroy(new_list, NULL);
+        Curl_llist_destroy(new_list, nullptr);
         return CURLM_OUT_OF_MEMORY;
       }
 
       entry = malloc(sizeof(struct site_blacklist_entry));
       if(!entry) {
         free(hostname);
-        Curl_llist_destroy(new_list, NULL);
+        Curl_llist_destroy(new_list, nullptr);
         return CURLM_OUT_OF_MEMORY;
       }
 
@@ -224,7 +224,7 @@ CURLMcode Curl_pipeline_set_site_blacklist(char **sites,
       if(port) {
         *port = '\0';
         port++;
-        entry->port = (unsigned short)strtol(port, NULL, 10);
+        entry->port = (unsigned short)strtol(port, nullptr, 10);
       }
       else {
         /* Default port number for HTTP */
@@ -234,8 +234,8 @@ CURLMcode Curl_pipeline_set_site_blacklist(char **sites,
       entry->hostname = hostname;
 
       if(!Curl_llist_insert_next(new_list, new_list->tail, entry)) {
-        site_blacklist_llist_dtor(NULL, entry);
-        Curl_llist_destroy(new_list, NULL);
+        site_blacklist_llist_dtor(nullptr, entry);
+        Curl_llist_destroy(new_list, nullptr);
         return CURLM_OUT_OF_MEMORY;
       }
 
@@ -245,10 +245,10 @@ CURLMcode Curl_pipeline_set_site_blacklist(char **sites,
 
   /* Free the old list */
   if(old_list) {
-    Curl_llist_destroy(old_list, NULL);
+    Curl_llist_destroy(old_list, nullptr);
   }
 
-  /* This might be NULL if sites == NULL, i.e the blacklist is cleared */
+  /* This might be nullptr if sites == nullptr, i.e the blacklist is cleared */
   *list_ptr = new_list;
 
   return CURLM_OK;
@@ -287,7 +287,7 @@ CURLMcode Curl_pipeline_set_server_blacklist(char **servers,
                                              struct curl_llist **list_ptr)
 {
   struct curl_llist *old_list = *list_ptr;
-  struct curl_llist *new_list = NULL;
+  struct curl_llist *new_list = nullptr;
 
   if(servers) {
     new_list = Curl_llist_alloc((curl_llist_dtor) server_blacklist_llist_dtor);
@@ -311,10 +311,10 @@ CURLMcode Curl_pipeline_set_server_blacklist(char **servers,
 
   /* Free the old list */
   if(old_list) {
-    Curl_llist_destroy(old_list, NULL);
+    Curl_llist_destroy(old_list, nullptr);
   }
 
-  /* This might be NULL if sites == NULL, i.e the blacklist is cleared */
+  /* This might be nullptr if sites == nullptr, i.e the blacklist is cleared */
   *list_ptr = new_list;
 
   return CURLM_OK;

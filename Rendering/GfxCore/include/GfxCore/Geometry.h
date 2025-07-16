@@ -20,23 +20,24 @@ namespace RBX
 				Semantic_Normal,
 				Semantic_Color,
 				Semantic_Texture,
+				Semantic_InstanceID,
 
 				Semantic_Count
 			};
 
 			enum Format
 			{
-				Format_UInt1,	/* 4  bytes */
-				Format_Float1,	/* 4  bytes */
-				Format_Float2,	/* 8  bytes */
-				Format_Float3,	/* 12 bytes */
-				Format_Float4,	/* 16 bytes */
-				Format_Short2,	/* 4  bytes */
-				Format_Short4,	/* 8  bytes */
-				Format_UByte4,	/* 4  bytes */
-				Format_Color,	/* 4  bytes */
+				Format_UInt1,	/* 32-bit unsigned integer x 1, 4 bytes */
+				Format_Float1,	/* 32-bit signed float x 1, 4 bytes */
+				Format_Float2,	/* 32-bit signed float x 2, 8 bytes */
+				Format_Float3,	/* 32-bit signed float x 3, 12 bytes */
+				Format_Float4,	/* 32-bit signed float x 4, 16 bytes */
+				Format_Short2,	/* 16-bit signed float x 2, 4 bytes */
+				Format_Short4,	/* 16-bit signed float x 4, 8 bytes */
+				Format_UByte4,	/* 8-bit unsigned integer x 4, 4 bytes */
+				Format_Color,	/* 8-bit normalized unsigned integer x 4, 4 bytes */
 
-				Format_Count
+				Format_Count	/* Do not use */
 			};
 
 			enum Input

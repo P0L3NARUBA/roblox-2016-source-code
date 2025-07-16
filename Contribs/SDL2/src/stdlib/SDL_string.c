@@ -606,7 +606,7 @@ SDL_strchr(const char *string, int c)
         }
         ++string;
     }
-    return NULL;
+    return nullptr;
 #endif /* HAVE_STRCHR */
 }
 
@@ -625,7 +625,7 @@ SDL_strrchr(const char *string, int c)
         }
         --bufp;
     }
-    return NULL;
+    return nullptr;
 #endif /* HAVE_STRRCHR */
 }
 
@@ -642,7 +642,7 @@ SDL_strstr(const char *haystack, const char *needle)
         }
         ++haystack;
     }
-    return NULL;
+    return nullptr;
 #endif /* HAVE_STRSTR */
 }
 
@@ -769,7 +769,7 @@ int SDL_atoi(const char *string)
 #ifdef HAVE_ATOI
     return atoi(string);
 #else
-    return SDL_strtol(string, NULL, 0);
+    return SDL_strtol(string, nullptr, 0);
 #endif /* HAVE_ATOI */
 }
 
@@ -778,7 +778,7 @@ double SDL_atof(const char *string)
 #ifdef HAVE_ATOF
     return (double) atof(string);
 #else
-    return SDL_strtod(string, NULL);
+    return SDL_strtod(string, nullptr);
 #endif /* HAVE_ATOF */
 }
 
@@ -1401,7 +1401,7 @@ SDL_PrintFloat(char *text, size_t maxlen, SDL_FormatInfo *info, double arg)
             ++text;
         }
         value = (unsigned long) arg;
-        len = SDL_PrintUnsignedLong(text, left, NULL, value);
+        len = SDL_PrintUnsignedLong(text, left, nullptr, value);
         text += len;
         if (len >= left) {
             left = SDL_min(left, 1);
@@ -1421,7 +1421,7 @@ SDL_PrintFloat(char *text, size_t maxlen, SDL_FormatInfo *info, double arg)
             ++text;
             while (info->precision-- > 0) {
                 value = (unsigned long) (arg * mult);
-                len = SDL_PrintUnsignedLong(text, left, NULL, value);
+                len = SDL_PrintUnsignedLong(text, left, nullptr, value);
                 text += len;
                 if (len >= left) {
                     left = SDL_min(left, 1);

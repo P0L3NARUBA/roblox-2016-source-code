@@ -23,7 +23,7 @@ static const int sMaxColumnCount = 7;
 TSJobItem* ArbiterItem::getOrCreateTSJobItem(boost::shared_ptr<const RBX::TaskScheduler::Job> pJob)
 {
 	int currentIndex = 0;
-	TSJobItem *pTSItem = NULL;
+	TSJobItem *pTSItem = nullptr;
 	while (currentIndex < childCount())
 	{
 		//static cast since we know all of the inserted child items are of type TSJobItem
@@ -113,8 +113,8 @@ void RobloxTaskScheduler::updateValues()
 	RBX::TaskScheduler::singleton().getJobsInfo(jobs);
 
 	std::set<TSJobItem *> currentTSJobItems;
-	ArbiterItem* pArbiterItem = NULL;
-	TSJobItem *pTSJobItem = NULL;
+	ArbiterItem* pArbiterItem = nullptr;
+	TSJobItem *pTSJobItem = nullptr;
 
 	for(Jobs::iterator iter = jobs.begin(); iter!=jobs.end(); ++iter)
 	{

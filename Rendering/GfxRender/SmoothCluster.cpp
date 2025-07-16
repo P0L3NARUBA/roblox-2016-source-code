@@ -89,12 +89,12 @@ private:
 
 SmoothClusterBase::SmoothClusterBase(VisualEngine* visualEngine, const boost::shared_ptr<PartInstance>& part)
     : visualEngine(visualEngine)
-    , grid(NULL)
+    , grid(nullptr)
 {
     RBXASSERT(part->getPartType() == MEGACLUSTER_PART);
     partInstance = part;
 
-    RBXASSERT(partInstance->getGfxPart() == NULL);
+    RBXASSERT(partInstance->getGfxPart() == nullptr);
     partInstance->setGfxPart(this);
 
     MegaClusterInstance* mci = boost::polymorphic_downcast<MegaClusterInstance*>(part.get());
@@ -126,7 +126,7 @@ void SmoothClusterBase::unbind()
 	{
 		grid->disconnectListener(this);
 
-		grid = NULL;
+		grid = nullptr;
 	}
 }
 
@@ -177,7 +177,7 @@ std::pair<RenderEntity*, RenderEntity*> SmoothClusterBase::uploadGeometry(Render
 
 	vbuf->upload(0, vertices, vertexSize * vertexCount);
 
-	RenderEntity* solidEntity = NULL;
+	RenderEntity* solidEntity = nullptr;
 
 	if (!solidIndices.empty())
 	{
@@ -188,7 +188,7 @@ std::pair<RenderEntity*, RenderEntity*> SmoothClusterBase::uploadGeometry(Render
         solidEntity = new SmoothClusterRenderEntity(node, GeometryBatch(geometry, Geometry::Primitive_Triangles, ibuf->getElementCount(), vbuf->getElementCount()), material, RenderQueue::Id_Opaque, &materialConstants, unpackInfo);
 	}
 
-	RenderEntity* waterEntity = NULL;
+	RenderEntity* waterEntity = nullptr;
 
 	if (!waterIndices.empty())
 	{
@@ -493,7 +493,7 @@ std::pair<RenderEntity*, RenderEntity*> SmoothClusterChunked::createChunkGeometr
 	if (box.isEmpty())
 	{
         *outQuads = 0;
-		return std::pair<RenderEntity*, RenderEntity*>(NULL, NULL);
+		return std::pair<RenderEntity*, RenderEntity*>(nullptr, nullptr);
 	}
 
 	using namespace Voxel2::Mesher;
@@ -502,7 +502,7 @@ std::pair<RenderEntity*, RenderEntity*> SmoothClusterChunked::createChunkGeometr
 	BasicMesh geometry = generateGeometry(box, region.begin(), 0, options);
     
     if (geometry.indices.empty())
-        return std::pair<RenderEntity*, RenderEntity*>(NULL, NULL);
+        return std::pair<RenderEntity*, RenderEntity*>(nullptr, nullptr);
     
 	auto packInfo = getPackInfo(region);
 
@@ -511,7 +511,7 @@ std::pair<RenderEntity*, RenderEntity*> SmoothClusterChunked::createChunkGeometr
 	*outQuads = (graphicsGeometry.solidIndices.size() + graphicsGeometry.waterIndices.size()) / 6;
 	
 	if (*outQuads == 0)
-		return std::pair<RenderEntity*, RenderEntity*>(NULL, NULL);
+		return std::pair<RenderEntity*, RenderEntity*>(nullptr, nullptr);
 
 	return uploadGeometry(updateChunkNode(pos), packInfo.second,
 		sizeof(GraphicsVertexPacked), &graphicsGeometry.vertices[0], graphicsGeometry.vertices.size(),
@@ -724,7 +724,7 @@ SmoothClusterLOD::Chunk* SmoothClusterLOD::findChunk(const ChunkId& id)
 	if (it != chunks.end())
 		return &it->second;
 
-	return NULL;
+	return nullptr;
 }
 
 void SmoothClusterLOD::removeChunk(const ChunkId& id)
@@ -738,7 +738,7 @@ SmoothClusterLOD::Chunk* SmoothClusterLOD::findDirtyChunk()
 		if (p.second.flags)
 			return &p.second;
 
-	return NULL;
+	return nullptr;
 }
 
 void SmoothClusterLOD::updateChunk(Chunk& chunk)
@@ -808,7 +808,7 @@ std::pair<RenderEntity*, RenderEntity*> SmoothClusterLOD::createChunkGeometry(Ch
 	if (box.isEmpty())
 	{
         *outQuads = 0;
-		return std::pair<RenderEntity*, RenderEntity*>(NULL, NULL);
+		return std::pair<RenderEntity*, RenderEntity*>(nullptr, nullptr);
 	}
 
 	using namespace Voxel2::Mesher;
@@ -817,7 +817,7 @@ std::pair<RenderEntity*, RenderEntity*> SmoothClusterLOD::createChunkGeometry(Ch
 	BasicMesh geometry = generateGeometry(box, region.begin(), lod, options);
 
     if (geometry.indices.empty())
-		return std::pair<RenderEntity*, RenderEntity*>(NULL, NULL);
+		return std::pair<RenderEntity*, RenderEntity*>(nullptr, nullptr);
     
     auto packInfo = getPackInfo(region);
 
@@ -826,7 +826,7 @@ std::pair<RenderEntity*, RenderEntity*> SmoothClusterLOD::createChunkGeometry(Ch
 	*outQuads = (graphicsGeometry.solidIndices.size() + graphicsGeometry.waterIndices.size()) / 6;
 	
 	if (*outQuads == 0)
-		return std::pair<RenderEntity*, RenderEntity*>(NULL, NULL);
+		return std::pair<RenderEntity*, RenderEntity*>(nullptr, nullptr);
 
 	return uploadGeometry(updateChunkNode(chunk), packInfo.second,
 		sizeof(GraphicsVertexPacked), &graphicsGeometry.vertices[0], graphicsGeometry.vertices.size(),

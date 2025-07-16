@@ -30,14 +30,14 @@ RCCServiceSoapService::~RCCServiceSoapService()
 void RCCServiceSoapService::RCCServiceSoapService_init(soap_mode imode, soap_mode omode)
 {	static const struct Namespace namespaces[] =
 {
-	{"SOAP-ENV", "http://schemas.xmlsoap.org/soap/envelope/", "http://www.w3.org/*/soap-envelope", NULL},
-	{"SOAP-ENC", "http://schemas.xmlsoap.org/soap/encoding/", "http://www.w3.org/*/soap-encoding", NULL},
-	{"xsi", "http://www.w3.org/2001/XMLSchema-instance", "http://www.w3.org/*/XMLSchema-instance", NULL},
-	{"xsd", "http://www.w3.org/2001/XMLSchema", "http://www.w3.org/*/XMLSchema", NULL},
-	{"ns2", "http://roblox.com/RCCServiceSoap", NULL, NULL},
-	{"ns1", "http://roblox.com/", NULL, NULL},
-	{"ns3", "http://roblox.com/RCCServiceSoap12", NULL, NULL},
-	{NULL, NULL, NULL, NULL}
+	{"SOAP-ENV", "http://schemas.xmlsoap.org/soap/envelope/", "http://www.w3.org/*/soap-envelope", nullptr},
+	{"SOAP-ENC", "http://schemas.xmlsoap.org/soap/encoding/", "http://www.w3.org/*/soap-encoding", nullptr},
+	{"xsi", "http://www.w3.org/2001/XMLSchema-instance", "http://www.w3.org/*/XMLSchema-instance", nullptr},
+	{"xsd", "http://www.w3.org/2001/XMLSchema", "http://www.w3.org/*/XMLSchema", nullptr},
+	{"ns2", "http://roblox.com/RCCServiceSoap", nullptr, nullptr},
+	{"ns1", "http://roblox.com/", nullptr, nullptr},
+	{"ns3", "http://roblox.com/RCCServiceSoap12", nullptr, nullptr},
+	{nullptr, nullptr, nullptr, nullptr}
 };
 	soap_imode(this, imode);
 	soap_omode(this, omode);
@@ -86,11 +86,11 @@ char *RCCServiceSoapService::soap_sprint_fault(char *buf, size_t len)
 #endif
 
 void RCCServiceSoapService::soap_noheader()
-{	header = NULL;
+{	header = nullptr;
 }
 
 int RCCServiceSoapService::run(int port)
-{	if (soap_valid_socket(bind(NULL, port, 100)))
+{	if (soap_valid_socket(bind(nullptr, port, 100)))
 	{	for (;;)
 		{	if (!soap_valid_socket(accept()))
 				return this->error;
@@ -236,8 +236,8 @@ static int serve___ns2__HelloWorld(RCCServiceSoapService *soap)
 	_ns1__HelloWorldResponse ns1__HelloWorldResponse;
 	ns1__HelloWorldResponse.soap_default(soap);
 	soap_default___ns2__HelloWorld(soap, &soap_tmp___ns2__HelloWorld);
-	soap->encodingStyle = NULL;
-	if (!soap_get___ns2__HelloWorld(soap, &soap_tmp___ns2__HelloWorld, "-ns2:HelloWorld", NULL))
+	soap->encodingStyle = nullptr;
+	if (!soap_get___ns2__HelloWorld(soap, &soap_tmp___ns2__HelloWorld, "-ns2:HelloWorld", nullptr))
 		return soap->error;
 	if (soap_body_end_in(soap)
 	 || soap_envelope_end_in(soap)
@@ -277,8 +277,8 @@ static int serve___ns2__GetVersion(RCCServiceSoapService *soap)
 	_ns1__GetVersionResponse ns1__GetVersionResponse;
 	ns1__GetVersionResponse.soap_default(soap);
 	soap_default___ns2__GetVersion(soap, &soap_tmp___ns2__GetVersion);
-	soap->encodingStyle = NULL;
-	if (!soap_get___ns2__GetVersion(soap, &soap_tmp___ns2__GetVersion, "-ns2:GetVersion", NULL))
+	soap->encodingStyle = nullptr;
+	if (!soap_get___ns2__GetVersion(soap, &soap_tmp___ns2__GetVersion, "-ns2:GetVersion", nullptr))
 		return soap->error;
 	if (soap_body_end_in(soap)
 	 || soap_envelope_end_in(soap)
@@ -318,8 +318,8 @@ static int serve___ns2__GetStatus(RCCServiceSoapService *soap)
 	_ns1__GetStatusResponse ns1__GetStatusResponse;
 	ns1__GetStatusResponse.soap_default(soap);
 	soap_default___ns2__GetStatus(soap, &soap_tmp___ns2__GetStatus);
-	soap->encodingStyle = NULL;
-	if (!soap_get___ns2__GetStatus(soap, &soap_tmp___ns2__GetStatus, "-ns2:GetStatus", NULL))
+	soap->encodingStyle = nullptr;
+	if (!soap_get___ns2__GetStatus(soap, &soap_tmp___ns2__GetStatus, "-ns2:GetStatus", nullptr))
 		return soap->error;
 	if (soap_body_end_in(soap)
 	 || soap_envelope_end_in(soap)
@@ -359,8 +359,8 @@ static int serve___ns2__OpenJob(RCCServiceSoapService *soap)
 	_ns1__OpenJobResponse ns1__OpenJobResponse;
 	ns1__OpenJobResponse.soap_default(soap);
 	soap_default___ns2__OpenJob(soap, &soap_tmp___ns2__OpenJob);
-	soap->encodingStyle = NULL;
-	if (!soap_get___ns2__OpenJob(soap, &soap_tmp___ns2__OpenJob, "-ns2:OpenJob", NULL))
+	soap->encodingStyle = nullptr;
+	if (!soap_get___ns2__OpenJob(soap, &soap_tmp___ns2__OpenJob, "-ns2:OpenJob", nullptr))
 		return soap->error;
 	if (soap_body_end_in(soap)
 	 || soap_envelope_end_in(soap)
@@ -400,8 +400,8 @@ static int serve___ns2__OpenJobEx(RCCServiceSoapService *soap)
 	_ns1__OpenJobExResponse ns1__OpenJobExResponse;
 	ns1__OpenJobExResponse.soap_default(soap);
 	soap_default___ns2__OpenJobEx(soap, &soap_tmp___ns2__OpenJobEx);
-	soap->encodingStyle = NULL;
-	if (!soap_get___ns2__OpenJobEx(soap, &soap_tmp___ns2__OpenJobEx, "-ns2:OpenJobEx", NULL))
+	soap->encodingStyle = nullptr;
+	if (!soap_get___ns2__OpenJobEx(soap, &soap_tmp___ns2__OpenJobEx, "-ns2:OpenJobEx", nullptr))
 		return soap->error;
 	if (soap_body_end_in(soap)
 	 || soap_envelope_end_in(soap)
@@ -441,8 +441,8 @@ static int serve___ns2__RenewLease(RCCServiceSoapService *soap)
 	_ns1__RenewLeaseResponse ns1__RenewLeaseResponse;
 	ns1__RenewLeaseResponse.soap_default(soap);
 	soap_default___ns2__RenewLease(soap, &soap_tmp___ns2__RenewLease);
-	soap->encodingStyle = NULL;
-	if (!soap_get___ns2__RenewLease(soap, &soap_tmp___ns2__RenewLease, "-ns2:RenewLease", NULL))
+	soap->encodingStyle = nullptr;
+	if (!soap_get___ns2__RenewLease(soap, &soap_tmp___ns2__RenewLease, "-ns2:RenewLease", nullptr))
 		return soap->error;
 	if (soap_body_end_in(soap)
 	 || soap_envelope_end_in(soap)
@@ -482,8 +482,8 @@ static int serve___ns2__Execute(RCCServiceSoapService *soap)
 	_ns1__ExecuteResponse ns1__ExecuteResponse;
 	ns1__ExecuteResponse.soap_default(soap);
 	soap_default___ns2__Execute(soap, &soap_tmp___ns2__Execute);
-	soap->encodingStyle = NULL;
-	if (!soap_get___ns2__Execute(soap, &soap_tmp___ns2__Execute, "-ns2:Execute", NULL))
+	soap->encodingStyle = nullptr;
+	if (!soap_get___ns2__Execute(soap, &soap_tmp___ns2__Execute, "-ns2:Execute", nullptr))
 		return soap->error;
 	if (soap_body_end_in(soap)
 	 || soap_envelope_end_in(soap)
@@ -523,8 +523,8 @@ static int serve___ns2__ExecuteEx(RCCServiceSoapService *soap)
 	_ns1__ExecuteExResponse ns1__ExecuteExResponse;
 	ns1__ExecuteExResponse.soap_default(soap);
 	soap_default___ns2__ExecuteEx(soap, &soap_tmp___ns2__ExecuteEx);
-	soap->encodingStyle = NULL;
-	if (!soap_get___ns2__ExecuteEx(soap, &soap_tmp___ns2__ExecuteEx, "-ns2:ExecuteEx", NULL))
+	soap->encodingStyle = nullptr;
+	if (!soap_get___ns2__ExecuteEx(soap, &soap_tmp___ns2__ExecuteEx, "-ns2:ExecuteEx", nullptr))
 		return soap->error;
 	if (soap_body_end_in(soap)
 	 || soap_envelope_end_in(soap)
@@ -564,8 +564,8 @@ static int serve___ns2__CloseJob(RCCServiceSoapService *soap)
 	_ns1__CloseJobResponse ns1__CloseJobResponse;
 	ns1__CloseJobResponse.soap_default(soap);
 	soap_default___ns2__CloseJob(soap, &soap_tmp___ns2__CloseJob);
-	soap->encodingStyle = NULL;
-	if (!soap_get___ns2__CloseJob(soap, &soap_tmp___ns2__CloseJob, "-ns2:CloseJob", NULL))
+	soap->encodingStyle = nullptr;
+	if (!soap_get___ns2__CloseJob(soap, &soap_tmp___ns2__CloseJob, "-ns2:CloseJob", nullptr))
 		return soap->error;
 	if (soap_body_end_in(soap)
 	 || soap_envelope_end_in(soap)
@@ -605,8 +605,8 @@ static int serve___ns2__BatchJob(RCCServiceSoapService *soap)
 	_ns1__BatchJobResponse ns1__BatchJobResponse;
 	ns1__BatchJobResponse.soap_default(soap);
 	soap_default___ns2__BatchJob(soap, &soap_tmp___ns2__BatchJob);
-	soap->encodingStyle = NULL;
-	if (!soap_get___ns2__BatchJob(soap, &soap_tmp___ns2__BatchJob, "-ns2:BatchJob", NULL))
+	soap->encodingStyle = nullptr;
+	if (!soap_get___ns2__BatchJob(soap, &soap_tmp___ns2__BatchJob, "-ns2:BatchJob", nullptr))
 		return soap->error;
 	if (soap_body_end_in(soap)
 	 || soap_envelope_end_in(soap)
@@ -646,8 +646,8 @@ static int serve___ns2__BatchJobEx(RCCServiceSoapService *soap)
 	_ns1__BatchJobExResponse ns1__BatchJobExResponse;
 	ns1__BatchJobExResponse.soap_default(soap);
 	soap_default___ns2__BatchJobEx(soap, &soap_tmp___ns2__BatchJobEx);
-	soap->encodingStyle = NULL;
-	if (!soap_get___ns2__BatchJobEx(soap, &soap_tmp___ns2__BatchJobEx, "-ns2:BatchJobEx", NULL))
+	soap->encodingStyle = nullptr;
+	if (!soap_get___ns2__BatchJobEx(soap, &soap_tmp___ns2__BatchJobEx, "-ns2:BatchJobEx", nullptr))
 		return soap->error;
 	if (soap_body_end_in(soap)
 	 || soap_envelope_end_in(soap)
@@ -687,8 +687,8 @@ static int serve___ns2__GetExpiration(RCCServiceSoapService *soap)
 	_ns1__GetExpirationResponse ns1__GetExpirationResponse;
 	ns1__GetExpirationResponse.soap_default(soap);
 	soap_default___ns2__GetExpiration(soap, &soap_tmp___ns2__GetExpiration);
-	soap->encodingStyle = NULL;
-	if (!soap_get___ns2__GetExpiration(soap, &soap_tmp___ns2__GetExpiration, "-ns2:GetExpiration", NULL))
+	soap->encodingStyle = nullptr;
+	if (!soap_get___ns2__GetExpiration(soap, &soap_tmp___ns2__GetExpiration, "-ns2:GetExpiration", nullptr))
 		return soap->error;
 	if (soap_body_end_in(soap)
 	 || soap_envelope_end_in(soap)
@@ -728,8 +728,8 @@ static int serve___ns2__GetAllJobs(RCCServiceSoapService *soap)
 	_ns1__GetAllJobsResponse ns1__GetAllJobsResponse;
 	ns1__GetAllJobsResponse.soap_default(soap);
 	soap_default___ns2__GetAllJobs(soap, &soap_tmp___ns2__GetAllJobs);
-	soap->encodingStyle = NULL;
-	if (!soap_get___ns2__GetAllJobs(soap, &soap_tmp___ns2__GetAllJobs, "-ns2:GetAllJobs", NULL))
+	soap->encodingStyle = nullptr;
+	if (!soap_get___ns2__GetAllJobs(soap, &soap_tmp___ns2__GetAllJobs, "-ns2:GetAllJobs", nullptr))
 		return soap->error;
 	if (soap_body_end_in(soap)
 	 || soap_envelope_end_in(soap)
@@ -769,8 +769,8 @@ static int serve___ns2__GetAllJobsEx(RCCServiceSoapService *soap)
 	_ns1__GetAllJobsExResponse ns1__GetAllJobsExResponse;
 	ns1__GetAllJobsExResponse.soap_default(soap);
 	soap_default___ns2__GetAllJobsEx(soap, &soap_tmp___ns2__GetAllJobsEx);
-	soap->encodingStyle = NULL;
-	if (!soap_get___ns2__GetAllJobsEx(soap, &soap_tmp___ns2__GetAllJobsEx, "-ns2:GetAllJobsEx", NULL))
+	soap->encodingStyle = nullptr;
+	if (!soap_get___ns2__GetAllJobsEx(soap, &soap_tmp___ns2__GetAllJobsEx, "-ns2:GetAllJobsEx", nullptr))
 		return soap->error;
 	if (soap_body_end_in(soap)
 	 || soap_envelope_end_in(soap)
@@ -810,8 +810,8 @@ static int serve___ns2__CloseExpiredJobs(RCCServiceSoapService *soap)
 	_ns1__CloseExpiredJobsResponse ns1__CloseExpiredJobsResponse;
 	ns1__CloseExpiredJobsResponse.soap_default(soap);
 	soap_default___ns2__CloseExpiredJobs(soap, &soap_tmp___ns2__CloseExpiredJobs);
-	soap->encodingStyle = NULL;
-	if (!soap_get___ns2__CloseExpiredJobs(soap, &soap_tmp___ns2__CloseExpiredJobs, "-ns2:CloseExpiredJobs", NULL))
+	soap->encodingStyle = nullptr;
+	if (!soap_get___ns2__CloseExpiredJobs(soap, &soap_tmp___ns2__CloseExpiredJobs, "-ns2:CloseExpiredJobs", nullptr))
 		return soap->error;
 	if (soap_body_end_in(soap)
 	 || soap_envelope_end_in(soap)
@@ -851,8 +851,8 @@ static int serve___ns2__CloseAllJobs(RCCServiceSoapService *soap)
 	_ns1__CloseAllJobsResponse ns1__CloseAllJobsResponse;
 	ns1__CloseAllJobsResponse.soap_default(soap);
 	soap_default___ns2__CloseAllJobs(soap, &soap_tmp___ns2__CloseAllJobs);
-	soap->encodingStyle = NULL;
-	if (!soap_get___ns2__CloseAllJobs(soap, &soap_tmp___ns2__CloseAllJobs, "-ns2:CloseAllJobs", NULL))
+	soap->encodingStyle = nullptr;
+	if (!soap_get___ns2__CloseAllJobs(soap, &soap_tmp___ns2__CloseAllJobs, "-ns2:CloseAllJobs", nullptr))
 		return soap->error;
 	if (soap_body_end_in(soap)
 	 || soap_envelope_end_in(soap)
@@ -892,8 +892,8 @@ static int serve___ns2__Diag(RCCServiceSoapService *soap)
 	_ns1__DiagResponse ns1__DiagResponse;
 	ns1__DiagResponse.soap_default(soap);
 	soap_default___ns2__Diag(soap, &soap_tmp___ns2__Diag);
-	soap->encodingStyle = NULL;
-	if (!soap_get___ns2__Diag(soap, &soap_tmp___ns2__Diag, "-ns2:Diag", NULL))
+	soap->encodingStyle = nullptr;
+	if (!soap_get___ns2__Diag(soap, &soap_tmp___ns2__Diag, "-ns2:Diag", nullptr))
 		return soap->error;
 	if (soap_body_end_in(soap)
 	 || soap_envelope_end_in(soap)
@@ -933,8 +933,8 @@ static int serve___ns2__DiagEx(RCCServiceSoapService *soap)
 	_ns1__DiagExResponse ns1__DiagExResponse;
 	ns1__DiagExResponse.soap_default(soap);
 	soap_default___ns2__DiagEx(soap, &soap_tmp___ns2__DiagEx);
-	soap->encodingStyle = NULL;
-	if (!soap_get___ns2__DiagEx(soap, &soap_tmp___ns2__DiagEx, "-ns2:DiagEx", NULL))
+	soap->encodingStyle = nullptr;
+	if (!soap_get___ns2__DiagEx(soap, &soap_tmp___ns2__DiagEx, "-ns2:DiagEx", nullptr))
 		return soap->error;
 	if (soap_body_end_in(soap)
 	 || soap_envelope_end_in(soap)

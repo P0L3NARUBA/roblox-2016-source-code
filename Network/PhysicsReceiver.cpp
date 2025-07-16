@@ -65,7 +65,7 @@ void DeserializedTouchItem::process(Replicator& replicator)
 }
 
 PhysicsReceiver::PhysicsReceiver(Replicator* replicator, bool isServer)
-: replicator(replicator), iAmServer(isServer), stats(NULL), movementWaypointList(DFInt::DebugMovementPathNumTotalWayPoint)
+: replicator(replicator), iAmServer(isServer), stats(nullptr), movementWaypointList(DFInt::DebugMovementPathNumTotalWayPoint)
 {
 	setTime(Time::nowFast());
 }
@@ -490,7 +490,7 @@ void PhysicsReceiver::readCoordinateFrame(RakNet::BitStream& bitStream, Coordina
 {
     NETPROFILE_START("readCoordinateFrame", &bitStream);
 
-	if(stats == NULL)
+	if(stats == nullptr)
 	{
 		Compressor::readTranslation(bitStream, cFrame.translation);
 		Compressor::readRotation(bitStream, cFrame.rotation);
@@ -617,7 +617,7 @@ void PhysicsReceiver::setPhysics(const MechanismItem& item, const RBX::RemoteTim
 	{
 		AssemblyItem& assemblyItem = item.getAssemblyItem(i);
 
-		// assemblyItem.primitive will be NULL if the Part was destroyed while the physics packet was outstanding
+		// assemblyItem.primitive will be nullptr if the Part was destroyed while the physics packet was outstanding
 
 		if (PartInstance* part = assemblyItem.rootPart.get())
 		{
@@ -807,7 +807,7 @@ bool PhysicsReceiver::receivePart(shared_ptr<PartInstance>& part, RakNet::BitStr
 	RBX::Guid::Data id;
 	if (replicator->deserializeInstanceRef(inBitstream, instance, id))
 	{
-		if (instance==NULL) {
+		if (instance==nullptr) {
 			return false;			// packet end tag
 		}
 		part = Instance::fastSharedDynamicCast<PartInstance>(instance);

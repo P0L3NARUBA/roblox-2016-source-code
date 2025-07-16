@@ -56,7 +56,7 @@ bool RBX::CSGOperations::doUnion(
         return false;
     }
 
-    Instance* newOperationParent = NULL;
+    Instance* newOperationParent = nullptr;
     if (FFlag::CSGDelayParentingOperationToEnd)
     {
         newOperationParent = getCommonParentOrWorkspace(start, end);
@@ -65,7 +65,7 @@ bool RBX::CSGOperations::doUnion(
     //Convert to mesh
     if (!setUnionMesh(partOperation, start, end, false))
     {
-        partOperation->setParent(NULL);
+        partOperation->setParent(nullptr);
         partOperation = boost::shared_ptr<RBX::PartOperation>();
         return false;
     }
@@ -117,7 +117,7 @@ bool RBX::CSGOperations::doUnion(
     {
         char buf[128];
         sprintf(buf, "This union is too complex.  There is a %d triangle limit for unions.  Please undo the last change.", (int)RBX::PartOperation::getMaximumTriangleCount());
-        partOperation->setParent(NULL);
+        partOperation->setParent(nullptr);
         partOperation = boost::shared_ptr<RBX::PartOperation>();
         operationFailed("Union Rejected", buf);
         return true;
@@ -135,12 +135,12 @@ bool RBX::CSGOperations::doUnion(
 
     //Remove Children
     while (partOperation->numChildren())
-        partOperation->getChild(0)->setParent(NULL);
+        partOperation->getChild(0)->setParent(nullptr);
 
     if (FFlag::CSGDelayParentingOperationToEnd)
     {
-        RBXASSERT(partOperation->getParent() == NULL);
-        RBXASSERT(newOperationParent != NULL);
+        RBXASSERT(partOperation->getParent() == nullptr);
+        RBXASSERT(newOperationParent != nullptr);
         partOperation->setParent(newOperationParent);
     }
 
@@ -159,12 +159,12 @@ bool RBX::CSGOperations::doNegate(
     if (!success)
     {
         for (std::vector<shared_ptr<RBX::Instance> >::iterator iter = toSelect.begin(); iter != toSelect.end(); ++iter)
-            (*iter)->setParent(NULL);
+            (*iter)->setParent(nullptr);
         return true;
     }
 
     for (std::vector<shared_ptr<RBX::Instance> >::iterator iter = toRemove.begin(); iter != toRemove.end(); ++iter)
-        (*iter)->setParent(NULL);
+        (*iter)->setParent(nullptr);
 
     return true;
 }
@@ -191,7 +191,7 @@ bool RBX::CSGOperations::doSeparate(
     if (didSomething)
     {
         for (Instances::const_iterator iter = itemsToDelete.begin(); iter != itemsToDelete.end(); ++iter)
-            (*iter)->setParent(NULL);
+            (*iter)->setParent(nullptr);
     }
     else
         debugAssertM(0, "Calling seperate command without checking is-enabled");
@@ -346,7 +346,7 @@ bool RBX::CSGOperations::setUnionMesh(shared_ptr<PartOperation> finalPartOperati
 
     CSGDictionaryService* dictionaryService = ServiceProvider::create< CSGDictionaryService >(dataModel);
 
-    Instance* parentToSet = FFlag::CSGDelayParentingOperationToEnd ? NULL : (*start)->getParent();
+    Instance* parentToSet = FFlag::CSGDelayParentingOperationToEnd ? nullptr : (*start)->getParent();
 
     CoordinateFrame primaryDelta;
     bool primaryDeltaSet = false;
@@ -358,7 +358,7 @@ bool RBX::CSGOperations::setUnionMesh(shared_ptr<PartOperation> finalPartOperati
         if (!FFlag::CSGDelayParentingOperationToEnd)
         {
             if (parentToSet != (*iter)->getParent())
-                parentToSet = NULL;
+                parentToSet = nullptr;
         }
 
         if (shared_ptr<PartInstance> partInstance = Instance::fastSharedDynamicCast<PartInstance>(*iter))
@@ -433,7 +433,7 @@ bool RBX::CSGOperations::setUnionMesh(shared_ptr<PartOperation> finalPartOperati
                 {
                     if (!isChildRecalculation)
                         resetInstanceCFrame(start, end, originalCFrames);
-                    finalPartOperation->setParent(NULL);
+                    finalPartOperation->setParent(nullptr);
                     operationFailed("Union Unsolvable -1", unionFailedMsg);
                     return false;
                 }
@@ -453,7 +453,7 @@ bool RBX::CSGOperations::setUnionMesh(shared_ptr<PartOperation> finalPartOperati
                 {
                     if (!isChildRecalculation)
                         resetInstanceCFrame(start, end, originalCFrames);
-                    finalPartOperation->setParent(NULL);
+                    finalPartOperation->setParent(nullptr);
                     operationFailed("Union Unsolvable -2", unionFailedMsg);
                     return false;
                 }
@@ -489,7 +489,7 @@ bool RBX::CSGOperations::setUnionMesh(shared_ptr<PartOperation> finalPartOperati
                 {
                     if (!isChildRecalculation)
                         resetInstanceCFrame(start, end, originalCFrames);
-                    finalPartOperation->setParent(NULL);
+                    finalPartOperation->setParent(nullptr);
                     operationFailed("Warning", "This part or mesh type is not supported.");
                     return false;
                 }
@@ -505,7 +505,7 @@ bool RBX::CSGOperations::setUnionMesh(shared_ptr<PartOperation> finalPartOperati
                     {
                         if (!isChildRecalculation)
                             resetInstanceCFrame(start, end, originalCFrames);
-                        finalPartOperation->setParent(NULL);
+                        finalPartOperation->setParent(nullptr);
                         operationFailed("Union Unsolvable -3", unionFailedMsg);
                         return false;
                     }
@@ -514,7 +514,7 @@ bool RBX::CSGOperations::setUnionMesh(shared_ptr<PartOperation> finalPartOperati
                 {
                     if (!isChildRecalculation)
                         resetInstanceCFrame(start, end, originalCFrames);
-                    finalPartOperation->setParent(NULL);
+                    finalPartOperation->setParent(nullptr);
                     operationFailed("Warning", "This part or mesh type is not supported.");
                     return false;
                 }
@@ -524,7 +524,7 @@ bool RBX::CSGOperations::setUnionMesh(shared_ptr<PartOperation> finalPartOperati
         {
             if (!isChildRecalculation)
                 resetInstanceCFrame(start, end, originalCFrames);
-            finalPartOperation->setParent(NULL);
+            finalPartOperation->setParent(nullptr);
             operationFailed("Warning", "Only parts, union parts, and negative parts are supported by union.");
             return false;
         }
@@ -534,7 +534,7 @@ bool RBX::CSGOperations::setUnionMesh(shared_ptr<PartOperation> finalPartOperati
     {
         if (!isChildRecalculation)
             resetInstanceCFrame(start, end, originalCFrames);
-        finalPartOperation->setParent(NULL);
+        finalPartOperation->setParent(nullptr);
         operationFailed("Union Unsolvable -6", unionFailedMsg);
         return false;
     }
@@ -550,7 +550,7 @@ bool RBX::CSGOperations::setUnionMesh(shared_ptr<PartOperation> finalPartOperati
         {
             if (!isChildRecalculation)
                 resetInstanceCFrame(start, end, originalCFrames);
-            finalPartOperation->setParent(NULL);
+            finalPartOperation->setParent(nullptr);
             operationFailed("Union Unsolvable -7", unionFailedMsg);
             return false;
         }
@@ -560,7 +560,7 @@ bool RBX::CSGOperations::setUnionMesh(shared_ptr<PartOperation> finalPartOperati
     {
         if (!isChildRecalculation)
             resetInstanceCFrame(start, end, originalCFrames);
-        finalPartOperation->setParent(NULL);
+        finalPartOperation->setParent(nullptr);
         operationFailed("Union Unsolvable -8", unionFailedMsg);
         return false;
     }
@@ -585,7 +585,7 @@ bool RBX::CSGOperations::setUnionMesh(shared_ptr<PartOperation> finalPartOperati
         sprintf(buf, "This union would be %d triangles.  There is a %d triangle limit for unions.", (int)numTriangles, (int)PartOperation::getMaximumTriangleCount());
         if (!isChildRecalculation)
             resetInstanceCFrame(start, end, originalCFrames);
-        finalPartOperation->setParent(NULL);
+        finalPartOperation->setParent(nullptr);
         operationFailed("Union Rejected", buf);
         return false;
     }
@@ -596,7 +596,7 @@ bool RBX::CSGOperations::setUnionMesh(shared_ptr<PartOperation> finalPartOperati
         sprintf(buf, "This union is too complex.  There is a %d triangle limit for unions.", (int)PartOperation::getMaximumTriangleCount());
         if (!isChildRecalculation)
             resetInstanceCFrame(start, end, originalCFrames);
-        finalPartOperation->setParent(NULL);
+        finalPartOperation->setParent(nullptr);
         operationFailed("Union Rejected", buf);
         return false;
     }
@@ -614,7 +614,7 @@ bool RBX::CSGOperations::setUnionMesh(shared_ptr<PartOperation> finalPartOperati
         }
     }
     if (!FFlag::CSGDelayParentingOperationToEnd && dataModel)
-        finalPartOperation->setParent(parentToSet != NULL ? parentToSet : dataModel->getWorkspace());
+        finalPartOperation->setParent(parentToSet != nullptr ? parentToSet : dataModel->getWorkspace());
     finalPartOperation->setPartSizeXml(positiveMesh->extentsSize());
     finalPartOperation->setInitialSize(finalPartOperation->getPartSizeUi());
 
@@ -629,7 +629,7 @@ bool RBX::CSGOperations::setUnionMesh(shared_ptr<PartOperation> finalPartOperati
     {
         if (!isChildRecalculation)
             resetInstanceCFrame(start, end, originalCFrames);
-        finalPartOperation->setParent(NULL);
+        finalPartOperation->setParent(nullptr);
         operationFailed("Union Rejected", "This union's Physics Data is too complex, simplify the model and try again");
         return false;
     }
@@ -824,7 +824,7 @@ bool RBX::CSGOperations::negateSelection(Instances& toRemove,
             std::stringstream ss;
             SerializerBinary::serialize(ss, groupInstance.get());
             negateOperation->setChildData(BinaryString(ss.str()));
-            groupInstance->setParent(NULL);
+            groupInstance->setParent(nullptr);
 
             if (FFlag::CSGDelayParentingOperationToEnd)
             {

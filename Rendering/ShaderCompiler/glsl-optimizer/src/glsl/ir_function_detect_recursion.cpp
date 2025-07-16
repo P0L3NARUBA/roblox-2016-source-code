@@ -155,10 +155,10 @@ public:
 class has_recursion_visitor : public ir_hierarchical_visitor {
 public:
    has_recursion_visitor()
-      : current(NULL)
+      : current(nullptr)
    {
       progress = false;
-      this->mem_ctx = ralloc_context(NULL);
+      this->mem_ctx = ralloc_context(nullptr);
       this->function_hash = hash_table_ctor(0, hash_table_pointer_hash,
 					    hash_table_pointer_compare);
    }
@@ -172,7 +172,7 @@ public:
    function *get_function(ir_function_signature *sig)
    {
       function *f = (function *) hash_table_find(this->function_hash, sig);
-      if (f == NULL) {
+      if (f == nullptr) {
 	 f = new(mem_ctx) function(sig);
 	 hash_table_insert(this->function_hash, f, sig);
       }
@@ -189,17 +189,17 @@ public:
    virtual ir_visitor_status visit_leave(ir_function_signature *sig)
    {
       (void) sig;
-      this->current = NULL;
+      this->current = nullptr;
       return visit_continue;
    }
 
    virtual ir_visitor_status visit_enter(ir_call *call)
    {
-      /* At global scope this->current will be NULL.  Since there is no way to
+      /* At global scope this->current will be nullptr.  Since there is no way to
        * call global scope, it can never be part of a cycle.  Don't bother
        * adding calls from global scope to the graph.
        */
-      if (this->current == NULL)
+      if (this->current == nullptr)
 	 return visit_continue;
 
       function *const target = this->get_function(call->callee);

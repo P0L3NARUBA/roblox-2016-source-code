@@ -257,31 +257,31 @@ static WIN_DialogData *CreateDialogData(int w, int h, const char *caption)
 
     dialog = (WIN_DialogData *)SDL_calloc(1, sizeof(*dialog));
     if (!dialog) {
-        return NULL;
+        return nullptr;
     }
 
     if (!AddDialogData(dialog, &dialogTemplate, sizeof(dialogTemplate))) {
         FreeDialogData(dialog);
-        return NULL;
+        return nullptr;
     }
 
     /* No menu */
     WordToPass = 0;
     if (!AddDialogData(dialog, &WordToPass, 2)) {
         FreeDialogData(dialog);
-        return NULL;
+        return nullptr;
     }
 
     /* No custom class */
     if (!AddDialogData(dialog, &WordToPass, 2)) {
         FreeDialogData(dialog);
-        return NULL;
+        return nullptr;
     }
 
     /* title */
     if (!AddDialogString(dialog, caption)) {
         FreeDialogData(dialog);
-        return NULL;
+        return nullptr;
     }
 
     /* Font stuff */
@@ -297,44 +297,44 @@ static WIN_DialogData *CreateDialogData(int w, int h, const char *caption)
 
         /* Font size - convert to logical font size for dialog parameter. */
         {
-            HDC ScreenDC = GetDC(NULL);
+            HDC ScreenDC = GetDC(nullptr);
             int LogicalPixelsY = GetDeviceCaps(ScreenDC, LOGPIXELSY);
             if (!LogicalPixelsY) /* This can happen if the application runs out of GDI handles */
                 LogicalPixelsY = 72;
             WordToPass = (WORD)(-72 * NCM.lfMessageFont.lfHeight / LogicalPixelsY);
-            ReleaseDC(NULL, ScreenDC);
+            ReleaseDC(nullptr, ScreenDC);
         }
 
         if (!AddDialogData(dialog, &WordToPass, 2)) {
             FreeDialogData(dialog);
-            return NULL;
+            return nullptr;
         }
 
         /* Font weight */
         WordToPass = (WORD)NCM.lfMessageFont.lfWeight;
         if (!AddDialogData(dialog, &WordToPass, 2)) {
             FreeDialogData(dialog);
-            return NULL;
+            return nullptr;
         }
 
         /* italic? */
         ToPass = NCM.lfMessageFont.lfItalic;
         if (!AddDialogData(dialog, &ToPass, 1)) {
             FreeDialogData(dialog);
-            return NULL;
+            return nullptr;
         }
 
         /* charset? */
         ToPass = NCM.lfMessageFont.lfCharSet;
         if (!AddDialogData(dialog, &ToPass, 1)) {
             FreeDialogData(dialog);
-            return NULL;
+            return nullptr;
         }
 
         /* font typeface. */
         if (!AddDialogString(dialog, NCM.lfMessageFont.lfFaceName)) {
             FreeDialogData(dialog);
-            return NULL;
+            return nullptr;
         }
     }
 
@@ -470,7 +470,7 @@ WIN_ShowMessageBox(const SDL_MessageBoxData *messageboxdata, int *buttonid)
     }
 
     /* FIXME: If we have a parent window, get the Instance and HWND for them */
-    which = DialogBoxIndirect(NULL, (DLGTEMPLATE*)dialog->lpDialog, NULL, (DLGPROC)MessageBoxDialogProc);
+    which = DialogBoxIndirect(nullptr, (DLGTEMPLATE*)dialog->lpDialog, nullptr, (DLGPROC)MessageBoxDialogProc);
     *buttonid = buttons[which].buttonid;
 
     FreeDialogData(dialog);

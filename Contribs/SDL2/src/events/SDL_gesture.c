@@ -115,7 +115,7 @@ static unsigned long SDL_HashDollar(SDL_FloatPoint* points)
 
 static int SaveTemplate(SDL_DollarTemplate *templ, SDL_RWops *dst)
 {
-    if (dst == NULL) {
+    if (dst == nullptr) {
         return 0;
     }
 
@@ -204,7 +204,7 @@ static int SDL_AddDollarGesture(SDL_GestureTouch* inTouch, SDL_FloatPoint* path)
 {
     int index = -1;
     int i = 0;
-    if (inTouch == NULL) {
+    if (inTouch == nullptr) {
         if (SDL_numGestureTouches == 0) return SDL_SetError("no gesture touch devices registered");
         for (i = 0; i < SDL_numGestureTouches; i++) {
             inTouch = &SDL_gestureTouch[i];
@@ -221,15 +221,15 @@ static int SDL_AddDollarGesture(SDL_GestureTouch* inTouch, SDL_FloatPoint* path)
 int SDL_LoadDollarTemplates(SDL_TouchID touchId, SDL_RWops *src)
 {
     int i,loaded = 0;
-    SDL_GestureTouch *touch = NULL;
-    if (src == NULL) return 0;
+    SDL_GestureTouch *touch = nullptr;
+    if (src == nullptr) return 0;
     if (touchId >= 0) {
         for (i = 0; i < SDL_numGestureTouches; i++) {
             if (SDL_gestureTouch[i].id == touchId) {
                 touch = &SDL_gestureTouch[i];
             }
         }
-        if (touch == NULL) {
+        if (touch == nullptr) {
             return SDL_SetError("given touch id not found");
         }
     }
@@ -465,7 +465,7 @@ static SDL_GestureTouch * SDL_GetGestureTouch(SDL_TouchID id)
         if (SDL_gestureTouch[i].id == id)
             return &SDL_gestureTouch[i];
     }
-    return NULL;
+    return nullptr;
 }
 
 int SDL_SendGestureMulti(SDL_GestureTouch* touch,float dTheta,float dDist)
@@ -526,7 +526,7 @@ void SDL_GestureProcessEvent(SDL_Event* event)
         SDL_GestureTouch* inTouch = SDL_GetGestureTouch(event->tfinger.touchId);
 
         /* Shouldn't be possible */
-        if (inTouch == NULL) return;
+        if (inTouch == nullptr) return;
 
         x = event->tfinger.x;
         y = event->tfinger.y;
@@ -543,7 +543,7 @@ void SDL_GestureProcessEvent(SDL_Event* event)
                 dollarNormalize(&inTouch->dollarPath,path);
                 /* PrintPath(path); */
                 if (recordAll) {
-                    index = SDL_AddDollarGesture(NULL,path);
+                    index = SDL_AddDollarGesture(nullptr,path);
                     for (i = 0; i < SDL_numGestureTouches; i++)
                         SDL_gestureTouch[i].recording = SDL_FALSE;
                 }

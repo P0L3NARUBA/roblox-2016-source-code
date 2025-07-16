@@ -128,7 +128,7 @@ namespace RBX {
             /*override*/ void writeProperties(const Instance* instance, RakNet::BitStream& outBitstream, PropertyCacheType cacheType, bool useDictionary);
 
 			/*override*/ Player* findTargetPlayer() const;
-			/*override*/ Player* getRemotePlayer() const { return NULL; }
+			/*override*/ Player* getRemotePlayer() const { return nullptr; }
 			/*override*/ void dataOutStep();
 
 			/*override*/ void setPropSyncExpiration(double value)

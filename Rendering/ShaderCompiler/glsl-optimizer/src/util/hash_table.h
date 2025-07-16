@@ -96,8 +96,8 @@ static inline uint32_t _mesa_hash_pointer(const void *pointer)
  * (which may rehash the table, making entry a dangling pointer).
  */
 #define hash_table_foreach(ht, entry)                   \
-   for (entry = _mesa_hash_table_next_entry(ht, NULL);  \
-        entry != NULL;                                  \
+   for (entry = _mesa_hash_table_next_entry(ht, nullptr);  \
+        entry != nullptr;                                  \
         entry = _mesa_hash_table_next_entry(ht, entry))
 
 #ifdef __cplusplus

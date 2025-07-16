@@ -33,7 +33,7 @@ bool GuiDrawImage::setImage(Adorn *adorn, const TextureId& textureId, unsigned i
 {
 	if (textureId != currentTexture) {
 		std::string contextString = "";
-		if (contextInstance != NULL)
+		if (contextInstance != nullptr)
 		{
 			contextString = contextInstance->getFullName() + context;
 		}
@@ -133,7 +133,7 @@ bool GuiDrawImage::setImageFromName(Adorn *adorn, const std::string& textureName
 {
 	std::string asset = "Textures/" + textureName + ".png";
 	ContentId contentId = ContentId::fromAssets(asset.c_str());
-	return setImage(adorn, contentId, imageState, NULL, contextInstance, context);
+	return setImage(adorn, contentId, imageState, nullptr, contextInstance, context);
 }
 
 

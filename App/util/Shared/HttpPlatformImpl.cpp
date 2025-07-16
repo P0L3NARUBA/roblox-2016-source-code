@@ -175,7 +175,7 @@ class CacheStatistics
 		,appName("")
 	{
 #ifdef _WIN32
-		DWORD size = GetModuleFileNameA( NULL, appPath, MAX_PATH );
+		DWORD size = GetModuleFileNameA( nullptr, appPath, MAX_PATH );
 		appName = strrchr(appPath, '\\');
 		appName = appName ? appName + 1 : appPath;
 #endif
@@ -285,7 +285,7 @@ void addHeader(curl_slist*& headers, const char* header)
 {
     FASTLOGS(DFLog::HttpTrace, "Adding CURL header: %s", header);
     headers = curl_slist_append(headers, header);
-    if (NULL == headers)
+    if (nullptr == headers)
     {
         throw RBX::runtime_error("Error adding header %s", header);
     }
@@ -513,7 +513,7 @@ class CurlHandle
             static boost::mutex mutex;
             boost::mutex::scoped_lock lock(mutex);
 
-            static boost::filesystem::path kPath = FileSystem::getCacheDirectory(true, NULL) / "httpstats.csv";
+            static boost::filesystem::path kPath = FileSystem::getCacheDirectory(true, nullptr) / "httpstats.csv";
             static bool firstLogRun = true;
             static std::ofstream fout(kPath.string().c_str());
 
@@ -572,7 +572,7 @@ public:
         ,connectTimeoutMillis(connectTimeoutMillis)
         ,performTimeoutMillis(performTimeoutMillis)
         ,cookieJarTempPath(FileSystem::getTempFilePath())
-        ,curlHeaders(NULL)
+        ,curlHeaders(nullptr)
         ,csrfTokenChanged(false)
         ,curlsh(gCurlsh)
     {
@@ -585,7 +585,7 @@ public:
 
         curl = curl_easy_init();
         RBXASSERT(curl);
-        if (NULL == curl)
+        if (nullptr == curl)
         {
             throw runtime_error("Error initializing CURL handle.");
         }
@@ -908,7 +908,7 @@ public:
 			ScopedNamedMutex lock(name.c_str());
             }
 #endif
-			Cache::CacheResult cacheResult = Cache::CacheResult::open(url.c_str(), NULL);
+			Cache::CacheResult cacheResult = Cache::CacheResult::open(url.c_str(), nullptr);
 
 			if (cacheResult.isValid())
 			{
@@ -991,7 +991,7 @@ public:
                 responseCodeReason.clear();
                 responseData.reset();
 
-                char* tmpRedirectUrl = NULL;
+                char* tmpRedirectUrl = nullptr;
                 logCurlError("CURLINFO_REDIRECT_URL", curl_easy_getinfo(curl, CURLINFO_REDIRECT_URL, &tmpRedirectUrl));
                 if (tmpRedirectUrl)
                 {
@@ -1009,7 +1009,7 @@ public:
 				ScopedNamedMutex lock(name.c_str());
                 }
 #endif
-				Cache::CacheResult cacheResult = Cache::CacheResult::open(zeroLatencyCaching ? url.c_str() : NULL, tmpRedirectUrl);
+				Cache::CacheResult cacheResult = Cache::CacheResult::open(zeroLatencyCaching ? url.c_str() : nullptr, tmpRedirectUrl);
 
 				if ((cacheFailed = !cacheResult.isValid()))
 				{
@@ -1057,7 +1057,7 @@ public:
 
 					try
 					{
-						Cache::CacheResult::update(zeroLatencyCaching ? url.c_str() : NULL, redirectUrl.c_str(), responseCode, headers, body);
+						Cache::CacheResult::update(zeroLatencyCaching ? url.c_str() : nullptr, redirectUrl.c_str(), responseCode, headers, body);
 					}
 					catch (const std::runtime_error& e)
 					{
@@ -1156,16 +1156,16 @@ void init(Http::CookieSharingPolicy cookieSharingPolicy)
         ::cookieSharingPolicy = cookieSharingPolicy;
 
 #ifndef __ANDROID__ // Android initializes curl in JNIMain.cpp
-        logCurlError(NULL, "curl_global_init", curl_global_init(CURL_GLOBAL_DEFAULT | CURL_GLOBAL_ACK_EINTR));
+        logCurlError(nullptr, "curl_global_init", curl_global_init(CURL_GLOBAL_DEFAULT | CURL_GLOBAL_ACK_EINTR));
 #endif
 
         gCurlsh.reset(curl_share_init(), ::CurlshDeleter());
 
-        logCurlError(NULL, "CURLSHOPT_LOCKFUNC", curl_share_setopt(gCurlsh.get(), CURLSHOPT_LOCKFUNC, &curlshLock));
-        logCurlError(NULL, "CURLSHOPT_UNLOCKFUNC", curl_share_setopt(gCurlsh.get(), CURLSHOPT_UNLOCKFUNC, &curlshUnlock));
-        logCurlError(NULL, "CURLSHOPT_SHARE", curl_share_setopt(gCurlsh.get(), CURLSHOPT_SHARE, CURL_LOCK_DATA_COOKIE));
-        logCurlError(NULL, "CURLSHOPT_SHARE", curl_share_setopt(gCurlsh.get(), CURLSHOPT_SHARE, CURL_LOCK_DATA_DNS));
-        logCurlError(NULL, "CURLSHOPT_SHARE", curl_share_setopt(gCurlsh.get(), CURLSHOPT_SHARE, CURL_LOCK_DATA_SSL_SESSION));
+        logCurlError(nullptr, "CURLSHOPT_LOCKFUNC", curl_share_setopt(gCurlsh.get(), CURLSHOPT_LOCKFUNC, &curlshLock));
+        logCurlError(nullptr, "CURLSHOPT_UNLOCKFUNC", curl_share_setopt(gCurlsh.get(), CURLSHOPT_UNLOCKFUNC, &curlshUnlock));
+        logCurlError(nullptr, "CURLSHOPT_SHARE", curl_share_setopt(gCurlsh.get(), CURLSHOPT_SHARE, CURL_LOCK_DATA_COOKIE));
+        logCurlError(nullptr, "CURLSHOPT_SHARE", curl_share_setopt(gCurlsh.get(), CURLSHOPT_SHARE, CURL_LOCK_DATA_DNS));
+        logCurlError(nullptr, "CURLSHOPT_SHARE", curl_share_setopt(gCurlsh.get(), CURLSHOPT_SHARE, CURL_LOCK_DATA_SSL_SESSION));
         
         setCookiesForDomain(robloxCookieOverrideDomain, robloxCookieOverride);
 
@@ -1231,12 +1231,12 @@ void setCookiesForDomain(const std::string& domain, const std::string& cookies)
         
         boost::shared_ptr<CURL> curl(curl_easy_init(), CurlDeleter());
         RBXASSERT(curl);
-        if (NULL == curl)
+        if (nullptr == curl)
         {
             throw runtime_error("Error initializing CURL handle.");
         }
         
-        logCurlError(NULL, "CURLOPT_SHARE", curl_easy_setopt(curl.get(), CURLOPT_SHARE, gCurlsh.get()));
+        logCurlError(nullptr, "CURLOPT_SHARE", curl_easy_setopt(curl.get(), CURLOPT_SHARE, gCurlsh.get()));
         
         size_t semicolon = 0;
         size_t lastSemicolon = 0;
@@ -1251,7 +1251,7 @@ void setCookiesForDomain(const std::string& domain, const std::string& cookies)
             std::stringstream cookie;
             cookie << "#HttpOnly_" << trimmedDomain << "\tTRUE\t/\tFALSE\t0\t" << key << "\t" << value;
             FASTLOGS(DFLog::HttpTrace, "Setting domain cookie with: %s", cookie.str().c_str());
-            logCurlError(NULL, "CURLOPT_COOKIELIST", curl_easy_setopt(curl.get(), CURLOPT_COOKIELIST, cookie.str().c_str()));
+            logCurlError(nullptr, "CURLOPT_COOKIELIST", curl_easy_setopt(curl.get(), CURLOPT_COOKIELIST, cookie.str().c_str()));
             
             lastSemicolon = semicolon + 2; // pass "; "
         } while (std::string::npos != semicolon);
@@ -1268,12 +1268,12 @@ void getCookiesForDomain(const std::string& domain, std::string& cookies)
 {
   boost::shared_ptr<CURL> curl(curl_easy_init(), CurlDeleter());
   RBXASSERT(curl);
-  if (NULL == curl)
+  if (nullptr == curl)
   {
       throw runtime_error("Error initializing CURL handle.");
   }
 
-  logCurlError(NULL, "CURLOPT_SHARE", curl_easy_setopt(curl.get(), CURLOPT_SHARE, gCurlsh.get()));
+  logCurlError(nullptr, "CURLOPT_SHARE", curl_easy_setopt(curl.get(), CURLOPT_SHARE, gCurlsh.get()));
 
   CURLcode res;
   struct curl_slist *cookiesList;
@@ -1287,7 +1287,7 @@ void getCookiesForDomain(const std::string& domain, std::string& cookies)
     return;
   }
   nc = cookiesList, i = 1;
-  if(nc != NULL){
+  if(nc != nullptr){
     cookieStr << nc->data;
     nc = nc->next;
     i++;

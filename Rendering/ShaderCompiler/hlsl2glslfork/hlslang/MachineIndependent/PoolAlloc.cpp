@@ -31,7 +31,7 @@ void FreeGlobalPools()
 
 	alloc->popAll();
 	delete alloc;
-	OS_SetTLSValue(s_TLSPoolAlloc, NULL);
+	OS_SetTLSValue(s_TLSPoolAlloc, nullptr);
 }
 
 bool InitializePoolIndex()
@@ -115,7 +115,7 @@ totalBytes(0)
 
 TPoolAllocator::~TPoolAllocator()
 {
-	assert(inUseList == NULL);
+	assert(inUseList == nullptr);
 
 	// Always delete the free list memory - it can't be being
 	// (correctly) referenced, whether the pool allocator was

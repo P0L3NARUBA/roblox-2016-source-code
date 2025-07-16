@@ -208,7 +208,7 @@ void GImage::decodeBMP(
         throw Error("BMP images must be uncompressed");
     }
 
-    uint8* palette = NULL;
+    uint8* palette = nullptr;
 
 	uint32 paletteDataSize = 0;
     // Create the palette if needed
@@ -420,9 +420,9 @@ void GImage::decodeBMP(
     } else if (bitCount == 16) {
 
         m_memMan->free(m_byte);
-        m_byte = NULL;
+        m_byte = nullptr;
         System::free(palette); 
-        palette = NULL;
+        palette = nullptr;
     	throw Error("16-bit bitmaps not supported");
 
 	} else if (bitCount == 24) {
@@ -465,21 +465,21 @@ void GImage::decodeBMP(
 	} else if (bitCount == 32) {
 
         m_memMan->free(m_byte);
-        m_byte = NULL;
+        m_byte = nullptr;
         System::free(palette); 
-        palette = NULL;
+        palette = nullptr;
     	throw Error("32 bit bitmaps not supported");
     
     } else {
         // We support all possible bit depths, so if the
         //     code gets here, it's not even a real bitmap.
         m_memMan->free(m_byte);
-        m_byte = NULL;
+        m_byte = nullptr;
         throw Error("Not a bitmap!");
 	}
 
     System::free(palette); 
-    palette = NULL;
+    palette = nullptr;
 }
 
 

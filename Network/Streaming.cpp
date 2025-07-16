@@ -1195,7 +1195,7 @@ bool IdSerializer::trySerializeId(RakNet::BitStream& stream, const Instance* ins
 	}
 	else
 	{
-		serializeId(stream, NULL);
+		serializeId(stream, nullptr);
 		return true;
 	}
 }
@@ -1381,7 +1381,7 @@ void IdSerializer::serializeInstanceRef(const Instance* instance, RakNet::BitStr
 }
 
 //Debuggable - 
-// Parent == NULL, or Parent::Debugable
+// Parent == nullptr, or Parent::Debugable
 
 bool IdSerializer::deserializeInstanceRef(RakNet::BitStream& stream, shared_ptr<Instance>& instance, RBX::Guid::Data& id)
 {
@@ -1440,7 +1440,7 @@ void DescriptorReceiver<ClassDescriptor>::learnName(std::string s, int i, uint32
 		++iter;
 	}
 	StandardOut::singleton()->printf(MESSAGE_WARNING, "ClassDescriptor failed to learn %s", s.c_str());
-	idToDesc[i].desc = NULL;
+	idToDesc[i].desc = nullptr;
     idToDesc[i].outdated = false;
 }
 
@@ -1486,7 +1486,7 @@ void DescriptorReceiver<EventDescriptor>::learnName(std::string s, int i, uint32
 		++iter;
 	}
 	StandardOut::singleton()->printf(MESSAGE_WARNING, "EventDescriptor failed to learn %s", s.c_str());
-	idToDesc[i].desc = NULL;
+	idToDesc[i].desc = nullptr;
     idToDesc[i].outdated = false;
 }
 
@@ -1527,7 +1527,7 @@ void DescriptorReceiver<PropertyDescriptor>::learnName(std::string s, int i, uin
 		++iter;
 	}
 
-	idToDesc[i].desc = NULL;
+	idToDesc[i].desc = nullptr;
     idToDesc[i].outdated = false;
 }
 
@@ -1555,7 +1555,7 @@ void DescriptorReceiver<Type>::learnName(std::string s, int i, uint32_t checksum
 	}
 
 	StandardOut::singleton()->printf(MESSAGE_WARNING, "Type failed to learn %s", s.c_str());
-	idToDesc[i].desc = NULL;
+	idToDesc[i].desc = nullptr;
     idToDesc[i].outdated = false;
 }
 

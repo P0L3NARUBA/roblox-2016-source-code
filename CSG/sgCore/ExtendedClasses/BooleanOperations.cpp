@@ -2,12 +2,12 @@
 
 sgCGroup*	sgBoolean::Intersection(const sgC3DObject& aOb,const sgC3DObject& bOb)
 {
-	sgCGroup*  retVal=NULL;
+	sgCGroup*  retVal=nullptr;
 	
 	LISTH resList;
 	init_listh(&resList);
 
-	hOBJ  reservObj = NULL;
+	hOBJ  reservObj = nullptr;
 
 	if (boolean_operation(GetObjectHandle(&aOb), GetObjectHandle(&bOb),INTER,&resList)!=OSTRUE)
 	{
@@ -33,7 +33,7 @@ sgCGroup*	sgBoolean::Intersection(const sgC3DObject& aOb,const sgC3DObject& bOb)
 
 	if (reservObj)
 	{
-		o_free(reservObj,NULL);
+		o_free(reservObj,nullptr);
 	}
 
 	free(objcts);
@@ -43,12 +43,12 @@ sgCGroup*	sgBoolean::Intersection(const sgC3DObject& aOb,const sgC3DObject& bOb)
 
 sgCGroup*	sgBoolean::Union(const sgC3DObject& aOb,const sgC3DObject& bOb, int& errcode)
 {
-	sgCGroup*  retVal=NULL;
+	sgCGroup*  retVal=nullptr;
 
 	LISTH resList;
 	init_listh(&resList);
 
-	hOBJ  reservObj = NULL;
+	hOBJ  reservObj = nullptr;
 
     errcode = boolean_operation(GetObjectHandle(&aOb), GetObjectHandle(&bOb),UNION,&resList);
 	if (errcode!=OSTRUE)
@@ -75,7 +75,7 @@ sgCGroup*	sgBoolean::Union(const sgC3DObject& aOb,const sgC3DObject& bOb, int& e
 
 	if (reservObj)
 	{
-		o_free(reservObj,NULL);
+		o_free(reservObj,nullptr);
 	}
 
 	free(objcts);
@@ -85,12 +85,12 @@ sgCGroup*	sgBoolean::Union(const sgC3DObject& aOb,const sgC3DObject& bOb, int& e
 
 sgCGroup* sgBoolean::Sub(const sgC3DObject& aOb,const sgC3DObject& bOb, int& errcode)
 {
-	sgCGroup*  retVal=NULL;
+	sgCGroup*  retVal=nullptr;
 
 	LISTH resList;
 	init_listh(&resList);
 
-	hOBJ  reservObj = NULL;
+	hOBJ  reservObj = nullptr;
 
     errcode = boolean_operation(GetObjectHandle(&aOb), GetObjectHandle(&bOb),SUB,&resList);
 	if (errcode!=OSTRUE)
@@ -117,7 +117,7 @@ sgCGroup* sgBoolean::Sub(const sgC3DObject& aOb,const sgC3DObject& bOb, int& err
 
 	if (reservObj)
 	{
-		o_free(reservObj,NULL);
+		o_free(reservObj,nullptr);
 	}
 	free(objcts);
 
@@ -126,12 +126,12 @@ sgCGroup* sgBoolean::Sub(const sgC3DObject& aOb,const sgC3DObject& bOb, int& err
 
 sgCGroup*	sgBoolean::IntersectionContour(const sgC3DObject& aOb,const sgC3DObject& bOb)
 {
-	sgCGroup*  retVal=NULL;
+	sgCGroup*  retVal=nullptr;
 
 	LISTH resList;
 	init_listh(&resList);
 
-	hOBJ  reservObj = NULL;
+	hOBJ  reservObj = nullptr;
 
 	if (boolean_operation(GetObjectHandle(&aOb), GetObjectHandle(&bOb),LINE_INTER,&resList)!=OSTRUE)
 	{
@@ -157,7 +157,7 @@ sgCGroup*	sgBoolean::IntersectionContour(const sgC3DObject& aOb,const sgC3DObjec
 
 	if (reservObj)
 	{
-		o_free(reservObj,NULL);
+		o_free(reservObj,nullptr);
 	}
 	free(objcts);
 
@@ -167,7 +167,7 @@ sgCGroup*	sgBoolean::IntersectionContour(const sgC3DObject& aOb,const sgC3DObjec
 sgCGroup*	sgBoolean::Section(const sgC3DObject& obj, const SG_VECTOR& planeNormal, 
 							   sgFloat planeD)
 {
-	sgCGroup*  retVal=NULL;
+	sgCGroup*  retVal=nullptr;
 
 	LISTH resList;
 	init_listh(&resList);

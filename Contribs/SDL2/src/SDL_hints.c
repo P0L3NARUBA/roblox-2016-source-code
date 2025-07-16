@@ -73,7 +73,7 @@ SDL_SetHintWithPriority(const char *name, const char *value,
                     entry = next;
                 }
                 SDL_free(hint->value);
-                hint->value = value ? SDL_strdup(value) : NULL;
+                hint->value = value ? SDL_strdup(value) : nullptr;
             }
             hint->priority = priority;
             return SDL_TRUE;
@@ -86,9 +86,9 @@ SDL_SetHintWithPriority(const char *name, const char *value,
         return SDL_FALSE;
     }
     hint->name = SDL_strdup(name);
-    hint->value = value ? SDL_strdup(value) : NULL;
+    hint->value = value ? SDL_strdup(value) : nullptr;
     hint->priority = priority;
-    hint->callbacks = NULL;
+    hint->callbacks = nullptr;
     hint->next = SDL_hints;
     SDL_hints = hint;
     return SDL_TRUE;
@@ -158,9 +158,9 @@ SDL_AddHintCallback(const char *name, SDL_HintCallback callback, void *userdata)
             return;
         }
         hint->name = SDL_strdup(name);
-        hint->value = NULL;
+        hint->value = nullptr;
         hint->priority = SDL_HINT_DEFAULT;
-        hint->callbacks = NULL;
+        hint->callbacks = nullptr;
         hint->next = SDL_hints;
         SDL_hints = hint;
     }
@@ -182,7 +182,7 @@ SDL_DelHintCallback(const char *name, SDL_HintCallback callback, void *userdata)
 
     for (hint = SDL_hints; hint; hint = hint->next) {
         if (SDL_strcmp(name, hint->name) == 0) {
-            prev = NULL;
+            prev = nullptr;
             for (entry = hint->callbacks; entry; entry = entry->next) {
                 if (callback == entry->callback && userdata == entry->userdata) {
                     if (prev) {

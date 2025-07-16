@@ -28,14 +28,14 @@ Reflection::PropDescriptor<Attachment, CoordinateFrame> Attachment::prop_Frame("
 // UI
 static const PropDescriptor<Attachment, Vector3> prop_Position("Position", category_Data, &Attachment::getPivotInPart, &Attachment::setPivotInPart, PropertyDescriptor::UI);
 static const PropDescriptor<Attachment, Vector3> prop_Rotation("Rotation", category_Data, &Attachment::getEulerAnglesInPart, &Attachment::setEulerAnglesInPart, PropertyDescriptor::UI);
-static const PropDescriptor<Attachment, Vector3> prop_WorldPosition("WorldPosition", "Derived Data", &Attachment::getPivotInWorld, NULL, PropertyDescriptor::UI);
-static const PropDescriptor<Attachment, Vector3> prop_WorldRotation("WorldRotation", "Derived Data", &Attachment::getEulerAnglesInWorld, NULL, PropertyDescriptor::UI);
+static const PropDescriptor<Attachment, Vector3> prop_WorldPosition("WorldPosition", "Derived Data", &Attachment::getPivotInWorld, nullptr, PropertyDescriptor::UI);
+static const PropDescriptor<Attachment, Vector3> prop_WorldRotation("WorldRotation", "Derived Data", &Attachment::getEulerAnglesInWorld, nullptr, PropertyDescriptor::UI);
 
 #ifdef ENABLE_AXES_API
-static const PropDescriptor<Attachment, Vector3> prop_Axis("Axis", "Derived Data", &Attachment::getAxisInPart, NULL, PropertyDescriptor::UI);
-static const PropDescriptor<Attachment, Vector3> prop_SecondaryAxis("SecondaryAxis", "Derived Data", &Attachment::getSecondaryAxisInPart, NULL, PropertyDescriptor::UI);
-static const PropDescriptor<Attachment, Vector3> prop_WorldAxis("WorldAxis", "Derived Data", &Attachment::getAxisInWorld, NULL, PropertyDescriptor::UI);
-static const PropDescriptor<Attachment, Vector3> prop_WorldSecondaryAxis("WorldSecondaryAxis", "Derived Data", &Attachment::getSecondaryAxisInWorld, NULL, PropertyDescriptor::UI);
+static const PropDescriptor<Attachment, Vector3> prop_Axis("Axis", "Derived Data", &Attachment::getAxisInPart, nullptr, PropertyDescriptor::UI);
+static const PropDescriptor<Attachment, Vector3> prop_SecondaryAxis("SecondaryAxis", "Derived Data", &Attachment::getSecondaryAxisInPart, nullptr, PropertyDescriptor::UI);
+static const PropDescriptor<Attachment, Vector3> prop_WorldAxis("WorldAxis", "Derived Data", &Attachment::getAxisInWorld, nullptr, PropertyDescriptor::UI);
+static const PropDescriptor<Attachment, Vector3> prop_WorldSecondaryAxis("WorldSecondaryAxis", "Derived Data", &Attachment::getSecondaryAxisInWorld, nullptr, PropertyDescriptor::UI);
 
 static BoundFuncDesc<Attachment, void(Vector3,Vector3)> func_setAxes(&Attachment::setAxes, "SetAxes", "axis0", "axis1", Security::None);
 static BoundFuncDesc<Attachment, void(Vector3)> func_setAxis(&Attachment::setAxisInPart, "SetAxis", "axis", Security::None);
@@ -406,7 +406,7 @@ void Attachment::verifySetParent(const Instance* instance) const
 {
     Super::verifySetParent(instance);
 
-    if( instance != NULL && instance->fastDynamicCast< PartInstance >() == NULL && instance->fastDynamicCast< Workspace >() == NULL )
+    if( instance != nullptr && instance->fastDynamicCast< PartInstance >() == nullptr && instance->fastDynamicCast< Workspace >() == nullptr )
     {
         throw RBX::runtime_error("Attachments can only be parented to parts or the workspace");
     }
@@ -416,7 +416,7 @@ void Attachment::verifyAddChild(const Instance* newChild) const
 {
     Super::verifyAddChild( newChild );
 
-    if( newChild != NULL /*&& newChild->fastDynamicCast< Constraints::Constraint >() == NULL*/ )
+    if( newChild != nullptr /*&& newChild->fastDynamicCast< Constraints::Constraint >() == nullptr*/ )
     {
         throw RBX::runtime_error("Attachments can't have children.");
     }

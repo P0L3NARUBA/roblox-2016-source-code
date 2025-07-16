@@ -37,9 +37,9 @@
 
 ir_variable_refcount_visitor::ir_variable_refcount_visitor()
 {
-   this->mem_ctx = ralloc_context(NULL);
-   this->ht = _mesa_hash_table_create(NULL, _mesa_key_pointer_equal);
-   this->current_lhs = NULL;
+   this->mem_ctx = ralloc_context(nullptr);
+   this->ht = _mesa_hash_table_create(nullptr, _mesa_key_pointer_equal);
+   this->current_lhs = nullptr;
 }
 
 static void
@@ -59,7 +59,7 @@ ir_variable_refcount_visitor::~ir_variable_refcount_visitor()
 ir_variable_refcount_entry::ir_variable_refcount_entry(ir_variable *var)
 {
    this->var = var;
-   assign = NULL;
+   assign = nullptr;
    assigned_count = 0;
    declaration = false;
    referenced_count = 0;
@@ -95,7 +95,7 @@ ir_variable_refcount_visitor::find_variable_entry(ir_variable *var)
 	if (e)
 		return (ir_variable_refcount_entry *)e->data;
 	
-	return NULL;
+	return nullptr;
 }
 
 
@@ -138,7 +138,7 @@ ir_variable_refcount_visitor::visit_enter(ir_function_signature *ir)
 ir_visitor_status
 ir_variable_refcount_visitor::visit_enter(ir_assignment *ir)
 {
-   assert(this->current_lhs == NULL);
+   assert(this->current_lhs == nullptr);
    this->current_lhs = ir->lhs->variable_referenced();
    return visit_continue;
 }
@@ -147,12 +147,12 @@ ir_variable_refcount_visitor::visit_enter(ir_assignment *ir)
 ir_visitor_status
 ir_variable_refcount_visitor::visit_leave(ir_assignment *ir)
 {
-	this->current_lhs = NULL;
+	this->current_lhs = nullptr;
    ir_variable_refcount_entry *entry;
    entry = this->get_variable_entry(ir->lhs->variable_referenced());
    if (entry) {
       entry->assigned_count++;
-      if (entry->assign == NULL)
+      if (entry->assign == nullptr)
 	 entry->assign = ir;
    }
 

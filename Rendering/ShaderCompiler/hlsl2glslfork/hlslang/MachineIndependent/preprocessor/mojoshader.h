@@ -22,7 +22,7 @@ extern "C" {
  *  specify your own allocator, but don't rely on that behaviour).
  * (data) is the pointer you supplied when specifying these allocator
  *  callbacks, in case you need instance-specific data...it is passed through
- *  to your allocator unmolested, and can be NULL if you like.
+ *  to your allocator unmolested, and can be nullptr if you like.
  */
 typedef void *(*MOJOSHADER_hlslang_malloc)(int bytes, void *data);
 typedef void (*MOJOSHADER_hlslang_free)(void *ptr, void *data);
@@ -39,14 +39,14 @@ typedef void (*MOJOSHADER_hlslang_free)(void *ptr, void *data);
 typedef struct MOJOSHADER_hlslang_error
 {
     /*
-     * Human-readable error, if there is one. Will be NULL if there was no
+     * Human-readable error, if there is one. Will be nullptr if there was no
      *  error. The string will be UTF-8 encoded, and English only. Most of
      *  these shouldn't be shown to the end-user anyhow.
      */
     const char *error;
 
     /*
-     * Filename where error happened. This can be NULL if the information
+     * Filename where error happened. This can be nullptr if the information
      *  isn't available.
      */
     const char *filename;
@@ -112,11 +112,11 @@ typedef enum
  *  contents. The callback is responsible for allocating this however they
  *  see fit (we provide allocator functions, but you may ignore them). This
  *  pointer must remain valid until the includeClose callback runs. This
- *  string does not need to be NULL-terminated.
+ *  string does not need to be nullptr-terminated.
  * (outbytes) will be set by the callback to the number of bytes pointed to
  *  by (outdata).
  * (m),(f), and (d) are the allocator details that the application passed to
- *  MojoShader. If these were NULL, MojoShader may have replaced them with its
+ *  MojoShader. If these were nullptr, MojoShader may have replaced them with its
  *  own internal allocators.
  *
  * The callback returns zero on error, non-zero on success.

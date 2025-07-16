@@ -404,7 +404,7 @@ protected:
 		int index = findIndex(key);
 		if (index == BT_HASH_NULL)
 		{
-			return NULL;
+			return nullptr;
 		}
 		return &m_valueArray[index];
 	}
@@ -414,7 +414,7 @@ protected:
 		int index = findIndex(key);
 		if (index == BT_HASH_NULL)
 		{
-			return NULL;
+			return nullptr;
 		}
 		return &m_valueArray[index];
 	}

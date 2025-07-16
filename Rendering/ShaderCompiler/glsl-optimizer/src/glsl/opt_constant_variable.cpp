@@ -150,7 +150,7 @@ ir_constant_variable_visitor::visit_enter(ir_call *ir)
    }
 
    /* Mark the return storage as having been assigned to */
-   if (ir->return_deref != NULL) {
+   if (ir->return_deref != nullptr) {
       ir_variable *var = ir->return_deref->variable_referenced();
       struct assignment_entry *entry;
 

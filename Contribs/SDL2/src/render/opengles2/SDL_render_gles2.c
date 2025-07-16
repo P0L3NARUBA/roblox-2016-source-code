@@ -245,7 +245,7 @@ GL_CheckAllErrors (const char *prefix, SDL_Renderer *renderer, const char *file,
     for (;;) {
         GLenum error = data->glGetError();
         if (error != GL_NO_ERROR) {
-            if (prefix == NULL || prefix[0] == '\0') {
+            if (prefix == nullptr || prefix[0] == '\0') {
                 prefix = "generic";
             }
             SDL_SetError("%s: %s (%d): %s %s (0x%X)", prefix, file, line, function, GL_TranslateError(error), error);
@@ -278,7 +278,7 @@ static void GLES2_DestroyRenderer(SDL_Renderer *renderer);
 static int GLES2_SetOrthographicProjection(SDL_Renderer *renderer);
 
 
-static SDL_GLContext SDL_CurrentContext = NULL;
+static SDL_GLContext SDL_CurrentContext = nullptr;
 
 static int GLES2_LoadFunctions(GLES2_DriverContext * data)
 {
@@ -314,7 +314,7 @@ GLES2_GetFBO(GLES2_DriverContext *data, Uint32 w, Uint32 h)
    while ((result) && ((result->w != w) || (result->h != h)) ) {
        result = result->next;
    }
-   if (result == NULL) {
+   if (result == nullptr) {
        result = SDL_malloc(sizeof(GLES2_FBOList));
        result->w = w;
        result->h = h;
@@ -332,7 +332,7 @@ GLES2_ActivateRenderer(SDL_Renderer * renderer)
 
     if (SDL_CurrentContext != data->context) {
         /* Null out the current program to ensure we set it again */
-        data->current_program = NULL;
+        data->current_program = nullptr;
 
         if (SDL_GL_MakeCurrent(renderer->window, data->context) < 0) {
             return -1;
@@ -356,7 +356,7 @@ GLES2_WindowEvent(SDL_Renderer * renderer, const SDL_WindowEvent *event)
         event->event == SDL_WINDOWEVENT_SHOWN ||
         event->event == SDL_WINDOWEVENT_HIDDEN) {
         /* Rebind the context to the window area */
-        SDL_CurrentContext = NULL;
+        SDL_CurrentContext = nullptr;
     }
 
     if (event->event == SDL_WINDOWEVENT_MINIMIZED) {
@@ -584,7 +584,7 @@ GLES2_CreateTexture(SDL_Renderer *renderer, SDL_Texture *texture)
         renderdata->glTexParameteri(data->texture_type, GL_TEXTURE_MAG_FILTER, scaleMode);
         renderdata->glTexParameteri(data->texture_type, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         renderdata->glTexParameteri(data->texture_type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        renderdata->glTexImage2D(data->texture_type, 0, format, texture->w / 2, texture->h / 2, 0, format, type, NULL);
+        renderdata->glTexImage2D(data->texture_type, 0, format, texture->w / 2, texture->h / 2, 0, format, type, nullptr);
 
         renderdata->glGenTextures(1, &data->texture_u);
         if (GL_CheckError("glGenTexures()", renderer) < 0) {
@@ -596,7 +596,7 @@ GLES2_CreateTexture(SDL_Renderer *renderer, SDL_Texture *texture)
         renderdata->glTexParameteri(data->texture_type, GL_TEXTURE_MAG_FILTER, scaleMode);
         renderdata->glTexParameteri(data->texture_type, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         renderdata->glTexParameteri(data->texture_type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        renderdata->glTexImage2D(data->texture_type, 0, format, texture->w / 2, texture->h / 2, 0, format, type, NULL);
+        renderdata->glTexImage2D(data->texture_type, 0, format, texture->w / 2, texture->h / 2, 0, format, type, nullptr);
         if (GL_CheckError("glTexImage2D()", renderer) < 0) {
             return -1;
         }
@@ -613,7 +613,7 @@ GLES2_CreateTexture(SDL_Renderer *renderer, SDL_Texture *texture)
         renderdata->glTexParameteri(data->texture_type, GL_TEXTURE_MAG_FILTER, scaleMode);
         renderdata->glTexParameteri(data->texture_type, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         renderdata->glTexParameteri(data->texture_type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        renderdata->glTexImage2D(data->texture_type, 0, GL_LUMINANCE_ALPHA, texture->w / 2, texture->h / 2, 0, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, NULL);
+        renderdata->glTexImage2D(data->texture_type, 0, GL_LUMINANCE_ALPHA, texture->w / 2, texture->h / 2, 0, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, nullptr);
         if (GL_CheckError("glTexImage2D()", renderer) < 0) {
             return -1;
         }
@@ -630,7 +630,7 @@ GLES2_CreateTexture(SDL_Renderer *renderer, SDL_Texture *texture)
     renderdata->glTexParameteri(data->texture_type, GL_TEXTURE_MAG_FILTER, scaleMode);
     renderdata->glTexParameteri(data->texture_type, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     renderdata->glTexParameteri(data->texture_type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    renderdata->glTexImage2D(data->texture_type, 0, format, texture->w, texture->h, 0, format, type, NULL);
+    renderdata->glTexImage2D(data->texture_type, 0, format, texture->w, texture->h, 0, format, type, nullptr);
     if (GL_CheckError("glTexImage2D()", renderer) < 0) {
         return -1;
     }
@@ -638,7 +638,7 @@ GLES2_CreateTexture(SDL_Renderer *renderer, SDL_Texture *texture)
     if (texture->access == SDL_TEXTUREACCESS_TARGET) {
        data->fbo = GLES2_GetFBO(renderer->driverdata, texture->w, texture->h);
     } else {
-       data->fbo = NULL;
+       data->fbo = nullptr;
     }
 
     return GL_CheckError("", renderer);
@@ -647,7 +647,7 @@ GLES2_CreateTexture(SDL_Renderer *renderer, SDL_Texture *texture)
 static int
 GLES2_TexSubImage2D(GLES2_DriverContext *data, GLenum target, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid *pixels, GLint pitch, GLint bpp)
 {
-    Uint8 *blob = NULL;
+    Uint8 *blob = nullptr;
     Uint8 *src;
     int src_pitch;
     int y;
@@ -836,10 +836,10 @@ static int
 GLES2_SetRenderTarget(SDL_Renderer * renderer, SDL_Texture * texture)
 {
     GLES2_DriverContext *data = (GLES2_DriverContext *) renderer->driverdata;
-    GLES2_TextureData *texturedata = NULL;
+    GLES2_TextureData *texturedata = nullptr;
     GLenum status;
 
-    if (texture == NULL) {
+    if (texture == nullptr) {
         data->glBindFramebuffer(GL_FRAMEBUFFER, data->window_framebuffer);
     } else {
         texturedata = (GLES2_TextureData *) texture->driverdata;
@@ -874,7 +874,7 @@ GLES2_DestroyTexture(SDL_Renderer *renderer, SDL_Texture *texture)
         }
         SDL_free(tdata->pixel_data);
         SDL_free(tdata);
-        texture->driverdata = NULL;
+        texture->driverdata = nullptr;
     }
 }
 
@@ -917,7 +917,7 @@ GLES2_CacheProgram(SDL_Renderer *renderer, GLES2_ShaderCacheEntry *vertex,
             if (entry->prev) {
                 entry->prev->next = entry->next;
             }
-            entry->prev = NULL;
+            entry->prev = nullptr;
             entry->next = data->program_cache.head;
             data->program_cache.head->prev = entry;
             data->program_cache.head = entry;
@@ -929,7 +929,7 @@ GLES2_CacheProgram(SDL_Renderer *renderer, GLES2_ShaderCacheEntry *vertex,
     entry = (GLES2_ProgramCacheEntry *)SDL_calloc(1, sizeof(GLES2_ProgramCacheEntry));
     if (!entry) {
         SDL_OutOfMemory();
-        return NULL;
+        return nullptr;
     }
     entry->vertex_shader = vertex;
     entry->fragment_shader = fragment;
@@ -949,7 +949,7 @@ GLES2_CacheProgram(SDL_Renderer *renderer, GLES2_ShaderCacheEntry *vertex,
         data->glDeleteProgram(entry->id);
         SDL_free(entry);
         SDL_SetError("Failed to link shader program");
-        return NULL;
+        return nullptr;
     }
 
     /* Predetermine locations of uniform variables */
@@ -1004,7 +1004,7 @@ GLES2_CacheProgram(SDL_Renderer *renderer, GLES2_ShaderCacheEntry *vertex,
         data->glDeleteProgram(data->program_cache.tail->id);
         data->program_cache.tail = data->program_cache.tail->prev;
         SDL_free(data->program_cache.tail->next);
-        data->program_cache.tail->next = NULL;
+        data->program_cache.tail->next = nullptr;
         --data->program_cache.count;
     }
     return entry;
@@ -1015,8 +1015,8 @@ GLES2_CacheShader(SDL_Renderer *renderer, GLES2_ShaderType type, SDL_BlendMode b
 {
     GLES2_DriverContext *data = (GLES2_DriverContext *)renderer->driverdata;
     const GLES2_Shader *shader;
-    const GLES2_ShaderInstance *instance = NULL;
-    GLES2_ShaderCacheEntry *entry = NULL;
+    const GLES2_ShaderInstance *instance = nullptr;
+    GLES2_ShaderCacheEntry *entry = nullptr;
     GLint compileSuccessful = GL_FALSE;
     int i, j;
 
@@ -1024,7 +1024,7 @@ GLES2_CacheShader(SDL_Renderer *renderer, GLES2_ShaderType type, SDL_BlendMode b
     shader = GLES2_GetShader(type, blendMode);
     if (!shader) {
         SDL_SetError("No shader matching the requested characteristics was found");
-        return NULL;
+        return nullptr;
     }
 
     /* Find a matching shader instance that's supported on this hardware */
@@ -1041,7 +1041,7 @@ GLES2_CacheShader(SDL_Renderer *renderer, GLES2_ShaderType type, SDL_BlendMode b
     }
     if (!instance) {
         SDL_SetError("The specified shader cannot be loaded on the current platform");
-        return NULL;
+        return nullptr;
     }
 
     /* Check if we've already cached this shader */
@@ -1060,7 +1060,7 @@ GLES2_CacheShader(SDL_Renderer *renderer, GLES2_ShaderType type, SDL_BlendMode b
     entry = (GLES2_ShaderCacheEntry *)SDL_calloc(1, sizeof(GLES2_ShaderCacheEntry));
     if (!entry) {
         SDL_OutOfMemory();
-        return NULL;
+        return nullptr;
     }
     entry->type = type;
     entry->instance = instance;
@@ -1068,7 +1068,7 @@ GLES2_CacheShader(SDL_Renderer *renderer, GLES2_ShaderType type, SDL_BlendMode b
     /* Compile or load the selected shader instance */
     entry->id = data->glCreateShader(instance->type);
     if (instance->format == (GLenum)-1) {
-        data->glShaderSource(entry->id, 1, (const char **)&instance->data, NULL);
+        data->glShaderSource(entry->id, 1, (const char **)&instance->data, nullptr);
         data->glCompileShader(entry->id);
         data->glGetShaderiv(entry->id, GL_COMPILE_STATUS, &compileSuccessful);
     } else {
@@ -1076,7 +1076,7 @@ GLES2_CacheShader(SDL_Renderer *renderer, GLES2_ShaderType type, SDL_BlendMode b
         compileSuccessful = GL_TRUE;
     }
     if (!compileSuccessful) {
-        char *info = NULL;
+        char *info = nullptr;
         int length = 0;
 
         data->glGetShaderiv(entry->id, GL_INFO_LOG_LENGTH, &length);
@@ -1094,7 +1094,7 @@ GLES2_CacheShader(SDL_Renderer *renderer, GLES2_ShaderType type, SDL_BlendMode b
         }
         data->glDeleteShader(entry->id);
         SDL_free(entry);
-        return NULL;
+        return nullptr;
     }
 
     /* Link the shader entry in at the front of the cache */
@@ -1133,8 +1133,8 @@ static int
 GLES2_SelectProgram(SDL_Renderer *renderer, GLES2_ImageSource source, SDL_BlendMode blendMode)
 {
     GLES2_DriverContext *data = (GLES2_DriverContext *)renderer->driverdata;
-    GLES2_ShaderCacheEntry *vertex = NULL;
-    GLES2_ShaderCacheEntry *fragment = NULL;
+    GLES2_ShaderCacheEntry *vertex = nullptr;
+    GLES2_ShaderCacheEntry *fragment = nullptr;
     GLES2_ShaderType vtype, ftype;
     GLES2_ProgramCacheEntry *program;
 
@@ -1212,7 +1212,7 @@ fault:
     if (fragment && fragment->references <= 0) {
         GLES2_EvictShader(renderer, fragment);
     }
-    data->current_program = NULL;
+    data->current_program = nullptr;
     return -1;
 }
 
@@ -2068,7 +2068,7 @@ GLES2_CreateRenderer(SDL_Window *window, Uint32 flags)
     }
 #endif /* ZUNE_HD */
 
-    data->framebuffers = NULL;
+    data->framebuffers = nullptr;
     data->glGetIntegerv(GL_FRAMEBUFFER_BINDING, &window_framebuffer);
     data->window_framebuffer = (GLuint)window_framebuffer;
 
@@ -2113,7 +2113,7 @@ error:
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minor);
         SDL_RecreateWindow(window, window_flags);
     }
-    return NULL;
+    return nullptr;
 }
 
 #endif /* SDL_VIDEO_RENDER_OGL_ES2 && !SDL_RENDER_DISABLED */

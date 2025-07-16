@@ -96,8 +96,8 @@ public:
    {
       this->progress = false;
       this->killed_all = false;
-      this->mem_ctx = ralloc_context(NULL);
-      this->shader_mem_ctx = NULL;
+      this->mem_ctx = ralloc_context(nullptr);
+      this->shader_mem_ctx = nullptr;
       this->acp = new(mem_ctx) exec_list;
       this->kills = new(mem_ctx) exec_list;
    }
@@ -206,7 +206,7 @@ ir_copy_propagation_elements_visitor::handle_rvalue(ir_rvalue **ir)
 {
    int swizzle_chan[4];
    ir_dereference_variable *deref_var;
-   ir_variable *source[4] = {NULL, NULL, NULL, NULL};
+   ir_variable *source[4] = {nullptr, nullptr, nullptr, nullptr};
    int source_chan[4] = {0, 0, 0, 0};
    int chans;
    bool noop_swizzle = true;

@@ -140,10 +140,10 @@ find_discard(exec_list &instructions)
 {
    foreach_in_list(ir_instruction, node, &instructions) {
       ir_discard *ir = node->as_discard();
-      if (ir != NULL)
+      if (ir != nullptr)
 	 return ir;
    }
-   return NULL;
+   return nullptr;
 }
 
 
@@ -153,12 +153,12 @@ replace_discard(void *mem_ctx, ir_variable *var, ir_discard *ir)
    ir_rvalue *condition = ir->condition;
 
    /* For unconditional discards, use "true" as the condition. */
-   if (condition == NULL)
+   if (condition == nullptr)
       condition = new(mem_ctx) ir_constant(true);
 
    ir_assignment *assignment =
       new(mem_ctx) ir_assignment(new(mem_ctx) ir_dereference_variable(var),
-				 condition, NULL);
+				 condition, nullptr);
 
    ir->replace_with(assignment);
 }
@@ -170,7 +170,7 @@ lower_discard_visitor::visit_leave(ir_if *ir)
    ir_discard *then_discard = find_discard(ir->then_instructions);
    ir_discard *else_discard = find_discard(ir->else_instructions);
 
-   if (then_discard == NULL && else_discard == NULL)
+   if (then_discard == nullptr && else_discard == nullptr)
       return visit_continue;
 
    void *mem_ctx = ralloc_parent(ir);
@@ -180,18 +180,18 @@ lower_discard_visitor::visit_leave(ir_if *ir)
 						ir_var_temporary, glsl_precision_low);
    ir_assignment *temp_initializer =
       new(mem_ctx) ir_assignment(new(mem_ctx) ir_dereference_variable(temp),
-				 new(mem_ctx) ir_constant(false), NULL);
+				 new(mem_ctx) ir_constant(false), nullptr);
 
    ir->insert_before(temp);
    ir->insert_before(temp_initializer);
 
-   if (then_discard != NULL)
+   if (then_discard != nullptr)
       replace_discard(mem_ctx, temp, then_discard);
 
-   if (else_discard != NULL)
+   if (else_discard != nullptr)
       replace_discard(mem_ctx, temp, else_discard);
 
-   ir_discard *discard = then_discard != NULL ? then_discard : else_discard;
+   ir_discard *discard = then_discard != nullptr ? then_discard : else_discard;
    discard->condition = new(mem_ctx) ir_dereference_variable(temp);
    ir->insert_after(discard);
 

@@ -38,7 +38,7 @@ public:
         parent.reset();
 		id.scope.setNull();
 		parentId.scope.setNull();
-		classDescriptor = NULL;
+		classDescriptor = nullptr;
 	}
 
 	/*implement*/ void process(Replicator& replicator);

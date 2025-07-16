@@ -247,7 +247,7 @@ struct Hlsl2Glsl_ParseCallbacks
 
 /// Parse HLSL shader to prepare it for final translation.
 /// \param callbacks
-///		File read callback for #include processing. If NULL is passed, then #include directives will result in error.
+///		File read callback for #include processing. If nullptr is passed, then #include directives will result in error.
 /// \param options
 ///		Flags of TTranslateOptions
 SH_IMPORT_EXPORT int C_DECL Hlsl2Glsl_Parse(

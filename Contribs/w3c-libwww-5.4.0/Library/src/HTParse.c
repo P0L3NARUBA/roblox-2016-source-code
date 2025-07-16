@@ -40,13 +40,13 @@ PRIVATE void scan (char * name, HTURI * parts)
     memset(parts, '\0', sizeof(HTURI));
 
     /* Look for fragment identifier */
-    if ((p = strchr(name, '#')) != NULL) {
+    if ((p = strchr(name, '#')) != nullptr) {
 	*p++ = '\0';
 	parts->fragment = p;
     }
     
     
-    if ((p = strchr(name, ' ')) != NULL) *p++ = '\0';    
+    if ((p = strchr(name, ' ')) != nullptr) *p++ = '\0';    
     
     for(p=name; *p; p++) {
 
@@ -76,7 +76,7 @@ PRIVATE void scan (char * name, HTURI * parts)
 		after_access = p+1;
 
 		if (0==strcasecomp("URL", parts->access)) {
-		    parts->access = NULL;  /* Ignore IETF's URL: pre-prefix */
+		    parts->access = nullptr;  /* Ignore IETF's URL: pre-prefix */
 		} else break;
 	}
     }
@@ -126,13 +126,13 @@ PUBLIC char * HTParse (const char *aName, const char *relatedName, int wanted)
     char * access;
     HTURI given, related;
     
-    if (!aName) return NULL;
-    if (!relatedName)        /* HWL 23/8/94: dont dump due to NULL */
+    if (!aName) return nullptr;
+    if (!relatedName)        /* HWL 23/8/94: dont dump due to nullptr */
         relatedName = "";
     
     /* Make working copies of input strings to cut up: */
     len = strlen(aName)+strlen(relatedName)+10;
-    if ((result=(char *) HT_MALLOC(len)) == NULL) /* Lots of space: more than enough */
+    if ((result=(char *) HT_MALLOC(len)) == nullptr) /* Lots of space: more than enough */
 	HT_OUTOFMEM("parse space");
     StrAllocCopy(name, aName);
     StrAllocCopy(rel, relatedName);
@@ -227,7 +227,7 @@ PUBLIC char * HTParse (const char *aName, const char *relatedName, int wanted)
 */
 PRIVATE char * HTCanon (char ** filename, char * host)
 {
-    char *newname = NULL;
+    char *newname = nullptr;
     char *port;
     char *strptr;
     char *path;
@@ -235,12 +235,12 @@ PRIVATE char * HTCanon (char ** filename, char * host)
 
     while (access>*filename && *(access-1)!='/')       /* Find access method */
 	access--;
-    if ((path = strchr(host, '/')) == NULL)			/* Find path */
+    if ((path = strchr(host, '/')) == nullptr)			/* Find path */
 	path = host + strlen(host);
-    if ((strptr = strchr(host, '@')) != NULL && strptr<path)	   /* UserId */
+    if ((strptr = strchr(host, '@')) != nullptr && strptr<path)	   /* UserId */
 	host = strptr;
-    if ((port = strchr(host, ':')) != NULL && port>path)      /* Port number */
-	port = NULL;
+    if ((port = strchr(host, ':')) != nullptr && port>path)      /* Port number */
+	port = nullptr;
 
     strptr = host;				    /* Convert to lower-case */
     while (strptr<path) {
@@ -252,11 +252,11 @@ PRIVATE char * HTCanon (char ** filename, char * host)
        numerical host name. The domain name is already made lower-case
        and without a trailing dot. */
 #if 0
-    if (((strptr = strchr(host, '.')) == NULL || strptr >= path) &&
+    if (((strptr = strchr(host, '.')) == nullptr || strptr >= path) &&
 	strncasecomp(host, "localhost", 9)) {
 	const char *domain = HTGetDomainName();
 	if (domain && *domain) {
-	    if ((newname = (char *) HT_CALLOC(1, strlen(*filename) + strlen(domain)+2)) == NULL)
+	    if ((newname = (char *) HT_CALLOC(1, strlen(*filename) + strlen(domain)+2)) == nullptr)
 		HT_OUTOFMEM("HTCanon");
 	    if (port)
 		strncpy(newname, *filename, (int) (port-*filename));
@@ -359,15 +359,15 @@ PUBLIC char *HTSimplify (char ** url)
 	return *url;
     }
     /* Find any scheme name */
-    if ((path = strstr(*url, "://")) != NULL) {		   /* Find host name */
+    if ((path = strstr(*url, "://")) != nullptr) {		   /* Find host name */
 	char *newptr;
 	char *access = *url;
 	while (access<path && (*access=TOLOWER(*access))) access++;
 	path += 3;
-	while ((newptr = strstr(path, "://")) != NULL)        /* For proxies */
+	while ((newptr = strstr(path, "://")) != nullptr)        /* For proxies */
 	    path = newptr+3;
 	path = HTCanon(url, path);       	      /* We have a host name */
-    } else if ((path = strstr(*url, ":/")) != NULL) {
+    } else if ((path = strstr(*url, ":/")) != nullptr) {
 	path += 2;
     } else
 	path = *url;
@@ -455,7 +455,7 @@ PUBLIC char * HTRelative (const char * aName, const char * relatedName)
     char * result = 0;
     const char *p = aName;
     const char *q = relatedName;
-    const char * after_access = NULL;
+    const char * after_access = nullptr;
     const char * path = 0;
     const char * last_slash = 0;
     int slashes = 0;
@@ -479,7 +479,7 @@ PUBLIC char * HTRelative (const char * aName, const char * relatedName)
     } else {					/* Some path in common */
         int levels= 0;
         for(; *q && *q!='#' && *q!=';' && *q!='?'; q++) if (*q=='/') levels++;
-	if ((result = (char  *) HT_MALLOC(3*levels + strlen(last_slash) + 4)) == NULL)
+	if ((result = (char  *) HT_MALLOC(3*levels + strlen(last_slash) + 4)) == nullptr)
 	    HT_OUTOFMEM("HTRelative");
 	*result = '\0';
 	if (!levels) strcat(result, "./");

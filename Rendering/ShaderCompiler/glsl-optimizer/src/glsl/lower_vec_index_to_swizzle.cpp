@@ -66,11 +66,11 @@ ir_rvalue *
 ir_vec_index_to_swizzle_visitor::convert_vector_extract_to_swizzle(ir_rvalue *ir)
 {
    ir_expression *const expr = ir->as_expression();
-   if (expr == NULL || expr->operation != ir_binop_vector_extract)
+   if (expr == nullptr || expr->operation != ir_binop_vector_extract)
       return ir;
 
    ir_constant *const idx = expr->operands[1]->constant_expression_value();
-   if (idx == NULL)
+   if (idx == nullptr)
       return ir;
 
    void *ctx = ralloc_parent(ir);

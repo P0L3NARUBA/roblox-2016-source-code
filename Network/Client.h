@@ -47,7 +47,7 @@ namespace RBX {
 			
 			static Client* findClient(const RBX::Instance* context, bool testInDatamodel = true);
 			static bool clientIsPresent(const RBX::Instance* context, bool testInDatamodel = true);
-			static const RBX::SystemAddress findLocalSimulatorAddress(const RBX::Instance* context);			// if Client == clientAddress, else == NULL;
+			static const RBX::SystemAddress findLocalSimulatorAddress(const RBX::Instance* context);			// if Client == clientAddress, else == nullptr;
 			static bool physicsOutBandwidthExceeded(const RBX::Instance* context);
 			static double getNetworkBufferHealth(const RBX::Instance* context);
 

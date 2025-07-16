@@ -18,7 +18,7 @@ namespace RBX {
 	class RBXInterface IJointOwner
 	{
 	public:
-		virtual Joint* getJoint(void) { RBXASSERT(0); return NULL; }
+		virtual Joint* getJoint(void) { RBXASSERT(0); return nullptr; }
 	};
 
 	class StepJointsStage;
@@ -217,7 +217,7 @@ protected:
 		/*override*/ virtual JointType getJointType() const	{return Joint::ANCHOR_JOINT;}
 
 	public:
-		AnchorJoint(Primitive* prim) : Joint(prim, NULL, CoordinateFrame(), CoordinateFrame())
+		AnchorJoint(Primitive* prim) : Joint(prim, nullptr, CoordinateFrame(), CoordinateFrame())
 		{}
 
 		static bool isAnchorJoint(const Joint* j) {
@@ -231,7 +231,7 @@ protected:
 		/*override*/ virtual JointType getJointType() const	{return Joint::FREE_JOINT;}
 
 	public:
-		FreeJoint(Primitive* prim) : Joint(prim, NULL, CoordinateFrame(), CoordinateFrame())
+		FreeJoint(Primitive* prim) : Joint(prim, nullptr, CoordinateFrame(), CoordinateFrame())
 		{}
 
 		static bool isFreeJoint(const Joint* j) {

@@ -23,9 +23,9 @@ FASTFLAGVARIABLE(WebkitDeveloperToolsEnabled, false)
 
 RobloxBrowser::RobloxBrowser(QWidget* parent) 
     : QWebView(parent)
-    , m_pPopup(NULL)
-    , m_pPopupDlg(NULL)
-    , m_loadingTimer(NULL)
+    , m_pPopup(nullptr)
+    , m_pPopupDlg(nullptr)
+    , m_loadingTimer(nullptr)
     , m_refreshIncr(0.0f)
 {
     connect(this, SIGNAL(loadStarted()), this, SLOT(loadStarted()));
@@ -79,7 +79,7 @@ void RobloxBrowser::loadFinished(bool)
     {
         m_loadingTimer->stop();
         delete m_loadingTimer;
-        m_loadingTimer = NULL;
+        m_loadingTimer = nullptr;
     }
     
     update();
@@ -91,7 +91,7 @@ void RobloxBrowser::resetLoadingTimer()
     {
         m_loadingTimer->stop();
         delete m_loadingTimer;
-        m_loadingTimer = NULL;
+        m_loadingTimer = nullptr;
     }
     
     m_loadingTimer = new QTimer(this);

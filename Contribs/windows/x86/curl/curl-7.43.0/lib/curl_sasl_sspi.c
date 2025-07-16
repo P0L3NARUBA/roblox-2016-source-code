@@ -60,8 +60,8 @@
  */
 TCHAR *Curl_sasl_build_spn(const char *service, const char *host)
 {
-  char *utf8_spn = NULL;
-  TCHAR *tchar_spn = NULL;
+  char *utf8_spn = nullptr;
+  TCHAR *tchar_spn = nullptr;
 
   /* Note: We could use DsMakeSPN() or DsClientMakeSpnForTargetServer() rather
      than doing this ourselves but the first is only available in Windows XP
@@ -73,7 +73,7 @@ TCHAR *Curl_sasl_build_spn(const char *service, const char *host)
   /* Allocate our UTF8 based SPN */
   utf8_spn = aprintf("%s/%s", service, host);
   if(!utf8_spn) {
-    return NULL;
+    return nullptr;
   }
 
   /* Allocate our TCHAR based SPN */
@@ -81,7 +81,7 @@ TCHAR *Curl_sasl_build_spn(const char *service, const char *host)
   if(!tchar_spn) {
     free(utf8_spn);
 
-    return NULL;
+    return nullptr;
   }
 
   /* Release the UTF8 variant when operating with Unicode */
@@ -119,11 +119,11 @@ CURLcode Curl_sasl_create_digest_md5_message(struct SessionHandle *data,
                                              char **outptr, size_t *outlen)
 {
   CURLcode result = CURLE_OK;
-  TCHAR *spn = NULL;
+  TCHAR *spn = nullptr;
   size_t chlglen = 0;
   size_t token_max = 0;
-  unsigned char *input_token = NULL;
-  unsigned char *output_token = NULL;
+  unsigned char *input_token = nullptr;
+  unsigned char *output_token = nullptr;
   CredHandle credentials;
   CtxtHandle context;
   PSecPkgInfo SecurityPackage;
@@ -198,13 +198,13 @@ CURLcode Curl_sasl_create_digest_md5_message(struct SessionHandle *data,
   }
   else
     /* Use the current Windows user */
-    p_identity = NULL;
+    p_identity = nullptr;
 
   /* Acquire our credentials handle */
-  status = s_pSecFn->AcquireCredentialsHandle(NULL,
+  status = s_pSecFn->AcquireCredentialsHandle(nullptr,
                                               (TCHAR *) TEXT(SP_NAME_DIGEST),
-                                              SECPKG_CRED_OUTBOUND, NULL,
-                                              p_identity, NULL, NULL,
+                                              SECPKG_CRED_OUTBOUND, nullptr,
+                                              p_identity, nullptr, nullptr,
                                               &credentials, &expiry);
 
   if(status != SEC_E_OK) {
@@ -233,7 +233,7 @@ CURLcode Curl_sasl_create_digest_md5_message(struct SessionHandle *data,
   resp_buf.cbBuffer   = curlx_uztoul(token_max);
 
   /* Generate our response message */
-  status = s_pSecFn->InitializeSecurityContext(&credentials, NULL, spn,
+  status = s_pSecFn->InitializeSecurityContext(&credentials, nullptr, spn,
                                                0, 0, 0, &chlg_desc, 0,
                                                &context, &resp_desc, &attrs,
                                                &expiry);
@@ -318,7 +318,7 @@ CURLcode Curl_override_sspi_http_realm(const char *chlg,
           }
           identity->Domain = dup_domain.tbyte_ptr;
           identity->DomainLength = curlx_uztoul(_tcslen(dup_domain.tchar_ptr));
-          dup_domain.tchar_ptr = NULL;
+          dup_domain.tchar_ptr = nullptr;
 
           Curl_unicodefree(domain.tchar_ptr);
         }
@@ -453,13 +453,13 @@ CURLcode Curl_sasl_create_digest_http_message(struct SessionHandle *data,
   }
   else
     /* Use the current Windows user */
-    p_identity = NULL;
+    p_identity = nullptr;
 
   /* Acquire our credentials handle */
-  status = s_pSecFn->AcquireCredentialsHandle(NULL,
+  status = s_pSecFn->AcquireCredentialsHandle(nullptr,
                                               (TCHAR *) TEXT(SP_NAME_DIGEST),
-                                              SECPKG_CRED_OUTBOUND, NULL,
-                                              p_identity, NULL, NULL,
+                                              SECPKG_CRED_OUTBOUND, nullptr,
+                                              p_identity, nullptr, nullptr,
                                               &credentials, &expiry);
   if(status != SEC_E_OK) {
     free(output_token);
@@ -478,7 +478,7 @@ CURLcode Curl_sasl_create_digest_http_message(struct SessionHandle *data,
   chlg_buf[1].pvBuffer   = (void *)request;
   chlg_buf[1].cbBuffer   = curlx_uztoul(strlen((const char *) request));
   chlg_buf[2].BufferType = SECBUFFER_PKG_PARAMS;
-  chlg_buf[2].pvBuffer   = NULL;
+  chlg_buf[2].pvBuffer   = nullptr;
   chlg_buf[2].cbBuffer   = 0;
 
   /* Setup the response "output" security buffer */
@@ -490,7 +490,7 @@ CURLcode Curl_sasl_create_digest_http_message(struct SessionHandle *data,
   resp_buf.cbBuffer   = curlx_uztoul(token_max);
 
   /* Generate our reponse message */
-  status = s_pSecFn->InitializeSecurityContext(&credentials, NULL,
+  status = s_pSecFn->InitializeSecurityContext(&credentials, nullptr,
                                                (TCHAR *) uripath,
                                                ISC_REQ_USE_HTTP_STYLE, 0, 0,
                                                &chlg_desc, 0, &context,
@@ -620,7 +620,7 @@ CURLcode Curl_sasl_create_ntlm_type1_message(const char *userp,
   }
   else
     /* Use the current Windows user */
-    ntlm->p_identity = NULL;
+    ntlm->p_identity = nullptr;
 
   /* Allocate our credentials handle */
   ntlm->credentials = malloc(sizeof(CredHandle));
@@ -630,10 +630,10 @@ CURLcode Curl_sasl_create_ntlm_type1_message(const char *userp,
   memset(ntlm->credentials, 0, sizeof(CredHandle));
 
   /* Acquire our credentials handle */
-  status = s_pSecFn->AcquireCredentialsHandle(NULL,
+  status = s_pSecFn->AcquireCredentialsHandle(nullptr,
                                               (TCHAR *) TEXT(SP_NAME_NTLM),
-                                              SECPKG_CRED_OUTBOUND, NULL,
-                                              ntlm->p_identity, NULL, NULL,
+                                              SECPKG_CRED_OUTBOUND, nullptr,
+                                              ntlm->p_identity, nullptr, nullptr,
                                               ntlm->credentials, &expiry);
   if(status != SEC_E_OK)
     return CURLE_LOGIN_DENIED;
@@ -654,10 +654,10 @@ CURLcode Curl_sasl_create_ntlm_type1_message(const char *userp,
   type_1_buf.cbBuffer   = curlx_uztoul(ntlm->token_max);
 
   /* Generate our type-1 message */
-  status = s_pSecFn->InitializeSecurityContext(ntlm->credentials, NULL,
+  status = s_pSecFn->InitializeSecurityContext(ntlm->credentials, nullptr,
                                                (TCHAR *) TEXT(""),
                                                0, 0, SECURITY_NETWORK_DREP,
-                                               NULL, 0,
+                                               nullptr, 0,
                                                ntlm->context, &type_1_desc,
                                                &attrs, &expiry);
   if(status == SEC_I_COMPLETE_NEEDED ||
@@ -667,7 +667,7 @@ CURLcode Curl_sasl_create_ntlm_type1_message(const char *userp,
     return CURLE_RECV_ERROR;
 
   /* Base64 encode the response */
-  return Curl_base64_encode(NULL, (char *) ntlm->output_token,
+  return Curl_base64_encode(nullptr, (char *) ntlm->output_token,
                             type_1_buf.cbBuffer, outptr, outlen);
 }
 
@@ -689,7 +689,7 @@ CURLcode Curl_sasl_decode_ntlm_type2_message(struct SessionHandle *data,
                                              struct ntlmdata *ntlm)
 {
   CURLcode result = CURLE_OK;
-  unsigned char *type2 = NULL;
+  unsigned char *type2 = nullptr;
   size_t type2_len = 0;
 
 #if defined(CURL_DISABLE_VERBOSE_STRINGS)
@@ -810,19 +810,19 @@ void Curl_sasl_ntlm_cleanup(struct ntlmdata *ntlm)
   if(ntlm->context) {
     s_pSecFn->DeleteSecurityContext(ntlm->context);
     free(ntlm->context);
-    ntlm->context = NULL;
+    ntlm->context = nullptr;
   }
 
   /* Free our credentials handle */
   if(ntlm->credentials) {
     s_pSecFn->FreeCredentialsHandle(ntlm->credentials);
     free(ntlm->credentials);
-    ntlm->credentials = NULL;
+    ntlm->credentials = nullptr;
   }
 
   /* Free our identity */
   Curl_sspi_free_identity(ntlm->p_identity);
-  ntlm->p_identity = NULL;
+  ntlm->p_identity = nullptr;
 
   /* Free the input and output tokens */
   Curl_safefree(ntlm->input_token);
@@ -867,7 +867,7 @@ CURLcode Curl_sasl_create_gssapi_user_message(struct SessionHandle *data,
 {
   CURLcode result = CURLE_OK;
   size_t chlglen = 0;
-  unsigned char *chlg = NULL;
+  unsigned char *chlg = nullptr;
   CtxtHandle context;
   PSecPkgInfo SecurityPackage;
   SecBuffer chlg_buf;
@@ -913,7 +913,7 @@ CURLcode Curl_sasl_create_gssapi_user_message(struct SessionHandle *data,
     }
     else
       /* Use the current Windows user */
-      krb5->p_identity = NULL;
+      krb5->p_identity = nullptr;
 
     /* Allocate our credentials handle */
     krb5->credentials = malloc(sizeof(CredHandle));
@@ -923,11 +923,11 @@ CURLcode Curl_sasl_create_gssapi_user_message(struct SessionHandle *data,
     memset(krb5->credentials, 0, sizeof(CredHandle));
 
     /* Acquire our credentials handle */
-    status = s_pSecFn->AcquireCredentialsHandle(NULL,
+    status = s_pSecFn->AcquireCredentialsHandle(nullptr,
                                                 (TCHAR *)
                                                 TEXT(SP_NAME_KERBEROS),
-                                                SECPKG_CRED_OUTBOUND, NULL,
-                                                krb5->p_identity, NULL, NULL,
+                                                SECPKG_CRED_OUTBOUND, nullptr,
+                                                krb5->p_identity, nullptr, nullptr,
                                                 krb5->credentials, &expiry);
     if(status != SEC_E_OK)
       return CURLE_LOGIN_DENIED;
@@ -973,12 +973,12 @@ CURLcode Curl_sasl_create_gssapi_user_message(struct SessionHandle *data,
 
   /* Generate our challenge-response message */
   status = s_pSecFn->InitializeSecurityContext(krb5->credentials,
-                                               chlg ? krb5->context : NULL,
+                                               chlg ? krb5->context : nullptr,
                                                krb5->spn,
                                                (mutual_auth ?
                                                  ISC_REQ_MUTUAL_AUTH : 0),
                                                0, SECURITY_NATIVE_DREP,
-                                               chlg ? &chlg_desc : NULL, 0,
+                                               chlg ? &chlg_desc : nullptr, 0,
                                                &context,
                                                &resp_desc, &attrs,
                                                &expiry);
@@ -1035,11 +1035,11 @@ CURLcode Curl_sasl_create_gssapi_security_message(struct SessionHandle *data,
   size_t chlglen = 0;
   size_t messagelen = 0;
   size_t appdatalen = 0;
-  unsigned char *chlg = NULL;
-  unsigned char *trailer = NULL;
-  unsigned char *message = NULL;
-  unsigned char *padding = NULL;
-  unsigned char *appdata = NULL;
+  unsigned char *chlg = nullptr;
+  unsigned char *trailer = nullptr;
+  unsigned char *message = nullptr;
+  unsigned char *padding = nullptr;
+  unsigned char *appdata = nullptr;
   SecBuffer input_buf[2];
   SecBuffer wrap_buf[3];
   SecBufferDesc input_desc;
@@ -1096,7 +1096,7 @@ CURLcode Curl_sasl_create_gssapi_security_message(struct SessionHandle *data,
   input_buf[0].pvBuffer = chlg;
   input_buf[0].cbBuffer = curlx_uztoul(chlglen);
   input_buf[1].BufferType = SECBUFFER_DATA;
-  input_buf[1].pvBuffer = NULL;
+  input_buf[1].pvBuffer = nullptr;
   input_buf[1].cbBuffer = 0;
 
   /* Decrypt the inbound challenge and obtain the qop */
@@ -1255,19 +1255,19 @@ void Curl_sasl_gssapi_cleanup(struct kerberos5data *krb5)
   if(krb5->context) {
     s_pSecFn->DeleteSecurityContext(krb5->context);
     free(krb5->context);
-    krb5->context = NULL;
+    krb5->context = nullptr;
   }
 
   /* Free our credentials handle */
   if(krb5->credentials) {
     s_pSecFn->FreeCredentialsHandle(krb5->credentials);
     free(krb5->credentials);
-    krb5->credentials = NULL;
+    krb5->credentials = nullptr;
   }
 
   /* Free our identity */
   Curl_sspi_free_identity(krb5->p_identity);
-  krb5->p_identity = NULL;
+  krb5->p_identity = nullptr;
 
   /* Free the SPN and output token */
   Curl_safefree(krb5->spn);

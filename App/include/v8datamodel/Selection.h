@@ -64,7 +64,7 @@ namespace RBX {
 		}
 		void clearSelection();
 
-		// Used for reflection. Note that it might return NULL (or an empty container)
+		// Used for reflection. Note that it might return nullptr (or an empty container)
 		shared_ptr<const Instances> getSelection2() { return selection.read(); }		
 
 		void setSelection(shared_ptr<const Instances> selection);
@@ -241,22 +241,22 @@ namespace RBX {
 			setName("FilteredSelection");
 		}
 		~FilteredSelection() {
-			if (rootSelection!=NULL)
+			if (rootSelection!=nullptr)
 				rootSelection->removeFilteredSelection(this);
 		}
 
 		// Returns the generic Selection service
 		Selection* getSelection() {
-			RBXASSERT(rootSelection!=NULL);
+			RBXASSERT(rootSelection!=nullptr);
 			return rootSelection.get();
 		}
 
 		const CollectionType& items() const { return filteredSelection; }
 		inline size_t size() const { return filteredSelection.size(); }
-		inline C* front() { return size()>0 ? filteredSelection.front() : NULL; }
-		inline const C* front() const { return size()>0 ? filteredSelection.front() : NULL; }
-		inline C* back() { return size()>0 ? filteredSelection.back() : NULL; }
-		inline const C* back() const { return size()>0 ? filteredSelection.back() : NULL; }
+		inline C* front() { return size()>0 ? filteredSelection.front() : nullptr; }
+		inline const C* front() const { return size()>0 ? filteredSelection.front() : nullptr; }
+		inline C* back() { return size()>0 ? filteredSelection.back() : nullptr; }
+		inline const C* back() const { return size()>0 ? filteredSelection.back() : nullptr; }
 
 		typename CollectionType::const_iterator begin() const { return filteredSelection.begin(); }
 		typename CollectionType::const_iterator end() const { return filteredSelection.end(); }
@@ -272,7 +272,7 @@ namespace RBX {
 			if (iter!=end())
 				return *iter;
 			else
-				return NULL;
+				return nullptr;
 		}
 
 		
@@ -315,11 +315,11 @@ namespace RBX {
 		{
 			// If an item was added to the selection, add it to ours if it is of the right type
 			C* c = dynamic_cast<C*>(event.addedItem.get());
-			if (c!=NULL)
+			if (c!=nullptr)
 				filteredSelection.push_back(c);
 
 			// If an item was removed from the selection, remove it from ours
-			if (event.removedItem!=NULL)
+			if (event.removedItem!=nullptr)
 			{
 				typename CollectionType::iterator it = std::find( filteredSelection.begin(), filteredSelection.end(), event.removedItem.get() );
 				if (it != filteredSelection.end())
@@ -334,16 +334,16 @@ namespace RBX {
 	/*override*/ void FilteredSelection<C>::onAncestorChanged(const AncestorChanged& event)
 	{
 		Super::onAncestorChanged(event);
-		if (rootSelection==NULL)
+		if (rootSelection==nullptr)
 		{
 			rootSelection = shared_from(ServiceProvider::create<Selection>(event.newParent));
-			if (rootSelection!=NULL)
+			if (rootSelection!=nullptr)
 			{
 				// Filter the current items
 				for (Instances::const_iterator iter = rootSelection->begin(); iter!=rootSelection->end(); ++iter)
 				{
 					C* c = dynamic_cast<C*>(iter->get());
-					if (c!=NULL)
+					if (c!=nullptr)
 						filteredSelection.push_back(c);
 				}
 

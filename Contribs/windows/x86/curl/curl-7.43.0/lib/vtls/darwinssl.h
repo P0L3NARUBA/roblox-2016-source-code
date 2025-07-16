@@ -64,7 +64,7 @@ bool Curl_darwinssl_false_start(void);
 #define curlssl_shutdown(x,y) 0
 #define curlssl_set_engine(x,y) ((void)x, (void)y, CURLE_NOT_BUILT_IN)
 #define curlssl_set_engine_default(x) ((void)x, CURLE_NOT_BUILT_IN)
-#define curlssl_engines_list(x) ((void)x, (struct curl_slist *)NULL)
+#define curlssl_engines_list(x) ((void)x, (struct curl_slist *)nullptr)
 #define curlssl_version Curl_darwinssl_version
 #define curlssl_check_cxn Curl_darwinssl_check_cxn
 #define curlssl_data_pending(x,y) Curl_darwinssl_data_pending(x, y)

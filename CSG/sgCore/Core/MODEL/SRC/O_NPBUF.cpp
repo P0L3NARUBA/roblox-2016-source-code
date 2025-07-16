@@ -46,13 +46,13 @@ VNP write_np(lpNP_BUF np_buf,lpNPW npw, NPTYPE type)
 	if ( !seek_buf(&np_buf->bd,-1) ) return FALSE;
 	np_loc.offset = get_buf_offset(&np_buf->bd);
 	np_loc.size   = get_size_np(npw, type);
-	if ( !write_np_buf(np_buf, npw, type) ) return NULL;
-	if ( !add_elem(&np_buf->dim,&np_loc) ) return NULL;
+	if ( !write_np_buf(np_buf, npw, type) ) return nullptr;
+	if ( !add_elem(&np_buf->dim,&np_loc) ) return nullptr;
 /*
   memcpy(&np_loc.viloc,&np_buf->vld.viloc,sizeof(VI_LOCATION));
   np_loc.size   = get_size_np(npw, type);
-  if ( !write_np_mem(np_buf, npw) ) return NULL;
-  if ( !add_elem(&np_buf->dim,&np_loc) ) return NULL;
+  if ( !write_np_mem(np_buf, npw) ) return nullptr;
+  if ( !add_elem(&np_buf->dim,&np_loc) ) return nullptr;
 */
 	return (VNP)np_buf->dim.num_elem;
 }

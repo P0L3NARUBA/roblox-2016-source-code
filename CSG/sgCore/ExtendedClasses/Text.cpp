@@ -3,14 +3,14 @@
 #include <vector>
 
 
-sgCFont*                      temp_font = NULL;
+sgCFont*                      temp_font = nullptr;
 
 bool sgFontManager::AttachFont(sgCFont* fnt)
 {
 	if (!fnt || !fnt->m_handle || fnt->m_length==0)
 		return false;
 
-	lpFONT     font = NULL;
+	lpFONT     font = nullptr;
 	IDENT_V    id;
 	ULONG      len;
 	//    
@@ -29,7 +29,7 @@ bool sgFontManager::AttachFont(sgCFont* fnt)
 			return false;
 		}
 		SGFree(font); 
-		font = NULL;
+		font = nullptr;
 		if(!il_get_next_item(&ft_bd->vd, id, &id))
 		{
 			assert(0);
@@ -46,14 +46,14 @@ bool sgFontManager::AttachFont(sgCFont* fnt)
 
 	fnt->m_id = id;
 	SGFree(fnt->m_handle);
-	fnt->m_handle = NULL;
+	fnt->m_handle = nullptr;
 	fnt->m_length = 0;
 
 	if (ft_bd->curr_font==0)
 		ft_bd->def_font = ft_bd->curr_font = id;
 
 	delete fnt;
-	fnt = NULL;
+	fnt = nullptr;
 
 	return true;
 }
@@ -65,24 +65,24 @@ unsigned int  sgFontManager::GetFontsCount()
 
 const sgCFont* sgFontManager::GetFont(unsigned int numb)
 {
-	lpFONT     fnt = NULL;
+	lpFONT     fnt = nullptr;
 	IDENT_V    id;
 
 	if ((long)numb>=ft_bd->ft_listh[FTFONT].num)
-		return NULL;
+		return nullptr;
 	//    
 	id = ft_bd->ft_listh[FTFONT].head;
 
 	for (unsigned int i=0;i<numb;i++)
 		if(!il_get_next_item(&ft_bd->vd, id, &id)) 
-			return NULL;
+			return nullptr;
 	if (temp_font)
 	{
 		delete temp_font;
-		temp_font = NULL;
+		temp_font = nullptr;
 	}
 
-	temp_font = new sgCFont(NULL,0,id);
+	temp_font = new sgCFont(nullptr,0,id);
 	return temp_font;
 }
 
@@ -96,7 +96,7 @@ bool sgFontManager::SetCurrentFont(unsigned int numb)
 	id = ft_bd->ft_listh[FTFONT].head;
 	for (unsigned int i=0;i<numb;i++)
 		if(!il_get_next_item(&ft_bd->vd, id, &id)) 
-			return NULL;
+			return nullptr;
 	ft_bd->curr_font = id;
 	return true;
 }
@@ -140,15 +140,15 @@ static  void  FillLinesArrayfromGeoText(lpGEO_TEXT geoT)
 {
 	lines_buffer.clear();
 	assert(geoT);
-	draw_geo_text(geoT,lines_collector_func,NULL);
+	draw_geo_text(geoT,lines_collector_func,nullptr);
 }
 
 
 sgCText::sgCText():sgCObject()
 {
-	m_lines = NULL;
+	m_lines = nullptr;
 	m_lines_count=0;
-	m_text = NULL;
+	m_text = nullptr;
 }
 
 sgCText::~sgCText()
@@ -156,21 +156,21 @@ sgCText::~sgCText()
 	if (m_text)
 	{
 		SGFree(m_text);
-		m_text = NULL;
+		m_text = nullptr;
 	}
 	if (m_lines)
 	{
 		delete [] m_lines;
-		m_lines = NULL;
+		m_lines = nullptr;
 		m_lines_count=0;
 	}
 }
 
 sgCText::sgCText(SG_OBJ_HANDLE objH):sgCObject(objH)
 {
-	m_lines = NULL;
+	m_lines = nullptr;
 	m_lines_count=0;
-	m_text = NULL;
+	m_text = nullptr;
 
 	char* typeID = "{0000000000000-0000-0000-000000000006}";
 	set_hobj_attr_value(id_TypeID, objH, typeID);
@@ -200,7 +200,7 @@ bool	sgCText::ApplyTempMatrix()
 	if (m_lines)
 	{
 		delete [] m_lines;
-		m_lines = NULL;
+		m_lines = nullptr;
 		m_lines_count=0;
 	}
 	lpOBJ pobj = (lpOBJ)GetObjectHandle(this);
@@ -222,8 +222,8 @@ bool	sgCText::ApplyTempMatrix()
 sgCText*   sgCText::Create(const sgCFont* fnt, const SG_TEXT_STYLE& text_stl,const char* textStr)
 {
 
-	if (fnt==NULL || textStr==NULL )
-		return NULL;
+	if (fnt==nullptr || textStr==nullptr )
+		return nullptr;
 
 	GEO_TEXT gtext;
     	
@@ -242,14 +242,14 @@ sgCText*   sgCText::Create(const sgCFont* fnt, const SG_TEXT_STYLE& text_stl,con
 
 	IDENT_V    id;
 	ULONG      len;
-	UCHAR      *exist_txt=NULL;
+	UCHAR      *exist_txt=nullptr;
 	bool       exist_this_text = false;
 
 	id = ft_bd->ft_listh[FTTEXT].head;
 
 	while(id){
 		if(0 ==(exist_txt = (UCHAR *)alloc_and_get_ft_value(id, &len))) 
-			return NULL;
+			return nullptr;
 		if(!strcmp((char*)exist_txt, textStr))
 		{
 			SGFree(exist_txt);
@@ -257,21 +257,21 @@ sgCText*   sgCText::Create(const sgCFont* fnt, const SG_TEXT_STYLE& text_stl,con
 			exist_this_text = true;
 			break;
 		}
-		SGFree(exist_txt); exist_txt = NULL;
+		SGFree(exist_txt); exist_txt = nullptr;
 		if(!il_get_next_item(&ft_bd->vd, id, &id)) 
-			return NULL;
+			return nullptr;
 	}
 
 	if (!exist_this_text)
 		gtext.text_id = add_ft_value(FTTEXT, const_cast<char*>(textStr), strlen(textStr)+1);
 	if(!gtext.text_id) 
-		return NULL;
+		return nullptr;
 
 	if(get_text_geo_par(&gtext) != G_OK)
 	{
 		if (!exist_this_text)
 			delete_ft_item(FTTEXT, gtext.text_id);
-		return NULL;
+		return nullptr;
 	}
 
 	hOBJ obj = create_simple_obj_loc(OTEXT, &gtext);
@@ -279,7 +279,7 @@ sgCText*   sgCText::Create(const sgCFont* fnt, const SG_TEXT_STYLE& text_stl,con
 	if (!obj)
 	{
 		assert(0);
-		return NULL;
+		return nullptr;
 	}
 
 	sgCText*   newT=new sgCText(obj);
@@ -318,7 +318,7 @@ const char*  sgCText::GetText()
 {
 	lpOBJ obj = (lpOBJ)GetObjectHandle(this);
 
-	if (m_text!=NULL)
+	if (m_text!=nullptr)
 		return m_text;
 
 	IDENT_V    id = ((lpGEO_TEXT)(obj->geo_data))->text_id;
@@ -327,7 +327,7 @@ const char*  sgCText::GetText()
 	if(0 ==(m_text = (char*)alloc_and_get_ft_value(id, &len))) 
 	{
 		assert(0);
-		return NULL;
+		return nullptr;
 	}
 	return m_text;
 }
@@ -365,9 +365,9 @@ bool   sgCText::GetWorldMatrix(sgCMatrix& mtrx) const
 }
 
 
-static  SG_DRAW_LINE_FUNC   drLF = NULL;
+static  SG_DRAW_LINE_FUNC   drLF = nullptr;
 
-static  sgCMatrix*           drMatr = NULL;
+static  sgCMatrix*           drMatr = nullptr;
 
 static BOOL  lineFnkForCore(lpD_POINT pb, lpD_POINT pe, void *usrD)
 {
@@ -389,7 +389,7 @@ bool  sgCText::Draw(const sgCFont* fnt,
 						const char* strng, 
 						SG_DRAW_LINE_FUNC dlf)
 {
-	if (fnt==NULL || strng==NULL || dlf==NULL)
+	if (fnt==nullptr || strng==nullptr || dlf==nullptr)
 		return false;
 
 	drLF = dlf;
@@ -399,8 +399,8 @@ bool  sgCText::Draw(const sgCFont* fnt,
     memcpy(&tmpTSt, &stle, sizeof(SG_TEXT_STYLE));
     draw_text(fntHndl, &tmpTSt,
         const_cast<UCHAR*>(reinterpret_cast<const UCHAR*>(strng)),
-        lineFnkForCore, NULL);
-	drLF = NULL;
-	drMatr = NULL;
+        lineFnkForCore, nullptr);
+	drLF = nullptr;
+	drMatr = nullptr;
 	return true;
 }

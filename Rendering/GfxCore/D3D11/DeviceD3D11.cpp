@@ -42,7 +42,7 @@ namespace RBX
 
 		static DXGI_ADAPTER_DESC getAdapterDesc(IDXGIDevice* device)
 		{
-			IDXGIAdapter* adapter = NULL;
+			IDXGIAdapter* adapter = nullptr;
 			device->GetAdapter(&adapter);
 
 			DXGI_ADAPTER_DESC desc = {};
@@ -64,14 +64,14 @@ namespace RBX
 
 		DeviceD3D11::DeviceD3D11(void* windowHandle)
 			: windowHandle(windowHandle)
-			, device11(NULL)
-			, swapChain11(NULL)
-			, immediateContext(NULL)
+			, device11(nullptr)
+			, swapChain11(nullptr)
+			, immediateContext(nullptr)
 			, frameTimeQueryIssued(false)
 			, gpuTime(0)
-			, beginQuery(NULL)
-			, endQuery(NULL)
-			, disjointQuery(NULL)
+			, beginQuery(nullptr)
+			, endQuery(nullptr)
+			, disjointQuery(nullptr)
 			, vrEnabled(true)
 		{
 			createDevice();
@@ -164,7 +164,7 @@ namespace RBX
 			RBXASSERT(!mainFramebuffer);
 
 			// Get back buffer, create view
-			ID3D11Texture2D* backBuffer = NULL;
+			ID3D11Texture2D* backBuffer = nullptr;
 			HRESULT hr = swapChain11->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
 			RBXASSERT(SUCCEEDED(hr));
 
@@ -176,7 +176,7 @@ namespace RBX
 			//shared_ptr<Renderbuffer> depthStencil = shared_ptr<Renderbuffer>(new RenderbufferD3D11(this, Texture::Format_D32F, width, height, 1));
 
 			// create frame buffer
-			mainFramebuffer.reset(new FramebufferD3D11(this, colorBuffers, NULL));
+			mainFramebuffer.reset(new FramebufferD3D11(this, colorBuffers, nullptr));
 		}
 
 		DeviceD3D11::~DeviceD3D11()
@@ -251,7 +251,7 @@ namespace RBX
 
 			// Don't render anything if window size changed; wait for validate
 			if (dimensions.first != mainFramebuffer->getWidth() || dimensions.second != mainFramebuffer->getHeight())
-				return NULL;
+				return nullptr;
 
 			immediateContext->bindFramebuffer(mainFramebuffer.get());
 			immediateContext->clearStates();
@@ -279,7 +279,7 @@ namespace RBX
 			// Reset device if window size changed
 			if (mainFramebuffer && (dimensions.first != mainFramebuffer->getWidth() || dimensions.second != mainFramebuffer->getHeight()))
 			{
-				immediateContext->getContextDX11()->OMSetRenderTargets(NULL, NULL, NULL);
+				immediateContext->getContextDX11()->OMSetRenderTargets(nullptr, nullptr, nullptr);
 
 				mainFramebuffer.reset();
 				resizeSwapchain();
@@ -371,7 +371,7 @@ namespace RBX
 
 		DeviceVR* DeviceD3D11::getVR()
 		{
-			return (vr && vrEnabled) ? vr.get() : NULL;
+			return (vr && vrEnabled) ? vr.get() : nullptr;
 		}
 
 		void DeviceD3D11::setVR(bool enabled)

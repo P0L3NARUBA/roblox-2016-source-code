@@ -86,7 +86,7 @@ namespace Graphics
 		{
 			typename SpatialMap::const_iterator it = mMap.find(index);
 			
-			return (it != mMap.end()) ? &it->second : NULL;
+			return (it != mMap.end()) ? &it->second : nullptr;
 		}
 		
 		SpatialGridIndex getIndexUnsafe(RBX::PartInstance* part, unsigned short flags) const

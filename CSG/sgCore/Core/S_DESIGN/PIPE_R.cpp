@@ -31,7 +31,7 @@ static  BOOL create_cyl_part ( lpCREATE_PIPE data, lpD_POINT vc1,
 static  BOOL create_tor_part ( lpCREATE_PIPE data, lpARC_DATA arc_data, short n_direct,
 															short beg, short step, short constr );
 
-//lpNPW	c_np_top = NULL;
+//lpNPW	c_np_top = nullptr;
 
 
 BOOL real_pipe_mesh(sgFloat R1, sgFloat R2, short num, hOBJ hpath, bool clos, hOBJ *hrez ){
@@ -41,12 +41,12 @@ BOOL real_pipe_mesh(sgFloat R1, sgFloat R2, short num, hOBJ hpath, bool clos, hO
 	BOOL		cod;
 
 	c_num_np	= -32767;
-	*hrez 		= NULL;
+	*hrez 		= nullptr;
 	if ( !np_init_list(&c_list_str) ) return FALSE;
 
 //   
 	if ((c_np_top = creat_np_mem(TNPW,MAXNOV,MAXNOE,MAXNOC, MAXNOF,
-																MAXNOE)) == NULL)  goto err1;
+																MAXNOE)) == nullptr)  goto err1;
 	np_init((lpNP)c_np_top);
 	c_np_top->ident = c_num_np++;
 	for( i=0; i<2; i++ ){
@@ -69,7 +69,7 @@ err1a:
 	free_vdim(&mdd.vdim);
 err1:
 	free_np_mem(&c_np_top);
-	np_end_of_put(&c_list_str,NP_CANCEL,0,NULL);
+	np_end_of_put(&c_list_str,NP_CANCEL,0,nullptr);
 	return FALSE;
 }
 

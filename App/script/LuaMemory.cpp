@@ -52,7 +52,7 @@ LuaAllocator::~LuaAllocator()
 		for (unsigned int i = 0; i < memPools.size(); i++)
 		{
 			delete memPools[i]; 
-			memPools[i] = NULL;
+			memPools[i] = nullptr;
 		}
 		memPools.clear();
 	}
@@ -98,7 +98,7 @@ void* LuaAllocator::alloc(void *ptr, size_t osize, size_t nsize)
 	if(!hasSpace(diff))
 	{
 		FASTLOG(FLog::LuaMemoryPool, "lua alloc has no space");
-		return NULL;
+		return nullptr;
 	}
 
 	void* result;
@@ -116,7 +116,7 @@ void* LuaAllocator::alloc(void *ptr, size_t osize, size_t nsize)
 			else
 				free(ptr);
 
-			result = NULL;
+			result = nullptr;
 		}
 		else // allocate new memory
 		{
@@ -165,7 +165,7 @@ void* LuaAllocator::alloc(void *ptr, size_t osize, size_t nsize)
 		if (nsize == 0)
 		{
 			free(ptr);
-			result = NULL;
+			result = nullptr;
 		}
 		else
 		{

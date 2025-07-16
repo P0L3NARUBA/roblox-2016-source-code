@@ -47,7 +47,7 @@ static Reflection::BoundFuncDesc<Camera, RBX::RbxRay(float,float,float)> func_sc
 static Reflection::BoundFuncDesc<Camera, shared_ptr<const Reflection::Tuple>(Vector3)> func_worldToViewportPoint(&Camera::projectViewportLua, "WorldToViewportPoint", "worldPoint", Security::None);
 static Reflection::BoundFuncDesc<Camera, shared_ptr<const Reflection::Tuple>(Vector3)> func_worldToScreenPoint(&Camera::projectLua, "WorldToScreenPoint", "worldPoint", Security::None);
 
-static Reflection::PropDescriptor<Camera, Vector2> desc_viewport("ViewportSize", category_Data, &Camera::getViewport, NULL);
+static Reflection::PropDescriptor<Camera, Vector2> desc_viewport("ViewportSize", category_Data, &Camera::getViewport, nullptr);
 
 static Reflection::PropDescriptor<Camera, CoordinateFrame> desc_CFrame("CFrame", category_Data, &Camera::getCameraCoordinateFrame, &Camera::setCameraCoordinateFrame);
 static Reflection::PropDescriptor<Camera, CoordinateFrame> desc_CoordFrame("CoordinateFrame", category_Data, &Camera::getCameraCoordinateFrame, &Camera::setCameraCoordinateFrame, Reflection::PropertyDescriptor::Attributes::deprecated(desc_CFrame, Reflection::PropertyDescriptor::LEGACY_SCRIPTING));
@@ -166,7 +166,7 @@ Camera::Camera() :
 
 bool Camera::askSetParent(const Instance* instance) const
 {
-	return Instance::fastDynamicCast<Workspace>(instance)!=NULL;
+	return Instance::fastDynamicCast<Workspace>(instance)!=nullptr;
 }
 
 // static
@@ -192,7 +192,7 @@ float Camera::getNewZoomDistance(float currentDistance, float in)
 bool Camera::isCharacterCamera() const
 {
 	return	(	
-				(cameraSubject.get() != NULL)
+				(cameraSubject.get() != nullptr)
 				&&	((cameraType == Camera::FOLLOW_CAMERA) || (cameraType == Camera::ATTACH_CAMERA) || 
 				     (cameraType == Camera::TRACK_CAMERA) || (cameraType == Camera::CUSTOM_CAMERA))
 			);
@@ -242,7 +242,7 @@ void Camera::onHeartbeat(const Heartbeat& event)
         signalInterpolationDone();
 		
 	CameraSubject* subject = getCameraSubject();
-	if (subject != NULL && cameraType != Camera::LOCKED_CAMERA && cameraType != Camera::CUSTOM_CAMERA)
+	if (subject != nullptr && cameraType != Camera::LOCKED_CAMERA && cameraType != Camera::CUSTOM_CAMERA)
 		subject->onCameraHeartbeat(cameraCoord.translation, cameraFocus.translation);
 	else if(RBX::GameBasicSettings::singleton().inStudioMode()) // only do camera interpolation if we are currently using studio
     {
@@ -270,7 +270,7 @@ ICameraOwner* Camera::getCameraOwner()
 			return owner;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 // this method will push the current camera data onto a stack, so we can have a camera history! (this will only work in studio with [] keys)
 void Camera::pushCameraHistoryStack() 
@@ -634,7 +634,7 @@ void Camera::lerpToExtents(const Extents& extents)
 	CoordinateFrame pos = cameraCoordGoal;
 	CoordinateFrame focus = cameraFocusGoal;
 
-	if ( RBX::ServiceProvider::findServiceProvider(this) != NULL &&
+	if ( RBX::ServiceProvider::findServiceProvider(this) != nullptr &&
 		 ( RBX::Network::Players::getGameMode(this) == RBX::Network::EDIT || 
 		   RBX::Network::Players::getGameMode(this) == RBX::Network::DPHYS_GAME_SERVER ||
 		   RBX::Network::Players::getGameMode(this) == RBX::Network::GAME_SERVER ) )
@@ -870,7 +870,7 @@ const CameraSubject* Camera::getConstCameraSubject() const
 		return answer;
 	}
 	else {
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -1074,7 +1074,7 @@ bool Camera::nonCharacterZoom(float in)
 
 bool Camera::isEditMode() const
 {
-	return RBX::ServiceProvider::findServiceProvider(this) != NULL && 
+	return RBX::ServiceProvider::findServiceProvider(this) != nullptr && 
 		(RBX::Network::Players::getGameMode(this) == RBX::Network::EDIT || RBX::Network::Players::isCloudEdit(this));
 }
 

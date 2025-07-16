@@ -76,7 +76,7 @@ You can of course also provide your own methods as well.
 #define HT_MALLOC(size)		HTMemory_malloc((size))
 #define HT_CALLOC(count, size)	HTMemory_calloc((count), (size))
 #define HT_REALLOC(ptr, size)	HTMemory_realloc((ptr), (size))
-#define HT_FREE(pointer)	{HTMemory_free((pointer));((pointer))=NULL;}
+#define HT_FREE(pointer)	{HTMemory_free((pointer));((pointer))=nullptr;}
 
 /*
 .
@@ -125,7 +125,7 @@ extern BOOL HTMemoryCall_deleteAll (void);
 If the freer functions are not capable of de-allocation enough memory then
 the application must have an organized way of closing down. This is done
 using the panic handler. In the libwww, each allocation is tested and
-HT_OUTOFMEM is called if a NULL was returned.
+HT_OUTOFMEM is called if a nullptr was returned.
 HT_OUTOFMEM is a macro which by default calls
 HTMemory_outofmem() but of course can point to any method. The
 default handler calls an exit function defined by the application in a call

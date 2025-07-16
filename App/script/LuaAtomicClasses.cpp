@@ -39,7 +39,7 @@ namespace RBX {
 
 		const char* lua_checkstring_secure(lua_State* L, int idx)
 		{
-			const char* s = lua_tolstringsecure(L, idx, NULL);
+			const char* s = lua_tolstringsecure(L, idx, nullptr);
 			if (!s) luaL_typerror(L, idx, lua_typename(L, LUA_TSTRING));
 			return s;
 		}
@@ -88,7 +88,7 @@ namespace RBX {
 			{"fromRGB", newColor3FromRGB},
 			{"fromHSV", newHSVColor3},
 			{"fromHex", newHexColor3},
-			{NULL, NULL}
+			{nullptr, nullptr}
 		};
 
 		void Color3Bridge::registerClassLibrary(lua_State* L) {
@@ -213,7 +213,7 @@ namespace RBX {
 
 		const luaL_reg RbxRayBridge::classLibrary[] = {
 			{"new", newRbxRay},
-			{NULL, NULL}
+			{nullptr, nullptr}
 		};
 
 		void RbxRayBridge::registerClassLibrary(lua_State* L) {
@@ -310,7 +310,7 @@ namespace RBX {
 
 		const luaL_reg Region3Bridge::classLibrary[] = {
 			{"new", newRegion3},
-			{NULL, NULL}
+			{nullptr, nullptr}
 		};
 
 		void Region3Bridge::registerClassLibrary(lua_State* L) {
@@ -391,7 +391,7 @@ namespace RBX {
 
 		const luaL_reg Region3int16Bridge::classLibrary[] = {
 			{"new", newRegion3int16},
-			{NULL, NULL}
+			{nullptr, nullptr}
 		};
 
 		void Region3int16Bridge::registerClassLibrary(lua_State* L) {
@@ -449,7 +449,7 @@ namespace RBX {
 		const luaL_reg PhysicalPropertiesBridge::classLibrary[] =
 		{
 			{"new", newPhysicalProperties},
-			{NULL, NULL}
+			{nullptr, nullptr}
 		};
 		void PhysicalPropertiesBridge::registerClassLibrary(lua_State* L)
 		{
@@ -545,7 +545,7 @@ namespace RBX {
 
 		const luaL_reg Rect2DBridge::classLibrary[] = {
 			{"new", newRect2D},
-			{NULL, NULL}
+			{nullptr, nullptr}
 		};
 		void Rect2DBridge::registerClassLibrary(lua_State* L) {
 
@@ -628,7 +628,7 @@ namespace RBX {
 			{"new", newVector3},
 			{"FromNormalId", newVector3FromNormalId},
 			{"FromAxis", newVector3FromAxis},
-			{NULL, NULL}
+			{nullptr, nullptr}
 		};
 
 		void Vector3Bridge::registerClassLibrary(lua_State* L) {
@@ -881,7 +881,7 @@ namespace RBX {
 
 		const luaL_reg Vector3int16Bridge::classLibrary[] = {
 			{"new", newVector3int16},
-			{NULL, NULL}
+			{nullptr, nullptr}
 		};
 
 		void Vector3int16Bridge::registerClassLibrary(lua_State* L) {
@@ -1030,7 +1030,7 @@ namespace RBX {
 
 		const luaL_reg Vector2int16Bridge::classLibrary[] = {
 			{"new", newVector2int16},
-			{NULL, NULL}
+			{nullptr, nullptr}
 		};
 
 		void Vector2int16Bridge::registerClassLibrary(lua_State* L) {
@@ -1186,7 +1186,7 @@ namespace RBX {
 
 		const luaL_reg Vector2Bridge::classLibrary[] = {
 			{"new", newVector2},
-			{NULL, NULL}
+			{nullptr, nullptr}
 		};
 
 		void Vector2Bridge::registerClassLibrary(lua_State* L) {
@@ -1417,7 +1417,7 @@ namespace RBX {
 			{"Yellow", pushYellow },
 			{"Green", pushGreen },
 			{"Blue", pushBlue },
-			{NULL, NULL}
+			{nullptr, nullptr}
 		};
 
 		int BrickColorBridge::newBrickColor(lua_State* L)
@@ -1533,7 +1533,7 @@ namespace RBX {
 			{"fromEulerAnglesXYZ", fromEulerAnglesXYZ},
 			{"Angles", fromEulerAnglesXYZ},	//Synonym, much shorter for 
 			{"fromAxisAngle", fromAxisAngle},
-			{NULL, NULL}
+			{nullptr, nullptr}
 		};
 
 		void CoordinateFrameBridge::registerClassLibrary(lua_State* L) {
@@ -1910,7 +1910,7 @@ namespace RBX {
 
 		const luaL_reg UDimBridge::classLibrary[] = {
 			{"new", newUDim},
-			{NULL, NULL}
+			{nullptr, nullptr}
 		};
 
 		void UDimBridge::registerClassLibrary(lua_State* L) {
@@ -1998,7 +1998,7 @@ namespace RBX {
 
 		const luaL_reg UDim2Bridge::classLibrary[] = {
 			{"new", newUDim2},
-			{NULL, NULL}
+			{nullptr, nullptr}
 		};
 
 		void UDim2Bridge::registerClassLibrary(lua_State* L) {
@@ -2091,7 +2091,7 @@ namespace RBX {
 
 		const luaL_reg FacesBridge::classLibrary[] = {
 			{"new", newFaces},
-			{NULL, NULL}
+			{nullptr, nullptr}
 		};
 
 		void FacesBridge::registerClassLibrary(lua_State* L) {
@@ -2179,7 +2179,7 @@ namespace RBX {
 
 		const luaL_reg AxesBridge::classLibrary[] = {
 			{"new", newAxes},
-			{NULL, NULL}
+			{nullptr, nullptr}
 		};
 
 		void AxesBridge::registerClassLibrary(lua_State* L) {
@@ -2288,7 +2288,7 @@ namespace RBX {
 
 		const luaL_reg CellIDBridge::classLibrary[] = {
 			{"new", newCellID},
-			{NULL, NULL}
+			{nullptr, nullptr}
 		};
 
 		void CellIDBridge::registerClassLibrary(lua_State* L) {

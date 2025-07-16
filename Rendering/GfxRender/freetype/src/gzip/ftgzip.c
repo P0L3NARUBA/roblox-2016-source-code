@@ -120,7 +120,7 @@
   {
     FT_ULong    sz = (FT_ULong)size * items;
     FT_Error    error;
-    FT_Pointer  p  = NULL;
+    FT_Pointer  p  = nullptr;
 
 
     (void)FT_ALLOC( p, sz );
@@ -305,7 +305,7 @@
     zstream->next_in  = zip->buffer;
 
     if ( inflateInit2( zstream, -MAX_WBITS ) != Z_OK ||
-         zstream->next_in == NULL                     )
+         zstream->next_in == nullptr                     )
       error = FT_THROW( Invalid_File_Format );
 
   Exit:
@@ -322,17 +322,17 @@
     inflateEnd( zstream );
 
     /* clear the rest */
-    zstream->zalloc    = NULL;
-    zstream->zfree     = NULL;
-    zstream->opaque    = NULL;
-    zstream->next_in   = NULL;
-    zstream->next_out  = NULL;
+    zstream->zalloc    = nullptr;
+    zstream->zfree     = nullptr;
+    zstream->opaque    = nullptr;
+    zstream->next_in   = nullptr;
+    zstream->next_out  = nullptr;
     zstream->avail_in  = 0;
     zstream->avail_out = 0;
 
-    zip->memory = NULL;
-    zip->source = NULL;
-    zip->stream = NULL;
+    zip->memory = nullptr;
+    zip->source = nullptr;
+    zip->stream = nullptr;
   }
 
 
@@ -562,7 +562,7 @@
 
       FT_FREE( zip );
 
-      stream->descriptor.pointer = NULL;
+      stream->descriptor.pointer = nullptr;
     }
 
     if ( !stream->read )
@@ -613,7 +613,7 @@
   {
     FT_Error     error;
     FT_Memory    memory;
-    FT_GZipFile  zip = NULL;
+    FT_GZipFile  zip = nullptr;
 
 
     if ( !stream || !source )
@@ -661,7 +661,7 @@
 
       if ( zip_size != 0 && zip_size < 40 * 1024 )
       {
-        FT_Byte*  zip_buff = NULL;
+        FT_Byte*  zip_buff = nullptr;
 
 
         if ( !FT_ALLOC( zip_buff, zip_size ) )
@@ -675,18 +675,18 @@
             ft_gzip_file_done( zip );
             FT_FREE( zip );
 
-            stream->descriptor.pointer = NULL;
+            stream->descriptor.pointer = nullptr;
 
             stream->size  = zip_size;
             stream->pos   = 0;
             stream->base  = zip_buff;
-            stream->read  = NULL;
+            stream->read  = nullptr;
             stream->close = ft_gzip_stream_close;
 
             goto Exit;
           }
 
-          ft_gzip_file_io( zip, 0, NULL, 0 );
+          ft_gzip_file_io( zip, 0, nullptr, 0 );
           FT_FREE( zip_buff );
         }
         error = FT_Err_Ok;
@@ -699,7 +699,7 @@
     }
 
     stream->pos   = 0;
-    stream->base  = NULL;
+    stream->base  = nullptr;
     stream->read  = ft_gzip_stream_io;
     stream->close = ft_gzip_stream_close;
 

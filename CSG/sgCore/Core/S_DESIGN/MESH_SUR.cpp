@@ -14,7 +14,7 @@ BOOL Create_Surf_By_Mesh( lpMESHDD mdd, short degree_u, short degree_v, hOBJ *hr
 
 	o_hcunit(surf_matr); //   
 	c_num_np	= -32767;
-	*hrez			= NULL;
+	*hrez			= nullptr;
 	if ( !np_init_list(&c_list_str) ) return FALSE;
 
 //initializatuion for surface structure
@@ -46,7 +46,7 @@ BOOL Create_Surf_By_Mesh( lpMESHDD mdd, short degree_u, short degree_v, hOBJ *hr
 	init_vdim(&mdd->vdim,sizeof(MNODE));
 	if( !Bild_Mesh_On_Surf(&surf_dat, mdd, 3, 3)) goto err2;
 //==============================================================================
-  if( ((*hrez)=create_BREP_surface(&geo_surf, mdd )) == NULL ) goto err3;
+  if( ((*hrez)=create_BREP_surface(&geo_surf, mdd )) == nullptr ) goto err3;
 
  	free_geo_surf( &geo_surf );
 	free_surf_data(&surf_dat);
@@ -60,7 +60,7 @@ err2:
 err1:
 	free_surf_data(&surf_dat);
 err0:
-  np_end_of_put(&c_list_str,NP_CANCEL,0,NULL);
+  np_end_of_put(&c_list_str,NP_CANCEL,0,nullptr);
 	return FALSE;
 }
 

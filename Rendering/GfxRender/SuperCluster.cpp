@@ -68,7 +68,7 @@ FastCluster* SuperCluster::findBestCluster()
         }
     }
 
-    clusters.push_back(new FastCluster(visualEngine, NULL, this, fw));
+    clusters.push_back(new FastCluster(visualEngine, nullptr, this, fw));
     lastCluster = clusters.back();
     return lastCluster;
 }

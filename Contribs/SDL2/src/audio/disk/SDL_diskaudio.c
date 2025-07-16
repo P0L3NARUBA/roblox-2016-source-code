@@ -44,9 +44,9 @@
 static const char *
 DISKAUD_GetOutputFilename(const char *devname)
 {
-    if (devname == NULL) {
+    if (devname == nullptr) {
         devname = SDL_getenv(DISKENVR_OUTFILE);
-        if (devname == NULL) {
+        if (devname == nullptr) {
             devname = DISKDEFAULT_OUTFILE;
         }
     }
@@ -87,28 +87,28 @@ DISKAUD_GetDeviceBuf(_THIS)
 static void
 DISKAUD_CloseDevice(_THIS)
 {
-    if (this->hidden != NULL) {
+    if (this->hidden != nullptr) {
         SDL_FreeAudioMem(this->hidden->mixbuf);
-        this->hidden->mixbuf = NULL;
-        if (this->hidden->output != NULL) {
+        this->hidden->mixbuf = nullptr;
+        if (this->hidden->output != nullptr) {
             SDL_RWclose(this->hidden->output);
-            this->hidden->output = NULL;
+            this->hidden->output = nullptr;
         }
         SDL_free(this->hidden);
-        this->hidden = NULL;
+        this->hidden = nullptr;
     }
 }
 
 static int
 DISKAUD_OpenDevice(_THIS, void *handle, const char *devname, int iscapture)
 {
-    /* handle != NULL means "user specified the placeholder name on the fake detected device list" */
-    const char *fname = DISKAUD_GetOutputFilename(handle ? NULL : devname);
+    /* handle != nullptr means "user specified the placeholder name on the fake detected device list" */
+    const char *fname = DISKAUD_GetOutputFilename(handle ? nullptr : devname);
     const char *envr = SDL_getenv(DISKENVR_WRITEDELAY);
 
     this->hidden = (struct SDL_PrivateAudioData *)
         SDL_malloc(sizeof(*this->hidden));
-    if (this->hidden == NULL) {
+    if (this->hidden == nullptr) {
         return SDL_OutOfMemory();
     }
     SDL_memset(this->hidden, 0, sizeof(*this->hidden));
@@ -119,14 +119,14 @@ DISKAUD_OpenDevice(_THIS, void *handle, const char *devname, int iscapture)
 
     /* Open the audio device */
     this->hidden->output = SDL_RWFromFile(fname, "wb");
-    if (this->hidden->output == NULL) {
+    if (this->hidden->output == nullptr) {
         DISKAUD_CloseDevice(this);
         return -1;
     }
 
     /* Allocate mixing buffer */
     this->hidden->mixbuf = (Uint8 *) SDL_AllocAudioMem(this->hidden->mixlen);
-    if (this->hidden->mixbuf == NULL) {
+    if (this->hidden->mixbuf == nullptr) {
         DISKAUD_CloseDevice(this);
         return -1;
     }

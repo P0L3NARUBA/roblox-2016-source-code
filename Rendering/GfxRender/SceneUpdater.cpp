@@ -154,7 +154,7 @@ void SceneUpdater::onWorkspaceDescendantAdded(shared_ptr<RBX::Instance> descenda
 	// See if the new instance is a PartInstance
 	
 	RBX::PartInstance* pi = RBX::Instance::fastDynamicCast<RBX::PartInstance>(descendant.get());
-	if (pi!=NULL)
+	if (pi!=nullptr)
 	{
 		queuePartToCreate(shared_from(pi));
 		return;
@@ -493,7 +493,7 @@ void SceneUpdater::updateInvalidatedFastClusters(bool bulkExecution /* = false *
 	
 	do
 	{
-		GfxPart* cluster = NULL;
+		GfxPart* cluster = nullptr;
 		
 		if(mPriorityInvalidateFastClusters.empty())
 		{
@@ -592,7 +592,7 @@ void SceneUpdater::notifyDestroyed(RBX::GfxPart* part)
 
 		if (MegaClusterInstance* terrain = Instance::fastDynamicCast<MegaClusterInstance>(part->getPartInstance()))
 		{
-			if (terrain->isSmooth() == (dynamic_cast<SmoothClusterBase*>(part) != NULL))
+			if (terrain->isSmooth() == (dynamic_cast<SmoothClusterBase*>(part) != nullptr))
 			{
 				if (terrain->isSmooth())
 					terrain->getSmoothGrid()->disconnectListener(this);
@@ -694,7 +694,7 @@ void SceneUpdater::processPendingParts(bool priorityParts)
 		}
 		else
 		{
-			FASTLOG2(FLog::GfxClustersFull, "Part %p died or removed from workspace before we could process it (died: %u)", it->first, p.get() == NULL);
+			FASTLOG2(FLog::GfxClustersFull, "Part %p died or removed from workspace before we could process it (died: %u)", it->first, p.get() == nullptr);
 		}
 	}
 }
@@ -918,7 +918,7 @@ void SceneUpdater::computeLightingPrepare()
 
             for (unsigned i = 0; i < chunkBudget; ++i)
             {
-                LightGridChunk* chunk = NULL;
+                LightGridChunk* chunk = nullptr;
                 if (bulkExecution)
                     chunk = lgrid->findFirstDirtyChunk();
                 else if (mAgeDirtyProportion == FLog::RenderLightGridAgeProportion)
@@ -991,7 +991,7 @@ void SceneUpdater::computeLightingPerform()
                 for (unsigned i = 0; i < chunkBudget; ++i)
                 {
                     // now the tricky part...
-                    LightGridChunk* chunk = NULL;
+                    LightGridChunk* chunk = nullptr;
                     
                     if( i < mLgridchunksToUpdate.size() ) // first, try the chunk cache from prepare
                     {
@@ -1108,7 +1108,7 @@ void SceneUpdater::checkFastClusters()
 
 	while (!mFastClustersToCheck.empty() || !mFastClustersToCheckFW.empty())
 	{
-		FastCluster* gfxcluster = NULL;
+		FastCluster* gfxcluster = nullptr;
 		if(!mFastClustersToCheckFW.empty())
 		{
 			gfxcluster = boost::polymorphic_downcast<FastCluster*>(*mFastClustersToCheckFW.begin());
@@ -1196,7 +1196,7 @@ RBX::Humanoid* SceneUpdater::getHumanoid(RBX::PartInstance* part)
         if (part->getCookie() & PartCookie::IS_HUMANOID_PART)
             return part->findAncestorModelWithHumanoid();
         else
-            return NULL;
+            return nullptr;
     }
     else
     {
@@ -1210,7 +1210,7 @@ RBX::Humanoid* SceneUpdater::getHumanoid(RBX::PartInstance* part)
     	if (RBX::Instance::isA<RBX::Accoutrement>(parent) || RBX::Instance::isA<RBX::Tool>(parent))
     		return RBX::Humanoid::modelIsCharacter(parent->getParent());
 
-    	return NULL;
+    	return nullptr;
     }
 }
 
@@ -1238,7 +1238,7 @@ void SceneUpdater::addFastPart(const shared_ptr<RBX::PartInstance>& part, bool i
         FastCluster*& cluster = mHumanoidClusters[humanoid];
 
         if (!cluster)
-            cluster = new FastCluster(mVisualEngine, humanoid, NULL, false);
+            cluster = new FastCluster(mVisualEngine, humanoid, nullptr, false);
 
         cluster->addPart(part);
 

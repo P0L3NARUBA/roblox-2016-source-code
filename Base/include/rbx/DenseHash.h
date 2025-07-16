@@ -83,7 +83,7 @@ namespace RBX
 
                 // Hash table is full - this should not happen
                 RBXASSERT(false);
-                return NULL;
+                return nullptr;
             }
 
             const Item* find(const Key& key) const
@@ -104,7 +104,7 @@ namespace RBX
 
                     // Element does not exist
                     if (eq(probe_item.key, empty_key))
-                        return NULL;
+                        return nullptr;
 
                     // Hash collision, quadratic probing
                     bucket = (bucket + probe + 1) & hashmod;
@@ -112,7 +112,7 @@ namespace RBX
 
                 // Hash table is full - this should not happen
                 RBXASSERT(false);
-                return NULL;
+                return nullptr;
             }
 
             const_iterator begin() const
@@ -306,7 +306,7 @@ namespace RBX
 		{
 			const detail::DenseHashMapItem<Key, Value>* result = impl.find(key);
 
-            return result ? &result->value : NULL;
+            return result ? &result->value : nullptr;
 		}
 
         // Note: this pointer is invalidated by any insert operation (i.e. operator[])
@@ -314,7 +314,7 @@ namespace RBX
 		{
 			const detail::DenseHashMapItem<Key, Value>* result = impl.find(key);
 
-            return result ? const_cast<Value*>(&result->value) : NULL;
+            return result ? const_cast<Value*>(&result->value) : nullptr;
 		}
 
         bool contains(const Key& key) const

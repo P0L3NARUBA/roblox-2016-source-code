@@ -51,8 +51,8 @@ int WIN_CreateWindowFramebuffer(_THIS, SDL_Window * window, Uint32 * format, voi
 
     /* The second call to GetDIBits() fills in the bitfields */
     hbm = CreateCompatibleBitmap(data->hdc, 1, 1);
-    GetDIBits(data->hdc, hbm, 0, 0, NULL, info, DIB_RGB_COLORS);
-    GetDIBits(data->hdc, hbm, 0, 0, NULL, info, DIB_RGB_COLORS);
+    GetDIBits(data->hdc, hbm, 0, 0, nullptr, info, DIB_RGB_COLORS);
+    GetDIBits(data->hdc, hbm, 0, 0, nullptr, info, DIB_RGB_COLORS);
     DeleteObject(hbm);
 
     *format = SDL_PIXELFORMAT_UNKNOWN;
@@ -84,7 +84,7 @@ int WIN_CreateWindowFramebuffer(_THIS, SDL_Window * window, Uint32 * format, voi
     info->bmiHeader.biSizeImage = window->h * (*pitch);
 
     data->mdc = CreateCompatibleDC(data->hdc);
-    data->hbm = CreateDIBSection(data->hdc, info, DIB_RGB_COLORS, pixels, NULL, 0);
+    data->hbm = CreateDIBSection(data->hdc, info, DIB_RGB_COLORS, pixels, nullptr, 0);
     SDL_stack_free(info);
 
     if (!data->hbm) {
@@ -114,11 +114,11 @@ void WIN_DestroyWindowFramebuffer(_THIS, SDL_Window * window)
 
     if (data->mdc) {
         DeleteDC(data->mdc);
-        data->mdc = NULL;
+        data->mdc = nullptr;
     }
     if (data->hbm) {
         DeleteObject(data->hbm);
-        data->hbm = NULL;
+        data->hbm = nullptr;
     }
 }
 

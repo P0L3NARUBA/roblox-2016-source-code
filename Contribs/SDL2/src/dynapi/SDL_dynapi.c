@@ -206,10 +206,10 @@ SDL_DYNAPI_entry(Uint32 apiver, void *table, Uint32 tablesize)
 static SDL_INLINE void *get_sdlapi_entry(const char *fname, const char *sym)
 {
     HANDLE lib = LoadLibraryA(fname);
-    void *retval = NULL;
+    void *retval = nullptr;
     if (lib) {
         retval = GetProcAddress(lib, sym);
-        if (retval == NULL) {
+        if (retval == nullptr) {
             FreeLibrary(lib);
         }
     }
@@ -221,11 +221,11 @@ static SDL_INLINE void *get_sdlapi_entry(const char *fname, const char *sym)
 static SDL_INLINE void *get_sdlapi_entry(const char *fname, const char *sym)
 {
     image_id lib = load_add_on(fname);
-    void *retval = NULL;
+    void *retval = nullptr;
     if (lib >= 0) {
         if (get_image_symbol(lib, sym, B_SYMBOL_TYPE_TEXT, &retval) != B_NO_ERROR) {
             unload_add_on(lib);
-            retval = NULL;
+            retval = nullptr;
         }
     }
     return retval;
@@ -235,10 +235,10 @@ static SDL_INLINE void *get_sdlapi_entry(const char *fname, const char *sym)
 static SDL_INLINE void *get_sdlapi_entry(const char *fname, const char *sym)
 {
     void *lib = dlopen(fname, RTLD_NOW | RTLD_LOCAL);
-    void *retval = NULL;
-    if (lib != NULL) {
+    void *retval = nullptr;
+    if (lib != nullptr) {
         retval = dlsym(lib, sym);
-        if (retval == NULL) {
+        if (retval == nullptr) {
             dlclose(lib);
         }
     }

@@ -62,8 +62,8 @@ static const Reflection::BoundFuncDesc<HopperBin,void()> func_toggleSelect(&Hopp
 static const Reflection::BoundFuncDesc<HopperBin,void()> func_disable(&HopperBin::disable,"Disable", Security::RobloxScript);
 
 // Legacy - This command string is now legacy, replaced with BinType - 
-static Reflection::PropDescriptor<HopperBin, std::string> desc_legacyCommand("Command", category_Data, NULL, &HopperBin::setLegacyCommand, Reflection::PropertyDescriptor::LEGACY);
-static Reflection::PropDescriptor<HopperBin, std::string> desc_legacyTextureName("TextureName", category_Data, NULL, &HopperBin::setLegacyTextureName, Reflection::PropertyDescriptor::LEGACY);
+static Reflection::PropDescriptor<HopperBin, std::string> desc_legacyCommand("Command", category_Data, nullptr, &HopperBin::setLegacyCommand, Reflection::PropertyDescriptor::LEGACY);
+static Reflection::PropDescriptor<HopperBin, std::string> desc_legacyTextureName("TextureName", category_Data, nullptr, &HopperBin::setLegacyTextureName, Reflection::PropertyDescriptor::LEGACY);
 REFLECTION_END();
 
 
@@ -76,12 +76,12 @@ StarterGear::StarterGear()
 
 bool StarterGear::askSetParent(const Instance* instance) const
 {
-	return false /*(Instance::fastDynamicCast<RBX::Network::Player>(instance) != NULL)*/;
+	return false /*(Instance::fastDynamicCast<RBX::Network::Player>(instance) != nullptr)*/;
 }
 
 bool StarterGear::askAddChild(const Instance* instance) const
 {
-	return (Instance::fastDynamicCast<BackpackItem>(instance)!=NULL);
+	return (Instance::fastDynamicCast<BackpackItem>(instance)!=nullptr);
 }
 
 
@@ -125,7 +125,7 @@ const TextureId BackpackItem::getTextureId() const
 
 bool BackpackItem::inBackpack()
 {
-	return Instance::fastDynamicCast<Backpack>(this->getParent()) != NULL;
+	return Instance::fastDynamicCast<Backpack>(this->getParent()) != nullptr;
 }
 
 bool BackpackItem::askAddChild(const Instance* instance) const
@@ -336,7 +336,7 @@ bool Hopper::askSetParent(const Instance* instance) const
 
 bool Hopper::askAddChild(const Instance* instance) const
 {
-	return (Instance::fastDynamicCast<BackpackItem>(instance)!=NULL);
+	return (Instance::fastDynamicCast<BackpackItem>(instance)!=nullptr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -374,7 +374,7 @@ void LegacyHopperService::onServiceProvider(ServiceProvider* oldProvider, Servic
 			getChild(0)->setParent(starterPack);
 		}
 
-		this->setParent(NULL);		// delete myself
+		this->setParent(nullptr);		// delete myself
 	}
 }
 

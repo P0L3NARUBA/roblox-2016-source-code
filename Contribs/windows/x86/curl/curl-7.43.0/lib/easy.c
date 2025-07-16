@@ -352,7 +352,7 @@ void curl_global_cleanup(void)
 
 /*
  * curl_easy_init() is the external interface to alloc, setup and init an
- * easy handle that is returned. If anything goes wrong, NULL is returned.
+ * easy handle that is returned. If anything goes wrong, nullptr is returned.
  */
 CURL *curl_easy_init(void)
 {
@@ -365,7 +365,7 @@ CURL *curl_easy_init(void)
     if(result) {
       /* something in the global init failed, return nothing */
       DEBUGF(fprintf(stderr, "Error: curl_global_init failed\n"));
-      return NULL;
+      return nullptr;
     }
   }
 
@@ -373,7 +373,7 @@ CURL *curl_easy_init(void)
   result = Curl_open(&data);
   if(result) {
     DEBUGF(fprintf(stderr, "Error: Curl_open failed\n"));
-    return NULL;
+    return nullptr;
   }
 
   return data;
@@ -405,7 +405,7 @@ CURLcode curl_easy_setopt(CURL *curl, CURLoption tag, ...)
 #ifdef CURLDEBUG
 
 struct socketmonitor {
-  struct socketmonitor *next; /* the next node in the list or NULL */
+  struct socketmonitor *next; /* the next node in the list or nullptr */
   struct pollfd socket; /* socket info of what to monitor */
 };
 
@@ -488,7 +488,7 @@ static int events_socket(CURL *easy,      /* easy handle */
 {
   struct events *ev = userp;
   struct socketmonitor *m;
-  struct socketmonitor *prev=NULL;
+  struct socketmonitor *prev=nullptr;
 
 #if defined(CURL_DISABLE_VERBOSE_STRINGS)
   (void) easy;
@@ -658,7 +658,7 @@ static CURLcode wait_or_timeout(struct Curl_multi *multi, struct events *ev)
  */
 static CURLcode easy_events(CURLM *multi)
 {
-  struct events evs= {2, FALSE, 0, NULL, 0};
+  struct events evs= {2, FALSE, 0, nullptr, 0};
 
   /* if running event-based, do some further multi inits */
   events_setup(multi, &evs);
@@ -684,7 +684,7 @@ static CURLcode easy_transfer(CURLM *multi)
     int ret;
 
     before = curlx_tvnow();
-    mcode = curl_multi_wait(multi, NULL, 0, 1000, &ret);
+    mcode = curl_multi_wait(multi, nullptr, 0, 1000, &ret);
 
     if(mcode == CURLM_OK) {
       if(ret == -1) {
@@ -882,7 +882,7 @@ CURL *curl_easy_duphandle(CURL *incurl)
   struct SessionHandle *data=(struct SessionHandle *)incurl;
 
   struct SessionHandle *outcurl = calloc(1, sizeof(struct SessionHandle));
-  if(NULL == outcurl)
+  if(nullptr == outcurl)
     goto fail;
 
   /*
@@ -900,9 +900,9 @@ CURL *curl_easy_duphandle(CURL *incurl)
     goto fail;
 
   /* the connection cache is setup on demand */
-  outcurl->state.conn_cache = NULL;
+  outcurl->state.conn_cache = nullptr;
 
-  outcurl->state.lastconnect = NULL;
+  outcurl->state.lastconnect = nullptr;
 
   outcurl->progress.flags    = data->progress.flags;
   outcurl->progress.callback = data->progress.callback;
@@ -957,7 +957,7 @@ CURL *curl_easy_duphandle(CURL *incurl)
 
   if(outcurl) {
     curl_slist_free_all(outcurl->change.cookielist);
-    outcurl->change.cookielist = NULL;
+    outcurl->change.cookielist = nullptr;
     Curl_safefree(outcurl->state.headerbuff);
     Curl_safefree(outcurl->change.url);
     Curl_safefree(outcurl->change.referer);
@@ -965,7 +965,7 @@ CURL *curl_easy_duphandle(CURL *incurl)
     free(outcurl);
   }
 
-  return NULL;
+  return nullptr;
 }
 
 /*
@@ -978,7 +978,7 @@ void curl_easy_reset(CURL *curl)
 
   Curl_safefree(data->state.pathbuffer);
 
-  data->state.path = NULL;
+  data->state.path = nullptr;
 
   Curl_free_request_state(data);
 
@@ -1029,7 +1029,7 @@ CURLcode curl_easy_pause(CURL *curl, int action)
        the tempwrite variables */
     char *tempwrite = data->state.tempwrite;
 
-    data->state.tempwrite = NULL;
+    data->state.tempwrite = nullptr;
     result = Curl_client_chop_write(data->easy_conn, data->state.tempwritetype,
                                     tempwrite, data->state.tempwritesize);
     free(tempwrite);
@@ -1050,7 +1050,7 @@ static CURLcode easy_connection(struct SessionHandle *data,
                                 curl_socket_t *sfd,
                                 struct connectdata **connp)
 {
-  if(data == NULL)
+  if(data == nullptr)
     return CURLE_BAD_FUNCTION_ARGUMENT;
 
   /* only allow these to be called on handles with CURLOPT_CONNECT_ONLY */
@@ -1107,7 +1107,7 @@ CURLcode curl_easy_send(CURL *curl, const void *buffer, size_t buflen,
   curl_socket_t sfd;
   CURLcode result;
   ssize_t n1;
-  struct connectdata *c = NULL;
+  struct connectdata *c = nullptr;
   struct SessionHandle *data = (struct SessionHandle *)curl;
 
   result = easy_connection(data, &sfd, &c);

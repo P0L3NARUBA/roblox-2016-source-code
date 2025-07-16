@@ -67,7 +67,7 @@ namespace Studio {
         void doubleClick(QListWidgetItem* listItem);
         void singleClick(QListWidgetItem* listItem);
 
-        void showToolTip(QListWidgetItem* listItem = NULL);
+        void showToolTip(QListWidgetItem* listItem = nullptr);
 
     private:
 

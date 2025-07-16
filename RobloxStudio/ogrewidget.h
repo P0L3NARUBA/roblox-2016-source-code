@@ -19,7 +19,7 @@ class QOgreWidget : public QWidget
 {
    Q_OBJECT
 	public:
-        QOgreWidget(const QString& name,QWidget* parent = NULL);
+        QOgreWidget(const QString& name,QWidget* parent = nullptr);
 	
 		void setRobloxView(RobloxView *rbxView);
 
@@ -56,7 +56,7 @@ class QOgreWidget : public QWidget
 	
 		/*override*/void paintEvent(QPaintEvent *evt);
 
-		/*override*/QPaintEngine* paintEngine () const { return NULL; }
+		/*override*/QPaintEngine* paintEngine () const { return nullptr; }
 	
 		//drag-drop related override
 		/*override*/void dragEnterEvent(QDragEnterEvent *evt);

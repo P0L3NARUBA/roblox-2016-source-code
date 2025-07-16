@@ -62,7 +62,7 @@ namespace
         {
             if (strncmp(reinterpret_cast<const char*>(sections[i]->Name), name, kPeSectionNameLimit) == 0) // 
             {
-                baseAddr = sections[i]->VirtualAddress + reinterpret_cast<size_t>(GetModuleHandle(NULL));
+                baseAddr = sections[i]->VirtualAddress + reinterpret_cast<size_t>(GetModuleHandle(nullptr));
                 size = sections[i]->Misc.VirtualSize;
                 return true;
             }
@@ -107,7 +107,7 @@ namespace
         DWORD unused;
         uintptr_t codeAddr = reinterpret_cast<uintptr_t>(rec->ExceptionRecord->ExceptionAddress);
         uintptr_t dataAddr = rec->ExceptionRecord->ExceptionInformation[1];
-        uintptr_t rccBaseAddress = reinterpret_cast<uintptr_t>(GetModuleHandleA(NULL));
+        uintptr_t rccBaseAddress = reinterpret_cast<uintptr_t>(GetModuleHandleA(nullptr));
         if ((rec->ExceptionRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION) // is access violation
             && (dataAddr - luaBase < luaSize) // data is in .lua
             && (codeAddr - luaBase >= luaSize)) // code is not in .lua
@@ -164,7 +164,7 @@ namespace RBX
         // If someone was scanning RAM, seeing repeating patterns would be suspicious and detectable.
         DWORD unused;
         VirtualProtect(&rccBigFuncStorage, 2*kPageSize, PAGE_EXECUTE_READWRITE, &unused);
-        unsigned char* fakeCode = reinterpret_cast<unsigned char*>(GetModuleHandleA(NULL)) + 0x1000;
+        unsigned char* fakeCode = reinterpret_cast<unsigned char*>(GetModuleHandleA(nullptr)) + 0x1000;
         memcpy(&rccBigFuncStorage, fakeCode, 2*kPageSize);
         VirtualProtect(&rccBigFuncStorage, 2*kPageSize, PAGE_EXECUTE_READ, &unused);
 
@@ -190,7 +190,7 @@ namespace RBX
         }
 
         SectionPtrVector sections;
-        getSections(reinterpret_cast<void*>(GetModuleHandleA(NULL)), sections);
+        getSections(reinterpret_cast<void*>(GetModuleHandleA(nullptr)), sections);
         getSectionInfo(sections, ".lua", luaBase, luaSize);
         if (luaBase && luaSize)
         {

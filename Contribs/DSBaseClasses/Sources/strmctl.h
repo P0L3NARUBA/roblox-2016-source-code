@@ -129,10 +129,10 @@ public:
     // Class adds default values suitable for immediate
     // muting and unmuting of the stream.
 
-    STDMETHODIMP StopAt( const REFERENCE_TIME * ptStop = NULL,
+    STDMETHODIMP StopAt( const REFERENCE_TIME * ptStop = nullptr,
 			 BOOL bSendExtra = FALSE,
 			 DWORD dwCookie = 0 );
-    STDMETHODIMP StartAt( const REFERENCE_TIME * ptStart = NULL,
+    STDMETHODIMP StartAt( const REFERENCE_TIME * ptStart = nullptr,
 		    	  DWORD dwCookie = 0 );
     STDMETHODIMP GetInfo( AM_STREAM_INFO *pInfo);
 
@@ -141,7 +141,7 @@ public:
     // WaitForSingleObject within this call if one is required.  This is
     // a "What should I do with this sample?" kind of call. We'll tell the
     // caller to either flow it or discard it.
-    // If pSample is NULL we evaluate based on the current state
+    // If pSample is nullptr we evaluate based on the current state
     // settings
     enum StreamControlState CheckStreamState( IMediaSample * pSample );
 

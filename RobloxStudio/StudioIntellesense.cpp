@@ -51,7 +51,7 @@ FASTFLAGVARIABLE(StudioIntellisenseAllowUnderscore, false)
 namespace Studio {
 
     Intellesense::Intellesense()
-     : m_focusProxy(NULL)
+     : m_focusProxy(nullptr)
      , m_menuBelow(true)
      , m_cursorHeight(0)
     {
@@ -179,7 +179,7 @@ namespace Studio {
 
     void Intellesense::deactivate()
     {
-        m_focusProxy = NULL;
+        m_focusProxy = nullptr;
         m_AutoCompleteFrame->setVisible(false);
         IntellesenseTooltip::singleton().hideText();
     }
@@ -1070,7 +1070,7 @@ namespace Studio {
 		if (topOfList->count() > 0)
 		{
 			std::sort(topOfList->begin(), topOfList->end(), &Intellesense::alphabeticalQListWidgetItemSort);
-			repopulateListWidgetHelper(*topOfList, NULL, PROPERTY_ITEM, "");
+			repopulateListWidgetHelper(*topOfList, nullptr, PROPERTY_ITEM, "");
 		}
 
         if(m_AutoCompleteMenu->count() < 1 || (m_AutoCompleteMenu->count() == 1 && m_AutoCompleteMenu->item(0)->text() == currentWord))

@@ -52,11 +52,11 @@
 
 #define LOGGROUP(group) namespace FLog { extern Channel group; }
 #define LOGVARIABLE(group,defaulton) \
-	namespace FLog { Channel group = defaulton; int group##Initer = RegisterLogGroup(#group, &group, NULL, FASTVARTYPE_STATIC); }
+	namespace FLog { Channel group = defaulton; int group##Initer = RegisterLogGroup(#group, &group, nullptr, FASTVARTYPE_STATIC); }
 
 #define DYNAMIC_LOGGROUP(group) namespace DFLog { extern FLog::Channel group; }
 #define DYNAMIC_LOGVARIABLE(group,defaulton) \
-	namespace DFLog { FLog::Channel group = defaulton; int group##Initer = FLog::RegisterLogGroup(#group, &group, NULL, FASTVARTYPE_DYNAMIC); }
+	namespace DFLog { FLog::Channel group = defaulton; int group##Initer = FLog::RegisterLogGroup(#group, &group, nullptr, FASTVARTYPE_DYNAMIC); }
 
 #define SYNCHRONIZED_LOGGROUP(group) namespace SFLog { extern FLog::Channel get##group(); }
 #define SYNCHRONIZED_LOGVARIABLE(group,defaulton) \
@@ -65,17 +65,17 @@
 
 #define FASTSTRING(var) namespace FString { extern std::string var; }
 #define FASTSTRINGVARIABLE(var, defaultvalue) \
-    namespace FString { std::string var = defaultvalue; int var##Initer = FLog::RegisterString(#var, &var, NULL, FASTVARTYPE_STATIC); }
+    namespace FString { std::string var = defaultvalue; int var##Initer = FLog::RegisterString(#var, &var, nullptr, FASTVARTYPE_STATIC); }
 
 #define FASTFLAG(var) namespace FFlag { extern bool var; }
 #define FASTFLAGVARIABLE(var, defaultvalue) \
     FASTSTRINGVARIABLE(PlaceFilter_##var, "") \
-    namespace FFlag { bool var = defaultvalue; int var##Initer = FLog::RegisterFlag(#var, &var, NULL, FASTVARTYPE_STATIC); }
+    namespace FFlag { bool var = defaultvalue; int var##Initer = FLog::RegisterFlag(#var, &var, nullptr, FASTVARTYPE_STATIC); }
 
 #define DYNAMIC_FASTFLAG(var) namespace DFFlag { extern bool var; }
 #define DYNAMIC_FASTFLAGVARIABLE(var, defaultvalue) \
     FASTSTRINGVARIABLE(PlaceFilter_##var, "") \
-	namespace DFFlag { bool var = defaultvalue; int var##Initer = FLog::RegisterFlag(#var, &var, NULL, FASTVARTYPE_DYNAMIC); }
+	namespace DFFlag { bool var = defaultvalue; int var##Initer = FLog::RegisterFlag(#var, &var, nullptr, FASTVARTYPE_DYNAMIC); }
 
 #ifndef _WIN32
 #if defined(__i386__)
@@ -102,12 +102,12 @@
 #define FASTINT(var) namespace FInt { extern int var; }
 #define FASTINTVARIABLE(var, defaultvalue) \
     FASTSTRINGVARIABLE(PlaceFilter_##var, "") \
-	namespace FInt { int var = defaultvalue; int var##Initer = FLog::RegisterInt(#var, &var, NULL, FASTVARTYPE_STATIC); }
+	namespace FInt { int var = defaultvalue; int var##Initer = FLog::RegisterInt(#var, &var, nullptr, FASTVARTYPE_STATIC); }
 
 #define DYNAMIC_FASTINT(var) namespace DFInt { extern int var; }
 #define DYNAMIC_FASTINTVARIABLE(var, defaultvalue) \
     FASTSTRINGVARIABLE(PlaceFilter_##var, "") \
-	namespace DFInt { int var = defaultvalue; int var##Initer = FLog::RegisterInt(#var, &var, NULL, FASTVARTYPE_DYNAMIC); }
+	namespace DFInt { int var = defaultvalue; int var##Initer = FLog::RegisterInt(#var, &var, nullptr, FASTVARTYPE_DYNAMIC); }
 
 #define SYNCHRONIZED_FASTINT(var) namespace SFInt { extern int get##var(); }
 #define SYNCHRONIZED_FASTINTVARIABLE(var, defaultvalue) \
@@ -117,7 +117,7 @@
 
 #define DYNAMIC_FASTSTRING(var) namespace DFString { extern std::string var; }
 #define DYNAMIC_FASTSTRINGVARIABLE(var, defaultvalue) \
-	namespace DFString { std::string var = defaultvalue; int var##Initer = FLog::RegisterString(#var, &var, NULL, FASTVARTYPE_DYNAMIC); }
+	namespace DFString { std::string var = defaultvalue; int var##Initer = FLog::RegisterString(#var, &var, nullptr, FASTVARTYPE_DYNAMIC); }
 
 #define SYNCHRONIZED_FASTSTRING(var) namespace SFString { extern std::string get##var(); }
 #define SYNCHRONIZED_FASTSTRINGVARIABLE(var, defaultvalue) \
@@ -126,15 +126,15 @@
 
 #define ABTEST_NEWUSERS(var) namespace ABNewUsers { extern int var; }
 #define ABTEST_NEWUSERS_VARIABLE(var) \
-	namespace ABNewUsers { int var = 0; int var##Initer = FLog::RegisterInt(#var, &var, NULL, FASTVARTYPE_AB_NEWUSERS); }
+	namespace ABNewUsers { int var = 0; int var##Initer = FLog::RegisterInt(#var, &var, nullptr, FASTVARTYPE_AB_NEWUSERS); }
 
 #define ABTEST_NEWSTUDIOUSERS(var) namespace ABNewStudioUsers { extern int var; }
 #define ABTEST_NEWSTUDIOUSERS_VARIABLE(var) \
-	namespace ABNewStudioUsers { int var = 0; int var##Initer = FLog::RegisterInt(#var, &var, NULL, FASTVARTYPE_AB_NEWSTUDIOUSERS); }
+	namespace ABNewStudioUsers { int var = 0; int var##Initer = FLog::RegisterInt(#var, &var, nullptr, FASTVARTYPE_AB_NEWSTUDIOUSERS); }
 
 #define ABTEST_ALLUSERS(var) namespace ABAllUsers { extern int var; }
 #define ABTEST_ALLUSERS_VARIABLE(var) \
-	namespace ABAllUsers { int var = 0; int var##Initer = FLog::RegisterInt(#var, &var, NULL, FASTVARTYPE_AB_ALLUSERS); }
+	namespace ABAllUsers { int var = 0; int var##Initer = FLog::RegisterInt(#var, &var, nullptr, FASTVARTYPE_AB_ALLUSERS); }
 
 #define LOGCHANNELS 5
 
@@ -225,10 +225,10 @@ namespace FLog {
 
 	int LOGAPI GetFastLogCounter(Channel channel);
 
-	int LOGAPI RegisterLogGroup(const char* groupName, Channel* groupVar, bool** isSync = NULL, FastVarType fastVarType = FASTVARTYPE_STATIC);
-	int LOGAPI RegisterFlag(const char* flagName, bool* flagVar, bool** isSync = NULL, FastVarType fastVarType = FASTVARTYPE_STATIC);
-	int LOGAPI RegisterInt(const char* flagName, int* flagVar, bool** isSync = NULL, FastVarType fastVarType = FASTVARTYPE_STATIC);
-	int LOGAPI RegisterString(const char* flagName, std::string* flagVar, bool** isSync = NULL, FastVarType fastVarType = FASTVARTYPE_STATIC);
+	int LOGAPI RegisterLogGroup(const char* groupName, Channel* groupVar, bool** isSync = nullptr, FastVarType fastVarType = FASTVARTYPE_STATIC);
+	int LOGAPI RegisterFlag(const char* flagName, bool* flagVar, bool** isSync = nullptr, FastVarType fastVarType = FASTVARTYPE_STATIC);
+	int LOGAPI RegisterInt(const char* flagName, int* flagVar, bool** isSync = nullptr, FastVarType fastVarType = FASTVARTYPE_STATIC);
+	int LOGAPI RegisterString(const char* flagName, std::string* flagVar, bool** isSync = nullptr, FastVarType fastVarType = FASTVARTYPE_STATIC);
 
 	typedef void(*VariableVisitor)(const std::string& name, const std::string& value, void* context);
 	void LOGAPI ForEachVariable(VariableVisitor visitor, void* context, FastVarType flagType);

@@ -108,7 +108,7 @@
                         FT_Long       value_len )
   {
     FT_Int             result  = 0;
-    FT_Service_PsInfo  service = NULL;
+    FT_Service_PsInfo  service = nullptr;
 
 
     if ( face )

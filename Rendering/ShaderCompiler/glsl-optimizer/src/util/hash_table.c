@@ -93,7 +93,7 @@ static const struct {
 static int
 entry_is_free(const struct hash_entry *entry)
 {
-   return entry->key == NULL;
+   return entry->key == nullptr;
 }
 
 static int
@@ -105,7 +105,7 @@ entry_is_deleted(const struct hash_table *ht, struct hash_entry *entry)
 static int
 entry_is_present(const struct hash_table *ht, struct hash_entry *entry)
 {
-   return entry->key != NULL && entry->key != ht->deleted_key;
+   return entry->key != nullptr && entry->key != ht->deleted_key;
 }
 
 struct hash_table *
@@ -116,8 +116,8 @@ _mesa_hash_table_create(void *mem_ctx,
    struct hash_table *ht;
 
    ht = ralloc(mem_ctx, struct hash_table);
-   if (ht == NULL)
-      return NULL;
+   if (ht == nullptr)
+      return nullptr;
 
    ht->size_index = 0;
    ht->size = hash_sizes[ht->size_index].size;
@@ -129,9 +129,9 @@ _mesa_hash_table_create(void *mem_ctx,
    ht->deleted_entries = 0;
    ht->deleted_key = &deleted_key_value;
 
-   if (ht->table == NULL) {
+   if (ht->table == nullptr) {
       ralloc_free(ht);
-      return NULL;
+      return nullptr;
    }
 
    return ht;
@@ -179,7 +179,7 @@ _mesa_hash_table_set_deleted_key(struct hash_table *ht, const void *deleted_key)
 /**
  * Finds a hash table entry with the given key and hash of that key.
  *
- * Returns NULL if no entry is found.  Note that the data pointer may be
+ * Returns nullptr if no entry is found.  Note that the data pointer may be
  * modified by the user.
  */
 struct hash_entry *
@@ -195,7 +195,7 @@ _mesa_hash_table_search(struct hash_table *ht, uint32_t hash,
       struct hash_entry *entry = ht->table + hash_address;
 
       if (entry_is_free(entry)) {
-         return NULL;
+         return nullptr;
       } else if (entry_is_present(ht, entry) && entry->hash == hash) {
          if (ht->key_equals_function(key, entry->key)) {
             return entry;
@@ -207,7 +207,7 @@ _mesa_hash_table_search(struct hash_table *ht, uint32_t hash,
       hash_address = (hash_address + double_hash) % ht->size;
    } while (hash_address != start_hash_address);
 
-   return NULL;
+   return nullptr;
 }
 
 static void
@@ -221,7 +221,7 @@ _mesa_hash_table_rehash(struct hash_table *ht, int new_size_index)
 
    table = rzalloc_array(ht, struct hash_entry,
                          hash_sizes[new_size_index].size);
-   if (table == NULL)
+   if (table == nullptr)
       return;
 
    old_ht = *ht;
@@ -303,7 +303,7 @@ _mesa_hash_table_insert(struct hash_table *ht, uint32_t hash,
    /* We could hit here if a required resize failed. An unchecked-malloc
     * application could ignore this result.
     */
-   return NULL;
+   return nullptr;
 }
 
 /**
@@ -327,14 +327,14 @@ _mesa_hash_table_remove(struct hash_table *ht,
 /**
  * This function is an iterator over the hash table.
  *
- * Pass in NULL for the first entry, as in the start of a for loop.  Note that
+ * Pass in nullptr for the first entry, as in the start of a for loop.  Note that
  * an iteration over the table is O(table_size) not O(entries).
  */
 struct hash_entry *
 _mesa_hash_table_next_entry(struct hash_table *ht,
                             struct hash_entry *entry)
 {
-   if (entry == NULL)
+   if (entry == nullptr)
       entry = ht->table;
    else
       entry = entry + 1;
@@ -345,7 +345,7 @@ _mesa_hash_table_next_entry(struct hash_table *ht,
       }
    }
 
-   return NULL;
+   return nullptr;
 }
 
 /**
@@ -354,7 +354,7 @@ _mesa_hash_table_next_entry(struct hash_table *ht,
  * This may be useful in implementing random replacement (as opposed
  * to just removing everything) in caches based on this hash table
  * implementation.  @predicate may be used to filter entries, or may
- * be set to NULL for no filtering.
+ * be set to nullptr for no filtering.
  */
 struct hash_entry *
 _mesa_hash_table_random_entry(struct hash_table *ht,
@@ -364,7 +364,7 @@ _mesa_hash_table_random_entry(struct hash_table *ht,
    uint32_t i = rand() % ht->size;
 
    if (ht->entries == 0)
-      return NULL;
+      return nullptr;
 
    for (entry = ht->table + i; entry != ht->table + ht->size; entry++) {
       if (entry_is_present(ht, entry) &&
@@ -380,7 +380,7 @@ _mesa_hash_table_random_entry(struct hash_table *ht,
       }
    }
 
-   return NULL;
+   return nullptr;
 }
 
 

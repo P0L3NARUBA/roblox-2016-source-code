@@ -78,13 +78,13 @@ namespace RBX {
 				if (iter!=allEnumsNameLookup().end())
 					return iter->second;
 				else
-					return NULL;
+					return nullptr;
 			}
 			static const EnumDescriptor* lookupDescriptor(const Type& type) {
 				if (type.isEnum)
 					return static_cast<const EnumDescriptor*>(&type);
 				else
-					return NULL;
+					return nullptr;
 			}
 
 			bool isValue(int intValue) const {
@@ -239,9 +239,9 @@ template<typename Enum> class EnumRegistrar;
 				RBXASSERT(value>=0);
 				RBXASSERT((size_t)value<enumToItem.size());
 				if (value<0)
-					return NULL;
+					return nullptr;
 				if ((size_t)value>=enumToItem.size())
-					return NULL;
+					return nullptr;
 
 				return enumToItem[value];
 			}
@@ -282,7 +282,7 @@ template<typename Enum> class EnumRegistrar;
 				if (convertToValue(RBX::Name::lookup(text), e))
 					return convertToItem(e);
 				else
-					return NULL;
+					return nullptr;
 			}
 			/*implement*/ const Item* lookup(const Variant& value) const 
 			{

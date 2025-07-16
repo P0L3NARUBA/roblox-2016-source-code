@@ -46,7 +46,7 @@ namespace
 
 	static int analyticsUserID = 0, analyticsPlaceID = 0;
 
-	static const char* robloxProductName = NULL;
+	static const char* robloxProductName = nullptr;
 
 	static ThreadPool* threadPool;
 
@@ -131,7 +131,7 @@ namespace RobloxGoogleAnalytics
 	}
 
     void lotteryInit(const std::string &accountPropertyID, size_t maxThreadScheduleSize, int lotteryThreshold,
-		const char * productName /* = NULL */,
+		const char * productName /* = nullptr */,
 		int robloxAnalyticsLottery /* = -1 */,
 		const std::string &sessionKey /* = "sessionID=" */)
     {
@@ -177,7 +177,7 @@ namespace RobloxGoogleAnalytics
 		return clientGUID;
 	}
 
-	void init(const std::string &accountPropertyID, size_t maxThreadScheduleSize, const char* productName /* = NULL */)
+	void init(const std::string &accountPropertyID, size_t maxThreadScheduleSize, const char* productName /* = nullptr */)
 	{
 		if (DFFlag::UseNewAnalyticsApi)
 		{

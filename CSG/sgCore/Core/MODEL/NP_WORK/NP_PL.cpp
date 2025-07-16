@@ -16,7 +16,7 @@ typedef struct {
 	short  * edge;                  //  
 } NP_STACK_EDGE;
 
-NP_STACK_EDGE np_stack={0,0,NULL,NULL};
+NP_STACK_EDGE np_stack={0,0,nullptr,nullptr};
 
 short  np_get_stack(void);
 BOOL np_init_stack(void);
@@ -147,7 +147,7 @@ mt: fedge = edge;
     loop = np1->c[loop].nc;
   } while (loop > 0);
 end:
-	if (np_stack.edge != NULL) np_stack.edge = NULL;
+	if (np_stack.edge != nullptr) np_stack.edge = nullptr;
   return rt;
 }
 
@@ -233,11 +233,11 @@ void np_av(short mt, short *p,short *pr,short *pt, BOOL *le)
 
 BOOL np_ver_alloc(lpNP_VERTEX_LIST ver)
 {
-	VADR   hv;//nb = NULL;
-	lpNP_VERTEX  v;//nb = NULL;
+	VADR   hv;//nb = nullptr;
+	lpNP_VERTEX  v;//nb = nullptr;
 
 	if (ver->maxuk == 0) {
-		if ( (ver->hv = SGMalloc(sizeof(NP_VERTEX)*MAXVER)) == NULL) 	return FALSE;
+		if ( (ver->hv = SGMalloc(sizeof(NP_VERTEX)*MAXVER)) == nullptr) 	return FALSE;
 		ver->v = (lpNP_VERTEX)ver->hv;
 		ver->maxuk = MAXVER;
 		ver->uk = 0;
@@ -245,7 +245,7 @@ BOOL np_ver_alloc(lpNP_VERTEX_LIST ver)
 	}
 
 	ver->maxuk += MAXVER;
-	if ( (hv = SGMalloc(sizeof(NP_VERTEX)*ver->maxuk)) == NULL) 		return FALSE;
+	if ( (hv = SGMalloc(sizeof(NP_VERTEX)*ver->maxuk)) == nullptr) 		return FALSE;
 	v = (lpNP_VERTEX)hv;
 	memcpy(v,&(ver->v),sizeof(NP_VERTEX)*(ver->maxuk - MAXVER));
 	SGFree (ver->hv);
@@ -255,8 +255,8 @@ BOOL np_ver_alloc(lpNP_VERTEX_LIST ver)
 }
 void np_free_ver(lpNP_VERTEX_LIST ver)
 {
-	if (ver->v != NULL)  { ver->v = NULL; }
-	if (ver->hv != NULL) { SGFree(ver->hv); ver->hv = NULL; }
+	if (ver->v != nullptr)  { ver->v = nullptr; }
+	if (ver->hv != nullptr) { SGFree(ver->hv); ver->hv = nullptr; }
   ver->uk = 0;
   ver->maxuk = 0;
 }
@@ -273,13 +273,13 @@ int sort_function( const short *a, const short *b)
 }
 BOOL np_put_stack(short r)
 {
-	short * edge;//nb = NULL;
-	VADR hedge;//nb = NULL;
+	short * edge;//nb = nullptr;
+	VADR hedge;//nb = nullptr;
 
 	if (np_stack.uk == np_stack.maxuk) {                // 
 		np_stack.maxuk += 10;
-		if ( (hedge = SGMalloc(sizeof(short)*np_stack.maxuk)) == NULL) return FALSE;
-		if (np_stack.edge == NULL) np_stack.edge = (short*)np_stack.hedge;
+		if ( (hedge = SGMalloc(sizeof(short)*np_stack.maxuk)) == nullptr) return FALSE;
+		if (np_stack.edge == nullptr) np_stack.edge = (short*)np_stack.hedge;
 		edge = (short*)hedge;
 		memcpy(edge,np_stack.edge,sizeof(short)*(np_stack.maxuk - 10));
 		SGFree(np_stack.hedge);
@@ -293,7 +293,7 @@ BOOL np_put_stack(short r)
 BOOL np_init_stack(void)
 {
   if (np_stack.maxuk == 0) {                  //  
-    if ( (np_stack.hedge = SGMalloc(sizeof(short)*10)) == NULL) return FALSE;
+    if ( (np_stack.hedge = SGMalloc(sizeof(short)*10)) == nullptr) return FALSE;
     np_stack.maxuk = 10;
   }
 	if ( !np_stack.edge ) np_stack.edge = (short*)np_stack.hedge;
@@ -308,12 +308,12 @@ short np_get_stack(void)
 }
 void np_free_stack(void)
 {
-	if (np_stack.edge != NULL) {
-		np_stack.edge = NULL;
+	if (np_stack.edge != nullptr) {
+		np_stack.edge = nullptr;
 	}
-	if (np_stack.hedge != NULL) {
+	if (np_stack.hedge != nullptr) {
 		SGFree(np_stack.hedge);
-		np_stack.hedge = NULL;
+		np_stack.hedge = nullptr;
 	}
 	np_stack.uk = np_stack.maxuk = 0;
 }

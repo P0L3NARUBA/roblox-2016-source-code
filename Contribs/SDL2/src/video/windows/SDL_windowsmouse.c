@@ -28,14 +28,14 @@
 #include "../../events/SDL_mouse_c.h"
 
 
-HCURSOR SDL_cursor = NULL;
+HCURSOR SDL_cursor = nullptr;
 
 static int rawInputEnableCount = 0;
 
 static int 
 ToggleRawInput(SDL_bool enabled)
 {
-    RAWINPUTDEVICE rawMouse = { 0x01, 0x02, 0, NULL }; /* Mouse: UsagePage = 1, Usage = 2 */
+    RAWINPUTDEVICE rawMouse = { 0x01, 0x02, 0, nullptr }; /* Mouse: UsagePage = 1, Usage = 2 */
 
     if (enabled) {
         rawInputEnableCount++;
@@ -76,7 +76,7 @@ WIN_CreateDefaultCursor()
 
     cursor = SDL_calloc(1, sizeof(*cursor));
     if (cursor) {
-        cursor->driverdata = LoadCursor(NULL, IDC_ARROW);
+        cursor->driverdata = LoadCursor(nullptr, IDC_ARROW);
     } else {
         SDL_OutOfMemory();
     }
@@ -113,22 +113,22 @@ WIN_CreateCursor(SDL_Surface * surface, int hot_x, int hot_y)
 
     maskbitslen = ((surface->w + (pad - (surface->w % pad))) / 8) * surface->h;
     maskbits = SDL_stack_alloc(Uint8,maskbitslen);
-    if (maskbits == NULL) {
+    if (maskbits == nullptr) {
         SDL_OutOfMemory();
-        return NULL;
+        return nullptr;
     }
 
     /* AND the cursor against full bits: no change. We already have alpha. */
     SDL_memset(maskbits, 0xFF, maskbitslen);
 
-    hdc = GetDC(NULL);
+    hdc = GetDC(nullptr);
     SDL_zero(ii);
     ii.fIcon = FALSE;
     ii.xHotspot = (DWORD)hot_x;
     ii.yHotspot = (DWORD)hot_y;
-    ii.hbmColor = CreateDIBSection(hdc, (BITMAPINFO*)&bmh, DIB_RGB_COLORS, &pixels, NULL, 0);
+    ii.hbmColor = CreateDIBSection(hdc, (BITMAPINFO*)&bmh, DIB_RGB_COLORS, &pixels, nullptr, 0);
     ii.hbmMask = CreateBitmap(surface->w, surface->h, 1, 1, maskbits);
-    ReleaseDC(NULL, hdc);
+    ReleaseDC(nullptr, hdc);
     SDL_stack_free(maskbits);
 
     SDL_assert(surface->format->format == SDL_PIXELFORMAT_ARGB8888);
@@ -142,7 +142,7 @@ WIN_CreateCursor(SDL_Surface * surface, int hot_x, int hot_y)
 
     if (!hicon) {
         WIN_SetError("CreateIconIndirect()");
-        return NULL;
+        return nullptr;
     }
 
     cursor = SDL_calloc(1, sizeof(*cursor));
@@ -166,7 +166,7 @@ WIN_CreateSystemCursor(SDL_SystemCursor id)
     {
     default:
         SDL_assert(0);
-        return NULL;
+        return nullptr;
     case SDL_SYSTEM_CURSOR_ARROW:     name = IDC_ARROW; break;
     case SDL_SYSTEM_CURSOR_IBEAM:     name = IDC_IBEAM; break;
     case SDL_SYSTEM_CURSOR_WAIT:      name = IDC_WAIT; break;
@@ -185,7 +185,7 @@ WIN_CreateSystemCursor(SDL_SystemCursor id)
     if (cursor) {
         HICON hicon;
 
-        hicon = LoadCursor(NULL, name);
+        hicon = LoadCursor(nullptr, name);
 
         cursor->driverdata = hicon;
     } else {
@@ -210,9 +210,9 @@ WIN_ShowCursor(SDL_Cursor * cursor)
     if (cursor) {
         SDL_cursor = (HCURSOR)cursor->driverdata;
     } else {
-        SDL_cursor = NULL;
+        SDL_cursor = nullptr;
     }
-    if (SDL_GetMouseFocus() != NULL) {
+    if (SDL_GetMouseFocus() != nullptr) {
         SetCursor(SDL_cursor);
     }
     return 0;
@@ -267,7 +267,7 @@ WIN_CaptureMouse(SDL_Window *window)
        we didn't count on the fact that SetCapture() only tracks while the
        left mouse button is held down! Instead, we listen for raw mouse input
        and manually query the mouse when it leaves the window. :/ */
-    return ToggleRawInput(window != NULL);
+    return ToggleRawInput(window != nullptr);
 }
 
 static Uint32
@@ -314,8 +314,8 @@ WIN_QuitMouse(_THIS)
     SDL_Mouse *mouse = SDL_GetMouse();
     if ( mouse->def_cursor ) {
         SDL_free(mouse->def_cursor);
-        mouse->def_cursor = NULL;
-        mouse->cur_cursor = NULL;
+        mouse->def_cursor = nullptr;
+        mouse->cur_cursor = nullptr;
     }
 
     if (rawInputEnableCount) {  /* force RAWINPUT off here. */

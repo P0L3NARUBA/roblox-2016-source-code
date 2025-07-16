@@ -3,11 +3,11 @@
 BOOL np_fa(lpNPW np, short face)
 {
 	short        mf;
-	lpNP_LOOPS l = NULL;
+	lpNP_LOOPS l = nullptr;
 	short        loops = 0;   				   // -    l
 	BOOL       rt = TRUE, msg = FALSE;
 
-	if ((l = np_realloc_loops(l,&loops)) == NULL) return FALSE;
+	if ((l = np_realloc_loops(l,&loops)) == nullptr) return FALSE;
 	mf = np->nof;        									   //  - 
 	if ( !np_fa_one(np, face, &l, &loops, msg) ) { rt = FALSE; goto end; }
 	if (np->nof > mf) np_fa_ef(np,mf);
@@ -41,7 +41,7 @@ BOOL np_fa_one(lpNPW np, short face, lpNP_LOOPS * ll, short * loops,
 			l[km].cm = loop;
 			km++;
 			if (km == *loops)
-				if ((l=np_realloc_loops(l,loops)) == NULL)  return FALSE;
+				if ((l=np_realloc_loops(l,loops)) == nullptr)  return FALSE;
 		} else {             					//   
 			if (kp == 0) {    							 //   
 				fpc = loop;
@@ -49,7 +49,7 @@ BOOL np_fa_one(lpNPW np, short face, lpNP_LOOPS * ll, short * loops,
 				l[km].cm = loop;
 				km++;   kp++;
 				if (km == *loops)
-					if ((l=np_realloc_loops(l,loops)) == NULL)  return FALSE;
+					if ((l=np_realloc_loops(l,loops)) == nullptr)  return FALSE;
 				} else {                  	//    
 					if ( !(f=np_new_face(np,loop)) ) return FALSE;
 					//      loop
@@ -59,7 +59,7 @@ BOOL np_fa_one(lpNPW np, short face, lpNP_LOOPS * ll, short * loops,
 					l[kp].mp = sq;
 					kp++;
 					if (kp == *loops)
-						if ((l=np_realloc_loops(l,loops)) == NULL)  return FALSE;
+						if ((l=np_realloc_loops(l,loops)) == nullptr)  return FALSE;
 					np->c[lc].nc = np->c[loop].nc; //    
 					np->c[loop].nc = 0;  loop = lc;
 				}
@@ -94,7 +94,7 @@ BOOL np_fa_one(lpNPW np, short face, lpNP_LOOPS * ll, short * loops,
 				l[vl].mem = pt;
 				vl++;
 				if (vl == *loops)
-					if ((l=np_realloc_loops(l,loops)) == NULL)  return FALSE;
+					if ((l=np_realloc_loops(l,loops)) == nullptr)  return FALSE;
 			}
 		}
 		if (vl == 0) {    						//     
@@ -171,11 +171,11 @@ void np_fa_ef(lpNPW np, short face_old)
 }
 lpNP_LOOPS np_realloc_loops(lpNP_LOOPS lold, short * loops)
 {
-	lpNP_LOOPS lnew;//nb  = NULL;
+	lpNP_LOOPS lnew;//nb  = nullptr;
 
 	*loops += 20;
-	if ((lnew = (lpNP_LOOPS)SGMalloc(sizeof(NP_LOOPS)*(*loops))) == NULL) return FALSE;
-	if (lold == NULL) return lnew;                 //  
+	if ((lnew = (lpNP_LOOPS)SGMalloc(sizeof(NP_LOOPS)*(*loops))) == nullptr) return FALSE;
+	if (lold == nullptr) return lnew;                 //  
 	memcpy(lnew,lold,sizeof(NP_LOOPS)*(*loops-20));
 	SGFree(lold);
 	return lnew;

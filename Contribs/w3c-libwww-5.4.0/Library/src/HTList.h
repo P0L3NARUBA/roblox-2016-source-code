@@ -104,7 +104,7 @@ extern void *	HTList_removeFirstObject	(HTList * me);
 Two small function to ask for the size
 */
 
-#define 	HTList_isEmpty(me)		(me ? me->next == NULL : YES)
+#define 	HTList_isEmpty(me)		(me ? me->next == nullptr : YES)
 extern int	HTList_count			(HTList *me);
 
 /*
@@ -121,23 +121,23 @@ extern int	HTList_indexOf	 (HTList * me, void * object);
 extern int	HTList_indexOfElement (HTList * me, HTList * element);
 extern void *	HTList_objectAt	 (HTList * me, int position);
 extern HTList * HTList_elementOf (HTList * me, void * object, HTList ** pLast);
-#define 	HTList_objectOf(me)		(me ? me->object: NULL)
+#define 	HTList_objectOf(me)		(me ? me->object: nullptr)
 
 /*
 .
   Find List Elements
 .
 
-This method returns the last element to the list or NULL if list is
+This method returns the last element to the list or nullptr if list is
 empty
 */
 
 #define		HTList_lastObject(me) \
-		((me) && (me)->next ? (me)->next->object : NULL)
+		((me) && (me)->next ? (me)->next->object : nullptr)
 
 /*
 
-This method returns the first element to the list or NULL if list
+This method returns the first element to the list or nullptr if list
 is empty
 */
 extern void * HTList_firstObject  (HTList * me);
@@ -149,11 +149,11 @@ extern void * HTList_firstObject  (HTList * me);
 
 Fast macro to traverse the list. Call it first with copy of list header:
 it returns the first object and increments the passed list pointer. Call
-it with the same variable until it returns NULL.
+it with the same variable until it returns nullptr.
 */
 
 #define		HTList_nextObject(me) \
-		((me) && ((me) = (me)->next) ? (me)->object : NULL)
+		((me) && ((me) = (me)->next) ? (me)->object : nullptr)
 
 /*
 .

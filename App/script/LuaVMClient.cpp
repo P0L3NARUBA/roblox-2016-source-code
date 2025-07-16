@@ -26,7 +26,7 @@ Proto *luaY_parser(lua_State *L, ZIO *z, Mbuffer *buff, const char *name)
     lua_pushstring(L, "");
     luaD_throw(L, LUA_ERRSYNTAX);
 
-    return NULL;
+    return nullptr;
 }
 
 namespace LuaVM

@@ -56,7 +56,7 @@ const luaL_reg ObjectBridge::classLibrary[] = {
 	{"new", newInstance},
 	{"Lock", lockInstance},
 	{"Unlock", unlockInstance},
-	{NULL, NULL}
+	{nullptr, nullptr}
 };
 
 // Returns a new Instance. 
@@ -295,7 +295,7 @@ static void pushLuaValue(RBX::Reflection::ConstProperty p, lua_State *L, RBX::Se
 	if (p.getDescriptor().bIsEnum)
 	{
 		const EnumPropertyDescriptor* enumDesc = static_cast<const EnumPropertyDescriptor*>(&p.getDescriptor());
-		if (enumDesc!=NULL)
+		if (enumDesc!=nullptr)
 		{
 			if(const EnumDescriptor::Item* item = enumDesc->getEnumItem(p.getInstance())){
 				EnumItem::push(L, item);
@@ -309,13 +309,13 @@ static void pushLuaValue(RBX::Reflection::ConstProperty p, lua_State *L, RBX::Se
 	if (RefPropertyDescriptor::isRefPropertyDescriptor(p.getDescriptor()))
 	{
 		const RefPropertyDescriptor* refDesc = static_cast<const RefPropertyDescriptor*>(&p.getDescriptor());
-		if (refDesc!=NULL)
+		if (refDesc!=nullptr)
 		{
 			// Throws exception if the value is the wrong type
 			Reflection::DescribedBase* value = refDesc->getRefValue(p.getInstance());
 
 			// Currently, we only support Instance* refs.
-			if (value!=NULL)
+			if (value!=nullptr)
 				ObjectBridge::push(L, shared_from(boost::polymorphic_downcast<Instance*>(value)));
 			else
 				ObjectBridge::push(L, shared_ptr<Instance>());
@@ -346,7 +346,7 @@ namespace RBX { namespace Lua {
 	template<>
 	int Bridge< shared_ptr<Instance>, false >::on_index(const shared_ptr<Instance>& object, const char* name, lua_State *L)
 	{
-		if (object==NULL)
+		if (object==nullptr)
 			throw std::runtime_error("The object has been deleted");
 
         RBXPROFILER_SCOPE("LuaBridge", "$index");
@@ -436,7 +436,7 @@ namespace RBX { namespace Lua {
 		// Look for a child with the same name
 		{
 			RBX::Instance* child = object->findFirstChildByName(name);
-			if (child!=NULL)
+			if (child!=nullptr)
 			{
 				object->securityCheck(securityContext);
 				if (object->getRobloxLocked())
@@ -639,28 +639,28 @@ static void assignLuaValue(RBX::Reflection::Property p, lua_State *L, int index,
 
 
 	const TypedPropertyDescriptor<RBX::Soundscape::SoundId>* soundProp = dynamic_cast<const TypedPropertyDescriptor<RBX::Soundscape::SoundId>*>(&p.getDescriptor());
-	if (soundProp!=NULL)
+	if (soundProp!=nullptr)
 	{
 		p.setValue<RBX::Soundscape::SoundId>(ContentId(throwable_lua_tostring(L, index)));
 		return;
 	}
 
 	const TypedPropertyDescriptor<RBX::TextureId>* textureProp = dynamic_cast<const TypedPropertyDescriptor<RBX::TextureId>*>(&p.getDescriptor());
-	if (textureProp!=NULL)
+	if (textureProp!=nullptr)
 	{
 		p.setValue<TextureId>(ContentId(throwable_lua_tostring(L, index)));
 		return;
 	}
 
 	const TypedPropertyDescriptor<RBX::MeshId>* meshProp = dynamic_cast<const TypedPropertyDescriptor<RBX::MeshId>*>(&p.getDescriptor());
-	if (meshProp!=NULL)
+	if (meshProp!=nullptr)
 	{
 		p.setValue<MeshId>(ContentId(throwable_lua_tostring(L, index)));
 		return;
 	}
 
 	const TypedPropertyDescriptor<RBX::AnimationId>* animationProp = dynamic_cast<const TypedPropertyDescriptor<RBX::AnimationId>*>(&p.getDescriptor());
-	if (animationProp!=NULL)
+	if (animationProp!=nullptr)
 	{
 		p.setValue<AnimationId>(ContentId(throwable_lua_tostring(L, index)));
 		return;
@@ -668,7 +668,7 @@ static void assignLuaValue(RBX::Reflection::Property p, lua_State *L, int index,
 
 
 	const EnumPropertyDescriptor* enumDesc = dynamic_cast<const EnumPropertyDescriptor*>(&p.getDescriptor());
-	if (enumDesc!=NULL)
+	if (enumDesc!=nullptr)
 	{
 		EnumDescriptorItemPtr item;
 		if (EnumItem::getItem(L, index, item))
@@ -692,7 +692,7 @@ static void assignLuaValue(RBX::Reflection::Property p, lua_State *L, int index,
 	}
 
 	const RefPropertyDescriptor* refDesc = dynamic_cast<const RefPropertyDescriptor*>(&p.getDescriptor());
-	if (refDesc!=NULL)
+	if (refDesc!=nullptr)
 	{
 		shared_ptr<Instance> value = ObjectBridge::getInstance(L, index);
 		refDesc->setRefValue(p.getInstance(), value.get());
@@ -760,7 +760,7 @@ shared_ptr<Tuple> callCallback(Lua::WeakFunctionRef function, shared_ptr<const T
 		const int nargs = LuaArguments::pushTuple(*args, callbackThread);
 
 		//HACK: Make sure we don't yield while debugging
-		RBX::Scripting::ScriptDebugger* pDebugger = NULL;
+		RBX::Scripting::ScriptDebugger* pDebugger = nullptr;
 		if (::FFlag::LuaDebugger)
 			pDebugger = RBX::Scripting::DebuggerManager::singleton().findDebugger(callbackThread.get());
 
@@ -886,7 +886,7 @@ void callAsyncCallback(Lua::WeakFunctionRef function, shared_ptr<const Tuple> ar
             continuations.success = boost::bind(callAsyncCallbackSuccess, resumeFunction, _1);
             continuations.error = boost::bind(callAsyncCallbackError, errorFunction, _1);
 
-            RBXASSERT(RobloxExtraSpace::get(callbackThread.get())->continuations.get() == NULL);
+            RBXASSERT(RobloxExtraSpace::get(callbackThread.get())->continuations.get() == nullptr);
             RobloxExtraSpace::get(callbackThread.get())->continuations.reset(new Lua::Continuations(continuations));
 
             break;

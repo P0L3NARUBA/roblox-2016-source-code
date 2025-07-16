@@ -198,7 +198,7 @@ namespace RBX {
 					}
 				}
 			}
-			return NULL;
+			return nullptr;
 		}
 
 	public:

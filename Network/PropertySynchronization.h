@@ -44,7 +44,7 @@ namespace detail
 		Guid::Data guidData;
 
 	public:
-		PropertyKey() : descriptor(NULL) 
+		PropertyKey() : descriptor(nullptr) 
 		{
 			guidData.scope.setNull();
 			guidData.index = 0;

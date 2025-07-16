@@ -160,10 +160,10 @@ void GuiBuilder::toggleGeneralStats()
     
 	GuiRoot* guiRoot = dataModel->getGuiRoot();
 	TopMenuBar* statsMenu = Instance::fastDynamicCast<TopMenuBar>(guiRoot->findFirstChildByName("StatsHud1"));
-	if (statsMenu!=NULL)
+	if (statsMenu!=nullptr)
 		statsMenu->setVisible(!statsMenu->isVisible());
 	statsMenu = Instance::fastDynamicCast<TopMenuBar>(guiRoot->findFirstChildByName("StatsHud2"));
-	if (statsMenu!=NULL)
+	if (statsMenu!=nullptr)
 		statsMenu->setVisible(!statsMenu->isVisible());
 }
     
@@ -173,13 +173,13 @@ void GuiBuilder::toggleRenderStats()
     
 	GuiRoot* guiRoot = dataModel->getGuiRoot();
 	TopMenuBar* statsMenu = Instance::fastDynamicCast<TopMenuBar>(guiRoot->findFirstChildByName("RenderStats"));
-	if (statsMenu!=NULL)
+	if (statsMenu!=nullptr)
 	{
 		statsMenu->setVisible(!statsMenu->isVisible());
 		if (FFlag::DebugDisplayFPS)
 		{
 			TopMenuBar* fpsMenu = Instance::fastDynamicCast<TopMenuBar>(guiRoot->findFirstChildByName("FPS"));
-			if (fpsMenu!=NULL)
+			if (fpsMenu!=nullptr)
 				fpsMenu->setVisible(!statsMenu->isVisible());
 		}
 	}
@@ -191,10 +191,10 @@ void GuiBuilder::toggleNetworkStats()
     
 	GuiRoot* guiRoot = dataModel->getGuiRoot();
 	TopMenuBar* statsMenu = Instance::fastDynamicCast<TopMenuBar>(guiRoot->findFirstChildByName("NetworkStats"));
-	if (statsMenu!=NULL)
+	if (statsMenu!=nullptr)
 		statsMenu->setVisible(!statsMenu->isVisible());
 	statsMenu = Instance::fastDynamicCast<TopMenuBar>(guiRoot->findFirstChildByName("NetworkStats2"));
-	if (statsMenu!=NULL)
+	if (statsMenu!=nullptr)
 	{
 		statsMenu->setVisible(!statsMenu->isVisible());
         
@@ -220,11 +220,11 @@ void GuiBuilder::togglePhysicsStats()
     
 	GuiRoot* guiRoot = dataModel->getGuiRoot();
 	TopMenuBar* statsMenu = Instance::fastDynamicCast<TopMenuBar>(guiRoot->findFirstChildByName("PhysicsStats"));
-	if (statsMenu!=NULL)
+	if (statsMenu!=nullptr)
 		statsMenu->setVisible(!statsMenu->isVisible());
     
 	statsMenu = Instance::fastDynamicCast<TopMenuBar>(guiRoot->findFirstChildByName("PhysicsStats2"));
-	if (statsMenu!=NULL)
+	if (statsMenu!=nullptr)
 	{
 		statsMenu->setVisible(!statsMenu->isVisible());
 		RBX::Profiling::setEnabled(statsMenu->isVisible());
@@ -280,7 +280,7 @@ void GuiBuilder::buildGui(
 	if (gDebugDisplay == DISPLAY_FPS)
 	{
         TopMenuBar* fps = Instance::fastDynamicCast<TopMenuBar>(dataModel->getGuiRoot()->findFirstChildByName("FPS"));
-        RBXASSERT(fps != NULL);
+        RBXASSERT(fps != nullptr);
 		if (fps)
         {
             fps->setVisible(true);
@@ -290,13 +290,13 @@ void GuiBuilder::buildGui(
     if (gDebugDisplay == DISPLAY_PHYSICS || gDebugDisplay == DISPLAY_PHYSICS_AND_OWNER)
 	{
         TopMenuBar* physicsStats = Instance::fastDynamicCast<TopMenuBar>(dataModel->getGuiRoot()->findFirstChildByName("PhysicsStats"));
-        RBXASSERT(physicsStats != NULL);
+        RBXASSERT(physicsStats != nullptr);
 		if (physicsStats)
         {
             physicsStats->setVisible(true);
         }
 		TopMenuBar* physicsStats2 = Instance::fastDynamicCast<TopMenuBar>(dataModel->getGuiRoot()->findFirstChildByName("PhysicsStats2"));
-		RBXASSERT(physicsStats2 != NULL);
+		RBXASSERT(physicsStats2 != nullptr);
 		if (physicsStats2)
 		{
 			physicsStats2->setVisible(true);
@@ -313,7 +313,7 @@ void GuiBuilder::buildGui(
     if (gDebugDisplay == DISPLAY_SUMMARY)
     {
         TopMenuBar* summaryStats = Instance::fastDynamicCast<TopMenuBar>(dataModel->getGuiRoot()->findFirstChildByName("SummaryStats"));
-        RBXASSERT(summaryStats != NULL);
+        RBXASSERT(summaryStats != nullptr);
 		if (summaryStats)
         {
             summaryStats->setVisible(true);
@@ -323,7 +323,7 @@ void GuiBuilder::buildGui(
     if (gDebugDisplay == DISPLAY_RENDER)
 	{
         TopMenuBar* renderStats = Instance::fastDynamicCast<TopMenuBar>(dataModel->getGuiRoot()->findFirstChildByName("RenderStats"));
-        RBXASSERT(renderStats != NULL);
+        RBXASSERT(renderStats != nullptr);
 		if (renderStats)
         {
             renderStats->setVisible(true);
@@ -433,7 +433,7 @@ void GuiBuilder::removeCustomStat(const std::string& name)
 		{
 			shared_ptr<TextDisplay> item = itr->second.item;
 
-			item->setParent(NULL);
+			item->setParent(nullptr);
 			item->setVisible(false);
 
 			customStatsCont.erase(itr);
@@ -482,7 +482,7 @@ shared_ptr<TopMenuBar> GuiBuilder::buildChatHud()
 void GuiBuilder::removeSafeChatMenu()
 {
 	if(safeChatMenu)
-		safeChatMenu->setParent(NULL);
+		safeChatMenu->setParent(nullptr);
 }
 	
 void GuiBuilder::addSafeChatMenu()
@@ -503,7 +503,7 @@ void GuiBuilder::nextNetworkStats()
     GuiItem* item = Instance::fastDynamicCast<GuiItem>(dataModel->getGuiRoot()->findFirstChildByName("NetworkStats2"));
     if (item)
     {
-        item->setParent(NULL);
+        item->setParent(nullptr);
     }
     dataModel->getGuiRoot()->addGuiItem(buildNetworkStats2(false));
 }

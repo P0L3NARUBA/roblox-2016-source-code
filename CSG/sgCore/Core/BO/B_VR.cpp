@@ -159,7 +159,7 @@ static BOOL  b_vr_on(short nm,lpD_POINT * vn,lpD_POINT * vk)
 		if ( !brept1 && object_number == 1)  { 
 			npr->p[0] = npr->p[fs1];
 		}	else {
-			put_message(NO_LIMIT_COND,NULL,0);
+			put_message(NO_LIMIT_COND,nullptr,0);
 			return FALSE;
 		}
 	} else { if (fs2 < 0)   fs2 = np_calc_gru(npr, ir); }
@@ -187,7 +187,7 @@ static BOOL  b_vr_on(short nm,lpD_POINT * vn,lpD_POINT * vk)
 			} else                                   
 				if (key != INTER) return TRUE;
 		}
-		put_message(TOO_MANY_FACES,NULL,0);
+		put_message(TOO_MANY_FACES,nullptr,0);
 		return FALSE;
 	}
 	if (p1 == -p2) {                              
@@ -341,7 +341,7 @@ static BOOL  b_vr_ee(lpD_POINT * vn,lpD_POINT * vk)
 			if (fpa == 0)	npa->p[0] = npa->p[fma];
 			else          npa->p[0] = npa->p[fpa];
 		}	else {
-			put_message(NO_LIMIT_COND,NULL,0);
+			put_message(NO_LIMIT_COND,nullptr,0);
 			return FALSE;
 		}
 	} else {
@@ -351,7 +351,7 @@ static BOOL  b_vr_ee(lpD_POINT * vn,lpD_POINT * vk)
 		}
 	}
 	if ( fpb == 0 || fmb == 0 ) {
-		put_message(NO_LIMIT_COND,NULL,0);
+		put_message(NO_LIMIT_COND,nullptr,0);
 		return FALSE;
 	}
 	if (fpb < 0 || fmb < 0) {       
@@ -443,7 +443,7 @@ static BOOL  b_vr_ee(lpD_POINT * vn,lpD_POINT * vk)
     return TRUE;
   }
 	if (i1 == 2 && i2 == 2)
-		put_message(TOO_MANY_FACES,NULL,0);
+		put_message(TOO_MANY_FACES,nullptr,0);
 	else
 		put_message(INTERNAL_ERROR,GetIDS(IDS_SG026),0);
 	return FALSE;

@@ -129,7 +129,7 @@ namespace RBX {
 		// returns true if the content is available.
 		bool hasContent(const ContentId& id);
 		
-		// returns non-NULL if the content is available. If not available, the provider does an asynchronous request of the content for later
+		// returns non-nullptr if the content is available. If not available, the provider does an asynchronous request of the content for later
 		shared_ptr<const std::string> requestContentString(const ContentId& id, float priority);
 
 		// Async request
@@ -137,7 +137,7 @@ namespace RBX {
 		void loadContent(const RBX::ContentId& id, float priority, boost::function<void (AsyncHttpQueue::RequestResult, shared_ptr<Instances>, shared_ptr<std::exception>)> callback, AsyncHttpQueue::ResultJob jobType=AsyncHttpQueue::AsyncInline);
 		void loadContentString(const RBX::ContentId& id, float priority, boost::function<void (AsyncHttpQueue::RequestResult, shared_ptr<const std::string>, shared_ptr<std::exception>)> callback, AsyncHttpQueue::ResultJob jobType=AsyncHttpQueue::AsyncInline);
 
-		// The following functions throw exceptions upon failure or return NULL
+		// The following functions throw exceptions upon failure or return nullptr
 		shared_ptr<const std::string> getContentString(ContentId id);
 		std::auto_ptr<std::istream> getContent(const ContentId& contentId, const std::string& expectedType = "");
 		std::string getFile(ContentId contentId);

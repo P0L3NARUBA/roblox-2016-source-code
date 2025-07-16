@@ -72,7 +72,7 @@ void LuaDragger::mouseDownPublic(shared_ptr<Instance> _mousePart,
 	shared_ptr<PartInstance> mousePartInstance = boost::dynamic_pointer_cast<PartInstance>(_mousePart);
 	std::vector<weak_ptr<PartInstance> > dragPartInstances;
 	copyParts(_dragParts, dragPartInstances);
-	if(mousePartInstance.get() == NULL)
+	if(mousePartInstance.get() == nullptr)
 		throw std::runtime_error("You must have a non-nil MousePart when you call Dragger:MouseDown");
 	if (!Workspace::getWorkspaceIfInWorkspace(mousePartInstance.get())) 
 		throw std::runtime_error("You must have a MousePart that is in the Workspace when you call Dragger:MouseDown");
@@ -96,7 +96,7 @@ void LuaDragger::mouseDown(shared_ptr<PartInstance> _mousePart,
 	}
 
 	RBXASSERT(jointsIMade.size() == 0);
-	RBXASSERT(runDragger.get() == NULL);
+	RBXASSERT(runDragger.get() == nullptr);
 
 	dragParts = _dragParts;
 	mousePart = _mousePart;

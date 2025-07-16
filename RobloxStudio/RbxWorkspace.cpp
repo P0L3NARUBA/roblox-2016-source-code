@@ -122,7 +122,7 @@ RbxWorkspace::RbxWorkspace( QObject *parent, RBX::DataModel *dm )
 : QObject(parent)
 , m_pDataModel(dm)
 , m_pParent(parent)
-, m_screenShotInProgressMsgBox(NULL)
+, m_screenShotInProgressMsgBox(nullptr)
 {
 	m_pContent = new RbxContent(this);
 }
@@ -265,7 +265,7 @@ bool RbxWorkspace::StartGame(const QString &ticket, const QString &url, const QS
 		Show();
 		errorCount++;
 		QMessageBox::critical(
-			NULL, 
+			nullptr, 
 			tr("ROBLOX Studio Playground"), 
 			errorCount <= 2 ? 
 				tr("There was a problem opening your place.  Please try again.")
@@ -316,7 +316,7 @@ QObject* RbxWorkspace::WriteSelection()
 	if (!AuthenticationHelper::Instance().verifyUserAndAuthenticate() || 
 		!AuthenticationHelper::validateMachine())
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	delete m_pContent;
@@ -384,7 +384,7 @@ QObject* RbxWorkspace::WriteSelection()
 		}
 
 		RBX::StandardOut::singleton()->print(RBX::MESSAGE_ERROR, e.what());
-		return NULL;
+		return nullptr;
 	}	
 	
 	return m_pContent;
@@ -399,7 +399,7 @@ void RbxWorkspace::writeToStream(const XmlElement* root, std::ostream& stream)
 // Do not confuse the DataModel Workspace with the RbxWorkspace. We are using RbxWorkspace as a Javascript Bridge Object
 RBX::Workspace* RbxWorkspace::getWorkspace() const
 {
-	return m_pDataModel ? m_pDataModel->getWorkspace() : NULL;
+	return m_pDataModel ? m_pDataModel->getWorkspace() : nullptr;
 }
 
 std::auto_ptr<XmlElement> RbxWorkspace::writeSelectionToXml()
@@ -538,8 +538,8 @@ void RbxWorkspace::insert(RBX::Instances& instances, bool insertInto)
 	{
 		// get position to insert at
 		bool isOnPart = false;
-		RBX::Vector3 pos = InsertObjectWidget::getInsertLocation(shared_from(m_pDataModel), NULL, &isOnPart);
-		spWorkspace->insertInstances(instances, requestedParent, insertMode, promptMode, isOnPart ? &pos : NULL);
+		RBX::Vector3 pos = InsertObjectWidget::getInsertLocation(shared_from(m_pDataModel), nullptr, &isOnPart);
+		spWorkspace->insertInstances(instances, requestedParent, insertMode, promptMode, isOnPart ? &pos : nullptr);
 
 		if (promptMode != RBX::PUT_TOOL_IN_STARTERPACK)
 		{
@@ -579,7 +579,7 @@ void RbxWorkspace::insert(RBX::Instances& instances, bool insertInto)
 	}
 	catch (std::exception&)
 	{
-		std::for_each(instances.begin(), instances.end(), boost::bind(&RBX::Instance::setParent, _1, (RBX::Instance*) NULL));
+		std::for_each(instances.begin(), instances.end(), boost::bind(&RBX::Instance::setParent, _1, (RBX::Instance*) nullptr));
 		throw;
 	}
 }
@@ -928,7 +928,7 @@ void RbxWorkspace::onScreenShotFinished_MT(QString fileName)
 	{
 		m_screenShotInProgressMsgBox->hide();
 		m_screenShotInProgressMsgBox->deleteLater();
-		m_screenShotInProgressMsgBox = NULL;
+		m_screenShotInProgressMsgBox = nullptr;
 	}
 
 	// Re-show the web page

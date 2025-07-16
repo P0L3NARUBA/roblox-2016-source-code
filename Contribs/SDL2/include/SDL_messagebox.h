@@ -92,14 +92,14 @@ typedef struct
 typedef struct
 {
     Uint32 flags;                       /**< ::SDL_MessageBoxFlags */
-    SDL_Window *window;                 /**< Parent window, can be NULL */
+    SDL_Window *window;                 /**< Parent window, can be nullptr */
     const char *title;                  /**< UTF-8 title */
     const char *message;                /**< UTF-8 message text */
 
     int numbuttons;
     const SDL_MessageBoxButtonData *buttons;
 
-    const SDL_MessageBoxColorScheme *colorScheme;   /**< ::SDL_MessageBoxColorScheme, can be NULL to use system settings */
+    const SDL_MessageBoxColorScheme *colorScheme;   /**< ::SDL_MessageBoxColorScheme, can be nullptr to use system settings */
 } SDL_MessageBoxData;
 
 /**
@@ -124,7 +124,7 @@ extern DECLSPEC int SDLCALL SDL_ShowMessageBox(const SDL_MessageBoxData *message
  *  \param flags    ::SDL_MessageBoxFlags
  *  \param title    UTF-8 title text
  *  \param message  UTF-8 message text
- *  \param window   The parent window, or NULL for no parent
+ *  \param window   The parent window, or nullptr for no parent
  *
  *  \return 0 on success, -1 on error
  *

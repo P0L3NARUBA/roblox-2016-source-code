@@ -79,7 +79,7 @@ namespace RBX {
 
     REFLECTION_BEGIN();
 	static Reflection::EnumPropDescriptor<Path, Path::PathStatus> prop_PathStatus
-		("Status", category_Data, &Path::getStatus, NULL);
+		("Status", category_Data, &Path::getStatus, nullptr);
     REFLECTION_END();
 
 	class PathfindingJob : public DataModelJob
@@ -144,7 +144,7 @@ namespace RBX {
 	
 	PathfindingService::PathfindingService() 
 		: lastChunkId(SpatialRegion::Id(std::numeric_limits<G3D::int16>::max(), std::numeric_limits<G3D::int16>::max(), std::numeric_limits<G3D::int16>::max())),
-		lastChunk(NULL), 
+		lastChunk(nullptr), 
 		currentFrameNum(0),
 		voxelizer(true /* collisionTransparency */)
 	{
@@ -447,7 +447,7 @@ namespace RBX {
 				if(*it == lastChunkId)
 				{
 					lastChunkId = SpatialRegion::Id(std::numeric_limits<G3D::int16>::max(), std::numeric_limits<G3D::int16>::max(), std::numeric_limits<G3D::int16>::max());
-					lastChunk = NULL;
+					lastChunk = nullptr;
 				}
 
 				FASTLOG3(FLog::PathfindingDetail, "Erasing chunk: %i %i %i", it->value().x, it->value().y, it->value().z);

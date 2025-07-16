@@ -738,7 +738,7 @@ void Mesh::addFace(size_t i, size_t j, size_t k, size_t l)
 void Mesh::addFace( int numVerts, int vertIndexList[], bool reverseOrder = false )
 {
 	size_t id = faces.size();
-	Edge* anEdge = NULL;
+	Edge* anEdge = nullptr;
 	std::vector<Edge*> faceEdges;
 
 	// find or make the edges and add them to a faceEdge container
@@ -800,8 +800,8 @@ Edge* Mesh::findOrMakeEdge(size_t v0, size_t v1)
 	Vertex* vert0 = &vertices[v0];
 	Vertex* vert1 = &vertices[v1];
 	if (Edge* found = vert0->findEdge(vert1)) {
-		RBXASSERT(found->getVertex(NULL, 0) == vert1);		// should be backwards - this is second face
-		RBXASSERT(found->getVertex(NULL, 1) == vert0);
+		RBXASSERT(found->getVertex(nullptr, 0) == vert1);		// should be backwards - this is second face
+		RBXASSERT(found->getVertex(nullptr, 1) == vert0);
 		RBXASSERT(found->getForward());
 		RBXASSERT(!found->getBackward());
 		return found;
@@ -852,15 +852,15 @@ const Face* Mesh::findFaceIntersection(const Vector3& inside, const Vector3& out
 	}
 	RBXASSERT(0);
 
-	return NULL;
+	return nullptr;
 }
 
 void Mesh::findFaceIntersections(const Vector3& p0, const Vector3& p1, const Face* &f0, const Face* &f1) const
 {
 	RBXASSERT(!pointInMesh(p0));
 	RBXASSERT(!pointInMesh(p1));
-	f0 = NULL;
-	f1 = NULL;
+	f0 = nullptr;
+	f1 = nullptr;
 	Line line = Line::fromTwoPoints(p0, p1);
 	
 	for (size_t i = 0; i < numFaces(); ++i) {
@@ -912,7 +912,7 @@ bool Mesh::lineIntersectsFace(const Line& line, const Face* face) const
 
 const Vertex* Mesh::farthestVertex(const Vector3& direction) const
 {
-	const Vertex* answer = NULL;
+	const Vertex* answer = nullptr;
 	float farthestDistance = -FLT_MAX;
 
 	for (size_t i = 0; i < numVertices(); ++i) {
@@ -1163,7 +1163,7 @@ Edge* Vertex::findEdge(const Vertex* other)
 			return e;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 const Edge* Vertex::recoverEdge(const Vertex* v0, const Vertex* v1) {
@@ -1174,15 +1174,15 @@ const Edge* Vertex::recoverEdge(const Vertex* v0, const Vertex* v1) {
 		}
 	}
 	RBXASSERT(0);
-	return NULL;
+	return nullptr;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 bool Edge::pointInVaronoi(const Vector3& point) const
 {
-	const Vector3& v0 = getVertexOffset(NULL, 0);
-	const Vector3& v1 = getVertexOffset(NULL, 1);
+	const Vector3& v0 = getVertexOffset(nullptr, 0);
+	const Vector3& v1 = getVertexOffset(nullptr, 1);
 
 	Vector3 v0v1 = v1 - v0;
 	Vector3 v0p = point - v0;

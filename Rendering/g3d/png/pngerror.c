@@ -40,7 +40,7 @@ png_error(png_structp png_ptr, png_const_charp error_message)
 {
 #ifdef PNG_ERROR_NUMBERS_SUPPORTED
    char msg[16];
-   if (png_ptr != NULL)
+   if (png_ptr != nullptr)
    {
      if (png_ptr->flags&
        (PNG_FLAG_STRIP_ERROR_NUMBERS|PNG_FLAG_STRIP_ERROR_TEXT))
@@ -75,7 +75,7 @@ png_error(png_structp png_ptr, png_const_charp error_message)
      }
    }
 #endif
-   if (png_ptr != NULL && png_ptr->error_fn != NULL)
+   if (png_ptr != nullptr && png_ptr->error_fn != nullptr)
       (*(png_ptr->error_fn))(png_ptr, error_message);
 
    /* If the custom handler doesn't exist, or if it returns,
@@ -86,7 +86,7 @@ png_error(png_structp png_ptr, png_const_charp error_message)
 void PNGAPI
 png_err(png_structp png_ptr)
 {
-   if (png_ptr != NULL && png_ptr->error_fn != NULL)
+   if (png_ptr != nullptr && png_ptr->error_fn != nullptr)
       (*(png_ptr->error_fn))(png_ptr, '\0');
 
    /* If the custom handler doesn't exist, or if it returns,
@@ -105,7 +105,7 @@ void PNGAPI
 png_warning(png_structp png_ptr, png_const_charp warning_message)
 {
    int offset = 0;
-   if (png_ptr != NULL)
+   if (png_ptr != nullptr)
    {
 #ifdef PNG_ERROR_NUMBERS_SUPPORTED
    if (png_ptr->flags&
@@ -120,7 +120,7 @@ png_warning(png_structp png_ptr, png_const_charp warning_message)
        }
      }
    }
-   if (png_ptr != NULL && png_ptr->warning_fn != NULL)
+   if (png_ptr != nullptr && png_ptr->warning_fn != nullptr)
       (*(png_ptr->warning_fn))(png_ptr, warning_message + offset);
    else
       png_default_warning(png_ptr, warning_message + offset);
@@ -165,7 +165,7 @@ png_format_buffer(png_structp png_ptr, png_charp buffer, png_const_charp
       }
    }
 
-   if (error_message == NULL)
+   if (error_message == nullptr)
       buffer[iout] = '\0';
    else
    {
@@ -181,7 +181,7 @@ void PNGAPI
 png_chunk_error(png_structp png_ptr, png_const_charp error_message)
 {
    char msg[18+PNG_MAX_ERROR_TEXT];
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
      png_error(png_ptr, error_message);
    else
    {
@@ -197,7 +197,7 @@ void PNGAPI
 png_chunk_warning(png_structp png_ptr, png_const_charp warning_message)
 {
    char msg[18+PNG_MAX_ERROR_TEXT];
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
      png_warning(png_ptr, warning_message);
    else
    {
@@ -210,7 +210,7 @@ png_chunk_warning(png_structp png_ptr, png_const_charp warning_message)
 
 /* This is the default error handling function.  Note that replacements for
  * this function MUST NOT RETURN, or the program will likely crash.  This
- * function is used by default, or if the program supplies NULL for the
+ * function is used by default, or if the program supplies nullptr for the
  * error function pointer in png_set_error_fn().
  */
 static void /* PRIVATE */
@@ -329,7 +329,7 @@ void PNGAPI
 png_set_error_fn(png_structp png_ptr, png_voidp error_ptr,
    png_error_ptr error_fn, png_error_ptr warning_fn)
 {
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
    png_ptr->error_ptr = error_ptr;
    png_ptr->error_fn = error_fn;
@@ -344,8 +344,8 @@ png_set_error_fn(png_structp png_ptr, png_voidp error_ptr,
 png_voidp PNGAPI
 png_get_error_ptr(png_structp png_ptr)
 {
-   if (png_ptr == NULL)
-      return NULL;
+   if (png_ptr == nullptr)
+      return nullptr;
    return ((png_voidp)png_ptr->error_ptr);
 }
 
@@ -354,7 +354,7 @@ png_get_error_ptr(png_structp png_ptr)
 void PNGAPI
 png_set_strip_error_numbers(png_structp png_ptr, png_uint_32 strip_mode)
 {
-   if (png_ptr != NULL)
+   if (png_ptr != nullptr)
    {
      png_ptr->flags &=
        ((~(PNG_FLAG_STRIP_ERROR_NUMBERS|PNG_FLAG_STRIP_ERROR_TEXT))&strip_mode);

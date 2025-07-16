@@ -74,7 +74,7 @@ namespace RBX {
 
 		Clothing();
 
-		virtual TextureId getTemplate() const { RBXASSERT(false); return NULL; }
+		virtual TextureId getTemplate() const { RBXASSERT(false); return nullptr; }
 
 	protected:
 		/*override*/ void applyByMyself(Humanoid* humanoid);

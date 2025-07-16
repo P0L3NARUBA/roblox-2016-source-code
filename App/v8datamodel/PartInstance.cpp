@@ -133,7 +133,7 @@ namespace RBX {
 	static const PropDescriptor<PartInstance, Vector3> prop_RotationUi("Rotation", category_Data, &PartInstance::getRotationUi, &PartInstance::setRotationUi, PropertyDescriptor::UI);
 	const PropDescriptor<PartInstance, Vector3> PartInstance::prop_Velocity("Velocity", category_Data, &PartInstance::getLinearVelocity, &PartInstance::setLinearVelocity);
 	const PropDescriptor<PartInstance, Vector3> PartInstance::prop_RotVelocity("RotVelocity", category_Data, &PartInstance::getRotationalVelocity, &PartInstance::setRotationalVelocityRoot);
-	static const PropDescriptor<PartInstance, float> prop_Density("SpecificGravity", category_Data, &PartInstance::getSpecificGravity, NULL, Reflection::PropertyDescriptor::UI);
+	static const PropDescriptor<PartInstance, float> prop_Density("SpecificGravity", category_Data, &PartInstance::getSpecificGravity, nullptr, Reflection::PropertyDescriptor::UI);
 
 	//////////////////////////
 
@@ -232,7 +232,7 @@ namespace RBX {
 	static BoundFuncDesc<PartInstance, shared_ptr<const Reflection::Tuple>()> desc_canSetNetworkOwnershipScript(&PartInstance::canSetNetworkOwnershipScript, "CanSetNetworkOwnership", Security::None);
 
 	// shape, size, form factor - both UI and streaming
-	const PropDescriptor<PartInstance, RBX::Vector3> prop_Siz("siz", category_Part, NULL, &PartInstance::setPartSizeXml, PropertyDescriptor::LEGACY); // Used to prepare for TA14264
+	const PropDescriptor<PartInstance, RBX::Vector3> prop_Siz("siz", category_Part, nullptr, &PartInstance::setPartSizeXml, PropertyDescriptor::LEGACY); // Used to prepare for TA14264
 	const PropDescriptor<PartInstance, RBX::Vector3> PartInstance::prop_Size("size", category_Part, &PartInstance::getPartSizeXml, &PartInstance::setPartSizeXml, PropertyDescriptor::STREAMING);
 	static const PropDescriptor<PartInstance, RBX::Vector3> prop_SizeUi("Size", category_Part, &PartInstance::getPartSizeUi, &PartInstance::setPartSizeUi, PropertyDescriptor::UI);
 
@@ -241,13 +241,13 @@ namespace RBX {
 	const PropDescriptor<PartInstance, PhysicalProperties> PartInstance::prop_CustomPhysicalProperties("CustomPhysicalProperties", category_Part, &PartInstance::getPhysicalProperties, &PartInstance::setPhysicalProperties);
 
 	// color, transparency, reflectance, anchored, canCollide, locked
-	const PropDescriptor<PartInstance, Color3> PartInstance::prop_Color("Color", category_Appearance, &PartInstance::getColor, &PartInstance::setColor);//, PropertyDescriptor::Functionality(PropertyDescriptor::UI));
+	const PropDescriptor<PartInstance, Color3> PartInstance::prop_Color("Color", category_Appearance, &PartInstance::getColor, &PartInstance::setColor); //, PropertyDescriptor::Functionality(PropertyDescriptor::UI));
 	const PropDescriptor<PartInstance, BrickColor> PartInstance::prop_BrickColor("BrickColor", category_Appearance, &PartInstance::getBrickColor, &PartInstance::setBrickColor);
 	const PropDescriptor<PartInstance, BrickColor> prop_BrickColorDep("brickColor", category_Appearance, &PartInstance::getBrickColor, &PartInstance::setBrickColor, PropertyDescriptor::Attributes::deprecated(PartInstance::prop_BrickColor, Reflection::PropertyDescriptor::LEGACY_SCRIPTING));
 	const EnumPropDescriptor<PartInstance, PartMaterial> PartInstance::prop_renderMaterial("Material", category_Appearance, &PartInstance::getRenderMaterial, &PartInstance::setRenderMaterial);
 	const PropDescriptor<PartInstance, float> PartInstance::prop_Transparency("Transparency", category_Appearance, &PartInstance::getTransparencyXml, &PartInstance::setTransparency);
 	// DFFlagNetworkOwnershipRuleReplicates
-	// Temporary Hack that allows use to Replicate Network Ownerhip
+	// Temporary Hack that allows use to Replicate Network Ownership
 	static const PropDescriptor<PartInstance, bool> prop_networkOwnershipRuleBool("NetworkOwnershipRuleBool", category_Behavior, &PartInstance::getNetworkOwnershipManualReplicate, &PartInstance::setNetworkOwnershipManualReplicate, PropertyDescriptor::REPLICATE_ONLY);
 	// DFFlagNetworkOwnershipRuleReplicates -> Commented Out for now because cannot introduce new Enum safely
 	//static const EnumPropDescriptor<PartInstance, NetworkOwnership> prop_networkOwnershipRule("NetworkOwnershipRule", category_Behavior, &PartInstance::getNetworkOwnershipRule, &PartInstance::setNetworkOwnershipRule, PropertyDescriptor::REPLICATE_ONLY);
@@ -258,8 +258,8 @@ namespace RBX {
 	const PropDescriptor<PartInstance, bool> PartInstance::prop_Anchored("Anchored", category_Behavior, &PartInstance::getAnchored, &PartInstance::setAnchored);
 	const PropDescriptor<PartInstance, bool> PartInstance::prop_CanCollide("CanCollide", category_Behavior, &PartInstance::getCanCollide, &PartInstance::setCanCollide);
 
-	const PropDescriptor<PartInstance, Faces> prop_ResizeableFaces("ResizeableFaces", category_Behavior, &PartInstance::getResizeHandleMask, NULL, PropertyDescriptor::UI);
-	const PropDescriptor<PartInstance, int>  prop_ResizeIncrement("ResizeIncrement", category_Behavior, &PartInstance::getResizeIncrement, NULL, PropertyDescriptor::UI);
+	const PropDescriptor<PartInstance, Faces> prop_ResizeableFaces("ResizeableFaces", category_Behavior, &PartInstance::getResizeHandleMask, nullptr, PropertyDescriptor::UI);
+	const PropDescriptor<PartInstance, int>  prop_ResizeIncrement("ResizeIncrement", category_Behavior, &PartInstance::getResizeIncrement, nullptr, PropertyDescriptor::UI);
 	const BoundFuncDesc<PartInstance, bool(NormalId, int)> desc_resize(&PartInstance::resize, "Resize", "normalId", "deltaAmount", Security::None);
 	const BoundFuncDesc<PartInstance, bool(NormalId, int)> desc_dep_resize(&PartInstance::resize, "resize", "normalId", "deltaAmount", Security::None, Descriptor::Attributes::deprecated(desc_resize));
 
@@ -312,7 +312,7 @@ namespace RBX {
 
 	// Temporary property for handling concurrent drags
 	const PropDescriptor<PartInstance, bool> prop_Dragging("DraggingV1", category_Behavior, &PartInstance::getDragging, &PartInstance::setDragging, PropertyDescriptor::REPLICATE_ONLY);
-	const PropDescriptor<PartInstance, float> PartInstance::prop_ReceiveAge("ReceiveAge", category_Part, &PartInstance::getReceiveInterval, NULL, PropertyDescriptor::HIDDEN_SCRIPTING);
+	const PropDescriptor<PartInstance, float> PartInstance::prop_ReceiveAge("ReceiveAge", category_Part, &PartInstance::getReceiveInterval, nullptr, PropertyDescriptor::HIDDEN_SCRIPTING);
 
 	Extents PartInstance::computeExtentsWorld() const
 	{
@@ -321,7 +321,7 @@ namespace RBX {
 
 	void PartInstance::addTouchTransmitter()
 	{
-		RBXASSERT(!onDemandRead() || onDemandRead()->touchTransmitter == NULL);
+		RBXASSERT(!onDemandRead() || onDemandRead()->touchTransmitter == nullptr);
 		shared_ptr<TouchTransmitter> tt = Creatable<Instance>::create<TouchTransmitter>();
 		tt->setParent(this);
 
@@ -331,9 +331,9 @@ namespace RBX {
 
 	void PartInstance::removeTouchTransmitter()
 	{
-		if (!onDemandRead() || onDemandRead()->touchTransmitter == NULL)
+		if (!onDemandRead() || onDemandRead()->touchTransmitter == nullptr)
 			return;
-		onDemandWrite()->touchTransmitter->setParent(NULL);
+		onDemandWrite()->touchTransmitter->setParent(nullptr);
 		onDemandWrite()->touchTransmitter = 0;
 	}
 
@@ -360,11 +360,11 @@ namespace RBX {
 	{
 		Super::onChildRemoved(child);
 		if (onDemandRead() && child == onDemandRead()->touchTransmitter)
-			onDemandWrite()->touchTransmitter = NULL;
+			onDemandWrite()->touchTransmitter = nullptr;
 	}
 
 	PartInstance::OnDemandPartInstance::OnDemandPartInstance(PartInstance* owner)
-		: touchTransmitter(NULL)
+		: touchTransmitter(nullptr)
 		, isCurrentlyStreamRemovingPart(false)
 	{
 		touchedSlotCount = 0;
@@ -419,10 +419,10 @@ namespace RBX {
 		: DescribedNonCreatable<PartInstance, PVInstance, sPart>(partName)
 		, raknetTime(0)
 		, primitive(new Primitive(Geometry::GEOMETRY_BLOCK))
-		, gfxPart(NULL)
+		, gfxPart(nullptr)
 		, cookie(0)
 		, brickColor(BrickColor::defaultColor())
-		, color(Color3(Color3uint8(163, 162, 165)))
+		, color(BrickColor::defaultColor().color3())
 		, transparency(0.0f)
 		, reflectance(0.0f)
 		, localTransparencyModifier(0.0)
@@ -451,8 +451,8 @@ namespace RBX {
 		FASTLOG2(FLog::PartInstanceLifetime, "PartInstance destroyed: %p, primitive: %p", this, getPartPrimitive());
 
 		RBXASSERT(getPartPrimitive());
-		RBXASSERT(getPartPrimitive()->getClump() == NULL);
-		RBXASSERT(getPartPrimitive()->getWorld() == NULL);
+		RBXASSERT(getPartPrimitive()->getClump() == nullptr);
+		RBXASSERT(getPartPrimitive()->getWorld() == nullptr);
 	}
 
 	OnDemandInstance* PartInstance::initOnDemand()
@@ -779,7 +779,7 @@ namespace RBX {
 
 	bool PartInstance::askSetParent(const Instance* instance) const
 	{
-		return Instance::fastDynamicCast<ModelInstance>(instance) != NULL;
+		return Instance::fastDynamicCast<ModelInstance>(instance) != nullptr;
 	}
 
 
@@ -793,7 +793,7 @@ namespace RBX {
 	{
 		return p
 			? rbx_static_cast<PartInstance*>(p->getOwner())
-			: NULL;
+			: nullptr;
 	}
 
 
@@ -801,14 +801,14 @@ namespace RBX {
 	{
 		Primitive* p = this->getPartPrimitive();
 		RBXASSERT(p);
-		return p ? p->getClump() : NULL;
+		return p ? p->getClump() : nullptr;
 	}
 
 	const Clump* PartInstance::getConstClump() const
 	{
 		const Primitive* p = this->getConstPartPrimitive();
 		RBXASSERT(p);
-		return p ? p->getConstClump() : NULL;
+		return p ? p->getConstClump() : nullptr;
 	}
 
 
@@ -886,12 +886,12 @@ namespace RBX {
 	void PartInstance::updatePrimitiveState()
 	{
 		Workspace* workspace = Workspace::getWorkspaceIfInWorkspace(this);
-		World* world = workspace ? workspace->getWorld() : NULL;
+		World* world = workspace ? workspace->getWorld() : nullptr;
 		World* oldWorld = getPartPrimitive()->getWorld();
 
 		if (world != oldWorld)
 		{
-			RBXASSERT(oldWorld || (getPartPrimitive()->getClump() == NULL));
+			RBXASSERT(oldWorld || (getPartPrimitive()->getClump() == nullptr));
 
 			if (oldWorld)
 			{
@@ -903,7 +903,7 @@ namespace RBX {
 						reportUntouch(shared_from(fromPrimitive(prim->getContactOther(i))));
 				}
 
-				setMovingManager(NULL);
+				setMovingManager(nullptr);
 				oldWorld->removePrimitive(prim, getIsCurrentlyStreamRemovingPart());
 			}
 
@@ -1008,7 +1008,7 @@ namespace RBX {
 		if (getTransparencyUi() >= 1.0f)
 			return;
 
-		if (getPartPrimitive()->getWorld() == NULL)
+		if (getPartPrimitive()->getWorld() == nullptr)
 			return;
 
 		if (computeSurfacesNeedAdorn()) {
@@ -1067,7 +1067,7 @@ namespace RBX {
 		{
 			Body* body = getPartPrimitive()->getBody();
 			Workspace* workspace = Workspace::getWorkspaceIfInWorkspace(this);
-			World* world = workspace ? workspace->getWorld() : NULL;
+			World* world = workspace ? workspace->getWorld() : nullptr;
 
 			if (body && world)
 			{
@@ -1549,7 +1549,7 @@ namespace RBX {
 		PartInstance* part = this;
 		Mechanism* m = prim->getMechanism();
 
-		if (currentSecurityIdentityIsScript() && m != NULL)
+		if (currentSecurityIdentityIsScript() && m != nullptr)
 		{
 			prim = m->getMechanismPrimitive();
 			part = PartInstance::fromPrimitive(prim);
@@ -1619,7 +1619,7 @@ namespace RBX {
 		PartInstance* part = this;
 		Mechanism* m = prim->getMechanism();
 
-		if (currentSecurityIdentityIsScript() && m != NULL)
+		if (currentSecurityIdentityIsScript() && m != nullptr)
 		{
 			prim = m->getMechanismPrimitive();
 			part = PartInstance::fromPrimitive(prim);
@@ -1674,7 +1674,7 @@ namespace RBX {
 		PartInstance* part = this;
 		Mechanism* m = prim->getMechanism();
 
-		if (currentSecurityIdentityIsScript() && m != NULL)
+		if (currentSecurityIdentityIsScript() && m != nullptr)
 		{
 			prim = m->getMechanismPrimitive();
 			part = PartInstance::fromPrimitive(prim);
@@ -1958,7 +1958,7 @@ namespace RBX {
 				RBXASSERT(currentOwner == Network::NetworkOwner::Server());
 
 				args[0] = currentOwner;
-				raiseEventInvocation(event_NetworkOwnerChanged, args, NULL);
+				raiseEventInvocation(event_NetworkOwnerChanged, args, nullptr);
 			}
 
 		}
@@ -1966,7 +1966,7 @@ namespace RBX {
 
 	rbx::remote_signal<void(RBX::SystemAddress)>* PartInstance::getOrCreateNetworkOwnerChangedSignal(bool create)
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	void PartInstance::processRemoteEvent(const EventDescriptor& descriptor, const EventArguments& args, const SystemAddress& source)
@@ -2058,12 +2058,12 @@ namespace RBX {
 
 	bool PartInstance::isGrounded()
 	{
-		return (primitive != NULL) && primitive->computeIsGrounded();
+		return (primitive != nullptr) && primitive->computeIsGrounded();
 	}
 
 	static void getConnectedPartsVisitor(Primitive* prim, shared_ptr<Instances>& inst)
 	{
-		if (prim != NULL && PartInstance::fromPrimitive(prim) != NULL)
+		if (prim != nullptr && PartInstance::fromPrimitive(prim) != nullptr)
 		{
 			inst->push_back(shared_from(PartInstance::fromPrimitive(prim)));
 		}
@@ -2072,15 +2072,15 @@ namespace RBX {
 	void PartInstance::getConnectedPartsRecursiveImpl(shared_ptr<Instances>& objs, boost::unordered_set<PartInstance*>& seen) const
 	{
 		const Workspace* ws = Workspace::findConstWorkspace(this);
-		const Instance* terrain = ws != NULL ? ws->getTerrain() : NULL;
+		const Instance* terrain = ws != nullptr ? ws->getTerrain() : nullptr;
 		for (int i = 0; i < primitive->getNumJoints(); ++i)
 		{
 			Primitive* otherNeighbor = primitive->getJointOther(i);
-			if (otherNeighbor != NULL &&
+			if (otherNeighbor != nullptr &&
 				(Joint::isKinematicJoint(primitive->getJoint(i))))
 			{
 				PartInstance* otherPart = PartInstance::fromPrimitive(otherNeighbor);
-				if (otherPart != NULL && otherPart != terrain && seen.find(otherPart) == seen.end())
+				if (otherPart != nullptr && otherPart != terrain && seen.find(otherPart) == seen.end())
 				{
 					seen.insert(otherPart);
 					objs->push_back(shared_from(otherPart));
@@ -2210,7 +2210,7 @@ namespace RBX {
 		}
 		else
 		{
-			ownershipData.prim = NULL;
+			ownershipData.prim = nullptr;
 		}
 	}
 
@@ -2225,7 +2225,7 @@ namespace RBX {
 		{
 			if (DFFlag::SetNetworkOwnerFixAnchoring2)
 			{
-				PartInstance* futureMechRootPart = NULL;
+				PartInstance* futureMechRootPart = nullptr;
 				if (Primitive* rootMovingPrim = futureMechRoots[i]->getRootMovingPrimitive())
 					futureMechRootPart = PartInstance::fromPrimitive(rootMovingPrim);
 
@@ -2334,7 +2334,7 @@ namespace RBX {
 	shared_ptr<const Instances> PartInstance::getConnectedParts(bool recursive)
 	{
 		const Workspace* ws = Workspace::findConstWorkspace(this);
-		const Instance* terrain = ws != NULL ? ws->getTerrain() : NULL;
+		const Instance* terrain = ws != nullptr ? ws->getTerrain() : nullptr;
 		shared_ptr<Instances> result(new Instances());
 		if (!recursive)
 		{
@@ -2342,7 +2342,7 @@ namespace RBX {
 			for (int i = 0; i < primitive->getNumJoints(); ++i)
 			{
 				Primitive* otherNeighbor = primitive->getJointOther(i);
-				if (otherNeighbor != NULL && PartInstance::fromPrimitive(otherNeighbor) != NULL &&
+				if (otherNeighbor != nullptr && PartInstance::fromPrimitive(otherNeighbor) != nullptr &&
 					PartInstance::fromPrimitive(otherNeighbor) != terrain &&
 					(Joint::isKinematicJoint(primitive->getJoint(i))))
 				{
@@ -2351,7 +2351,7 @@ namespace RBX {
 			}
 		}
 		else { // recursive
-			if (primitive != NULL && primitive->getAssembly() != NULL)
+			if (primitive != nullptr && primitive->getAssembly() != nullptr)
 			{
 				if (!primitive->getAssembly()->computeIsGrounded())
 				{
@@ -2371,8 +2371,8 @@ namespace RBX {
 
 	shared_ptr<Instance> PartInstance::getRootPart()
 	{
-		PartInstance* part = NULL;
-		if (primitive != NULL && primitive->getAssembly() != NULL)
+		PartInstance* part = nullptr;
+		if (primitive != nullptr && primitive->getAssembly() != nullptr)
 		{
 			part = PartInstance::fromPrimitive(primitive->getAssembly()->getAssemblyPrimitive());
 		}
@@ -2572,7 +2572,7 @@ namespace RBX {
 
 	bool PartInstance::canSetNetworkOwnership(Primitive*& rootPrimitive, std::string& statusMessage)
 	{
-		rootPrimitive = NULL;
+		rootPrimitive = nullptr;
 		statusMessage.clear();
 
 		if (!Workspace::getWorkspaceIfInWorkspace(this))
@@ -3026,7 +3026,7 @@ namespace RBX {
 			}
 		}
 		RBXASSERT_IF_VALIDATING(0);
-		return Surface(NULL, NORM_X);
+		return Surface(nullptr, NORM_X);
 	}
 
 	SurfaceType PartInstance::getSurfaceType(NormalId surfId) const
@@ -3242,7 +3242,7 @@ namespace RBX {
 			current = current->getParent();
 		}
 
-		return NULL;
+		return nullptr;
 	}
 
 	void PartInstance::updateHumanoidCookie()

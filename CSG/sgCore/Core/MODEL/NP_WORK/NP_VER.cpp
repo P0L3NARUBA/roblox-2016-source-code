@@ -90,7 +90,7 @@ BOOL np_vertex_normal(lpNP_STR_LIST list_str, lpNPW np, short edge, lpD_POINT p,
       }
       else
       {
-        if ( !np_get_str(list_str,ident,&str,NULL) )
+        if ( !np_get_str(list_str,ident,&str,nullptr) )
         { //goto end;  ,  
           if (pr == 0) {                               //  
             np_edge = np_edge_pr;                       //  
@@ -131,7 +131,7 @@ BOOL np_vertex_normal(lpNP_STR_LIST list_str, lpNPW np, short edge, lpD_POINT p,
   }
 end:
   if ( ident != np_ident ) {                    //   
-    if ( !np_get_str(list_str,np_ident,&str,NULL) )
+    if ( !np_get_str(list_str,np_ident,&str,nullptr) )
     {
       rt = FALSE; goto l;
     }
@@ -243,7 +243,7 @@ BOOL RA_np_vertex_normal(sgCBRep* brep, short piece, short edge, lpD_POINT p,
       }
       else
       {
-        lpNPW tmpNP = NULL;
+        lpNPW tmpNP = nullptr;
         short tmpInd = ident-zero_ident;
         if (tmpInd<0)
           tmpInd = -tmpInd;
@@ -295,7 +295,7 @@ BOOL RA_np_vertex_normal(sgCBRep* brep, short piece, short edge, lpD_POINT p,
 							leftInd = mid+1;
 				}
 		}
-        //if ( !np_get_str(list_str,ident,&str,NULL) )
+        //if ( !np_get_str(list_str,ident,&str,nullptr) )
         { //goto end;  ,  
           if (pr == 0) {                               //  
             np_edge = np_edge_pr;                       //  
@@ -338,14 +338,14 @@ RA_label1:
   }
 end:
   if ( ident != np_ident ) {                    //   
-  /*  lpNPW tmpNP = NULL;
+  /*  lpNPW tmpNP = nullptr;
     for (unsigned int pC = 0; pC<piecesCnt; pC++)
     {
       tmpNP =  GetNPWFromBRepPiece(brep->GetPiece(pC));
       if (tmpNP->ident==np_ident)
         goto  RA_label2;
     }
-    //if ( !np_get_str(list_str,np_ident,&str,NULL) )
+    //if ( !np_get_str(list_str,np_ident,&str,nullptr) )
     {
       rt = FALSE; goto l;
     }

@@ -197,7 +197,7 @@ SDL_BlendPoint(SDL_Surface * dst, int x, int y, SDL_BlendMode blendMode, Uint8 r
                Uint8 g, Uint8 b, Uint8 a)
 {
     if (!dst) {
-        return SDL_SetError("Passed NULL destination surface");
+        return SDL_SetError("Passed nullptr destination surface");
     }
 
     /* This function doesn't work on surfaces < 8 bpp */
@@ -264,11 +264,11 @@ SDL_BlendPoints(SDL_Surface * dst, const SDL_Point * points, int count,
     int i;
     int x, y;
     int (*func)(SDL_Surface * dst, int x, int y,
-                SDL_BlendMode blendMode, Uint8 r, Uint8 g, Uint8 b, Uint8 a) = NULL;
+                SDL_BlendMode blendMode, Uint8 r, Uint8 g, Uint8 b, Uint8 a) = nullptr;
     int status = 0;
 
     if (!dst) {
-        return SDL_SetError("Passed NULL destination surface");
+        return SDL_SetError("Passed nullptr destination surface");
     }
 
     /* This function doesn't work on surfaces < 8 bpp */

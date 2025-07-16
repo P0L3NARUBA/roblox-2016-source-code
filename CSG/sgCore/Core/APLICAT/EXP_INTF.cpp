@@ -8,7 +8,7 @@ static BOOL  exp_up(lpNPW np, short face, lpNP_VERTEX_LIST ver);
 
 BOOL exp_divide_face(lpNPW np, short face, lpREGION_3D	gab)
 {
-	NP_VERTEX_LIST ver = {0,0,NULL,NULL};
+	NP_VERTEX_LIST ver = {0,0,nullptr,nullptr};
 	D_PLANE        pl;
 	BOOL           rt = TRUE;
 

@@ -37,18 +37,18 @@
 
 wchar_t *Curl_convert_UTF8_to_wchar(const char *str_utf8)
 {
-  wchar_t *str_w = NULL;
+  wchar_t *str_w = nullptr;
 
   if(str_utf8) {
     int str_w_len = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,
-                                        str_utf8, -1, NULL, 0);
+                                        str_utf8, -1, nullptr, 0);
     if(str_w_len > 0) {
       str_w = malloc(str_w_len * sizeof(wchar_t));
       if(str_w) {
         if(MultiByteToWideChar(CP_UTF8, 0, str_utf8, -1, str_w,
                                str_w_len) == 0) {
           free(str_w);
-          return NULL;
+          return nullptr;
         }
       }
     }
@@ -59,18 +59,18 @@ wchar_t *Curl_convert_UTF8_to_wchar(const char *str_utf8)
 
 char *Curl_convert_wchar_to_UTF8(const wchar_t *str_w)
 {
-  char *str_utf8 = NULL;
+  char *str_utf8 = nullptr;
 
   if(str_w) {
-    int str_utf8_len = WideCharToMultiByte(CP_UTF8, 0, str_w, -1, NULL,
-                                           0, NULL, NULL);
+    int str_utf8_len = WideCharToMultiByte(CP_UTF8, 0, str_w, -1, nullptr,
+                                           0, nullptr, nullptr);
     if(str_utf8_len > 0) {
       str_utf8 = malloc(str_utf8_len * sizeof(wchar_t));
       if(str_utf8) {
         if(WideCharToMultiByte(CP_UTF8, 0, str_w, -1, str_utf8, str_utf8_len,
-                               NULL, FALSE) == 0) {
+                               nullptr, FALSE) == 0) {
           free(str_utf8);
-          return NULL;
+          return nullptr;
         }
       }
     }

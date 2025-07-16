@@ -17,7 +17,7 @@ using namespace RBX;
 
 GeometryService::GeometryService(void)
 	:DescribedNonCreatable<GeometryService, Instance, sGeometryService>(sGeometryService),
-	workspace(NULL)
+	workspace(nullptr)
 {
 }
 
@@ -96,7 +96,7 @@ Vector3 GeometryService::getHitLocationPartFilterDescendents(IgnoreType *ancesto
 {
 	RBXPROFILER_SCOPE("Physics", "getHitLocationPartFilterDescendents");
 
-	Primitive* hitPrim = NULL;
+	Primitive* hitPrim = nullptr;
 	Vector3 v3result = getHitLocationFilterDescendents(ancestor, ray, &hitPrim, surfaceNormal, surfaceMaterial, terrainCellsAreCubes, ignoreWaterCells);
 	if(hitPrim){
 		result = shared_from(PartInstance::fromPrimitive(hitPrim));
@@ -123,7 +123,7 @@ Vector3 GeometryService::getHitLocationFilterDescendents(Instance *ancestor, RBX
 	Vector3 hitPoint;
 
 	*hitPrim = contactManager.getHit(	ray,
-														NULL,
+														nullptr,
 														&filter,
                                                         hitPoint,
 														terrainCellsAreCubes,
@@ -150,7 +150,7 @@ Vector3 GeometryService::getHitLocationFilterDescendents(const Instances *ancest
 	Vector3 hitPoint;
 
 	*hitPrim = contactManager.getHit(	ray,
-														NULL,
+														nullptr,
 														&filter,
 														hitPoint,
                                                         terrainCellsAreCubes,
@@ -178,7 +178,7 @@ Vector3 GeometryService::getHitLocationFilterStairs(Instance *ancestor, RBX::Rbx
 	std::vector<const Primitive *> dummy; // required, fix in CM later
 
 	*hitPrim = contactManager.getHit(	ray,
-														&dummy, // can't be NULL
+														&dummy, // can't be nullptr
 														&filter,
 														hitPoint);
 
@@ -192,7 +192,7 @@ Vector3 GeometryService::getHitLocationFilterStairs(Instance *ancestor, RBX::Rbx
 
 void GeometryService::onServiceProvider(ServiceProvider* oldProvider, ServiceProvider* newProvider)
 {
-	workspace = NULL;
+	workspace = nullptr;
 
 	Super::onServiceProvider(oldProvider, newProvider);
 

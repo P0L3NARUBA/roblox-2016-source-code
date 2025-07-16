@@ -175,7 +175,7 @@ void DialogRoot::onServiceProvider(ServiceProvider* oldProvider, ServiceProvider
 
 bool DialogRoot::askSetParent(const Instance* instance) const
 {
-	return Instance::fastDynamicCast<PartInstance>(instance) != NULL;
+	return Instance::fastDynamicCast<PartInstance>(instance) != nullptr;
 }
 	
 

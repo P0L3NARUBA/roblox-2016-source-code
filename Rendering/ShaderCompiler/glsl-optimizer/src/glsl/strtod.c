@@ -46,9 +46,9 @@ glsl_strtod(const char *s, char **end)
 {
 #if defined(_GNU_SOURCE) && !defined(__CYGWIN__) && !defined(__FreeBSD__) && \
    !defined(__HAIKU__) && !defined(__UCLIBC__)
-   static locale_t loc = NULL;
+   static locale_t loc = nullptr;
    if (!loc) {
-      loc = newlocale(LC_CTYPE_MASK, "C", NULL);
+      loc = newlocale(LC_CTYPE_MASK, "C", nullptr);
    }
    return strtod_l(s, end, loc);
 #else
@@ -66,9 +66,9 @@ glsl_strtof(const char *s, char **end)
 {
 #if defined(_GNU_SOURCE) && !defined(__CYGWIN__) && !defined(__FreeBSD__) && \
    !defined(__HAIKU__) && !defined(__UCLIBC__)
-   static locale_t loc = NULL;
+   static locale_t loc = nullptr;
    if (!loc) {
-      loc = newlocale(LC_CTYPE_MASK, "C", NULL);
+      loc = newlocale(LC_CTYPE_MASK, "C", nullptr);
    }
    return strtof_l(s, end, loc);
 #elif _XOPEN_SOURCE >= 600 || _ISOC99_SOURCE

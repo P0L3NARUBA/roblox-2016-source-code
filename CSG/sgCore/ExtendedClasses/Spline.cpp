@@ -12,13 +12,13 @@ static   void ExtractPointsAndKnotsFromSplineDAT(SPLY_DAT* splD,
 	if (pnts)
 	{
 		delete [] pnts;
-		pnts = NULL;
+		pnts = nullptr;
 		pnts_cnt=0;
 	}
 	if (knts)
 	{
 		delete [] knts;
-		knts = NULL;
+		knts = nullptr;
 		knts_cnt=0;
 	}
 
@@ -74,19 +74,19 @@ static   void ExtractPointsAndKnotsFromSplineDAT(SPLY_DAT* splD,
 
 SG_SPLINE::SG_SPLINE()
 {
-	m_handle = NULL;
-	m_points = NULL;
+	m_handle = nullptr;
+	m_points = nullptr;
 	m_points_count=0;
-	m_knots = NULL;
+	m_knots = nullptr;
 	m_knots_count=0;
 }
 
 SG_SPLINE::SG_SPLINE(void* SplObjHndl)
 {
-	m_handle = NULL;
-	m_points = NULL;
+	m_handle = nullptr;
+	m_points = nullptr;
 	m_points_count=0;
-	m_knots = NULL;
+	m_knots = nullptr;
 	m_knots_count=0;
 
 	assert(SplObjHndl);
@@ -132,13 +132,13 @@ SG_SPLINE::~SG_SPLINE()
 	if (m_points)
 	{
 		delete [] m_points;
-		m_points = NULL;
+		m_points = nullptr;
 		m_points_count=0;
 	}
 	if (m_knots)
 	{
 		delete [] m_knots;
-		m_knots = NULL;
+		m_knots = nullptr;
 		m_knots_count=0;
 	}
 }
@@ -155,7 +155,7 @@ SG_SPLINE*   SG_SPLINE::Create()
 	if(!init_sply_dat(SPL_NEW, degree, type_s, (SPLY_DAT*)res->m_handle))
 	{
 		global_sg_error = SG_ER_INTERNAL;
-		return NULL;
+		return nullptr;
 	}
 	global_sg_error = SG_ER_SUCCESS;
 	return res;
@@ -307,7 +307,7 @@ static bool  is_spline_on_one_line(const SG_SPLINE* splG)
 
 sgCSpline::sgCSpline():sgC2DObject()
 {
-	m_spline_geo = NULL;
+	m_spline_geo = nullptr;
 }
 
 
@@ -318,7 +318,7 @@ bool	sgCSpline::ApplyTempMatrix()
 	if (m_spline_geo)
 	{
 		delete m_spline_geo;
-		m_spline_geo = NULL;
+		m_spline_geo = nullptr;
 		m_spline_geo = new SG_SPLINE(GetObjectHandle(this));
 
 		lpOBJ obj = (lpOBJ)GetObjectHandle(this);
@@ -420,7 +420,7 @@ sgCSpline*   sgCSpline::Create(const SG_SPLINE& splG)
 	{
 		assert(0);
 		global_sg_error = SG_ER_INTERNAL;
-		return NULL;
+		return nullptr;
 	}
 
 	//   
@@ -457,12 +457,12 @@ sgCSpline*   sgCSpline::Create(const SG_SPLINE& splG)
 	}
 
 	OSCAN_COD cod;
-	if( (cod = test_self_cross_path(GetObjectHandle(newSpl), NULL)) == OSFALSE )
+	if( (cod = test_self_cross_path(GetObjectHandle(newSpl), nullptr)) == OSFALSE )
 	{
 		sgCObject::DeleteObject(newSpl);
 		assert(0);
 		global_sg_error = SG_ER_INTERNAL;
-		return NULL;
+		return nullptr;
 	}
 	if( cod == OSTRUE ){
 		obj->status |= ST_SIMPLE;

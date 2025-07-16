@@ -42,9 +42,9 @@ FASTSTRINGVARIABLE(StudioTutorialsUrl, "http://wiki.roblox.com/wiki/index.php?ti
 FASTSTRINGVARIABLE(StudioTutorialsTOCUrl, "http://wiki.roblox.com/wiki/index.php?title=Studio_Tutorials_Landing&studiomode=true");
 
 RobloxTutorials::RobloxTutorials()
-: m_pWebView(NULL)
-, m_pWrapperWidget(NULL)
-, m_pWebContentsView(NULL)
+: m_pWebView(nullptr)
+, m_pWrapperWidget(nullptr)
+, m_pWebContentsView(nullptr)
 , m_firstPaint(true)
 , m_firstClick(true)
 {

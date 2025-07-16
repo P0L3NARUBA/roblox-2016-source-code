@@ -11,7 +11,7 @@
 PerfCounter::PerfCounter()
 {
 #ifdef _WIN32
-	PDH_STATUS pdhResult = PdhOpenQuery( NULL, 0, &hQuery );
+	PDH_STATUS pdhResult = PdhOpenQuery( nullptr, 0, &hQuery );
 #else
 #warning "MACPORT - NEED TO HANDLE THIS CASE ON THE MAC"
 #endif
@@ -44,7 +44,7 @@ void PerfCounter::GetData2(HCOUNTER counter, long& result)
 	PDH_FMT_COUNTERVALUE stFormattedValue = {0};
 	PDH_STATUS pdhResult = PdhGetFormattedCounterValue( counter
 	, PDH_FMT_LONG
-	, NULL
+	, nullptr
 	, &stFormattedValue
 	);
 	result = stFormattedValue.longValue;
@@ -60,7 +60,7 @@ void PerfCounter::GetData2(HCOUNTER counter, double& result)
 	PDH_FMT_COUNTERVALUE stFormattedValue = {0};
 	PDH_STATUS pdhResult = PdhGetFormattedCounterValue( counter
 	, PDH_FMT_DOUBLE
-	, NULL
+	, nullptr
 	, &stFormattedValue
 	);
 	result = stFormattedValue.doubleValue;
@@ -100,7 +100,7 @@ void CProcessPerfCounter::init(int pid)
 	{
 		DWORD length = 100000;
 		DWORD dummy = 0;
-		PDH_STATUS status = PdhEnumObjectItems(NULL, NULL, "Process", NULL, &dummy, buffer, &length, PERF_DETAIL_EXPERT, 0);
+		PDH_STATUS status = PdhEnumObjectItems(nullptr, nullptr, "Process", nullptr, &dummy, buffer, &length, PERF_DETAIL_EXPERT, 0);
 		RBXASSERT(SUCCEEDED(status) || status == PDH_MORE_DATA);
 
 		std::map<std::string, int> instanceCount;
@@ -115,7 +115,7 @@ void CProcessPerfCounter::init(int pid)
 			DWORD dwPathSize = 1024;
 			PDH_COUNTER_PATH_ELEMENTS pe = {0};
 			CQuery hQuery;
-			PDH_STATUS pdhResult = PdhOpenQuery( NULL, 0, &hQuery );
+			PDH_STATUS pdhResult = PdhOpenQuery( nullptr, 0, &hQuery );
 			pe.szObjectName = "Process";
 			pe.szCounterName = "ID Process";
 			pe.szInstanceName = instanceName;
@@ -127,7 +127,7 @@ void CProcessPerfCounter::init(int pid)
 			pdhResult = PdhCollectQueryData(hQuery);
 
 			PDH_FMT_COUNTERVALUE stFormattedValue = {0};
-			pdhResult = PdhGetFormattedCounterValue( counter, PDH_FMT_LONG, NULL, &stFormattedValue);
+			pdhResult = PdhGetFormattedCounterValue( counter, PDH_FMT_LONG, nullptr, &stFormattedValue);
 
 			if (stFormattedValue.longValue==pid)
 				break;

@@ -4,28 +4,28 @@ int  nMEM_TRACE_LEVEL = 2;
 BOOL bINHOUSE_VERSION = FALSE;         
 //---------------------------------------------------------------
 
-BOOL (*pExtStartupInits)(void) = NULL;
+BOOL (*pExtStartupInits)(void) = nullptr;
 
-void (*pExtFreeAllMem)(void) = NULL;
+void (*pExtFreeAllMem)(void) = nullptr;
 
-void (*pExtSyntaxInit)(void) = NULL;
+void (*pExtSyntaxInit)(void) = nullptr;
 
-void (*pExtActionsInit)(void) = NULL;
+void (*pExtActionsInit)(void) = nullptr;
 
-void (*pExtRegObjects)(void) = NULL;
+void (*pExtRegObjects)(void) = nullptr;
 
-void (*pExtRegCommonMethods)(void) = NULL;
+void (*pExtRegCommonMethods)(void) = nullptr;
 
-void (*pExtInitObjMetods)(void) = NULL;
+void (*pExtInitObjMetods)(void) = nullptr;
 
-void (*pExtConfigPars)(void) = NULL;
+void (*pExtConfigPars)(void) = nullptr;
 
-void (*pExtSysAttrs)(void) = NULL;
+void (*pExtSysAttrs)(void) = nullptr;
 
 
-BOOL (*pExtBeforeRunCmdLoop)(void) = NULL;
+BOOL (*pExtBeforeRunCmdLoop)(void) = nullptr;
 
-BOOL (*pExtBeforeNew)(void) = NULL;
-BOOL (*pExtAfterNew)(void) = NULL;
-BOOL (*pExtReLoadCSG)(hOBJ hobj, hCSG *hcsg) = NULL;
+BOOL (*pExtBeforeNew)(void) = nullptr;
+BOOL (*pExtAfterNew)(void) = nullptr;
+BOOL (*pExtReLoadCSG)(hOBJ hobj, hCSG *hcsg) = nullptr;
 

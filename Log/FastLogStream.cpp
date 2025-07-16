@@ -24,7 +24,7 @@ typedef int socket_t;
 
 static int fopen_s(FILE** pFile, const char *filename, const char *mode) {
 	(*pFile) = fopen(filename, mode);
-	return (*pFile) != NULL ? 0 : -1;
+	return (*pFile) != nullptr ? 0 : -1;
 }
 #endif
 
@@ -115,7 +115,7 @@ namespace FLog
                 {
                     printf("LogStream: Listening for incoming connection on port %d\n", port);
 
-                    socket_t client = accept(sock, NULL, NULL);
+                    socket_t client = accept(sock, nullptr, nullptr);
 
                     if (SOCKET_VALID(client))
                     {

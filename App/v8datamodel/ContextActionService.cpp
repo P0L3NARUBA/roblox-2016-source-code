@@ -84,7 +84,7 @@ Tool* ContextActionService::getCurrentLocalTool()
             if( RBX::Tool* activeTool = character->findFirstChildOfType<RBX::Tool>() )
                 return activeTool;
     
-    return NULL;
+    return nullptr;
 }
     
 std::string ContextActionService::getCurrentLocalToolIcon()
@@ -107,7 +107,7 @@ Tool* ContextActionService::isTool(shared_ptr<Instance> instance)
         if (Tool* tool = Instance::fastDynamicCast<Tool>(baldInstance))
             return tool;
     
-    return NULL;
+    return nullptr;
 
 }
     

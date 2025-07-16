@@ -90,7 +90,7 @@ extern void hash_table_clear(struct hash_table *ht);
  * \return
  * The \c data value supplied to \c hash_table_insert when the element with
  * the matching key was added.  If no matching key exists in the table,
- * \c NULL is returned.
+ * \c nullptr is returned.
  */
 extern void *hash_table_find(struct hash_table *ht, const void *key);
 
@@ -215,7 +215,7 @@ public:
 
    ~string_to_uint_map()
    {
-      hash_table_call_foreach(this->ht, delete_key, NULL);
+      hash_table_call_foreach(this->ht, delete_key, nullptr);
       hash_table_dtor(this->ht);
    }
 
@@ -224,7 +224,7 @@ public:
     */
    void clear()
    {
-      hash_table_call_foreach(this->ht, delete_key, NULL);
+      hash_table_call_foreach(this->ht, delete_key, nullptr);
       hash_table_clear(this->ht);
    }
 
@@ -252,7 +252,7 @@ public:
 
    void put(unsigned value, const char *key)
    {
-      /* The low-level hash table structure returns NULL if key is not in the
+      /* The low-level hash table structure returns nullptr if key is not in the
        * hash table.  However, users of this map might want to store zero as a
        * valid value in the table.  Bias the value by +1 so that a
        * user-specified zero is stored as 1.  This enables ::get to tell the

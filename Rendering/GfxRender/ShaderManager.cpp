@@ -44,7 +44,7 @@ namespace RBX
 					if (strncmp(name, entries[i].name, sizeof(entries[i].name)) == 0)
 						return &entries[i];
 
-				return NULL;
+				return nullptr;
 			}
 		};
 

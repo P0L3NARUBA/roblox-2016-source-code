@@ -22,7 +22,7 @@ const SpanningNode* SpanningEdge::getConstChildSpanningNode() const
 		}
 	}
 	RBXASSERT(0);
-	return NULL;
+	return nullptr;
 }
 
 SpanningNode* SpanningEdge::getChildSpanningNode()
@@ -41,8 +41,8 @@ void SpanningEdge::removeFromSpanningTree()
 	SpanningNode* child = getChildSpanningNode();
 	RBXASSERT(child);
 
-	child->setIndexedTreeParent(NULL);
-	child->setEdgeToParent(NULL);
+	child->setIndexedTreeParent(nullptr);
+	child->setEdgeToParent(nullptr);
 }
 
 void SpanningEdge::addToSpanningTree(SpanningNode* newParent)

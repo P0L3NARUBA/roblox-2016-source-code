@@ -164,7 +164,7 @@
       goto Exit;
 
     FT_FACE_FIND_SERVICE( face, service, TT_GLYF );
-    if ( service == NULL )
+    if ( service == nullptr )
       goto Exit;
 
     for ( gindex = 0; gindex < (FT_UInt)face->num_glyphs; gindex++ )

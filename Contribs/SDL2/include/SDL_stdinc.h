@@ -473,7 +473,7 @@ extern DECLSPEC size_t SDLCALL SDL_iconv(SDL_iconv_t cd, const char **inbuf,
                                          size_t * outbytesleft);
 /**
  *  This function converts a string between encodings in one pass, returning a
- *  string that must be freed with SDL_free() or NULL on error.
+ *  string that must be freed with SDL_free() or nullptr on error.
  */
 extern DECLSPEC char *SDLCALL SDL_iconv_string(const char *tocode,
                                                const char *fromcode,

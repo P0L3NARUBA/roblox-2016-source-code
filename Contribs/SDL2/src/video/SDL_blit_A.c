@@ -57,7 +57,7 @@ BlitNto1SurfaceAlpha(SDL_BlitInfo * info)
 		dG &= 0xff;
 		dB &= 0xff;
 		/* Pack RGB into 8bit pixel */
-		if ( palmap == NULL ) {
+		if ( palmap == nullptr ) {
 		    *dst =((dR>>5)<<(3+2))|((dG>>5)<<(2))|((dB>>6)<<(0));
 		} else {
 		    *dst = palmap[((dR>>5)<<(3+2))|((dG>>5)<<(2))|((dB>>6)<<(0))];
@@ -103,7 +103,7 @@ BlitNto1PixelAlpha(SDL_BlitInfo * info)
 		dG &= 0xff;
 		dB &= 0xff;
 		/* Pack RGB into 8bit pixel */
-		if ( palmap == NULL ) {
+		if ( palmap == nullptr ) {
 		    *dst =((dR>>5)<<(3+2))|((dG>>5)<<(2))|((dB>>6)<<(0));
 		} else {
 		    *dst = palmap[((dR>>5)<<(3+2))|((dG>>5)<<(2))|((dB>>6)<<(0))];
@@ -152,7 +152,7 @@ BlitNto1SurfaceAlphaKey(SDL_BlitInfo * info)
 		    dG &= 0xff;
 		    dB &= 0xff;
 		    /* Pack RGB into 8bit pixel */
-		    if ( palmap == NULL ) {
+		    if ( palmap == nullptr ) {
                 *dst =((dR>>5)<<(3+2))|((dG>>5)<<(2))|((dB>>6)<<(0));
 		    } else {
                 *dst = palmap[((dR>>5)<<(3+2))|((dG>>5)<<(2))|((dB>>6)<<(0))];
@@ -1382,7 +1382,7 @@ SDL_CalculateBlitA(SDL_Surface * surface)
         break;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /* vi: set ts=4 sw=4 expandtab: */

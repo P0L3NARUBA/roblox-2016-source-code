@@ -21,7 +21,7 @@ const char *const sPVInstance = "PVInstance";
 // legacy stuff - old offset
 
 REFLECTION_BEGIN();
-static const Reflection::PropDescriptor<PVInstance, CoordinateFrame> desc_CoordFrame("CoordinateFrame", category_Data, NULL, &PVInstance::setPVGridOffsetLegacy, Reflection::PropertyDescriptor::UI);
+static const Reflection::PropDescriptor<PVInstance, CoordinateFrame> desc_CoordFrame("CoordinateFrame", category_Data, nullptr, &PVInstance::setPVGridOffsetLegacy, Reflection::PropertyDescriptor::UI);
 REFLECTION_END();
 
 PVInstance::PVInstance(const char* name) :
@@ -57,7 +57,7 @@ void PVInstance::readProperty(const XmlElement* propertyElement, IReferenceBinde
 	// If the element is an Feature and the Feature does not exist, create it
 	if (propertyElement->getTag()=="Feature")
 	{
-		const RBX::Name* name = NULL;
+		const RBX::Name* name = nullptr;
 		bool foundNameAttribute = propertyElement->findAttributeValue(name_name, name);
 		RBXASSERT(foundNameAttribute);
 		if (*name=="Part")

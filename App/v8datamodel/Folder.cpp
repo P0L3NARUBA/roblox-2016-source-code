@@ -15,7 +15,7 @@ Folder::Folder()
 bool Folder::askAddChild(const Instance* instance) const 
 { 
 	const Instance *parent = getParent();
-	if (parent != NULL)
+	if (parent != nullptr)
 	{
 		return parent->canAddChild(instance, false);
 	} else {

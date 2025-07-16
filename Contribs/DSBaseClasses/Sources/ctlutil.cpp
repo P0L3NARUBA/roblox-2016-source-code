@@ -65,19 +65,19 @@ CBaseDispatch::GetTypeInfo(
     ValidateReadWritePtr(pptinfo,sizeof(ITypeInfo *));
     HRESULT hr;
 
-    *pptinfo = NULL;
+    *pptinfo = nullptr;
 
     // we only support one type element
     if (0 != itinfo) {
 	return TYPE_E_ELEMENTNOTFOUND;
     }
 
-    if (NULL == pptinfo) {
+    if (nullptr == pptinfo) {
 	return E_POINTER;
     }
 
     // always look for neutral
-    if (NULL == m_pti) {
+    if (nullptr == m_pti) {
 
 	LPLOADTYPELIB	    lpfnLoadTypeLib;
 	LPLOADREGTYPELIB    lpfnLoadRegTypeLib;
@@ -93,13 +93,13 @@ CBaseDispatch::GetTypeInfo(
 	//
 
 	hInst = LoadOLEAut32();
-	if (hInst == NULL) {
+	if (hInst == nullptr) {
 	    DWORD dwError = GetLastError();
 	    return AmHresultFromWin32(dwError);
 	}
 	lpfnLoadRegTypeLib = (LPLOADREGTYPELIB)GetProcAddress(hInst,
 							      szRegTypeLib);
-	if (lpfnLoadRegTypeLib == NULL) {
+	if (lpfnLoadRegTypeLib == nullptr) {
 	    DWORD dwError = GetLastError();
 	    return AmHresultFromWin32(dwError);
 	}
@@ -113,7 +113,7 @@ CBaseDispatch::GetTypeInfo(
 	    // registry in if it finds it
 
 	    lpfnLoadTypeLib = (LPLOADTYPELIB)GetProcAddress(hInst, szTypeLib);
-	    if (lpfnLoadTypeLib == NULL) {
+	    if (lpfnLoadTypeLib == nullptr) {
 		DWORD dwError = GetLastError();
 		return AmHresultFromWin32(dwError);
 	    }
@@ -486,7 +486,7 @@ CPosPassThru::CPosPassThru(const TCHAR *pName,
     CMediaPosition(pName,pUnk),
     m_pPin(pPin)
 {
-    if (pPin == NULL) {
+    if (pPin == nullptr) {
 	*phr = E_POINTER;
 	return;
     }
@@ -499,7 +499,7 @@ STDMETHODIMP
 CPosPassThru::NonDelegatingQueryInterface(REFIID riid,void **ppv)
 {
     CheckPointer(ppv,E_POINTER);
-    *ppv = NULL;
+    *ppv = nullptr;
 
     if (riid == IID_IMediaSeeking) {
 	return GetInterface( static_cast<IMediaSeeking *>(this), ppv);
@@ -513,7 +513,7 @@ CPosPassThru::NonDelegatingQueryInterface(REFIID riid,void **ppv)
 HRESULT
 CPosPassThru::GetPeer(IMediaPosition ** ppMP)
 {
-    *ppMP = NULL;
+    *ppMP = nullptr;
 
     IPin *pConnected;
     HRESULT hr = m_pPin->ConnectedTo(&pConnected);
@@ -537,7 +537,7 @@ CPosPassThru::GetPeer(IMediaPosition ** ppMP)
 HRESULT
 CPosPassThru::GetPeerSeeking(IMediaSeeking ** ppMS)
 {
-    *ppMS = NULL;
+    *ppMS = nullptr;
 
     IPin *pConnected;
     HRESULT hr = m_pPin->ConnectedTo(&pConnected);
@@ -729,7 +729,7 @@ STDMETHODIMP
 CPosPassThru::GetCurrentPosition(LONGLONG *pCurrent)
 {
     // Can we report the current position
-    HRESULT hr = GetMediaTime(pCurrent,NULL);
+    HRESULT hr = GetMediaTime(pCurrent,nullptr);
     if (SUCCEEDED(hr)) hr = NOERROR;
     else hr = GetSeekingLongLong( &IMediaSeeking::GetCurrentPosition, pCurrent );
     return hr;
@@ -1752,12 +1752,12 @@ CBaseBasicVideo::Invoke(
 CDispParams::CDispParams(UINT nArgs, VARIANT* pArgs, HRESULT *phr)
 {
    cNamedArgs = 0;
-   rgdispidNamedArgs = NULL;
+   rgdispidNamedArgs = nullptr;
    cArgs = nArgs;
 
     if (cArgs) {
 	rgvarg = new VARIANT[cArgs];
-        if (NULL == rgvarg) {
+        if (nullptr == rgvarg) {
             cArgs = 0;
             if (phr) {
                 *phr = E_OUTOFMEMORY;
@@ -1810,8 +1810,8 @@ CDispParams::CDispParams(UINT nArgs, VARIANT* pArgs, HRESULT *phr)
 		break;
 
 	    case VT_BSTR:
-		if (pSrc->bstrVal == NULL) {
-		    pDest->bstrVal = NULL;
+		if (pSrc->bstrVal == nullptr) {
+		    pDest->bstrVal = nullptr;
 		} else {
 
 		    // a BSTR is a WORD followed by a UNICODE string.
@@ -1852,7 +1852,7 @@ CDispParams::CDispParams(UINT nArgs, VARIANT* pArgs, HRESULT *phr)
 	}
 
     } else {
-	rgvarg = NULL;
+	rgvarg = nullptr;
     }
 
 }
@@ -1863,7 +1863,7 @@ CDispParams::~CDispParams()
     for (UINT i = 0; i < cArgs; i++) {
 	switch(rgvarg[i].vt) {
 	case VT_BSTR:
-	    if (rgvarg[i].bstrVal != NULL) {
+	    if (rgvarg[i].bstrVal != nullptr) {
 		OLECHAR * pch = rgvarg[i].bstrVal - (sizeof(WORD)/sizeof(OLECHAR));
 		delete pch;
 	    }
@@ -1963,7 +1963,7 @@ CDeferredCommand::~CDeferredCommand()
     // this assert is invalid since if the queue is deleted while we are
     // still on the queue, we will have been removed by the queue and this
     // m_pQueue will not have been modified.
-    // ASSERT(m_pQueue == NULL);
+    // ASSERT(m_pQueue == nullptr);
 
     // we don't hold a ref count on pUnk, which is the object that should
     // execute the command.
@@ -1999,7 +1999,7 @@ CDeferredCommand::NonDelegatingQueryInterface(REFIID riid, void **ppv)
 STDMETHODIMP
 CDeferredCommand::Cancel()
 {
-    if (m_pQueue == NULL) {
+    if (m_pQueue == nullptr) {
 	return VFW_E_ALREADY_CANCELLED;
     }
 
@@ -2008,7 +2008,7 @@ CDeferredCommand::Cancel()
 	return hr;
     }
 
-    m_pQueue = NULL;
+    m_pQueue = nullptr;
     return S_OK;
 }
 
@@ -2026,7 +2026,7 @@ CDeferredCommand::GetHResult(HRESULT * phrResult)
     CheckPointer(phrResult,E_POINTER);
     ValidateReadWritePtr(phrResult,sizeof(HRESULT));
 
-    if (m_pQueue != NULL) {
+    if (m_pQueue != nullptr) {
 	return E_ABORT;
     }
     *phrResult = m_hrResult;
@@ -2070,7 +2070,7 @@ HRESULT
 CDeferredCommand::Invoke()
 {
     // check that we are still outstanding
-    if (m_pQueue == NULL) {
+    if (m_pQueue == nullptr) {
 	return VFW_E_ALREADY_CANCELLED;
     }
 
@@ -2110,7 +2110,7 @@ CDeferredCommand::Invoke()
     // remove from list whether or not successful
     // or we loop indefinitely
     hr = m_pQueue->Remove(this);
-    m_pQueue = NULL;
+    m_pQueue = nullptr;
     return hr;
 }
 
@@ -2124,7 +2124,7 @@ CCmdQueue::CCmdQueue() :
     m_listStream(NAME("Stream time command list")),
     m_evDue(TRUE),    // manual reset
     m_dwAdvise(0),
-    m_pClock(NULL),
+    m_pClock(nullptr),
     m_bRunning(FALSE)
 {
 }
@@ -2185,12 +2185,12 @@ CCmdQueue::New(
     CAutoLock lock(&m_Lock);
 
     HRESULT hr = S_OK;
-    *ppCmd = NULL;
+    *ppCmd = nullptr;
 
     CDeferredCommand* pCmd;
     pCmd = new CDeferredCommand(
 		    this,
-		    NULL,	    // not aggregated
+		    nullptr,	    // not aggregated
 		    &hr,
 		    pUnk,	    // this guy will execute
 		    time,
@@ -2203,7 +2203,7 @@ CCmdQueue::New(
 		    puArgErr,
 		    bStream);
 
-    if (pCmd == NULL) {
+    if (pCmd == nullptr) {
 	hr = E_OUTOFMEMORY;
     } else {
 	*ppCmd = pCmd;
@@ -2428,7 +2428,7 @@ CCmdQueue::GetDueCommand(CDeferredCommand ** ppCmd, long msTimeout)
 
 
 	    // find the earliest command
-	    CDeferredCommand * pCmd = NULL;
+	    CDeferredCommand * pCmd = nullptr;
 
 	    // check the presentation time and the
 	    // stream time list to find the earliest
@@ -2485,12 +2485,12 @@ CCmdQueue::GetCommandDueFor(REFERENCE_TIME rtStream, CDeferredCommand**ppCmd)
     CRefTime tStream(rtStream);
 
     // find the earliest stream and presentation time commands
-    CDeferredCommand* pStream = NULL;
+    CDeferredCommand* pStream = nullptr;
     if (m_listStream.GetCount() > 0) {
 	POSITION pos = m_listStream.GetHeadPosition();
 	pStream = m_listStream.Get(pos);
     }
-    CDeferredCommand* pPresent = NULL;
+    CDeferredCommand* pPresent = nullptr;
     if (m_listPresentation.GetCount() > 0) {
 	POSITION pos = m_listPresentation.GetHeadPosition();
 	pPresent = m_listPresentation.Get(pos);

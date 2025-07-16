@@ -76,6 +76,7 @@ namespace RBX
 
 			static Vector2int16 getSpecular(PartMaterial material);
 			static float getTiling(PartMaterial material);
+			static int getMaterialId(PartMaterial material);
 
 			static unsigned int createFlags(bool skinned, RBX::PartInstance* part, const HumanoidIdentifier* humanoidIdentifier, bool& ignoreDecalsOut);
 

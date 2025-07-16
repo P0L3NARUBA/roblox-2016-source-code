@@ -19,16 +19,16 @@ static  void  FillLinesArrayfromGeoDim(lpGEO_DIM geoD)
 {
 	lines_buffer.clear();
 	assert(geoD);
-	draw_geo_dim(geoD,lines_collector_func,NULL);
+	draw_geo_dim(geoD,lines_collector_func,nullptr);
 }
 
 
 sgCDimensions::sgCDimensions():sgCObject()
 {
-	m_lines = NULL;
+	m_lines = nullptr;
 	m_lines_count=0;
-	m_text = NULL;
-	m_formed_points = NULL;
+	m_text = nullptr;
+	m_formed_points = nullptr;
 }
 
 sgCDimensions::~sgCDimensions()
@@ -36,28 +36,28 @@ sgCDimensions::~sgCDimensions()
 	if (m_text)
 	{
 		SGFree(m_text);
-		m_text = NULL;
+		m_text = nullptr;
 	}
 	if (m_lines)
 	{
 		delete [] m_lines;
-		m_lines = NULL;
+		m_lines = nullptr;
 		m_lines_count=0;
 	}
 	if (m_formed_points)
 	{
 		delete [] m_formed_points;
-		m_formed_points = NULL;
+		m_formed_points = nullptr;
 	}
 	lines_buffer.clear();
 }
 
 sgCDimensions::sgCDimensions(SG_OBJ_HANDLE objH):sgCObject(objH)
 {
-	m_lines = NULL;
+	m_lines = nullptr;
 	m_lines_count=0;
-	m_text = NULL;
-	m_formed_points = NULL;
+	m_text = nullptr;
+	m_formed_points = nullptr;
 
 	char* typeID = "{0000000000000-0000-0000-000000000008}";
 	set_hobj_attr_value(id_TypeID, objH, typeID);
@@ -87,7 +87,7 @@ bool	sgCDimensions::ApplyTempMatrix()
 	if (m_lines)
 	{
 		delete [] m_lines;
-		m_lines = NULL;
+		m_lines = nullptr;
 		m_lines_count=0;
 	}
 	lpOBJ pobj = (lpOBJ)GetObjectHandle(this);
@@ -177,7 +177,7 @@ const SG_POINT*  sgCDimensions::GetFormedPoints()
 		return m_formed_points;
 	default:
 		assert(0);
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -272,7 +272,7 @@ const char*  sgCDimensions::GetText()
 {
 	lpOBJ obj = (lpOBJ)GetObjectHandle(this);
 
-	if (m_text!=NULL)
+	if (m_text!=nullptr)
 		return m_text;
 
 	GEO_DIM  geom;
@@ -284,7 +284,7 @@ const char*  sgCDimensions::GetText()
 	if(0 ==(m_text = (char*)alloc_and_get_ft_value(id, &len))) 
 	{
 		assert(0);
-		return NULL;
+		return nullptr;
 	}
 	return m_text;
 }
@@ -315,8 +315,8 @@ unsigned int sgCDimensions::GetFont()
 }
 
 
-static  SG_DRAW_LINE_FUNC   drLF = NULL;
-static  sgCMatrix*  mmm=NULL;
+static  SG_DRAW_LINE_FUNC   drLF = nullptr;
+static  sgCMatrix*  mmm=nullptr;
 
 static BOOL  lineFnkForCore(lpD_POINT pb, lpD_POINT pe, void *usrD)
 {
@@ -338,7 +338,7 @@ bool    sgCDimensions::Draw(SG_DIMENSION_TYPE dimType, const SG_POINT* points,
 									 const char* strng,
 									 SG_DRAW_LINE_FUNC dlf)
 {
-	if (points==NULL || fnt==NULL || dlf==NULL)
+	if (points==nullptr || fnt==nullptr || dlf==nullptr)
 		return false;
 
 	GEO_DIM  geo;
@@ -502,21 +502,21 @@ bool    sgCDimensions::Draw(SG_DIMENSION_TYPE dimType, const SG_POINT* points,
 	bool   isD = (dimType==SG_DT_DIAM);
 
 	set_dim_geo(&geo,ldtype,fntHndl, 
-		(strng==NULL)?((isR)?My_R_shablon:((isD)?My_D_shablon:My_shablon)):const_cast<UCHAR*>(reinterpret_cast<const UCHAR*>(strng)),
+		(strng==nullptr)?((isR)?My_R_shablon:((isD)?My_D_shablon:My_shablon)):const_cast<UCHAR*>(reinterpret_cast<const UCHAR*>(strng)),
 			(lpD_POINT)(points),(lpD_POINT)(points+1),
-			(dimType!=SG_DT_ANGLE)?NULL:((lpD_POINT)(points+2)), 
-			(dimType!=SG_DT_ANGLE)?NULL:((lpD_POINT)(points+3)),
+			(dimType!=SG_DT_ANGLE)?nullptr:((lpD_POINT)(points+2)), 
+			(dimType!=SG_DT_ANGLE)?nullptr:((lpD_POINT)(points+3)),
 			(dimType!=SG_DT_ANGLE)?((lpD_POINT)(points+2)):((lpD_POINT)(points+4)),
 			&errr);
 	
 	mmm = new sgCMatrix(geo.matr);
 
 	draw_dim1(&geo,fntHndl,	
-		(strng==NULL)?((isR)?My_R_shablon:((isD)?My_D_shablon:My_shablon)):const_cast<UCHAR*>(reinterpret_cast<const UCHAR*>(strng)), 
-		lineFnkForCore, NULL);
+		(strng==nullptr)?((isR)?My_R_shablon:((isD)?My_D_shablon:My_shablon)):const_cast<UCHAR*>(reinterpret_cast<const UCHAR*>(strng)), 
+		lineFnkForCore, nullptr);
 	delete mmm;
-	mmm = NULL;
-	drLF = NULL;
+	mmm = nullptr;
+	drLF = nullptr;
 	return true;
 }
 
@@ -525,8 +525,8 @@ sgCDimensions* sgCDimensions::Create(SG_DIMENSION_TYPE dimType, const SG_POINT* 
 									 const SG_DIMENSION_STYLE& dim_st,
 									 const char* strng)
 {
-	if (points==NULL || fnt==NULL )
-		return NULL;
+	if (points==nullptr || fnt==nullptr )
+		return nullptr;
 
 	GEO_DIM  geo;
 	memset(&geo, 0, sizeof(GEO_DIM));
@@ -546,7 +546,7 @@ sgCDimensions* sgCDimensions::Create(SG_DIMENSION_TYPE dimType, const SG_POINT* 
 		break;
 	default:
 		assert(0);
-		return NULL;
+		return nullptr;
 	}
 	geo.dtstyle = dim_info->dts[geo.type];
 
@@ -596,18 +596,18 @@ sgCDimensions* sgCDimensions::Create(SG_DIMENSION_TYPE dimType, const SG_POINT* 
     
 	geo.dtstyle.font = fnt->m_id;
 
-	if (strng!=NULL)
+	if (strng!=nullptr)
 	{
 		IDENT_V    id;
 		ULONG      len;
-		UCHAR      *exist_txt=NULL;
+		UCHAR      *exist_txt=nullptr;
 		bool       exist_this_text = false;
 
 		id = ft_bd->ft_listh[FTTEXT].head;
 
 		while(id){
 			if(0 ==(exist_txt = (UCHAR *)alloc_and_get_ft_value(id, &len))) 
-				return NULL;
+				return nullptr;
 			if(!strcmp((char*)exist_txt, strng))
 			{
 				SGFree(exist_txt);
@@ -615,15 +615,15 @@ sgCDimensions* sgCDimensions::Create(SG_DIMENSION_TYPE dimType, const SG_POINT* 
 				exist_this_text = true;
 				break;
 			}
-			SGFree(exist_txt); exist_txt = NULL;
+			SGFree(exist_txt); exist_txt = nullptr;
 			if(!il_get_next_item(&ft_bd->vd, id, &id)) 
-				return NULL;
+				return nullptr;
 		}
 
 		if (!exist_this_text)
 			geo.dtstyle.text = add_ft_value(FTTEXT, const_cast<char*>(strng), strlen(strng)+1);
 		if(!geo.dtstyle.text) 
-			return NULL;
+			return nullptr;
 	}
 
 	//geo.dgstyle = dim_info->dgs;
@@ -730,16 +730,16 @@ sgCDimensions* sgCDimensions::Create(SG_DIMENSION_TYPE dimType, const SG_POINT* 
 
 	set_dim_geo(&geo,ldtype,
 		fntHndl, 
-		(strng==NULL)?((isR)?My_R_shablon:((isD)?My_D_shablon:My_shablon)):const_cast<UCHAR*>(reinterpret_cast<const UCHAR*>(strng)),
+		(strng==nullptr)?((isR)?My_R_shablon:((isD)?My_D_shablon:My_shablon)):const_cast<UCHAR*>(reinterpret_cast<const UCHAR*>(strng)),
 		(lpD_POINT)(points),(lpD_POINT)(points+1),
-		(dimType!=SG_DT_ANGLE)?NULL:((lpD_POINT)(points+2)), 
-		(dimType!=SG_DT_ANGLE)?NULL:((lpD_POINT)(points+3)),
+		(dimType!=SG_DT_ANGLE)?nullptr:((lpD_POINT)(points+2)), 
+		(dimType!=SG_DT_ANGLE)?nullptr:((lpD_POINT)(points+3)),
 		(dimType!=SG_DT_ANGLE)?((lpD_POINT)(points+2)):((lpD_POINT)(points+4)),
 		&errr);
 
 	hOBJ hO = create_simple_obj(ODIM, &geo); 
-	if (hO==NULL)
-		return NULL;
+	if (hO==nullptr)
+		return nullptr;
 
 	sgCDimensions*   newD=new sgCDimensions(hO);
 
@@ -870,7 +870,7 @@ void    sgCDimensions::DrawArcDimension(const SG_POINT& f_pnt,
 
 	set_dim_geo(&geo,1,
 		fntHndl, 
-		(strng==NULL)?My_shablon:const_cast<UCHAR*>(reinterpret_cast<const UCHAR*>(strng)),
+		(strng==nullptr)?My_shablon:const_cast<UCHAR*>(reinterpret_cast<const UCHAR*>(strng)),
 		(lpD_POINT)&f_pnt,
 		(lpD_POINT)&s_pnt,
 		(lpD_POINT)&th_pnt,
@@ -879,11 +879,11 @@ void    sgCDimensions::DrawArcDimension(const SG_POINT& f_pnt,
 		&errr);
 	mmm = new sgCMatrix(geo.matr);
 	draw_dim1(&geo,fntHndl,	
-		(strng==NULL)?My_shablon:const_cast<UCHAR*>(reinterpret_cast<const UCHAR*>(strng)), 
-		lineFnkForCore, NULL);
+		(strng==nullptr)?My_shablon:const_cast<UCHAR*>(reinterpret_cast<const UCHAR*>(strng)), 
+		lineFnkForCore, nullptr);
 	delete mmm;
-	mmm = NULL;
-	drLF = NULL;
+	mmm = nullptr;
+	drLF = nullptr;
 }
 
 sgCDimensions*   sgCDimensions::CreateArcDimension(const SG_POINT& f_pnt,
@@ -909,18 +909,18 @@ sgCDimensions*   sgCDimensions::CreateArcDimension(const SG_POINT& f_pnt,
 	memcpy(&geo.dtstyle.tstyle,&dim_st.text_style,sizeof(TSTYLE));
 	geo.dtstyle.font = fnt->m_id;
 
-	if (strng!=NULL)
+	if (strng!=nullptr)
 	{
 		IDENT_V    id;
 		ULONG      len;
-		UCHAR      *exist_txt=NULL;
+		UCHAR      *exist_txt=nullptr;
 		bool       exist_this_text = false;
 
 		id = ft_bd->ft_listh[FTTEXT].head;
 
 		while(id){
 			if(0 ==(exist_txt = (UCHAR *)alloc_and_get_ft_value(id, &len))) 
-				return NULL;
+				return nullptr;
 			if(!strcmp((char*)exist_txt, strng))
 			{
 				SGFree(exist_txt);
@@ -928,15 +928,15 @@ sgCDimensions*   sgCDimensions::CreateArcDimension(const SG_POINT& f_pnt,
 				exist_this_text = true;
 				break;
 			}
-			SGFree(exist_txt); exist_txt = NULL;
+			SGFree(exist_txt); exist_txt = nullptr;
 			if(!il_get_next_item(&ft_bd->vd, id, &id)) 
-				return NULL;
+				return nullptr;
 		}
 
 		if (!exist_this_text)
 			geo.dtstyle.text = add_ft_value(FTTEXT, const_cast<char*>(strng), strlen(strng)+1);
 		if(!geo.dtstyle.text) 
-			return NULL;
+			return nullptr;
 	}
 
 	//geo.dgstyle = dim_info->dgs;
@@ -1031,7 +1031,7 @@ sgCDimensions*   sgCDimensions::CreateArcDimension(const SG_POINT& f_pnt,
 		unsigned char  My_shablon[] = {'<','>',0};
 		set_dim_geo(&geo,1,
 			fntHndl, 
-			(strng==NULL)?My_shablon:const_cast<UCHAR*>(reinterpret_cast<const UCHAR*>(strng)),
+			(strng==nullptr)?My_shablon:const_cast<UCHAR*>(reinterpret_cast<const UCHAR*>(strng)),
 			(lpD_POINT)&f_pnt,
 			(lpD_POINT)&s_pnt,
 			(lpD_POINT)&th_pnt,
@@ -1040,8 +1040,8 @@ sgCDimensions*   sgCDimensions::CreateArcDimension(const SG_POINT& f_pnt,
 			&errr);
 
 		hOBJ hO = create_simple_obj(ODIM, &geo); 
-		if (hO==NULL)
-			return NULL;
+		if (hO==nullptr)
+			return nullptr;
 
 		sgCDimensions*   newD=new sgCDimensions(hO);
 
@@ -1170,18 +1170,18 @@ void     sgCDimensions::DrawRadianDimension(const SG_POINT& f_pnt,
 		unsigned char  My_shablon[] = {'<','>',0};
 
 		set_dim_geo(&geo,1,fntHndl, 
-			(strng==NULL)?My_shablon:const_cast<UCHAR*>(reinterpret_cast<const UCHAR*>(strng)),
+			(strng==nullptr)?My_shablon:const_cast<UCHAR*>(reinterpret_cast<const UCHAR*>(strng)),
 			(lpD_POINT)&f_pnt,(lpD_POINT)&s_pnt,
-			NULL, NULL,(lpD_POINT)&cur_pnt,	&errr);
+			nullptr, nullptr,(lpD_POINT)&cur_pnt,	&errr);
 
 		mmm = new sgCMatrix(geo.matr);
 
 		draw_dim1(&geo,fntHndl,	
-			(strng==NULL)?My_shablon:const_cast<UCHAR*>(reinterpret_cast<const UCHAR*>(strng)), 
-			lineFnkForCore, NULL);
+			(strng==nullptr)?My_shablon:const_cast<UCHAR*>(reinterpret_cast<const UCHAR*>(strng)), 
+			lineFnkForCore, nullptr);
 		delete mmm;
-		mmm = NULL;
-		drLF = NULL;
+		mmm = nullptr;
+		drLF = nullptr;
 }
 
 */

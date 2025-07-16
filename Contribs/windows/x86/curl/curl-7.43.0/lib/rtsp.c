@@ -240,15 +240,15 @@ static CURLcode rtsp_do(struct connectdata *conn, bool *done)
   curl_off_t postsize = 0; /* for ANNOUNCE and SET_PARAMETER */
   curl_off_t putsize = 0; /* for ANNOUNCE and SET_PARAMETER */
 
-  const char *p_request = NULL;
-  const char *p_session_id = NULL;
-  const char *p_accept = NULL;
-  const char *p_accept_encoding = NULL;
-  const char *p_range = NULL;
-  const char *p_referrer = NULL;
-  const char *p_stream_uri = NULL;
-  const char *p_transport = NULL;
-  const char *p_uagent = NULL;
+  const char *p_request = nullptr;
+  const char *p_session_id = nullptr;
+  const char *p_accept = nullptr;
+  const char *p_accept_encoding = nullptr;
+  const char *p_range = nullptr;
+  const char *p_referrer = nullptr;
+  const char *p_stream_uri = nullptr;
+  const char *p_transport = nullptr;
+  const char *p_uagent = nullptr;
 
   *done = TRUE;
 
@@ -313,7 +313,7 @@ static CURLcode rtsp_do(struct connectdata *conn, bool *done)
 
   if(rtspreq == RTSPREQ_RECEIVE) {
     Curl_setup_transfer(conn, FIRSTSOCKET, -1, TRUE,
-                        &http->readbytecount, -1, NULL);
+                        &http->readbytecount, -1, nullptr);
 
     return result;
   }
@@ -363,7 +363,7 @@ static CURLcode rtsp_do(struct connectdata *conn, bool *done)
   if(rtspreq == RTSPREQ_DESCRIBE) {
     /* Accept Header */
     p_accept = Curl_checkheaders(conn, "Accept:")?
-      NULL:"Accept: application/sdp\r\n";
+      nullptr:"Accept: application/sdp\r\n";
 
     /* Accept-Encoding header */
     if(!Curl_checkheaders(conn, "Accept-Encoding:") &&
@@ -385,7 +385,7 @@ static CURLcode rtsp_do(struct connectdata *conn, bool *done)
      here. */
   if(Curl_checkheaders(conn, "User-Agent:") && conn->allocptr.uagent) {
     Curl_safefree(conn->allocptr.uagent);
-    conn->allocptr.uagent = NULL;
+    conn->allocptr.uagent = nullptr;
   }
   else if(!Curl_checkheaders(conn, "User-Agent:") &&
           data->set.str[STRING_USERAGENT]) {
@@ -397,7 +397,7 @@ static CURLcode rtsp_do(struct connectdata *conn, bool *done)
   if(data->change.referer && !Curl_checkheaders(conn, "Referer:"))
     conn->allocptr.ref = aprintf("Referer: %s\r\n", data->change.referer);
   else
-    conn->allocptr.ref = NULL;
+    conn->allocptr.ref = nullptr;
 
   p_referrer = conn->allocptr.ref;
 
@@ -564,7 +564,7 @@ static CURLcode rtsp_do(struct connectdata *conn, bool *done)
 
   Curl_setup_transfer(conn, FIRSTSOCKET, -1, TRUE, &http->readbytecount,
                       putsize?FIRSTSOCKET:-1,
-                      putsize?&http->writebytecount:NULL);
+                      putsize?&http->writebytecount:nullptr);
 
   /* Increment the CSeq on success */
   data->state.rtsp_next_client_CSeq++;
@@ -598,7 +598,7 @@ static CURLcode rtsp_rtp_readwrite(struct SessionHandle *data,
     char *newptr = realloc(rtspc->rtp_buf, rtspc->rtp_bufsize + *nread);
     if(!newptr) {
       Curl_safefree(rtspc->rtp_buf);
-      rtspc->rtp_buf = NULL;
+      rtspc->rtp_buf = nullptr;
       rtspc->rtp_bufsize = 0;
       return CURLE_OUT_OF_MEMORY;
     }
@@ -641,7 +641,7 @@ static CURLcode rtsp_rtp_readwrite(struct SessionHandle *data,
           failf(data, "Got an error writing an RTP packet");
           *readmore = FALSE;
           Curl_safefree(rtspc->rtp_buf);
-          rtspc->rtp_buf = NULL;
+          rtspc->rtp_buf = nullptr;
           rtspc->rtp_bufsize = 0;
           return result;
         }
@@ -673,7 +673,7 @@ static CURLcode rtsp_rtp_readwrite(struct SessionHandle *data,
     scratch = malloc(rtp_dataleft);
     if(!scratch) {
       Curl_safefree(rtspc->rtp_buf);
-      rtspc->rtp_buf = NULL;
+      rtspc->rtp_buf = nullptr;
       rtspc->rtp_bufsize = 0;
       return CURLE_OUT_OF_MEMORY;
     }
@@ -703,7 +703,7 @@ static CURLcode rtsp_rtp_readwrite(struct SessionHandle *data,
 
   /* If we get here, we have finished with the leftover/merge buffer */
   Curl_safefree(rtspc->rtp_buf);
-  rtspc->rtp_buf = NULL;
+  rtspc->rtp_buf = nullptr;
   rtspc->rtp_bufsize = 0;
 
   return CURLE_OK;
@@ -794,7 +794,7 @@ CURLcode Curl_rtsp_parseheader(struct connectdata *conn,
 
       /* Copy the id substring into a new buffer */
       data->set.str[STRING_RTSP_SESSION_ID] = malloc(end - start + 1);
-      if(data->set.str[STRING_RTSP_SESSION_ID] == NULL)
+      if(data->set.str[STRING_RTSP_SESSION_ID] == nullptr)
         return CURLE_OUT_OF_MEMORY;
       memcpy(data->set.str[STRING_RTSP_SESSION_ID], start, end - start);
       (data->set.str[STRING_RTSP_SESSION_ID])[end - start] = '\0';

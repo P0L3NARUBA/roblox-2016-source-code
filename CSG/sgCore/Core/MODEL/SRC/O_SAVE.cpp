@@ -121,7 +121,7 @@ static BOOL  create_map_blocks( lpLISTH listh, NUM_LIST list_zudina,
 	*new_number = 0;
 	begin_rw(vdim,0);
 	for (i=0; i<vd_blocks.num_elem; i++) {
-		if ((lpmap=(BLOCKS_MAP*)get_next_elem(vdim)) == NULL) goto err;
+		if ((lpmap=(BLOCKS_MAP*)get_next_elem(vdim)) == nullptr) goto err;
 		switch (lpmap->count) {
 			case -1:
 				lpmap->number = -1;
@@ -555,7 +555,7 @@ static BOOL  calk_new_order_np_and_attr(lpLISTH listh, NUM_LIST list_zudina,
 -*/
 	if ( !begin_rw(&vd_brep,0)) return FALSE;
 	for ( i=0; i< vd_brep.num_elem; i++ ) {
-		if ((lplnp = (LNP*)get_next_elem(&vd_brep)) == NULL) return FALSE;
+		if ((lplnp = (LNP*)get_next_elem(&vd_brep)) == nullptr) return FALSE;
     lplnp->num = -1;
 	}
 	end_rw(&vd_brep);
@@ -590,7 +590,7 @@ static BOOL  calk_new_order_np_and_attr(lpLISTH listh, NUM_LIST list_zudina,
 	number = 0;
 	if ( !begin_rw(&vd_brep,0)) return FALSE;
 	for ( i=0; i< vd_brep.num_elem; i++ ) {
-		if ((lplnp = (LNP*)get_next_elem(&vd_brep)) == NULL) return FALSE;
+		if ((lplnp = (LNP*)get_next_elem(&vd_brep)) == nullptr) return FALSE;
 		if ( lplnp->num != -1 ) lplnp->num = number++;
 	}
 	end_rw(&vd_brep);
@@ -621,7 +621,7 @@ BOOL			flg_skip = FALSE;
 	//   
 	if(!mark_record_to_save(irec)) return OSFALSE;
 	if(lpsc->type == OINSERT){ //   
-		if((lblk = (IBLOCK*)get_elem(&vd_blocks, bnum)) == NULL) return OSFALSE;
+		if((lblk = (IBLOCK*)get_elem(&vd_blocks, bnum)) == nullptr) return OSFALSE;
 		if ( lblk->type & BLK_EXTERN ) flg_skip = TRUE;
 		irec = lblk->irec;
 		if(!mark_record_to_save(irec)) return OSFALSE;
@@ -644,7 +644,7 @@ static OSCAN_COD np_pre_scan(hOBJ hobj, lpSCAN_CONTROL lpsc)
 
 		obj = (lpOBJ)hobj;
 		num = ((lpGEO_BREP)(obj->geo_data))->num;
-		if ((lnp=(LNP*)get_elem(&vd_brep,num)) == NULL) return OSFALSE;
+		if ((lnp=(LNP*)get_elem(&vd_brep,num)) == nullptr) return OSFALSE;
 		lnp->num = 1;
   }
 	return OSTRUE;
@@ -664,7 +664,7 @@ lpATTR        lpattr;
     if(vd[j]->num_elem){
       if(!begin_rw(vd[j], 0)) attr_exit();
       for(i = 0; i < vd[j]->num_elem; i++){
-				if((lpattr = (ATTR*)get_next_elem(vd[j])) == NULL) attr_exit();
+				if((lpattr = (ATTR*)get_next_elem(vd[j])) == nullptr) attr_exit();
         lpattr->sinfo = 0;
 			}
 			end_rw(vd[j]);
@@ -677,12 +677,12 @@ static BOOL mark_record_to_save(IDENT_V rec_id)
 //   
 {
 ATTR_RECORD   rec;
-lpRECORD_ITEM irec;//nb = NULL;
+lpRECORD_ITEM irec;//nb = nullptr;
 short           i;
 
   if(!rec_id) return TRUE;
   //   rec_id
-	if((irec = alloc_and_load_record(rec_id, &rec)) == NULL) return FALSE;
+	if((irec = alloc_and_load_record(rec_id, &rec)) == nullptr) return FALSE;
 	if(rec.num && (!rec.sinfo)){ //     
     rec.sinfo = 1;
     //   
@@ -733,7 +733,7 @@ static void mark_ft_item_to_save(IDENT_V item_id)
 lpFT_ITEM ft_item;
 
 	if(!item_id) return;
-	if((ft_item = (FT_ITEM*)get_elem(&ft_bd->vd, item_id - 1)) == NULL) attr_exit();
+	if((ft_item = (FT_ITEM*)get_elem(&ft_bd->vd, item_id - 1)) == nullptr) attr_exit();
 	ft_item->sinfo = 1;
 }
 
@@ -798,7 +798,7 @@ BOOL          font_flag;
   if(!story_data(bd, sizeof(max_record_len), &max_record_len)) return FALSE;
   if(!max_record_len) goto met_font;
   //    
-	if((irec = (RECORD_ITEM*)SGMalloc(max_record_len)) == NULL){
+	if((irec = (RECORD_ITEM*)SGMalloc(max_record_len)) == nullptr){
     attr_handler_err(AT_HEAP);
     return FALSE;
   }
@@ -831,7 +831,7 @@ met_font:  //
   if(!story_data(bd, sizeof(ft_bd->max_len), &ft_bd->max_len)) return FALSE;
   if(!ft_bd->max_len) return TRUE;
   //    
-  if((font = (FONT*)SGMalloc(ft_bd->max_len)) == NULL){
+  if((font = (FONT*)SGMalloc(ft_bd->max_len)) == nullptr){
 		attr_handler_err(AT_HEAP);
 		return FALSE;
 	}
@@ -942,7 +942,7 @@ static BOOL story_surf(lpBUFFER_DAT bd)
   hBuf = SGMalloc(size);
   if (!hBuf) return FALSE;
 
-  if ((lpBuf = (void*)hBuf) == NULL) { SGFree(hBuf); return FALSE; }
+  if ((lpBuf = (void*)hBuf) == nullptr) { SGFree(hBuf); return FALSE; }
 
   size = sizeof(D_POINT) * surf.numpu * surf.numpv;
   read_vld_data(size, lpBuf);

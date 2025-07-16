@@ -45,7 +45,7 @@ const char *qname_token(const char *QName, const char *URI)
     if (!strncmp(QName + 1, URI, n) && QName[n + 1] == '"')
       return QName + n + 3;
   }
-  return NULL;
+  return nullptr;
 }
 
 int is_builtin_qname(const char *QName)
@@ -77,7 +77,7 @@ int show_ignore(struct soap*, const char*);
 wsdl__definitions::wsdl__definitions()
 { soap = soap_new1(SOAP_XML_TREE | SOAP_C_UTFSTRING);
 #ifdef WITH_OPENSSL
-  soap_ssl_client_context(soap, SOAP_SSL_NO_AUTHENTICATION, NULL, NULL, NULL, NULL, NULL);
+  soap_ssl_client_context(soap, SOAP_SSL_NO_AUTHENTICATION, nullptr, nullptr, nullptr, nullptr, nullptr);
 #endif
   soap_set_namespaces(soap, namespaces);
   soap_default(soap);
@@ -85,13 +85,13 @@ wsdl__definitions::wsdl__definitions()
     soap->fignore = show_ignore;
   else
     soap->fignore = warn_ignore;
-  soap->encodingStyle = NULL;
+  soap->encodingStyle = nullptr;
   soap->proxy_host = proxy_host;
   soap->proxy_port = proxy_port;
-  name = NULL;
+  name = nullptr;
   targetNamespace = "";
-  documentation = NULL;
-  types = NULL;
+  documentation = nullptr;
+  types = nullptr;
   updated = false;
   redirs = 0;
 }
@@ -104,7 +104,7 @@ wsdl__definitions::wsdl__definitions(struct soap *copy, const char *cwd, const c
   strcpy(soap->host, copy->host);
   soap_default(soap);
   soap->fignore = warn_ignore;
-  soap->encodingStyle = NULL;
+  soap->encodingStyle = nullptr;
   updated = false;
   redirs = 0;
   read(cwd, loc);
@@ -123,11 +123,11 @@ int wsdl__definitions::get(struct soap *soap)
 
 int wsdl__definitions::read(int num, char **loc)
 { if (num <= 0)
-    return read((const char*)NULL, (const char*)NULL);
+    return read((const char*)nullptr, (const char*)nullptr);
   if (num == 1)
-    return read((const char*)NULL, loc[0]);
+    return read((const char*)nullptr, loc[0]);
   wsdl__import im;
-  im.namespace_ = NULL;
+  im.namespace_ = nullptr;
   for (int i = 0; i < num; i++)
   { im.location = loc[i];
     import.push_back(im);
@@ -154,7 +154,7 @@ int wsdl__definitions::read(const char *cwd, const char *loc)
 #endif
     { fprintf(stderr, "Connecting to '%s' to retrieve WSDL/XSD... ", loc);
       location = soap_strdup(soap, loc);
-      if (soap_connect_command(soap, SOAP_GET, location, NULL))
+      if (soap_connect_command(soap, SOAP_GET, location, nullptr))
       { fprintf(stderr, "connection failed\n");
         soap_print_fault(soap, stderr);
         exit(1);
@@ -171,7 +171,7 @@ int wsdl__definitions::read(const char *cwd, const char *loc)
       strcat(location, "/");
       strcat(location, loc);
       fprintf(stderr, "Connecting to '%s' to retrieve relative '%s' WSDL/XSD... ", location, loc);
-      if (soap_connect_command(soap, SOAP_GET, location, NULL))
+      if (soap_connect_command(soap, SOAP_GET, location, nullptr))
       { fprintf(stderr, "connection failed\n");
         exit(1);
       }
@@ -219,26 +219,26 @@ int wsdl__definitions::read(const char *cwd, const char *loc)
   cwd_temp = cwd_path;
   cwd_path = location;
   if (!soap_begin_recv(soap))
-    this->soap_in(soap, "wsdl:definitions", NULL);
+    this->soap_in(soap, "wsdl:definitions", nullptr);
   if (soap->error)
   { // handle sloppy WSDLs that import schemas at the top level rather than
     // importing them in <types>
     if (soap->error == SOAP_TAG_MISMATCH && soap->level == 0)
     { soap_retry(soap);
       xs__schema *schema = soap_new_xs__schema(soap, -1);
-      schema->soap_in(soap, "xs:schema", NULL);
+      schema->soap_in(soap, "xs:schema", nullptr);
       if (soap->error)
       { fprintf(stderr, "An error occurred while parsing WSDL or XSD from '%s'\n", loc?loc:"");
         soap_print_fault(soap, stderr);
         soap_print_fault_location(soap, stderr);
         exit(1);
       }
-      name = NULL;
+      name = nullptr;
       targetNamespace = schema->targetNamespace;
       if (vflag)
         cerr << "Found schema " << (targetNamespace?targetNamespace:"") << " when expecting WSDL" << endl;
       types = soap_new_wsdl__types(soap, -1);
-      types->documentation = NULL;
+      types->documentation = nullptr;
       types->xs__schema_.push_back(schema);
     }
     // check HTTP redirect (socket was closed)
@@ -436,7 +436,7 @@ int wsdl__service::traverse(wsdl__definitions& definitions)
 }
 
 wsdl__port::wsdl__port()
-{ bindingRef = NULL;
+{ bindingRef = nullptr;
 }
 
 int wsdl__port::traverse(wsdl__definitions& definitions)
@@ -444,7 +444,7 @@ int wsdl__port::traverse(wsdl__definitions& definitions)
     cerr << "Analyzing wsdl port" << endl;
   // search binding name
   const char *token = qname_token(binding, definitions.targetNamespace);
-  bindingRef = NULL;
+  bindingRef = nullptr;
   if (token)
   { for (vector<wsdl__binding>::iterator binding = definitions.binding.begin(); binding != definitions.binding.end(); ++binding)
     { if ((*binding).name && !strcmp((*binding).name, token))
@@ -487,14 +487,14 @@ wsdl__binding *wsdl__port::bindingPtr() const
 }
 
 wsdl__binding::wsdl__binding()
-{ portTypeRef = NULL;
+{ portTypeRef = nullptr;
 }
 
 int wsdl__binding::traverse(wsdl__definitions& definitions)
 { if (vflag)
     cerr << "Analyzing wsdl bindings" << endl;
   const char *token = qname_token(type, definitions.targetNamespace);
-  portTypeRef = NULL;
+  portTypeRef = nullptr;
   if (token)
   { for (vector<wsdl__portType>::iterator portType = definitions.portType.begin(); portType != definitions.portType.end(); ++portType)
     { if ((*portType).name && !strcmp((*portType).name, token))
@@ -539,7 +539,7 @@ wsdl__portType *wsdl__binding::portTypePtr() const
 }
 
 wsdl__binding_operation::wsdl__binding_operation()
-{ operationRef = NULL;
+{ operationRef = nullptr;
 }
 
 int wsdl__binding_operation::traverse(wsdl__definitions& definitions, wsdl__portType *portTypeRef)
@@ -551,7 +551,7 @@ int wsdl__binding_operation::traverse(wsdl__definitions& definitions, wsdl__port
     output->traverse(definitions);
   for (vector<wsdl__ext_fault>::iterator i = fault.begin(); i != fault.end(); ++i)
     (*i).traverse(definitions);
-  operationRef = NULL;
+  operationRef = nullptr;
   if (name && portTypeRef)
   { for (vector<wsdl__operation>::iterator i = portTypeRef->operation.begin(); i != portTypeRef->operation.end(); ++i)
     { if ((*i).name && !strcmp((*i).name, name))
@@ -622,13 +622,13 @@ int wsdl__ext_output::traverse(wsdl__definitions& definitions)
 }
 
 wsdl__ext_fault::wsdl__ext_fault()
-{ messageRef = NULL;
+{ messageRef = nullptr;
 }
 
 int wsdl__ext_fault::traverse(wsdl__definitions& definitions)
 { if (vflag)
     cerr << "Analyzing wsdl ext fault" << endl;
-  messageRef = NULL;
+  messageRef = nullptr;
   return SOAP_OK;
 }
 
@@ -661,14 +661,14 @@ int wsdl__operation::traverse(wsdl__definitions& definitions)
 }
 
 wsdl__input::wsdl__input()
-{ messageRef = NULL;
+{ messageRef = nullptr;
 }
 
 int wsdl__input::traverse(wsdl__definitions& definitions)
 { if (vflag)
     cerr << "Analyzing wsdl input" << endl;
   const char *token = qname_token(message, definitions.targetNamespace);
-  messageRef = NULL;
+  messageRef = nullptr;
   if (token)
   { for (vector<wsdl__message>::iterator message = definitions.message.begin(); message != definitions.message.end(); ++message)
     { if ((*message).name && !strcmp((*message).name, token))
@@ -711,14 +711,14 @@ wsdl__message *wsdl__input::messagePtr() const
 }
 
 wsdl__output::wsdl__output()
-{ messageRef = NULL;
+{ messageRef = nullptr;
 }
 
 int wsdl__output::traverse(wsdl__definitions& definitions)
 { if (vflag)
     cerr << "Analyzing wsdl output" << endl;
   const char *token = qname_token(message, definitions.targetNamespace);
-  messageRef = NULL;
+  messageRef = nullptr;
   if (token)
   { for (vector<wsdl__message>::iterator message = definitions.message.begin(); message != definitions.message.end(); ++message)
     { if ((*message).name && !strcmp((*message).name, token))
@@ -761,14 +761,14 @@ wsdl__message *wsdl__output::messagePtr() const
 }
 
 wsdl__fault::wsdl__fault()
-{ messageRef = NULL;
+{ messageRef = nullptr;
 }
 
 int wsdl__fault::traverse(wsdl__definitions& definitions)
 { if (vflag)
     cerr << "Analyzing wsdl fault" << endl;
   const char *token = qname_token(message, definitions.targetNamespace);
-  messageRef = NULL;
+  messageRef = nullptr;
   if (token)
   { for (vector<wsdl__message>::iterator message = definitions.message.begin(); message != definitions.message.end(); ++message)
     { if ((*message).name && !strcmp((*message).name, token))
@@ -819,17 +819,17 @@ int wsdl__message::traverse(wsdl__definitions& definitions)
 }
 
 wsdl__part::wsdl__part()
-{ elementRef = NULL;
-  simpleTypeRef = NULL;
-  complexTypeRef = NULL;
+{ elementRef = nullptr;
+  simpleTypeRef = nullptr;
+  complexTypeRef = nullptr;
 }
 
 int wsdl__part::traverse(wsdl__definitions& definitions)
 { if (vflag)
     cerr << "Analyzing wsdl part" << endl;
-  elementRef = NULL;
-  simpleTypeRef = NULL;
-  complexTypeRef = NULL;
+  elementRef = nullptr;
+  simpleTypeRef = nullptr;
+  complexTypeRef = nullptr;
   if (definitions.types)
   { for (vector<xs__schema*>::iterator schema = definitions.types->xs__schema_.begin(); schema != definitions.types->xs__schema_.end(); ++schema)
     { const char *token = qname_token(element, (*schema)->targetNamespace);
@@ -1054,7 +1054,7 @@ int wsdl__import::preprocess(wsdl__definitions& definitions)
 { bool found = false;
   if (vflag)
     cerr << "Preprocess wsdl import " << (location?location:"") << endl;
-  definitionsRef = NULL;
+  definitionsRef = nullptr;
   if (namespace_)
   { for (SetOfString::const_iterator i = exturis.begin(); i != exturis.end(); ++i)
     { if (!soap_tag_cmp(namespace_, *i))
@@ -1108,7 +1108,7 @@ wsdl__definitions *wsdl__import::definitionsPtr() const
 }
 
 wsdl__import::wsdl__import()
-{ definitionsRef = NULL;
+{ definitionsRef = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1124,7 +1124,7 @@ ostream &operator<<(ostream &o, const wsdl__definitions &e)
     soap_set_namespaces(&soap, namespaces);
     e.soap_serialize(&soap);
     soap_begin_send(&soap);
-    e.soap_out(&soap, "wsdl:definitions", 0, NULL);
+    e.soap_out(&soap, "wsdl:definitions", 0, nullptr);
     soap_end_send(&soap);
     soap_destroy(&soap);
     soap_end(&soap);
@@ -1135,7 +1135,7 @@ ostream &operator<<(ostream &o, const wsdl__definitions &e)
     e.soap->os = &o;
     e.soap_serialize(e.soap);
     soap_begin_send(e.soap);
-    e.soap_out(e.soap, "wsdl:definitions", 0, NULL);
+    e.soap_out(e.soap, "wsdl:definitions", 0, nullptr);
     soap_end_send(e.soap);
     e.soap->os = os;
   }
@@ -1150,7 +1150,7 @@ istream &operator>>(istream &i, wsdl__definitions &e)
   istream *is = e.soap->is;
   e.soap->is = &i;
   if (soap_begin_recv(e.soap)
-   || !e.soap_in(e.soap, "wsdl:definitions", NULL)
+   || !e.soap_in(e.soap, "wsdl:definitions", nullptr)
    || soap_end_recv(e.soap))
   { // handle error? Note: e.soap->error is set and app should check
   }

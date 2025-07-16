@@ -1,15 +1,15 @@
 #define PROCESSING
 
-#include "buffers.h"
-#include "common.h"
+#include "buffers.hlsli"
+#include "common.hlsli"
 
 TEX_DECLARE2D(Main, 0);
 
 float4 InitialBloomDownsamplePS( BasicVertexOutput IN ) : SV_TARGET {
-	return float4(max(MainTexture.Sample(MainSampler, IN.UV).rgb, 0.0) / TextureSize_ViewportScale.z, 1.0);
+	return float4(max(MainTexture.Sample(MainSampler, IN.UV).rgb, 0.0) / Parameters1.x, 1.0);
 }
 
-float4 BloomDownsamplePS( BasicVertexOutput IN) : SV_TARGET {
+float4 BloomDownsamplePS( BasicVertexOutput IN ) : SV_TARGET {
 	float2 texCoord = IN.UV;
     float2 srcTexelSize = TextureSize_ViewportScale.zw;
     float x = srcTexelSize.x;

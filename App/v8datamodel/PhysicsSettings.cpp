@@ -50,7 +50,7 @@ static Reflection::EnumPropDescriptor<PhysicsSettings, EThrottle::EThrottleType>
 static Reflection::PropDescriptor<PhysicsSettings, double> prop_ThrottleAdjustTime("ThrottleAdjustTime", "Performance", &PhysicsSettings::getThrottleAdjustTime, &PhysicsSettings::setThrottleAdjustTime);
 
 static Reflection::PropDescriptor<PhysicsSettings, bool> prop_RenderDecompositionData("ShowDecompositionGeometry", "Display", &PhysicsSettings::getRenderDecompositionData, &PhysicsSettings::setRenderDecompositionData);
-static Reflection::PropDescriptor<PhysicsSettings, bool> prop_PhysicsAnalyzerEnabled("PhysicsAnalyzerEnabled", category_Data, &PhysicsSettings::getPhysicsAnalyzerState, NULL, Reflection::PropertyDescriptor::UI, Security::Plugin);
+static Reflection::PropDescriptor<PhysicsSettings, bool> prop_PhysicsAnalyzerEnabled("PhysicsAnalyzerEnabled", category_Data, &PhysicsSettings::getPhysicsAnalyzerState, nullptr, Reflection::PropertyDescriptor::UI, Security::Plugin);
 
 #if defined(RBX_TEST_BUILD) || RBX_PLATFORM_IOS
 static Reflection::PropDescriptor<PhysicsSettings, bool> prop_ThrottleAt30Fps("Is30FpsThrottleEnabled", "Performance", &PhysicsSettings::getThrottleAt30Fps, &PhysicsSettings::setThrottleAt30Fps);

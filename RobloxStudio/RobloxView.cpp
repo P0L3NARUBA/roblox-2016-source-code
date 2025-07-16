@@ -522,7 +522,7 @@ RobloxView::~RobloxView(void)
 
 		if(m_renderStatsItem)
 		{
-			m_renderStatsItem->setParent(NULL);
+			m_renderStatsItem->setParent(nullptr);
 			m_renderStatsItem.reset();
 		}
 	}
@@ -569,7 +569,7 @@ RobloxView::~RobloxView(void)
 		RBX::DataModel::LegacyLock lock(m_pDataModel, RBX::DataModelJob::Write);
 	
 		RBX::ControllerService* service = RBX::ServiceProvider::create<RBX::ControllerService>(m_pDataModel.get());
-		service->setHardwareDevice(NULL);
+		service->setHardwareDevice(nullptr);
 		
 		m_pViewBase->bindWorkspace(boost::shared_ptr<RBX::DataModel>());
 
@@ -739,7 +739,7 @@ void RobloxView::handleMouse(RBX::InputObject::UserInputType event,
 
 					// DE7421 - if Ctrl or Shift is not pressed already then make sure we post key press event first so multiple selections can be done
 					if (rbxKey != RBX::SDLK_UNKNOWN)
-						m_pUserInput->PostUserInputMessage(RBX::InputObject::TYPE_KEYBOARD, RBX::InputObject::INPUT_STATE_BEGIN, rbxKey, modifiers, NULL);
+						m_pUserInput->PostUserInputMessage(RBX::InputObject::TYPE_KEYBOARD, RBX::InputObject::INPUT_STATE_BEGIN, rbxKey, modifiers, nullptr);
 				}
 			}
 
@@ -854,7 +854,7 @@ shared_ptr<const RBX::Instances> RobloxView::handleDropOperation(const QString& 
 	
 	try
 	{
-		RBX::ContentProvider* cp = NULL;
+		RBX::ContentProvider* cp = nullptr;
 		{
 			RBX::DataModel::LegacyLock lock(m_pDataModel, RBX::DataModelJob::Write);
 			cp = m_pDataModel.get()->create<RBX::ContentProvider>();
@@ -926,7 +926,7 @@ void RobloxView::handleDropOperation(boost::shared_ptr<RBX::Instance> pInstanceT
 		instances.push_back(pClonedObjectToInsert);
 
 		RBX::InsertMode insertMode = RBX::INSERT_TO_3D_VIEW;
-		if (RBX::Instance::fastDynamicCast<RBX::Decal>(pClonedObjectToInsert.get()) != NULL)
+		if (RBX::Instance::fastDynamicCast<RBX::Decal>(pClonedObjectToInsert.get()) != nullptr)
 			insertMode = RBX::INSERT_TO_TREE;
 		insertInstances(x, y, instances, mouseCommandInvoked, insertMode);
 	}
@@ -943,15 +943,15 @@ void RobloxView::cancelDropOperation(bool resetMouseCommand)
 
 	std::for_each(m_DraggedItems.begin(), 
 				  m_DraggedItems.end(), 
-				  boost::bind(&RBX::Instance::setParent, _1, (RBX::Instance*) NULL));
+				  boost::bind(&RBX::Instance::setParent, _1, (RBX::Instance*) nullptr));
 	m_DraggedItems.clear();
 	
 	if (resetMouseCommand)	
 	{
 		RBX::MouseCommand* pCurrentMouseCommand = m_pDataModel->getWorkspace()->getCurrentMouseCommand();
-		RBX::ICancelableTool* pCancelableTool = NULL;
+		RBX::ICancelableTool* pCancelableTool = nullptr;
 					
-		if((pCurrentMouseCommand != NULL) && (pCancelableTool = dynamic_cast<RBX::ICancelableTool*>(pCurrentMouseCommand)))
+		if((pCurrentMouseCommand != nullptr) && (pCancelableTool = dynamic_cast<RBX::ICancelableTool*>(pCurrentMouseCommand)))
 			m_pDataModel->getWorkspace()->setMouseCommand(pCancelableTool->onCancelOperation());
 	}
 }
@@ -969,7 +969,7 @@ void RobloxView::insertInstances(int x, int y, const RBX::Instances &instances, 
 	
 		RBX::Instances remaining;
 		{
-			m_pDataModel->getWorkspace()->insertInstances(instances, m_pDataModel->getWorkspace(), insertMode, RBX::SUPPRESS_PROMPTS, NULL, &remaining);
+			m_pDataModel->getWorkspace()->insertInstances(instances, m_pDataModel->getWorkspace(), insertMode, RBX::SUPPRESS_PROMPTS, nullptr, &remaining);
 			if (!remaining.empty())
 				mouseCommandInvoked = m_pDataModel->getWorkspace()->startPartDropDrag(remaining, true);
 
@@ -994,7 +994,7 @@ void RobloxView::insertInstances(int x, int y, const RBX::Instances &instances, 
 	
 	catch (std::exception&)
 	{
-		std::for_each(instances.begin(), instances.end(), boost::bind(&RBX::Instance::setParent, _1, (RBX::Instance*) NULL));
+		std::for_each(instances.begin(), instances.end(), boost::bind(&RBX::Instance::setParent, _1, (RBX::Instance*) nullptr));
 		throw;
 	}
 }
@@ -1108,10 +1108,10 @@ void RobloxView::setCursorImage(bool forceShowCursor)
 
 	if (cursorContent.toString().empty())
 	{
-		if (RBX::Network::Players::findLocalPlayer(m_pDataModel.get()) != NULL)
+		if (RBX::Network::Players::findLocalPlayer(m_pDataModel.get()) != nullptr)
 		{
 			RBX::ToolMouseCommand* pToolMouseCommand = dynamic_cast<RBX::ToolMouseCommand*>(m_pDataModel->getWorkspace()->getCurrentMouseCommand());
-			if (pToolMouseCommand != NULL)
+			if (pToolMouseCommand != nullptr)
 				cursorContent = RBX::ContentId::fromAssets("Textures/ArrowCursor.png");
 		}
 		else
@@ -1470,7 +1470,7 @@ void RobloxView::updateHoverOver()
 // IMetric 
 double RobloxView::getMetricValue(const std::string& metric) const
 {
-	RBX::FrameRateManager* pFrameRateManager = m_pViewBase ? m_pViewBase->getFrameRateManager() : NULL;
+	RBX::FrameRateManager* pFrameRateManager = m_pViewBase ? m_pViewBase->getFrameRateManager() : nullptr;
 	
 	if (metric == "Video Memory")
         return RBX::SystemUtil::getVideoMemory();
@@ -1708,13 +1708,13 @@ bool RobloxView::RbxViewCyclicFlagsEnabled()
 static RBX::ViewBase* createGameWindow(QOgreWidget *pQtWrapperWindow)
 {
 	if (!pQtWrapperWindow)
-		return NULL;
+		return nullptr;
 
 	//Ogre Plugin Initialization
 	static boost::once_flag flag = BOOST_ONCE_INIT;
 	boost::call_once(&RBX::ViewBase::InitPluginModules, flag);
 
-	RBX::ViewBase* pRbxView = NULL;
+	RBX::ViewBase* pRbxView = nullptr;
 
 	std::vector<RBX::CRenderSettings::GraphicsMode> modes;
 

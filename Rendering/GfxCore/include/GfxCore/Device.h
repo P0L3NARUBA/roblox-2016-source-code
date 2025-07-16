@@ -36,6 +36,9 @@ public:
     virtual void setDefaultAnisotropy(unsigned int value) = 0;
 
     virtual void updateGlobalConstants(const void* data, size_t dataSize) = 0;
+    virtual void updateGlobalProcessingData(const void* data, size_t dataSize) = 0;
+    virtual void updateGlobalMaterialData(const void* data, size_t dataSize) = 0;
+    virtual void updateInstancedModelMatrixes(const void* data, size_t dataSize) = 0;
     virtual void updateGlobalLightList(const void* data, size_t dataSize) = 0;
 
     virtual void bindFramebuffer(Framebuffer* buffer) = 0;

@@ -59,7 +59,7 @@ namespace RBX
 	public:
 		mutex()
 		{
-			if ( pthread_mutex_init(&sl,NULL) != 0 )
+			if ( pthread_mutex_init(&sl,nullptr) != 0 )
 				throw std::runtime_error("failed in mutex to initialize pthread_mutex_init.");
 		}
 		~mutex()

@@ -46,7 +46,7 @@ void SimpleJSON::ReadFromStream(const char *stream)
             continue;
         }
 		parser dataParser = _propValues[valueName];
-		if (dataParser != NULL)
+		if (dataParser != nullptr)
 		{
 			dataParser(valueData.str().c_str());
 		}

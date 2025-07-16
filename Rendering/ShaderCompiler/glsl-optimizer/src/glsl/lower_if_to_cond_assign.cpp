@@ -120,7 +120,7 @@ move_block_to_cond_assign(void *mem_ctx,
       if (ir->ir_type == ir_type_assignment) {
 	 ir_assignment *assign = (ir_assignment *)ir;
 
-	 if (hash_table_find(ht, assign) == NULL) {
+	 if (hash_table_find(ht, assign) == nullptr) {
 	    hash_table_insert(ht, assign, assign);
 
 	    /* If the LHS of the assignment is a condition variable that was
@@ -128,23 +128,23 @@ move_block_to_cond_assign(void *mem_ctx,
 	     * the variable.
 	     */
 	    const bool assign_to_cv =
-	       hash_table_find(ht, assign->lhs->variable_referenced()) != NULL;
+	       hash_table_find(ht, assign->lhs->variable_referenced()) != nullptr;
 
 	    if (!assign->condition) {
 	       if (assign_to_cv) {
 		  assign->rhs =
 		     new(mem_ctx) ir_expression(ir_binop_logic_and,
 						glsl_type::bool_type,
-						cond_expr->clone(mem_ctx, NULL),
+						cond_expr->clone(mem_ctx, nullptr),
 						assign->rhs);
 	       } else {
-		  assign->condition = cond_expr->clone(mem_ctx, NULL);
+		  assign->condition = cond_expr->clone(mem_ctx, nullptr);
 	       }
 	    } else {
 	       assign->condition =
 		  new(mem_ctx) ir_expression(ir_binop_logic_and,
 					     glsl_type::bool_type,
-					     cond_expr->clone(mem_ctx, NULL),
+					     cond_expr->clone(mem_ctx, nullptr),
 					     assign->condition);
 	    }
 	 }
@@ -229,7 +229,7 @@ ir_if_to_cond_assign_visitor::visit_leave(ir_if *ir)
 
       ir_rvalue *inverse =
 	 new(mem_ctx) ir_expression(ir_unop_logic_not,
-				    then_cond->clone(mem_ctx, NULL));
+				    then_cond->clone(mem_ctx, nullptr));
 
       assign = new(mem_ctx) ir_assignment(else_cond, inverse);
       ir->insert_before(assign);

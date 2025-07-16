@@ -1,7 +1,7 @@
 #include "../sg.h"
 
 static 	VI_LOCATION 	loc1;
-static 	lpRAW	 		 		lprawg = NULL;
+static 	lpRAW	 		 		lprawg = nullptr;
 
 BOOL  add_vpage(lpVLD lpvld);
 
@@ -122,7 +122,7 @@ void lock_vld_data(lpVLD vld)
 void unlock_vld_data(lpVLD vld)
 {
 	if ( vld->lprawg ) {
-  	vld->lprawg = NULL;
+  	vld->lprawg = nullptr;
 	}
 }
 
@@ -134,7 +134,7 @@ void begin_read_vld(lpVI_LOCATION lploc)
 
 void end_read_vld(void)
 {
-	lprawg = NULL;
+	lprawg = nullptr;
 	memset(&loc1,0,sizeof(loc1));
 }
 void begin_rezet_vld(lpVI_LOCATION lploc)
@@ -144,7 +144,7 @@ void begin_rezet_vld(lpVI_LOCATION lploc)
 }
 void end_rezet_vld(void)
 {
-	lprawg = NULL;
+	lprawg = nullptr;
 	memset(&loc1,0,sizeof(loc1));
 }
 void get_read_loc(lpVI_LOCATION lploc)
@@ -178,7 +178,7 @@ void  read_vld_data(ULONG len, void* p )
 		if ( !len ) break;
 
 		hnew_page = lpraw->list.hnext;
-    lprawg = NULL;
+    lprawg = nullptr;
     if ( !hnew_page ) goto err;
 		lpraw = (lpRAW)hnew_page;
 		lprawg = lpraw;
@@ -233,7 +233,7 @@ BOOL add_vpage(lpVLD lpvld)
 	lpRAW lpraw;
 	VADR  hpage;
 
-	if ( (hpage = SGMalloc(SIZE_VPAGE)) == NULL ) return FALSE;
+	if ( (hpage = SGMalloc(SIZE_VPAGE)) == nullptr ) return FALSE;
 	lpraw = (lpRAW)hpage;
   memset(lpraw,0,SIZE_VPAGE);
 	lpraw->free_mem = SIZE_VPAGE - sizeof(RAW);

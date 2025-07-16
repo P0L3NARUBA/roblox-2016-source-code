@@ -78,12 +78,12 @@ SDL_EnumUnixAudioDevices_Internal(const int iscapture, const int classic, int (*
     const char *audiodev;
     char audiopath[1024];
 
-    if (test == NULL)
+    if (test == nullptr)
         test = test_stub;
 
     /* Figure out what our audio device is */
-    if (((audiodev = SDL_getenv("SDL_PATH_DSP")) == NULL) &&
-        ((audiodev = SDL_getenv("AUDIODEV")) == NULL)) {
+    if (((audiodev = SDL_getenv("SDL_PATH_DSP")) == nullptr) &&
+        ((audiodev = SDL_getenv("AUDIODEV")) == nullptr)) {
         if (classic) {
             audiodev = _PATH_DEV_AUDIO;
         } else {

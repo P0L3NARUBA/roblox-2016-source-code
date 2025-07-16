@@ -20,8 +20,8 @@ public:
 									sgFloat point_attr_3=0.0,  
 									int point_mark=0);
 	bool         SetAllPoints(unsigned int points_count, const sgFloat* all_points,
-									const sgFloat* points_attrs=NULL, 
-									const int* points_marks=NULL);
+									const sgFloat* points_attrs=nullptr, 
+									const int* points_marks=nullptr);
 	
 	void         CorrectPointsCollisions();
 
@@ -29,7 +29,7 @@ public:
 	bool         SetSegment(unsigned int segment_index, int start_ind, int end_ind,
 									int segment_mark=0);
 	bool         SetAllSegments(unsigned int segments_count, const int* all_segments,
-									const int* segments_marks=NULL);
+									const int* segments_marks=nullptr);
 
 
 	bool         SetHolesCount(unsigned int holes_count);

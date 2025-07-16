@@ -79,7 +79,7 @@ ATOM RegisterWindowClass(HINSTANCE hInstance)
 	wcex.cbWndExtra		= 0;
 	wcex.hInstance		= hInstance;
 	wcex.hIcon			= LoadIcon(hInstance, MAKEINTRESOURCE(IDI_WINDOW_ICON));
-	wcex.hCursor		= LoadCursor(NULL, IDC_ARROW);
+	wcex.hCursor		= LoadCursor(nullptr, IDC_ARROW);
 	wcex.hbrBackground	= (HBRUSH)(COLOR_WINDOW+1);
 	wcex.lpszMenuName	= MAKEINTRESOURCE(IDC_WINDOWSCLIENT);
 	wcex.lpszClassName	= szWindowClass;
@@ -95,7 +95,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     // will cause issues.
     if (!G3D::System::hasSSE2())
     {
-        MessageBoxA(NULL, "This platform lacks SSE2 support.", "ROBLOX", MB_OK);
+        MessageBoxA(nullptr, "This platform lacks SSE2 support.", "ROBLOX", MB_OK);
         return false;
     }
 
@@ -110,7 +110,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	if (!app.ParseArguments(lpCmdLine))
 		return FALSE;
 
-	HWND hWnd = NULL;
+	HWND hWnd = nullptr;
 
 	// need client settings here before we create window
 	std::string clientSettingsString;
@@ -128,8 +128,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 	// perform application initialization:
 	hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, CW_USEDEFAULT, WINDOW_WIDTH, WINDOW_HEIGHT, NULL, NULL, hInstance,
-		NULL);
+		CW_USEDEFAULT, CW_USEDEFAULT, WINDOW_WIDTH, WINDOW_HEIGHT, nullptr, nullptr, hInstance,
+		nullptr);
 
 	if (!hWnd)
 		return FALSE;
@@ -151,7 +151,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 	// set a "keep alive" timer that periodically puts a message in the queue
 	// see message handler for WM_TIMER
-	SetTimer(hWnd, NULL, 10 * 1000 /*once every ten seconds*/, NULL);
+	SetTimer(hWnd, nullptr, 10 * 1000 /*once every ten seconds*/, nullptr);
 
 	// Only show the window if there isn't a named object to wait for before
 	// displaying it
@@ -161,7 +161,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	MSG msg;
 
 	// main message loop:
-	while (GetMessage(&msg, NULL, 0, 0))
+	while (GetMessage(&msg, nullptr, 0, 0))
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);

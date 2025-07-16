@@ -8,8 +8,8 @@ unsigned long BadFreeCount       = 0L;
 unsigned long TotalMallocMemSize = 0L;
 
 #define  MAXNUMMALLOC 100000
-unsigned long *pPtrs          = NULL;
-unsigned long *pMallocNumber  = NULL;
+unsigned long *pPtrs          = nullptr;
+unsigned long *pMallocNumber  = nullptr;
 extern   long ControlMalloc;
 long     FirstEmptyIdx = 0;
 long     AMallocLen    = 0;
@@ -36,7 +36,7 @@ unsigned long ss;
 	if(size <= 0){
     StopInNullSizeMalloc();
     FatalInternalError(2);
-    return NULL;
+    return nullptr;
   }
 	else{
     TotalMallocCount++;
@@ -66,11 +66,11 @@ unsigned long ss;
     return v;
   }
   FatalInternalError(3);
-  return NULL;
+  return nullptr;
 }
 
 
-//  malloc   .     NULL
+//  malloc   .     nullptr
 //  0  
 void *SGMallocN(size_t size)
 {
@@ -81,7 +81,7 @@ unsigned long ss;
 	if(size <= 0){
     StopInNullSizeMalloc();
     BadMallocCount++;
-    return NULL;
+    return nullptr;
   }
 	else{
     TotalMallocCount++;
@@ -109,7 +109,7 @@ unsigned long ss;
       StopInControlMalloc();
     return v;
   }
-  return NULL;
+  return nullptr;
 }
 
 void SGFree(void* address)
@@ -164,7 +164,7 @@ long          i;
       StopInBadPointerRealloc();
       FatalInternalError(4);
     }
-    return NULL;
+    return nullptr;
   }
   if(!block)    //   -    -   malloc
     return SGMalloc(size);
@@ -181,7 +181,7 @@ long          i;
       return v;
     }
     FatalInternalError(3);
-    return NULL;
+    return nullptr;
   }
   for(i = 0; i < AMallocLen; i++){
     if(pPtrs[i] == (unsigned long)block)
@@ -189,7 +189,7 @@ long          i;
   }
     StopInBadPointerRealloc();
   FatalInternalError(5);
-  return NULL;
+  return nullptr;
 next:
 //  ss = ((*(((unsigned long*)block) - 1))>>2)<<2;
   ss = SG_MSize(block);
@@ -203,7 +203,7 @@ next:
     return v;
   }
   FatalInternalError(3);
-  return NULL;
+  return nullptr;
 }
 
 
@@ -222,7 +222,7 @@ long          i;
       BadReAllocCount++;
       StopInBadPointerRealloc();
     }
-    return NULL;
+    return nullptr;
   }
   if(!block)    //   -    -   malloc
     return SGMalloc(size);
@@ -241,10 +241,10 @@ long          i;
     if(pPtrs[i] == (unsigned long)block)
       goto next;
   }
-  //   -  .  NULL
+  //   -  .  nullptr
   StopInBadPointerRealloc();
   BadReAllocCount++;
-  return NULL;
+  return nullptr;
 next:
   ss = ((*(((unsigned long*)block) - 1))>>2)<<2;
   TotalMallocMemSize -= ss;
@@ -271,10 +271,10 @@ void FreeDbgMem(void)
 {
   if(pPtrs)
     free(pPtrs);
-  pPtrs = NULL;
+  pPtrs = nullptr;
   if(pMallocNumber)
     free(pMallocNumber);
-  pMallocNumber = NULL;
+  pMallocNumber = nullptr;
 }
 
 #include <IOSTREAM>
@@ -311,7 +311,7 @@ void vReport(void)
 						j=sprintf(buf," Non free objects count:  %ld", TotalMallocCount-TotalFreeCount);
 						sprintf(buf + j,"\r\n Non free memory size : %ld bytes", TotalMallocMemSize+126);
 					#if (SG_CURRENT_PLATFORM==SG_PLATFORM_WINDOWS)
-					  	MessageBox(NULL, buf, "MEMORY LEAK",MB_OK|MB_ICONERROR) ;
+					  	MessageBox(nullptr, buf, "MEMORY LEAK",MB_OK|MB_ICONERROR) ;
 					#endif
                         
                     #if (SG_CURRENT_PLATFORM==SG_PLATFORM_IOS)
@@ -336,7 +336,7 @@ void FatalInternalError(int code)
 char Buf[256];
 
   strcpy(Buf, "Fatal internal error");
-//  MessageBox(NULL, Buf, GetSystemName(), MB_OK|MB_ICONERROR);
+//  MessageBox(nullptr, Buf, GetSystemName(), MB_OK|MB_ICONERROR);
 	exit(code);
 }
 

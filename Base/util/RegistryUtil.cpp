@@ -46,7 +46,7 @@ bool RegistryUtil::keyExists(const std::string& key) {
 
     HKEY hkey = getKeyFromString(key.c_str(), pos);
 
-    if ( hkey == NULL ) {
+    if ( hkey == nullptr ) {
         return false;
     }
 
@@ -71,7 +71,7 @@ bool RegistryUtil::read32bitNumber(const std::string& key, INT32& valueData) {
 
     HKEY hkey = getKeyFromString(key.c_str(), pos);
 
-    if ( hkey == NULL ) {
+    if ( hkey == nullptr ) {
         return false;
     }
 
@@ -88,7 +88,7 @@ bool RegistryUtil::read32bitNumber(const std::string& key, INT32& valueData) {
 
         if ( result == ERROR_SUCCESS ) {
             UINT32 dataSize = sizeof(INT32);
-            result = RegQueryValueEx(openKey, value.c_str(), NULL, NULL, reinterpret_cast<LPBYTE>(&valueData), reinterpret_cast<LPDWORD>(&dataSize));
+            result = RegQueryValueEx(openKey, value.c_str(), nullptr, nullptr, reinterpret_cast<LPBYTE>(&valueData), reinterpret_cast<LPDWORD>(&dataSize));
 
             RBXASSERT(result == ERROR_SUCCESS && "Could not read registry key value.");
 
@@ -107,7 +107,7 @@ bool RegistryUtil::readBinaryData(const std::string& key, BYTE* valueData, UINT3
 
     HKEY hkey = getKeyFromString(key.c_str(), pos);
 
-    if ( hkey == NULL ) {
+    if ( hkey == nullptr ) {
         return false;
     }
 
@@ -124,10 +124,10 @@ bool RegistryUtil::readBinaryData(const std::string& key, BYTE* valueData, UINT3
 
         if ( result == ERROR_SUCCESS ) {
 
-            if ( valueData == NULL ) {
-                result = RegQueryValueEx(openKey, value.c_str(), NULL, NULL, NULL, reinterpret_cast<LPDWORD>(&dataSize));
+            if ( valueData == nullptr ) {
+                result = RegQueryValueEx(openKey, value.c_str(), nullptr, nullptr, nullptr, reinterpret_cast<LPDWORD>(&dataSize));
             } else {
-                result = RegQueryValueEx(openKey, value.c_str(), NULL, NULL, valueData, reinterpret_cast<LPDWORD>(&dataSize));
+                result = RegQueryValueEx(openKey, value.c_str(), nullptr, nullptr, valueData, reinterpret_cast<LPDWORD>(&dataSize));
             }
 
             RBXASSERT(result == ERROR_SUCCESS && "Could not read registry key value.");
@@ -148,7 +148,7 @@ bool RegistryUtil::readString(const std::string& key, std::string& valueData) {
 
     HKEY hkey = getKeyFromString(key.c_str(), pos);
 
-    if ( hkey == NULL ) {
+    if ( hkey == nullptr ) {
         return false;
     }
 
@@ -166,13 +166,13 @@ bool RegistryUtil::readString(const std::string& key, std::string& valueData) {
         if ( result == ERROR_SUCCESS ) {
             UINT32 dataSize = 0;
 
-            result = RegQueryValueEx(openKey, value.c_str(), NULL, NULL, NULL, reinterpret_cast<LPDWORD>(&dataSize));
+            result = RegQueryValueEx(openKey, value.c_str(), nullptr, nullptr, nullptr, reinterpret_cast<LPDWORD>(&dataSize));
 
             if ( result == ERROR_SUCCESS ) {
                 char* tmpStr = new char[dataSize];
                 memset(tmpStr, 0, dataSize);
 
-                result = RegQueryValueEx(openKey, value.c_str(), NULL, NULL, reinterpret_cast<LPBYTE>(tmpStr), reinterpret_cast<LPDWORD>(&dataSize));
+                result = RegQueryValueEx(openKey, value.c_str(), nullptr, nullptr, reinterpret_cast<LPBYTE>(tmpStr), reinterpret_cast<LPDWORD>(&dataSize));
                 
                 if ( result == ERROR_SUCCESS ) {
                     valueData = tmpStr;
@@ -199,7 +199,7 @@ bool RegistryUtil::write32bitNumber(const std::string& key, INT32 valueData) {
 
     HKEY hkey = getKeyFromString(key.c_str(), pos);
 
-    if ( hkey == NULL ) {
+    if ( hkey == nullptr ) {
         return false;
     }
 
@@ -215,7 +215,7 @@ bool RegistryUtil::write32bitNumber(const std::string& key, INT32 valueData) {
         INT32 result = RegOpenKeyEx(hkey, subKey.c_str(), 0, KEY_ALL_ACCESS, &openKey);
 
         if ( result == ERROR_SUCCESS ) {
-            result = RegSetValueEx(openKey, value.c_str(), NULL, REG_DWORD, reinterpret_cast<const BYTE*>(&valueData), sizeof(INT32));
+            result = RegSetValueEx(openKey, value.c_str(), nullptr, REG_DWORD, reinterpret_cast<const BYTE*>(&valueData), sizeof(INT32));
 
             RBXASSERT(result == ERROR_SUCCESS && "Could not write registry key value.");
 
@@ -236,7 +236,7 @@ bool RegistryUtil::writeBinaryData(const std::string& key, const BYTE* valueData
 
     HKEY hkey = getKeyFromString(key.c_str(), pos);
 
-    if ( hkey == NULL ) {
+    if ( hkey == nullptr ) {
         return false;
     }
 
@@ -254,7 +254,7 @@ bool RegistryUtil::writeBinaryData(const std::string& key, const BYTE* valueData
         if ( result == ERROR_SUCCESS ) {
 
             if (valueData) {
-                result = RegSetValueEx(openKey, value.c_str(), NULL, REG_BINARY, reinterpret_cast<const BYTE*>(valueData), dataSize);
+                result = RegSetValueEx(openKey, value.c_str(), nullptr, REG_BINARY, reinterpret_cast<const BYTE*>(valueData), dataSize);
             }
 
             RBXASSERT(result == ERROR_SUCCESS && "Could not write registry key value.");
@@ -275,7 +275,7 @@ bool RegistryUtil::writeString(const std::string& key, const std::string& valueD
 
     HKEY hkey = getKeyFromString(key.c_str(), pos);
 
-    if ( hkey == NULL ) {
+    if ( hkey == nullptr ) {
         return false;
     }
 
@@ -291,7 +291,7 @@ bool RegistryUtil::writeString(const std::string& key, const std::string& valueD
         INT32 result = RegOpenKeyEx(hkey, subKey.c_str(), 0, KEY_ALL_ACCESS, &openKey);
 
         if ( result == ERROR_SUCCESS ) {
-            result = RegSetValueEx(openKey, value.c_str(), NULL, REG_SZ, reinterpret_cast<const BYTE*>(valueData.c_str()), (valueData.size() + 1));                
+            result = RegSetValueEx(openKey, value.c_str(), nullptr, REG_SZ, reinterpret_cast<const BYTE*>(valueData.c_str()), (valueData.size() + 1));                
             RBXASSERT(result == ERROR_SUCCESS && "Could not write registry key value.");
 
             RegCloseKey(openKey);
@@ -325,10 +325,10 @@ static HKEY getKeyFromString(const char* str, UINT32 length) {
         } else if  ( strncmp(str, "HKEY_CLASSES_ROOT", length) == 0 ) {
             return HKEY_CLASSES_ROOT;
         } else {
-            return NULL;
+            return nullptr;
         }
     } else {
-        return NULL;
+        return nullptr;
     }
 }
 

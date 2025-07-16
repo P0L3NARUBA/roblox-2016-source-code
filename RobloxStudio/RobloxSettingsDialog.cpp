@@ -241,7 +241,7 @@ void RobloxSettingsDialog::onDescendantRemoving(boost::shared_ptr<RBX::Instance>
 	if(tableItems.empty())
 		return;
 	QTableWidgetItem* item = tableItems[0];
-	if(item != NULL)
+	if(item != nullptr)
 		m_SettingsTypesTable->removeRow(item->row());
 }
 
@@ -275,7 +275,7 @@ SelectionPropertyTree::~SelectionPropertyTree()
     if (m_selection)
         m_selection->clearSelection();
 #endif
-	setSelection(NULL);
+	setSelection(nullptr);
 }
 
 void SelectionPropertyTree::addSelectionInstance(boost::shared_ptr<RBX::Instance> pInstance)

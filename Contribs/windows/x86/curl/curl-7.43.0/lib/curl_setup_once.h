@@ -541,7 +541,7 @@ typedef int sig_atomic_t;
 
 /*
  * We use this ZERO_NULL to avoid picky compiler warnings,
- * when assigning a NULL pointer to a function pointer var.
+ * when assigning a nullptr pointer to a function pointer var.
  */
 
 #define ZERO_NULL 0

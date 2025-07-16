@@ -43,7 +43,7 @@ struct gl_builtin_uniform_desc {
 
 
 static const struct gl_builtin_uniform_element gl_NumSamples_elements[] = {
-   {NULL, {STATE_NUM_SAMPLES, 0, 0}, SWIZZLE_XXXX}
+   {nullptr, {STATE_NUM_SAMPLES, 0, 0}, SWIZZLE_XXXX}
 };
 
 
@@ -54,7 +54,7 @@ static const struct gl_builtin_uniform_element gl_DepthRange_elements[] = {
 };
 
 static const struct gl_builtin_uniform_element gl_ClipPlane_elements[] = {
-   {NULL, {STATE_CLIPPLANE, 0, 0}, SWIZZLE_XYZW}
+   {nullptr, {STATE_CLIPPLANE, 0, 0}, SWIZZLE_XYZW}
 };
 
 static const struct gl_builtin_uniform_element gl_Point_elements[] = {
@@ -127,39 +127,39 @@ static const struct gl_builtin_uniform_element gl_BackLightProduct_elements[] = 
 };
 
 static const struct gl_builtin_uniform_element gl_TextureEnvColor_elements[] = {
-   {NULL, {STATE_TEXENV_COLOR, 0}, SWIZZLE_XYZW},
+   {nullptr, {STATE_TEXENV_COLOR, 0}, SWIZZLE_XYZW},
 };
 
 static const struct gl_builtin_uniform_element gl_EyePlaneS_elements[] = {
-   {NULL, {STATE_TEXGEN, 0, STATE_TEXGEN_EYE_S}, SWIZZLE_XYZW},
+   {nullptr, {STATE_TEXGEN, 0, STATE_TEXGEN_EYE_S}, SWIZZLE_XYZW},
 };
 
 static const struct gl_builtin_uniform_element gl_EyePlaneT_elements[] = {
-   {NULL, {STATE_TEXGEN, 0, STATE_TEXGEN_EYE_T}, SWIZZLE_XYZW},
+   {nullptr, {STATE_TEXGEN, 0, STATE_TEXGEN_EYE_T}, SWIZZLE_XYZW},
 };
 
 static const struct gl_builtin_uniform_element gl_EyePlaneR_elements[] = {
-   {NULL, {STATE_TEXGEN, 0, STATE_TEXGEN_EYE_R}, SWIZZLE_XYZW},
+   {nullptr, {STATE_TEXGEN, 0, STATE_TEXGEN_EYE_R}, SWIZZLE_XYZW},
 };
 
 static const struct gl_builtin_uniform_element gl_EyePlaneQ_elements[] = {
-   {NULL, {STATE_TEXGEN, 0, STATE_TEXGEN_EYE_Q}, SWIZZLE_XYZW},
+   {nullptr, {STATE_TEXGEN, 0, STATE_TEXGEN_EYE_Q}, SWIZZLE_XYZW},
 };
 
 static const struct gl_builtin_uniform_element gl_ObjectPlaneS_elements[] = {
-   {NULL, {STATE_TEXGEN, 0, STATE_TEXGEN_OBJECT_S}, SWIZZLE_XYZW},
+   {nullptr, {STATE_TEXGEN, 0, STATE_TEXGEN_OBJECT_S}, SWIZZLE_XYZW},
 };
 
 static const struct gl_builtin_uniform_element gl_ObjectPlaneT_elements[] = {
-   {NULL, {STATE_TEXGEN, 0, STATE_TEXGEN_OBJECT_T}, SWIZZLE_XYZW},
+   {nullptr, {STATE_TEXGEN, 0, STATE_TEXGEN_OBJECT_T}, SWIZZLE_XYZW},
 };
 
 static const struct gl_builtin_uniform_element gl_ObjectPlaneR_elements[] = {
-   {NULL, {STATE_TEXGEN, 0, STATE_TEXGEN_OBJECT_R}, SWIZZLE_XYZW},
+   {nullptr, {STATE_TEXGEN, 0, STATE_TEXGEN_OBJECT_R}, SWIZZLE_XYZW},
 };
 
 static const struct gl_builtin_uniform_element gl_ObjectPlaneQ_elements[] = {
-   {NULL, {STATE_TEXGEN, 0, STATE_TEXGEN_OBJECT_Q}, SWIZZLE_XYZW},
+   {nullptr, {STATE_TEXGEN, 0, STATE_TEXGEN_OBJECT_Q}, SWIZZLE_XYZW},
 };
 
 static const struct gl_builtin_uniform_element gl_Fog_elements[] = {
@@ -171,27 +171,27 @@ static const struct gl_builtin_uniform_element gl_Fog_elements[] = {
 };
 
 static const struct gl_builtin_uniform_element gl_NormalScale_elements[] = {
-   {NULL, {STATE_NORMAL_SCALE}, SWIZZLE_XXXX},
+   {nullptr, {STATE_NORMAL_SCALE}, SWIZZLE_XXXX},
 };
 
 static const struct gl_builtin_uniform_element gl_FogParamsOptimizedMESA_elements[] = {
-   {NULL, {STATE_INTERNAL, STATE_FOG_PARAMS_OPTIMIZED}, SWIZZLE_XYZW},
+   {nullptr, {STATE_INTERNAL, STATE_FOG_PARAMS_OPTIMIZED}, SWIZZLE_XYZW},
 };
 
 static const struct gl_builtin_uniform_element gl_CurrentAttribVertMESA_elements[] = {
-   {NULL, {STATE_INTERNAL, STATE_CURRENT_ATTRIB, 0}, SWIZZLE_XYZW},
+   {nullptr, {STATE_INTERNAL, STATE_CURRENT_ATTRIB, 0}, SWIZZLE_XYZW},
 };
 
 static const struct gl_builtin_uniform_element gl_CurrentAttribFragMESA_elements[] = {
-   {NULL, {STATE_INTERNAL, STATE_CURRENT_ATTRIB_MAYBE_VP_CLAMPED, 0}, SWIZZLE_XYZW},
+   {nullptr, {STATE_INTERNAL, STATE_CURRENT_ATTRIB_MAYBE_VP_CLAMPED, 0}, SWIZZLE_XYZW},
 };
 
 #define MATRIX(name, statevar, modifier)				\
    static const struct gl_builtin_uniform_element name ## _elements[] = { \
-      { NULL, { statevar, 0, 0, 0, modifier}, SWIZZLE_XYZW },		\
-      { NULL, { statevar, 0, 1, 1, modifier}, SWIZZLE_XYZW },		\
-      { NULL, { statevar, 0, 2, 2, modifier}, SWIZZLE_XYZW },		\
-      { NULL, { statevar, 0, 3, 3, modifier}, SWIZZLE_XYZW },		\
+      { nullptr, { statevar, 0, 0, 0, modifier}, SWIZZLE_XYZW },		\
+      { nullptr, { statevar, 0, 1, 1, modifier}, SWIZZLE_XYZW },		\
+      { nullptr, { statevar, 0, 2, 2, modifier}, SWIZZLE_XYZW },		\
+      { nullptr, { statevar, 0, 3, 3, modifier}, SWIZZLE_XYZW },		\
    }
 
 MATRIX(gl_ModelViewMatrix,
@@ -231,11 +231,11 @@ MATRIX(gl_TextureMatrixInverseTranspose,
        STATE_TEXTURE_MATRIX, STATE_MATRIX_INVERSE);
 
 static const struct gl_builtin_uniform_element gl_NormalMatrix_elements[] = {
-   { NULL, { STATE_MODELVIEW_MATRIX, 0, 0, 0, STATE_MATRIX_INVERSE},
+   { nullptr, { STATE_MODELVIEW_MATRIX, 0, 0, 0, STATE_MATRIX_INVERSE},
      MAKE_SWIZZLE4(SWIZZLE_X, SWIZZLE_Y, SWIZZLE_Z, SWIZZLE_Z) },
-   { NULL, { STATE_MODELVIEW_MATRIX, 0, 1, 1, STATE_MATRIX_INVERSE},
+   { nullptr, { STATE_MODELVIEW_MATRIX, 0, 1, 1, STATE_MATRIX_INVERSE},
      MAKE_SWIZZLE4(SWIZZLE_X, SWIZZLE_Y, SWIZZLE_Z, SWIZZLE_Z) },
-   { NULL, { STATE_MODELVIEW_MATRIX, 0, 2, 2, STATE_MATRIX_INVERSE},
+   { nullptr, { STATE_MODELVIEW_MATRIX, 0, 2, 2, STATE_MATRIX_INVERSE},
      MAKE_SWIZZLE4(SWIZZLE_X, SWIZZLE_Y, SWIZZLE_Z, SWIZZLE_Z) },
 };
 
@@ -294,7 +294,7 @@ static const struct gl_builtin_uniform_desc _mesa_builtin_uniform_desc[] = {
    STATEVAR(gl_CurrentAttribVertMESA),
    STATEVAR(gl_CurrentAttribFragMESA),
 
-   {NULL, NULL, 0}
+   {nullptr, nullptr, 0}
 };
 
 
@@ -486,13 +486,13 @@ builtin_variable_generator::add_uniform(const glsl_type *type,
    ir_variable *const uni = add_variable(name, type, ir_var_uniform, -1, prec);
 
    unsigned i;
-   for (i = 0; _mesa_builtin_uniform_desc[i].name != NULL; i++) {
+   for (i = 0; _mesa_builtin_uniform_desc[i].name != nullptr; i++) {
       if (strcmp(_mesa_builtin_uniform_desc[i].name, name) == 0) {
 	 break;
       }
    }
 
-   assert(_mesa_builtin_uniform_desc[i].name != NULL);
+   assert(_mesa_builtin_uniform_desc[i].name != nullptr);
    const struct gl_builtin_uniform_desc* const statevar =
       &_mesa_builtin_uniform_desc[i];
 

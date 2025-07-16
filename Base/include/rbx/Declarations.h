@@ -17,7 +17,7 @@ use several layers of classes, none intended to be used by themselves,
 but only as base classes for yet more classes. ATL provides many such 
 classes using templates, another source of class proliferation. All of 
 this adds up to lots of initialization code and useless vtables with 
-NULL entries. The total bloat can become significant, especially when 
+nullptr entries. The total bloat can become significant, especially when 
 you're developing small objects that must load over a slow medium like 
 the Internet. 
   So __declspec(novtable) was invented to solve the problem. It's a 

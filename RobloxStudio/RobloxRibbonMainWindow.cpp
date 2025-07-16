@@ -127,11 +127,11 @@ static const char* settingRecentFiles       = "rbxRecentFiles";
 static const char* settingLastDirectory     = "rbxl_last_directory";
 
 RobloxRibbonMainWindow::RobloxRibbonMainWindow(RobloxMainWindow* pMainWindow)
-: Qtitan::RibbonMainWindow(NULL)
+: Qtitan::RibbonMainWindow(nullptr)
 , m_LastDirectory(".")
-, m_pRibbonStyle(NULL)
-, m_pRibbonMinimizeAction(NULL)
-, m_pQuickAccessConfigDialog(NULL)
+, m_pRibbonStyle(nullptr)
+, m_pRibbonMinimizeAction(nullptr)
+, m_pQuickAccessConfigDialog(nullptr)
 , m_bInitialized(false)
 {
 	// DO NOT ADD MORE HERE
@@ -202,7 +202,7 @@ RibbonPage* RobloxRibbonMainWindow::createRibbonPage(const QString& objectName, 
 RibbonGroup* RobloxRibbonMainWindow::createRibbonGroup(RibbonPage* pParent, const QString& objectName, const QString& groupTitle)
 {
 	if (!pParent)
-		return NULL;
+		return nullptr;
 
 	RibbonGroup* pRibbonGroup = pParent->findChild<RibbonGroup*>(objectName);
 	if (pRibbonGroup)
@@ -534,7 +534,7 @@ void RobloxRibbonMainWindow::parseAndCreateChildren(const QDomElement& tabPageEl
 			}
 		}
 		
-		QObject* pCreatedElement   = NULL;
+		QObject* pCreatedElement   = nullptr;
 		QString  domElementTagName = domElementIterator.tagName().toLower();
 
 		if (domElementTagName == elemTabPage)
@@ -714,7 +714,7 @@ QWidget* RobloxRibbonMainWindow::parseAndCreateColorPicker(const QDomElement& do
 	pAddedAction->setToolTip(getToolTip(domElement));
 
 	QLayoutItem* pLayoutItem = pRibbonGroup->layout()->itemAt(pRibbonGroup->layout()->count()-1);
-    QToolButton* pToolButton = qobject_cast<QToolButton*>(pLayoutItem ? pLayoutItem->widget() : NULL);
+    QToolButton* pToolButton = qobject_cast<QToolButton*>(pLayoutItem ? pLayoutItem->widget() : nullptr);
 	if (pToolButton)
 	{
 		if (!domElement.attribute(attribCheckable).isEmpty() && (domElement.attribute(attribCheckable) == "true"))
@@ -1005,7 +1005,7 @@ QActionGroup* RobloxRibbonMainWindow::parseAndCreateActionGroup(const QDomElemen
 
 	bool isCheckable = domElement.attribute(attribCheckable) == "true";
 
-	QAction* pAction = NULL;
+	QAction* pAction = nullptr;
 	QList<QAction*> actions = dummyActionGroup.actions();
 	for (int ii = 0; ii < actions.size(); ii++)
 	{
@@ -1356,7 +1356,7 @@ QAction* RobloxRibbonMainWindow::getAction(const QDomElement& domElement)
 {
 	QString objectName = getName(domElement);
 	if (objectName.isEmpty())
-		return NULL;
+		return nullptr;
 
 	QAction* pAction = findChildAction(objectName);
 	if (!pAction)
@@ -1669,7 +1669,7 @@ void RobloxRibbonMainWindow::handleToolButtonClicked()
 void RobloxRibbonMainWindow::handleColorPickMenu()
 {
 	QMenu* pMenu = qobject_cast<QMenu*>(sender());
-	QToolButton* pButton = pMenu ? qobject_cast<QToolButton*>(pMenu->parent()) : NULL;
+	QToolButton* pButton = pMenu ? qobject_cast<QToolButton*>(pMenu->parent()) : nullptr;
 	if (!pMenu || !pButton)
 		return;
 

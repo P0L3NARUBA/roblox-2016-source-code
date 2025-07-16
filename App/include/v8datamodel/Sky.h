@@ -19,6 +19,9 @@ namespace RBX {
 		bool drawCelestialBodies;
 	private:
 		int numStars;
+
+		bool useHDRI;
+		TextureId HDRI;
 	public:
 		Sky();
 		int getNumStars() const { return numStars; }
@@ -36,6 +39,12 @@ namespace RBX {
         const TextureId&  getSkyboxBk() const { return skyBk; }
         const TextureId&  getSkyboxDn() const { return skyDn; }
         const TextureId&  getSkyboxFt() const { return skyFt; }
+
+		bool getUseHDRI() const { return useHDRI; }
+		void setUseHDRI(bool value);
+
+		const TextureId& getHDRI() const { return HDRI; }
+		void setHDRI(const TextureId& texId);
        
 		static Reflection::PropDescriptor<Sky, int> prop_StarCount;
 		static Reflection::BoundProp<bool> prop_CelestialBodiesShown;
@@ -46,6 +55,9 @@ namespace RBX {
 		static Reflection::PropDescriptor<Sky, TextureId> prop_Back;
 		static Reflection::PropDescriptor<Sky, TextureId> prop_Front;
 		static Reflection::PropDescriptor<Sky, TextureId> prop_Down;
+
+		static Reflection::PropDescriptor<Sky, bool> prop_UseHDRI;
+		static Reflection::PropDescriptor<Sky, TextureId> prop_HDRI;
 
 		static Reflection::PropDescriptor<Sky, TextureId> prop_SkyUp;
 		static Reflection::PropDescriptor<Sky, TextureId> prop_SkyLf;

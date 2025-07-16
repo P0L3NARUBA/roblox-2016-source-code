@@ -64,7 +64,7 @@ bool DragUtilities::anyPartAlive(const PartArray& parts)
 World* DragUtilities::partsToPrimitives(const PartArray& parts, G3D::Array<Primitive*>& primitives)
 {
 	RBXASSERT(primitives.size() == 0);
-	World* answer = NULL;
+	World* answer = nullptr;
 
 	for (size_t i = 0; i < parts.size(); ++i) {
 		const shared_ptr<PartInstance>& part = parts[i].lock();
@@ -337,7 +337,7 @@ bool DragUtilities::hitObjectOrPlane(const ContactManager& contactManager,
 
 	if (!contactManager.getHit(	searchRay,
 								&ignorePrims,
-								NULL,
+								nullptr,
 								hit))
 	{
 		if (!Math::intersectRayPlane(searchRay, Plane(Vector3::unitY(), Vector3::zero()), hit)) {
@@ -361,7 +361,7 @@ bool DragUtilities::hitObject(	const ContactManager& contactManager,
 
 	if (!contactManager.getHit(	searchRay,
 								&ignorePrims,
-								NULL,
+								nullptr,
 								hit))
 		return false;
 

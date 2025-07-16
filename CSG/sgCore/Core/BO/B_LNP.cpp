@@ -9,8 +9,8 @@ static int is_faces_equals(lpNPW np1, short face1, lpNPW np2, short face2,
 static bool is_faces_on_one_plane(lpNPW np1, short face1, lpNPW np2, short face2);
 
 short            facea,faceb;
-NP_VERTEX_LIST vera = {0,0,NULL,NULL};
-NP_VERTEX_LIST verb = {0,0,NULL,NULL};
+NP_VERTEX_LIST vera = {0,0,nullptr,nullptr};
+NP_VERTEX_LIST verb = {0,0,nullptr,nullptr};
 
 BOOL b_lnp(lpNP_STR str1,lpNP_STR str2)
 {

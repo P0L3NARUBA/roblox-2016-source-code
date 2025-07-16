@@ -91,7 +91,7 @@ namespace RBX {
             {
                 Reflection::EventArguments args(1);
                 args[0] = shared_from(player);
-                raiseEventInvocation(event_RequestServerOutputSignal, args, NULL);
+                raiseEventInvocation(event_RequestServerOutputSignal, args, nullptr);
             }
         }
     }
@@ -135,7 +135,7 @@ namespace RBX {
 				Instance* instance = player;
 				args[0] = shared_from(instance);
 				args[1] = source;
-				raiseEventInvocation(event_requestScriptExecutionSignal, args, NULL);
+				raiseEventInvocation(event_requestScriptExecutionSignal, args, nullptr);
 			}
 		}
 	}
@@ -237,7 +237,7 @@ namespace RBX {
 	{
 		if (shared_ptr<Network::Player> player = p.lock())
 		{
-			if (player->getParent() != NULL)
+			if (player->getParent() != nullptr)
 			{
 				return false;
 			}

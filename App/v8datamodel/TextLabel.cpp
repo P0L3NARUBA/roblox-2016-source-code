@@ -20,7 +20,7 @@ IMPLEMENT_GUI_TEXT_MIXIN(TextLabel);
 
 void TextLabel::render2d(Adorn* adorn) 
 {
-	render2dContext(adorn, NULL);	
+	render2dContext(adorn, nullptr);	
 }
 
 void TextLabel::render2dContext(Adorn* adorn, const Instance* context)

@@ -32,7 +32,7 @@ static Token debug_preprocessor_lexer(hlmojo_IncludeState *s)
 #if DEBUG_TOKENIZER
 static void print_debug_lexing_position(hlmojo_IncludeState *s)
 {
-    if (s != NULL)
+    if (s != nullptr)
         printf("NOW LEXING %s:%d ...\n", s->filename, s->line);
 } // print_debug_lexing_position
 #else
@@ -71,7 +71,7 @@ static inline void out_of_memory(Context *ctx)
 static inline void *Malloc(Context *ctx, const size_t len)
 {
     void *retval = ctx->malloc((int) len, ctx->malloc_data);
-    if (retval == NULL)
+    if (retval == nullptr)
         out_of_memory(ctx);
     return retval;
 } // Malloc
@@ -94,7 +94,7 @@ static void FreeBridge(void *ptr, void *data)
 static inline char *StrDup(Context *ctx, const char *str)
 {
     char *retval = (char *) Malloc(ctx, strlen(str) + 1);
-    if (retval != NULL)
+    if (retval != nullptr)
         strcpy(retval, str);
     return retval;
 } // StrDup
@@ -223,11 +223,11 @@ int MOJOSHADER_hlslang_internal_include_open(MOJOSHADER_hlslang_includeType inct
 
     const DWORD share = FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE;
     const HANDLE handle = CreateFileW(wpath, FILE_GENERIC_READ, share,
-                                      NULL, OPEN_EXISTING, NULL, NULL);
+                                      nullptr, OPEN_EXISTING, nullptr, nullptr);
     if (handle == INVALID_HANDLE_VALUE)
         return 0;
 
-    const DWORD fileSize = GetFileSize(handle, NULL);
+    const DWORD fileSize = GetFileSize(handle, nullptr);
     if (fileSize == INVALID_FILE_SIZE)
     {
         CloseHandle(handle);
@@ -235,14 +235,14 @@ int MOJOSHADER_hlslang_internal_include_open(MOJOSHADER_hlslang_includeType inct
     } // if
 
     char *data = (char *) m(fileSize, d);
-    if (data == NULL)
+    if (data == nullptr)
     {
         CloseHandle(handle);
         return 0;
     } // if
 
     DWORD readLength = 0;
-    if (!ReadFile(handle, data, fileSize, &readLength, NULL))
+    if (!ReadFile(handle, data, fileSize, &readLength, nullptr))
     {
         CloseHandle(handle);
         f(data, d);
@@ -264,7 +264,7 @@ int MOJOSHADER_hlslang_internal_include_open(MOJOSHADER_hlslang_includeType inct
     if (stat(fname, &statbuf) == -1)
         return 0;
     char *data = (char *) m(statbuf.st_size, d);
-    if (data == NULL)
+    if (data == nullptr)
         return 0;
     const int fd = open(fname, O_RDONLY);
     if (fd == -1)
@@ -302,7 +302,7 @@ void MOJOSHADER_hlslang_internal_include_close(const char *data, MOJOSHADER_hlsl
 #define FREE_POOL(type, poolname) \
     static void free_##poolname##_pool(Context *ctx) { \
         type *item = ctx->poolname##_pool; \
-        while (item != NULL) { \
+        while (item != nullptr) { \
             type *next = item->next; \
             Free(ctx, item); \
             item = next; \
@@ -312,11 +312,11 @@ void MOJOSHADER_hlslang_internal_include_close(const char *data, MOJOSHADER_hlsl
 #define GET_POOL(type, poolname) \
     static type *get_##poolname(Context *ctx) { \
         type *retval = ctx->poolname##_pool; \
-        if (retval != NULL) \
+        if (retval != nullptr) \
             ctx->poolname##_pool = retval->next; \
         else \
             retval = (type *) Malloc(ctx, sizeof (type)); \
-        if (retval != NULL) \
+        if (retval != nullptr) \
             memset(retval, '\0', sizeof (type)); \
         return retval; \
     }
@@ -373,11 +373,11 @@ static int add_define(Context *ctx, const char *sym, const char *val,
     } // while
 
     bucket = get_define(ctx);
-    if (bucket == NULL)
+    if (bucket == nullptr)
         return 0;
 
     bucket->definition = val;
-    bucket->original = NULL;
+    bucket->original = nullptr;
     bucket->identifier = sym;
     bucket->parameters = (const char **) parameters;
     bucket->paramcount = paramcount;
@@ -389,7 +389,7 @@ static int add_define(Context *ctx, const char *sym, const char *val,
 
 static void free_define(Context *ctx, hlmojo_Define *def)
 {
-    if (def != NULL)
+    if (def != nullptr)
     {
         int i;
         for (i = 0; i < def->paramcount; i++)
@@ -407,12 +407,12 @@ static int remove_define(Context *ctx, const char *sym)
 {
     const uint8 hash = hash_define(sym);
     hlmojo_Define *bucket = ctx->define_hashtable[hash];
-    hlmojo_Define *prev = NULL;
+    hlmojo_Define *prev = nullptr;
     while (bucket)
     {
         if (strcmp(bucket->identifier, sym) == 0)
         {
-            if (prev == NULL)
+            if (prev == nullptr)
                 ctx->define_hashtable[hash] = bucket->next;
             else
                 prev->next = bucket->next;
@@ -452,7 +452,7 @@ static const hlmojo_Define *find_define(Context *ctx, const char *sym)
         const size_t len = strlen(fname) + 2;
         char *str = (char *) Malloc(ctx, len);
         if (!str)
-            return NULL;
+            return nullptr;
         str[0] = '\"';
         memcpy(str + 1, fname, len - 2);
         str[len - 1] = '\"';
@@ -475,7 +475,7 @@ static const hlmojo_Define *find_define(Context *ctx, const char *sym)
         return ctx->line_macro;
     } // else
 
-    return NULL;
+    return nullptr;
 } // find_define
 
 
@@ -493,14 +493,14 @@ static const hlmojo_Define *find_define_by_token(Context *ctx)
 static const hlmojo_Define *find_macro_arg(const hlmojo_IncludeState *state,
                                     const hlmojo_Define *defines)
 {
-    const hlmojo_Define *def = NULL;
+    const hlmojo_Define *def = nullptr;
     char *sym = (char *) alloca(state->tokenlen + 1);
     memcpy(sym, state->token, state->tokenlen);
     sym[state->tokenlen] = '\0';
 
-    for (def = defines; def != NULL; def = def->next)
+    for (def = defines; def != nullptr; def = def->next)
     {
-        assert(def->parameters == NULL);  // args can't have args!
+        assert(def->parameters == nullptr);  // args can't have args!
         assert(def->paramcount == 0);  // args can't have args!
         if (strcmp(def->identifier, sym) == 0)
             break;
@@ -516,7 +516,7 @@ static void put_all_defines(Context *ctx)
     for (i = 0; i < STATICARRAYLEN(ctx->define_hashtable); i++)
     {
         hlmojo_Define *bucket = ctx->define_hashtable[i];
-        ctx->define_hashtable[i] = NULL;
+        ctx->define_hashtable[i] = nullptr;
         while (bucket)
         {
             hlmojo_Define *next = bucket->next;
@@ -532,13 +532,13 @@ static int push_source(Context *ctx, const char *fname, const char *source,
                        MOJOSHADER_hlslang_includeClose close_callback)
 {
     hlmojo_IncludeState *state = get_include(ctx);
-    if (state == NULL)
+    if (state == nullptr)
         return 0;
 
-    if (fname != NULL)
+    if (fname != nullptr)
     {
         state->filename = hlmojo_stringcache(ctx->filename_cache, fname);
-        if (state->filename == NULL)
+        if (state->filename == nullptr)
         {
             put_include(ctx, state);
             return 0;
@@ -566,8 +566,8 @@ static int push_source(Context *ctx, const char *fname, const char *source,
 static void pop_source(Context *ctx)
 {
     hlmojo_IncludeState *state = ctx->include_stack;
-    assert(state != NULL);  // more pops than pushes!
-    if (state == NULL)
+    assert(state != nullptr);  // more pops than pushes!
+    if (state == nullptr)
         return;
 
     if (state->close_callback)
@@ -612,13 +612,13 @@ hlmojo_Preprocessor *hlmojo_preprocessor_start(const char *fname, const char *so
     int okay = 1;
     unsigned int i = 0;
 
-    // the preprocessor is internal-only, so we verify all these are != NULL.
-    assert(m != NULL);
-    assert(f != NULL);
+    // the preprocessor is internal-only, so we verify all these are != nullptr.
+    assert(m != nullptr);
+    assert(f != nullptr);
 
     Context *ctx = (Context *) m(sizeof (Context), d);
-    if (ctx == NULL)
-        return NULL;
+    if (ctx == nullptr)
+        return nullptr;
 
     memset(ctx, '\0', sizeof (Context));
     ctx->malloc = m;
@@ -628,25 +628,25 @@ hlmojo_Preprocessor *hlmojo_preprocessor_start(const char *fname, const char *so
     ctx->close_callback = close_callback;
 
     ctx->filename_cache = hlmojo_stringcache_create(MallocBridge, FreeBridge, ctx);
-    okay = ((okay) && (ctx->filename_cache != NULL));
+    okay = ((okay) && (ctx->filename_cache != nullptr));
 
     ctx->file_macro = get_define(ctx);
-    okay = ((okay) && (ctx->file_macro != NULL));
+    okay = ((okay) && (ctx->file_macro != nullptr));
     if ((okay) && (ctx->file_macro))
         okay = ((ctx->file_macro->identifier = StrDup(ctx, "__FILE__")) != 0);
 
     ctx->line_macro = get_define(ctx);
-    okay = ((okay) && (ctx->line_macro != NULL));
+    okay = ((okay) && (ctx->line_macro != nullptr));
     if ((okay) && (ctx->line_macro))
         okay = ((ctx->line_macro->identifier = StrDup(ctx, "__LINE__")) != 0);
 
     // let the usual preprocessor parser sort these out.
-    char *define_include = NULL;
+    char *define_include = nullptr;
     unsigned int define_include_len = 0;
     if ((okay) && (define_count > 0))
     {
         hlmojo_Buffer *predefbuf = hlmojo_buffer_create(256, MallocBridge, FreeBridge, ctx);
-        okay = okay && (predefbuf != NULL);
+        okay = okay && (predefbuf != nullptr);
         for (i = 0; okay && (i < define_count); i++)
         {
             okay = okay && hlmojo_buffer_append_fmt(predefbuf, "#define %s %s\n",
@@ -657,17 +657,17 @@ hlmojo_Preprocessor *hlmojo_preprocessor_start(const char *fname, const char *so
         if (define_include_len > 0)
         {
             define_include = hlmojo_buffer_flatten(predefbuf);
-            okay = okay && (define_include != NULL);
+            okay = okay && (define_include != nullptr);
         } // if
         hlmojo_buffer_destroy(predefbuf);
     } // if
 
-    if ((okay) && (!push_source(ctx,fname,source,sourcelen,1,NULL)))
+    if ((okay) && (!push_source(ctx,fname,source,sourcelen,1,nullptr)))
         okay = 0;
 
     if ((okay) && (define_include_len > 0))
     {
-        assert(define_include != NULL);
+        assert(define_include != nullptr);
         okay = push_source(ctx, "<predefined macros>", define_include,
                            define_include_len, 1, close_define_include);
     } // if
@@ -675,7 +675,7 @@ hlmojo_Preprocessor *hlmojo_preprocessor_start(const char *fname, const char *so
     if (!okay)
     {
         hlmojo_preprocessor_end((hlmojo_Preprocessor *) ctx);
-        return NULL;
+        return nullptr;
     } // if
 
     return (hlmojo_Preprocessor *) ctx;
@@ -685,15 +685,15 @@ hlmojo_Preprocessor *hlmojo_preprocessor_start(const char *fname, const char *so
 void hlmojo_preprocessor_end(hlmojo_Preprocessor *_ctx)
 {
     Context *ctx = (Context *) _ctx;
-    if (ctx == NULL)
+    if (ctx == nullptr)
         return;
 
-    while (ctx->include_stack != NULL)
+    while (ctx->include_stack != nullptr)
         pop_source(ctx);
 
     put_all_defines(ctx);
 
-    if (ctx->filename_cache != NULL)
+    if (ctx->filename_cache != nullptr)
         hlmojo_stringcache_destroy(ctx->filename_cache);
 
     free_define(ctx, ctx->file_macro);
@@ -757,7 +757,7 @@ static void handle_pp_include(Context *ctx)
     hlmojo_IncludeState *state = ctx->include_stack;
     Token token = lexer(state);
     MOJOSHADER_hlslang_includeType incltype;
-    char *filename = NULL;
+    char *filename = nullptr;
     int bogus = 0;
 
     if (token == TOKEN_STRING_LITERAL)
@@ -804,9 +804,9 @@ static void handle_pp_include(Context *ctx)
         return;
     } // else
 
-    const char *newdata = NULL;
+    const char *newdata = nullptr;
     unsigned int newbytes = 0;
-    if ((ctx->open_callback == NULL) || (ctx->close_callback == NULL))
+    if ((ctx->open_callback == nullptr) || (ctx->close_callback == nullptr))
     {
         fail(ctx, "Saw #include, but no include callbacks defined");
         return;
@@ -832,7 +832,7 @@ static void handle_pp_include(Context *ctx)
 static void handle_pp_line(Context *ctx)
 {
     hlmojo_IncludeState *state = ctx->include_stack;
-    char *filename = NULL;
+    char *filename = nullptr;
     int linenum = 0;
     int bogus = 0;
 
@@ -870,7 +870,7 @@ static void handle_pp_line(Context *ctx)
     } // if
 
     const char *cached = hlmojo_stringcache(ctx->filename_cache, filename);
-    state->filename = cached;  // may be NULL if hlmojo_stringcache() failed.
+    state->filename = cached;  // may be nullptr if hlmojo_stringcache() failed.
     state->line = linenum;
 } // handle_pp_line
 
@@ -970,9 +970,9 @@ static void handle_pp_define(Context *ctx)
         return;
     } // if
 
-    char *definition = NULL;
+    char *definition = nullptr;
     char *sym = (char *) Malloc(ctx, state->tokenlen+1);
-    if (sym == NULL)
+    if (sym == nullptr)
         return;
     memcpy(sym, state->token, state->tokenlen);
     sym[state->tokenlen] = '\0';
@@ -991,7 +991,7 @@ static void handle_pp_define(Context *ctx)
         {
             failf(ctx, "'%s' already defined", sym); // !!! FIXME: warning?
             free_define(ctx, ctx->file_macro);
-            ctx->file_macro = NULL;
+            ctx->file_macro = nullptr;
         } // if
     } // if
     else if (strcmp(sym, "__LINE__") == 0)
@@ -1000,7 +1000,7 @@ static void handle_pp_define(Context *ctx)
         {
             failf(ctx, "'%s' already defined", sym); // !!! FIXME: warning?
             free_define(ctx, ctx->line_macro);
-            ctx->line_macro = NULL;
+            ctx->line_macro = nullptr;
         } // if
     } // else if
 
@@ -1010,10 +1010,10 @@ static void handle_pp_define(Context *ctx)
     state->report_whitespace = 0;
 
     int params = 0;
-    char **idents = NULL;
+    char **idents = nullptr;
     static const char space = ' ';
 	int hashhash_error = 0;
-	hlmojo_Buffer *buffer = NULL;
+	hlmojo_Buffer *buffer = nullptr;
 	size_t buflen = 0;
 
     if (state->tokenval == ((Token) ' '))
@@ -1042,7 +1042,7 @@ static void handle_pp_define(Context *ctx)
         else
         {
             idents = (char **) Malloc(ctx, sizeof (char *) * params);
-            if (idents == NULL)
+            if (idents == nullptr)
                 goto handle_pp_define_failed;
 
             // roll all the way back, do it again.
@@ -1056,7 +1056,7 @@ static void handle_pp_define(Context *ctx)
                 assert(state->tokenval == TOKEN_IDENTIFIER);
 
                 char *dst = (char *) Malloc(ctx, state->tokenlen+1);
-                if (dst == NULL)
+                if (dst == nullptr)
                     break;
 
                 memcpy(dst, state->token, state->tokenlen);
@@ -1161,7 +1161,7 @@ static void handle_pp_define(Context *ctx)
 handle_pp_define_failed:
     Free(ctx, sym);
     Free(ctx, definition);
-    if (idents != NULL)
+    if (idents != nullptr)
     {
         while (params--)
             Free(ctx, idents[params]);
@@ -1196,7 +1196,7 @@ static void handle_pp_undef(Context *ctx)
         {
             failf(ctx, "undefining \"%s\"", sym);  // !!! FIXME: should be warning.
             free_define(ctx, ctx->file_macro);
-            ctx->file_macro = NULL;
+            ctx->file_macro = nullptr;
         } // if
     } // if
     else if (strcmp(sym, "__LINE__") == 0)
@@ -1205,7 +1205,7 @@ static void handle_pp_undef(Context *ctx)
         {
             failf(ctx, "undefining \"%s\"", sym);  // !!! FIXME: should be warning.
             free_define(ctx, ctx->line_macro);
-            ctx->line_macro = NULL;
+            ctx->line_macro = nullptr;
         } // if
     } // if
 
@@ -1222,7 +1222,7 @@ static hlmojo_Conditional *_handle_pp_ifdef(Context *ctx, const Token type)
     if (lexer(state) != TOKEN_IDENTIFIER)
     {
         fail(ctx, "Macro names must be indentifiers");
-        return NULL;
+        return nullptr;
     } // if
 
     char *sym = (char *) alloca(state->tokenlen+1);
@@ -1235,16 +1235,16 @@ static hlmojo_Conditional *_handle_pp_ifdef(Context *ctx, const Token type)
             fail(ctx, "Invalid #ifdef directive");
         else
             fail(ctx, "Invalid #ifndef directive");
-        return NULL;
+        return nullptr;
     } // if
 
     hlmojo_Conditional *conditional = get_conditional(ctx);
-    assert((conditional != NULL) || (ctx->out_of_memory));
-    if (conditional == NULL)
-        return NULL;
+    assert((conditional != nullptr) || (ctx->out_of_memory));
+    if (conditional == nullptr)
+        return nullptr;
 
     hlmojo_Conditional *parent = state->conditional_stack;
-    const int found = (find_define(ctx, sym) != NULL);
+    const int found = (find_define(ctx, sym) != nullptr);
     const int chosen = (type == TOKEN_PP_IFDEF) ? found : !found;
     const int skipping = ( (((parent) && (parent->skipping))) || (!chosen) );
 
@@ -1273,17 +1273,17 @@ static inline void handle_pp_ifndef(Context *ctx)
 static int replace_and_push_macro(Context *ctx, const hlmojo_Define *def,
                                   const hlmojo_Define *params)
 {
-    char *final = NULL;
+    char *final = nullptr;
 
     // We push the #define and lex it, building a buffer with argument
     //  replacement, stringification, and concatenation.
     hlmojo_Buffer *buffer = hlmojo_buffer_create(128, MallocBridge, FreeBridge, ctx);
-    if (buffer == NULL)
+    if (buffer == nullptr)
         return 0;
 
     hlmojo_IncludeState *state = ctx->include_stack;
     if (!push_source(ctx, state->filename, def->definition,
-                     strlen(def->definition), state->line, NULL))
+                     strlen(def->definition), state->line, nullptr))
     {
         hlmojo_buffer_destroy(buffer);
         return 0;
@@ -1293,7 +1293,7 @@ static int replace_and_push_macro(Context *ctx, const hlmojo_Define *def,
     while (lexer(state) != TOKEN_EOI)
     {
         int wantorig = 0;
-        const hlmojo_Define *arg = NULL;
+        const hlmojo_Define *arg = nullptr;
 
         // put a space between tokens if we're not concatenating.
         if (state->tokenval == TOKEN_HASHHASH)  // concatenate?
@@ -1325,7 +1325,7 @@ static int replace_and_push_macro(Context *ctx, const hlmojo_Define *def,
             if (state->tokenval == TOKEN_IDENTIFIER)
             {
                 arg = find_macro_arg(state, params);
-                if (arg != NULL)
+                if (arg != nullptr)
                 {
                     data = arg->original;
                     len = strlen(data);
@@ -1344,7 +1344,7 @@ static int replace_and_push_macro(Context *ctx, const hlmojo_Define *def,
         if (state->tokenval == TOKEN_IDENTIFIER)
         {
             arg = find_macro_arg(state, params);
-            if (arg != NULL)
+            if (arg != nullptr)
             {
                 if (!wantorig)
                 {
@@ -1387,7 +1387,7 @@ static int handle_macro_args(Context *ctx, const char *sym, const hlmojo_Define 
 {
     int retval = 0;
     hlmojo_IncludeState *state = ctx->include_stack;
-    hlmojo_Define *params = NULL;
+    hlmojo_Define *params = nullptr;
     const int expected = (def->paramcount < 0) ? 0 : def->paramcount;
     int saw_params = 0;
     hlmojo_IncludeState saved;  // can't pushback, we need the original token.
@@ -1461,7 +1461,7 @@ static int handle_macro_args(Context *ctx, const char *sym, const hlmojo_Define 
                 goto handle_macro_args_failed;
             } // else if
 
-            assert(expr != NULL);
+            assert(expr != nullptr);
 
             if (!hlmojo_buffer_append(buffer, expr, exprlen))
                 goto handle_macro_args_failed;
@@ -1527,7 +1527,7 @@ static int handle_macro_args(Context *ctx, const char *sym, const hlmojo_Define 
     // "a()" should match "#define a()" ...
     if ((expected == 0) && (saw_params == 1) && (void_call))
     {
-        assert(params == NULL);
+        assert(params == nullptr);
         saw_params = 0;
     } // if
 
@@ -1545,7 +1545,7 @@ handle_macro_args_failed:
     while (params)
     {
         hlmojo_Define *next = params->next;
-        params->identifier = NULL;
+        params->identifier = nullptr;
         free_define(ctx, params);
         params = next;
     } // while
@@ -1572,13 +1572,13 @@ static int handle_pp_identifier(Context *ctx)
 
     // Is this identifier #defined?
     const hlmojo_Define *def = find_define(ctx, sym);
-    if (def == NULL)
+    if (def == nullptr)
         return 0;   // just send the token through unchanged.
     else if (def->paramcount != 0)
         return handle_macro_args(ctx, sym, def);
 
     const size_t deflen = strlen(def->definition);
-    return push_source(ctx, fname, def->definition, deflen, line, NULL);
+    return push_source(ctx, fname, def->definition, deflen, line, nullptr);
 } // handle_pp_identifier
 
 
@@ -1772,7 +1772,7 @@ static int reduce_pp_expression(Context *ctx)
                         fail(ctx, "operator 'defined' requires an identifier");
                         return -1;
                     } // if
-                    const int found = (find_define_by_token(ctx) != NULL);
+                    const int found = (find_define_by_token(ctx) != nullptr);
 
                     if (paren)
                     {
@@ -1920,12 +1920,12 @@ static hlmojo_Conditional *handle_pp_if(Context *ctx)
     hlmojo_IncludeState *state = ctx->include_stack;
     const int result = reduce_pp_expression(ctx);
     if (result == -1)
-        return NULL;
+        return nullptr;
 
     hlmojo_Conditional *conditional = get_conditional(ctx);
-    assert((conditional != NULL) || (ctx->out_of_memory));
-    if (conditional == NULL)
-        return NULL;
+    assert((conditional != nullptr) || (ctx->out_of_memory));
+    if (conditional == nullptr)
+        return nullptr;
 
     hlmojo_Conditional *parent = state->conditional_stack;
     const int chosen = result;
@@ -1949,7 +1949,7 @@ static void handle_pp_elif(Context *ctx)
 
     hlmojo_IncludeState *state = ctx->include_stack;
     hlmojo_Conditional *cond = state->conditional_stack;
-    if (cond == NULL)
+    if (cond == nullptr)
         fail(ctx, "#elif without #if");
     else if (cond->type == TOKEN_PP_ELSE)
         fail(ctx, "#elif after #else");
@@ -1971,7 +1971,7 @@ static void handle_pp_else(Context *ctx)
 
     if (!require_newline(state))
         fail(ctx, "Invalid #else directive");
-    else if (cond == NULL)
+    else if (cond == nullptr)
         fail(ctx, "#else without #if");
     else if (cond->type == TOKEN_PP_ELSE)
         fail(ctx, "#else after #else");
@@ -1993,7 +1993,7 @@ static void handle_pp_endif(Context *ctx)
 
     if (!require_newline(state))
         fail(ctx, "Invalid #endif directive");
-    else if (cond == NULL)
+    else if (cond == nullptr)
         fail(ctx, "Unmatched #endif");
     else
     {
@@ -2042,15 +2042,15 @@ static inline const char *_hlmojo_preprocessor_nexttoken(hlmojo_Preprocessor *_c
         } // if
 
         hlmojo_IncludeState *state = ctx->include_stack;
-        if (state == NULL)
+        if (state == nullptr)
         {
             *_token = TOKEN_EOI;
             *_len = 0;
-            return NULL;  // we're done!
+            return nullptr;  // we're done!
         } // if
 
         const hlmojo_Conditional *cond = state->conditional_stack;
-        const int skipping = ((cond != NULL) && (cond->skipping));
+        const int skipping = ((cond != nullptr) && (cond->skipping));
 
         const Token token = lexer(state);
 
@@ -2060,7 +2060,7 @@ static inline const char *_hlmojo_preprocessor_nexttoken(hlmojo_Preprocessor *_c
         if (token == TOKEN_EOI)
         {
             assert(state->bytes_left == 0);
-            if (state->conditional_stack != NULL)
+            if (state->conditional_stack != nullptr)
             {
                 unterminated_pp_condition(ctx);
                 continue;  // returns an error.
@@ -2176,7 +2176,7 @@ static inline const char *_hlmojo_preprocessor_nexttoken(hlmojo_Preprocessor *_c
     assert(0 && "shouldn't hit this code");
     *_token = TOKEN_UNKNOWN;
     *_len = 0;
-    return NULL;
+    return nullptr;
 } // _hlmojo_preprocessor_nexttoken
 
 
@@ -2192,10 +2192,10 @@ const char *hlmojo_preprocessor_nexttoken(hlmojo_Preprocessor *ctx, unsigned int
 const char *hlmojo_preprocessor_sourcepos(hlmojo_Preprocessor *_ctx, unsigned int *pos)
 {
     Context *ctx = (Context *) _ctx;
-    if (ctx->include_stack == NULL)
+    if (ctx->include_stack == nullptr)
     {
         *pos = 0;
-        return NULL;
+        return nullptr;
     } // if
 
     *pos = ctx->include_stack->line;

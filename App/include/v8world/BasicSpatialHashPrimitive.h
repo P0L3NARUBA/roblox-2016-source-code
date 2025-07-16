@@ -43,7 +43,7 @@ namespace RBX {
 		~BasicSpatialHashPrimitive()
 		{
 			RBXASSERT(spatialNodeLevel == -1);	//
-			RBXASSERT_SPATIAL_HASH(spatialNodes == NULL);
+			RBXASSERT_SPATIAL_HASH(spatialNodes == nullptr);
 			RBXASSERT_SPATIAL_HASH(spatialNodeCount == 0);
 			spatialNodeLevel = -2;
 		}

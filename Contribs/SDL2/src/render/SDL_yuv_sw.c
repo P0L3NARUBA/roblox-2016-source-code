@@ -1013,7 +1013,7 @@ SDL_SW_SetupYUVDisplay(SDL_SW_YUVTexture * swdata, Uint32 target_format)
     }
 
     SDL_FreeSurface(swdata->display);
-    swdata->display = NULL;
+    swdata->display = nullptr;
     return 0;
 }
 
@@ -1037,13 +1037,13 @@ SDL_SW_CreateYUVTexture(Uint32 format, int w, int h)
         break;
     default:
         SDL_SetError("Unsupported YUV format");
-        return NULL;
+        return nullptr;
     }
 
     swdata = (SDL_SW_YUVTexture *) SDL_calloc(1, sizeof(*swdata));
     if (!swdata) {
         SDL_OutOfMemory();
-        return NULL;
+        return nullptr;
     }
 
     swdata->format = format;
@@ -1056,7 +1056,7 @@ SDL_SW_CreateYUVTexture(Uint32 format, int w, int h)
     if (!swdata->pixels || !swdata->colortab || !swdata->rgb_2_pix) {
         SDL_SW_DestroyYUVTexture(swdata);
         SDL_OutOfMemory();
-        return NULL;
+        return nullptr;
     }
 
     /* Generate the tables for the display surface */
@@ -1384,7 +1384,7 @@ SDL_SW_CopyYUVToRGB(SDL_SW_YUVTexture * swdata, const SDL_Rect * srcrect,
     }
     if (stretch) {
         SDL_Rect rect = *srcrect;
-        SDL_SoftStretch(swdata->stretch, &rect, swdata->display, NULL);
+        SDL_SoftStretch(swdata->stretch, &rect, swdata->display, nullptr);
     }
     return 0;
 }

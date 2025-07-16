@@ -104,7 +104,7 @@ void Curl_http2_setup_conn(struct connectdata *conn)
   http->nread_header_recvbuf = 0;
   http->bodystarted = FALSE;
   http->status_code = -1;
-  http->pausedata = NULL;
+  http->pausedata = nullptr;
   http->pauselen = 0;
   http->error_code = NGHTTP2_NO_ERROR;
   http->closed = FALSE;
@@ -210,8 +210,8 @@ static int on_frame_recv(nghttp2_session *session, const nghttp2_frame *frame,
 {
   struct connectdata *conn = (struct connectdata *)userp;
   struct http_conn *httpc = &conn->proto.httpc;
-  struct SessionHandle *data_s = NULL;
-  struct HTTP *stream = NULL;
+  struct SessionHandle *data_s = nullptr;
+  struct HTTP *stream = nullptr;
   int rv;
   size_t left, ncopy;
   int32_t stream_id = frame->hd.stream_id;
@@ -592,7 +592,7 @@ static ssize_t data_source_read_callback(nghttp2_session *session,
   struct connectdata *conn = (struct connectdata *)userp;
   struct http_conn *c = &conn->proto.httpc;
   struct SessionHandle *data_s;
-  struct HTTP *stream = NULL;
+  struct HTTP *stream = nullptr;
   size_t nread;
   (void)session;
   (void)stream_id;
@@ -660,7 +660,7 @@ CURLcode Curl_http2_init(struct connectdata *conn)
     nghttp2_session_callbacks *callbacks;
 
     conn->proto.httpc.inbuf = malloc(H2_BUFSIZE);
-    if(conn->proto.httpc.inbuf == NULL)
+    if(conn->proto.httpc.inbuf == nullptr)
       return CURLE_OUT_OF_MEMORY;
 
     rc = nghttp2_session_callbacks_new(&callbacks);
@@ -818,7 +818,7 @@ static ssize_t http2_recv(struct connectdata *conn, int sockindex,
 
   /* Nullify here because we call nghttp2_session_send() and they
      might refer to the old buffer. */
-  stream->upload_mem = NULL;
+  stream->upload_mem = nullptr;
   stream->upload_len = 0;
 
   /*
@@ -869,7 +869,7 @@ static ssize_t http2_recv(struct connectdata *conn, int sockindex,
       assert(httpc->pause_stream_id == stream->stream_id);
       httpc->pause_stream_id = 0;
 
-      stream->pausedata = NULL;
+      stream->pausedata = nullptr;
       stream->pauselen = 0;
     }
     infof(data, "http2_recv: returns unpaused %zd bytes on stream %u\n",
@@ -1029,7 +1029,7 @@ static ssize_t http2_send(struct connectdata *conn, int sockindex,
 
     /* Nullify here because we call nghttp2_session_send() and they
        might refer to the old buffer. */
-    stream->upload_mem = NULL;
+    stream->upload_mem = nullptr;
     stream->upload_len = 0;
 
     if(stream->upload_left) {
@@ -1059,7 +1059,7 @@ static ssize_t http2_send(struct connectdata *conn, int sockindex,
      more space. */
   nheader += 1;
   nva = malloc(sizeof(nghttp2_nv) * nheader);
-  if(nva == NULL) {
+  if(nva == nullptr) {
     *err = CURLE_OUT_OF_MEMORY;
     return -1;
   }
@@ -1147,13 +1147,13 @@ static ssize_t http2_send(struct connectdata *conn, int sockindex,
   case HTTPREQ_POST_FORM:
   case HTTPREQ_PUT:
     data_prd.read_callback = data_source_read_callback;
-    data_prd.source.ptr = NULL;
-    stream_id = nghttp2_submit_request(h2, NULL, nva, nheader,
-                                       &data_prd, NULL);
+    data_prd.source.ptr = nullptr;
+    stream_id = nghttp2_submit_request(h2, nullptr, nva, nheader,
+                                       &data_prd, nullptr);
     break;
   default:
-    stream_id = nghttp2_submit_request(h2, NULL, nva, nheader,
-                                       NULL, NULL);
+    stream_id = nghttp2_submit_request(h2, nullptr, nva, nheader,
+                                       nullptr, nullptr);
   }
 
   free(nva);
@@ -1224,7 +1224,7 @@ CURLcode Curl_http2_setup(struct connectdata *conn)
 
   infof(conn->data, "Using HTTP2, server supports multi-use\n");
   stream->upload_left = 0;
-  stream->upload_mem = NULL;
+  stream->upload_mem = nullptr;
   stream->upload_len = 0;
 
   httpc->inbuflen = 0;
@@ -1266,7 +1266,7 @@ CURLcode Curl_http2_switched(struct connectdata *conn,
     stream->stream_id = 1;
     /* queue SETTINGS frame (again) */
     rv = nghttp2_session_upgrade(httpc->h2, httpc->binsettings,
-                                 httpc->binlen, NULL);
+                                 httpc->binlen, nullptr);
     if(rv != 0) {
       failf(data, "nghttp2_session_upgrade() failed: %s(%d)",
             nghttp2_strerror(rv), rv);
@@ -1283,7 +1283,7 @@ CURLcode Curl_http2_switched(struct connectdata *conn,
   else {
     /* stream ID is unknown at this point */
     stream->stream_id = -1;
-    rv = nghttp2_submit_settings(httpc->h2, NGHTTP2_FLAG_NONE, NULL, 0);
+    rv = nghttp2_submit_settings(httpc->h2, NGHTTP2_FLAG_NONE, nullptr, 0);
     if(rv != 0) {
       failf(data, "nghttp2_submit_settings() failed: %s(%d)",
             nghttp2_strerror(rv), rv);

@@ -200,7 +200,7 @@ if (!strcmp(name, blk.name))
 			init_listh(&listh);
 			//blk_level++;
 			code = SGLoadModel(name, &p_min, &p_max,
-					 /*((property) ? pFileProp : NULL),*/ matr, &listh);
+					 /*((property) ? pFileProp : nullptr),*/ matr, &listh);
 			//blk_level--;
 			if (!code) {
 				ret = G_CANCEL;
@@ -209,7 +209,7 @@ if (!strcmp(name, blk.name))
 			num = -1;
 			o_hcunit(m);
 			if (!create_block(&listh, name, m, BLK_EXTERN, &num)) {
-				while ((hobj = listh.hhead) != NULL) {
+				while ((hobj = listh.hhead) != nullptr) {
 					o_free(hobj, &listh);
 				}
 				ret = G_CANCEL;

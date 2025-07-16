@@ -45,9 +45,9 @@ DebuggerClientManager& DebuggerClientManager::Instance()
 }
 
 DebuggerClientManager::DebuggerClientManager()
-: m_pCurrentDebuggerClient(NULL)
-, m_pActiveDebuggerClient(NULL)
-, m_pSeparatorAction(NULL)
+: m_pCurrentDebuggerClient(nullptr)
+, m_pActiveDebuggerClient(nullptr)
+, m_pSeparatorAction(nullptr)
 , m_bIgnorePauseExecution(false)
 , m_bDebuggerListUpdateRequested(false)
 {
@@ -79,8 +79,8 @@ void DebuggerClientManager::setDataModel(shared_ptr<RBX::DataModel> spDataModel)
 
 	if (m_spDataModel)
 	{
-		m_pCurrentDebuggerClient = NULL;
-		m_pActiveDebuggerClient = NULL;
+		m_pCurrentDebuggerClient = nullptr;
+		m_pActiveDebuggerClient = nullptr;
 
 		m_cDebuggerAddedConnection.disconnect();
 		m_cDebuggerRemovedConnection.disconnect();
@@ -213,10 +213,10 @@ void DebuggerClientManager::removeDebuggerClient(DebuggerClient* pDebuggerClient
 		if (*iter == pDebuggerClient)
 		{
 			if (pDebuggerClient == m_pCurrentDebuggerClient)
-				m_pCurrentDebuggerClient = NULL;
+				m_pCurrentDebuggerClient = nullptr;
 
 			if (pDebuggerClient == m_pActiveDebuggerClient)
-				m_pActiveDebuggerClient = NULL;
+				m_pActiveDebuggerClient = nullptr;
 
 			debuggerClients.erase(iter);
 			break;
@@ -266,7 +266,7 @@ void DebuggerClientManager::syncBreakpointState(shared_ptr<RBX::Scripting::Debug
 DebuggerClient* DebuggerClientManager::getOrCreateDebuggerClient(shared_ptr<RBX::Instance> spScript)
 {
 	if (!FFlag::LuaDebugger || !m_spDataModel || !m_spDataModel->isAncestorOf(spScript.get()))
-		return NULL;
+		return nullptr;
 
 	DebuggerClient* pDebuggerClient = getDebuggerClient(spScript);
 	if (!pDebuggerClient)
@@ -296,7 +296,7 @@ DebuggerClient* DebuggerClientManager::getDebuggerClient(shared_ptr<RBX::Instanc
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 const std::vector<DebuggerClient *>& DebuggerClientManager::getDebuggerClients()
@@ -451,7 +451,7 @@ void DebuggerClientManager::stopDebugging(RBX::RunTransition evt)
 	try
 	{
 		//reset current debugger client
-		m_pCurrentDebuggerClient = NULL;
+		m_pCurrentDebuggerClient = nullptr;
 		RBX::Scripting::DebuggerManager::singleton().reset();
 		resetAllClients();
 
@@ -478,7 +478,7 @@ void DebuggerClientManager::onStepAction()
 			m_pCurrentDebuggerClient->resetExecution();
 
 		STUDIO_EMIT_SIGNAL executionDataCleared();
-		m_pCurrentDebuggerClient = NULL;
+		m_pCurrentDebuggerClient = nullptr;
 
 		eStepMode stepMode = (eStepMode)pAction->data().toInt();
 		switch (stepMode)
@@ -587,7 +587,7 @@ void DebuggerClientManager::resumeAllClients(bool forceAll)
 			pClient->resetExecution();
 
 		STUDIO_EMIT_SIGNAL executionDataCleared();
-		m_pCurrentDebuggerClient = NULL;
+		m_pCurrentDebuggerClient = nullptr;
 
 		RBX::Scripting::DebuggerManager::singleton().resume();
 	}
@@ -598,7 +598,7 @@ void DebuggerClientManager::resumeAllClients(bool forceAll)
 			pClient->resetExecution();
 
 		STUDIO_EMIT_SIGNAL executionDataCleared();
-		m_pCurrentDebuggerClient = NULL;
+		m_pCurrentDebuggerClient = nullptr;
 
 		RBX::Scripting::DebuggerManager::singleton().resume();
 	}
@@ -622,13 +622,13 @@ void DebuggerClientManager::updateDebugActions(bool add)
 	if (add)
 	{
 		if (!m_pSeparatorAction)
-			m_pSeparatorAction = rbxMainWindow.runToolBar->insertSeparator(NULL);
+			m_pSeparatorAction = rbxMainWindow.runToolBar->insertSeparator(nullptr);
 		else
-			rbxMainWindow.runToolBar->insertAction(NULL, m_pSeparatorAction);
+			rbxMainWindow.runToolBar->insertAction(nullptr, m_pSeparatorAction);
 
-			rbxMainWindow.runToolBar->insertAction(NULL, rbxMainWindow.stepIntoAction);
-			rbxMainWindow.runToolBar->insertAction(NULL, rbxMainWindow.stepOverAction);
-			rbxMainWindow.runToolBar->insertAction(NULL, rbxMainWindow.stepOutAction);
+			rbxMainWindow.runToolBar->insertAction(nullptr, rbxMainWindow.stepIntoAction);
+			rbxMainWindow.runToolBar->insertAction(nullptr, rbxMainWindow.stepOverAction);
+			rbxMainWindow.runToolBar->insertAction(nullptr, rbxMainWindow.stepOutAction);
 	}
 	else
 	{
@@ -644,8 +644,8 @@ void DebuggerClientManager::updateDebugActions(bool add)
 //--------------------------------------------------------------------------------------------
 DebuggerClient::DebuggerClient(boost::shared_ptr<RBX::Instance> script)
 : m_spScript(script)
-, m_pQDebuggerClient(NULL)
-, m_pExtDebuggerClient(NULL)
+, m_pQDebuggerClient(nullptr)
+, m_pExtDebuggerClient(nullptr)
 , m_CurrentFrame(0)
 , m_bIgnoreBreakpointAddRemove(false)
 , m_bIsActive(false)
@@ -745,7 +745,7 @@ void DebuggerClient::setDocument(IRobloxDoc *pDocument)
 	{
 		if (m_pQDebuggerClient)
 			m_pQDebuggerClient->deleteLater();
-		m_pQDebuggerClient = NULL;
+		m_pQDebuggerClient = nullptr;
 	}
 }
 
@@ -768,7 +768,7 @@ void DebuggerClient::deActivate()
 
 	if (m_pQDebuggerClient)
 		m_pQDebuggerClient->deActivate();
-	DebuggerClientManager::Instance().setActiveDebuggerClient(NULL);
+	DebuggerClientManager::Instance().setActiveDebuggerClient(nullptr);
 
 	m_bIsActive = false;
 }
@@ -968,7 +968,7 @@ void DebuggerClient::syncBreakpointState(int breakpointLine)
 
 void DebuggerClient::pauseExecution()
 {
-	m_pExtDebuggerClient = NULL;
+	m_pExtDebuggerClient = nullptr;
 	if (!isPaused())
 	{
 		m_spDebugger->pause();
@@ -979,7 +979,7 @@ void DebuggerClient::pauseExecution()
 
 void DebuggerClient::resumeExecution()
 {
-	m_pExtDebuggerClient = NULL;
+	m_pExtDebuggerClient = nullptr;
 	if (m_spDebugger && m_spDebugger->isDebugging())
 	{
 		m_spDebugger->resume();
@@ -1007,7 +1007,7 @@ void DebuggerClient::resetExecution()
 		}
 	}
 
-	m_pExtDebuggerClient = NULL;
+	m_pExtDebuggerClient = nullptr;
 
 	m_CallStackAtPausedLine.clear();
 	m_CurrentFrame = 0;
@@ -1043,7 +1043,7 @@ void DebuggerClient::syncScriptWithTextEditor(const BreakpointDetails& textEditB
 	//delete existing breakpoints
 	RBX::Scripting::ScriptDebugger::Breakpoints breakpoints = m_spDebugger->getBreakpoints();
 	for (RBX::Scripting::ScriptDebugger::Breakpoints::iterator iter = breakpoints.begin(); iter != breakpoints.end(); ++iter)
-		(iter->second)->setParent(NULL);
+		(iter->second)->setParent(nullptr);
 
 	//recreate all the breakpoints again!
 	boost::shared_ptr<RBX::Scripting::DebuggerBreakpoint> spBreakpoint;
@@ -1087,7 +1087,7 @@ void DebuggerClient::toggleBreakpoint(int breakpointLine)
 	else
 	{
 		STUDIO_EMIT_SIGNAL DebuggerClientManager::Instance().breakpointRemoved(shared_from(pBreakpoint));
-		pBreakpoint->setParent(NULL);
+		pBreakpoint->setParent(nullptr);
 	}
 
 	//update state in text editor also
@@ -1305,10 +1305,10 @@ bool DebuggerClient::handleAction(const QString &actionID, bool checkedState)
 //--------------------------------------------------------------------------------------------
 QDebuggerClient::QDebuggerClient(DebuggerClient* pDebuggerClient, ScriptTextEditor* pTextEdit)
 : m_pDebuggerClient(pDebuggerClient)
-, m_pExtDebuggerClient(NULL)
-, m_pBreakpointMenuAction(NULL)
-, m_pSeparatorAction1(NULL)
-, m_pSeparatorAction2(NULL)
+, m_pExtDebuggerClient(nullptr)
+, m_pBreakpointMenuAction(nullptr)
+, m_pSeparatorAction1(nullptr)
+, m_pSeparatorAction2(nullptr)
 , m_pTextEdit(pTextEdit)
 , m_lastBlockCount(pTextEdit->blockCount())
 , m_isModifiedByKeyBoard(false)
@@ -1320,8 +1320,8 @@ QDebuggerClient::QDebuggerClient(DebuggerClient* pDebuggerClient, ScriptTextEdit
 QDebuggerClient::~QDebuggerClient()
 {	
 	m_pToolTipWidget->deleteLater();
-	m_pToolTipWidget = NULL;
-	m_pTextEdit = NULL;//this will get deleted as a part of ScriptDoc
+	m_pToolTipWidget = nullptr;
+	m_pTextEdit = nullptr;//this will get deleted as a part of ScriptDoc
 }
 
 void QDebuggerClient::activate()
@@ -1425,7 +1425,7 @@ void QDebuggerClient::onAddWatch()
 	QString watchExpression(m_pTextEdit->textCursor().selectedText());
 	// if there's no selected text then get user input
 	if (watchExpression.isEmpty())
-		watchExpression = QInputDialog::getText(m_pTextEdit, tr("Watch"), tr("Watch Expression:"), QLineEdit::Normal, watchExpression, NULL, Qt::WindowTitleHint | Qt::WindowSystemMenuHint);
+		watchExpression = QInputDialog::getText(m_pTextEdit, tr("Watch"), tr("Watch Expression:"), QLineEdit::Normal, watchExpression, nullptr, Qt::WindowTitleHint | Qt::WindowSystemMenuHint);
 	// if we've got an input, add watch
 	if (!watchExpression.isEmpty())
 	{
@@ -1620,7 +1620,7 @@ void QDebuggerClient::cleanupContextMenu()
 	if (pContextualMenu && m_pBreakpointMenuAction)
 	{
 		pContextualMenu->removeAction(m_pBreakpointMenuAction); delete m_pBreakpointMenuAction;
-		m_pBreakpointMenuAction = NULL;
+		m_pBreakpointMenuAction = nullptr;
 
 		QMenu* pBreakpointMenu = pContextualMenu->findChild<QMenu*>("BreakpointMenu");
 		if (pBreakpointMenu)
@@ -1629,8 +1629,8 @@ void QDebuggerClient::cleanupContextMenu()
 			delete pBreakpointMenu;
 		}
 
-		pContextualMenu->removeAction(m_pSeparatorAction1); delete m_pSeparatorAction1; m_pSeparatorAction1 = NULL;
-		pContextualMenu->removeAction(m_pSeparatorAction2); delete m_pSeparatorAction2; m_pSeparatorAction2 = NULL;
+		pContextualMenu->removeAction(m_pSeparatorAction1); delete m_pSeparatorAction1; m_pSeparatorAction1 = nullptr;
+		pContextualMenu->removeAction(m_pSeparatorAction2); delete m_pSeparatorAction2; m_pSeparatorAction2 = nullptr;
 		pContextualMenu->removeAction(UpdateUIManager::Instance().getMainWindow().addWatchAction);
 	}
 }

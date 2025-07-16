@@ -324,7 +324,7 @@ LightGridChunk* LightGrid::getChunkByIndex(const Vector3int32& index)
     if (isChunkInsideGridLocal(localIndex))
         return getChunkByLocalIndex(localIndex);
     else
-        return NULL;
+        return nullptr;
 }
 
 LightGridChunk* LightGrid::getChunkByLocalIndex(const Vector3int32& index)
@@ -852,14 +852,14 @@ void LightGrid::stepCursor(Vector3int32& cursor)
 
 LightGridChunk* LightGrid::findDirtyChunk()
 {
-    LightGridChunk* candidateChunk = NULL;
+    LightGridChunk* candidateChunk = nullptr;
     
     Vector3int32 newCursor = dirtyCursor;
     for (size_t i = 0; i < chunks.size(); ++i)
     {
         stepCursor(dirtyCursor);
         LightGridChunk* chunk = getChunkByLocalIndex(dirtyCursor);
-        if (chunk->dirty && (candidateChunk == NULL || isChunkMoreImportant(*chunk, *candidateChunk)))
+        if (chunk->dirty && (candidateChunk == nullptr || isChunkMoreImportant(*chunk, *candidateChunk)))
         {
             candidateChunk = chunk;
             newCursor = dirtyCursor;
@@ -880,18 +880,18 @@ LightGridChunk* LightGrid::findFirstDirtyChunk()
             return chunk;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 LightGridChunk* LightGrid::findOldestChunk()
 {
-    LightGridChunk* candidateChunk = NULL;
+    LightGridChunk* candidateChunk = nullptr;
     Vector3int32 cursor = Vector3int32(0,0,0);
     for (size_t i = 0; i < chunks.size(); ++i)
     {
         stepCursor(cursor);
         LightGridChunk* chunk = getChunkByLocalIndex(cursor);
-        if (chunk->dirty && (candidateChunk == NULL || chunk->age > candidateChunk->age))
+        if (chunk->dirty && (candidateChunk == nullptr || chunk->age > candidateChunk->age))
             candidateChunk = chunk;
     }
     return candidateChunk;
@@ -3671,7 +3671,7 @@ void LightGrid::relocateGrid(const Vector3int32& newCorner, bool skipChunkUpdate
     std::vector<LightGridChunk*> oldChunks = chunks;
     
     for (size_t i = 0; i < chunks.size(); ++i)
-        chunks[i] = NULL;
+        chunks[i] = nullptr;
                 
     // Put all old chunks that are in the new grid to their old locations
     for (size_t i = 0; i < oldChunks.size(); )
@@ -3682,7 +3682,7 @@ void LightGrid::relocateGrid(const Vector3int32& newCorner, bool skipChunkUpdate
         {
             unsigned int offset = getArrayOffset(localIndex, chunkCount);
             
-            RBXASSERT(chunks[offset] == NULL);
+            RBXASSERT(chunks[offset] == nullptr);
             chunks[offset] = oldChunks[i];
             
             // Fast remove from array

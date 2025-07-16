@@ -110,16 +110,16 @@ void hlmojo_buffer_destroy(hlmojo_Buffer *buffer);
 // #define this to force app to supply an allocator, so there's no reference
 //  to the C runtime's malloc() and free()...
 #if MOJOSHADER_hlslang_FORCE_ALLOCATOR
-#define MOJOSHADER_hlslang_internal_malloc NULL
-#define MOJOSHADER_hlslang_internal_free NULL
+#define MOJOSHADER_hlslang_internal_malloc nullptr
+#define MOJOSHADER_hlslang_internal_free nullptr
 #else
 void *MOJOSHADER_hlslang_internal_malloc(int bytes, void *d);
 void MOJOSHADER_hlslang_internal_free(void *ptr, void *d);
 #endif
 
 #if MOJOSHADER_hlslang_FORCE_INCLUDE_CALLBACKS
-#define MOJOSHADER_hlslang_internal_include_open NULL
-#define MOJOSHADER_hlslang_internal_include_close NULL
+#define MOJOSHADER_hlslang_internal_include_open nullptr
+#define MOJOSHADER_hlslang_internal_include_close nullptr
 #else
 int MOJOSHADER_hlslang_internal_include_open(MOJOSHADER_hlslang_includeType inctype,
                                      const char *fname, const char *parent,
@@ -182,7 +182,7 @@ typedef enum
     TOKEN_BAD_CHARS,
 
     // This is returned if there's an error condition (the error is returned
-    //  as a NULL-terminated string from hlmojo_preprocessor_nexttoken(), instead
+    //  as a nullptr-terminated string from hlmojo_preprocessor_nexttoken(), instead
     //  of actual token data). You can continue getting tokens after this
     //  is reported. It happens for things like missing #includes, etc.
     TOKEN_PREPROCESSING_ERROR,
@@ -253,7 +253,7 @@ typedef struct hlmojo_IncludeState
 Token hlmojo_preprocessor_lexer(hlmojo_IncludeState *s);
 
 // This will only fail if the allocator fails, so it doesn't return any
-//  error code...NULL on failure.
+//  error code...nullptr on failure.
 hlmojo_Preprocessor *hlmojo_preprocessor_start(const char *fname, const char *source,
                             unsigned int sourcelen,
                             MOJOSHADER_hlslang_includeOpen open_callback,

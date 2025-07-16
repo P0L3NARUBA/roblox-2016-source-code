@@ -42,7 +42,7 @@
  *
  *    // Open the device
  *    haptic = SDL_HapticOpen( 0 );
- *    if (haptic == NULL)
+ *    if (haptic == nullptr)
  *       return -1;
  *
  *    // Initialize simple rumble
@@ -67,7 +67,7 @@
  *
  *    // Open the device
  *    haptic = SDL_HapticOpenFromJoystick( joystick );
- *    if (haptic == NULL) return -1; // Most likely joystick isn't haptic
+ *    if (haptic == nullptr) return -1; // Most likely joystick isn't haptic
  *
  *    // See if it can do sine waves
  *    if ((SDL_HapticQuery(haptic) & SDL_HAPTIC_SINE)==0) {
@@ -807,10 +807,10 @@ extern DECLSPEC int SDLCALL SDL_NumHaptics(void);
  *  \brief Get the implementation dependent name of a Haptic device.
  *
  *  This can be called before any joysticks are opened.
- *  If no name can be found, this function returns NULL.
+ *  If no name can be found, this function returns nullptr.
  *
  *  \param device_index Index of the device to get its name.
- *  \return Name of the device or NULL on error.
+ *  \return Name of the device or nullptr on error.
  *
  *  \sa SDL_NumHaptics
  */
@@ -827,7 +827,7 @@ extern DECLSPEC const char *SDLCALL SDL_HapticName(int device_index);
  *  SDL_HapticSetGain() and SDL_HapticSetAutocenter().
  *
  *  \param device_index Index of the device to open.
- *  \return Device identifier or NULL on error.
+ *  \return Device identifier or nullptr on error.
  *
  *  \sa SDL_HapticIndex
  *  \sa SDL_HapticOpenFromMouse
@@ -874,7 +874,7 @@ extern DECLSPEC int SDLCALL SDL_MouseIsHaptic(void);
 /**
  *  \brief Tries to open a haptic device from the current mouse.
  *
- *  \return The haptic device identifier or NULL on error.
+ *  \return The haptic device identifier or nullptr on error.
  *
  *  \sa SDL_MouseIsHaptic
  *  \sa SDL_HapticOpen
@@ -904,7 +904,7 @@ extern DECLSPEC int SDLCALL SDL_JoystickIsHaptic(SDL_Joystick * joystick);
  *  on that device.
  *
  *  \param joystick Joystick to create a haptic device from.
- *  \return A valid haptic device identifier on success or NULL on error.
+ *  \return A valid haptic device identifier on success or nullptr on error.
  *
  *  \sa SDL_HapticOpen
  *  \sa SDL_HapticClose

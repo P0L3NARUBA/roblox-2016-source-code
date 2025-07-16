@@ -178,11 +178,11 @@ static const char* kNewPlaceWindowTitle  = "Untitled";
 int RobloxIDEDoc::sIDEDocCount = 1;
 
 RobloxIDEDoc::RobloxIDEDoc(RobloxMainWindow* pMainWindow)
-: m_WrapperWidget(NULL)
-, m_pQOgreWidget(NULL)
-, m_pDiagViewWidget(NULL)
+: m_WrapperWidget(nullptr)
+, m_pQOgreWidget(nullptr)
+, m_pDiagViewWidget(nullptr)
 , m_pMainWindow(pMainWindow)
-, m_pFileWatcher(NULL)
+, m_pFileWatcher(nullptr)
 , m_fileName("")
 , m_displayName(QString("Place%1").arg(sIDEDocCount))
 , m_bIsLocalDocument(true)
@@ -194,10 +194,10 @@ RobloxIDEDoc::RobloxIDEDoc(RobloxMainWindow* pMainWindow)
 , m_RequiresSave(false)
 , m_CurrentGame(&m_EditGame)
 , m_initialDataModelHash("")
-, m_AnnouncementWidget(NULL)
+, m_AnnouncementWidget(nullptr)
 { 
 #ifdef _WIN32
-	m_pRecordToggle = NULL;
+	m_pRecordToggle = nullptr;
 #endif
 	
 	InitializeDefaultsFromSettings();
@@ -346,7 +346,7 @@ void RobloxIDEDoc::initializeNewPlace()
 	instances.push_back(instance);
 	dataModel->getWorkspace()->insertInstances(
         instances,
-        NULL,
+        nullptr,
         RBX::INSERT_TO_TREE,
         RBX::SUPPRESS_PROMPTS);
 
@@ -446,7 +446,7 @@ bool RobloxIDEDoc::openFile(const QString& fileName, bool asNew)
         return openStream(fileName, &stream, asNew);
     }
 
-    return openStream(fileName, NULL, asNew);
+    return openStream(fileName, nullptr, asNew);
 }
 
 static void doCloudEditFetch(const QString& scriptArg, int placeId, shared_ptr<EntityProperties> config,
@@ -631,14 +631,14 @@ bool RobloxIDEDoc::openStream(const QString& fileName, std::istream* stream, boo
 #ifdef STUDIO_ADMIN_BUILD
 		if (fileName.indexOf("Join.ashx") != -1)
 		{
-			m_EditGame.m_Game.reset(new RBX::SecurePlayerGame(NULL, baseUrl.toStdString().c_str(), false));
+			m_EditGame.m_Game.reset(new RBX::SecurePlayerGame(nullptr, baseUrl.toStdString().c_str(), false));
 		}
 		else
         {
-			m_EditGame.m_Game.reset(new RBX::UnsecuredStudioGame(NULL, baseUrl.toStdString().c_str(), StudioUtilities::isAvatarMode()));
+			m_EditGame.m_Game.reset(new RBX::UnsecuredStudioGame(nullptr, baseUrl.toStdString().c_str(), StudioUtilities::isAvatarMode()));
         }
 #else
-        m_EditGame.m_Game.reset(new RBX::UnsecuredStudioGame(NULL,baseUrl.toStdString().c_str(), true));
+        m_EditGame.m_Game.reset(new RBX::UnsecuredStudioGame(nullptr,baseUrl.toStdString().c_str(), true));
 #endif
 
 		RBX::Log::current()->writeEntry(RBX::Log::Information,"\tLocking DataModel");
@@ -655,7 +655,7 @@ bool RobloxIDEDoc::openStream(const QString& fileName, std::istream* stream, boo
 		m_EditGame.m_Game->getDataModel()->setName(displayName().toStdString());
 
 		m_WrapperWidget = new QWidget;      //hack to display Ogre window in a tab
-		QWidget *pDocWidgetToAdd = NULL;
+		QWidget *pDocWidgetToAdd = nullptr;
 
 		RBX::CRenderSettings::GraphicsMode graphicsMode = CRenderSettingsItem::singleton().getLatchedGraphicsMode();
 		if (graphicsMode != RBX::CRenderSettings::NoGraphics)
@@ -896,7 +896,7 @@ bool RobloxIDEDoc::openStream(const QString& fileName, std::istream* stream, boo
 	
 		// for now assume qt docs always have access to keyboard/mouse (we should handle this somewhere else in the future)
 		RBX::UserInputService* userInputService = m_EditGame.m_Game->getDataModel()->find<RBX::UserInputService>();
-		if (userInputService != NULL)
+		if (userInputService != nullptr)
 		{
 			userInputService->setMouseEnabled(true);
 			userInputService->setKeyboardEnabled(true);
@@ -1135,7 +1135,7 @@ bool RobloxIDEDoc::doClose()
 	//reset debugger data
 	if (FFlag::LuaDebugger)
 	{
-		RBX::Scripting::DebuggerManager::singleton().setDataModel(NULL);
+		RBX::Scripting::DebuggerManager::singleton().setDataModel(nullptr);
 		DebuggerClientManager::Instance().setDataModel(boost::shared_ptr<RBX::DataModel>());
 		//make sure we remove debugger file if we are in test mode
 		if (StudioUtilities::isTestMode())
@@ -1157,27 +1157,27 @@ bool RobloxIDEDoc::doClose()
 	if (m_AnnouncementWidget)
 	{
 		m_AnnouncementWidget->deleteLater();
-		m_AnnouncementWidget = NULL;
+		m_AnnouncementWidget = nullptr;
 	}
 
 	if (m_pQOgreWidget)
 	{
-	    m_pQOgreWidget->setRobloxView(NULL);
+	    m_pQOgreWidget->setRobloxView(nullptr);
 	    m_pQOgreWidget->deleteLater();
-	    m_pQOgreWidget = NULL;
+	    m_pQOgreWidget = nullptr;
 	}
 
 	if (m_pDiagViewWidget)
 	{
 		m_pDiagViewWidget->setDataModel(boost::shared_ptr<RBX::DataModel>());
 		m_pDiagViewWidget->deleteLater();
-		m_pDiagViewWidget = NULL;
+		m_pDiagViewWidget = nullptr;
 	}
 
     if (m_WrapperWidget)
     {
 		m_WrapperWidget->deleteLater();
-		m_WrapperWidget = NULL;
+		m_WrapperWidget = nullptr;
     }
 
 	setTeamCreateWidgetEnabled(false);
@@ -1185,7 +1185,7 @@ bool RobloxIDEDoc::doClose()
     cleanupGameState(m_PlayGame);
     cleanupGameState(m_EditGame);
 
-	UpdateUIManager::Instance().getViewWidget<RobloxExplorerWidget>(eDW_OBJECT_EXPLORER).setCurrentWidget(NULL);
+	UpdateUIManager::Instance().getViewWidget<RobloxExplorerWidget>(eDW_OBJECT_EXPLORER).setCurrentWidget(nullptr);
 
     // only delete autosave if we have an autosave and we did not load from an autosave
 	//  if we loaded from an autosave, we're going to keep using the same autosave but we're
@@ -1211,7 +1211,7 @@ bool RobloxIDEDoc::doClose()
     if (m_pFileWatcher)
     {
         delete m_pFileWatcher;
-        m_pFileWatcher = NULL;
+        m_pFileWatcher = nullptr;
     }
 
 	//self deletion (maybe we must use reference counting!)
@@ -1241,10 +1241,10 @@ void RobloxIDEDoc::cleanupGameState(GameState& gameState)
 		}
 
         gameState.m_Verbs.clear();
-		gameState.m_UndoVerb = NULL;
-		gameState.m_RedoVerb = NULL;
+		gameState.m_UndoVerb = nullptr;
+		gameState.m_RedoVerb = nullptr;
 #ifdef _WIN32
-		gameState.m_RecordToggleVerb = NULL;
+		gameState.m_RecordToggleVerb = nullptr;
 #endif
 		dataModel->getWorkspace()->getAdornableCollector()->onRenderableDescendantRemoving(&gameState.m_SelectionHighlightAdornable);
 	}
@@ -1254,8 +1254,8 @@ void RobloxIDEDoc::cleanupGameState(GameState& gameState)
 	{
 		m_pMainWindow->treeWidgetStack().removeWidget(gameState.m_TreeWidget);
 		gameState.m_TreeWidget->requestDelete();
-		gameState.m_TreeWidget = NULL;
-		UpdateUIManager::Instance().getViewWidget<RobloxExplorerWidget>(eDW_OBJECT_EXPLORER).setCurrentWidget(NULL);
+		gameState.m_TreeWidget = nullptr;
+		UpdateUIManager::Instance().getViewWidget<RobloxExplorerWidget>(eDW_OBJECT_EXPLORER).setCurrentWidget(nullptr);
 	}
 
     // shut down UI and plugins
@@ -1268,7 +1268,7 @@ void RobloxIDEDoc::cleanupGameState(GameState& gameState)
 			if (gameState.m_View)
 			{
 				delete gameState.m_View;
-				gameState.m_View = NULL;
+				gameState.m_View = nullptr;
 			}
 
 		}
@@ -1459,7 +1459,7 @@ void RobloxIDEDoc::restoreEditModelScripts()
 	for (tScriptDocs::const_iterator iter = openScriptDocs.begin(); iter != openScriptDocs.end() ; ++iter)
 	{
 		shared_ptr<RBX::Instance> playInstance = (*iter)->getCurrentScript().toInstance();
-		if (playInstance == NULL)
+		if (playInstance == nullptr)
 		{
 			continue;
 		}
@@ -1507,7 +1507,7 @@ void RobloxIDEDoc::patchPlayModelScripts()
 	for (tScriptDocs::const_iterator iter = openScriptDocs.begin(); iter != openScriptDocs.end() ; ++iter)
 	{
 		shared_ptr<RBX::Instance> backingInstance = (*iter)->getCurrentScript().toInstance();
-		if (backingInstance == NULL)
+		if (backingInstance == nullptr)
 		{
 			continue;
 		}
@@ -2576,10 +2576,10 @@ void RobloxIDEDoc::mapToolMenu(GameState& gameState)
 		verbs.push_back(new ServerPlayersStateInitVerb(dataModel.get()));
 		mapActionIDWithVerb(gameState,"startServerCB",verbs.back());
 
-		verbs.push_back(new PairRbxDevVerb(dataModel.get(), NULL));
+		verbs.push_back(new PairRbxDevVerb(dataModel.get(), nullptr));
 		mapActionIDWithVerb(gameState,"pairRbxDevDeviceAction",verbs.back());
 
-		verbs.push_back(new ManageEmulationDevVerb(dataModel.get(), NULL));
+		verbs.push_back(new ManageEmulationDevVerb(dataModel.get(), nullptr));
 		mapActionIDWithVerb(gameState, "manageEmulationDeviceAction", verbs.back());
 
 		verbs.push_back(new AudioToggleVerb(dataModel.get()));
@@ -2892,7 +2892,7 @@ void RobloxIDEDoc::loadPlayDataModel(QString url, bool play, bool cloneDataModel
 		cleanupVideoRecording(m_EditGame);
 
         delete m_EditGame.m_View;
-        m_EditGame.m_View = NULL;
+        m_EditGame.m_View = nullptr;
     }
     
     QString debugDataFile = getDebugInfoFile(false, PlaySoloDebugFileExt);
@@ -2912,7 +2912,7 @@ void RobloxIDEDoc::loadPlayDataModel(QString url, bool play, bool cloneDataModel
 		}
         
         QString baseUrl = RobloxSettings::getBaseURL() + "/";
-        m_PlayGame.m_Game.reset(new RBX::UnsecuredStudioGame(NULL,baseUrl.toStdString().c_str()));
+        m_PlayGame.m_Game.reset(new RBX::UnsecuredStudioGame(nullptr,baseUrl.toStdString().c_str()));
         
         shared_ptr<RBX::DataModel> playDataModel = m_PlayGame.m_Game->getDataModel();
         RBX::DataModel::LegacyLock lock(m_PlayGame.m_Game->getDataModel(), RBX::DataModelJob::Write);
@@ -3126,11 +3126,11 @@ void RobloxIDEDoc::onIdeRun(bool play)
 {
 	shared_ptr<RBX::DataModel> dataModel = m_EditGame.m_Game->getDataModel();
 
-	// We receive a crash down the stack with m_GameView equal to NULL. One explanation is somehow user pressed onIdeRun before first paint message made it
+	// We receive a crash down the stack with m_GameView equal to nullptr. One explanation is somehow user pressed onIdeRun before first paint message made it
 	// Lets try to catch it with assert
 
 	RBXASSERT(m_GameView);
-	if(m_GameView == NULL)
+	if(m_GameView == nullptr)
 		return;
     
     QString scriptStr;
@@ -3255,7 +3255,7 @@ RBX::Verb* RobloxIDEDoc::getVerb(GameState& gameState,const QString& name) const
 			return gameState.m_Verbs[i];
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 bool RobloxIDEDoc::autoSave(bool force)
@@ -3565,7 +3565,7 @@ void RobloxIDEDoc::initializeDebuggerData(const QString &debugFile, const shared
 				QFile::remove(debugFile); //remove invalid debug info file
 
 				//remove all children from debug manager and again set datamodel
-				debuggerManager.setDataModel(NULL);			
+				debuggerManager.setDataModel(nullptr);			
 				debuggerManager.setDataModel(dm.get());
 			}
 		}
@@ -3770,7 +3770,7 @@ void RobloxIDEDoc::notifyScriptEdited(shared_ptr<RBX::Instance> script)
 
 void RobloxIDEDoc::onPlayModifiedAncestryChanged(shared_ptr<RBX::Instance> script, shared_ptr<RBX::Instance> newParent)
 {
-	if (newParent==NULL)
+	if (newParent==nullptr)
 	{
         for (tPlayModifiedScriptList::iterator iter = m_playModifiedScriptList.begin(); iter != m_playModifiedScriptList.end(); ++iter)
         {
@@ -3824,7 +3824,7 @@ std::string RobloxIDEDoc::getScriptIndexHierarchy(shared_ptr<RBX::Instance> scri
         // if this parent is a service and a child of the DataModel.
         if (pParent && dynamic_cast<const RBX::Service*>(pParent) &&
             pParent->getParent() &&
-            pParent->getParent()->getParent() == NULL)
+            pParent->getParent()->getParent() == nullptr)
         {
             return pParent->getClassNameStr();
         }
@@ -3899,7 +3899,7 @@ void RobloxIDEDoc::cleanupVideoRecording(GameState& gameState)
 
 		gameState.m_Verbs.remove(gameState.m_Verbs.indexOf(gameState.m_RecordToggleVerb.get()));
 		delete gameState.m_RecordToggleVerb;
-		gameState.m_RecordToggleVerb = NULL;
+		gameState.m_RecordToggleVerb = nullptr;
 	}
 #endif
 }

@@ -50,7 +50,7 @@ BOOL explode_frame(hOBJ hobj, lpLISTH listh)
 
 	htail = listh->htail;
 	while ( frame_read_next(&type, &color, &ltype, &lthick, &geo)) {
-		if ( (hobjn = o_alloc(type)) == NULL ) goto err;
+		if ( (hobjn = o_alloc(type)) == nullptr ) goto err;
 		obj = (lpOBJ)hobjn;
 		obj->color = (BYTE)color;
 		obj->ltype = ltype;

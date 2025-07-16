@@ -30,7 +30,7 @@ class WebBrowserEvents : public DWebBrowserEvents
 	RbxWebView *rbxWebView; // any time a IWebBrowser instance is needed
 public:
 	void SetRbxWebView(RbxWebView *newView) { rbxWebView = newView; }
-	HRESULT WindowClosing(DISPPARAMS __RPC_FAR *pDispParams = NULL);
+	HRESULT WindowClosing(DISPPARAMS __RPC_FAR *pDispParams = nullptr);
 };
 
 class RbxWebView : 

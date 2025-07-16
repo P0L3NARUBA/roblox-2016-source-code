@@ -44,7 +44,7 @@ class Decal;
 
 		ArrowToolBase(Workspace* workspace) 
             : MouseCommand(workspace), 
-              overInstance(NULL), 
+              overInstance(nullptr), 
               altKeyDown(false)
 		{
 			FASTLOG1(FLog::MouseCommandLifetime, "ArrowTool created: %p", this);

@@ -56,7 +56,7 @@ void DialogChoice::setGoodbyeDialog(std::string value)
 
 bool DialogChoice::askSetParent(const Instance* instance) const
 {
-	return Instance::fastDynamicCast<DialogChoice>(instance) != NULL || Instance::fastDynamicCast<DialogRoot>(instance) != NULL;
+	return Instance::fastDynamicCast<DialogChoice>(instance) != nullptr || Instance::fastDynamicCast<DialogRoot>(instance) != nullptr;
 }
 
 

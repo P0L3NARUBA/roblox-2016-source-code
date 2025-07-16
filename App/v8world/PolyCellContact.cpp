@@ -26,7 +26,7 @@ float PolyCellContact::epsilonDistance()
 
 PolyCellContact::PolyCellContact(Primitive* p0, Primitive* p1, const Vector3int16& cell)
 	: CellMeshContact(p0, p1, Vector3int32(cell))
-	, bestPair(NULL)
+	, bestPair(nullptr)
 {
     cellMesh = new POLY::Mesh;
 
@@ -62,7 +62,7 @@ PolyCellContact::PolyCellContact(Primitive* p0, Primitive* p1, const Vector3int1
 
 PolyCellContact::~PolyCellContact()
 {
-	resetBestPair(NULL);
+	resetBestPair(nullptr);
     delete cellMesh;
 }
 
@@ -101,7 +101,7 @@ void PolyCellContact::findBestPair()
     CellEdgeEdgePair edgeEdge(getPrimitive(0), getPrimitive(1), *contactParams, this, false);
 
     PolyCellPair* testPairs[] = {&face0, &face1, &edgeEdge};
-    PolyCellPair* betterPair = NULL;
+    PolyCellPair* betterPair = nullptr;
 
     for (size_t i = 0; i < 2; ++i) {				// only doing face face - Tim - if you set this to 3 we will get CellEdgeEdgePairs.
 	    PolyCellPair* testPair = testPairs[i];
@@ -132,7 +132,7 @@ void PolyCellContact::resetBestPair(PolyCellPair* pairOnStack)
 {
 	if (bestPair) {
 		delete bestPair;
-		bestPair = NULL;
+		bestPair = nullptr;
 	}
 
 	if (pairOnStack) {
@@ -163,7 +163,7 @@ const Poly* PolyCellPair::poly1() const
 
 CellFaceFacePair::CellFaceFacePair(Primitive* p0, Primitive* p1, const ContactParams& contactParams, PolyCellContact* aPCContact, bool swap) 
 	: PolyCellPair(p0, p1, contactParams, aPCContact, swap)
-	, otherFace(NULL)
+	, otherFace(nullptr)
 {
     mainFace = swapPrims ? poly0()->getMesh()->getFace(0) : aPCContact->getCellMesh()->getFace(0);
 }
@@ -187,10 +187,10 @@ float CellFaceFacePair::test()
 	computeVertices(verticesInObject, otherInMe);
 
 	// do current first - could be > 0.0
-	const Vertex* closeVertex = NULL;
+	const Vertex* closeVertex = nullptr;
 	float biggestDistance = closestVertex(mainFace, verticesInObject, closeVertex);
 	if (biggestDistance > 0.0) {
-		otherFace = NULL;
+		otherFace = nullptr;
 		return biggestDistance;			// separating plane - blow out
 	}
 
@@ -198,14 +198,14 @@ float CellFaceFacePair::test()
 	for (size_t i = 0; i < faceMesh->numFaces(); ++i) {
 		const POLY::Face* face = faceMesh->getFace(i);
 		if (face != mainFace) {
-			const Vertex* tempVertex = NULL;
+			const Vertex* tempVertex = nullptr;
 			float distance = closestVertex(face, verticesInObject, tempVertex);	
 			if (distance > biggestDistance) {
 				biggestDistance = distance;
 				mainFace = face;
 				closeVertex = tempVertex;
 				if (distance > 0.0) {			// separating plane - blow out
-					otherFace = NULL;				// make sure we are not using this - no contact
+					otherFace = nullptr;				// make sure we are not using this - no contact
 					return biggestDistance;
 				}
 			}
@@ -253,7 +253,7 @@ float CellFaceFacePair::closestVertex(const POLY::Face* face, const FixedArray<V
 
 const POLY::Face* CellFaceFacePair::findOtherFace(const Vertex* closeVertex)
 {
-	const POLY::Face* bestFace = NULL;
+	const POLY::Face* bestFace = nullptr;
 	float bestAlignment = -2.0;	
 
 	CoordinateFrame faceInOther = primitive[1]->getCoordinateFrame().toObjectSpace(primitive[0]->getCoordinateFrame());
@@ -296,8 +296,8 @@ bool CellFaceFacePair::pairIsValid()
 {
 	// The initial version of this pair validation only eliminates contact connectors that have been
 	// created for a -y facing terrain cell face that is interior (that is, not exposed for actual contact).
-	MegaClusterInstance* terrain0 = NULL;
-	MegaClusterInstance* terrain1 = NULL;
+	MegaClusterInstance* terrain0 = nullptr;
+	MegaClusterInstance* terrain1 = nullptr;
 
 	primitive[0]->getGeometryType() == Geometry::GEOMETRY_MEGACLUSTER ? 
 		terrain0 = rbx_static_cast<MegaClusterInstance*>(primitive[0]->getOwner()) :

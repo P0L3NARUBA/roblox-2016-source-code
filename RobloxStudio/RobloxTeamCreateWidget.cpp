@@ -327,7 +327,7 @@ QString CreatorsListWidget::getPlayerName(int playerId)
 CreatorItem* CreatorsListWidget::getCreatorItem(int playerId)
 {
 	int currentCount = 0;
-	CreatorItem* pCreatorItem = NULL;
+	CreatorItem* pCreatorItem = nullptr;
 
 	while (currentCount < topLevelItemCount())
 	{
@@ -337,13 +337,13 @@ CreatorItem* CreatorsListWidget::getCreatorItem(int playerId)
 		currentCount++;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 CreatorItem* CreatorsListWidget::getCreatorItem(const QString& playerName)
 {
 	int currentCount = 0;
-	CreatorItem* pCreatorItem = NULL;
+	CreatorItem* pCreatorItem = nullptr;
 
 	while (currentCount < topLevelItemCount())
 	{
@@ -353,13 +353,13 @@ CreatorItem* CreatorsListWidget::getCreatorItem(const QString& playerName)
 		currentCount++;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 void CreatorsListWidget::mousePressEvent(QMouseEvent *evt)
 {
 	if (!itemAt(evt->pos()))
-		setCurrentItem(NULL);
+		setCurrentItem(nullptr);
 	else
 		QTreeWidget::mousePressEvent(evt);
 }
@@ -496,7 +496,7 @@ bool UserPlaceCreatorsListWidget::canDeleteSelectedCreator()
 
 void UserPlaceCreatorsListWidget::removeRemovedCreators()
 {
-	CreatorItem* pCreatorItem = NULL;
+	CreatorItem* pCreatorItem = nullptr;
 	QList<QTreeWidgetItem*> itemsToDelete;
 	const CreatorsCollection& creators = m_pCreatorsListLoader->getCreators();	
 
@@ -591,9 +591,9 @@ void GroupPlaceCreatorsListWidget::onPlayerRemoveRequested(int playerId)
 //--------------------------------------------------------------------------------------------
 RobloxTeamCreateWidget::RobloxTeamCreateWidget(QWidget* parent)
 : QWidget(parent)
-, m_pCreatorsListWidget(NULL)
-, m_pMainStackedWidgetAnimator(NULL)
-, m_pFriendsInfoLoader(NULL)
+, m_pCreatorsListWidget(nullptr)
+, m_pMainStackedWidgetAnimator(nullptr)
+, m_pFriendsInfoLoader(nullptr)
 , m_bCanManageCurrentPlace(false)
 , m_bLoginButtonClicked(false)
 {
@@ -629,12 +629,12 @@ void RobloxTeamCreateWidget::setDataModel(boost::shared_ptr<RBX::DataModel> data
 	m_PlaceDetailsQuery = boost::shared_future<void>();
 	m_PlaceManageStatusQuery = boost::shared_future<void>();
 	m_cPlaceIdChange.disconnect();
-	if (m_pFriendsInfoLoader) delete m_pFriendsInfoLoader; m_pFriendsInfoLoader = NULL;
+	if (m_pFriendsInfoLoader) delete m_pFriendsInfoLoader; m_pFriendsInfoLoader = nullptr;
 
 	if (m_pCreatorsListWidget)
 	{
 		delete m_pCreatorsListWidget;
-		m_pCreatorsListWidget = NULL;
+		m_pCreatorsListWidget = nullptr;
 	}
 
 	m_pDataModel = dataModel;
@@ -874,8 +874,8 @@ void RobloxTeamCreateWidget::onTurnOnButtonClicked()
 void RobloxTeamCreateWidget::onBottomMoreButtonClicked()
 {
 	QMenu menu(this);
-	QAction* cloudEditTurnOffAction = NULL;
-	QAction* deleteUserAction = NULL;
+	QAction* cloudEditTurnOffAction = nullptr;
+	QAction* deleteUserAction = nullptr;
 	if (RobloxIDEDoc::getIsCloudEditSession() && canManageCurrentPlace())
 	{
 		cloudEditTurnOffAction = menu.addAction(tr("Turn OFF Team Create"));

@@ -54,7 +54,7 @@ float ContactConnector::computeRelativeVelocity()
 {
 	updateContactPoint();	// TBD: check if this is absolutely necessary
 	// return positive velocity when body1 is approaching bpdy0
-	return -computeRelativeVelocity(contactPoint, NULL, NULL);	
+	return -computeRelativeVelocity(contactPoint, nullptr, nullptr);	
 }
 
 // Reorder the SimBody(s) so that simBody0 is always in kernel and adjust contact point data accordingly
@@ -72,11 +72,11 @@ bool ContactConnector::getReordedSimBody(SimBody*& simBody0, SimBody*& simBody1,
 		if (!simBody1->isInKernel())
 			return false;
 		simBody0 = simBody1;
-		simBody1 = NULL;
+		simBody1 = nullptr;
 		params.normal *= -1.0f;
 	} else if (!simBody1->isInKernel())
 	{
-		simBody1 = NULL;
+		simBody1 = nullptr;
 		bodyNotInKernel = geoPair.body1;
 	}
 	return true;
@@ -84,7 +84,7 @@ bool ContactConnector::getReordedSimBody(SimBody*& simBody0, SimBody*& simBody1,
 
 bool ContactConnector::getReordedSimBody(SimBody*& simBody0, SimBody*& simBody1, PairParams& params)
 {
-	Body* dummy = NULL;
+	Body* dummy = nullptr;
 	return getReordedSimBody(simBody0, simBody1, dummy, params);
 }
 
@@ -94,7 +94,7 @@ bool ContactConnector::getSimBodyAndContactVelocity(SimBody*& simBody0, SimBody*
 {
 
 
-	Body* bodyNotInKernel = NULL;
+	Body* bodyNotInKernel = nullptr;
 	if (!getReordedSimBody(simBody0, simBody1, bodyNotInKernel, params))
 	{
 		outOfContactHit++;	
@@ -373,8 +373,8 @@ void ContactConnector::updateContactPoint()
     if (contactPoint == oldContactPoint)
 	    return;
     
-    SimBody* simBody0 = NULL;
-    SimBody* simBody1 = NULL;
+    SimBody* simBody0 = nullptr;
+    SimBody* simBody1 = nullptr;
     PairParams params = oldContactPoint;
     
     if (getReordedSimBody(simBody0, simBody1, params))

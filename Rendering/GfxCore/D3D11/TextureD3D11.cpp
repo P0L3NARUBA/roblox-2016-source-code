@@ -60,7 +60,7 @@ namespace Graphics
 
     static ID3D11Resource* createTexture(ID3D11Device * device11, Texture::Type type, Texture::Format format, unsigned int width, unsigned int height, unsigned int depth, unsigned int mipLevels, const TextureUsageD3D11& textureUsage)
     {
-        ID3D11Resource* result = NULL;
+        ID3D11Resource* result = nullptr;
 
         DXGI_FORMAT format11 = gTextureFormatD3D11[format];
      
@@ -84,7 +84,7 @@ namespace Graphics
                 desc.CPUAccessFlags = textureUsage.cpuAccess;
                 desc.MiscFlags = textureUsage.misc | (type == Texture::Type_Cube ? D3D11_RESOURCE_MISC_TEXTURECUBE : 0);
 
-                hr = device11->CreateTexture2D(&desc, NULL, reinterpret_cast<ID3D11Texture2D**>(&result));
+                hr = device11->CreateTexture2D(&desc, nullptr, reinterpret_cast<ID3D11Texture2D**>(&result));
                 break;
             }
            
@@ -101,7 +101,7 @@ namespace Graphics
                 desc.CPUAccessFlags = textureUsage.cpuAccess;
                 desc.MiscFlags = textureUsage.misc;
 
-                hr = device11->CreateTexture3D(&desc, NULL, reinterpret_cast<ID3D11Texture3D**>(&result)); 
+                hr = device11->CreateTexture3D(&desc, nullptr, reinterpret_cast<ID3D11Texture3D**>(&result)); 
                 break;
             }
         default:
@@ -156,8 +156,8 @@ namespace Graphics
 
     TextureD3D11::TextureD3D11(Device* device, Type type, Format format, unsigned int width, unsigned int height, unsigned int depth, unsigned int mipLevels, Usage usage)
         : Texture(device, type, format, width, height, depth, mipLevels, usage)
-        , object(NULL)
-        , objectSRV(NULL)
+        , object(nullptr)
+        , objectSRV(nullptr)
     {
         ID3D11Device* device11 = static_cast<DeviceD3D11*>(device)->getDevice11();
 
@@ -197,7 +197,7 @@ namespace Graphics
         }
 
         UINT res = D3D11CalcSubresource(mip, index, mipLevels);
-        context11->UpdateSubresource(object, res, partialUpload ? &box : NULL, data, dataRowPitch, dataSlicePitch);
+        context11->UpdateSubresource(object, res, partialUpload ? &box : nullptr, data, dataRowPitch, dataSlicePitch);
     }
 
     static void copyHelper(void* targetData, unsigned int targetRowPitch, unsigned int targetSlicePitch,
@@ -257,13 +257,13 @@ namespace Graphics
         desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
         desc.MiscFlags = 0;
 
-        ID3D11Texture2D* tempTex = NULL;
-        HRESULT hr = device11->getDevice11()->CreateTexture2D(&desc, NULL, reinterpret_cast<ID3D11Texture2D**>(&tempTex));
+        ID3D11Texture2D* tempTex = nullptr;
+        HRESULT hr = device11->getDevice11()->CreateTexture2D(&desc, nullptr, reinterpret_cast<ID3D11Texture2D**>(&tempTex));
         if (FAILED(hr))
             throw RBX::runtime_error("Download texture cant create temp texture %x", hr);
 
         UINT res = D3D11CalcSubresource(mip, index, mipLevels);
-        context11->CopySubresourceRegion(tempTex, 0, 0, 0, 0, object, res, NULL);
+        context11->CopySubresourceRegion(tempTex, 0, 0, 0, 0, object, res, nullptr);
 
         // copy texture to provided memory
         D3D11_MAPPED_SUBRESOURCE mappedResource;

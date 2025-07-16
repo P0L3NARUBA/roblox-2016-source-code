@@ -64,8 +64,8 @@ namespace RBX {
 			return prevFrame.coordinateFrame;
 		}
 
-		const CoordinateFrame& interpolate( const Time& now, const Time& targetTime, const unsigned int& upper, const PartInstance* part = NULL);
-		const CoordinateFrame& interpolateHermiteSpline( const Time& now, const Time& targetTime, const unsigned int& upper, const PartInstance* part = NULL);
+		const CoordinateFrame& interpolate( const Time& now, const Time& targetTime, const unsigned int& upper, const PartInstance* part = nullptr);
+		const CoordinateFrame& interpolateHermiteSpline( const Time& now, const Time& targetTime, const unsigned int& upper, const PartInstance* part = nullptr);
 		RemoteTime computeSampleTargetTime( const Time& now);
 
 	public:

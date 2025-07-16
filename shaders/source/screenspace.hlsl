@@ -1,4 +1,4 @@
-#include "common.h"
+#include "common.hlsli"
 
 TEX_DECLARE2D(Main, 0);
 

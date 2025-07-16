@@ -27,7 +27,7 @@ namespace Graphics
 #if !defined(RBX_PLATFORM_DURANGO)
         HMODULE d3dCompiler = ShaderProgramD3D11::loadShaderCompilerDLL();
 
-        return d3dCompiler ? (TypeD3DCompile)GetProcAddress(d3dCompiler, "D3DCompile") : NULL;
+        return d3dCompiler ? (TypeD3DCompile)GetProcAddress(d3dCompiler, "D3DCompile") : nullptr;
 #else
         return &D3DCompile;
 #endif
@@ -38,7 +38,7 @@ namespace Graphics
 #if !defined(RBX_PLATFORM_DURANGO)
         HMODULE d3dCompiler = ShaderProgramD3D11::loadShaderCompilerDLL();
 
-        return d3dCompiler ? (TypeD3DPreprocess)GetProcAddress(d3dCompiler, "D3DPreprocess") : NULL;
+        return d3dCompiler ? (TypeD3DPreprocess)GetProcAddress(d3dCompiler, "D3DPreprocess") : nullptr;
 #else
         return &D3DPreprocess;
 #endif
@@ -49,7 +49,7 @@ namespace Graphics
 #if !defined(RBX_PLATFORM_DURANGO)
         HMODULE d3dCompiler = ShaderProgramD3D11::loadShaderCompilerDLL();
 
-        return d3dCompiler ? (TypeD3DReflect)GetProcAddress(d3dCompiler, "D3DReflect") : NULL;
+        return d3dCompiler ? (TypeD3DReflect)GetProcAddress(d3dCompiler, "D3DReflect") : nullptr;
 #else
         return &D3DReflect;
 #endif
@@ -62,7 +62,7 @@ namespace Graphics
 
         cbuffers.clear();
 
-        ID3D11ShaderReflection* shaderReflection11 = NULL;
+        ID3D11ShaderReflection* shaderReflection11 = nullptr;
         HRESULT hr = D3DReflect(bytecode.data(), bytecode.size(), IID_ID3D11ShaderReflection, (void**) &shaderReflection11);
         RBXASSERT(SUCCEEDED(hr));
 
@@ -148,7 +148,7 @@ namespace Graphics
         DeviceContextD3D11* context = static_cast<DeviceD3D11*>(device)->getImmediateContextD3D11();
         ID3D11Device* device11 = static_cast<DeviceD3D11*>(device)->getDevice11();
 
-        extractCbuffers(device, bytecode, cbuffers, context->getGlobalDataSize(), NULL);
+        extractCbuffers(device, bytecode, cbuffers, context->getGlobalDataSize(), nullptr);
         
         uniformsCBuffer = findCBuffer(cbuffers, "$Globals");
         worldMatCBuffer = findCBuffer(cbuffers, "WorldMatrixCB");
@@ -169,8 +169,8 @@ namespace Graphics
             }
         }
 
-        ID3D11VertexShader* vertexShader = NULL;
-        HRESULT hr = device11->CreateVertexShader( bytecode.data(), bytecode.size(), NULL, &vertexShader);
+        ID3D11VertexShader* vertexShader = nullptr;
+        HRESULT hr = device11->CreateVertexShader( bytecode.data(), bytecode.size(), nullptr, &vertexShader);
         RBXASSERT(SUCCEEDED(hr));
 
         return vertexShader;
@@ -183,8 +183,8 @@ namespace Graphics
         extractCbuffers(device, bytecode, cbuffers, context->getGlobalDataSize(), &samplerMask);
         uniformsCBuffer = findCBuffer(cbuffers, "$Globals");
 
-        ID3D11PixelShader* pixelShader = NULL;
-        HRESULT hr = device11->CreatePixelShader(bytecode.data(), bytecode.size(), NULL, &pixelShader);
+        ID3D11PixelShader* pixelShader = nullptr;
+        HRESULT hr = device11->CreatePixelShader(bytecode.data(), bytecode.size(), nullptr, &pixelShader);
         RBXASSERT(SUCCEEDED(hr));
 
         return pixelShader;
@@ -193,8 +193,8 @@ namespace Graphics
     static ID3D11ComputeShader* createComputeShader(Device* device, const std::vector<char>& bytecode, std::vector<shared_ptr<CBufferD3D11>>& cbuffers, int& uniformsCBuffer) {
         ID3D11Device* device11 = static_cast<DeviceD3D11*>(device)->getDevice11();
 
-        ID3D11ComputeShader* computeShader = NULL;
-        HRESULT hr = device11->CreateComputeShader(bytecode.data(), bytecode.size(), NULL, &computeShader);
+        ID3D11ComputeShader* computeShader = nullptr;
+        HRESULT hr = device11->CreateComputeShader(bytecode.data(), bytecode.size(), nullptr, &computeShader);
         RBXASSERT(SUCCEEDED(hr));
 
         return computeShader;
@@ -203,8 +203,8 @@ namespace Graphics
     static ID3D11GeometryShader* createGeometryShader(Device* device, const std::vector<char>& bytecode, std::vector<shared_ptr<CBufferD3D11>>& cbuffers, int& uniformsCBuffer) {
         ID3D11Device* device11 = static_cast<DeviceD3D11*>(device)->getDevice11();
 
-        ID3D11GeometryShader* geometryShader = NULL;
-        HRESULT hr = device11->CreateGeometryShader(bytecode.data(), bytecode.size(), NULL, &geometryShader);
+        ID3D11GeometryShader* geometryShader = nullptr;
+        HRESULT hr = device11->CreateGeometryShader(bytecode.data(), bytecode.size(), nullptr, &geometryShader);
         RBXASSERT(SUCCEEDED(hr));
 
         return geometryShader;
@@ -221,10 +221,10 @@ namespace Graphics
         registerId(registerId),
         name(name),
         size(sizeIn),
-        data(NULL),
+        data(nullptr),
         dirty(true),
         uniforms(uniformsIn),
-        object(NULL)
+        object(nullptr)
     {
         ID3D11Device* device11 = static_cast<DeviceD3D11*>(device)->getDevice11();
 
@@ -239,7 +239,7 @@ namespace Graphics
         cbDesc.MiscFlags = 0;
         cbDesc.StructureByteStride = 0;
 
-        HRESULT hr = device11->CreateBuffer(&cbDesc, NULL, &object);
+        HRESULT hr = device11->CreateBuffer(&cbDesc, nullptr, &object);
         RBXASSERT(SUCCEEDED(hr));
     }
 
@@ -263,7 +263,7 @@ namespace Graphics
             ID3D11Device* device11 =  static_cast<DeviceD3D11*>(device)->getDevice11();
             ID3D11DeviceContext* context11 = static_cast<DeviceD3D11*>(device)->getImmediateContext11();
 
-            context11->UpdateSubresource(object, 0, NULL, data, 0, 0);
+            context11->UpdateSubresource(object, 0, nullptr, data, 0, 0);
 
             dirty = false;
         }
@@ -315,7 +315,7 @@ namespace Graphics
     VertexShaderD3D11::VertexShaderD3D11(Device* device, const std::vector<char>& bytecode)
         : VertexShader(device)
         , BaseShaderD3D11(bytecode)
-        , object(NULL)
+        , object(nullptr)
         , worldMatrixCbuffer(-1)
         , worldMatrixArray(-1)
         , worldMatrix(-1)
@@ -384,7 +384,7 @@ namespace Graphics
     FragmentShaderD3D11::FragmentShaderD3D11(Device* device, const std::vector<char>& bytecode)
         : FragmentShader(device)
         , BaseShaderD3D11(bytecode)
-        , object(NULL)
+        , object(nullptr)
         , samplerMask(0)
     {
         object = createPixelShader(device, bytecode, cBuffers, uniformsBufferId, samplerMask);
@@ -393,7 +393,7 @@ namespace Graphics
     ComputeShaderD3D11::ComputeShaderD3D11(Device* device, const std::vector<char>& bytecode)
         : ComputeShader(device)
         , BaseShaderD3D11(bytecode)
-        , object(NULL)
+        , object(nullptr)
     {
         object = createComputeShader(device, bytecode, cBuffers, uniformsBufferId);
     }
@@ -401,7 +401,7 @@ namespace Graphics
     GeometryShaderD3D11::GeometryShaderD3D11(Device* device, const std::vector<char>& bytecode)
         : GeometryShader(device)
         , BaseShaderD3D11(bytecode)
-        , object(NULL)
+        , object(nullptr)
     {
         object = createGeometryShader(device, bytecode, cBuffers, uniformsBufferId);
     }
@@ -442,8 +442,8 @@ namespace Graphics
         TypeD3DReflect D3DReflect = loadShaderReflector();
         RBXASSERT(D3DReflect);
 
-        ID3D11ShaderReflection* reflectionVS11 = NULL;
-        ID3D11ShaderReflection* reflectionFS11 = NULL;
+        ID3D11ShaderReflection* reflectionVS11 = nullptr;
+        ID3D11ShaderReflection* reflectionFS11 = nullptr;
         D3DReflect(vs->getByteCode().data(), vs->getByteCode().size(), IID_ID3D11ShaderReflection, (void**) &reflectionVS11);
         D3DReflect(fs->getByteCode().data(), fs->getByteCode().size(), IID_ID3D11ShaderReflection, (void**) &reflectionFS11);
 
@@ -698,9 +698,9 @@ namespace Graphics
         std::string realTarget;
         translateShaderProfile(target, device11->getShaderProfile(), realTarget);
 
-        ID3DBlob* bytecode = NULL;
-        ID3DBlob* messages = NULL;
-        HRESULT hr = D3DCompile(source.c_str(), source.length(), entrypoint.c_str(), NULL, NULL, entrypoint.c_str(), realTarget.c_str(), flags, 0, &bytecode, &messages);
+        ID3DBlob* bytecode = nullptr;
+        ID3DBlob* messages = nullptr;
+        HRESULT hr = D3DCompile(source.c_str(), source.length(), entrypoint.c_str(), nullptr, nullptr, entrypoint.c_str(), realTarget.c_str(), flags, 0, &bytecode, &messages);
 
         return consumeData<char>(hr, bytecode, messages);
     }
@@ -793,8 +793,8 @@ namespace Graphics
 			context11->PSSetConstantBuffers(cb->getRegisterId(), 1, &buffer);
 		}
 
-        context11->VSSetShader(vs->getObject(), NULL, 0);
-        context11->PSSetShader(fs->getObject(), NULL, 0);
+        context11->VSSetShader(vs->getObject(), nullptr, 0);
+        context11->PSSetShader(fs->getObject(), nullptr, 0);
     }
 }
 }

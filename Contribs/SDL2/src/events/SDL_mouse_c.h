@@ -48,7 +48,7 @@ typedef struct
     /* Create a system cursor */
     SDL_Cursor *(*CreateSystemCursor) (SDL_SystemCursor id);
 
-    /* Show the specified cursor, or hide if cursor is NULL */
+    /* Show the specified cursor, or hide if cursor is nullptr */
     int (*ShowCursor) (SDL_Cursor * cursor);
 
     /* This is called when a mouse motion event occurs */
@@ -69,7 +69,7 @@ typedef struct
     /* Set mouse capture */
     int (*CaptureMouse) (SDL_Window * window);
 
-    /* Get absolute mouse coordinates. (x) and (y) are never NULL and set to zero before call. */
+    /* Get absolute mouse coordinates. (x) and (y) are never nullptr and set to zero before call. */
     Uint32 (*GetGlobalMouseState) (int *x, int *y);
 
     /* Data common to all mice */

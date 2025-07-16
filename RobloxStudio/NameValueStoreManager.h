@@ -22,7 +22,7 @@ public:
 	}
 
 	void setValue(const QString& storeID, const QString& key, const QVariant &value);
-	QVariant getValue(const QString&storeID, const QString& key, bool *isOK = NULL);
+	QVariant getValue(const QString&storeID, const QString& key, bool *isOK = nullptr);
 
 	bool clear(const QString& storeID);
 	void clearAll();

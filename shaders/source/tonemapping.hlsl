@@ -1,7 +1,7 @@
 #define PROCESSING
 
-#include "buffers.h"
-#include "common.h"
+#include "buffers.hlsli"
+#include "common.hlsli"
 
 TEX_DECLARE2D(Main, 0);
 #ifdef BLOOM
@@ -37,15 +37,14 @@ float3 Tonemapping(inout float3 color) {
 }
 
 float3 ColorCorrection(inout float3 color) {
-	float3 tintColor = Parameters2.xyz;
-	float brightness = Parameters1.x;
-	float contrast = Parameters1.y;
-	float grayscaleLvl = Parameters1.z;
+	float3 params1 = Parameters1.xyz;
+	float3 params2 = Parameters2.xyz;
 
-	color = contrast * (color - 0.5) + 0.5 + brightness;
+	color = params1.y * (color - 0.5) + 0.5 + params1.x;
+
 	float grayscale = dot(color, float3(0.2126, 0.7152, 0.0722));
 
-	return lerp(color.rgb, grayscale.xxx, grayscaleLvl) * tintColor;
+	return lerp(color.rgb, grayscale.xxx, params1.z) * params2;
 }
 
 float4 TonemappingPS( BasicVertexOutput IN ) : SV_TARGET {

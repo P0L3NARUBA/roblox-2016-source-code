@@ -191,7 +191,7 @@ namespace RBX
             {
                 if (shared_ptr<RBX::BinaryStringValue> strChild = iter->second.ref.lock())
                 {
-                    strChild->setParent(NULL);
+                    strChild->setParent(nullptr);
                 }
                 instanceMap.erase(iter);
             }
@@ -223,7 +223,7 @@ namespace RBX
 
 			for (std::vector<shared_ptr<BinaryStringValue> >::const_iterator iter = toDelete.begin(); iter != toDelete.end(); ++iter)
 			{
-				(*iter)->setParent(NULL);
+				(*iter)->setParent(nullptr);
 			}
 		}
 	}
@@ -252,7 +252,7 @@ namespace RBX
 				instanceMap.erase((*iter));
 				if (stringValue)
 				{
-					stringValue->setParent(NULL);
+					stringValue->setParent(nullptr);
 				}
 			}
 		}

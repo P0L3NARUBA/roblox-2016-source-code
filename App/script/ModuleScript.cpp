@@ -26,8 +26,8 @@ ModuleScript::ModuleScript()
 
 ModuleScript::PerVMState::PerVMState()
 	: scriptLoadingState(NotRunYet)
-	, node(NULL)
-	, globalStateContainingResult(NULL)
+	, node(nullptr)
+	, globalStateContainingResult(nullptr)
 	, resultRegistryIndex(LUA_NOREF)
 {
 }
@@ -90,7 +90,7 @@ void ModuleScript::PerVMState::setCompletedSuccess(lua_State* globalStateContain
 {
 	RBXASSERT(scriptLoadingState == Running);
 	scriptLoadingState = CompletedSuccess;
-    if (this->globalStateContainingResult == NULL)
+    if (this->globalStateContainingResult == nullptr)
         this->globalStateContainingResult = globalStateContainingResult;
 	this->resultRegistryIndex = resultRegistryIndex;
 }
@@ -137,11 +137,11 @@ void ModuleScript::PerVMState::releaseReferenceIfCompletedSuccessfully()
 	{
 		RBXASSERT(resultRegistryIndex != LUA_NOREF);
 		RBXASSERT(globalStateContainingResult);
-		if (globalStateContainingResult != NULL && resultRegistryIndex != LUA_NOREF)
+		if (globalStateContainingResult != nullptr && resultRegistryIndex != LUA_NOREF)
 		{
 			lua_unref(globalStateContainingResult, resultRegistryIndex);
 		}
-		globalStateContainingResult = NULL;
+		globalStateContainingResult = nullptr;
 		resultRegistryIndex = LUA_NOREF;
 	}
 }
@@ -185,7 +185,7 @@ void ModuleScript::PerVMState::resetState()
 
 void ModuleScript::PerVMState::reassignResultRegistryIndex(int result)
 {
-    if (globalStateContainingResult != NULL && resultRegistryIndex != LUA_NOREF)
+    if (globalStateContainingResult != nullptr && resultRegistryIndex != LUA_NOREF)
     {
         lua_unref(globalStateContainingResult, resultRegistryIndex);
     }

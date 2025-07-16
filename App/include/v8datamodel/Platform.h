@@ -66,7 +66,7 @@ class PlatformImpl : public ActionStation<Base>
 			if (!h->getTorsoSlow())
 				return;
 
-			PartInstance *pTorsoPart = NULL; 
+			PartInstance *pTorsoPart = nullptr; 
 			pTorsoPart = h->getVisibleTorsoSlow();
 			RBXASSERT(pTorsoPart); // we just checked for this
 
@@ -145,12 +145,12 @@ class PlatformImpl : public ActionStation<Base>
 		void findAndDestroyPlatformMotor6DInternal()
 		{
 			while (Motor6D* motor6D = findPlatformMotor6D()) {
-				motor6D->setParent(NULL);
+				motor6D->setParent(nullptr);
 			}
 		}
 
 		Humanoid* humanoidFromMotor6D(Motor6D* motor6D) {
-			PartInstance* torso = motor6D ? motor6D->getPart1() : NULL;
+			PartInstance* torso = motor6D ? motor6D->getPart1() : nullptr;
 			return Humanoid::humanoidFromBodyPart(torso);
 		}
 
@@ -160,7 +160,7 @@ class PlatformImpl : public ActionStation<Base>
 					return answer;
 				}
 			}
-			return NULL;
+			return nullptr;
 		}
 
 		Motor6D* isChildPlatformMotor6D(Instance* child) {
@@ -169,12 +169,12 @@ class PlatformImpl : public ActionStation<Base>
 					return childMotor6D;
 				}
 			}
-			return NULL;
+			return nullptr;
 		}
 
 		void destroyOtherMotor6D(shared_ptr<Instance> child, Motor6D* childMotor6D) {
 			if ((child.get() != childMotor6D) && isChildPlatformMotor6D(child.get())) {
-				child->setParent(NULL);
+				child->setParent(nullptr);
 			}
 		}
 

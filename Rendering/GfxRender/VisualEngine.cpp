@@ -165,7 +165,7 @@ namespace RBX
 
 			// set up caps
 			bool gbufferSupported = false;
-			/*shaderManager->getProgram("PassThroughVS", "SSAOFS").get() != NULL &&
+			/*shaderManager->getProgram("PassThroughVS", "SSAOFS").get() != nullptr &&
 			device->getCaps().maxDrawBuffers >= 2 &&
 			(device->getFeatureLevel() == "D3D11" || SystemUtil::getVideoMemory() >= 128*1024*1024);*/
 
@@ -223,9 +223,9 @@ namespace RBX
 			}
 			else
 			{
-				contentProvider = NULL;
-				meshContentProvider = NULL;
-				lighting = NULL;
+				contentProvider = nullptr;
+				meshContentProvider = nullptr;
+				lighting = nullptr;
 
 				if (sceneUpdater)
 				{

@@ -42,8 +42,8 @@
 /*
  * Internal stuff.
  */
-SDL_hapticlist_item *SDL_hapticlist = NULL;
-static SDL_hapticlist_item *SDL_hapticlist_tail = NULL;
+SDL_hapticlist_item *SDL_hapticlist = nullptr;
+static SDL_hapticlist_item *SDL_hapticlist_tail = nullptr;
 static int numhaptics = 0;
 
 
@@ -65,7 +65,7 @@ SDL_SYS_HapticInit(void)
 int
 SDL_SYS_AddHapticDevice(SDL_hapticlist_item *item)
 {
-    if (SDL_hapticlist_tail == NULL) {
+    if (SDL_hapticlist_tail == nullptr) {
         SDL_hapticlist = SDL_hapticlist_tail = item;
     } else {
         SDL_hapticlist_tail->next = item;
@@ -82,7 +82,7 @@ int
 SDL_SYS_RemoveHapticDevice(SDL_hapticlist_item *prev, SDL_hapticlist_item *item)
 {
     const int retval = item->haptic ? item->haptic->index : -1;
-    if (prev != NULL) {
+    if (prev != nullptr) {
         prev->next = item->next;
     } else {
         SDL_assert(SDL_hapticlist == item);
@@ -109,11 +109,11 @@ HapticByDevIndex(int device_index)
     SDL_hapticlist_item *item = SDL_hapticlist;
 
     if ((device_index < 0) || (device_index >= numhaptics)) {
-        return NULL;
+        return nullptr;
     }
 
     while (device_index > 0) {
-        SDL_assert(item != NULL);
+        SDL_assert(item != nullptr);
         --device_index;
         item = item->next;
     }
@@ -156,7 +156,7 @@ SDL_SYS_HapticMouse(void)
     int index = 0;
 
     /* Grab the first mouse haptic device we find. */
-    for (item = SDL_hapticlist; item != NULL; item = item->next) {
+    for (item = SDL_hapticlist; item != nullptr; item = item->next) {
         if (item->capabilities.dwDevType == DI8DEVCLASS_POINTER ) {
             return index;
         }
@@ -225,7 +225,7 @@ SDL_SYS_HapticClose(SDL_Haptic * haptic)
 
         /* Free effects. */
         SDL_free(haptic->effects);
-        haptic->effects = NULL;
+        haptic->effects = nullptr;
         haptic->neffects = 0;
 
         /* Clean up */
@@ -237,7 +237,7 @@ SDL_SYS_HapticClose(SDL_Haptic * haptic)
 
         /* Free */
         SDL_free(haptic->hwdata);
-        haptic->hwdata = NULL;
+        haptic->hwdata = nullptr;
     }
 }
 
@@ -248,16 +248,16 @@ void
 SDL_SYS_HapticQuit(void)
 {
     SDL_hapticlist_item *item;
-    SDL_hapticlist_item *next = NULL;
-    SDL_Haptic *hapticitem = NULL;
+    SDL_hapticlist_item *next = nullptr;
+    SDL_Haptic *hapticitem = nullptr;
 
     extern SDL_Haptic *SDL_haptics;
     for (hapticitem = SDL_haptics; hapticitem; hapticitem = hapticitem->next) {
         if ((hapticitem->hwdata->bXInputHaptic) && (hapticitem->hwdata->thread)) {
             /* we _have_ to stop the thread before we free the XInput DLL! */
             hapticitem->hwdata->stopThread = 1;
-            SDL_WaitThread(hapticitem->hwdata->thread, NULL);
-            hapticitem->hwdata->thread = NULL;
+            SDL_WaitThread(hapticitem->hwdata->thread, nullptr);
+            hapticitem->hwdata->thread = nullptr;
         }
     }
 
@@ -274,8 +274,8 @@ SDL_SYS_HapticQuit(void)
     SDL_DINPUT_HapticQuit();
 
     numhaptics = 0;
-    SDL_hapticlist = NULL;
-    SDL_hapticlist_tail = NULL;
+    SDL_hapticlist = nullptr;
+    SDL_hapticlist_tail = nullptr;
 }
 
 /*
@@ -290,7 +290,7 @@ SDL_SYS_HapticNewEffect(SDL_Haptic * haptic, struct haptic_effect *effect,
     /* Alloc the effect. */
     effect->hweffect = (struct haptic_hweffect *)
         SDL_malloc(sizeof(struct haptic_hweffect));
-    if (effect->hweffect == NULL) {
+    if (effect->hweffect == nullptr) {
         SDL_OutOfMemory();
         return -1;
     }
@@ -303,7 +303,7 @@ SDL_SYS_HapticNewEffect(SDL_Haptic * haptic, struct haptic_effect *effect,
     }
     if (result < 0) {
         SDL_free(effect->hweffect);
-        effect->hweffect = NULL;
+        effect->hweffect = nullptr;
     }
     return result;
 }
@@ -362,7 +362,7 @@ SDL_SYS_HapticDestroyEffect(SDL_Haptic * haptic, struct haptic_effect *effect)
         SDL_DINPUT_HapticDestroyEffect(haptic, effect);
     }
     SDL_free(effect->hweffect);
-    effect->hweffect = NULL;
+    effect->hweffect = nullptr;
 }
 
 /*

@@ -75,7 +75,7 @@ namespace RBX {
 		template<class Type>
 		Type* getOneBelowRoot() {
 			IndexedTree* above = parent;
-			RBXASSERT(above != NULL);
+			RBXASSERT(above != nullptr);
 			IndexedTree* answer = this;
 			while (above->parent) {
 				answer = above;

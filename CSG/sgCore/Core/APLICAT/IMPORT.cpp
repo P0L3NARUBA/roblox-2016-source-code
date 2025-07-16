@@ -65,7 +65,7 @@ int import(DEV_TYPE dev, char * name, lpLISTH listh, BOOL frame, lpMATR matr,boo
 	if (dev != DEV_WMF)
 		close_buf(&bd);
 	if ( frame && vld.listh.hhead) {  
-		if ( (hobj = creat_frame_obj(&vld,count_frame)) == NULL) {
+		if ( (hobj = creat_frame_obj(&vld,count_frame)) == nullptr) {
 			free_vld_data(&vld);
 			return count_frame_hobj;
 		}
@@ -80,17 +80,17 @@ static  hOBJ creat_frame_obj(lpVLD vld, short count)
 	lpOBJ			 obj;
 	D_POINT	 	 min, max;
 
-	if ((hobj = o_alloc(OFRAME)) == NULL) {
+	if ((hobj = o_alloc(OFRAME)) == nullptr) {
 		free_vld_data(vld);
-		return NULL;
+		return nullptr;
 	}
 	obj = (lpOBJ)hobj;
 	((lpGEO_FRAME)obj->geo_data)->num = count;
 	((lpGEO_FRAME)obj->geo_data)->vld = *vld;
 	o_hcunit(((lpGEO_FRAME)obj->geo_data)->matr);
 	if (!get_object_limits(hobj, &min, &max) ) {
-		o_free(hobj,NULL);
-		return NULL;
+		o_free(hobj,nullptr);
+		return nullptr;
 	}
 	obj = (lpOBJ)hobj;
 	((lpGEO_FRAME)obj->geo_data)->min = min;
@@ -110,7 +110,7 @@ BOOL cr_add_obj(OBJTYPE type, short cur_color, lpGEO_SIMPLE geo,
 	if ( frame ) {
 		count_frame++;
 		if ( count_frame >= MAXNUMFRAME ) {
-			if ( (hobj = creat_frame_obj(vld, (short)(count_frame-1))) == NULL )
+			if ( (hobj = creat_frame_obj(vld, (short)(count_frame-1))) == nullptr )
 				return FALSE;
 			attach_item_tail(listh,hobj);
 //			free_vld_data(vld);   
@@ -126,7 +126,7 @@ BOOL cr_add_obj(OBJTYPE type, short cur_color, lpGEO_SIMPLE geo,
 		if ( !add_vld_data(vld, geo_size[type],geo)) return FALSE;
 		return TRUE;
 	}
-	if ( (hobj = o_alloc(type)) == NULL ) return FALSE;
+	if ( (hobj = o_alloc(type)) == nullptr ) return FALSE;
 
 	obj = (lpOBJ)hobj;
 	obj->color = (BYTE)cur_color;
@@ -142,7 +142,7 @@ short   i = 0;
     if(i + 1 > *num) break;
     while(*line == SPACE || *line == TAB) line++;
     if(!(*line)) break;
-    if((line = z_atof(line, &values[i++])) == NULL) return FALSE;
+    if((line = z_atof(line, &values[i++])) == nullptr) return FALSE;
 		if (static_data->RoundOn)
 			values[i-1] = round(values[i-1], export_floating_precision);
     while(*line == SPACE || *line == TAB) line++;

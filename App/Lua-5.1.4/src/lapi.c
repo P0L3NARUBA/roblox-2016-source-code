@@ -343,15 +343,15 @@ LUA_API const char *lua_tolstring (lua_State *L, int idx, size_t *len) {
   if (!ttisstring(o)) {
     lua_lock(L);  /* `luaV_tostring' may create a new string */
     if (!luaV_tostring(L, o)) {  /* conversion failed? */
-      if (len != NULL) *len = 0;
+      if (len != nullptr) *len = 0;
       lua_unlock(L);
-      return NULL;
+      return nullptr;
     }
     luaC_checkGC(L);
     o = index2adr(L, idx);  /* previous call may reallocate the stack */
     lua_unlock(L);
   }
-  if (len != NULL) *len = tsvalue(o)->len;
+  if (len != nullptr) *len = tsvalue(o)->len;
   return svalue(o);
 }
 
@@ -372,9 +372,9 @@ LUA_API const char *lua_tolstringsecure(lua_State *L, int idx, size_t *len)
     if (!ttisstring(o)) {
         lua_lock(L);  /* `luaV_tostring' may create a new string */
         if (!luaV_tostring(L, o)) {  /* conversion failed? */
-			if (len != NULL) *len = 0;
+			if (len != nullptr) *len = 0;
             lua_unlock(L);
-            return NULL;
+            return nullptr;
         }
         luaC_checkGC(L);
         o = index2adr(L, idx);  /* previous call may reallocate the stack */
@@ -387,18 +387,18 @@ LUA_API const char *lua_tolstringsecure(lua_State *L, int idx, size_t *len)
 #if !defined(RBX_STUDIO_BUILD)
     if (lua_hash(str, l) == tsvalue(o)->hash)
     {
-        if (len != NULL) *len = l;
+        if (len != nullptr) *len = l;
         return str;
 	}
 	else
 	{
         RBX::DataModel::sendStats |= HATE_LUA_HASH_CHANGED;
 
-        if (len != NULL) *len = 0;
-        return NULL;
+        if (len != nullptr) *len = 0;
+        return nullptr;
 	}
 #else
-    if (len != NULL) *len = l;
+    if (len != nullptr) *len = l;
     return str;
 #endif
 }
@@ -424,7 +424,7 @@ LUA_API size_t lua_objlen (lua_State *L, int idx) {
 
 LUA_API lua_CFunction lua_tocfunction (lua_State *L, int idx) {
   StkId o = index2adr(L, idx);
-  return (!iscfunction(o)) ? NULL : cast(lua_CFunction, clvalue(o)->c.f);
+  return (!iscfunction(o)) ? nullptr : cast(lua_CFunction, clvalue(o)->c.f);
 }
 
 
@@ -433,14 +433,14 @@ LUA_API void *lua_touserdata (lua_State *L, int idx) {
   switch (ttype(o)) {
     case LUA_TUSERDATA: return (rawuvalue(o) + 1);
     case LUA_TLIGHTUSERDATA: return pvalue(o);
-    default: return NULL;
+    default: return nullptr;
   }
 }
 
 
 LUA_API lua_State *lua_tothread (lua_State *L, int idx) {
   StkId o = index2adr(L, idx);
-  return (!ttisthread(o)) ? NULL : thvalue(o);
+  return (!ttisthread(o)) ? nullptr : thvalue(o);
 }
 
 
@@ -453,7 +453,7 @@ LUA_API const void *lua_topointer (lua_State *L, int idx) {
     case LUA_TUSERDATA:
     case LUA_TLIGHTUSERDATA:
       return lua_touserdata(L, idx);
-    default: return NULL;
+    default: return nullptr;
   }
 }
 
@@ -498,7 +498,7 @@ LUA_API void lua_pushlstring (lua_State *L, const char *s, size_t len) {
 
 
 LUA_API void lua_pushstring (lua_State *L, const char *s) {
-  if (s == NULL)
+  if (s == nullptr)
     lua_pushnil(L);
   else
     lua_pushlstring(L, s, strlen(s));
@@ -642,7 +642,7 @@ void lua_setreadonly (lua_State *L, int objindex, bool value) {
 
 LUA_API int lua_getmetatable (lua_State *L, int objindex) {
   const TValue *obj;
-  Table *mt = NULL;
+  Table *mt = nullptr;
   int res;
   lua_lock(L);
   obj = index2adr(L, objindex);
@@ -657,7 +657,7 @@ LUA_API int lua_getmetatable (lua_State *L, int objindex) {
       mt = G(L)->mt[ttype(obj)];
       break;
   }
-  if (mt == NULL)
+  if (mt == nullptr)
     res = 0;
   else {
     sethvalue(L, L->top, mt);
@@ -764,7 +764,7 @@ LUA_API int lua_setmetatable (lua_State *L, int objindex) {
   obj = index2adr(L, objindex);
   api_checkvalidindex(L, obj);
   if (ttisnil(L->top - 1))
-    mt = NULL;
+    mt = nullptr;
   else {
     api_check(L, ttistable(L->top - 1));
     mt = hvalue(L->top - 1);
@@ -1105,16 +1105,16 @@ LUA_API void *lua_newuserdata (lua_State *L, size_t size) {
 
 static const char *aux_upvalue (StkId fi, int n, TValue **val) {
   Closure *f;
-  if (!ttisfunction(fi)) return NULL;
+  if (!ttisfunction(fi)) return nullptr;
   f = clvalue(fi);
   if (f->c.isC) {
-    if (!(1 <= n && n <= f->c.nupvalues)) return NULL;
+    if (!(1 <= n && n <= f->c.nupvalues)) return nullptr;
     *val = &f->c.upvalue[n-1];
     return "";
   }
   else {
     Proto *p = f->l.p;
-    if (!(1 <= n && n <= p->sizeupvalues)) return NULL;
+    if (!(1 <= n && n <= p->sizeupvalues)) return nullptr;
     *val = f->l.upvals[n-1]->v;
     return getstr(p->upvalues[n-1]);
   }

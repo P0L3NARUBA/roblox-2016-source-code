@@ -544,7 +544,7 @@ public:
      @param textureScale Lower-right texture coordinate
      @param spaceCentered If true, the coordinates generated are centered at the origin before the transformation.
      @param twoSided If true, matching top and bottom planes are generated.
-     \param elevation If non-NULL, values from this image are used as elevations.  Apply an \a xform to adjust the scale
+     \param elevation If non-nullptr, values from this image are used as elevations.  Apply an \a xform to adjust the scale
      */
     static void generateGrid(
         Array<Vector3>&     vertex,
@@ -556,7 +556,7 @@ public:
         bool                spaceCentered = true,
         bool                twoSided = true,
         const CoordinateFrame& xform = CoordinateFrame(),
-        const Image1::Ref&  elevation = NULL);
+        const Image1::Ref&  elevation = nullptr);
 
     /** Converts quadlist (QUADS), 
         triangle fan (TRIANGLE_FAN),

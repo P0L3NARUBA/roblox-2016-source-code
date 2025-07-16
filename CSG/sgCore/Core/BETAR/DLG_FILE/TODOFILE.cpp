@@ -23,9 +23,9 @@ LONG GetFileNameSize(LPSTR	fname)
             DWORD dw;
 
             if (INVALID_HANDLE_VALUE == (fin = CreateFileA(fname, GENERIC_READ, FILE_SHARE_READ,
-            NULL, OPEN_EXISTING, NULL, NULL)))
+            nullptr, OPEN_EXISTING, nullptr, nullptr)))
             return -1;
-            dw = GetFileSize(fin, NULL);
+            dw = GetFileSize(fin, nullptr);
             CloseHandle(fin);
             return dw;
     #else
@@ -44,7 +44,7 @@ BOOL FileIsExist(LPSTR	fname)
             HANDLE fin;
 
             if (INVALID_HANDLE_VALUE == (fin = CreateFileA(fname, GENERIC_READ, FILE_SHARE_READ,
-            NULL, OPEN_EXISTING, NULL, NULL)))
+            nullptr, OPEN_EXISTING, nullptr, nullptr)))
             return FALSE;
              else
                 {
@@ -65,7 +65,7 @@ LONG nb_filelength(HANDLE fin)
 {
     #if (SG_CURRENT_PLATFORM==SG_PLATFORM_WINDOWS)
         DWORD dw;
-        dw = GetFileSize(fin, NULL);
+        dw = GetFileSize(fin, nullptr);
         return dw;
      #else
 	
@@ -137,24 +137,24 @@ HANDLE nb_open(const char *fname, int access, WORD mode)
   	if (mode)
       if (access & O_RDWR)
         hDest = CreateFileA(fname, GENERIC_READ | GENERIC_WRITE,
-          0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_TEMPORARY|FILE_FLAG_RANDOM_ACCESS, NULL);
+          0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_TEMPORARY|FILE_FLAG_RANDOM_ACCESS, nullptr);
       else
         hDest = CreateFileA(fname, GENERIC_READ,
-          0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_TEMPORARY|FILE_FLAG_RANDOM_ACCESS, NULL);
+          0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_TEMPORARY|FILE_FLAG_RANDOM_ACCESS, nullptr);
     else
       if (access & O_RDWR)
         hDest = CreateFileA(fname, GENERIC_READ | GENERIC_WRITE,
-          0, NULL, CREATE_ALWAYS, FILE_FLAG_RANDOM_ACCESS, NULL);
+          0, nullptr, CREATE_ALWAYS, FILE_FLAG_RANDOM_ACCESS, nullptr);
       else
         hDest = CreateFileA(fname, GENERIC_READ,
-          0, NULL, CREATE_ALWAYS, FILE_FLAG_RANDOM_ACCESS, NULL);
+          0, nullptr, CREATE_ALWAYS, FILE_FLAG_RANDOM_ACCESS, nullptr);
   else
   	if (access & O_RDWR)
             hDest = CreateFileA(fname, GENERIC_READ | GENERIC_WRITE,
-	    	0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	    	0, nullptr, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
     else
             hDest = CreateFileA(fname, GENERIC_READ,
-	    	0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	    	0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
     return hDest;
 #else
     return open(fname, access, mode);
@@ -180,7 +180,7 @@ DWORD nb_write(HANDLE h, LPCVOID buf, DWORD size)
 {
 #if (SG_CURRENT_PLATFORM==SG_PLATFORM_WINDOWS)
     DWORD reallen;
-	WriteFile(h, buf, size, &reallen, NULL);
+	WriteFile(h, buf, size, &reallen, nullptr);
     return reallen;
 #else
     return write((int)h, buf, size);
@@ -194,7 +194,7 @@ DWORD nb_read(HANDLE h, LPCVOID buf, DWORD size)
 {
 #if (SG_CURRENT_PLATFORM==SG_PLATFORM_WINDOWS)
     DWORD reallen=0;
-    ReadFile(h, const_cast<void*>(buf), size, &reallen, NULL);
+    ReadFile(h, const_cast<void*>(buf), size, &reallen, nullptr);
     return reallen;
  #else
     return read((int)h,buf, size);
@@ -212,16 +212,16 @@ DWORD	nb_lseek(HANDLE handle, long offset, int fromwhere)
 
 	switch (fromwhere) {
   case SEEK_CUR:	// Current file pointer position
-		dw = SetFilePointer(handle, offset, NULL, FILE_CURRENT);
+		dw = SetFilePointer(handle, offset, nullptr, FILE_CURRENT);
    	break;
 
 	case SEEK_END:	// End-of-file
-		dw = SetFilePointer(handle, 0, NULL, FILE_END);
+		dw = SetFilePointer(handle, 0, nullptr, FILE_END);
   	break;
 
   case SEEK_SET:	// File beginning
 	default:
-		dw = SetFilePointer(handle, offset, NULL, FILE_BEGIN);
+		dw = SetFilePointer(handle, offset, nullptr, FILE_BEGIN);
    	break;
   }
   return dw;
@@ -266,7 +266,7 @@ BOOL GetFileInfo(LPSTR fname, LPSTR infosize, LPSTR infotime)
 
 	*infosize = *infotime = 0;
     fin = CreateFileA(fname, GENERIC_READ, FILE_SHARE_READ,
-  	NULL, OPEN_EXISTING, NULL, NULL);
+  	nullptr, OPEN_EXISTING, nullptr, nullptr);
 	if ((int)fin < 0)
   	return FALSE;
   if (!GetFileInformationByHandle(fin, &fi))

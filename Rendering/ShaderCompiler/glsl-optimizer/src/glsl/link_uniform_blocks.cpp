@@ -46,7 +46,7 @@ public:
    {
       this->offset = 0;
       this->buffer_size = 0;
-      this->is_array_instance = strchr(name, ']') != NULL;
+      this->is_array_instance = strchr(name, ']') != nullptr;
       this->program_resource_visitor::process(type, name);
    }
 
@@ -84,10 +84,10 @@ private:
          v->IndexName = ralloc_strdup(mem_ctx, name);
 
          char *open_bracket = strchr(v->IndexName, '[');
-         assert(open_bracket != NULL);
+         assert(open_bracket != nullptr);
 
          char *close_bracket = strchr(open_bracket, ']');
-         assert(close_bracket != NULL);
+         assert(close_bracket != nullptr);
 
          /* Length of the tail without the ']' but with the NUL.
           */
@@ -185,7 +185,7 @@ link_uniform_blocks(void *mem_ctx,
    struct hash_table *block_hash =
       _mesa_hash_table_create(mem_ctx, _mesa_key_string_equal);
 
-   if (block_hash == NULL) {
+   if (block_hash == nullptr) {
       _mesa_error_no_memory(__func__);
       linker_error(prog, "out of memory\n");
       return 0;
@@ -231,7 +231,7 @@ link_uniform_blocks(void *mem_ctx,
 
    if (num_blocks == 0) {
       assert(num_variables == 0);
-      _mesa_hash_table_destroy(block_hash, NULL);
+      _mesa_hash_table_destroy(block_hash, nullptr);
       return 0;
    }
 
@@ -319,7 +319,7 @@ link_uniform_blocks(void *mem_ctx,
 
    assert(parcel.index == num_variables);
 
-   _mesa_hash_table_destroy(block_hash, NULL);
+   _mesa_hash_table_destroy(block_hash, nullptr);
 
    *blocks_ret = blocks;
    return num_blocks;

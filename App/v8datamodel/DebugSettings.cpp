@@ -108,61 +108,61 @@ std::string DebugSettings::robloxVersion = "?";
 std::string DebugSettings::robloxProductName = "?";
 
 REFLECTION_BEGIN();
-static Reflection::PropDescriptor<DebugSettings, std::string> prop_RobloxVersion("RobloxVersion", "Profile", &DebugSettings::getRobloxVersion, NULL);
-static Reflection::PropDescriptor<DebugSettings, std::string> prop_RobloxProductName("RobloxProductName", "Profile", &DebugSettings::getRobloxProductName, NULL);
-static Reflection::PropDescriptor<DebugSettings, float> prop_getVertexShaderModel("VertexShaderModel", "Profile", &DebugSettings::getVertexShaderModel, NULL);
-static Reflection::PropDescriptor<DebugSettings, float> prop_getPixelShaderModel("PixelShaderModel", "Profile", &DebugSettings::getPixelShaderModel, NULL);
-static Reflection::PropDescriptor<DebugSettings, int> prop_videoMemory("VideoMemory", "Profile", &DebugSettings::videoMemory, NULL);
-static Reflection::PropDescriptor<DebugSettings, int> prop_cpuSpeed("CpuSpeed", "Profile", &DebugSettings::cpuSpeed, NULL);
-static Reflection::PropDescriptor<DebugSettings, int> prop_cpuCount("CpuCount", "Profile", &DebugSettings::cpuCount, NULL);
-static Reflection::PropDescriptor<DebugSettings, int> prop_osPlatformId("OsPlatformId", "Profile", &DebugSettings::osPlatformId, NULL);
-static Reflection::PropDescriptor<DebugSettings, std::string> prop_osPlatform("OsPlatform", "Profile", &DebugSettings::osPlatform, NULL);
-static Reflection::PropDescriptor<DebugSettings, std::string> prop_osVer("OsVer", "Profile", &DebugSettings::osVer, NULL);
-static Reflection::PropDescriptor<DebugSettings, bool> prop_osIs64Bit("OsIs64Bit", "Profile", &DebugSettings::osIs64Bit, NULL);
-static Reflection::PropDescriptor<DebugSettings, std::string> prop_systemProductName("SystemProductName", "Profile", &DebugSettings::systemProductName, NULL);
-static Reflection::PropDescriptor<DebugSettings, std::string> prop_gfxcard("GfxCard", "Profile", &DebugSettings::gfxcard, NULL);
-static Reflection::PropDescriptor<DebugSettings, std::string> prop_cpu("CPU", "Profile", &DebugSettings::cpu, NULL);
-static Reflection::PropDescriptor<DebugSettings, std::string> prop_simd("SIMD", "Profile", &DebugSettings::simd, NULL);
-static Reflection::PropDescriptor<DebugSettings, int> prop_ram("RAM", "Profile", &DebugSettings::totalPhysicalMemory, NULL); // alias of TotalPhysicalMemory for back-compat.
-static Reflection::PropDescriptor<DebugSettings, int> prop_totalPhysicalMemory("TotalPhysicalMemory", "Profile", &DebugSettings::totalPhysicalMemory, NULL);
-static Reflection::PropDescriptor<DebugSettings, std::string> prop_resolution("Resolution", "Profile", &DebugSettings::resolution, NULL);
+static Reflection::PropDescriptor<DebugSettings, std::string> prop_RobloxVersion("RobloxVersion", "Profile", &DebugSettings::getRobloxVersion, nullptr);
+static Reflection::PropDescriptor<DebugSettings, std::string> prop_RobloxProductName("RobloxProductName", "Profile", &DebugSettings::getRobloxProductName, nullptr);
+static Reflection::PropDescriptor<DebugSettings, float> prop_getVertexShaderModel("VertexShaderModel", "Profile", &DebugSettings::getVertexShaderModel, nullptr);
+static Reflection::PropDescriptor<DebugSettings, float> prop_getPixelShaderModel("PixelShaderModel", "Profile", &DebugSettings::getPixelShaderModel, nullptr);
+static Reflection::PropDescriptor<DebugSettings, int> prop_videoMemory("VideoMemory", "Profile", &DebugSettings::videoMemory, nullptr);
+static Reflection::PropDescriptor<DebugSettings, int> prop_cpuSpeed("CpuSpeed", "Profile", &DebugSettings::cpuSpeed, nullptr);
+static Reflection::PropDescriptor<DebugSettings, int> prop_cpuCount("CpuCount", "Profile", &DebugSettings::cpuCount, nullptr);
+static Reflection::PropDescriptor<DebugSettings, int> prop_osPlatformId("OsPlatformId", "Profile", &DebugSettings::osPlatformId, nullptr);
+static Reflection::PropDescriptor<DebugSettings, std::string> prop_osPlatform("OsPlatform", "Profile", &DebugSettings::osPlatform, nullptr);
+static Reflection::PropDescriptor<DebugSettings, std::string> prop_osVer("OsVer", "Profile", &DebugSettings::osVer, nullptr);
+static Reflection::PropDescriptor<DebugSettings, bool> prop_osIs64Bit("OsIs64Bit", "Profile", &DebugSettings::osIs64Bit, nullptr);
+static Reflection::PropDescriptor<DebugSettings, std::string> prop_systemProductName("SystemProductName", "Profile", &DebugSettings::systemProductName, nullptr);
+static Reflection::PropDescriptor<DebugSettings, std::string> prop_gfxcard("GfxCard", "Profile", &DebugSettings::gfxcard, nullptr);
+static Reflection::PropDescriptor<DebugSettings, std::string> prop_cpu("CPU", "Profile", &DebugSettings::cpu, nullptr);
+static Reflection::PropDescriptor<DebugSettings, std::string> prop_simd("SIMD", "Profile", &DebugSettings::simd, nullptr);
+static Reflection::PropDescriptor<DebugSettings, int> prop_ram("RAM", "Profile", &DebugSettings::totalPhysicalMemory, nullptr); // alias of TotalPhysicalMemory for back-compat.
+static Reflection::PropDescriptor<DebugSettings, int> prop_totalPhysicalMemory("TotalPhysicalMemory", "Profile", &DebugSettings::totalPhysicalMemory, nullptr);
+static Reflection::PropDescriptor<DebugSettings, std::string> prop_resolution("Resolution", "Profile", &DebugSettings::resolution, nullptr);
 //PerfCounters
-static Reflection::PropDescriptor<DebugSettings, int> prop_sfjsdlkfjlk("NameDatabaseSize", "Performance", &DebugSettings::nameDatabaseSize, NULL);
-static Reflection::PropDescriptor<DebugSettings, int> prop_sfjsdlkgflk("NameDatabaseBytes", "Performance", &DebugSettings::nameDatabaseBytes, NULL);
-static Reflection::PropDescriptor<DebugSettings, int> prop_availablePhysicalMemory("AvailablePhysicalMemory", "Performance", &DebugSettings::availablePhysicalMemory, NULL);
-static Reflection::PropDescriptor<DebugSettings, double> prop_ElapsedTime("ElapsedTime", "Performance", &DebugSettings::getElapsedTime, NULL);
-static Reflection::PropDescriptor<DebugSettings, double> prop_ProcessCores("ProcessCores", "Performance", &DebugSettings::processCores, NULL);
-static Reflection::PropDescriptor<DebugSettings, int> prop_TotalProcessorTime("TotalProcessorTime", "Performance", &DebugSettings::totalProcessorTime, NULL);
-static Reflection::PropDescriptor<DebugSettings, int> prop_ProcessorTime("ProcessorTime", "Performance", &DebugSettings::processorTime, NULL);
-static Reflection::PropDescriptor<DebugSettings, int> prop_PrivateBytes("PrivateBytes", "Performance", &DebugSettings::privateBytes, NULL);
-static Reflection::PropDescriptor<DebugSettings, int> prop_PrivateWorkingSetBytes("PrivateWorkingSetBytes", "Performance", &DebugSettings::privateWorkingSetBytes, NULL);
-static Reflection::PropDescriptor<DebugSettings, int> prop_VirtualBytes("VirtualBytes", "Performance", &DebugSettings::GetVirtualBytes, NULL);
-static Reflection::PropDescriptor<DebugSettings, int> prop_PageFileBytes("PageFileBytes", "Performance", &DebugSettings::GetPageFileBytes, NULL);
-static Reflection::PropDescriptor<DebugSettings, int> prop_PageFaultsPerSecond("PageFaultsPerSecond", "Performance", &DebugSettings::GetPageFaultsPerSecond, NULL);
-static Reflection::PropDescriptor<DebugSettings, int> prop_InstanceCount("InstanceCount", "Performance", &DebugSettings::instanceCount, NULL);
-static Reflection::PropDescriptor<DebugSettings, int> prop_PlayerCount("PlayerCount", "Performance", &DebugSettings::getPlayerCount, NULL);
-static Reflection::PropDescriptor<DebugSettings, int> prop_DataModelCount("DataModel", "Performance", &DebugSettings::getDataModelCount, NULL);
-static Reflection::PropDescriptor<DebugSettings, int> prop_JobCount("JobCount", "Performance", &DebugSettings::jobCount, NULL);
-static Reflection::PropDescriptor<DebugSettings, int> prop_CdnSuccesses("CdnSuccessCount", "Performance", &DebugSettings::getCdnSuccessCount, NULL);
-static Reflection::PropDescriptor<DebugSettings, int> prop_CdnFailures("CdnFailureCount", "Performance", &DebugSettings::getCdnFailureCount, NULL);
-static Reflection::PropDescriptor<DebugSettings, int> prop_AltCdnSuccesses("AltCdnSuccessCount", "Performance", &DebugSettings::getAlternateCdnSuccessCount, NULL);
-static Reflection::PropDescriptor<DebugSettings, int> prop_AltCdnFailures("AltCdnFailureCount", "Performance", &DebugSettings::getAlternateCdnFailureCount, NULL);
-static Reflection::PropDescriptor<DebugSettings, int> prop_blockMeshMapSize("BlockMeshSize", "Performance", &DebugSettings::getBlockMeshMapCount, NULL);
-static Reflection::PropDescriptor<DebugSettings, double> prop_LastCdnFailureTimeSpan("LastCdnFailureTimeSpan", "Performance", &DebugSettings::getLastCdnFailureTimeSpan, NULL);
-static Reflection::PropDescriptor<DebugSettings, int> prop_robloxSuccesses("RobloxSuccessCount", "Performance", &DebugSettings::getRobloxSuccessCount, NULL);
-static Reflection::PropDescriptor<DebugSettings, int> prop_robloxFailures("RobloxFailureCount", "Performance", &DebugSettings::getRobloxFalureCount, NULL);
-static Reflection::PropDescriptor<DebugSettings, double> prop_robloxResponce("RobloxRespoceTime", "Performance", &DebugSettings::getRobloxResponce, NULL);
-static Reflection::PropDescriptor<DebugSettings, double> prop_cdnReponce("CdnResponceTime", "Performance", &DebugSettings::getCdnRespoce, NULL);
+static Reflection::PropDescriptor<DebugSettings, int> prop_sfjsdlkfjlk("NameDatabaseSize", "Performance", &DebugSettings::nameDatabaseSize, nullptr);
+static Reflection::PropDescriptor<DebugSettings, int> prop_sfjsdlkgflk("NameDatabaseBytes", "Performance", &DebugSettings::nameDatabaseBytes, nullptr);
+static Reflection::PropDescriptor<DebugSettings, int> prop_availablePhysicalMemory("AvailablePhysicalMemory", "Performance", &DebugSettings::availablePhysicalMemory, nullptr);
+static Reflection::PropDescriptor<DebugSettings, double> prop_ElapsedTime("ElapsedTime", "Performance", &DebugSettings::getElapsedTime, nullptr);
+static Reflection::PropDescriptor<DebugSettings, double> prop_ProcessCores("ProcessCores", "Performance", &DebugSettings::processCores, nullptr);
+static Reflection::PropDescriptor<DebugSettings, int> prop_TotalProcessorTime("TotalProcessorTime", "Performance", &DebugSettings::totalProcessorTime, nullptr);
+static Reflection::PropDescriptor<DebugSettings, int> prop_ProcessorTime("ProcessorTime", "Performance", &DebugSettings::processorTime, nullptr);
+static Reflection::PropDescriptor<DebugSettings, int> prop_PrivateBytes("PrivateBytes", "Performance", &DebugSettings::privateBytes, nullptr);
+static Reflection::PropDescriptor<DebugSettings, int> prop_PrivateWorkingSetBytes("PrivateWorkingSetBytes", "Performance", &DebugSettings::privateWorkingSetBytes, nullptr);
+static Reflection::PropDescriptor<DebugSettings, int> prop_VirtualBytes("VirtualBytes", "Performance", &DebugSettings::GetVirtualBytes, nullptr);
+static Reflection::PropDescriptor<DebugSettings, int> prop_PageFileBytes("PageFileBytes", "Performance", &DebugSettings::GetPageFileBytes, nullptr);
+static Reflection::PropDescriptor<DebugSettings, int> prop_PageFaultsPerSecond("PageFaultsPerSecond", "Performance", &DebugSettings::GetPageFaultsPerSecond, nullptr);
+static Reflection::PropDescriptor<DebugSettings, int> prop_InstanceCount("InstanceCount", "Performance", &DebugSettings::instanceCount, nullptr);
+static Reflection::PropDescriptor<DebugSettings, int> prop_PlayerCount("PlayerCount", "Performance", &DebugSettings::getPlayerCount, nullptr);
+static Reflection::PropDescriptor<DebugSettings, int> prop_DataModelCount("DataModel", "Performance", &DebugSettings::getDataModelCount, nullptr);
+static Reflection::PropDescriptor<DebugSettings, int> prop_JobCount("JobCount", "Performance", &DebugSettings::jobCount, nullptr);
+static Reflection::PropDescriptor<DebugSettings, int> prop_CdnSuccesses("CdnSuccessCount", "Performance", &DebugSettings::getCdnSuccessCount, nullptr);
+static Reflection::PropDescriptor<DebugSettings, int> prop_CdnFailures("CdnFailureCount", "Performance", &DebugSettings::getCdnFailureCount, nullptr);
+static Reflection::PropDescriptor<DebugSettings, int> prop_AltCdnSuccesses("AltCdnSuccessCount", "Performance", &DebugSettings::getAlternateCdnSuccessCount, nullptr);
+static Reflection::PropDescriptor<DebugSettings, int> prop_AltCdnFailures("AltCdnFailureCount", "Performance", &DebugSettings::getAlternateCdnFailureCount, nullptr);
+static Reflection::PropDescriptor<DebugSettings, int> prop_blockMeshMapSize("BlockMeshSize", "Performance", &DebugSettings::getBlockMeshMapCount, nullptr);
+static Reflection::PropDescriptor<DebugSettings, double> prop_LastCdnFailureTimeSpan("LastCdnFailureTimeSpan", "Performance", &DebugSettings::getLastCdnFailureTimeSpan, nullptr);
+static Reflection::PropDescriptor<DebugSettings, int> prop_robloxSuccesses("RobloxSuccessCount", "Performance", &DebugSettings::getRobloxSuccessCount, nullptr);
+static Reflection::PropDescriptor<DebugSettings, int> prop_robloxFailures("RobloxFailureCount", "Performance", &DebugSettings::getRobloxFalureCount, nullptr);
+static Reflection::PropDescriptor<DebugSettings, double> prop_robloxResponce("RobloxRespoceTime", "Performance", &DebugSettings::getRobloxResponce, nullptr);
+static Reflection::PropDescriptor<DebugSettings, double> prop_cdnReponce("CdnResponceTime", "Performance", &DebugSettings::getCdnRespoce, nullptr);
 static Reflection::BoundFuncDesc<DebugSettings, shared_ptr<const Reflection::Tuple>()> prop_ResetCdnFailures(&DebugSettings::resetCdnFailureCounts, "ResetCdnFailureCounts", Security::LocalUser);
 
 // TODO: The setters here no longer do anying, get rid of these TaskSchedulerSettings!
-static Reflection::PropDescriptor<TaskSchedulerSettings, int> prop_ThreadPoolSize("ThreadPoolSize", "Diagnostics", &TaskSchedulerSettings::threadPoolSize, NULL);
-static Reflection::PropDescriptor<TaskSchedulerSettings, double> prop_threadAffinity("ThreadAffinity" , "Diagnostics", &TaskSchedulerSettings::threadAffinity, NULL);
-static Reflection::PropDescriptor<TaskSchedulerSettings, double> prop_numSleepingJobs("NumSleepingJobs" , "Diagnostics", &TaskSchedulerSettings::numSleepingJobs, NULL);
-static Reflection::PropDescriptor<TaskSchedulerSettings, double> prop_numWaitingJobs("NumWaitingJobs" , "Diagnostics", &TaskSchedulerSettings::numWaitingJobs, NULL);
-static Reflection::PropDescriptor<TaskSchedulerSettings, double> prop_numRunningJobs("NumRunningJobs" , "Diagnostics", &TaskSchedulerSettings::numRunningJobs, NULL);
-static Reflection::PropDescriptor<TaskSchedulerSettings, double> prop_messageRate("SchedulerRate" , "Diagnostics", &TaskSchedulerSettings::schedulerRate, NULL);
-static Reflection::PropDescriptor<TaskSchedulerSettings, double> prop_messageDutyCycle("SchedulerDutyCycle" , "Diagnostics", &TaskSchedulerSettings::schedulerDutyCyclePerThread, NULL);
+static Reflection::PropDescriptor<TaskSchedulerSettings, int> prop_ThreadPoolSize("ThreadPoolSize", "Diagnostics", &TaskSchedulerSettings::threadPoolSize, nullptr);
+static Reflection::PropDescriptor<TaskSchedulerSettings, double> prop_threadAffinity("ThreadAffinity" , "Diagnostics", &TaskSchedulerSettings::threadAffinity, nullptr);
+static Reflection::PropDescriptor<TaskSchedulerSettings, double> prop_numSleepingJobs("NumSleepingJobs" , "Diagnostics", &TaskSchedulerSettings::numSleepingJobs, nullptr);
+static Reflection::PropDescriptor<TaskSchedulerSettings, double> prop_numWaitingJobs("NumWaitingJobs" , "Diagnostics", &TaskSchedulerSettings::numWaitingJobs, nullptr);
+static Reflection::PropDescriptor<TaskSchedulerSettings, double> prop_numRunningJobs("NumRunningJobs" , "Diagnostics", &TaskSchedulerSettings::numRunningJobs, nullptr);
+static Reflection::PropDescriptor<TaskSchedulerSettings, double> prop_messageRate("SchedulerRate" , "Diagnostics", &TaskSchedulerSettings::schedulerRate, nullptr);
+static Reflection::PropDescriptor<TaskSchedulerSettings, double> prop_messageDutyCycle("SchedulerDutyCycle" , "Diagnostics", &TaskSchedulerSettings::schedulerDutyCyclePerThread, nullptr);
 static Reflection::BoundFuncDesc<TaskSchedulerSettings,void(bool, double)> func_AddDummyJob(&TaskSchedulerSettings::addDummyJob, "AddDummyJob", "exclusive", true, "fps", 30, Security::LocalUser);
 
 Reflection::BoundProp<bool> prop_SoundWarnings("ReportSoundWarnings", "Errors", &DebugSettings::soundWarnings);
@@ -572,7 +572,7 @@ double DebugSettings::processCores() const
 	unsigned	count = 0;
 	size_t		size = sizeof(count);
 	
-	if( sysctlbyname( "hw.ncpu", &count, &size, NULL, 0 ) )
+	if( sysctlbyname( "hw.ncpu", &count, &size, nullptr, 0 ) )
 		return 1;
 	
 	return count;

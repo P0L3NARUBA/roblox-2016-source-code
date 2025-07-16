@@ -197,7 +197,7 @@ typedef SDL_AssertState (SDLCALL *SDL_AssertionHandler)(
  *  This callback may fire from any thread, but it runs wrapped in a mutex, so
  *  it will only fire from one thread at a time.
  *
- *  Setting the callback to NULL restores SDL's original internal handler.
+ *  Setting the callback to nullptr restores SDL's original internal handler.
  *
  *  This callback is NOT reset to SDL's internal handler upon SDL_Quit()!
  *
@@ -232,9 +232,9 @@ extern DECLSPEC SDL_AssertionHandler SDLCALL SDL_GetDefaultAssertionHandler(void
  *
  *   \param puserdata Pointer to a void*, which will store the "userdata"
  *                    pointer that was passed to SDL_SetAssertionHandler().
- *                    This value will always be NULL for the default handler.
+ *                    This value will always be nullptr for the default handler.
  *                    If you don't care about this data, it is safe to pass
- *                    a NULL pointer to this function to ignore it.
+ *                    a nullptr pointer to this function to ignore it.
  *  \return The SDL_AssertionHandler that is called when an assert triggers.
  */
 extern DECLSPEC SDL_AssertionHandler SDLCALL SDL_GetAssertionHandler(void **puserdata);

@@ -38,7 +38,7 @@ WeldJoint* WeldJoint::canBuildJoint(
         return new WeldJoint(p0, p1, c0, c1);
 	}
 	else {
-		return NULL;
+		return nullptr;
 	}
 }
 

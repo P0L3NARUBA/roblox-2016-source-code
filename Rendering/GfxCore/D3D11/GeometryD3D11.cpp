@@ -30,8 +30,8 @@ namespace RBX
 			DXGI_FORMAT_R32G32_FLOAT,
 			DXGI_FORMAT_R32G32B32_FLOAT,
 			DXGI_FORMAT_R32G32B32A32_FLOAT,
-			DXGI_FORMAT_R16G16_SINT,
-			DXGI_FORMAT_R16G16B16A16_SINT,
+			DXGI_FORMAT_R16G16_FLOAT,
+			DXGI_FORMAT_R16G16B16A16_FLOAT,
 			DXGI_FORMAT_R8G8B8A8_UINT,
 			DXGI_FORMAT_R8G8B8A8_UNORM,
 		};
@@ -50,6 +50,7 @@ namespace RBX
 			"NORMAL",
 			"COLOR",
 			"TEXCOORD",
+			"SV_InstanceID",
 		};
 
 		static const D3D11_PRIMITIVE_TOPOLOGY gGeometryPrimitiveD3D11[Geometry::Primitive_Count] =
@@ -107,7 +108,7 @@ namespace RBX
 		template <typename Base> GeometryBufferD3D11<Base>::GeometryBufferD3D11(Device* device, size_t elementSize, size_t elementCount, GeometryBuffer::Usage usage)
 			: Base(device, elementSize, elementCount, usage)
 			, locked(0)
-			, object(NULL)
+			, object(nullptr)
 		{
 		}
 
@@ -123,7 +124,7 @@ namespace RBX
 			bd.MiscFlags = 0;
 			bd.StructureByteStride = 0;
 
-			HRESULT hr = device11->CreateBuffer(&bd, NULL, &object);
+			HRESULT hr = device11->CreateBuffer(&bd, nullptr, &object);
 			if (FAILED(hr))
 				throw RBX::runtime_error("Couldn't create geometry buffer: %x", hr);
 		}
@@ -153,7 +154,7 @@ namespace RBX
 				if (FAILED(hr))
 				{
 					FASTLOG2(FLog::Graphics, "Failed to lock VB (size %d): %x", elementCount * elementSize, hr);
-					return NULL;
+					return nullptr;
 				}
 
 				locked = resource.pData;
@@ -179,7 +180,7 @@ namespace RBX
 				context11->Unmap(object, 0);
 			}
 
-			locked = NULL;
+			locked = nullptr;
 		}
 
 		template <typename Base> void GeometryBufferD3D11<Base>::upload(unsigned int offset, const void* data, unsigned int size)

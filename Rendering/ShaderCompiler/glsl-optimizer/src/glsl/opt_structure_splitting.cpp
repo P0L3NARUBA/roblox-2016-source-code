@@ -49,8 +49,8 @@ public:
       this->var = var;
       this->whole_structure_access = 0;
       this->declaration = false;
-      this->components = NULL;
-      this->mem_ctx = NULL;
+      this->components = nullptr;
+      this->mem_ctx = nullptr;
    }
 
    ir_variable *var; /* The key: the variable's pointer. */
@@ -75,7 +75,7 @@ class ir_structure_reference_visitor : public ir_hierarchical_visitor {
 public:
    ir_structure_reference_visitor(void)
    {
-      this->mem_ctx = ralloc_context(NULL);
+      this->mem_ctx = ralloc_context(nullptr);
       this->variable_list.make_empty();
    }
 
@@ -105,7 +105,7 @@ ir_structure_reference_visitor::get_variable_entry(ir_variable *var)
 
    if (!var->type->is_record() || var->data.mode == ir_var_uniform
        || var->data.mode == ir_var_shader_in || var->data.mode == ir_var_shader_out)
-      return NULL;
+      return nullptr;
 
    foreach_in_list(variable_entry, entry, &this->variable_list) {
       if (entry->var == var)
@@ -206,7 +206,7 @@ ir_structure_splitting_visitor::get_splitting_entry(ir_variable *var)
    assert(var);
 
    if (!var->type->is_record())
-      return NULL;
+      return nullptr;
 
    foreach_in_list(variable_entry, entry, this->variable_list) {
       if (entry->var == var) {
@@ -214,7 +214,7 @@ ir_structure_splitting_visitor::get_splitting_entry(ir_variable *var)
       }
    }
 
-   return NULL;
+   return nullptr;
 }
 
 void
@@ -263,8 +263,8 @@ ir_structure_splitting_visitor::visit_leave(ir_assignment *ir)
 {
    ir_dereference_variable *lhs_deref = ir->lhs->as_dereference_variable();
    ir_dereference_variable *rhs_deref = ir->rhs->as_dereference_variable();
-   variable_entry *lhs_entry = lhs_deref ? get_splitting_entry(lhs_deref->var) : NULL;
-   variable_entry *rhs_entry = rhs_deref ? get_splitting_entry(rhs_deref->var) : NULL;
+   variable_entry *lhs_entry = lhs_deref ? get_splitting_entry(lhs_deref->var) : nullptr;
+   variable_entry *rhs_entry = rhs_deref ? get_splitting_entry(rhs_deref->var) : nullptr;
    const glsl_type *type = ir->rhs->type;
 
    if ((lhs_entry || rhs_entry) && !ir->condition) {
@@ -276,7 +276,7 @@ ir_structure_splitting_visitor::visit_leave(ir_assignment *ir)
 	    new_lhs = new(mem_ctx) ir_dereference_variable(lhs_entry->components[i]);
 	 } else {
 	    new_lhs = new(mem_ctx)
-	       ir_dereference_record(ir->lhs->clone(mem_ctx, NULL),
+	       ir_dereference_record(ir->lhs->clone(mem_ctx, nullptr),
 				     type->fields.structure[i].name);
 	 }
 
@@ -284,13 +284,13 @@ ir_structure_splitting_visitor::visit_leave(ir_assignment *ir)
 	    new_rhs = new(mem_ctx) ir_dereference_variable(rhs_entry->components[i]);
 	 } else {
 	    new_rhs = new(mem_ctx)
-	       ir_dereference_record(ir->rhs->clone(mem_ctx, NULL),
+	       ir_dereference_record(ir->rhs->clone(mem_ctx, nullptr),
 				     type->fields.structure[i].name);
 	 }
 
 	 ir->insert_before(new(mem_ctx) ir_assignment(new_lhs,
 						      new_rhs,
-						      NULL));
+						      nullptr));
       }
       ir->remove();
    } else {
@@ -328,7 +328,7 @@ do_structure_splitting(exec_list *instructions)
    if (refs.variable_list.is_empty())
       return false;
 
-   void *mem_ctx = ralloc_context(NULL);
+   void *mem_ctx = ralloc_context(nullptr);
 
    /* Replace the decls of the structures to be split with their split
     * components.

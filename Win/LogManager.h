@@ -44,7 +44,7 @@ public:
 	virtual std::string getLogFileName() = 0;
 
 protected:
-	LogManager(const char* name):log(NULL),name(name),threadID(GetCurrentThreadId()) {};
+	LogManager(const char* name):log(nullptr),name(name),threadID(GetCurrentThreadId()) {};
 };
 
 

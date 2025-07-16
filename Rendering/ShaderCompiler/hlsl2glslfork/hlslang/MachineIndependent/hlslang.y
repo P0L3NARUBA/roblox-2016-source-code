@@ -1191,7 +1191,7 @@ init_declarator_list
 		if (!sym)
 			$$ = $1;
 		else
-			$$ = ir_grow_declaration($1, sym, NULL, parseContext);
+			$$ = ir_grow_declaration($1, sym, nullptr, parseContext);
     }
     | init_declarator_list COMMA IDENTIFIER LEFT_BRACKET RIGHT_BRACKET type_info {
 		TPublicType type = ir_get_decl_type_noarray($1);
@@ -1213,7 +1213,7 @@ init_declarator_list
 				$$ = $1;
 			else {
 				variable->getType().setArray(true);
-				$$ = ir_grow_declaration($1, variable, NULL, parseContext);
+				$$ = ir_grow_declaration($1, variable, nullptr, parseContext);
 			}
         }
     }
@@ -1241,7 +1241,7 @@ init_declarator_list
 			if (!variable)
 				$$ = $1;
 			else {
-				$$ = ir_grow_declaration($1, variable, NULL, parseContext);
+				$$ = ir_grow_declaration($1, variable, nullptr, parseContext);
 			}
         }
     }
@@ -1355,7 +1355,7 @@ single_declaration
 		
 		TSymbol* symbol = parseContext.symbolTable.find(*$2.string);
 		if (!error && symbol) {
-			$$ = ir_add_declaration(symbol, NULL, $2.line, parseContext);
+			$$ = ir_add_declaration(symbol, nullptr, $2.line, parseContext);
 		} else {
 			$$ = 0;
 		}
@@ -1378,7 +1378,7 @@ single_declaration
 		
 		TSymbol* symbol = parseContext.symbolTable.find(*$2.string);
 		if (symbol) {
-			$$ = ir_add_declaration(symbol, NULL, $2.line, parseContext);
+			$$ = ir_add_declaration(symbol, nullptr, $2.line, parseContext);
 		} else {
 			$$ = 0;
 		}
@@ -1403,7 +1403,7 @@ single_declaration
                 parseContext.recover();
 			
 			if (variable) {
-				$$ = ir_add_declaration(variable, NULL, $2.line, parseContext);
+				$$ = ir_add_declaration(variable, nullptr, $2.line, parseContext);
 			} else {
 				$$ = 0;
 			}
@@ -1492,7 +1492,7 @@ single_declaration
 				
 			TSymbol* symbol = parseContext.symbolTable.find(*$2.string);
 			if (symbol) {
-				$$ = ir_add_declaration(symbol, NULL, $2.line, parseContext);
+				$$ = ir_add_declaration(symbol, nullptr, $2.line, parseContext);
 			} else {
 				$$ = 0;
 			}

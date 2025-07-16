@@ -8,7 +8,7 @@
 namespace RBX { namespace Voxel {
 
 template<class InternalStorageType>
-const Region<InternalStorageType> Region<InternalStorageType>::kEndRegion(NULL, Vector3int16::one(), Vector3int16::zero());
+const Region<InternalStorageType> Region<InternalStorageType>::kEndRegion(nullptr, Vector3int16::one(), Vector3int16::zero());
 
 template<class InternalStorageType>
 const typename Region<InternalStorageType>::iterator Region<InternalStorageType>::kEndIterator(Region<InternalStorageType>::kEndRegion);
@@ -18,7 +18,7 @@ const typename Region<InternalStorageType>::xline_iterator Region<InternalStorag
 
 template<class InternalStorageType>
 Region<InternalStorageType>::Region() :
-	internalStorage(NULL), minCoords(Vector3int16::zero()), maxCoords(Vector3int16::zero()) {}
+	internalStorage(nullptr), minCoords(Vector3int16::zero()), maxCoords(Vector3int16::zero()) {}
 
 template<class InternalStorageType>
 Region<InternalStorageType>::Region(const InternalStorageType* internalStorage,
@@ -27,7 +27,7 @@ Region<InternalStorageType>::Region(const InternalStorageType* internalStorage,
 
 template<class InternalStorageType>
 bool Region<InternalStorageType>::isGuaranteedAllEmpty() const {
-	return internalStorage == NULL;
+	return internalStorage == nullptr;
 }
 
 template<class InternalStorageType>

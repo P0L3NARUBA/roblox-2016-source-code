@@ -133,19 +133,19 @@ namespace RBX
 
 		// Use WinHttpOpen to obtain a session handle.
 		WINHTTPHINTERNET hSession = ::WinHttpOpen( L"Roblox/WinHttp", WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0 );	
-		ThrowIfFailure(hSession!=NULL, "WinHttpOpen");
+		ThrowIfFailure(hSession!=nullptr, "WinHttpOpen");
 
 		bool isHttps = u.GetScheme()==ATL_URL_SCHEME_HTTPS;
 
 
 		// Specify an HTTP server.
 		WINHTTPHINTERNET hConnect = ::WinHttpConnect( hSession, CComBSTR(CString(u.GetHostName())), u.GetPortNumber(), 0 );
-		ThrowIfFailure(hConnect!=NULL, "WinHttpConnect" );
+		ThrowIfFailure(hConnect!=nullptr, "WinHttpConnect" );
 
 		std::string p = u.GetUrlPath();
 		p += u.GetExtraInfo();
-		WINHTTPHINTERNET hRequest = ::WinHttpOpenRequest( hConnect, isPost ? L"POST" : L"GET", CComBSTR(p.c_str()), NULL, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, isHttps ? WINHTTP_FLAG_SECURE : 0);
-		ThrowIfFailure(hRequest!=NULL, "WinHttpOpenRequest");
+		WINHTTPHINTERNET hRequest = ::WinHttpOpenRequest( hConnect, isPost ? L"POST" : L"GET", CComBSTR(p.c_str()), nullptr, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, isHttps ? WINHTTP_FLAG_SECURE : 0);
+		ThrowIfFailure(hRequest!=nullptr, "WinHttpOpenRequest");
 
 		DWORD optionValue = WINHTTP_DISABLE_COOKIES;
 		ThrowIfFailure(TRUE==::WinHttpSetOption(hRequest, WINHTTP_OPTION_DISABLE_FEATURE, &optionValue, sizeof(optionValue)),"WinHttpSetOption");
@@ -238,7 +238,7 @@ namespace RBX
 			ThrowIfFailure(TRUE==::WinHttpSendRequest(hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, (LPVOID)uploadData.c_str(), uploadSize, uploadSize, 0), "WinHttpSendRequest failed");
 		}
 
-		ThrowIfFailure(TRUE==::WinHttpReceiveResponse( hRequest, NULL ), "WinHttpReceiveResponse");
+		ThrowIfFailure(TRUE==::WinHttpReceiveResponse( hRequest, nullptr ), "WinHttpReceiveResponse");
 
 		if (externalRequest)
 		{
@@ -246,7 +246,7 @@ namespace RBX
 			WCHAR transferCoding[256];
 			DWORD transferCodingLength = sizeof(transferCoding);
 			if (::WinHttpQueryHeaders(hRequest, WINHTTP_QUERY_CONTENT_TRANSFER_ENCODING,
-				NULL, (LPVOID) transferCoding, &transferCodingLength, 0))
+				nullptr, (LPVOID) transferCoding, &transferCodingLength, 0))
 			{
 				if (CString(transferCoding) != "identity")
 				{
@@ -257,7 +257,7 @@ namespace RBX
 			DWORD contentLength = 0;
 			DWORD contentLengthLength = sizeof(contentLength);
 			if (::WinHttpQueryHeaders(hRequest, WINHTTP_QUERY_CONTENT_LENGTH | WINHTTP_QUERY_FLAG_NUMBER,
-				NULL, &contentLength, &contentLengthLength, 0) &&
+				nullptr, &contentLength, &contentLengthLength, 0) &&
 				(contentLength / 1024) >= static_cast<DWORD>(DFInt::ExternalHttpResponseSizeLimitKB))
 			{
 				throw RBX::runtime_error(
@@ -270,7 +270,7 @@ namespace RBX
 		{
 			DWORD dwSize = sizeof(DWORD);
 			//get status code back from the response
-			ThrowIfFailure(TRUE==::WinHttpQueryHeaders( hRequest, WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER, NULL, &statusCode, &dwSize, WINHTTP_NO_HEADER_INDEX ), "WinHttpQueryHeaders");
+			ThrowIfFailure(TRUE==::WinHttpQueryHeaders( hRequest, WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER, nullptr, &statusCode, &dwSize, WINHTTP_NO_HEADER_INDEX ), "WinHttpQueryHeaders");
 		}
 
 		try
@@ -281,7 +281,7 @@ namespace RBX
 				{
 					WCHAR buffer[256];
 					DWORD length = 256;
-					if (::WinHttpQueryHeaders(hRequest, WINHTTP_QUERY_CONTENT_ENCODING, NULL, (LPVOID) buffer, &length, 0))
+					if (::WinHttpQueryHeaders(hRequest, WINHTTP_QUERY_CONTENT_ENCODING, nullptr, (LPVOID) buffer, &length, 0))
 						if (CString(buffer)=="gzip")
 							in.push(io::gzip_decompressor());
 				}
@@ -326,7 +326,7 @@ namespace RBX
 
 			WCHAR buffer[512];
 			DWORD length = 512;
-			if (::WinHttpQueryHeaders(hRequest, WINHTTP_QUERY_STATUS_TEXT, NULL, (LPVOID) buffer, &length, WINHTTP_NO_HEADER_INDEX))
+			if (::WinHttpQueryHeaders(hRequest, WINHTTP_QUERY_STATUS_TEXT, nullptr, (LPVOID) buffer, &length, WINHTTP_NO_HEADER_INDEX))
 				throw RBX::http_status_error(statusCode, (LPCTSTR)CString(buffer));
 			else
 				throw RBX::http_status_error(statusCode);

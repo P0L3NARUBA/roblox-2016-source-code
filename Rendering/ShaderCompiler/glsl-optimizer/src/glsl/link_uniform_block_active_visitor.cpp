@@ -39,7 +39,7 @@ process_block(void *mem_ctx, struct hash_table *ht, ir_variable *var)
     * If a block with this block-name has been seen, it must be identical to
     * the block currently being examined.
     */
-   if (existing_block == NULL) {
+   if (existing_block == nullptr) {
       link_uniform_block_active *const b =
 	 rzalloc(mem_ctx, struct link_uniform_block_active);
 
@@ -63,13 +63,13 @@ process_block(void *mem_ctx, struct hash_table *ht, ir_variable *var)
 
       if (b->type != block_type
 	  || b->has_instance_name != var->is_interface_instance())
-	 return NULL;
+	 return nullptr;
       else
 	 return b;
    }
 
    assert(!"Should not get here.");
-   return NULL;
+   return nullptr;
 }
 
 ir_visitor_status
@@ -96,7 +96,7 @@ link_uniform_block_active_visitor::visit(ir_variable *var)
     */
    link_uniform_block_active *const b =
       process_block(this->mem_ctx, this->ht, var);
-   if (b == NULL) {
+   if (b == nullptr) {
       linker_error(this->prog,
                    "uniform block `%s' has mismatching definitions",
                    var->get_interface_type()->name);
@@ -105,8 +105,8 @@ link_uniform_block_active_visitor::visit(ir_variable *var)
    }
 
    assert(b->num_array_elements == 0);
-   assert(b->array_elements == NULL);
-   assert(b->type != NULL);
+   assert(b->array_elements == nullptr);
+   assert(b->type != nullptr);
 
    return visit_continue;
 }
@@ -115,7 +115,7 @@ ir_visitor_status
 link_uniform_block_active_visitor::visit_enter(ir_dereference_array *ir)
 {
    ir_dereference_variable *const d = ir->array->as_dereference_variable();
-   ir_variable *const var = (d == NULL) ? NULL : d->var;
+   ir_variable *const var = (d == nullptr) ? nullptr : d->var;
 
    /* If the r-value being dereferenced is not a variable (e.g., a field of a
     * structure) or is not a uniform block instance, continue.
@@ -125,7 +125,7 @@ link_uniform_block_active_visitor::visit_enter(ir_dereference_array *ir)
     * that lack an instance name are handled by the ir_dereference_variable
     * function.
     */
-   if (var == NULL
+   if (var == nullptr
        || !var->is_in_uniform_block()
        || !var->is_interface_instance())
       return visit_continue;
@@ -134,7 +134,7 @@ link_uniform_block_active_visitor::visit_enter(ir_dereference_array *ir)
     */
    link_uniform_block_active *const b =
       process_block(this->mem_ctx, this->ht, var);
-   if (b == NULL) {
+   if (b == nullptr) {
       linker_error(prog,
 		   "uniform block `%s' has mismatching definitions",
 		   var->get_interface_type()->name);
@@ -145,8 +145,8 @@ link_uniform_block_active_visitor::visit_enter(ir_dereference_array *ir)
    /* Block arrays must be declared with an instance name.
     */
    assert(b->has_instance_name);
-   assert((b->num_array_elements == 0) == (b->array_elements == NULL));
-   assert(b->type != NULL);
+   assert((b->num_array_elements == 0) == (b->array_elements == nullptr));
+   assert(b->type != nullptr);
 
    ir_constant *c = ir->array_index->as_constant();
 
@@ -205,7 +205,7 @@ link_uniform_block_active_visitor::visit(ir_dereference_variable *ir)
     */
    link_uniform_block_active *const b =
       process_block(this->mem_ctx, this->ht, var);
-   if (b == NULL) {
+   if (b == nullptr) {
       linker_error(this->prog,
 		   "uniform block `%s' has mismatching definitions",
 		   var->get_interface_type()->name);
@@ -214,8 +214,8 @@ link_uniform_block_active_visitor::visit(ir_dereference_variable *ir)
    }
 
    assert(b->num_array_elements == 0);
-   assert(b->array_elements == NULL);
-   assert(b->type != NULL);
+   assert(b->array_elements == nullptr);
+   assert(b->type != nullptr);
 
    return visit_continue;
 }

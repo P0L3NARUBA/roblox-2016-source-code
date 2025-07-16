@@ -247,7 +247,7 @@ namespace RBX {
 		/*override*/ float getYAxisRotationalVelocity() const; // used for camera control
 		/*override*/ void setFirstPersonRotationalVelocity(const Vector3& desiredLook, bool firstPersonOn);
 		/*override*/ void getSelectionIgnorePrimitives(std::vector<const Primitive*>& primitives);
-		/*override*/ virtual bool hasFocusCoord() const {return getHeadSlow() != NULL;}
+		/*override*/ virtual bool hasFocusCoord() const {return getHeadSlow() != nullptr;}
 
 		// Humanoid Platform Networking
 		bool validateNetworkUpdateDistance(PartInstance* floorPart, CoordinateFrame& previousFloorPosition, float& netDt);
@@ -528,7 +528,7 @@ namespace RBX {
         void setRigType(Humanoid::HumanoidRigType type);
 
 		// Build Joints
-		void buildJoints(RBX::DataModel* dm = NULL);
+		void buildJoints(RBX::DataModel* dm = nullptr);
 		void buildJointsFromAttachments(PartInstance* part, std::vector<PartInstance*>& characterParts);
 
 		JointInstance* getRightShoulder();
@@ -581,7 +581,7 @@ namespace RBX {
 		inline Body* getTorsoBodyFast()
 		{
 			Primitive* prim = getTorsoPrimitiveFast();
-			return prim ? prim->getBody() : NULL;
+			return prim ? prim->getBody() : nullptr;
 		}
 		Body* getRootBodyFast();
 

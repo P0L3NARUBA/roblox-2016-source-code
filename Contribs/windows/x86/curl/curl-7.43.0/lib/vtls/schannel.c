@@ -99,7 +99,7 @@ schannel_connect_step1(struct connectdata *conn, int sockindex)
   SecBufferDesc outbuf_desc;
   SCHANNEL_CRED schannel_cred;
   SECURITY_STATUS sspi_status = SEC_E_OK;
-  struct curl_schannel_cred *old_cred = NULL;
+  struct curl_schannel_cred *old_cred = nullptr;
   struct in_addr addr;
 #ifdef ENABLE_IPV6
   struct in6_addr addr6;
@@ -111,7 +111,7 @@ schannel_connect_step1(struct connectdata *conn, int sockindex)
         conn->host.name, conn->remote_port);
 
   /* check for an existing re-usable credential handle */
-  if(!Curl_ssl_getsessionid(conn, (void **)&old_cred, NULL)) {
+  if(!Curl_ssl_getsessionid(conn, (void **)&old_cred, nullptr)) {
     connssl->cred = old_cred;
     infof(data, "schannel: re-using existing credential handle\n");
   }
@@ -183,9 +183,9 @@ schannel_connect_step1(struct connectdata *conn, int sockindex)
 
     /* http://msdn.microsoft.com/en-us/library/windows/desktop/aa374716.aspx */
     sspi_status =
-      s_pSecFn->AcquireCredentialsHandle(NULL, (TCHAR *)UNISP_NAME,
-                                         SECPKG_CRED_OUTBOUND, NULL,
-                                         &schannel_cred, NULL, NULL,
+      s_pSecFn->AcquireCredentialsHandle(nullptr, (TCHAR *)UNISP_NAME,
+                                         SECPKG_CRED_OUTBOUND, nullptr,
+                                         &schannel_cred, nullptr, nullptr,
                                          &connssl->cred->cred_handle,
                                          &connssl->cred->time_stamp);
 
@@ -211,7 +211,7 @@ schannel_connect_step1(struct connectdata *conn, int sockindex)
   }
 
   /* setup output buffer */
-  InitSecBuffer(&outbuf, SECBUFFER_EMPTY, NULL, 0);
+  InitSecBuffer(&outbuf, SECBUFFER_EMPTY, nullptr, 0);
   InitSecBufferDesc(&outbuf_desc, &outbuf, 1);
 
   /* setup request flags */
@@ -235,8 +235,8 @@ schannel_connect_step1(struct connectdata *conn, int sockindex)
   /* http://msdn.microsoft.com/en-us/library/windows/desktop/aa375924.aspx */
 
   sspi_status = s_pSecFn->InitializeSecurityContext(
-    &connssl->cred->cred_handle, NULL, host_name,
-    connssl->req_flags, 0, 0, NULL, 0, &connssl->ctxt->ctxt_handle,
+    &connssl->cred->cred_handle, nullptr, host_name,
+    connssl->req_flags, 0, 0, nullptr, 0, &connssl->ctxt->ctxt_handle,
     &outbuf_desc, &connssl->ret_flags, &connssl->ctxt->time_stamp);
 
   Curl_unicodefree(host_name);
@@ -305,22 +305,22 @@ schannel_connect_step2(struct connectdata *conn, int sockindex)
     return CURLE_SSL_CONNECT_ERROR;
 
   /* buffer to store previously received and decrypted data */
-  if(connssl->decdata_buffer == NULL) {
+  if(connssl->decdata_buffer == nullptr) {
     connssl->decdata_offset = 0;
     connssl->decdata_length = CURL_SCHANNEL_BUFFER_INIT_SIZE;
     connssl->decdata_buffer = malloc(connssl->decdata_length);
-    if(connssl->decdata_buffer == NULL) {
+    if(connssl->decdata_buffer == nullptr) {
       failf(data, "schannel: unable to allocate memory");
       return CURLE_OUT_OF_MEMORY;
     }
   }
 
   /* buffer to store previously received and encrypted data */
-  if(connssl->encdata_buffer == NULL) {
+  if(connssl->encdata_buffer == nullptr) {
     connssl->encdata_offset = 0;
     connssl->encdata_length = CURL_SCHANNEL_BUFFER_INIT_SIZE;
     connssl->encdata_buffer = malloc(connssl->encdata_length);
-    if(connssl->encdata_buffer == NULL) {
+    if(connssl->encdata_buffer == nullptr) {
       failf(data, "schannel: unable to allocate memory");
       return CURLE_OUT_OF_MEMORY;
     }
@@ -335,7 +335,7 @@ schannel_connect_step2(struct connectdata *conn, int sockindex)
     reallocated_buffer = realloc(connssl->encdata_buffer,
                                  reallocated_length);
 
-    if(reallocated_buffer == NULL) {
+    if(reallocated_buffer == nullptr) {
       failf(data, "schannel: unable to re-allocate memory");
       return CURLE_OUT_OF_MEMORY;
     }
@@ -377,16 +377,16 @@ schannel_connect_step2(struct connectdata *conn, int sockindex)
     /* setup input buffers */
     InitSecBuffer(&inbuf[0], SECBUFFER_TOKEN, malloc(connssl->encdata_offset),
                   curlx_uztoul(connssl->encdata_offset));
-    InitSecBuffer(&inbuf[1], SECBUFFER_EMPTY, NULL, 0);
+    InitSecBuffer(&inbuf[1], SECBUFFER_EMPTY, nullptr, 0);
     InitSecBufferDesc(&inbuf_desc, inbuf, 2);
 
     /* setup output buffers */
-    InitSecBuffer(&outbuf[0], SECBUFFER_TOKEN, NULL, 0);
-    InitSecBuffer(&outbuf[1], SECBUFFER_ALERT, NULL, 0);
-    InitSecBuffer(&outbuf[2], SECBUFFER_EMPTY, NULL, 0);
+    InitSecBuffer(&outbuf[0], SECBUFFER_TOKEN, nullptr, 0);
+    InitSecBuffer(&outbuf[1], SECBUFFER_ALERT, nullptr, 0);
+    InitSecBuffer(&outbuf[2], SECBUFFER_EMPTY, nullptr, 0);
     InitSecBufferDesc(&outbuf_desc, outbuf, 3);
 
-    if(inbuf[0].pvBuffer == NULL) {
+    if(inbuf[0].pvBuffer == nullptr) {
       failf(data, "schannel: unable to allocate memory");
       return CURLE_OUT_OF_MEMORY;
     }
@@ -403,7 +403,7 @@ schannel_connect_step2(struct connectdata *conn, int sockindex)
 
     sspi_status = s_pSecFn->InitializeSecurityContext(
       &connssl->cred->cred_handle, &connssl->ctxt->ctxt_handle,
-      host_name, connssl->req_flags, 0, 0, &inbuf_desc, 0, NULL,
+      host_name, connssl->req_flags, 0, 0, &inbuf_desc, 0, nullptr,
       &outbuf_desc, &connssl->ret_flags, &connssl->ctxt->time_stamp);
 
     Curl_unicodefree(host_name);
@@ -450,7 +450,7 @@ schannel_connect_step2(struct connectdata *conn, int sockindex)
         }
 
         /* free obsolete buffer */
-        if(outbuf[i].pvBuffer != NULL) {
+        if(outbuf[i].pvBuffer != nullptr) {
           s_pSecFn->FreeContextBuffer(outbuf[i].pvBuffer);
         }
       }
@@ -525,7 +525,7 @@ schannel_connect_step3(struct connectdata *conn, int sockindex)
   CURLcode result = CURLE_OK;
   struct SessionHandle *data = conn->data;
   struct ssl_connect_data *connssl = &conn->ssl[sockindex];
-  struct curl_schannel_cred *old_cred = NULL;
+  struct curl_schannel_cred *old_cred = nullptr;
   bool incache;
 
   DEBUGASSERT(ssl_connect_3 == connssl->connecting_state);
@@ -559,7 +559,7 @@ schannel_connect_step3(struct connectdata *conn, int sockindex)
   }
 
   /* save the current session data for possible re-use */
-  incache = !(Curl_ssl_getsessionid(conn, (void **)&old_cred, NULL));
+  incache = !(Curl_ssl_getsessionid(conn, (void **)&old_cred, nullptr));
   if(incache) {
     if(old_cred != connssl->cred) {
       infof(data, "schannel: old credential handle is stale, removing\n");
@@ -605,7 +605,7 @@ schannel_connect_common(struct connectdata *conn, int sockindex,
 
   if(ssl_connect_1 == connssl->connecting_state) {
     /* check out how much more time we're allowed */
-    timeout_ms = Curl_timeleft(data, NULL, TRUE);
+    timeout_ms = Curl_timeleft(data, nullptr, TRUE);
 
     if(timeout_ms < 0) {
       /* no need to continue if time already is up */
@@ -623,7 +623,7 @@ schannel_connect_common(struct connectdata *conn, int sockindex,
         ssl_connect_2_writing == connssl->connecting_state) {
 
     /* check out how much more time we're allowed */
-    timeout_ms = Curl_timeleft(data, NULL, TRUE);
+    timeout_ms = Curl_timeleft(data, nullptr, TRUE);
 
     if(timeout_ms < 0) {
       /* no need to continue if time already is up */
@@ -703,7 +703,7 @@ schannel_send(struct connectdata *conn, int sockindex,
 {
   ssize_t written = -1;
   size_t data_len = 0;
-  unsigned char *data = NULL;
+  unsigned char *data = nullptr;
   struct ssl_connect_data *connssl = &conn->ssl[sockindex];
   SecBuffer outbuf[4];
   SecBufferDesc outbuf_desc;
@@ -732,7 +732,7 @@ schannel_send(struct connectdata *conn, int sockindex,
   data_len = connssl->stream_sizes.cbHeader + len +
     connssl->stream_sizes.cbTrailer;
   data = (unsigned char *) malloc(data_len);
-  if(data == NULL) {
+  if(data == nullptr) {
     *err = CURLE_OUT_OF_MEMORY;
     return -1;
   }
@@ -745,7 +745,7 @@ schannel_send(struct connectdata *conn, int sockindex,
   InitSecBuffer(&outbuf[2], SECBUFFER_STREAM_TRAILER,
                 data + connssl->stream_sizes.cbHeader + len,
                 connssl->stream_sizes.cbTrailer);
-  InitSecBuffer(&outbuf[3], SECBUFFER_EMPTY, NULL, 0);
+  InitSecBuffer(&outbuf[3], SECBUFFER_EMPTY, nullptr, 0);
   InitSecBufferDesc(&outbuf_desc, outbuf, 4);
 
   /* copy data into output buffer */
@@ -786,7 +786,7 @@ schannel_send(struct connectdata *conn, int sockindex,
 
       this_write = 0;
 
-      timeleft = Curl_timeleft(conn->data, NULL, FALSE);
+      timeleft = Curl_timeleft(conn->data, nullptr, FALSE);
       if(timeleft < 0) {
         /* we already got the timeout */
         failf(conn->data, "schannel: timed out sending data "
@@ -908,7 +908,7 @@ schannel_recv(struct connectdata *conn, int sockindex,
       }
       reallocated_buffer = realloc(connssl->encdata_buffer,
                                    reallocated_length);
-      if(reallocated_buffer == NULL) {
+      if(reallocated_buffer == nullptr) {
         *err = CURLE_OUT_OF_MEMORY;
         failf(data, "schannel: unable to re-allocate memory");
         goto cleanup;
@@ -960,14 +960,14 @@ schannel_recv(struct connectdata *conn, int sockindex,
                   curlx_uztoul(connssl->encdata_offset));
 
     /* we need 3 more empty input buffers for possible output */
-    InitSecBuffer(&inbuf[1], SECBUFFER_EMPTY, NULL, 0);
-    InitSecBuffer(&inbuf[2], SECBUFFER_EMPTY, NULL, 0);
-    InitSecBuffer(&inbuf[3], SECBUFFER_EMPTY, NULL, 0);
+    InitSecBuffer(&inbuf[1], SECBUFFER_EMPTY, nullptr, 0);
+    InitSecBuffer(&inbuf[2], SECBUFFER_EMPTY, nullptr, 0);
+    InitSecBuffer(&inbuf[3], SECBUFFER_EMPTY, nullptr, 0);
     InitSecBufferDesc(&inbuf_desc, inbuf, 4);
 
     /* http://msdn.microsoft.com/en-us/library/windows/desktop/aa375348.aspx */
     sspi_status = s_pSecFn->DecryptMessage(&connssl->ctxt->ctxt_handle,
-                                           &inbuf_desc, 0, NULL);
+                                           &inbuf_desc, 0, nullptr);
 
     /* check if everything went fine (server may want to renegotiate
        or shutdown the connection context) */
@@ -992,7 +992,7 @@ schannel_recv(struct connectdata *conn, int sockindex,
           }
           reallocated_buffer = realloc(connssl->decdata_buffer,
                                        reallocated_length);
-          if(reallocated_buffer == NULL) {
+          if(reallocated_buffer == nullptr) {
             *err = CURLE_OUT_OF_MEMORY;
             failf(data, "schannel: unable to re-allocate memory");
             goto cleanup;
@@ -1231,7 +1231,7 @@ int Curl_schannel_shutdown(struct connectdata *conn, int sockindex)
       return CURLE_OUT_OF_MEMORY;
 
     /* setup output buffer */
-    InitSecBuffer(&outbuf, SECBUFFER_EMPTY, NULL, 0);
+    InitSecBuffer(&outbuf, SECBUFFER_EMPTY, nullptr, 0);
     InitSecBufferDesc(&outbuf_desc, &outbuf, 1);
 
     sspi_status = s_pSecFn->InitializeSecurityContext(
@@ -1241,7 +1241,7 @@ int Curl_schannel_shutdown(struct connectdata *conn, int sockindex)
       connssl->req_flags,
       0,
       0,
-      NULL,
+      nullptr,
       0,
       &connssl->ctxt->ctxt_handle,
       &outbuf_desc,
@@ -1289,14 +1289,14 @@ int Curl_schannel_shutdown(struct connectdata *conn, int sockindex)
   }
 
   /* free internal buffer for received encrypted data */
-  if(connssl->encdata_buffer != NULL) {
+  if(connssl->encdata_buffer != nullptr) {
     Curl_safefree(connssl->encdata_buffer);
     connssl->encdata_length = 0;
     connssl->encdata_offset = 0;
   }
 
   /* free internal buffer for received decrypted data */
-  if(connssl->decdata_buffer != NULL) {
+  if(connssl->decdata_buffer != nullptr) {
     Curl_safefree(connssl->decdata_buffer);
     connssl->decdata_length = 0;
     connssl->decdata_offset = 0;
@@ -1341,7 +1341,7 @@ int Curl_schannel_random(unsigned char *entropy, size_t length)
 {
   HCRYPTPROV hCryptProv = 0;
 
-  if(!CryptAcquireContext(&hCryptProv, NULL, NULL, PROV_RSA_FULL,
+  if(!CryptAcquireContext(&hCryptProv, nullptr, nullptr, PROV_RSA_FULL,
                           CRYPT_VERIFYCONTEXT | CRYPT_SILENT))
     return 1;
 
@@ -1361,14 +1361,14 @@ static CURLcode verify_certificate(struct connectdata *conn, int sockindex)
   struct SessionHandle *data = conn->data;
   struct ssl_connect_data *connssl = &conn->ssl[sockindex];
   CURLcode result = CURLE_OK;
-  CERT_CONTEXT *pCertContextServer = NULL;
-  const CERT_CHAIN_CONTEXT *pChainContext = NULL;
+  CERT_CONTEXT *pCertContextServer = nullptr;
+  const CERT_CHAIN_CONTEXT *pChainContext = nullptr;
 
   status = s_pSecFn->QueryContextAttributes(&connssl->ctxt->ctxt_handle,
                                             SECPKG_ATTR_REMOTE_CERT_CONTEXT,
                                             &pCertContextServer);
 
-  if((status != SEC_E_OK) || (pCertContextServer == NULL)) {
+  if((status != SEC_E_OK) || (pCertContextServer == nullptr)) {
     failf(data, "schannel: Failed to read remote certificate context: %s",
           Curl_sspi_strerror(conn, status));
     result = CURLE_PEER_FAILED_VERIFICATION;
@@ -1379,17 +1379,17 @@ static CURLcode verify_certificate(struct connectdata *conn, int sockindex)
     memset(&ChainPara, 0, sizeof(ChainPara));
     ChainPara.cbSize = sizeof(ChainPara);
 
-    if(!CertGetCertificateChain(NULL,
+    if(!CertGetCertificateChain(nullptr,
                                 pCertContextServer,
-                                NULL,
+                                nullptr,
                                 pCertContextServer->hCertStore,
                                 &ChainPara,
                                 0,
-                                NULL,
+                                nullptr,
                                 &pChainContext)) {
       failf(data, "schannel: CertGetCertificateChain failed: %s",
             Curl_sspi_strerror(conn, GetLastError()));
-      pChainContext = NULL;
+      pChainContext = nullptr;
       result = CURLE_PEER_FAILED_VERIFICATION;
     }
 
@@ -1428,7 +1428,7 @@ static CURLcode verify_certificate(struct connectdata *conn, int sockindex)
       len = CertGetNameString(pCertContextServer,
                               CERT_NAME_DNS_TYPE,
                               0,
-                              NULL,
+                              nullptr,
                               cert_hostname.tchar_ptr,
                               128);
       if(len > 0 && *cert_hostname.tchar_ptr == '*') {

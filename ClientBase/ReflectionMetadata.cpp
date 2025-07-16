@@ -76,7 +76,7 @@ shared_ptr<Metadata::Reflection> Metadata::Reflection::safe_static_do_get_single
 		sing->load( bfsp / "ReflectionMetadata.xml" );
 #else
 		wchar_t buf[MAX_PATH] = {0};
-		GetModuleFileNameW(NULL, buf, MAX_PATH);
+		GetModuleFileNameW(nullptr, buf, MAX_PATH);
         boost::filesystem::path exePath(buf);
         exePath.remove_filename();
 		
@@ -138,9 +138,9 @@ Metadata::Class* Metadata::Classes::get(const ClassDescriptor& descriptor, bool 
 	if (c)
 		return c;
 	if (!findBestMatch)
-		return NULL;
+		return nullptr;
 	if (!descriptor.getBase())
-		return NULL;
+		return nullptr;
 	return get(*descriptor.getBase(), true);
 }
 
@@ -421,7 +421,7 @@ public:
             return old;
 
         old = desc;
-        return NULL;
+        return nullptr;
 	}
 
 	void writeConflictingMember(const ClassDescriptor* desc, const MemberDescriptor* member)

@@ -91,10 +91,10 @@ ir_assignment::set_lhs(ir_rvalue *lhs)
    void *mem_ctx = this;
    bool swizzled = false;
 
-   while (lhs != NULL) {
+   while (lhs != nullptr) {
       ir_swizzle *swiz = lhs->as_swizzle();
 
-      if (swiz == NULL)
+      if (swiz == nullptr)
 	 break;
 
       unsigned write_mask = 0;
@@ -135,7 +135,7 @@ ir_assignment::set_lhs(ir_rvalue *lhs)
       this->rhs = new(mem_ctx) ir_swizzle(this->rhs, rhs_swiz);
    }
 
-   assert((lhs == NULL) || lhs->as_dereference());
+   assert((lhs == nullptr) || lhs->as_dereference());
 
    this->lhs = (ir_dereference *) lhs;
 }
@@ -145,8 +145,8 @@ ir_assignment::whole_variable_written()
 {
    ir_variable *v = this->lhs->whole_variable_referenced();
 
-   if (v == NULL)
-      return NULL;
+   if (v == nullptr)
+      return nullptr;
 
    if (v->type->is_scalar())
       return v;
@@ -155,7 +155,7 @@ ir_assignment::whole_variable_written()
       const unsigned mask = (1U << v->type->vector_elements) - 1;
 
       if (mask != this->write_mask)
-	 return NULL;
+	 return nullptr;
    }
 
    /* Either all the vector components are assigned or the variable is some
@@ -222,7 +222,7 @@ ir_expression::ir_expression(int op, const struct glsl_type *type,
 #ifndef NDEBUG
    int num_operands = get_num_operands(this->operation);
    for (int i = num_operands; i < 4; i++) {
-      assert(this->operands[i] == NULL);
+      assert(this->operands[i] == nullptr);
    }
 #endif
 }
@@ -232,9 +232,9 @@ ir_expression::ir_expression(int op, ir_rvalue *op0)
 {
    this->operation = ir_expression_operation(op);
    this->operands[0] = op0;
-   this->operands[1] = NULL;
-   this->operands[2] = NULL;
-   this->operands[3] = NULL;
+   this->operands[1] = nullptr;
+   this->operands[2] = nullptr;
+   this->operands[3] = nullptr;
 
    assert(op <= ir_last_unop);
 
@@ -348,8 +348,8 @@ ir_expression::ir_expression(int op, ir_rvalue *op0, ir_rvalue *op1)
    this->operation = ir_expression_operation(op);
    this->operands[0] = op0;
    this->operands[1] = op1;
-   this->operands[2] = NULL;
-   this->operands[3] = NULL;
+   this->operands[2] = nullptr;
+   this->operands[3] = nullptr;
 
    assert(op > ir_last_unop);
 
@@ -448,7 +448,7 @@ ir_expression::ir_expression(int op, ir_rvalue *op0, ir_rvalue *op1,
    this->operands[0] = op0;
    this->operands[1] = op1;
    this->operands[2] = op2;
-   this->operands[3] = NULL;
+   this->operands[3] = nullptr;
 
    assert(op > ir_last_binop && op <= ir_last_triop);
 
@@ -735,7 +735,7 @@ ir_constant::ir_constant(const struct glsl_type *type, exec_list *value_list)
       this->array_elements = ralloc_array(this, ir_constant *, type->length);
       unsigned i = 0;
       foreach_in_list(ir_constant, value, value_list) {
-	 assert(value->as_constant() != NULL);
+	 assert(value->as_constant() != nullptr);
 
 	 this->array_elements[i++] = value;
       }
@@ -826,7 +826,7 @@ ir_constant::ir_constant(const struct glsl_type *type, exec_list *value_list)
     * component of the constant being constructed.
     */
    for (unsigned i = 0; i < type->components(); /* empty */) {
-      assert(value->as_constant() != NULL);
+      assert(value->as_constant() != nullptr);
       assert(!value->is_tail_sentinel());
 
       for (unsigned j = 0; j < value->type->components(); j++) {
@@ -982,20 +982,20 @@ ir_constant::get_record_field(const char *name)
    int idx = this->type->field_index(name);
 
    if (idx < 0)
-      return NULL;
+      return nullptr;
 
    if (this->components.is_empty())
-      return NULL;
+      return nullptr;
 
    exec_node *node = this->components.head;
    for (int i = 0; i < idx; i++) {
       node = node->next;
 
       /* If the end of the list is encountered before the element matching the
-       * requested field is found, return NULL.
+       * requested field is found, return nullptr.
        */
       if (node->is_tail_sentinel())
-	 return NULL;
+	 return nullptr;
    }
 
    return (ir_constant *) node;
@@ -1036,7 +1036,7 @@ ir_constant::copy_offset(ir_constant *src, int offset)
       assert (src->type == this->type);
       this->components.make_empty();
       foreach_in_list(ir_constant, orig, &src->components) {
-	 this->components.push_tail(orig->clone(this, NULL));
+	 this->components.push_tail(orig->clone(this, nullptr));
       }
       break;
    }
@@ -1044,7 +1044,7 @@ ir_constant::copy_offset(ir_constant *src, int offset)
    case GLSL_TYPE_ARRAY: {
       assert (src->type == this->type);
       for (unsigned i = 0; i < this->type->length; i++) {
-	 this->array_elements[i] = src->array_elements[i]->clone(this, NULL);
+	 this->array_elements[i] = src->array_elements[i]->clone(this, nullptr);
       }
       break;
    }
@@ -1270,7 +1270,7 @@ ir_loop::ir_loop()
 ir_dereference_variable::ir_dereference_variable(ir_variable *var)
    : ir_dereference(ir_type_dereference_variable, precision_from_ir(var))
 {
-   assert(var != NULL);
+   assert(var != nullptr);
 
    this->var = var;
    this->type = var->type;
@@ -1300,7 +1300,7 @@ ir_dereference_array::ir_dereference_array(ir_variable *var,
 void
 ir_dereference_array::set_array(ir_rvalue *value)
 {
-   assert(value != NULL);
+   assert(value != nullptr);
 
    this->array = value;
 
@@ -1320,7 +1320,7 @@ ir_dereference_record::ir_dereference_record(ir_rvalue *value,
 					     const char *field)
    : ir_dereference(ir_type_dereference_record, precision_from_ir(value))
 {
-   assert(value != NULL);
+   assert(value != nullptr);
 
    this->record = value;
    this->field = ralloc_strdup(this, field);
@@ -1350,7 +1350,7 @@ ir_dereference::is_lvalue() const
 
    /* Every l-value derference chain eventually ends in a variable.
     */
-   if ((var == NULL) || var->data.read_only)
+   if ((var == nullptr) || var->data.read_only)
       return false;
 
    /* From section 4.1.7 of the GLSL 4.40 spec:
@@ -1390,8 +1390,8 @@ ir_texture::get_opcode(const char *str)
 void
 ir_texture::set_sampler(ir_dereference *sampler, const glsl_type *type)
 {
-   assert(sampler != NULL);
-   assert(type != NULL);
+   assert(sampler != nullptr);
+   assert(type != nullptr);
    this->sampler = sampler;
    this->type = type;
 
@@ -1546,7 +1546,7 @@ ir_swizzle::create(ir_rvalue *val, const char *str, unsigned vector_length)
     * index value as described above.
     */
    if ((str[0] < 'a') || (str[0] > 'z'))
-      return NULL;
+      return nullptr;
 
    const unsigned base = base_idx[str[0] - 'a'];
 
@@ -1556,15 +1556,15 @@ ir_swizzle::create(ir_rvalue *val, const char *str, unsigned vector_length)
        * swizzle index.
        */
       if ((str[i] < 'a') || (str[i] > 'z'))
-	 return NULL;
+	 return nullptr;
 
       swiz_idx[i] = idx_map[str[i] - 'a'] - base;
       if ((swiz_idx[i] < 0) || (swiz_idx[i] >= (int) vector_length))
-	 return NULL;
+	 return nullptr;
    }
 
    if (str[i] != '\0')
-	 return NULL;
+	 return nullptr;
 
    return new(ctx) ir_swizzle(val, swiz_idx[0], swiz_idx[1], swiz_idx[2],
 			      swiz_idx[3], i);
@@ -1593,12 +1593,12 @@ ir_variable::ir_variable(const struct glsl_type *type, const char *name,
    this->type = type;
 
    if (mode == ir_var_temporary && !ir_variable::temporaries_allocate_names)
-      name = NULL;
+      name = nullptr;
 
    /* The ir_variable clone method may call this constructor with name set to
     * tmp_name.
     */
-   assert(name != NULL
+   assert(name != nullptr
           || mode == ir_var_temporary
           || mode == ir_var_function_in
           || mode == ir_var_function_out
@@ -1606,13 +1606,13 @@ ir_variable::ir_variable(const struct glsl_type *type, const char *name,
    assert(name != ir_variable::tmp_name
           || mode == ir_var_temporary);
    if (mode == ir_var_temporary
-       && (name == NULL || name == ir_variable::tmp_name)) {
+       && (name == nullptr || name == ir_variable::tmp_name)) {
       this->name = ir_variable::tmp_name;
    } else {
       this->name = ralloc_strdup(this, name);
    }
 
-   this->u.max_ifc_array_access = NULL;
+   this->u.max_ifc_array_access = nullptr;
 
    this->data.explicit_location = false;
    this->data.has_initializer = false;
@@ -1620,8 +1620,8 @@ ir_variable::ir_variable(const struct glsl_type *type, const char *name,
    this->data.location_frac = 0;
    this->data.binding = 0;
    this->data.warn_extension_index = 0;
-   this->constant_value = NULL;
-   this->constant_initializer = NULL;
+   this->constant_value = nullptr;
+   this->constant_initializer = nullptr;
    this->data.origin_upper_left = false;
    this->data.pixel_center_integer = false;
    this->data.depth_layout = ir_depth_layout_none;
@@ -1642,7 +1642,7 @@ ir_variable::ir_variable(const struct glsl_type *type, const char *name,
    this->data.image_volatile = false;
    this->data.image_restrict = false;
 
-   if (type != NULL) {
+   if (type != nullptr) {
       if (type->base_type == GLSL_TYPE_SAMPLER)
          this->data.read_only = true;
 
@@ -1707,23 +1707,23 @@ const char *
 ir_variable::get_extension_warning() const
 {
    return this->data.warn_extension_index == 0
-      ? NULL : warn_extension_table[this->data.warn_extension_index];
+      ? nullptr : warn_extension_table[this->data.warn_extension_index];
 }
 
 ir_function_signature::ir_function_signature(const glsl_type *return_type,
                                              glsl_precision precision, builtin_available_predicate b)
    : ir_instruction(ir_type_function_signature),
      return_type(return_type), precision(precision), is_defined(false), is_intrinsic(false),
-     builtin_avail(b), _function(NULL)
+     builtin_avail(b), _function(nullptr)
 {
-   this->origin = NULL;
+   this->origin = nullptr;
 }
 
 
 bool
 ir_function_signature::is_builtin() const
 {
-   return builtin_avail != NULL;
+   return builtin_avail != nullptr;
 }
 
 
@@ -1736,10 +1736,10 @@ ir_function_signature::is_builtin_available(const _mesa_glsl_parse_state *state)
     * imported built-in prototypes to their definitions, which will always
     * be an exact match.  So we can skip the filtering.
     */
-   if (state == NULL)
+   if (state == nullptr)
       return true;
 
-   assert(builtin_avail != NULL);
+   assert(builtin_avail != nullptr);
    return builtin_avail(state);
 }
 
@@ -1783,7 +1783,7 @@ ir_function_signature::qualifiers_match(exec_list *params)
 	 return a->name;
       }
    }
-   return NULL;
+   return nullptr;
 }
 
 
@@ -1840,16 +1840,16 @@ steal_memory(ir_instruction *ir, void *new_ctx)
 {
    ir_variable *var = ir->as_variable();
    ir_constant *constant = ir->as_constant();
-   if (var != NULL && var->constant_value != NULL)
+   if (var != nullptr && var->constant_value != nullptr)
       steal_memory(var->constant_value, ir);
 
-   if (var != NULL && var->constant_initializer != NULL)
+   if (var != nullptr && var->constant_initializer != nullptr)
       steal_memory(var->constant_initializer, ir);
 
    /* The components of aggregate constants are not visited by the normal
     * visitor, so steal their values by hand.
     */
-   if (constant != NULL) {
+   if (constant != nullptr) {
       if (constant->type->is_record()) {
 	 foreach_in_list(ir_constant, field, &constant->components) {
 	    steal_memory(field, ir);
@@ -1902,7 +1902,7 @@ try_min_one(ir_rvalue *ir)
    ir_expression *expr = ir->as_expression();
 
    if (!expr || expr->operation != ir_binop_min)
-      return NULL;
+      return nullptr;
 
    if (expr->operands[0]->is_one())
       return expr->operands[1];
@@ -1910,7 +1910,7 @@ try_min_one(ir_rvalue *ir)
    if (expr->operands[1]->is_one())
       return expr->operands[0];
 
-   return NULL;
+   return nullptr;
 }
 
 static ir_rvalue *
@@ -1919,7 +1919,7 @@ try_max_zero(ir_rvalue *ir)
    ir_expression *expr = ir->as_expression();
 
    if (!expr || expr->operation != ir_binop_max)
-      return NULL;
+      return nullptr;
 
    if (expr->operands[0]->is_zero())
       return expr->operands[1];
@@ -1927,7 +1927,7 @@ try_max_zero(ir_rvalue *ir)
    if (expr->operands[1]->is_zero())
       return expr->operands[0];
 
-   return NULL;
+   return nullptr;
 }
 
 ir_rvalue *
@@ -1936,7 +1936,7 @@ ir_rvalue::as_rvalue_to_saturate()
    ir_expression *expr = this->as_expression();
 
    if (!expr)
-      return NULL;
+      return nullptr;
 
    ir_rvalue *max_zero = try_max_zero(expr);
    if (max_zero) {
@@ -1948,7 +1948,7 @@ ir_rvalue::as_rvalue_to_saturate()
       }
    }
 
-   return NULL;
+   return nullptr;
 }
 
 

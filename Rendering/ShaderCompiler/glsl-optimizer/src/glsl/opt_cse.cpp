@@ -60,7 +60,7 @@ public:
       assert(*val);
       assert(base_ir);
 
-      var = NULL;
+      var = nullptr;
    }
 
    /**
@@ -94,7 +94,7 @@ public:
       : validate_instructions(validate_instructions)
    {
       progress = false;
-      mem_ctx = ralloc_context(NULL);
+      mem_ctx = ralloc_context(nullptr);
       this->ae = new(mem_ctx) exec_list;
    }
    ~cse_visitor()
@@ -313,7 +313,7 @@ cse_visitor::try_cse(ir_rvalue *rvalue)
       return new(rvalue) ir_dereference_variable(entry->var);
    }
 
-   return NULL;
+   return nullptr;
 }
 
 /** Add the rvalue to the list of available expressions for CSE. */

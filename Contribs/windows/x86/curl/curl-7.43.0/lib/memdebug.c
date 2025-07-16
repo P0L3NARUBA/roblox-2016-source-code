@@ -103,7 +103,7 @@ struct memdebug {
  */
 
 #define logfile curl_debuglogfile
-FILE *curl_debuglogfile = NULL;
+FILE *curl_debuglogfile = nullptr;
 static bool memlimit = FALSE; /* enable memory limit */
 static long memsize = 0;  /* set number of mallocs allowed */
 
@@ -117,7 +117,7 @@ void curl_memdebug(const char *logname)
       logfile = stderr;
 #ifdef MEMDEBUG_LOG_SYNC
     /* Flush the log file after every line so the log isn't lost in a crash */
-    setvbuf(logfile, (char *)NULL, _IOLBF, 0);
+    setvbuf(logfile, (char *)nullptr, _IOLBF, 0);
 #endif
   }
 }
@@ -135,7 +135,7 @@ void curl_memlimit(long limit)
 /* returns TRUE if this isn't allowed! */
 static bool countcheck(const char *func, int line, const char *source)
 {
-  /* if source is NULL, then the call is made internally and this check
+  /* if source is nullptr, then the call is made internally and this check
      should not be made */
   if(memlimit && source) {
     if(!memsize) {
@@ -171,7 +171,7 @@ void *curl_domalloc(size_t wantedsize, int line, const char *source)
   assert(wantedsize != 0);
 
   if(countcheck("malloc", line, source))
-    return NULL;
+    return nullptr;
 
   /* alloc at least 64 bytes */
   size = sizeof(struct memdebug)+wantedsize;
@@ -188,7 +188,7 @@ void *curl_domalloc(size_t wantedsize, int line, const char *source)
                 source, line, wantedsize,
                 mem ? (void *)mem->mem : (void *)0);
 
-  return (mem ? mem->mem : NULL);
+  return (mem ? mem->mem : nullptr);
 }
 
 void *curl_docalloc(size_t wanted_elements, size_t wanted_size,
@@ -201,7 +201,7 @@ void *curl_docalloc(size_t wanted_elements, size_t wanted_size,
   assert(wanted_size != 0);
 
   if(countcheck("calloc", line, source))
-    return NULL;
+    return nullptr;
 
   /* alloc at least 64 bytes */
   user_size = wanted_size * wanted_elements;
@@ -216,7 +216,7 @@ void *curl_docalloc(size_t wanted_elements, size_t wanted_size,
                 source, line, wanted_elements, wanted_size,
                 mem ? (void *)mem->mem : (void *)0);
 
-  return (mem ? mem->mem : NULL);
+  return (mem ? mem->mem : nullptr);
 }
 
 char *curl_dostrdup(const char *str, int line, const char *source)
@@ -224,14 +224,14 @@ char *curl_dostrdup(const char *str, int line, const char *source)
   char *mem;
   size_t len;
 
-  assert(str != NULL);
+  assert(str != nullptr);
 
   if(countcheck("strdup", line, source))
-    return NULL;
+    return nullptr;
 
   len=strlen(str)+1;
 
-  mem=curl_domalloc(len, 0, NULL); /* NULL prevents logging */
+  mem=curl_domalloc(len, 0, nullptr); /* nullptr prevents logging */
   if(mem)
     memcpy(mem, str, len);
 
@@ -248,15 +248,15 @@ wchar_t *curl_dowcsdup(const wchar_t *str, int line, const char *source)
   wchar_t *mem;
   size_t wsiz, bsiz;
 
-  assert(str != NULL);
+  assert(str != nullptr);
 
   if(countcheck("wcsdup", line, source))
-    return NULL;
+    return nullptr;
 
   wsiz = wcslen(str) + 1;
   bsiz = wsiz * sizeof(wchar_t);
 
-  mem = curl_domalloc(bsiz, 0, NULL); /* NULL prevents logging */
+  mem = curl_domalloc(bsiz, 0, nullptr); /* nullptr prevents logging */
   if(mem)
     memcpy(mem, str, bsiz);
 
@@ -268,19 +268,19 @@ wchar_t *curl_dowcsdup(const wchar_t *str, int line, const char *source)
 }
 #endif
 
-/* We provide a realloc() that accepts a NULL as pointer, which then
+/* We provide a realloc() that accepts a nullptr as pointer, which then
    performs a malloc(). In order to work with ares. */
 void *curl_dorealloc(void *ptr, size_t wantedsize,
                      int line, const char *source)
 {
-  struct memdebug *mem=NULL;
+  struct memdebug *mem=nullptr;
 
   size_t size = sizeof(struct memdebug)+wantedsize;
 
   assert(wantedsize != 0);
 
   if(countcheck("realloc", line, source))
-    return NULL;
+    return nullptr;
 
 #ifdef __INTEL_COMPILER
 #  pragma warning(push)
@@ -306,7 +306,7 @@ void *curl_dorealloc(void *ptr, size_t wantedsize,
     return mem->mem;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 void curl_dofree(void *ptr, int line, const char *source)
@@ -446,7 +446,7 @@ int curl_fclose(FILE *file, int line, const char *source)
 {
   int res;
 
-  assert(file != NULL);
+  assert(file != nullptr);
 
   res=fclose(file);
 

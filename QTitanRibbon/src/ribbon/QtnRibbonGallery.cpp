@@ -349,7 +349,7 @@ void RibbonGalleryPrivate::setScrollPos(int scrollPos)
     m_scrollPos = scrollPos;
     layoutItems();
 
-    repaintItems(NULL, false);
+    repaintItems(nullptr, false);
 }
 
 void RibbonGalleryPrivate::actionTriggered(int action)
@@ -1164,7 +1164,7 @@ int RibbonGallery::getItemCount() const
 RibbonGalleryItem* RibbonGallery::getItem(int index) const
 {
     RibbonGalleryGroup* items = galleryGroup();
-    return items ? items->getItem(index) : NULL;
+    return items ? items->getItem(index) : nullptr;
 }
 
 /*!
@@ -1234,7 +1234,7 @@ void RibbonGallery::setCheckedIndex(int index)
 {
     QTN_D(RibbonGallery);
 
-    RibbonGalleryItem* previous = NULL;
+    RibbonGalleryItem* previous = nullptr;
     int previousInd = checkedIndex();
     if (previousInd != -1)
         previous = getItem(previousInd);

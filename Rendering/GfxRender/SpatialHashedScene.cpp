@@ -26,7 +26,7 @@ class GfxSpatialHash : public RBX::SpatialHash<CullableSceneNode, RBX::Contact, 
 {
 public:
     GfxSpatialHash()
-    : SpatialHash<CullableSceneNode, Contact, ContactManager, GFXSPATIALHASHLEVELS>(NULL, NULL, GFXSPATIALHASH_MAX_CELLS_PER_PRIMITIVE)
+    : SpatialHash<CullableSceneNode, Contact, ContactManager, GFXSPATIALHASHLEVELS>(nullptr, nullptr, GFXSPATIALHASH_MAX_CELLS_PER_PRIMITIVE)
 	{
 	}
 };
@@ -176,7 +176,7 @@ void SpatialHashedScene::querySphere(std::vector<CullableSceneNode*>& nodes, con
 			nodes.push_back(node);
 	}
 
-	DenseHashSet<CullableSceneNode*> result(NULL);
+	DenseHashSet<CullableSceneNode*> result(nullptr);
 	spatialHash->getPrimitivesOverlappingRec(Extents::fromCenterRadius(center, radius), result);
 
 	for (CullableSceneNode* node: result)
@@ -196,7 +196,7 @@ void SpatialHashedScene::queryExtents(std::vector<CullableSceneNode*>& nodes, co
             nodes.push_back(node);
     }
     
-    DenseHashSet<CullableSceneNode*> result(NULL);
+    DenseHashSet<CullableSceneNode*> result(nullptr);
     spatialHash->getPrimitivesOverlappingRec(extents, result);
 
     for (CullableSceneNode* node: result)

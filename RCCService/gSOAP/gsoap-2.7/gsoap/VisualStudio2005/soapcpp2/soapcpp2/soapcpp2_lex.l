@@ -68,14 +68,14 @@ YYSTYPE yylval;
 
 #ifndef WITH_LEX
 #define MAX_IMPORT_DEPTH 16
-static struct importlist { struct importlist *next; char name[1]; } *importlist = NULL;
+static struct importlist { struct importlist *next; char name[1]; } *importlist = nullptr;
 static char fnstk[MAX_IMPORT_DEPTH][1024];
 static int lnstk[MAX_IMPORT_DEPTH];
 static char *imstk[MAX_IMPORT_DEPTH];
 static YY_BUFFER_STATE instk[MAX_IMPORT_DEPTH];
 #endif
 int imports = 0;
-char *imported = NULL;
+char *imported = nullptr;
 static void check_id(const char*);
 static Token install_id();
 static Token install_int();
@@ -333,24 +333,24 @@ static void directive()
 	{	sp = (Service*)emalloc(sizeof(Service));
 		sp->next = services;
 		sp->ns = s;
-		sp->name = NULL;
-		sp->porttype = NULL;
-		sp->portname = NULL;
-		sp->binding = NULL;
-		sp->definitions = NULL;
-		sp->transport = NULL;
-		sp->URL = NULL;
-		sp->URI = NULL;
-		sp->WSDL = NULL;
-		sp->style = NULL;
-		sp->encoding = NULL;
-		sp->elementForm = NULL;
-		sp->attributeForm = NULL;
-		sp->executable = NULL;
-		sp->import = NULL;
-		sp->documentation = NULL;
-		sp->list = NULL;
-		sp->data = NULL;
+		sp->name = nullptr;
+		sp->porttype = nullptr;
+		sp->portname = nullptr;
+		sp->binding = nullptr;
+		sp->definitions = nullptr;
+		sp->transport = nullptr;
+		sp->URL = nullptr;
+		sp->URI = nullptr;
+		sp->WSDL = nullptr;
+		sp->style = nullptr;
+		sp->encoding = nullptr;
+		sp->elementForm = nullptr;
+		sp->attributeForm = nullptr;
+		sp->executable = nullptr;
+		sp->import = nullptr;
+		sp->documentation = nullptr;
+		sp->list = nullptr;
+		sp->data = nullptr;
 		services = sp;
 	}
 	for (i = j; yytext[i]; i++)
@@ -470,7 +470,7 @@ static void directive()
 		{	m = (Method*)emalloc(sizeof(Method));
 			m->name = s;
 			m->mess = STYLE;
-			m->part = NULL;
+			m->part = nullptr;
 			m->next = sp->list;
 			sp->list = m;
 			for (j = k; yytext[j]; j++)
@@ -490,7 +490,7 @@ static void directive()
 		{	m = (Method*)emalloc(sizeof(Method));
 			m->name = s;
 			m->mess = ENCODING;
-			m->part = NULL;
+			m->part = nullptr;
 			m->next = sp->list;
 			sp->list = m;
 			for (j = k; yytext[j]; j++)
@@ -513,7 +513,7 @@ static void directive()
 		{	m = (Method*)emalloc(sizeof(Method));
 			m->name = s;
 			m->mess = RESPONSE_ENCODING;
-			m->part = NULL;
+			m->part = nullptr;
 			m->next = sp->list;
 			sp->list = m;
 			for (j = k; yytext[j]; j++)
@@ -536,7 +536,7 @@ static void directive()
 		{	m = (Method*)emalloc(sizeof(Method));
 			m->name = s;
 			m->mess = COMMENT;
-			m->part = NULL;
+			m->part = nullptr;
 			m->next = sp->list;
 			sp->list = m;
 			for (j = k; yytext[j]; j++)
@@ -556,7 +556,7 @@ static void directive()
 		{	m = (Method*)emalloc(sizeof(Method));
 			m->name = s;
 			m->mess = ACTION;
-			m->part = NULL;
+			m->part = nullptr;
 			m->next = sp->list;
 			sp->list = m;
 			for (j = k; yytext[j]; j++)
@@ -576,7 +576,7 @@ static void directive()
 		{	m = (Method*)emalloc(sizeof(Method));
 			m->name = s;
 			m->mess = MIMEIN | MIMEOUT;
-			m->part = NULL;
+			m->part = nullptr;
 			m->next = sp->list;
 			sp->list = m;
 			for (j = k; yytext[j]; j++)
@@ -596,7 +596,7 @@ static void directive()
 		{	m = (Method*)emalloc(sizeof(Method));
 			m->name = s;
 			m->mess = MIMEIN;
-			m->part = NULL;
+			m->part = nullptr;
 			m->next = sp->list;
 			sp->list = m;
 			for (j = k; yytext[j]; j++)
@@ -616,7 +616,7 @@ static void directive()
 		{	m = (Method*)emalloc(sizeof(Method));
 			m->name = s;
 			m->mess = MIMEOUT;
-			m->part = NULL;
+			m->part = nullptr;
 			m->next = sp->list;
 			sp->list = m;
 			for (j = k; yytext[j]; j++)
@@ -636,7 +636,7 @@ static void directive()
 		{	m = (Method*)emalloc(sizeof(Method));
 			m->name = s;
 			m->mess = HDRIN | HDROUT;
-			m->part = NULL;
+			m->part = nullptr;
 			m->next = sp->list;
 			sp->list = m;
 			for (j = k; yytext[j]; j++)
@@ -656,7 +656,7 @@ static void directive()
 		{	m = (Method*)emalloc(sizeof(Method));
 			m->name = s;
 			m->mess = HDRIN;
-			m->part = NULL;
+			m->part = nullptr;
 			m->next = sp->list;
 			sp->list = m;
 			for (j = k; yytext[j]; j++)
@@ -676,7 +676,7 @@ static void directive()
 		{	m = (Method*)emalloc(sizeof(Method));
 			m->name = s;
 			m->mess = HDROUT;
-			m->part = NULL;
+			m->part = nullptr;
 			m->next = sp->list;
 			sp->list = m;
 			for (j = k; yytext[j]; j++)
@@ -696,7 +696,7 @@ static void directive()
 		{	m = (Method*)emalloc(sizeof(Method));
 			m->name = s;
 			m->mess = FAULT;
-			m->part = NULL;
+			m->part = nullptr;
 			m->next = sp->list;
 			sp->list = m;
 			for (j = k; yytext[j]; j++)
@@ -715,7 +715,7 @@ static void directive()
 		else if (!strncmp(yytext+i, "type-documentation:", 19))
 		{	d = (Data*)emalloc(sizeof(Data));
 			d->name = s;
-			d->part = NULL;
+			d->part = nullptr;
 			d->next = sp->data;
 			sp->data = d;
 			for (j = k; yytext[j]; j++)
@@ -860,7 +860,7 @@ static void module(const char *name, const char *fullname)
     if (!*pp)
     { *pp = (Pragma*)emalloc(sizeof(Pragma));
       (*pp)->pragma = s;
-      (*pp)->next = NULL;
+      (*pp)->next = nullptr;
     }
     imported = (char*)emalloc(strlen(fullname)+1);
     strcpy(imported, fullname);
@@ -908,7 +908,7 @@ static void import(const char *file)
   strcpy(fnstk[imports], filename);
   lnstk[imports] = yylineno;
   imstk[imports] = imported;
-  /* imported = NULL; this is useful to change the semantics of #import to NOT consider non-module imports to be part of the current module */
+  /* imported = nullptr; this is useful to change the semantics of #import to NOT consider non-module imports to be part of the current module */
   imports++;
   if (!(yyin = fopen(file, "r")))
   { if (importpath)
@@ -925,7 +925,7 @@ static void import(const char *file)
 	}
 	else
         { strcpy(buf, s);
-          s = NULL;
+          s = nullptr;
 	}
         strcat(buf, "/");
         strcat(buf, file);

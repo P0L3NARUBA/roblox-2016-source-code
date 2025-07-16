@@ -66,7 +66,7 @@ namespace RBX
 	static Reflection::BoundFuncDesc<MarketplaceService, void(shared_ptr<Instance>, int, bool, MarketplaceService::CurrencyType)> func_PromptPurchase(&MarketplaceService::promptPurchase, "PromptPurchase", "player", "assetId", "equipIfPurchased", true, "currencyType",MarketplaceService::CURRENCY_DEFAULT, Security::None);
 	static Reflection::BoundFuncDesc<MarketplaceService, void(shared_ptr<Instance>, int, bool, MarketplaceService::CurrencyType)> func_PromptProductPurchase(&MarketplaceService::promptProductPurchase, "PromptProductPurchase", "player", "productId", "equipIfPurchased", true, "currencyType",MarketplaceService::CURRENCY_DEFAULT, Security::None);
 	static Reflection::RemoteEventDesc<MarketplaceService, void(shared_ptr<Instance>, int, bool)> event_promptPurchaseFinished(&MarketplaceService::promptPurchaseFinished, "PromptPurchaseFinished", "player", "assetId", "isPurchased", Security::None, Reflection::RemoteEventCommon::SCRIPTING, Reflection::RemoteEventCommon::BROADCAST);
-	static Reflection::RemoteEventDesc<MarketplaceService, void(int, int, bool)> event_promptProductPurchaseFinished(&MarketplaceService::promptProductPurchaseFinished, "PromptProductPurchaseFinished", "userId", "productId", "isPurchased", Security::None, Reflection::RemoteEventCommon::Attributes::deprecated(Reflection::RemoteEventCommon::SCRIPTING, NULL), Reflection::RemoteEventCommon::BROADCAST);
+	static Reflection::RemoteEventDesc<MarketplaceService, void(int, int, bool)> event_promptProductPurchaseFinished(&MarketplaceService::promptProductPurchaseFinished, "PromptProductPurchaseFinished", "userId", "productId", "isPurchased", Security::None, Reflection::RemoteEventCommon::Attributes::deprecated(Reflection::RemoteEventCommon::SCRIPTING, nullptr), Reflection::RemoteEventCommon::BROADCAST);
 
     static Reflection::RemoteEventDesc<MarketplaceService, void(shared_ptr<const Reflection::Tuple>)> event_ClientLuaDialogRequested(&MarketplaceService::clientLuaDialogRequested, "ClientLuaDialogRequested", "arguments", Security::RobloxScript, Reflection::RemoteEventCommon::SCRIPTING, Reflection::RemoteEventCommon::CLIENT_SERVER);
 	static Reflection::RemoteEventDesc<MarketplaceService, void(bool, shared_ptr<Instance>)> event_luaDialogCallbackSignal(&MarketplaceService::luaDialogCallbackSignal, "LuaDialogCallbackSignal", "value", "player", Security::RobloxScript, Reflection::RemoteEventCommon::REPLICATE_ONLY, Reflection::RemoteEventCommon::CLIENT_SERVER);
@@ -662,7 +662,7 @@ namespace RBX
 			args[1] = shared_from(player);
 
 			if (Network::Players::clientIsPresent(this))
-				raiseEventInvocation(event_luaDialogCallbackSignal, args, NULL);
+				raiseEventInvocation(event_luaDialogCallbackSignal, args, nullptr);
 			else
 				event_luaDialogCallbackSignal.fireEvent(this, args);
 		}

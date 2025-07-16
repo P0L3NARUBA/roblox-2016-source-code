@@ -440,7 +440,7 @@ class btConvexHullInternal
 				Point32 point;
 				int copy;
 				
-				Vertex(): next(NULL), prev(NULL), edges(NULL), firstNearbyFace(NULL), lastNearbyFace(NULL), copy(-1)
+				Vertex(): next(nullptr), prev(nullptr), edges(nullptr), firstNearbyFace(nullptr), lastNearbyFace(nullptr), copy(-1)
 				{
 				}
 
@@ -498,8 +498,8 @@ class btConvexHullInternal
 						btAssert(f->nearbyVertex == src);
 						f->nearbyVertex = this;
 					}
-					src->firstNearbyFace = NULL;
-					src->lastNearbyFace = NULL;
+					src->firstNearbyFace = nullptr;
+					src->lastNearbyFace = nullptr;
 				}
 		};
 
@@ -516,11 +516,11 @@ class btConvexHullInternal
 
 				~Edge()
 				{
-					next = NULL;
-					prev = NULL;
-					reverse = NULL;
-					target = NULL;
-					face = NULL;
+					next = nullptr;
+					prev = nullptr;
+					reverse = nullptr;
+					target = nullptr;
+					face = nullptr;
 				}
 
 				void link(Edge* n)
@@ -549,7 +549,7 @@ class btConvexHullInternal
 				Point32 dir0;
 				Point32 dir1;
 
-				Face(): next(NULL), nearbyVertex(NULL), nextWithSameNearbyVertex(NULL)
+				Face(): next(nullptr), nearbyVertex(nullptr), nextWithSameNearbyVertex(nullptr)
 				{
 				}
 
@@ -653,7 +653,7 @@ class btConvexHullInternal
 				Vertex* minYx;
 				Vertex* maxYx;
 				
-				IntermediateHull(): minXy(NULL), maxXy(NULL), minYx(NULL), maxYx(NULL)
+				IntermediateHull(): minXy(nullptr), maxXy(nullptr), minYx(nullptr), maxYx(nullptr)
 				{
 				}
 				
@@ -671,7 +671,7 @@ class btConvexHullInternal
 			public:
 				PoolArray<T>* next;
 
-				PoolArray(int size): size(size), next(NULL)
+				PoolArray(int size): size(size), next(nullptr)
 				{
 					array = (T*) btAlignedAlloc(sizeof(T) * size, 16);
 				}
@@ -686,7 +686,7 @@ class btConvexHullInternal
 					T* o = array;
 					for (int i = 0; i < size; i++, o++)
 					{
-						o->next = (i+1 < size) ? o + 1 : NULL;
+						o->next = (i+1 < size) ? o + 1 : nullptr;
 					}
 					return array;
 				}
@@ -701,7 +701,7 @@ class btConvexHullInternal
 				int arraySize;
 
 			public:
-				Pool(): arrays(NULL), nextArray(NULL), freeObjects(NULL), arraySize(256)
+				Pool(): arrays(nullptr), nextArray(nullptr), freeObjects(nullptr), arraySize(256)
 				{
 				}
 
@@ -719,7 +719,7 @@ class btConvexHullInternal
 				void reset()
 				{
 					nextArray = arrays;
-					freeObjects = NULL;
+					freeObjects = nullptr;
 				}
 
 				void setArraySize(int arraySize)
@@ -791,7 +791,7 @@ class btConvexHullInternal
 			}
 			else
 			{
-				r->target->edges = NULL;
+				r->target->edges = nullptr;
 			}
 			
 			n = r->next;
@@ -804,7 +804,7 @@ class btConvexHullInternal
 			}
 			else
 			{
-				edge->target->edges = NULL;
+				edge->target->edges = nullptr;
 			}
 
 			edgePool.freeObject(edge);
@@ -1006,8 +1006,8 @@ btConvexHullInternal::Edge* btConvexHullInternal::newEdgePair(Vertex* from, Vert
 	r->copy = mergeStamp;
 	e->target = to;
 	r->target = from;
-	e->face = NULL;
-	r->face = NULL;
+	e->face = nullptr;
+	r->face = nullptr;
 	usedEdgePairs++;
 	if (usedEdgePairs > maxUsedEdgePairs)
 	{
@@ -1065,8 +1065,8 @@ bool btConvexHullInternal::mergeProjection(IntermediateHull& h0, IntermediateHul
 	
 	v0 = h0.maxXy;
 	v1 = h1.maxXy;
-	Vertex* v00 = NULL;
-	Vertex* v10 = NULL;
+	Vertex* v00 = nullptr;
+	Vertex* v10 = nullptr;
 	int32_t sign = 1;
 
 	for (int side = 0; side <= 1; side++)
@@ -1207,10 +1207,10 @@ void btConvexHullInternal::computeInternal(int start, int end, IntermediateHull&
 	switch (n)
 	{
 		case 0:
-			result.minXy = NULL;
-			result.maxXy = NULL;
-			result.minYx = NULL;
-			result.maxYx = NULL;
+			result.minXy = nullptr;
+			result.maxXy = nullptr;
+			result.minYx = nullptr;
+			result.maxYx = nullptr;
 			return;
 		case 2:
 		{
@@ -1282,7 +1282,7 @@ void btConvexHullInternal::computeInternal(int start, int end, IntermediateHull&
 		case 1:
 		{
 			Vertex* v = originalVertices[start];
-			v->edges = NULL;
+			v->edges = nullptr;
 			v->next = v;
 			v->prev = v;
 
@@ -1410,7 +1410,7 @@ btConvexHullInternal::Orientation btConvexHullInternal::getOrientation(const Edg
 
 btConvexHullInternal::Edge* btConvexHullInternal::findMaxAngle(bool ccw, const Vertex* start, const Point32& s, const Point64& rxs, const Point64& sxrxs, Rational64& minCot)
 {
-	Edge* minEdge = NULL;
+	Edge* minEdge = nullptr;
 
 #ifdef DEBUG_CONVEX_HULL
 	printf("find max edge for %d\n", start->point.index);
@@ -1435,7 +1435,7 @@ btConvexHullInternal::Edge* btConvexHullInternal::findMaxAngle(bool ccw, const V
 				else
 				{
 					int cmp;
-					if (minEdge == NULL)
+					if (minEdge == nullptr)
 					{
 						minCot = cot;
 						minEdge = e;
@@ -1551,7 +1551,7 @@ void btConvexHullInternal::findEdgeForCoplanarFaces(Vertex* c0, Vertex* c1, Edge
 					{
 						et0 = f0->target->point;
 						dx = (et1 - et0).dot(perp);
-						e0 = (e0 == start0) ? NULL : f0;
+						e0 = (e0 == start0) ? nullptr : f0;
 						continue;
 					}
 				}
@@ -1603,7 +1603,7 @@ void btConvexHullInternal::findEdgeForCoplanarFaces(Vertex* c0, Vertex* c1, Edge
 					{
 						et1 = f1->target->point;
 						dx = (et1 - et0).dot(perp);
-						e1 = (e1 == start1) ? NULL : f1;
+						e1 = (e1 == start1) ? nullptr : f1;
 						continue;
 					}
 				}
@@ -1658,16 +1658,16 @@ void btConvexHullInternal::merge(IntermediateHull& h0, IntermediateHull& h1)
 	
 	mergeStamp--;
 
-	Vertex* c0 = NULL;
-	Edge* toPrev0 = NULL;
-	Edge* firstNew0 = NULL;
-	Edge* pendingHead0 = NULL;
-	Edge* pendingTail0 = NULL;
-	Vertex* c1 = NULL;
-	Edge* toPrev1 = NULL;
-	Edge* firstNew1 = NULL;
-	Edge* pendingHead1 = NULL;
-	Edge* pendingTail1 = NULL;
+	Vertex* c0 = nullptr;
+	Edge* toPrev0 = nullptr;
+	Edge* firstNew0 = nullptr;
+	Edge* pendingHead0 = nullptr;
+	Edge* pendingTail0 = nullptr;
+	Vertex* c1 = nullptr;
+	Edge* toPrev1 = nullptr;
+	Edge* firstNew1 = nullptr;
+	Edge* pendingHead1 = nullptr;
+	Edge* pendingTail1 = nullptr;
 	Point32 prevPoint;
 
 	if (mergeProjection(h0, h1, c0, c1))
@@ -1678,7 +1678,7 @@ void btConvexHullInternal::merge(IntermediateHull& h0, IntermediateHull& h1)
 		btAssert(!t.isZero());
 
 		Edge* e = c0->edges;
-		Edge* start0 = NULL;
+		Edge* start0 = nullptr;
 		if (e)
 		{
 			do
@@ -1697,7 +1697,7 @@ void btConvexHullInternal::merge(IntermediateHull& h0, IntermediateHull& h1)
 		}
 		
 		e = c1->edges;
-		Edge* start1 = NULL;
+		Edge* start1 = nullptr;
 		if (e)
 		{
 			do
@@ -1717,7 +1717,7 @@ void btConvexHullInternal::merge(IntermediateHull& h0, IntermediateHull& h1)
 
 		if (start0 || start1)
 		{
-			findEdgeForCoplanarFaces(c0, c1, start0, start1, NULL, NULL);
+			findEdgeForCoplanarFaces(c0, c1, start0, start1, nullptr, nullptr);
 			if (start0)
 			{
 				c0 = start0->target;
@@ -1808,14 +1808,14 @@ void btConvexHullInternal::merge(IntermediateHull& h0, IntermediateHull& h1)
 
 			if (cmp == 0)
 			{
-				findEdgeForCoplanarFaces(c0, c1, e0, e1, NULL, NULL);
+				findEdgeForCoplanarFaces(c0, c1, e0, e1, nullptr, nullptr);
 			}
 
 			if ((cmp >= 0) && e1)
 			{
 				if (toPrev1)
 				{
-					for (Edge* e = toPrev1->next, *n = NULL; e != min1; e = n)
+					for (Edge* e = toPrev1->next, *n = nullptr; e != min1; e = n)
 					{
 						n = e->next;
 						removeEdgePair(e);
@@ -1834,8 +1834,8 @@ void btConvexHullInternal::merge(IntermediateHull& h0, IntermediateHull& h1)
 						firstNew1 = pendingHead1;
 					}
 					pendingTail1->link(min1);
-					pendingHead1 = NULL;
-					pendingTail1 = NULL;
+					pendingHead1 = nullptr;
+					pendingTail1 = nullptr;
 				}
 				else if (!toPrev1)
 				{
@@ -1851,7 +1851,7 @@ void btConvexHullInternal::merge(IntermediateHull& h0, IntermediateHull& h1)
 			{
 				if (toPrev0)
 				{
-					for (Edge* e = toPrev0->prev, *n = NULL; e != min0; e = n)
+					for (Edge* e = toPrev0->prev, *n = nullptr; e != min0; e = n)
 					{
 						n = e->prev;
 						removeEdgePair(e);
@@ -1870,8 +1870,8 @@ void btConvexHullInternal::merge(IntermediateHull& h0, IntermediateHull& h1)
 						firstNew0 = pendingHead0;
 					}
 					min0->link(pendingTail0);
-					pendingHead0 = NULL;
-					pendingTail0 = NULL;
+					pendingHead0 = nullptr;
+					pendingTail0 = nullptr;
 				}
 				else if (!toPrev0)
 				{
@@ -1886,14 +1886,14 @@ void btConvexHullInternal::merge(IntermediateHull& h0, IntermediateHull& h1)
 
 		if ((c0 == first0) && (c1 == first1))
 		{
-			if (toPrev0 == NULL)
+			if (toPrev0 == nullptr)
 			{
 				pendingHead0->link(pendingTail0);
 				c0->edges = pendingTail0;
 			}
 			else
 			{
-				for (Edge* e = toPrev0->prev, *n = NULL; e != firstNew0; e = n)
+				for (Edge* e = toPrev0->prev, *n = nullptr; e != firstNew0; e = n)
 				{
 					n = e->prev;
 					removeEdgePair(e);
@@ -1905,14 +1905,14 @@ void btConvexHullInternal::merge(IntermediateHull& h0, IntermediateHull& h1)
 				}
 			}
 
-			if (toPrev1 == NULL)
+			if (toPrev1 == nullptr)
 			{
 				pendingTail1->link(pendingHead1);
 				c1->edges = pendingTail1;
 			}
 			else
 			{
-				for (Edge* e = toPrev1->next, *n = NULL; e != firstNew1; e = n)
+				for (Edge* e = toPrev1->next, *n = nullptr; e != firstNew1; e = n)
 				{
 					n = e->next;
 					removeEdgePair(e);
@@ -2038,7 +2038,7 @@ void btConvexHullInternal::compute(const void* coords, bool doubleCoords, int st
 	for (int i = 0; i < count; i++)
 	{
 		Vertex* v = vertexPool.newObject();
-		v->edges = NULL;
+		v->edges = nullptr;
 		v->point = points[i];
 		v->copy = -1;
 		originalVertices[i] = v;
@@ -2124,8 +2124,8 @@ btScalar btConvexHullInternal::shrink(btScalar amount, btScalar clampAmount)
 					faces.push_back(face);
 					Edge* f = e;
 
-					Vertex* a = NULL;
-					Vertex* b = NULL;
+					Vertex* a = nullptr;
+					Vertex* b = nullptr;
 					do
 					{
 						if (a && b)
@@ -2240,7 +2240,7 @@ bool btConvexHullInternal::shiftFace(Face* face, btScalar amount, btAlignedObjec
 		return false;
 	}
 
-	Edge* intersection = NULL;
+	Edge* intersection = nullptr;
 
 	Edge* startEdge = face->nearbyVertex->edges;
 #ifdef DEBUG_CONVEX_HULL
@@ -2356,9 +2356,9 @@ bool btConvexHullInternal::shiftFace(Face* face, btScalar amount, btAlignedObjec
 #endif
 	}
 	
-	Edge* firstIntersection = NULL;
-	Edge* faceEdge = NULL;
-	Edge* firstFaceEdge = NULL;
+	Edge* firstIntersection = nullptr;
+	Edge* faceEdge = nullptr;
+	Edge* firstFaceEdge = nullptr;
 
 #ifdef SHOW_ITERATIONS
 	int m = 0;
@@ -2453,7 +2453,7 @@ bool btConvexHullInternal::shiftFace(Face* face, btScalar amount, btAlignedObjec
 			e = intersection->reverse;
 			if (e->prev == e)
 			{
-				removed->edges = NULL;
+				removed->edges = nullptr;
 			}
 			else
 			{
@@ -2493,7 +2493,7 @@ bool btConvexHullInternal::shiftFace(Face* face, btScalar amount, btAlignedObjec
 
 			stack.push_back(v);
 			stack.push_back(removed);
-			stack.push_back(NULL);
+			stack.push_back(nullptr);
 		}
 
 		if (cmp || prevCmp || (prevIntersection->reverse->next->target != intersection->target))
@@ -2536,7 +2536,7 @@ bool btConvexHullInternal::shiftFace(Face* face, btScalar amount, btAlignedObjec
 					printf("2: Removed part contains (%d %d %d)\n", removed->point.x, removed->point.y, removed->point.z);
 #endif
 				}
-				stack.push_back(NULL);
+				stack.push_back(nullptr);
 			}
 		}
 		faceEdge->face = face;
@@ -2569,7 +2569,7 @@ bool btConvexHullInternal::shiftFace(Face* face, btScalar amount, btAlignedObjec
 			printf("3: Removed part contains (%d %d %d)\n", removed->point.x, removed->point.y, removed->point.z);
 #endif
 		}
-		stack.push_back(NULL);
+		stack.push_back(nullptr);
 	}
 
 	btAssert(stack.size() > 0);
@@ -2593,7 +2593,7 @@ bool btConvexHullInternal::shiftFace(Face* face, btScalar amount, btAlignedObjec
 #endif
 			bool deeper = false;
 			Vertex* removed;
-			while ((removed = stack[pos++]) != NULL)
+			while ((removed = stack[pos++]) != nullptr)
 			{
 #ifdef SHOW_ITERATIONS
 				n++;
@@ -2612,7 +2612,7 @@ bool btConvexHullInternal::shiftFace(Face* face, btScalar amount, btAlignedObjec
 			}
 			if (deeper)
 			{
-				stack.push_back(NULL);
+				stack.push_back(nullptr);
 			}
 		}
 	}

@@ -17,9 +17,9 @@ const char* const sDead = "Dead";
 Dead::Dead(Humanoid* humanoid, StateType priorState)
 	: Named<HumanoidState, sDead>(humanoid, priorState)
 {
-	if (humanoid != NULL) {
+	if (humanoid != nullptr) {
 		PartInstance *pRoot = humanoid->getTorsoSlow();
-		if (pRoot != NULL)
+		if (pRoot != nullptr)
 		{
 			pRoot->setCanCollide(true);
 			pRoot->getPartPrimitive()->setMassInertia(10.0f); 

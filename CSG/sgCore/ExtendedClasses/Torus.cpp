@@ -24,7 +24,7 @@ sgCTorus* sgCTorus::Create(sgFloat r1,sgFloat r2,short m1,short m2)
 		r2>r1 ||
 		m1<2 ||
 		m2<2)
-		return NULL;
+		return nullptr;
 
 	sgFloat par[4];
 	par[0] = r1;  

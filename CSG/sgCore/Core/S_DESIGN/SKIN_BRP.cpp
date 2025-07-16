@@ -15,11 +15,11 @@ static BOOL Skinned_Surface_BRP( lpLISTH list, lpVDIM begin_point,
 BOOL Skin_Surface_BRP( lpLISTH rib_curves, lpVDIM begin_point,
 											 BOOL closed,	 BOOL solid, hOBJ *hrez){
 	MESHDD      mdd;
-	lpNPW       np = NULL;
+	lpNPW       np = nullptr;
 	BOOL				cod;
 
 	c_num_np	= -32767;
-	*hrez			= NULL;
+	*hrez			= nullptr;
 	if ( !np_init_list(&c_list_str) ) return FALSE;
 
 	init_vdim(&mdd.vdim,sizeof(MNODE));
@@ -30,7 +30,7 @@ BOOL Skin_Surface_BRP( lpLISTH rib_curves, lpVDIM begin_point,
 //   
 	if( !closed && solid ){
 		if ((np = creat_np_mem(TNPW,MAXNOV,MAXNOE,MAXNOC, MAXNOF,
-													MAXNOE)) == NULL)  goto err1;
+													MAXNOE)) == nullptr)  goto err1;
 		np_init((lpNP)np);
 		np->ident = c_num_np++;
 		if( !put_top_bottom( np, &mdd )) goto err1;
@@ -58,7 +58,7 @@ BOOL Skin_Surface_BRP( lpLISTH rib_curves, lpVDIM begin_point,
 err1:
 	free_vdim(&mdd.vdim);
 	free_np_mem(&np);
-	np_end_of_put(&c_list_str,NP_CANCEL,0,NULL);
+	np_end_of_put(&c_list_str,NP_CANCEL,0,nullptr);
 	return FALSE;
 }
 
@@ -73,15 +73,15 @@ static BOOL Skinned_Surface_BRP( lpLISTH list, lpVDIM begin_point, lpMESHDD mdd 
 	MNODE    node_s;
 	hOBJ   	 object, object1;
 
-	if( (quantaty = (short*)SGMalloc(rib_data.n_primitiv*sizeof(short) )) == NULL)goto err;
+	if( (quantaty = (short*)SGMalloc(rib_data.n_primitiv*sizeof(short) )) == nullptr)goto err;
 	object = list->hhead;  // list begining
 
-	if( (rib_data.n_point = (short*)SGMalloc(rib_data.n_primitiv*sizeof(short))) == NULL)
+	if( (rib_data.n_point = (short*)SGMalloc(rib_data.n_primitiv*sizeof(short))) == nullptr)
 			goto err;
 	n_section=0;
-	while( object != NULL ){      // while objects exist into list
+	while( object != nullptr ){      // while objects exist into list
 		rib_data.n_num=0;
-		if ((object1 = new_begin_path(object, begin_point, n_section)) == NULL) goto err;
+		if ((object1 = new_begin_path(object, begin_point, n_section)) == nullptr) goto err;
 // calculate nessesary number of point on each primitiv
 		for( i=0; i<rib_data.n_primitiv; i++ ) rib_data.n_point[i] = 0;
 		apr_rib( object1, 1 );//Approximate cross sections
@@ -92,7 +92,7 @@ static BOOL Skinned_Surface_BRP( lpLISTH list, lpVDIM begin_point, lpMESHDD mdd 
 			for( i=0; i<rib_data.n_primitiv; i++ )
 				if( rib_data.n_point[i] > quantaty[i] )
 								quantaty[i] = rib_data.n_point[i];
-		if(object1 != object) o_free(object1, NULL);
+		if(object1 != object) o_free(object1, nullptr);
 		get_next_item_z( SEL_LIST, object, &object );
 		n_section++;
 	}
@@ -102,10 +102,10 @@ static BOOL Skinned_Surface_BRP( lpLISTH list, lpVDIM begin_point, lpMESHDD mdd 
 
 	object = list->hhead;  // list begining
 	n_section=0;
-	while( object != NULL ){ // while objects exist into list
+	while( object != nullptr ){ // while objects exist into list
 		rib_data.n_num=0;
 		rib_point=0;
-		if ((object1 = new_begin_path(object, begin_point, n_section)) == NULL) goto err;
+		if ((object1 = new_begin_path(object, begin_point, n_section)) == nullptr) goto err;
 		if ( !init_vdim(&rib_data.vdim, sizeof(MNODE)) ) goto err;
 		apr_rib( object1, 2 );//Approximate cross sections
 
@@ -117,7 +117,7 @@ static BOOL Skinned_Surface_BRP( lpLISTH list, lpVDIM begin_point, lpMESHDD mdd 
 			node_s.num = mask;
 			if( !add_elem(&mdd->vdim, &node_s ) ) goto err;
 		}
-		if(object1 != object) o_free(object1, NULL);
+		if(object1 != object) o_free(object1, nullptr);
 		get_next_item_z( SEL_LIST, object, &object );
 		free_vdim(&rib_data.vdim);
 		n_section++;
@@ -156,9 +156,9 @@ static hOBJ new_begin_path(hOBJ hobj, lpVDIM vdim, short num){
 	GEO_CIRCLE		circle;
 	GEO_ARC				arc;
 
-	if (!get_status_path(hobj, &status)) return NULL;
+	if (!get_status_path(hobj, &status)) return nullptr;
 	if (status & ST_CLOSE) {
-		if (!read_elem(vdim, num, &p)) return NULL;
+		if (!read_elem(vdim, num, &p)) return nullptr;
 		obj = (lpOBJ)hobj;
 		type = obj->type;
 		memcpy(&circle, obj->geo_data, sizeof(GEO_CIRCLE));
@@ -179,9 +179,9 @@ static hOBJ new_begin_path(hOBJ hobj, lpVDIM vdim, short num){
 		obj = (lpOBJ)hobj;
 		if (obj->type == OSPLINE) {	//    
 			spline = (lpGEO_SPLINE)obj->geo_data;
-			if ((hpoint1 = SGMalloc(sizeof(D_POINT)*spline->nump)) == NULL) goto err0;
+			if ((hpoint1 = SGMalloc(sizeof(D_POINT)*spline->nump)) == nullptr) goto err0;
 			if (spline->numd > 0) {
-				if ((hderivates1 = SGMalloc(sizeof(MNODE)*spline->numd)) == NULL) goto err1;
+				if ((hderivates1 = SGMalloc(sizeof(MNODE)*spline->numd)) == nullptr) goto err1;
 			}
 			point = (lpD_POINT)spline->hpoint;
 			for (i = 0; i < spline->nump; i++) {
@@ -223,7 +223,7 @@ static hOBJ new_begin_path(hOBJ hobj, lpVDIM vdim, short num){
 			sc.user_geo_scan = skin6_geo_scan;
 			sc.data          = &data;
 			if (o_scan(hobj, &sc) == OSFALSE) goto err0;
-			while ((hobj1 = data.listh1.hhead) != NULL) {
+			while ((hobj1 = data.listh1.hhead) != nullptr) {
 				detach_item(&data.listh1, hobj1);
 				attach_item_tail(&data.listh2, hobj1);
 			}
@@ -242,7 +242,7 @@ err2:
 err1:
 	SGFree(hpoint1);
 err0:
-	return NULL;
+	return nullptr;
 }
 
 

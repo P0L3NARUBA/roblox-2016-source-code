@@ -298,16 +298,16 @@ public:
 
 
 	void childAddedSignal(shared_ptr<Instance>& inst) { if(onDemandRead()) onDemandWrite()->childAddedSignal(inst); }
-	rbx::signal<void(shared_ptr<Instance>)>* getOrCreateChildAddedSignal(bool create = true) { return (onDemandRead() || create) ? &onDemandWrite()->childAddedSignal : NULL; };
+	rbx::signal<void(shared_ptr<Instance>)>* getOrCreateChildAddedSignal(bool create = true) { return (onDemandRead() || create) ? &onDemandWrite()->childAddedSignal : nullptr; };
 
 	void childRemovedSignal(shared_ptr<Instance>& inst) { if(onDemandRead()) onDemandWrite()->childRemovedSignal(inst); }
-	rbx::signal<void(shared_ptr<Instance>)>* getOrCreateChildRemovedSignal(bool create = true) { return (onDemandRead() || create) ? &onDemandWrite()->childRemovedSignal : NULL; };
+	rbx::signal<void(shared_ptr<Instance>)>* getOrCreateChildRemovedSignal(bool create = true) { return (onDemandRead() || create) ? &onDemandWrite()->childRemovedSignal : nullptr; };
 
 	void descendantAddedSignal(shared_ptr<Instance>& inst) { if(onDemandRead()) onDemandWrite()->descendantAddedSignal(inst); }
-	rbx::signal<void(shared_ptr<Instance>)>* getOrCreateDescendantAddedSignal(bool create = true) { return (onDemandRead() || create) ? &onDemandWrite()->descendantAddedSignal : NULL; };
+	rbx::signal<void(shared_ptr<Instance>)>* getOrCreateDescendantAddedSignal(bool create = true) { return (onDemandRead() || create) ? &onDemandWrite()->descendantAddedSignal : nullptr; };
 
 	void descendantRemovingSignal(const shared_ptr<Instance>& inst) { if(onDemandRead()) onDemandWrite()->descendantRemovingSignal(inst); }
-	rbx::signal<void(shared_ptr<Instance>)>* getOrCreateDescendantRemovingSignal(bool create = true) { return (onDemandRead() || create) ? &onDemandWrite()->descendantRemovingSignal : NULL; };
+	rbx::signal<void(shared_ptr<Instance>)>* getOrCreateDescendantRemovingSignal(bool create = true) { return (onDemandRead() || create) ? &onDemandWrite()->descendantRemovingSignal : nullptr; };
 
 	rbx::signal<void(shared_ptr<Instance>, shared_ptr<Instance>)> ancestryChangedSignal;
 	rbx::signal<void(const Reflection::PropertyDescriptor*)> propertyChangedSignal;
@@ -340,8 +340,8 @@ public:
 	inline Instance* getRootAncestor() {return parent ? parent->getRootAncestor() : this;}
 	inline const Instance* getRootAncestor() const {return parent ? parent->getRootAncestor() : this;}
 
-	static Instance* getRootAncestor(Instance* instance) { return instance ? instance->getRootAncestor() : NULL; }
-	static const Instance* getRootAncestor(const Instance* instance) { return instance ? instance->getRootAncestor() : NULL; }
+	static Instance* getRootAncestor(Instance* instance) { return instance ? instance->getRootAncestor() : nullptr; }
+	static const Instance* getRootAncestor(const Instance* instance) { return instance ? instance->getRootAncestor() : nullptr; }
 
 	bool getRobloxLocked() const { return robloxLocked; }
 	void setRobloxLocked(bool value);
@@ -369,7 +369,7 @@ public:
 
 	bool isAncestorOf(const Instance* descendant) const
 	{
-		if (descendant==NULL)
+		if (descendant==nullptr)
 			return false;
 		else if (descendant->getParent()==this)
 			return true;
@@ -380,13 +380,13 @@ public:
 	bool isAncestorOf2(shared_ptr<Instance> descendant) { return isAncestorOf(descendant.get()); }
 	bool isDescendantOf2(shared_ptr<Instance> ancestor) { return isDescendantOf(ancestor.get()); }
 
-	// isDescendantOf will return true if parent==NULL (consistent with the fact that a top-level Instance has parent==NULL)
+	// isDescendantOf will return true if parent==nullptr (consistent with the fact that a top-level Instance has parent==nullptr)
 	bool isDescendantOf(const Instance* ancestor) const
 	{
 		const Instance* parent = getParent();
 		if (ancestor==parent)
 			return true;
-		else if (parent!=NULL)
+		else if (parent!=nullptr)
 			return parent->isDescendantOf(ancestor);
 		else
 			return false;
@@ -398,10 +398,10 @@ public:
 		Instance* parent = getParent();
 		if (Type* parentType = this->fastDynamicCast<Type>(parent))
 			return parentType;
-		else if (parent!=NULL)
+		else if (parent!=nullptr)
 			return parent->findFirstAncestorOfType<Type>();
 		else
-			return NULL;
+			return nullptr;
 	}
 
 	size_t numChildren() const						{return children ? children->size() : 0;}
@@ -508,7 +508,7 @@ public:
 
 	const copy_on_write_ptr<Instances>& getChildren() const { return children; }
 
-	// Used for reflection. Note that it might return NULL (or an empty container)
+	// Used for reflection. Note that it might return nullptr (or an empty container)
 	// TODO - this is dangerous?  getting const children?
 	shared_ptr<const Instances> getChildren2() { return children.read(); }		
 
@@ -562,11 +562,11 @@ public:
 			Instances::const_iterator end = children->end();
 			for (Instances::const_iterator iter = children->begin(); iter!=end; ++iter) {
 				const C* c = fastDynamicCast<C>(iter->get());
-				if (c!=NULL)
+				if (c!=nullptr)
 					return c;
 			}
 		}
-		return NULL;
+		return nullptr;
 	}
 
 	template<class C>
@@ -585,7 +585,7 @@ public:
 					return iter->get();
 			}
 		}
-		return NULL;
+		return nullptr;
 	}
 
 	template<class C>
@@ -604,7 +604,7 @@ public:
 				}
 			}
 		}
-		return NULL;
+		return nullptr;
 	}
 
 	template<class C>
@@ -623,7 +623,7 @@ public:
 				}
 			}
 		}
-		return NULL;
+		return nullptr;
 	}
 
 	template<class C>
@@ -649,12 +649,12 @@ public:
 			return i1;
 
 		if (!i1)
-			return NULL;
+			return nullptr;
 		if (i1->isAncestorOf(i2))
 			return i1;
 		
 		if (!i2)
-			return NULL;
+			return nullptr;
 		if (i2->isAncestorOf(i1))
 			return i2;
 		
@@ -678,10 +678,10 @@ public:
 		return false;
 	}
 	bool canAddChild(const shared_ptr<Instance>& instance) const {
-		return (instance!=NULL) && canAddChild(instance.get());
+		return (instance!=nullptr) && canAddChild(instance.get());
 	}
 	bool canSetParent(const Instance* instance) const {
-		return (instance==NULL) || instance->canAddChild(this);
+		return (instance==nullptr) || instance->canAddChild(this);
 	}
 
 	template<typename Iter>

@@ -8,7 +8,7 @@ namespace RBX {
 
 void HeartbeatInstance::onServiceProviderHeartbeatInstance(ServiceProvider* oldProvider, ServiceProvider* newProvider)
 {
-	RBXASSERT((oldProvider == NULL) != (newProvider == NULL));
+	RBXASSERT((oldProvider == nullptr) != (newProvider == nullptr));
 
 	heartbeatConnection.disconnect();
 

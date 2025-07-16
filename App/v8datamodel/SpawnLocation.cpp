@@ -197,11 +197,11 @@ SpawnLocation* SpawnerService::GetSpawnLocation(Network::Player *p, std::string 
 
 	if (possibleLocations.empty()) 
 	{
-		return NULL;
+		return nullptr;
 	}
 	else
 	{
-		SpawnLocation *sl = NULL;
+		SpawnLocation *sl = nullptr;
 
 		if (!preferedSpawnName.empty())
 		{
@@ -215,7 +215,7 @@ SpawnLocation* SpawnerService::GetSpawnLocation(Network::Player *p, std::string 
 			}
 		}
 
-		if (sl == NULL) 
+		if (sl == nullptr) 
 		{
 			sl = possibleLocations[rand() % possibleLocations.size()];
 		}

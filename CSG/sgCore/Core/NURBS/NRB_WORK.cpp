@@ -12,11 +12,11 @@ BOOL Merge_Control_Vectors( lpVDIM ribs ){
 BOOL		 rt=FALSE;
 short    nump_new1, nump_new2;
 short 	 i=0, ii, r, k, s, m_max, m_tmp;
-short		 *K_max/*=NULL*/, *K_tmp=NULL;
-sgFloat	 *U_max/*=NULL*/, *U_tmp=NULL;
+short		 *K_max/*=nullptr*/, *K_tmp=nullptr;
+sgFloat	 *U_max/*=nullptr*/, *U_tmp=nullptr;
 SPLY_DAT sply;
-sgFloat 	 *U_new1=NULL, *u_new1/*=NULL*/, *U_new2=NULL, *u_new2=NULL;
-W_NODE   *P_new1=NULL, *P_new2=NULL;
+sgFloat 	 *U_new1=nullptr, *u_new1/*=nullptr*/, *U_new2=nullptr, *u_new2=nullptr;
+W_NODE   *P_new1=nullptr, *P_new2=nullptr;
 
     long RA_max = 0;
 
@@ -25,15 +25,15 @@ W_NODE   *P_new1=NULL, *P_new2=NULL;
 		RA_max+=sply.allocSizeFor_U;
 	}
 
-	// RA - if((U_max=(sgFloat*)SGMalloc(2*MAX_POINT_ON_SPLINE*sizeof(sgFloat))) == NULL) return FALSE;
-	// RA - if((K_max=(short *)SGMalloc(2*MAX_POINT_ON_SPLINE*sizeof(short))) 	== NULL) goto err;
-	// RA - if((U_tmp=(sgFloat*)SGMalloc(MAX_POINT_ON_SPLINE  *sizeof(sgFloat)))	== NULL) goto err;
-	// RA - if((K_tmp=(short *)SGMalloc(MAX_POINT_ON_SPLINE  *sizeof(short))) 	== NULL) goto err;
+	// RA - if((U_max=(sgFloat*)SGMalloc(2*MAX_POINT_ON_SPLINE*sizeof(sgFloat))) == nullptr) return FALSE;
+	// RA - if((K_max=(short *)SGMalloc(2*MAX_POINT_ON_SPLINE*sizeof(short))) 	== nullptr) goto err;
+	// RA - if((U_tmp=(sgFloat*)SGMalloc(MAX_POINT_ON_SPLINE  *sizeof(sgFloat)))	== nullptr) goto err;
+	// RA - if((K_tmp=(short *)SGMalloc(MAX_POINT_ON_SPLINE  *sizeof(short))) 	== nullptr) goto err;
 
-	if((U_max=(sgFloat*)SGMalloc(2*RA_max*sizeof(sgFloat))) == NULL) return FALSE;
-	if((K_max=(short *)SGMalloc(2*RA_max*sizeof(short))) 	== NULL) goto err;
-	if((U_tmp=(sgFloat*)SGMalloc(RA_max  *sizeof(sgFloat)))	== NULL) goto err;
-	if((K_tmp=(short *)SGMalloc(RA_max  *sizeof(short))) 	== NULL) goto err;
+	if((U_max=(sgFloat*)SGMalloc(2*RA_max*sizeof(sgFloat))) == nullptr) return FALSE;
+	if((K_max=(short *)SGMalloc(2*RA_max*sizeof(short))) 	== nullptr) goto err;
+	if((U_tmp=(sgFloat*)SGMalloc(RA_max  *sizeof(sgFloat)))	== nullptr) goto err;
+	if((K_tmp=(short *)SGMalloc(RA_max  *sizeof(short))) 	== nullptr) goto err;
 
 	i=0;
 //create Max control vector
@@ -53,14 +53,14 @@ W_NODE   *P_new1=NULL, *P_new2=NULL;
 //add knots into all ribs
 	ii=0;
 	while( read_elem( ribs, ii++, &sply )){ //read current rib
-		if( (P_new1=(W_NODE*)SGMalloc(sply.nump*sizeof(W_NODE))) == NULL) goto err;
-		if( (u_new1=(sgFloat*)SGMalloc(sply.nump*sizeof(sgFloat))) == NULL) goto err1;
+		if( (P_new1=(W_NODE*)SGMalloc(sply.nump*sizeof(W_NODE))) == nullptr) goto err;
+		if( (u_new1=(sgFloat*)SGMalloc(sply.nump*sizeof(sgFloat))) == nullptr) goto err1;
 		for( i=0; i<sply.nump; i++ ){
 			memcpy( &P_new1[i], &sply.P[i], sizeof(W_NODE) );
     	u_new1[i]=sply.u[i];
   	}
 
- 		if( (U_new1=(sgFloat*)SGMalloc(sply.numU*sizeof(sgFloat))) == NULL ) goto err1;
+ 		if( (U_new1=(sgFloat*)SGMalloc(sply.numU*sizeof(sgFloat))) == nullptr ) goto err1;
 		for( i=0; i<sply.numU; i++ ) U_new1[i]=sply.U[i];
 		nump_new1=sply.nump;
 
@@ -73,9 +73,9 @@ W_NODE   *P_new1=NULL, *P_new2=NULL;
 				nump_new2=0;
 				if( !Insert_Knot(  U_new1, P_new1,  u_new1,  nump_new1, sply.degree, U_max[i],
                           &U_new2, &P_new2, &u_new2, &nump_new2, r, k, s ) ) goto err1;
-				SGFree(U_new1); U_new1=U_new2; U_new2=NULL;
-				SGFree(P_new1); P_new1=P_new2; P_new2=NULL;
-				SGFree(u_new1); u_new1=u_new2; u_new2=NULL;
+				SGFree(U_new1); U_new1=U_new2; U_new2=nullptr;
+				SGFree(P_new1); P_new1=P_new2; P_new2=nullptr;
+				SGFree(u_new1); u_new1=u_new2; u_new2=nullptr;
 				nump_new1=nump_new2;
 			}
 		}
@@ -83,9 +83,9 @@ W_NODE   *P_new1=NULL, *P_new2=NULL;
 // modify spline structure
     if( !Modify_Spline_Str( &sply, U_new1, nump_new1+sply.degree+1, P_new1, u_new1,
     												nump_new1, sply.degree ) ) goto err1;
-		if( P_new1 ) SGFree( P_new1 ); P_new1=NULL;
-    if( U_new1 ) SGFree( U_new1 ); U_new1=NULL;
-    if( u_new1 ) SGFree( u_new1 ); u_new1=NULL;
+		if( P_new1 ) SGFree( P_new1 ); P_new1=nullptr;
+    if( U_new1 ) SGFree( U_new1 ); U_new1=nullptr;
+    if( u_new1 ) SGFree( u_new1 ); u_new1=nullptr;
 		if( !write_elem( ribs, ii-1, &sply )) goto err1;
 	}
 	rt=TRUE;

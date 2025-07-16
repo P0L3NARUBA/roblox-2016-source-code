@@ -84,9 +84,9 @@ void DocDockWidget::cleanup()
 	setFloating(false);
     
     // make sure we're not the ones deleting the viewer
-    setWidget(NULL);
+    setWidget(nullptr);
     QCoreApplication::removePostedEvents(m_Viewer);
-    m_Viewer->setParent(NULL);
+    m_Viewer->setParent(nullptr);
     m_Viewer->hide();
     m_MainWindow.removeDockWidget(this);
 }

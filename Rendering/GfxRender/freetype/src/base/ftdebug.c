@@ -110,7 +110,7 @@
   static const char*  ft_trace_toggles[trace_count + 1] =
   {
 #include FT_INTERNAL_TRACE_H
-    NULL
+    nullptr
   };
 
 #undef FT_TRACE_DEF
@@ -136,7 +136,7 @@
     if ( idx < max )
       return ft_trace_toggles[idx];
     else
-      return NULL;
+      return nullptr;
   }
 
 
@@ -256,7 +256,7 @@
   {
     FT_UNUSED( idx );
 
-    return NULL;
+    return nullptr;
   }
 
 

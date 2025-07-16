@@ -317,11 +317,11 @@ void FriendService::playerAdded(int userId)
 				}
 				else{
 					//All Guests, so they can't be friends
-					ProcessBulkFriendResponse(weak_from(this), userId, players, NULL, NULL);
+					ProcessBulkFriendResponse(weak_from(this), userId, players, nullptr, nullptr);
 				}
 			}
 			else{
-				ProcessBulkFriendResponse(weak_from(this), userId, players, NULL, NULL);
+				ProcessBulkFriendResponse(weak_from(this), userId, players, nullptr, nullptr);
 			}
 		}
 	}

@@ -134,7 +134,7 @@ void RootInstance::moveSafe(MegaDragger& megaDragger, Vector3 move, DRAG::MoveTy
 // Always joins on finish
 void RootInstance::moveSafe(PartArray& partArray, Vector3 move, DRAG::MoveType moveType)
 {
-	MegaDragger megaDragger(NULL, partArray, this);
+	MegaDragger megaDragger(nullptr, partArray, this);
 
 	moveSafe(megaDragger, move, moveType);
 }
@@ -423,7 +423,7 @@ void RootInstance::insert3dView(const Instances& instances, PromptMode promptMod
 	RBXASSERT(instances.size() > 0);
 
 	PartArray partArray;
-	if (positionHint != NULL) {
+	if (positionHint != nullptr) {
 		insertRemoteCharacterView(instances, partArray, positionHint, promptMode, suppressMove);
 	}
 	else if (Network::Players::findLocalCharacter(this)) {
@@ -620,7 +620,7 @@ void RootInstance::doInsertInstances(const Instances& instances,
 		if (!remaining->empty())
 		{
 			// 3.  If no requested parent, then it's the workspace
-			requestedParent = (requestedParent == NULL) ? this : requestedParent;
+			requestedParent = (requestedParent == nullptr) ? this : requestedParent;
 
 			// 4.  Do the insert
 			switch (insertMode)

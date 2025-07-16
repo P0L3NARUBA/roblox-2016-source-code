@@ -42,7 +42,7 @@ bool dxf_flat_flag    = false;
 bool dxf_blocks_flag  = true;
 bool dxf_binary_flag  = false;
 short  dxf_acad_version = 10;
-lpVDIM vd_dxf_layers = NULL;
+lpVDIM vd_dxf_layers = nullptr;
 
 char dxf_binary_tytle[] = {"AutoCAD Binary DXF\r\n\032"};
 char dxf_auto_name[] = {"SG_BLOCK"};
@@ -210,9 +210,9 @@ char *d, *c = dxfname;
 	strcpy(dxfname, sg_2_name);
 	if(strlen(dxfname) > MAXDXFBLOCKNAME) dxfname[MAXDXFBLOCKNAME] = 0;
 	while(*c){
-		if((d = strchr(rus_up, *c)) != NULL)
+		if((d = strchr(rus_up, *c)) != nullptr)
 			*c = rus_lat[(short)(d - rus_up)];
-		else if((d = strchr(rus_dn, *c)) != NULL)
+		else if((d = strchr(rus_dn, *c)) != nullptr)
 			*c = rus_lat[(short)(d - rus_dn)];
 		else if(!isascii(*c)) *c = '$';
 		else if(isalpha(*c)){
@@ -319,11 +319,11 @@ MATR					matr;
 	trian_post_face   = dxfout_post_face;
 
 	code = o_scan(hobj, &sc);
-	trian_put_face  = NULL;
-	trian_pre_np    = NULL;
-  trian_post_np   = NULL;
-  trian_pre_face  = NULL;
-  trian_post_face = NULL;
+	trian_put_face  = nullptr;
+	trian_pre_np    = nullptr;
+  trian_post_np   = nullptr;
+  trian_pre_face  = nullptr;
+  trian_post_face = nullptr;
   return (code == OSFALSE) ? FALSE : TRUE;
 }
 

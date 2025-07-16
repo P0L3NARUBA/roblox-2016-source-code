@@ -70,7 +70,7 @@ CURLcode Curl_addrinfo_callback(struct connectdata *conn,
                                 int status,
                                 struct Curl_addrinfo *ai)
 {
-  struct Curl_dns_entry *dns = NULL;
+  struct Curl_dns_entry *dns = nullptr;
   CURLcode result = CURLE_OK;
 
   conn->async.status = status;
@@ -123,7 +123,7 @@ CURLcode Curl_async_resolved(struct connectdata *conn,
 
   if(conn->async.dns) {
     conn->dns_entry = conn->async.dns;
-    conn->async.dns = NULL;
+    conn->async.dns = nullptr;
   }
 
   result = Curl_setup_conn(conn, protocol_done);

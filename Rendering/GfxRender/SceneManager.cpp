@@ -30,7 +30,7 @@
 
 LOGGROUP(Graphics)
 
-FASTFLAGVARIABLE(GlowEnabled, true)
+//FASTFLAGVARIABLE(GlowEnabled, true)
 
 FASTFLAG(RenderVR)
 
@@ -45,8 +45,8 @@ namespace RBX
 		{
 			float matrixData[256 * 12];
 
-			const Technique* cachedTechnique = NULL;
-			const void* cachedMatrixData = NULL;
+			const Technique* cachedTechnique = nullptr;
+			const void* cachedMatrixData = nullptr;
 
 			PIX_SCOPE(context, "Render: %s", dbgname);
 
@@ -57,7 +57,7 @@ namespace RBX
 				if (cachedTechnique != rop.technique)
 				{
 					cachedTechnique = rop.technique;
-					cachedMatrixData = NULL;
+					cachedMatrixData = nullptr;
 
 					rop.technique->apply(context);
 
@@ -123,9 +123,9 @@ namespace RBX
 			Vertex vertices[4] =
 			{
 				Vertex(Vector3(-1.0, -1.0, 0.0), Vector2(0.0, 0.0), Color4(1.0, 1.0, 1.0, 1.0)),
-				Vertex(Vector3(1.0, -1.0, 0.0), Vector2(1.0, 0.0), Color4(1.0, 1.0, 1.0, 1.0)),
+				Vertex(Vector3( 1.0, -1.0, 0.0), Vector2(1.0, 0.0), Color4(1.0, 1.0, 1.0, 1.0)),
 				Vertex(Vector3(-1.0,  1.0, 0.0), Vector2(0.0, 1.0), Color4(1.0, 1.0, 1.0, 1.0)),
-				Vertex(Vector3(1.0,  1.0, 0.0), Vector2(1.0, 1.0), Color4(1.0, 1.0, 1.0, 1.0)),
+				Vertex(Vector3( 1.0,  1.0, 0.0), Vector2(1.0, 1.0), Color4(1.0, 1.0, 1.0, 1.0)),
 			};
 
 			vb->upload(0, vertices, sizeof(vertices));
@@ -144,7 +144,7 @@ namespace RBX
 			{
 			}
 
-			bool valid() { return data.get() != NULL; }
+			bool valid() { return data.get() != nullptr; }
 
 			float getIntensity() const { return bloomIntensity; }
 
@@ -174,9 +174,11 @@ namespace RBX
 				}
 			}
 
-			void render(DeviceContext* context, Texture* source)
+			void render(DeviceContext* context, Texture* source, GlobalProcessingData* globalProcessingData)
 			{
 				float totalBloomSize = bloomSize + 1;
+
+				globalProcessingData->Parameters1 = Vector4(totalBloomSize, 0.0, 0.0, 0.0);
 
 				/* Initial Fetch */
 				{
@@ -187,8 +189,9 @@ namespace RBX
 
 					if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "InitialBloomDownsampleFS", BlendState::Mode_None, width, height))
 					{
-						float params1[4] = { 1.0 / float(width), 1.0 / float(height), totalBloomSize, 0.0 };
-						context->setConstant(program->getConstantHandle("Params1"), &params1[0], 1);
+						globalProcessingData->TextureSize_ViewportScale = Vector4(width, height, 1.0 / float(width), 1.0 / float(height));
+						context->updateGlobalProcessingData(&globalProcessingData, sizeof(globalProcessingData));
+
 						context->bindTexture(0, source, SamplerState(SamplerState::Filter_Point, SamplerState::Address_Border));
 
 						ScreenSpaceEffect::renderFullscreenEnd(context, visualEngine);
@@ -205,8 +208,9 @@ namespace RBX
 
 					if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "BloomDownsampleFS", BlendState::Mode_None, width, height))
 					{
-						float params1[4] = { 1.0 / float(width), 1.0 / float(height), totalBloomSize, 0.0 };
-						context->setConstant(program->getConstantHandle("Params1"), &params1[0], 1);
+						globalProcessingData->TextureSize_ViewportScale = Vector4(width, height, 1.0 / float(width), 1.0 / float(height));
+						context->updateGlobalProcessingData(&globalProcessingData, sizeof(globalProcessingData));
+
 						context->bindTexture(0, texture, SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Border));
 
 						ScreenSpaceEffect::renderFullscreenEnd(context, visualEngine);
@@ -225,8 +229,9 @@ namespace RBX
 
 					if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "BloomUpsampleFS", BlendState::Mode_Additive, width, height))
 					{
-						float params1[4] = { filterSize, filterSize * (width / height), totalBloomSize, 0.0 };
-						context->setConstant(program->getConstantHandle("Params1"), &params1[0], 1);
+						globalProcessingData->TextureSize_ViewportScale = Vector4(width, height, filterSize, filterSize * (width / height));
+						context->updateGlobalProcessingData(&globalProcessingData, sizeof(globalProcessingData));
+
 						context->bindTexture(0, data->bloomBuffers[i].get(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 
 						ScreenSpaceEffect::renderFullscreenEnd(context, visualEngine);
@@ -245,8 +250,9 @@ namespace RBX
 
 					if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "BloomUpsampleFS", BlendState::Mode_Additive, width, height))
 					{
-						float params1[4] = { filterSize, filterSize * (width / height), totalBloomSize, 0.0 };
-						context->setConstant(program->getConstantHandle("Params1"), &params1[0], 1);
+						globalProcessingData->TextureSize_ViewportScale = Vector4(width, height, filterSize, filterSize * (width / height));
+						context->updateGlobalProcessingData(&globalProcessingData, sizeof(globalProcessingData));
+						
 						context->bindTexture(0, data->bloomBuffers[0].get(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 
 						ScreenSpaceEffect::renderFullscreenEnd(context, visualEngine);
@@ -274,7 +280,7 @@ namespace RBX
 
 			Data* createData(unsigned width, unsigned height)
 			{
-				Data* data = new Data();
+				auto* data = new Data();
 
 				Device* device = visualEngine->getDevice();
 
@@ -316,11 +322,11 @@ namespace RBX
 			Blur(VisualEngine* visualEngine)
 				: visualEngine(visualEngine)
 				, blurError(false)
-				, blurStrength(8)
+				, blurStrength(5)
 			{
 			}
 
-			bool valid() const { return data != NULL; }
+			bool valid() const { return data != nullptr; }
 
 			void update(unsigned width, unsigned height, const SceneManager::PostProcessSettings& pps)
 			{
@@ -373,7 +379,7 @@ namespace RBX
 
 			Data* createData(unsigned width, unsigned height)
 			{
-				Data* data = new Data();
+				auto* data = new Data();
 
 				Device* device = visualEngine->getDevice();
 
@@ -415,7 +421,7 @@ namespace RBX
 
 			}
 
-			bool valid() const { return data != NULL; }
+			bool valid() const { return data != nullptr; }
 
 			void update(unsigned width, unsigned height, const SceneManager::PostProcessSettings& pps)
 			{
@@ -438,7 +444,7 @@ namespace RBX
 				}
 			}
 
-			void render(DeviceContext* context, Texture* source, Bloom* bloom)
+			void render(DeviceContext* context, Texture* source, Bloom* bloom, GlobalProcessingData* globalProcessingData)
 			{
 				std::string nameFS = "Tonemap";
 
@@ -455,12 +461,17 @@ namespace RBX
 
 				nameFS += "FS";
 
-				if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", nameFS.c_str(), BlendState::Mode_None, source->getWidth(), source->getHeight()))
+				int width = source->getWidth();
+				int height = source->getHeight();
+
+				globalProcessingData->TextureSize_ViewportScale = Vector4(width, height, 1.0 / float(width), 1.0 / float(height));
+				globalProcessingData->Exposure_Gamma_InverseGamma_Unused = Vector4(0.0, 2.2, 1.0 / 2.2, 0.0); // TODO: move this so that it's only updated when required, such as when exposure or gamma is updated
+				globalProcessingData->Parameters1 = Vector4(brightness, contrast + 1.0f, grayscaleLevel, bloomIntensity);
+				globalProcessingData->Parameters2 = Vector4(tintColor.r, tintColor.g, tintColor.b, 0.0);	
+				context->updateGlobalProcessingData(&globalProcessingData, sizeof(globalProcessingData));
+
+				if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", nameFS.c_str(), BlendState::Mode_None, width, height))
 				{
-					float params1[4] = { brightness, contrast + 1.0f, grayscaleLevel, bloomIntensity };
-					float params2[4] = { tintColor.r, tintColor.g, tintColor.b, 0 };
-					context->setConstant(program->getConstantHandle("Params1"), &params1[0], 1);
-					context->setConstant(program->getConstantHandle("Params2"), &params2[0], 1);
 					context->bindTexture(0, source, SamplerState(SamplerState::Filter_Point, SamplerState::Address_Clamp));
 
 					if (bloom) {
@@ -482,7 +493,7 @@ namespace RBX
 
 			Data* createData(unsigned width, unsigned height)
 			{
-				Data* data = new Data();
+				auto* data = new Data();
 
 				Device* device = visualEngine->getDevice();
 
@@ -529,9 +540,9 @@ namespace RBX
 				msaaResolvedFB = device->createFramebuffer(msaaResolved->getRenderbuffer(0, 0));*/
 			}
 
-			void renderResolve(DeviceContext* context, Framebuffer* multisampledSource, Framebuffer* target)
+			void renderResolve(DeviceContext* context, Framebuffer* source, Framebuffer* target)
 			{
-				context->resolveFramebuffer(multisampledSource, target, DeviceContext::Buffer_Color);
+				context->resolveFramebuffer(source, target, DeviceContext::Buffer_Color);
 			}
 
 			Framebuffer* getFramebuffer() const
@@ -600,7 +611,7 @@ namespace RBX
 			, sqMinPartDistance(FLT_MAX)
 			, skyEnabled(true)
 			, msaaError(false)
-			, postProcessSettings(PostProcessSettings())
+			//, postProcessSettings(PostProcessSettings())
 		{
 			Device* device = visualEngine->getDevice();
 
@@ -784,7 +795,7 @@ namespace RBX
 
 			context->updateGlobalConstants(&globalShaderData, sizeof(globalShaderData));
 
-			//SSAO* ssao = this->ssao->isActive() ? this->ssao.get() : NULL;
+			//SSAO* ssao = this->ssao->isActive() ? this->ssao.get() : nullptr;
 
 			/* Clear */
 			{
@@ -906,7 +917,7 @@ namespace RBX
 				RBXPROFILER_SCOPE("Render", "Bloom");
 				RBXPROFILER_SCOPE("GPU", "Bloom");
 
-				bloom->render(context, main->mainColor.get());
+				bloom->render(context, main->mainColor.get(), &globalProcessingData);
 			}
 
 			/* Tonemapping */
@@ -916,7 +927,7 @@ namespace RBX
 
 				context->bindFramebuffer(mainFramebuffer);
 
-				imageProcess->render(context, main->mainColor.get(), bloom.get());
+				imageProcess->render(context, main->mainColor.get(), bloom.get(), &globalProcessingData);
 			}
 
 			/* Screen UI */

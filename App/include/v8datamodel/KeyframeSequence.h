@@ -83,7 +83,7 @@ namespace RBX {
 		/*override*/ bool askSetParent(const Instance* instance) const { return false; }
 		/*override*/ bool askAddChild(const Instance* instance) const 
 		{ 
-			return Instance::fastDynamicCast<Keyframe>(instance)  != NULL; 
+			return Instance::fastDynamicCast<Keyframe>(instance)  != nullptr; 
 		}
 
 		void apply(std::vector<PoseAccumulator>& jointposes, double lastkeyframetime, double keyframetime, float trackweight) const;

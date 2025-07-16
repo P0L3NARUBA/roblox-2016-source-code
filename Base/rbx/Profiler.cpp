@@ -97,7 +97,7 @@ static void MicroProfileDebugPrintf(const char* format, ...)
 #ifdef RBX_PLATFORM_DURANGO
 #define MICROPROFILE_WEBSERVER_PORT 4600
 #define MICROPROFILE_CONTEXT_SWITCH_TRACE 0
-#define getenv(name) NULL
+#define getenv(name) nullptr
 #endif
 
 #if defined(_WIN32)

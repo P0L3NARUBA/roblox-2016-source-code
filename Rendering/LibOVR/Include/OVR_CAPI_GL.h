@@ -51,7 +51,7 @@ typedef union ovrGLTexture_s
 /// \param[in]  format Specifies the texture format.
 /// \param[in]  width Specifies the requested texture width.
 /// \param[in]  height Specifies the requested texture height.
-/// \param[out] outTextureSet Specifies the created ovrSwapTextureSet, which will be valid upon a successful return value, else it will be NULL.
+/// \param[out] outTextureSet Specifies the created ovrSwapTextureSet, which will be valid upon a successful return value, else it will be nullptr.
 ///             This texture set must be eventually destroyed via ovr_DestroySwapTextureSet before destroying the HMD with ovr_Destroy.
 ///
 /// \return Returns an ovrResult indicating success or failure. In the case of failure, use 
@@ -81,7 +81,7 @@ OVR_PUBLIC_FUNCTION(ovrResult) ovr_CreateSwapTextureSetGL(ovrSession session, GL
 /// \param[in]  format Specifies the texture format.
 /// \param[in]  width Specifies the requested texture width.
 /// \param[in]  height Specifies the requested texture height.
-/// \param[out] outMirrorTexture Specifies the created ovrSwapTexture, which will be valid upon a successful return value, else it will be NULL.
+/// \param[out] outMirrorTexture Specifies the created ovrSwapTexture, which will be valid upon a successful return value, else it will be nullptr.
 ///             This texture must be eventually destroyed via ovr_DestroyMirrorTexture before destroying the HMD with ovr_Destroy.
 ///
 /// \return Returns an ovrResult indicating success or failure. In the case of failure, use 

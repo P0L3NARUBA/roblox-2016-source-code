@@ -18,7 +18,7 @@ BOOL	begin_tri_biand(lpTRI_BIAND trb)
 
 	if ( !np_init_list(&trb->list_str)) return FALSE;
 	if ( 0 ==(trb->indv = (short*)SGMalloc(MAXINDV*sizeof(*trb->indv))) ) {
-		np_end_of_put(&trb->list_str,NP_CANCEL,0,NULL); //  
+		np_end_of_put(&trb->list_str,NP_CANCEL,0,nullptr); //  
 		np_handler_err(NP_NO_HEAP);
 		return FALSE;
 	}
@@ -393,8 +393,8 @@ BOOL	end_tri_biand(lpTRI_BIAND trb, lpLISTH listho, lpNPTRP trp)
 		free_vdim(&trb->vdtri);
 		free_vdim(&trb->coor);
 		if ( trb->indv ) SGFree(trb->indv);
-		np_end_of_put(&trb->list_str,NP_CANCEL,0,NULL); //  
-		trb->indv = NULL;
+		np_end_of_put(&trb->list_str,NP_CANCEL,0,nullptr); //  
+		trb->indv = nullptr;
 		return TRUE;
 	}
 	cod = np_mesh3v(&trb->list_str, trp, &trb->ident, &trb->coor, c_smooth_angle,
@@ -408,7 +408,7 @@ BOOL	end_tri_biand(lpTRI_BIAND trb, lpLISTH listho, lpNPTRP trp)
 	if ( hobj ) 	attach_item_tail(listho,hobj);
 	return cod;
 err:
-	np_end_of_put(&trb->list_str,NP_CANCEL,0,NULL); //  
+	np_end_of_put(&trb->list_str,NP_CANCEL,0,nullptr); //  
 	return FALSE;
 }
 

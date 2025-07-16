@@ -46,7 +46,7 @@ public:
    ir_function_inlining_visitor()
    {
       progress = false;
-	  current_function = NULL;
+	  current_function = nullptr;
    }
 
    virtual ~ir_function_inlining_visitor()
@@ -67,7 +67,7 @@ public:
    }
    virtual ir_visitor_status visit_leave(ir_function_signature *sig)
    {
-	   this->current_function = NULL;
+	   this->current_function = nullptr;
 	   return ir_hierarchical_visitor::visit_leave(sig);
    }
 
@@ -97,8 +97,8 @@ replace_return_with_assignment(ir_instruction *ir, void *data)
 
    if (ret) {
       if (ret->value) {
-	 ir_rvalue *lhs = orig_deref->clone(ctx, NULL);
-	 ret->replace_with(new(ctx) ir_assignment(lhs, ret->value, NULL));
+	 ir_rvalue *lhs = orig_deref->clone(ctx, nullptr);
+	 ret->replace_with(new(ctx) ir_assignment(lhs, ret->value, nullptr));
       } else {
 	 /* un-valued return has to be the last return, or we shouldn't
 	  * have reached here. (see can_inline()).
@@ -140,7 +140,7 @@ ir_call::generate_inline(ir_instruction *next_ir)
 	  * the location information, which an assignment of an opaque
 	  * variable wouldn't.  Fix it up below.
 	  */
-	 parameters[i] = NULL;
+	 parameters[i] = nullptr;
       } else {
 	 parameters[i] = sig_param->clone(ctx, ht);
 	 parameters[i]->data.mode = ir_var_auto;
@@ -166,7 +166,7 @@ ir_call::generate_inline(ir_instruction *next_ir)
 	 ir_assignment *assign;
 
 	 assign = new(ctx) ir_assignment(new(ctx) ir_dereference_variable(parameters[i]),
-					 param, NULL);
+					 param, nullptr);
 	 next_ir->insert_before(assign);
       }
 
@@ -216,9 +216,9 @@ ir_call::generate_inline(ir_instruction *next_ir)
 			    sig_param->data.mode == ir_var_function_inout)) {
 	 ir_assignment *assign;
 
-	 assign = new(ctx) ir_assignment(param->clone(ctx, NULL)->as_rvalue(),
+	 assign = new(ctx) ir_assignment(param->clone(ctx, nullptr)->as_rvalue(),
 					 new(ctx) ir_dereference_variable(parameters[i]),
-					 NULL);
+					 nullptr);
 	 next_ir->insert_before(assign);
       }
 
@@ -314,7 +314,7 @@ ir_variable_replacement_visitor::replace_deref(ir_dereference **deref)
 {
    ir_dereference_variable *deref_var = (*deref)->as_dereference_variable();
    if (deref_var && deref_var->var == this->orig) {
-      *deref = this->repl->clone(ralloc_parent(*deref), NULL);
+      *deref = this->repl->clone(ralloc_parent(*deref), nullptr);
    }
 }
 

@@ -74,7 +74,7 @@ btSimplePair* btHashedSimplePairCache::findPair(int indexA, int indexB)
 
 	if (hash >= m_hashTable.size())
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	int index = m_hashTable[hash];
@@ -85,7 +85,7 @@ btSimplePair* btHashedSimplePairCache::findPair(int indexA, int indexB)
 
 	if (index == BT_SIMPLE_NULL_PAIR)
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	btAssert(index < m_overlappingPairArray.size());
@@ -143,7 +143,7 @@ btSimplePair* btHashedSimplePairCache::internalAddPair(int indexA, int indexB)
 
 
 	btSimplePair* pair = internalFindPair(indexA, indexB, hash);
-	if (pair != NULL)
+	if (pair != nullptr)
 	{
 		return pair;
 	}
@@ -184,7 +184,7 @@ void* btHashedSimplePairCache::removeOverlappingPair(int indexA, int indexB)
 	int	hash = static_cast<int>(getHash(static_cast<unsigned int>(indexA),static_cast<unsigned int>(indexB)) & (m_overlappingPairArray.capacity()-1));
 
 	btSimplePair* pair = internalFindPair(indexA, indexB, hash);
-	if (pair == NULL)
+	if (pair == nullptr)
 	{
 		return 0;
 	}

@@ -15,9 +15,9 @@ void MultiJoint::init(int numBreaking)
 	numBreakingConnectors = numBreaking;
 	numConnector = 0;
 	for (int j = 0; j < 4; j++) {
-		point[j*2] = NULL;
-		point[j*2+1] = NULL;
-		connector[j] = NULL;
+		point[j*2] = nullptr;
+		point[j*2+1] = nullptr;
+		connector[j] = nullptr;
 	}
 }
 
@@ -39,7 +39,7 @@ MultiJoint::MultiJoint(
 
 MultiJoint::~MultiJoint() 
 {
-	RBXASSERT(connector[0] == NULL);
+	RBXASSERT(connector[0] == nullptr);
 	RBXASSERT(numConnector == 0);
 }
 
@@ -71,7 +71,7 @@ void MultiJoint::addToMultiJoint(Point* point0, Point* point1, Connector* _conne
 Point* MultiJoint::getPoint(int id)
 {
 	RBXASSERT(id < 8);
-	RBXASSERT(point[id] != NULL);
+	RBXASSERT(point[id] != nullptr);
 	RBXASSERT(point[id]->getBody() == getPrimitive(id % 2)->getBody());
 	return point[id];
 }
@@ -79,7 +79,7 @@ Point* MultiJoint::getPoint(int id)
 Connector* MultiJoint::getConnector(int id)
 {
 	RBXASSERT(id < 4);
-	RBXASSERT(connector[id] != NULL);
+	RBXASSERT(connector[id] != nullptr);
 	return connector[id];
 }
 
@@ -139,9 +139,9 @@ void MultiJoint::removeFromKernel()
 		getKernel()->deletePoint(point[i*2]);
 		getKernel()->deletePoint(point[i*2+1]);
 
-		point[i*2] = NULL;
-		point[i*2+1] = NULL;
-		connector[i] = NULL;
+		point[i*2] = nullptr;
+		point[i*2+1] = nullptr;
+		connector[i] = nullptr;
 	}
 
 	numConnector = 0;

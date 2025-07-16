@@ -11,7 +11,7 @@ namespace RBX {
 const char* const sTerrainRegion = "TerrainRegion";
 
 REFLECTION_BEGIN();
-static Reflection::PropDescriptor<TerrainRegion, Vector3> prop_Extents("SizeInCells", category_Data, &TerrainRegion::getSizeInCells, NULL, Reflection::PropertyDescriptor::UI);
+static Reflection::PropDescriptor<TerrainRegion, Vector3> prop_Extents("SizeInCells", category_Data, &TerrainRegion::getSizeInCells, nullptr, Reflection::PropertyDescriptor::UI);
 
 static Reflection::PropDescriptor<TerrainRegion, Vector3int16> prop_ExtentsMin("ExtentsMin", category_Data, &TerrainRegion::getExtentsMin, &TerrainRegion::setExtentsMin, Reflection::PropertyDescriptor::STREAMING);
 static Reflection::PropDescriptor<TerrainRegion, Vector3int16> prop_ExtentsMax("ExtentsMax", category_Data, &TerrainRegion::getExtentsMax, &TerrainRegion::setExtentsMax, Reflection::PropertyDescriptor::STREAMING);
@@ -20,7 +20,7 @@ static Reflection::PropDescriptor<TerrainRegion, BinaryString> prop_GridV3("Grid
 
 static Reflection::PropDescriptor<TerrainRegion, BinaryString> desc_SmoothGrid("SmoothGrid", category_Data, &TerrainRegion::getPackagedSmoothGrid, &TerrainRegion::setPackagedSmoothGrid, Reflection::PropertyDescriptor::CLUSTER, Security::None);
 
-static Reflection::PropDescriptor<TerrainRegion, bool> prop_IsSmooth("IsSmooth", category_Data, &TerrainRegion::isSmooth, NULL, Reflection::PropertyDescriptor::UI, Security::None);
+static Reflection::PropDescriptor<TerrainRegion, bool> prop_IsSmooth("IsSmooth", category_Data, &TerrainRegion::isSmooth, nullptr, Reflection::PropertyDescriptor::UI, Security::None);
 
 static Reflection::BoundFuncDesc<TerrainRegion, void(void)> func_convertToSmooth(&TerrainRegion::convertToSmooth, "ConvertToSmooth", Security::Plugin);
 REFLECTION_END();

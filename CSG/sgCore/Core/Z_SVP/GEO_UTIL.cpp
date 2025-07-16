@@ -3,7 +3,7 @@
 /*
 	Най поек ок p на пм, поод еез ок l1,l2
 
-	Возваае: NULL - ел ок l1,l2 овпада
+	Возваае: nullptr - ел ок l1,l2 овпада
 										 Сообене не вдае!
 							лк на ком ок - в номалном лае
 	Меод:
@@ -20,7 +20,7 @@ lpD_POINT projection_on_line(lpD_POINT p,
 
 	dpoint_sub(l2, l1, &ll);
 	alpha = dskalar_product(&ll, &ll);
-	if (alpha < eps_d) return NULL;
+	if (alpha < eps_d) return nullptr;
 	alpha = (dskalar_product(&ll, p) - dskalar_product(&ll, l1)) / alpha;
 	return dpoint_parametr(l1, l2, alpha, pp);
 }

@@ -438,7 +438,7 @@ void Lighting::setFogStart_deprecated(float value) {
 void Lighting::replaceSky(Sky* newSky) {
 	while (Sky* oldSky = this->findFirstChildOfType<Sky>())
 	{
-		oldSky->setParent(NULL);
+		oldSky->setParent(nullptr);
 	}
 	newSky->setParent(this);
 }

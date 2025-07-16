@@ -20,16 +20,16 @@ static rbx::atomic<int> gBodyStateIndex;
 
 Body::Body()
 : connectorUseCount(0) 
-, root(NULL)
-, link(NULL)
+, root(nullptr)
+, link(nullptr)
 , leafBodyIndex(-1)
 , canThrottle(true)
-, simBody(NULL)
+, simBody(nullptr)
 , moment(Matrix3::identity())
 , mass(0.0f)
 , cofmOffset(Vector3::zero())
 , stateIndex(getNextStateIndex())
-, cofm(NULL)
+, cofm(nullptr)
 , uid( 0 )
 {
 	root = this;
@@ -46,10 +46,10 @@ Body::~Body()
 	if( cofm )
 	{
 		delete cofm;
-		cofm = NULL;
+		cofm = nullptr;
 	}
 	delete simBody;
-	simBody = NULL;
+	simBody = nullptr;
 
 	RBXASSERT(!cofm);
 	RBXASSERT(root == this);
@@ -136,8 +136,8 @@ void Body::onParentChanging()
 	RBXASSERT_VERY_FAST(!getParent() || (!(getParent()->getConstRootSimBody()->isInKernel())));	// confirm not happening to bodies in kernel
 
 	if (link) {
-		link->setBody(NULL);						// link must always set parent first, then 
-		link = NULL;
+		link->setBody(nullptr);						// link must always set parent first, then 
+		link = nullptr;
 	}
 
 	if (getParent()) {
@@ -148,7 +148,7 @@ void Body::onParentChanging()
 		RBXASSERT(root = this);
 		RBXASSERT(simBody);
 		delete simBody;
-		simBody = NULL;
+		simBody = nullptr;
 	}
 }
 
@@ -191,7 +191,7 @@ void Body::refreshCofm()
 	else {		// doesn't need Cofm
 		if (cofm) {
 			delete cofm;
-			cofm = NULL;
+			cofm = nullptr;
 		}
 	}
 }
@@ -209,7 +209,7 @@ void Body::setCofmOffset(const Vector3& _centerOfMassInBody)
 
 void Body::updatePV()
 {
-	RBXASSERT((getParent() != NULL) != (getRoot() == this));
+	RBXASSERT((getParent() != nullptr) != (getRoot() == this));
 
 	if (!getParent() || (stateIndex == getRoot()->getStateIndex())) {
 		;
@@ -255,8 +255,8 @@ void Body::setMeInParent(const CoordinateFrame& _meInParent)
 
 	if (link) {
 		RBXASSERT(0);
-		link->setBody(NULL);
-		link = NULL;
+		link->setBody(nullptr);
+		link = nullptr;
 	}
 
 	if (getParent()) {
@@ -274,7 +274,7 @@ void Body::setMeInParent(Link* _link)
 	RBXASSERT(_link);
 
 	if (link && (link != _link)) {
-		link->setBody(NULL);
+		link->setBody(nullptr);
 	}
 
 	if (getParent()) {

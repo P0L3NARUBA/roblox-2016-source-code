@@ -38,8 +38,8 @@ static Reflection::EventDesc<SkateboardPlatform, void(shared_ptr<Instance>, shar
 static Reflection::EventDesc<SkateboardPlatform, void(shared_ptr<Instance>)> event_Unequipped(&SkateboardPlatform::unequippedSignal, "Unequipped", "humanoid");
 static Reflection::EventDesc<SkateboardPlatform, void(shared_ptr<Instance>)> dep_Unequipped(&SkateboardPlatform::unequippedSignal, "unequipped", "humanoid", Security::None, Reflection::Descriptor::Attributes::deprecated(event_Unequipped));
 
-static Reflection::RefPropDescriptor<SkateboardPlatform, SkateboardController> prop_Controller("Controller", "Control", &SkateboardPlatform::getController, NULL, Reflection::PropertyDescriptor::UI);
-static Reflection::RefPropDescriptor<SkateboardPlatform, Humanoid> prop_ControllingHumanoid("ControllingHumanoid", "Control", &SkateboardPlatform::getControllingHumanoid, NULL, Reflection::PropertyDescriptor::UI);
+static Reflection::RefPropDescriptor<SkateboardPlatform, SkateboardController> prop_Controller("Controller", "Control", &SkateboardPlatform::getController, nullptr, Reflection::PropertyDescriptor::UI);
+static Reflection::RefPropDescriptor<SkateboardPlatform, Humanoid> prop_ControllingHumanoid("ControllingHumanoid", "Control", &SkateboardPlatform::getControllingHumanoid, nullptr, Reflection::PropertyDescriptor::UI);
 
 static Reflection::BoundFuncDesc<SkateboardPlatform, void(Vector3)> desc_ApplySpecificImpulse(&SkateboardPlatform::applySpecificImpulse, "ApplySpecificImpulse", "impulseWorld", Security::None);
 
@@ -63,10 +63,10 @@ EnumDesc<SkateboardPlatform::MoveState>::EnumDesc()
 const char* const sSkateboardPlatform = "SkateboardPlatform";
 
 SkateboardPlatform::SkateboardPlatform() 
-: world(NULL)
+: world(nullptr)
 , moveState(STOPPED)
-, motor6D(NULL)
-, humanoid(NULL)
+, motor6D(nullptr)
+, humanoid(nullptr)
 , throttle(0)
 , steer(0)
 , turnRate(0)
@@ -84,8 +84,8 @@ SkateboardPlatform::SkateboardPlatform()
 
 {
 	setName(sSkateboardPlatform);
-	RBXASSERT(Edge::getPrimitive(0) == NULL);
-	RBXASSERT(Edge::getPrimitive(1) == NULL);
+	RBXASSERT(Edge::getPrimitive(0) == nullptr);
+	RBXASSERT(Edge::getPrimitive(1) == nullptr);
 
 	createPlatformMotor6DSignal.connect(boost::bind(static_cast<void (SkateboardPlatform::*)(shared_ptr<Instance>)>(&SkateboardPlatform::createPlatformMotor6DInternal), this, _1));
 	destroyPlatformMotor6DSignal.connect(boost::bind(&SkateboardPlatform::findAndDestroyPlatformMotor6DInternal, this));
@@ -94,9 +94,9 @@ SkateboardPlatform::SkateboardPlatform()
 
 SkateboardPlatform::~SkateboardPlatform() 
 {
-	RBXASSERT(world == NULL);
-	RBXASSERT(Edge::getPrimitive(0) == NULL);
-	RBXASSERT(Edge::getPrimitive(1) == NULL);
+	RBXASSERT(world == nullptr);
+	RBXASSERT(Edge::getPrimitive(0) == nullptr);
+	RBXASSERT(Edge::getPrimitive(1) == nullptr);
 }
 
 
@@ -108,7 +108,7 @@ void SkateboardPlatform::onPlatformStandingChanged(bool platformed, Humanoid* hu
 	// 1. Clear out the controller
 	if(myController)
 	{
-		myController->setParent(NULL);
+		myController->setParent(nullptr);
 		myController.reset();
 	}
 
@@ -192,7 +192,7 @@ void SkateboardPlatform::onLocalNotPlatformStanding(Humanoid* humanoid)
 		dataModel->submitTask(boost::bind(&delayedReparentToWorkspace, weak_from(board), weak_from(figure)), DataModelJob::Write);
 	}
 
-	this->humanoid = NULL;
+	this->humanoid = nullptr;
 }
 
 
@@ -211,15 +211,15 @@ void SkateboardPlatform::onAncestorChanged(const AncestorChanged& event)
 	{
 		if(myController)
 		{
-			myController->setParent(NULL); // should we re-link? 
+			myController->setParent(nullptr); // should we re-link? 
 			myController.reset();
-			humanoid = NULL;
+			humanoid = nullptr;
 		}
 
 		if (world) {
 			world->removeJoint(this);
-			setPrimitive(0, NULL);
-			setPrimitive(1, NULL);
+			setPrimitive(0, nullptr);
+			setPrimitive(1, nullptr);
 		}
 
 		world = newWorld;
@@ -266,7 +266,7 @@ void SkateboardPlatform::countGroundedWheels()
 		for(int i = 0; i < wheels.size(); ++i)
 		{
 			RBX::RbxRay caster( wheels[i].joint->getJointWorldCoord(1).translation, downforceDir* 2.0f); // search 2 stud
-			Primitive* hitPrim = NULL;
+			Primitive* hitPrim = nullptr;
 			geom->getHitLocationFilterStairs(humanoid->getParent(), caster, &hitPrim);
 			if(hitPrim)
 			{
@@ -663,7 +663,7 @@ void SkateboardPlatform::findAndDestroyPlatformMotor6D()
 		caster.origin = torsoCoord.translation + originOnTorso;
 		caster.direction = torsoLook * ladderSearchDistance();
 
-		Primitive* hitPrim = NULL;
+		Primitive* hitPrim = nullptr;
 		Vector3 hitLoc = geom->getHitLocationFilterStairs(humanoid->getParent(), caster, &hitPrim);
 
 		// make trusses climbable.

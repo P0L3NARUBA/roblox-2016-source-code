@@ -71,7 +71,7 @@ static int doargs(int argc, char* argv[])
 {
  int i;
  int version=0;
- if (argv[0]!=NULL && *argv[0]!=0) progname=argv[0];
+ if (argv[0]!=nullptr && *argv[0]!=0) progname=argv[0];
  for (i=1; i<argc; i++)
  {
   if (*argv[i]!='-')			/* end of options; keep it */
@@ -89,8 +89,8 @@ static int doargs(int argc, char* argv[])
   else if (IS("-o"))			/* output file */
   {
    output=argv[++i];
-   if (output==NULL || *output==0) usage(LUA_QL("-o") " needs argument");
-   if (IS("-")) output=NULL;
+   if (output==nullptr || *output==0) usage(LUA_QL("-o") " needs argument");
+   if (IS("-")) output=nullptr;
   }
   else if (IS("-p"))			/* parse only */
    dumping=0;
@@ -165,15 +165,15 @@ static int pmain(lua_State* L)
  if (!lua_checkstack(L,argc)) fatal("too many input files");
  for (i=0; i<argc; i++)
  {
-  const char* filename=IS("-") ? NULL : argv[i];
+  const char* filename=IS("-") ? nullptr : argv[i];
   if (luaL_loadfile(L,filename)!=0) fatal(lua_tostring(L,-1));
  }
  f=combine(L,argc);
  if (listing) luaU_print(f,listing>1);
  if (dumping)
  {
-  FILE* D= (output==NULL) ? stdout : fopen(output,"wb");
-  if (D==NULL) cannot("open");
+  FILE* D= (output==nullptr) ? stdout : fopen(output,"wb");
+  if (D==nullptr) cannot("open");
   lua_lock(L);
   luaU_dump(L,f,writer,D,stripping);
   lua_unlock(L);
@@ -191,7 +191,7 @@ int main(int argc, char* argv[])
  argc-=i; argv+=i;
  if (argc<=0) usage("no input files given");
  L=lua_open();
- if (L==NULL) fatal("not enough memory for state");
+ if (L==nullptr) fatal("not enough memory for state");
  s.argc=argc;
  s.argv=argv;
  if (lua_cpcall(L,pmain,&s)!=0) fatal(lua_tostring(L,-1));

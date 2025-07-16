@@ -438,7 +438,7 @@ TIntermAggregate* ir_set_aggregate_op(TIntermNode* node, TOperator op, TSourceLo
 // Convert one type to another.
 //
 // Returns the node representing the conversion, which could be the same
-// node passed in if no conversion was needed. Returns NULL if conversion can't be done.
+// node passed in if no conversion was needed. Returns nullptr if conversion can't be done.
 TIntermTyped* ir_add_conversion(TOperator op, const TType& type, TIntermTyped* node, TInfoSink& infoSink)
 {
     if (!node)
@@ -580,7 +580,7 @@ TIntermDeclaration* ir_add_declaration(TIntermSymbol* symbol, TIntermTyped* init
 		TIntermTyped* t = ir_add_assign(EOpAssign, symbol, initializer, line, ctx);
 		if (!t) {
 			delete decl;
-			return NULL;
+			return nullptr;
 		}
 		decl->getDeclaration() = t;
 	}
@@ -828,7 +828,7 @@ TIntermTyped* ir_add_const_vector_swizzle(const TVectorFields& fields, TIntermTy
 {
 	TIntermConstant* constNode = node->getAsConstant();
 	if (!constNode)
-		return NULL;
+		return nullptr;
 	
 	TIntermConstant* res = ir_add_constant(node->getType(), line);
 	for (int i = 0; i < fields.num; ++i)
@@ -854,7 +854,7 @@ TIntermTyped* ir_add_vector_swizzle(TVectorFields& fields, TIntermTyped* arg, TS
 			return res;
 	}
 		
-	TIntermTyped* res = NULL;
+	TIntermTyped* res = nullptr;
 	if (fields.num == 1)
 	{
 		TIntermConstant* index = ir_add_constant(TType(EbtInt, EbpUndefined, EvqConst), lineIndex);

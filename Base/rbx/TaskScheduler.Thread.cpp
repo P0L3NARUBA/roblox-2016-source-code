@@ -130,7 +130,7 @@ TaskScheduler::StepResult TaskScheduler::Thread::runJob()
 	
 	TaskScheduler::StepResult result;
 	++taskScheduler->runningJobCount;
-	RBXASSERT(currentJob.get()==NULL);
+	RBXASSERT(currentJob.get()==nullptr);
 	currentJob.reset(job.get());
 
 	// No need for exception handling. If an exception is thrown here
@@ -139,7 +139,7 @@ TaskScheduler::StepResult TaskScheduler::Thread::runJob()
 	result = job->step(stats);
 
 	RBXASSERT(currentJob.get()==job.get());
-	currentJob.reset(NULL);
+	currentJob.reset(nullptr);
 	--taskScheduler->runningJobCount;
 
 	job->postStep(result);

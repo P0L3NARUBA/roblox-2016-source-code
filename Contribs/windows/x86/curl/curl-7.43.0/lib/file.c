@@ -263,7 +263,7 @@ static CURLcode file_done(struct connectdata *conn,
 
   if(file) {
     Curl_safefree(file->freepath);
-    file->path = NULL;
+    file->path = nullptr;
     if(file->fd != -1)
       close(file->fd);
     file->fd = -1;
@@ -280,7 +280,7 @@ static CURLcode file_disconnect(struct connectdata *conn,
 
   if(file) {
     Curl_safefree(file->freepath);
-    file->path = NULL;
+    file->path = nullptr;
     if(file->fd != -1)
       close(file->fd);
     file->fd = -1;

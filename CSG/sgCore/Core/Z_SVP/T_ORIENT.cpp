@@ -25,7 +25,7 @@ short test_orient_path(hOBJ hpath, lpD_PLANE plane)
 	if (!apr_path(&vdim, hpath)) return -2;
 	if (!begin_rw(&vdim, 0)) goto err;
 	for (j = 0; j < vdim.num_elem; j++) {
-		if ( (lpmnode = (lpMNODE)get_next_elem(&vdim)) == NULL) goto err1;
+		if ( (lpmnode = (lpMNODE)get_next_elem(&vdim)) == nullptr) goto err1;
 		o_hcncrd(m, &lpmnode->p, &ep);
 		if (j) s += (bp.x * ep.y - ep.x * bp.y);
 		dpoint_copy(&bp, &ep);

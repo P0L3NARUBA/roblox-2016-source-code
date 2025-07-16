@@ -62,13 +62,13 @@ _mesa_glsl_parse_state::_mesa_glsl_parse_state(struct gl_context *_ctx,
    assert(stage < MESA_SHADER_STAGES);
    this->stage = stage;
 
-   this->scanner = NULL;
+   this->scanner = nullptr;
    this->translation_unit.make_empty();
    this->symbols = new(mem_ctx) glsl_symbol_table;
 
    this->info_log = ralloc_strdup(mem_ctx, "");
    this->error = false;
-   this->loop_nesting_ast = NULL;
+   this->loop_nesting_ast = nullptr;
 
    this->struct_specifier_depth = 0;
 
@@ -137,11 +137,11 @@ _mesa_glsl_parse_state::_mesa_glsl_parse_state(struct gl_context *_ctx,
    this->Const.MaxFragmentImageUniforms = ctx->Const.Program[MESA_SHADER_FRAGMENT].MaxImageUniforms;
    this->Const.MaxCombinedImageUniforms = ctx->Const.MaxCombinedImageUniforms;
 
-   this->current_function = NULL;
-   this->toplevel_ir = NULL;
+   this->current_function = nullptr;
+   this->toplevel_ir = nullptr;
    this->found_return = false;
    this->all_invariant = false;
-   this->user_structures = NULL;
+   this->user_structures = nullptr;
    this->num_user_structures = 0;
 
    /* Populate the list of supported GLSL versions */
@@ -194,7 +194,7 @@ _mesa_glsl_parse_state::_mesa_glsl_parse_state(struct gl_context *_ctx,
    this->supported_version_string = supported;
 
    if (ctx->Const.ForceGLSLExtensionsWarn)
-      _mesa_glsl_process_extension("all", NULL, "warn", NULL, this);
+      _mesa_glsl_process_extension("all", nullptr, "warn", nullptr, this);
 
    this->default_uniform_qualifier = new(this) ast_type_qualifier;
    this->default_uniform_qualifier->flags.q.shared = 1;
@@ -274,7 +274,7 @@ _mesa_glsl_parse_state::check_version(unsigned required_glsl_version,
  * \param version is the integer that follows the #version token.
  *
  * \param ident is a string identifier that follows the integer, if any is
- * present.  Otherwise NULL.
+ * present.  Otherwise nullptr.
  */
 void
 _mesa_glsl_parse_state::process_version_directive(YYLTYPE *locp, int version,
@@ -386,7 +386,7 @@ _mesa_glsl_msg(const YYLTYPE *locp, _mesa_glsl_parse_state *state,
    bool error = (type == MESA_DEBUG_TYPE_ERROR);
    GLuint msg_id = 0;
 
-   assert(state->info_log != NULL);
+   assert(state->info_log != nullptr);
 
    /* Get the offset that the new message will be written to. */
    int msg_offset = strlen(state->info_log);
@@ -619,7 +619,7 @@ void _mesa_glsl_extension::set_flags(_mesa_glsl_parse_state *state,
 
 /**
  * Find an extension by name in _mesa_glsl_supported_extensions.  If
- * the name is not found, return NULL.
+ * the name is not found, return nullptr.
  */
 static const _mesa_glsl_extension *find_extension(const char *name)
 {
@@ -628,7 +628,7 @@ static const _mesa_glsl_extension *find_extension(const char *name)
          return &_mesa_glsl_supported_extensions[i];
       }
    }
-   return NULL;
+   return nullptr;
 }
 
 
@@ -873,7 +873,7 @@ ast_compound_statement::ast_compound_statement(int new_scope,
 {
    this->new_scope = new_scope;
 
-   if (statements != NULL) {
+   if (statements != nullptr) {
       this->statements.push_degenerate_list_at_head(&statements->link);
    }
 }
@@ -1012,7 +1012,7 @@ ast_expression::ast_expression(int oper,
    this->subexpressions[0] = ex0;
    this->subexpressions[1] = ex1;
    this->subexpressions[2] = ex2;
-   this->non_lvalue_description = NULL;
+   this->non_lvalue_description = nullptr;
 }
 
 
@@ -1048,8 +1048,8 @@ ast_function::print(void) const
 
 
 ast_function::ast_function(void)
-   : return_type(NULL), identifier(NULL), is_definition(false),
-     signature(NULL)
+   : return_type(nullptr), identifier(nullptr), is_definition(false),
+     signature(nullptr)
 {
    /* empty */
 }
@@ -1159,7 +1159,7 @@ ast_jump_statement::print(void) const
 
 
 ast_jump_statement::ast_jump_statement(int mode, ast_expression *return_value)
-   : opt_return_value(NULL)
+   : opt_return_value(nullptr)
 {
    this->mode = ast_jump_modes(mode);
 
@@ -1218,7 +1218,7 @@ void
 ast_switch_body::print(void) const
 {
    printf("{\n");
-   if (stmts != NULL) {
+   if (stmts != nullptr) {
       stmts->print();
    }
    printf("}\n");
@@ -1233,7 +1233,7 @@ ast_switch_body::ast_switch_body(ast_case_statement_list *stmts)
 
 void ast_case_label::print(void) const
 {
-   if (test_value != NULL) {
+   if (test_value != nullptr) {
       printf("case ");
       test_value->print();
       printf(": ");
@@ -1361,7 +1361,7 @@ ast_struct_specifier::print(void) const
 ast_struct_specifier::ast_struct_specifier(const char *identifier,
 					   ast_declarator_list *declarator_list)
 {
-   if (identifier == NULL) {
+   if (identifier == nullptr) {
       static unsigned anon_count = 1;
       identifier = ralloc_asprintf(this, "#anon_struct_%04x", anon_count);
       anon_count++;

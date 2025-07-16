@@ -187,7 +187,7 @@ private:
    void
    setup_factory(void *mem_ctx)
    {
-      assert(factory.mem_ctx == NULL);
+      assert(factory.mem_ctx == nullptr);
       assert(factory.instructions->is_empty());
 
       factory.mem_ctx = mem_ctx;
@@ -198,7 +198,7 @@ private:
    {
       base_ir->insert_before(factory.instructions);
       assert(factory.instructions->is_empty());
-      factory.mem_ctx = NULL;
+      factory.mem_ctx = nullptr;
    }
 
    template <typename T>

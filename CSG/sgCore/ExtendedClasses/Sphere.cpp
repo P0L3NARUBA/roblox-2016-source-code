@@ -22,7 +22,7 @@ sgCSphere* sgCSphere::Create(sgFloat rad, short merid, short parall)
 	if (rad<eps_d ||
 		merid<2 ||
 		parall<2)
-		return NULL;
+		return nullptr;
 
 	sgFloat par[3];
 	par[0] = rad;

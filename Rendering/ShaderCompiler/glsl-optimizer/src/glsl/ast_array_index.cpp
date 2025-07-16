@@ -74,14 +74,14 @@ update_max_array_access(ir_rvalue *ir, unsigned idx, YYLTYPE *loc,
        */
       ir_dereference_variable *deref_var =
          deref_record->record->as_dereference_variable();
-      if (deref_var == NULL) {
+      if (deref_var == nullptr) {
          if (ir_dereference_array *deref_array =
              deref_record->record->as_dereference_array()) {
             deref_var = deref_array->array->as_dereference_variable();
          }
       }
 
-      if (deref_var != NULL) {
+      if (deref_var != nullptr) {
          if (deref_var->var->is_interface_instance()) {
             const glsl_type *interface_type =
                deref_var->var->get_interface_type();
@@ -92,7 +92,7 @@ update_max_array_access(ir_rvalue *ir, unsigned idx, YYLTYPE *loc,
             unsigned *const max_ifc_array_access =
                deref_var->var->get_max_ifc_array_access();
 
-            assert(max_ifc_array_access != NULL);
+            assert(max_ifc_array_access != nullptr);
 
             if (idx > max_ifc_array_access[field_index]) {
                max_ifc_array_access[field_index] = idx;
@@ -138,7 +138,7 @@ _mesa_ast_array_index_to_hir(void *mem_ctx,
     * declared size.
     */
    ir_constant *const const_index = idx->constant_expression_value();
-   if (const_index != NULL && idx->type->is_integer()) {
+   if (const_index != nullptr && idx->type->is_integer()) {
       const int idx = const_index->value.i[0];
       const char *type_name = "error";
       unsigned bound = 0;
@@ -183,7 +183,7 @@ _mesa_ast_array_index_to_hir(void *mem_ctx,
 
       if (array->type->is_array())
          update_max_array_access(array, idx, &loc, state);
-   } else if (const_index == NULL && array->type->is_array()) {
+   } else if (const_index == nullptr && array->type->is_array()) {
       if (array->type->is_unsized_array()) {
 	 _mesa_glsl_error(&loc, state, "unsized array index must be constant");
       } else if (array->type->fields.array->is_interface()
@@ -197,13 +197,13 @@ _mesa_ast_array_index_to_hir(void *mem_ctx,
 	 _mesa_glsl_error(&loc, state,
 			  "uniform block array index must be constant");
       } else {
-	 /* whole_variable_referenced can return NULL if the array is a
+	 /* whole_variable_referenced can return nullptr if the array is a
 	  * member of a structure.  In this case it is safe to not update
 	  * the max_array_access field because it is never used for fields
 	  * of structures.
 	  */
 	 ir_variable *v = array->whole_variable_referenced();
-	 if (v != NULL)
+	 if (v != nullptr)
 	    v->data.max_array_access = array->type->array_size() - 1;
       }
 

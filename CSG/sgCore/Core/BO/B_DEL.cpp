@@ -11,14 +11,14 @@ BOOL b_del(lpNP_STR_LIST list_str, lpNPW np, lpNP_STR str)
 	NP_BIT_FACE *bf;
 	NP_STR      str_n;
 	short       ident,edge,face,index;
-	short    *mem_ident;//nb  = NULL;
+	short    *mem_ident;//nb  = nullptr;
 
 	
 
 	if ( !(b_as(np)) ) return FALSE;
 	if ( !(b_fa(np)) ) return FALSE;
 
-	if ( (mem_ident = (short*)SGMalloc(sizeof(np->ident)*(np->noe))) == NULL )
+	if ( (mem_ident = (short*)SGMalloc(sizeof(np->ident)*(np->noe))) == nullptr )
 		return FALSE;
 
 	

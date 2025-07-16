@@ -37,7 +37,7 @@ namespace RBX {
 		void onChangedEnabled(const Reflection::PropertyDescriptor&);
 
 	protected:
-		bool askSetParent(const Instance* parent) const {return Instance::fastDynamicCast<PartInstance>(parent) != NULL;}
+		bool askSetParent(const Instance* parent) const {return Instance::fastDynamicCast<PartInstance>(parent) != nullptr;}
 		bool askAddChild(const Instance* instance) const {return true;}
 	};
 }	// namespace RBX

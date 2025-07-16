@@ -177,7 +177,7 @@ Workspace* Workspace::getWorkspaceIfInWorkspace(Instance* context)
 			return workspace;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 // returns getWorld if context is within the RootInstance
@@ -189,7 +189,7 @@ World* Workspace::getWorldIfInWorkspace(Instance* context)
 	}
 	else
 	{
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -198,7 +198,7 @@ ContactManager* Workspace::getContactManagerIfInWorkspace(Instance* context)
 	if (World* world = getWorldIfInWorkspace(context)) {
 		return world->getContactManager();
 	}
-	return NULL;
+	return nullptr;
 }
 
 bool Workspace::contextInWorkspace(const Instance* context)
@@ -224,7 +224,7 @@ static Reflection::BoundFuncDesc<Workspace, shared_ptr<const Instances>(Region3,
 static Reflection::BoundFuncDesc<Workspace, bool(Region3, shared_ptr<const Instances>)> workspace_RegionEmpty2(&Workspace::isRegion3Empty, "IsRegion3EmptyWithIgnoreList", "region", "ignoreDescendentsTable", Security::None);
 static Reflection::BoundFuncDesc<Workspace, shared_ptr<const Reflection::Tuple>(RbxRay, shared_ptr<const Instances>, bool, bool)> workspace_FindPartOnRay2(&Workspace::getRayHit<const Instances>, "FindPartOnRayWithIgnoreList", "ray", "ignoreDescendentsTable", "terrainCellsAreCubes", false, "ignoreWater", false, Security::None);
 
-static Reflection::RefPropDescriptor<Workspace, Instance> workspace_Terrain("Terrain", category_Behavior, &Workspace::getTerrain, NULL, Reflection::PropertyDescriptor::UI, Security::None);
+static Reflection::RefPropDescriptor<Workspace, Instance> workspace_Terrain("Terrain", category_Behavior, &Workspace::getTerrain, nullptr, Reflection::PropertyDescriptor::UI, Security::None);
 
 // Removed - set through debugSettings
 static Reflection::BoundFuncDesc<Workspace, void(bool)> workspace_SetThrottleEnabled(&Workspace::doNothing, "SetPhysicsThrottleEnabled", "value", Security::LocalUser);
@@ -248,7 +248,7 @@ static Reflection::BoundFuncDesc<Workspace, void(shared_ptr<const Instances>)> w
 REFLECTION_END();
 
 Workspace::Workspace(IDataState* dataState)	 :
-	VerbContainer(NULL),
+	VerbContainer(nullptr),
 	flySteps(0),
 	arrowCameraControls(false),
 	dataState(dataState),
@@ -277,7 +277,7 @@ Workspace::Workspace(IDataState* dataState)	 :
 	networkFilteringEnabled(false),
 	allowThirdPartySales(false)
 {
-	RBXASSERT(dataState!=NULL);
+	RBXASSERT(dataState!=nullptr);
 	setName("Workspace");
 	FASTLOG1(FLog::GuiTargetLifetime, "Workspace created: %p", this);
 
@@ -411,7 +411,7 @@ void Workspace::setDistributedGameTimeNoTransmit(double value)
 
 bool Workspace::forceDrawConnectors() const
 {
-	RBXASSERT(currentCommand.get() != NULL);
+	RBXASSERT(currentCommand.get() != nullptr);
 	if (currentCommand.get()) {
 		return currentCommand->drawConnectors();
 	}
@@ -529,7 +529,7 @@ void Workspace::onHeartbeat(const Heartbeat& heartbeat)
 
 bool Workspace::askAddChild(const Instance* instance) const
 {
-	return dynamic_cast<const IAdornable*>(instance)!=NULL;		// TODO: Hmmm. Is this a good choice? What about RBX::Message?
+	return dynamic_cast<const IAdornable*>(instance)!=nullptr;		// TODO: Hmmm. Is this a good choice? What about RBX::Message?
 }
 
 void Workspace::onDescendantRemoving(const shared_ptr<Instance>& instance)
@@ -570,7 +570,7 @@ bool Workspace::startDecalDrag(Decal *decal, RBX::InsertMode insertMode)
 	}
 	shared_ptr<MouseCommand> result = Creatable<MouseCommand>::create<DecalTool>(this, decal, insertMode);
 	this->setMouseCommand(result);
-	return result != NULL;
+	return result != nullptr;
 }
 
 bool Workspace::startPartDropDrag(const Instances& instances, bool suppressPartsAlign)
@@ -583,7 +583,7 @@ bool Workspace::startPartDropDrag(const Instances& instances, bool suppressParts
 	}
 	shared_ptr<MouseCommand> result = DropTool::createDropTool(Vector3(0,0,0),dragInstances,this,selWhenDone,suppressPartsAlign);
 	this->setMouseCommand(result, true);
-	return result != NULL;
+	return result != nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -634,7 +634,7 @@ void destroyIfNotCurrent(shared_ptr<Instance> destroy, const Camera* current)
 	RBXASSERT(current);
 	if (Instance::fastDynamicCast<Camera>(destroy.get())) {
 		if (destroy.get() != current) {
-			destroy->setParent(NULL);
+			destroy->setParent(nullptr);
 		}
 	}
 }
@@ -699,7 +699,7 @@ void Workspace::clearTerrain()
 		FASTLOG(FLog::MegaClusterInit, "Clearing terrain (from client replicator?)");
 
 		terrain->unlockParent();
-		terrain->setParent(NULL);
+		terrain->setParent(nullptr);
 		terrain.reset();
 	}
 }
@@ -721,7 +721,7 @@ bool Workspace::setImageServerView(bool bIsPlace)
 		return false; // place rendering. don't fiddle with the camera.
 
 	// use the ThumnailCamera if it is the child of the first child of the workspace.
-	Instance *model = NULL;
+	Instance *model = nullptr;
 	
 	if(numChildren() > 0)
 	{
@@ -743,7 +743,7 @@ bool Workspace::setImageServerView(bool bIsPlace)
 
 	replenishCamera();
 
-	HopperBin* superHack = NULL;
+	HopperBin* superHack = nullptr;
 
 	for (size_t i = 0; i < this->numChildren(); ++i) 
 	{
@@ -877,7 +877,7 @@ void Workspace::detachParent(Instance* test)
 		RBXASSERT(parts.empty());
 	#endif
 
-	test->setParent(NULL);
+	test->setParent(nullptr);
 	clearEmptiedModels(oldParent);
 }
 
@@ -960,7 +960,7 @@ void Workspace::handleFallenParts()
 		{
 			shared_ptr<PartInstance> part = fallenParts[i];
 			shared_ptr<Instance> oldParent = shared_from<Instance>(part->getParent());
-			part->setParent(NULL);
+			part->setParent(nullptr);
 			clearEmptiedModels(oldParent);
 		}
 	}
@@ -1112,7 +1112,7 @@ void Workspace::setMouseCommand(shared_ptr<MouseCommand> newMouseCommand, bool a
 		return;
 	}
 
-	if (newMouseCommand.get() == NULL)								// The MouseCommand has been used. Get a new Tool
+	if (newMouseCommand.get() == nullptr)								// The MouseCommand has been used. Get a new Tool
 	{
 		if (stickyCommand.get()) {
 			newMouseCommand = stickyCommand.get()->isSticky();	// pull a copy of the stickyCommand - returns a copy if isSticky
@@ -1120,9 +1120,9 @@ void Workspace::setMouseCommand(shared_ptr<MouseCommand> newMouseCommand, bool a
 		}
 	}
 
-	if (newMouseCommand.get()  == NULL) 
+	if (newMouseCommand.get()  == nullptr) 
 	{
-		if (Network::Players::findLocalPlayer(this) == NULL || Network::Players::isCloudEdit(this))
+		if (Network::Players::findLocalPlayer(this) == nullptr || Network::Players::isCloudEdit(this))
 		{
 			newMouseCommand = Creatable<MouseCommand>::create<AdvArrowTool>(this);
 			FASTLOG1(FLog::MouseCommand, "Generating new arrow tool: %p", newMouseCommand.get() );
@@ -1138,11 +1138,11 @@ void Workspace::setMouseCommand(shared_ptr<MouseCommand> newMouseCommand, bool a
 
 	if (newMouseCommand != currentCommand) 
 	{
-		RBXASSERT((currentCommand.get() == NULL) || !currentCommand.get()->captured());
+		RBXASSERT((currentCommand.get() == nullptr) || !currentCommand.get()->captured());
 		FASTLOG2(FLog::MouseCommand, "Current command update, new: %p, old: %p", newMouseCommand.get(), currentCommand.get());
 		currentCommand = newMouseCommand;
 		shared_ptr<MouseCommand> sticky = newMouseCommand->isSticky();
-		if (sticky.get() != NULL)
+		if (sticky.get() != nullptr)
 		{
 			FASTLOG2(FLog::MouseCommand, "Sticky command replaced too: %p, old: %p", sticky.get(), stickyCommand.get());
 			stickyCommand = sticky;
@@ -1150,7 +1150,7 @@ void Workspace::setMouseCommand(shared_ptr<MouseCommand> newMouseCommand, bool a
 
 		if (activePlugin && activePlugin->isTool())
 		{
-			PluginManager::singleton()->activate(NULL, dataModel);
+			PluginManager::singleton()->activate(nullptr, dataModel);
 		}
 
 		updatePlayerMouseCommand();
@@ -1509,7 +1509,7 @@ GuiResponse Workspace::process(const shared_ptr<InputObject>& event)
     if( resp.wasSunk() )
         return resp;
 
-	RBXASSERT(currentCommand.get() != NULL);
+	RBXASSERT(currentCommand.get() != nullptr);
 	shared_ptr<MouseCommand> processingCommand = currentCommand;
 
 	if (event->isMouseEvent()) // copy last mouse position
@@ -1669,7 +1669,7 @@ GuiResponse Workspace::process(const shared_ptr<InputObject>& event)
 	FASTLOG(FLog::UserInputProfile, "Done with workspace process");
 	FASTLOG1(FLog::MouseCommand, "Workspace::Process finish, captured: %u", processingCommand->captured());
 
-	RBXASSERT(processingCommand.get() != NULL);
+	RBXASSERT(processingCommand.get() != nullptr);
 	if (processingCommand->captured()) {
 		return GuiResponse::sunkWithTarget(this);
 	}
@@ -1872,7 +1872,7 @@ void Workspace::onServiceProvider(ServiceProvider* oldProvider, ServiceProvider*
 		setDefaultMouseCommandConnection.disconnect();
 
 		if (statsItem) {
-			statsItem->setParent(NULL);
+			statsItem->setParent(nullptr);
 			statsItem.reset();
 		}
 	}

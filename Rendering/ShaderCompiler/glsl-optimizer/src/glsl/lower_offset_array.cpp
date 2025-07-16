@@ -54,7 +54,7 @@ public:
 void
 brw_lower_offset_array_visitor::handle_rvalue(ir_rvalue **rv)
 {
-   if (*rv == NULL || (*rv)->ir_type != ir_type_texture)
+   if (*rv == nullptr || (*rv)->ir_type != ir_type_texture)
       return;
 
    ir_texture *ir = (ir_texture *) *rv;
@@ -68,7 +68,7 @@ brw_lower_offset_array_visitor::handle_rvalue(ir_rvalue **rv)
    base_ir->insert_before(var);
 
    for (int i = 0; i < 4; i++) {
-      ir_texture *tex = ir->clone(mem_ctx, NULL);
+      ir_texture *tex = ir->clone(mem_ctx, nullptr);
       tex->offset = new (mem_ctx) ir_dereference_array(tex->offset,
             new (mem_ctx) ir_constant(i));
 

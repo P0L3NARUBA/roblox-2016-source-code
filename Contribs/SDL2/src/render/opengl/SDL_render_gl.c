@@ -211,7 +211,7 @@ GL_ClearErrors(SDL_Renderer *renderer)
             SDL_free(data->error_messages);
 
             data->errors = 0;
-            data->error_messages = NULL;
+            data->error_messages = nullptr;
         }
     } else {
         while (data->glGetError() != GL_NO_ERROR) {
@@ -244,7 +244,7 @@ GL_CheckAllErrors (const char *prefix, SDL_Renderer *renderer, const char *file,
         for (;;) {
             GLenum error = data->glGetError();
             if (error != GL_NO_ERROR) {
-                if (prefix == NULL || prefix[0] == '\0') {
+                if (prefix == nullptr || prefix[0] == '\0') {
                     prefix = "generic";
                 }
                 SDL_SetError("%s: %s (%d): %s %s (0x%X)", prefix, file, line, function, GL_TranslateError(error), error);
@@ -285,7 +285,7 @@ GL_LoadFunctions(GL_RenderData * data)
     return 0;
 }
 
-static SDL_GLContext SDL_CurrentContext = NULL;
+static SDL_GLContext SDL_CurrentContext = nullptr;
 
 static int
 GL_ActivateRenderer(SDL_Renderer * renderer)
@@ -561,7 +561,7 @@ GL_CreateRenderer(SDL_Window * window, Uint32 flags)
             SDL_GL_GetProcAddress("glCheckFramebufferStatusEXT");
         renderer->info.flags |= SDL_RENDERER_TARGETTEXTURE;
     }
-    data->framebuffers = NULL;
+    data->framebuffers = nullptr;
 
     /* Set up parameters for rendering */
     GL_ResetState(renderer);
@@ -576,7 +576,7 @@ error:
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minor);
         SDL_RecreateWindow(window, window_flags);
     }
-    return NULL;
+    return nullptr;
 }
 
 static void
@@ -586,7 +586,7 @@ GL_WindowEvent(SDL_Renderer * renderer, const SDL_WindowEvent *event)
         event->event == SDL_WINDOWEVENT_SHOWN ||
         event->event == SDL_WINDOWEVENT_HIDDEN) {
         /* Rebind the context to the window area and update matrices */
-        SDL_CurrentContext = NULL;
+        SDL_CurrentContext = nullptr;
     }
 }
 
@@ -699,7 +699,7 @@ GL_CreateTexture(SDL_Renderer * renderer, SDL_Texture * texture)
     if (texture->access == SDL_TEXTUREACCESS_TARGET) {
         data->fbo = GL_GetFBO(renderdata, texture->w, texture->h);
     } else {
-        data->fbo = NULL;
+        data->fbo = nullptr;
     }
 
     GL_CheckError("", renderer);
@@ -781,7 +781,7 @@ GL_CreateTexture(SDL_Renderer * renderer, SDL_Texture * texture)
 #endif
     {
         renderdata->glTexImage2D(data->type, 0, internalFormat, texture_w,
-                                 texture_h, 0, format, type, NULL);
+                                 texture_h, 0, format, type, nullptr);
     }
     renderdata->glDisable(data->type);
     if (GL_CheckError("glTexImage2D()", renderer) < 0) {
@@ -806,7 +806,7 @@ GL_CreateTexture(SDL_Renderer * renderer, SDL_Texture * texture)
         renderdata->glTexParameteri(data->type, GL_TEXTURE_WRAP_T,
                                     GL_CLAMP_TO_EDGE);
         renderdata->glTexImage2D(data->type, 0, internalFormat, texture_w/2,
-                                 texture_h/2, 0, format, type, NULL);
+                                 texture_h/2, 0, format, type, nullptr);
 
         renderdata->glBindTexture(data->type, data->vtexture);
         renderdata->glTexParameteri(data->type, GL_TEXTURE_MIN_FILTER,
@@ -818,7 +818,7 @@ GL_CreateTexture(SDL_Renderer * renderer, SDL_Texture * texture)
         renderdata->glTexParameteri(data->type, GL_TEXTURE_WRAP_T,
                                     GL_CLAMP_TO_EDGE);
         renderdata->glTexImage2D(data->type, 0, internalFormat, texture_w/2,
-                                 texture_h/2, 0, format, type, NULL);
+                                 texture_h/2, 0, format, type, nullptr);
 
         renderdata->glDisable(data->type);
     }
@@ -840,7 +840,7 @@ GL_CreateTexture(SDL_Renderer * renderer, SDL_Texture * texture)
         renderdata->glTexParameteri(data->type, GL_TEXTURE_WRAP_T,
                                     GL_CLAMP_TO_EDGE);
         renderdata->glTexImage2D(data->type, 0, GL_LUMINANCE_ALPHA, texture_w/2,
-                                 texture_h/2, 0, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, NULL);
+                                 texture_h/2, 0, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, nullptr);
         renderdata->glDisable(data->type);
     }
 
@@ -980,7 +980,7 @@ GL_SetRenderTarget(SDL_Renderer * renderer, SDL_Texture * texture)
 
     GL_ActivateRenderer(renderer);
 
-    if (texture == NULL) {
+    if (texture == nullptr) {
         data->glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
         return 0;
     }
@@ -1493,7 +1493,7 @@ GL_DestroyTexture(SDL_Renderer * renderer, SDL_Texture * texture)
     }
     SDL_free(data->pixels);
     SDL_free(data);
-    texture->driverdata = NULL;
+    texture->driverdata = nullptr;
 }
 
 static void

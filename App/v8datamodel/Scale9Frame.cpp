@@ -44,7 +44,7 @@ void Scale9Frame::render2d(Adorn* adorn)
 	{
 		Rect2D rect = Rect2D::xyxy(scaleEdgeSize, imageSize - scaleEdgeSize );
 		Color4 color(Color3::white(), 1.0f - getBackgroundTransparency());
-		render2dScale9Impl2(adorn, slicePrefix, image, rect, NULL, color);
+		render2dScale9Impl2(adorn, slicePrefix, image, rect, nullptr, color);
 	}
 }
 

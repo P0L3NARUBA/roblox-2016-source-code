@@ -26,7 +26,7 @@
   static FT_Service_PfrMetrics
   ft_pfr_check( FT_Face  face )
   {
-    FT_Service_PfrMetrics  service = NULL;
+    FT_Service_PfrMetrics  service = nullptr;
 
 
     if ( face )

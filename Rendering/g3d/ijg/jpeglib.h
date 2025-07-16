@@ -175,7 +175,7 @@ typedef struct {
   int last_col_width;		/* # of non-dummy blocks across in last MCU */
   int last_row_height;		/* # of non-dummy blocks down in last MCU */
 
-  /* Saved quantization table for component; NULL if none yet saved.
+  /* Saved quantization table for component; nullptr if none yet saved.
    * See jdinput.c comments about the need for this information.
    * This field is currently used only for decompression.
    */
@@ -200,7 +200,7 @@ typedef struct {
 typedef struct jpeg_marker_struct FAR * jpeg_saved_marker_ptr;
 
 struct jpeg_marker_struct {
-  jpeg_saved_marker_ptr next;	/* next in list, or NULL */
+  jpeg_saved_marker_ptr next;	/* next in list, or nullptr */
   UINT8 marker;			/* marker code: JPEG_COM, or JPEG_APP0+n */
   unsigned int original_length;	/* # bytes of data in the file */
   unsigned int data_length;	/* # bytes of data saved at data[] */
@@ -248,7 +248,7 @@ typedef enum {
 #define jpeg_common_fields \
   struct jpeg_error_mgr * err;	/* Error handler module */\
   struct jpeg_memory_mgr * mem;	/* Memory manager module */\
-  struct jpeg_progress_mgr * progress; /* Progress monitor, or NULL if none */\
+  struct jpeg_progress_mgr * progress; /* Progress monitor, or nullptr if none */\
   void * client_data;		/* Available for use by application */\
   boolean is_decompressor;	/* So common code can tell which is which */\
   int global_state		/* For checking call sequence validity */
@@ -319,21 +319,21 @@ struct jpeg_compress_struct {
 
   JQUANT_TBL * quant_tbl_ptrs[NUM_QUANT_TBLS];
   int q_scale_factor[NUM_QUANT_TBLS];
-  /* ptrs to coefficient quantization tables, or NULL if not defined,
+  /* ptrs to coefficient quantization tables, or nullptr if not defined,
    * and corresponding scale factors (percentage, initialized 100).
    */
 
   JHUFF_TBL * dc_huff_tbl_ptrs[NUM_HUFF_TBLS];
   JHUFF_TBL * ac_huff_tbl_ptrs[NUM_HUFF_TBLS];
-  /* ptrs to Huffman coding tables, or NULL if not defined */
+  /* ptrs to Huffman coding tables, or nullptr if not defined */
 
   UINT8 arith_dc_L[NUM_ARITH_TBLS]; /* L values for DC arith-coding tables */
   UINT8 arith_dc_U[NUM_ARITH_TBLS]; /* U values for DC arith-coding tables */
   UINT8 arith_ac_K[NUM_ARITH_TBLS]; /* Kx values for AC arith-coding tables */
 
   int num_scans;		/* # of entries in scan_info array */
-  const jpeg_scan_info * scan_info; /* script for multi-scan file, or NULL */
-  /* The default value of scan_info is NULL, which causes a single-scan
+  const jpeg_scan_info * scan_info; /* script for multi-scan file, or nullptr */
+  /* The default value of scan_info is nullptr, which causes a single-scan
    * sequential JPEG file to be emitted.  To create a multi-scan file,
    * set num_scans and scan_info to point to an array of scan definitions.
    */
@@ -495,7 +495,7 @@ struct jpeg_decompress_struct {
    */
 
   /* When quantizing colors, the output colormap is described by these fields.
-   * The application can supply a colormap by setting colormap non-NULL before
+   * The application can supply a colormap by setting colormap non-nullptr before
    * calling jpeg_start_decompress; otherwise a colormap is created during
    * jpeg_start_decompress or jpeg_start_output.
    * The map has out_color_components rows and actual_number_of_colors columns.
@@ -531,7 +531,7 @@ struct jpeg_decompress_struct {
    * It is -1 when no data has yet been received, otherwise it is the point
    * transform (shift) value for the most recent scan of the coefficient
    * (thus, 0 at completion of the progression).
-   * This pointer is NULL when reading a non-progressive file.
+   * This pointer is nullptr when reading a non-progressive file.
    */
   int (*coef_bits)[DCTSIZE2];	/* -1 or current Al value for each coef */
 
@@ -545,11 +545,11 @@ struct jpeg_decompress_struct {
    */
 
   JQUANT_TBL * quant_tbl_ptrs[NUM_QUANT_TBLS];
-  /* ptrs to coefficient quantization tables, or NULL if not defined */
+  /* ptrs to coefficient quantization tables, or nullptr if not defined */
 
   JHUFF_TBL * dc_huff_tbl_ptrs[NUM_HUFF_TBLS];
   JHUFF_TBL * ac_huff_tbl_ptrs[NUM_HUFF_TBLS];
-  /* ptrs to Huffman coding tables, or NULL if not defined */
+  /* ptrs to Huffman coding tables, or nullptr if not defined */
 
   /* These parameters are never carried across datastreams, since they
    * are given in SOF/SOS markers or defined to be reset by SOI.
@@ -767,7 +767,7 @@ struct jpeg_source_mgr {
  * each created object is assigned to a pool, and whole pools can be freed
  * at once.  This is faster and more convenient than remembering exactly what
  * to free, especially where malloc()/free() are not too speedy.
- * NB: alloc routines never return NULL.  They exit to error_exit if not
+ * NB: alloc routines never return nullptr.  They exit to error_exit if not
  * successful.
  */
 

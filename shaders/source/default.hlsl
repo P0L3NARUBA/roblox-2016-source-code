@@ -1,16 +1,14 @@
 #define GLOBALS
 #define INSTANCED
 
-#include "buffers.h"
-#include "common.h"
+#include "buffers.hlsli"
+#include "common.hlsli"
 
 /* Vertex Shaders */
 BasicMaterialVertexOutput DepthOnlyVS(InstancedBasicMaterialAppData IN) {
     BasicMaterialVertexOutput OUT;
 
-    float4x4 ModelMatrix = ModelMatrixes[IN.InstanceID].Model;
-
-    OUT.Position = mul(float4(IN.Position.xyz, 1.0), ModelMatrix);
+    OUT.Position = mul(float4(IN.Position.xyz, 1.0), ModelMatrixes[IN.InstanceID].Model);
     OUT.Position = mul(OUT.Position, ViewProjection);
 
     return OUT;

@@ -19,7 +19,7 @@ static Reflection::BoundFuncDesc<Teams, shared_ptr<const Instances>()> func_team
 REFLECTION_END();
 
 Teams::Teams() :
-	teams(Instances())		// Initialize to a non-NULL value
+	teams(Instances())		// Initialize to a non-nullptr value
 {
 	setName(sTeams);
 }
@@ -37,7 +37,7 @@ bool Teams::isTeamGame()
 		for(unsigned int n = 0; n < players->numChildren(); n++)
 		{
 			Network::Player* p = Instance::fastDynamicCast<Network::Player>(players->getChild(n));
-			if (p == NULL) continue; // only care about player objects
+			if (p == nullptr) continue; // only care about player objects
 			if (p->getNeutral() == false) 
 				return true;
 		}
@@ -56,7 +56,7 @@ void Teams::rebalanceTeams()
 	for(unsigned int n = 0; n < players->numChildren(); n++)
 	{
 		Network::Player* p = Instance::fastDynamicCast<Network::Player>(players->getChild(n));
-		p->setTeam(NULL);
+		p->setTeam(nullptr);
 		assignNewPlayerToTeam(p);
 	}
 	*/
@@ -74,7 +74,7 @@ void Teams::assignNewPlayerToTeam(Network::Player *p)
 	for(unsigned int i = 0; i < this->numChildren(); i++)
 	{
 		Team* child = Instance::fastDynamicCast<Team>(this->getChild(i));
-		if(child != NULL) {
+		if(child != nullptr) {
 			if(child->getAutoAssignable() == true) {
 				int count = getNumPlayersInTeam(child->getTeamColor());
 				if (count < best_count) {
@@ -103,7 +103,7 @@ int Teams::getNumPlayersInTeam(BrickColor color)
 	for(unsigned int n = 0; n < players->numChildren(); n++)
 	{
 		Network::Player* p = Instance::fastDynamicCast<Network::Player>(players->getChild(n));
-		if (p == NULL) continue; // only care about player objects
+		if (p == nullptr) continue; // only care about player objects
 		if (p->getNeutral() == false && p->getTeamColor() == color) result++;
 		
 	}
@@ -112,7 +112,7 @@ int Teams::getNumPlayersInTeam(BrickColor color)
 
 bool Teams::teamExists(BrickColor color)
 {
-	return (getTeamFromTeamColor(color) != NULL);
+	return (getTeamFromTeamColor(color) != nullptr);
 }
 
 
@@ -124,13 +124,13 @@ Team *Teams::getTeamFromTeamColor(BrickColor c)
 		if (t && t->getTeamColor() == c) 
 				return t;
 	}
-	return NULL;
+	return nullptr;
 }
 
 Team *Teams::getTeamFromPlayer(Network::Player *p)
 {
 	if(p->getNeutral()) 
-		return NULL;
+		return nullptr;
 
 	return getTeamFromTeamColor(p->getTeamColor());
 }

@@ -52,8 +52,8 @@ public:
       this->var = var;
       this->split = true;
       this->declaration = false;
-      this->components = NULL;
-      this->mem_ctx = NULL;
+      this->components = nullptr;
+      this->mem_ctx = nullptr;
       if (var->type->is_array())
 	 this->size = var->type->length;
       else
@@ -92,7 +92,7 @@ public:
    ir_array_reference_visitor(bool split_shader_outputs)
    {
       this->split_shader_outputs = split_shader_outputs;
-      this->mem_ctx = ralloc_context(NULL);
+      this->mem_ctx = ralloc_context(nullptr);
       this->variable_list.make_empty();
    }
 
@@ -128,16 +128,16 @@ ir_array_reference_visitor::get_variable_entry(ir_variable *var)
        var->data.mode != ir_var_temporary &&
 	   (!this->split_shader_outputs || (var->data.mode != ir_var_shader_out && var->data.mode != ir_var_shader_inout))
 	   )
-      return NULL;
+      return nullptr;
 
    if (!(var->type->is_array() || var->type->is_matrix()))
-      return NULL;
+      return nullptr;
 
    /* If the array hasn't been sized yet, we can't split it.  After
     * linking, this should be resolved.
     */
    if (var->type->is_unsized_array())
-      return NULL;
+      return nullptr;
 
    foreach_in_list(variable_entry, entry, &this->variable_list) {
       if (entry->var == var)
@@ -277,7 +277,7 @@ ir_array_splitting_visitor::get_splitting_entry(ir_variable *var)
       }
    }
 
-   return NULL;
+   return nullptr;
 }
 
 void
@@ -363,7 +363,7 @@ optimize_split_arrays(exec_list *instructions, bool linked, bool split_shader_ou
    if (!refs.get_split_list(instructions, linked))
       return false;
 
-   void *mem_ctx = ralloc_context(NULL);
+   void *mem_ctx = ralloc_context(nullptr);
 
    /* Replace the decls of the arrays to be split with their split
     * components.
@@ -406,7 +406,7 @@ optimize_split_arrays(exec_list *instructions, bool linked, bool split_shader_ou
    visit_list_elements(&split, instructions);
 
    if (debug)
-      _mesa_print_ir(stdout, instructions, NULL);
+      _mesa_print_ir(stdout, instructions, nullptr);
 
    ralloc_free(mem_ctx);
 

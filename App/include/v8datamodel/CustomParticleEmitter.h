@@ -120,7 +120,7 @@ namespace RBX
 
 		NormalId		emissionDirection;
 
-        virtual bool askSetParent(const Instance* parent) const {return Instance::fastDynamicCast<PartInstance>(parent) != NULL;}
+        virtual bool askSetParent(const Instance* parent) const {return Instance::fastDynamicCast<PartInstance>(parent) != nullptr;}
         virtual bool askAddChild(const Instance* instance) const {return false;}
         virtual void onAncestorChanged(const AncestorChanged& event);
     };

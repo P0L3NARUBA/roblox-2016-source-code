@@ -54,7 +54,7 @@ BOOL_VALUE bv;
 		else           bv.b = 0;
 		bv.tb[0] = 0;
 	}
-	if(attr.type == ATTR_TEXT || value == NULL) return FALSE;
+	if(attr.type == ATTR_TEXT || value == nullptr) return FALSE;
 	if(!add_attr_value(id_attr, value, &item_id)) return FALSE;
 	lpattr = lock_attr(id_attr);
 	lpattr->curr = item_id;
@@ -271,8 +271,8 @@ ATTR_RECORD rec;
 ATTR_RECORD oldrec;
 ATTR_RECORD newrec;
 lpRECORD_ITEM irec;
-lpRECORD_ITEM oldirec = NULL;
-lpRECORD_ITEM newirec = NULL;
+lpRECORD_ITEM oldirec = nullptr;
+lpRECORD_ITEM newirec = nullptr;
 
 
 	if(rec_id < 0){ // 
@@ -280,11 +280,11 @@ lpRECORD_ITEM newirec = NULL;
 		rec_id = -rec_id;
 	}
 	//   rec_id
-	if(NULL ==(irec = alloc_and_load_record(rec_id, &rec))) goto fr;
+	if(nullptr ==(irec = alloc_and_load_record(rec_id, &rec))) goto fr;
 
 	if(*objrec_id){ //     
 		//   rec_id
-	if(NULL ==(oldirec = alloc_and_load_record(*objrec_id, &oldrec))) goto fr;
+	if(nullptr ==(oldirec = alloc_and_load_record(*objrec_id, &oldrec))) goto fr;
 		//     
 		if(0 ==(newirec = (RECORD_ITEM*)SGMalloc((rec.num + oldrec.num)*sizeof(RECORD_ITEM)))){
 			attr_handler_err(AT_HEAP);
@@ -353,7 +353,7 @@ lpATTR_RECORD lock_record(IDENT_V rec_id)
 //    
 {
 lpATTR_RECORD rec;
-	if(NULL ==(rec = (ATTR_RECORD*)get_elem(vd_record, rec_id - 1))) attr_exit();
+	if(nullptr ==(rec = (ATTR_RECORD*)get_elem(vd_record, rec_id - 1))) attr_exit();
 	return rec;
 }
 
@@ -427,12 +427,12 @@ lpATTR        attr;
 	num_attr = 0;
 	begin_rw(vd, 0);
 	for(i = 0; i < vd->num_elem; i++) {
-	  if(NULL ==(index = (long*)get_next_elem(vd))) attr_exit();
+	  if(nullptr ==(index = (long*)get_next_elem(vd))) attr_exit();
 		if(*index) num_attr++;
 	}
 	end_rw(vd);
 	if(!num_attr) return TRUE;
-	if(NULL ==(ri = (RECORD_ITEM*)SGMalloc(num_attr*sizeof(RECORD_ITEM)))){
+	if(nullptr ==(ri = (RECORD_ITEM*)SGMalloc(num_attr*sizeof(RECORD_ITEM)))){
 		attr_handler_err(AT_HEAP);
 		return FALSE;
 	}
@@ -440,7 +440,7 @@ lpATTR        attr;
 	memset(&rec, 0, sizeof(ATTR_RECORD));
 	begin_rw(vd, 0);
 	for(i = 0; i < vd->num_elem; i++) {
-	if(NULL ==(index = (long*)get_next_elem(vd))) attr_exit();
+	if(nullptr ==(index = (long*)get_next_elem(vd))) attr_exit();
 		if(*index){
 			attr = lock_attr(*index);
 			ri[rec.num].attr = *index;
@@ -462,16 +462,16 @@ lpRECORD_ITEM ri;
 
 	read_record(rec_id, rec);
 	if(rec->num){
-		if(NULL ==(ri = (RECORD_ITEM*)SGMalloc(rec->num*sizeof(RECORD_ITEM)))){
+		if(nullptr ==(ri = (RECORD_ITEM*)SGMalloc(rec->num*sizeof(RECORD_ITEM)))){
 			attr_handler_err(AT_HEAP);
-			return NULL;
+			return nullptr;
 		}
 		if(!load_vld_data(&rec->vbd.loc, rec->vbd.len, ri)) attr_exit();
 	}
 	else {
-		if(NULL ==(ri = (RECORD_ITEM*)SGMalloc(sizeof(RECORD_ITEM)))){
+		if(nullptr ==(ri = (RECORD_ITEM*)SGMalloc(sizeof(RECORD_ITEM)))){
 			attr_handler_err(AT_HEAP);
-			return NULL;
+			return nullptr;
 		}
 		ri->attr = ri->item = 0;
 		rec->vbd.len = 0;
@@ -656,8 +656,8 @@ ATTR_RECORD r1;
 ATTR_RECORD r2;
 ATTR_RECORD r3;
 lpRECORD_ITEM irec1;
-lpRECORD_ITEM irec2 = NULL;
-lpRECORD_ITEM irec3 = NULL;
+lpRECORD_ITEM irec2 = nullptr;
+lpRECORD_ITEM irec3 = nullptr;
 short         num;
 
 
@@ -757,7 +757,7 @@ VI_LOCATION   loc;
 		if(rec.num){
 			get_read_loc(&rec.vbd.loc);
 			if(!write_elem(vd_record, id - 1, &rec)) attr_exit();
-			read_vld_data(rec.vbd.len, NULL);
+			read_vld_data(rec.vbd.len, nullptr);
 		}
 		if(!il_get_next_item(vd_record, id, &id)) attr_exit();
 	}
@@ -784,7 +784,7 @@ WORD          i, j, k, len;
 
 	id = record_ilisth->head;
 	while(id){
-		if((ri = alloc_and_load_record(id, &rec)) == NULL) goto err;
+		if((ri = alloc_and_load_record(id, &rec)) == nullptr) goto err;
 		for(i = 0, j = 0; i < rec.num; i++){
 			for(k = 0; k < numattr; k++){
 				if(ri[i].attr == dri[k].attr) goto next;
@@ -825,7 +825,7 @@ WORD          i;
 
 	id = record_ilisth->head;
 	while(id){
-		if((ri = alloc_and_load_record(id, &rec)) == NULL) goto err;
+		if((ri = alloc_and_load_record(id, &rec)) == nullptr) goto err;
 		for(i = 0; i < rec.num; i++){
 			if(ri[i].item == item_id){
 				ri[i].item = newid;

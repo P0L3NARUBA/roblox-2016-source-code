@@ -27,14 +27,14 @@ public:
 			return ((lpOBJ)objH)->extendedClass;
 		}
 		else
-			return NULL;
+			return nullptr;
 	};
 	virtual  sgCObject*  GetNext(sgCObject* c_obj) const
 	{
 		hOBJ nextElem;
 		get_next_item(GetObjectHandle(c_obj),&nextElem);
-		if (nextElem==NULL)
-			return NULL;
+		if (nextElem==nullptr)
+			return nullptr;
 		return ((lpOBJ)nextElem)->extendedClass;
 	};
 	virtual  sgCObject*  GetTail()	const
@@ -47,14 +47,14 @@ public:
 			return ((lpOBJ)objH)->extendedClass;
 		}
 		else
-			return NULL;
+			return nullptr;
 	};
 	virtual  sgCObject*  GetPrev(sgCObject* c_obj) const
 	{
 		hOBJ prElem;
 		get_prev_item(GetObjectHandle(c_obj),&prElem);
-		if (prElem==NULL)
-			return NULL;
+		if (prElem==nullptr)
+			return nullptr;
 		return ((lpOBJ)prElem)->extendedClass;
 	}
 };
@@ -172,14 +172,14 @@ public:
 			return ((lpOBJ)objH)->extendedClass;
 		}
 		else
-			return NULL;
+			return nullptr;
 	};
 	virtual  sgCObject*  GetNext(sgCObject* c_obj) const
 	{
 		hOBJ nextElem;
 		get_next_item(GetObjectHandle(c_obj),&nextElem);
-		if (nextElem==NULL)
-			return NULL;
+		if (nextElem==nullptr)
+			return nullptr;
 		return ((lpOBJ)nextElem)->extendedClass;
 	};
 	virtual  sgCObject*  GetTail()	const
@@ -192,14 +192,14 @@ public:
 			return ((lpOBJ)objH)->extendedClass;
 		}
 		else
-			return NULL;
+			return nullptr;
 	};
 	virtual  sgCObject*  GetPrev(sgCObject* c_obj) const
 	{
 		hOBJ prElem;
 		get_prev_item(GetObjectHandle(c_obj),&prElem);
-		if (prElem==NULL)
-			return NULL;
+		if (prElem==nullptr)
+			return nullptr;
 		return ((lpOBJ)prElem)->extendedClass;
 	}
 };
@@ -553,7 +553,7 @@ bool   sgCContour::TopologySort(sgCObject** objcts, int cnt)
 					   break;
 				}
 			}
-			if (tmpArray[i]==NULL)
+			if (tmpArray[i]==nullptr)
 			{
 				assert(0);
 				free(gr_Pnts);
@@ -584,7 +584,7 @@ bool   sgCContour::TopologySort(sgCObject** objcts, int cnt)
 					break;
 				}
 			}
-			if (tmpArray[i]==NULL)
+			if (tmpArray[i]==nullptr)
 			{
 				assert(0);
 				free(gr_Pnts);

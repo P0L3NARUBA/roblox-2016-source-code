@@ -30,17 +30,17 @@ extern "C" {
 #include "program/hash_table.h"
 }
 
-hash_table *glsl_type::array_types = NULL;
-hash_table *glsl_type::record_types = NULL;
-hash_table *glsl_type::interface_types = NULL;
-void *glsl_type::mem_ctx = NULL;
+hash_table *glsl_type::array_types = nullptr;
+hash_table *glsl_type::record_types = nullptr;
+hash_table *glsl_type::interface_types = nullptr;
+void *glsl_type::mem_ctx = nullptr;
 
 void
 glsl_type::init_ralloc_type_ctx(void)
 {
-   if (glsl_type::mem_ctx == NULL) {
+   if (glsl_type::mem_ctx == nullptr) {
       glsl_type::mem_ctx = ralloc_autofree_context();
-      assert(glsl_type::mem_ctx != NULL);
+      assert(glsl_type::mem_ctx != nullptr);
    }
 }
 
@@ -55,7 +55,7 @@ glsl_type::glsl_type(GLenum gl_type,
    length(0)
 {
    init_ralloc_type_ctx();
-   assert(name != NULL);
+   assert(name != nullptr);
    this->name = ralloc_strdup(this->mem_ctx, name);
    /* Neither dimension is zero or both dimensions are zero.
     */
@@ -73,7 +73,7 @@ glsl_type::glsl_type(GLenum gl_type, glsl_base_type base_type,
    length(0)
 {
    init_ralloc_type_ctx();
-   assert(name != NULL);
+   assert(name != nullptr);
    this->name = ralloc_strdup(this->mem_ctx, name);
    memset(& fields, 0, sizeof(fields));
 
@@ -97,7 +97,7 @@ glsl_type::glsl_type(const glsl_struct_field *fields, unsigned num_fields,
    unsigned int i;
 
    init_ralloc_type_ctx();
-   assert(name != NULL);
+   assert(name != nullptr);
    this->name = ralloc_strdup(this->mem_ctx, name);
    this->fields.structure = ralloc_array(this->mem_ctx,
 					 glsl_struct_field, length);
@@ -126,7 +126,7 @@ glsl_type::glsl_type(const glsl_struct_field *fields, unsigned num_fields,
    unsigned int i;
 
    init_ralloc_type_ctx();
-   assert(name != NULL);
+   assert(name != nullptr);
    this->name = ralloc_strdup(this->mem_ctx, name);
    this->fields.structure = ralloc_array(this->mem_ctx,
 					 glsl_struct_field, length);
@@ -288,14 +288,14 @@ const glsl_type *glsl_type::get_scalar_type() const
 void
 _mesa_glsl_release_types(void)
 {
-   if (glsl_type::array_types != NULL) {
+   if (glsl_type::array_types != nullptr) {
       hash_table_dtor(glsl_type::array_types);
-      glsl_type::array_types = NULL;
+      glsl_type::array_types = nullptr;
    }
 
-   if (glsl_type::record_types != NULL) {
+   if (glsl_type::record_types != nullptr) {
       hash_table_dtor(glsl_type::record_types);
-      glsl_type::record_types = NULL;
+      glsl_type::record_types = nullptr;
    }
 }
 
@@ -305,7 +305,7 @@ glsl_type::glsl_type(const glsl_type *array, unsigned length) :
    sampler_dimensionality(0), sampler_shadow(0), sampler_array(0),
    sampler_type(0), interface_packing(0),
    vector_elements(0), matrix_columns(0),
-   name(NULL), length(length)
+   name(nullptr), length(length)
 {
    this->fields.array = array;
    /* Inherit the gl type of the base. The GL type is used for
@@ -456,7 +456,7 @@ const glsl_type *
 glsl_type::get_array_instance(const glsl_type *base, unsigned array_size)
 {
 
-   if (array_types == NULL) {
+   if (array_types == nullptr) {
       array_types = hash_table_ctor(64, hash_table_string_hash,
 				    hash_table_string_compare);
    }
@@ -470,7 +470,7 @@ glsl_type::get_array_instance(const glsl_type *base, unsigned array_size)
    snprintf(key, sizeof(key), "%p[%u]", (void *) base, array_size);
 
    const glsl_type *t = (glsl_type *) hash_table_find(array_types, key);
-   if (t == NULL) {
+   if (t == nullptr) {
       t = new glsl_type(base, array_size);
 
       hash_table_insert(array_types, (void *) t, ralloc_strdup(mem_ctx, key));
@@ -581,12 +581,12 @@ glsl_type::get_record_instance(const glsl_struct_field *fields,
 {
    const glsl_type key(fields, num_fields, name);
 
-   if (record_types == NULL) {
+   if (record_types == nullptr) {
       record_types = hash_table_ctor(64, record_key_hash, record_key_compare);
    }
 
    const glsl_type *t = (glsl_type *) hash_table_find(record_types, & key);
-   if (t == NULL) {
+   if (t == nullptr) {
       t = new glsl_type(fields, num_fields, name);
 
       hash_table_insert(record_types, (void *) t, t);
@@ -608,12 +608,12 @@ glsl_type::get_interface_instance(const glsl_struct_field *fields,
 {
    const glsl_type key(fields, num_fields, packing, block_name);
 
-   if (interface_types == NULL) {
+   if (interface_types == nullptr) {
       interface_types = hash_table_ctor(64, record_key_hash, record_key_compare);
    }
 
    const glsl_type *t = (glsl_type *) hash_table_find(interface_types, & key);
-   if (t == NULL) {
+   if (t == nullptr) {
       t = new glsl_type(fields, num_fields, packing, block_name);
 
       hash_table_insert(interface_types, (void *) t, t);
@@ -755,7 +755,7 @@ glsl_type::can_implicitly_convert_to(const glsl_type *desired,
       return true;
 
    /* With GLSL 4.0 / ARB_gpu_shader5, int can be converted to uint.
-    * Note that state may be NULL here, when resolving function calls in the
+    * Note that state may be nullptr here, when resolving function calls in the
     * linker. By this time, all the state-dependent checks have already
     * happened though, so allow anything that's allowed in any shader version. */
    if ((!state || state->is_version(400, 0) || state->ARB_gpu_shader5_enable) &&

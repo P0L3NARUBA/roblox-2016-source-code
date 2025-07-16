@@ -87,7 +87,7 @@ void BallPolyContact::findClosestFeatures(ConnectorArray& newConnectors)
 const POLY::Face* BallPolyContact::getFarthestPlane(float& planeToCenter, const Vector3& ballInPoly)
 {
 	planeToCenter = -FLT_MAX;			// deep inside to start
-	const POLY::Face* answer = NULL;
+	const POLY::Face* answer = nullptr;
 	for (size_t i = 0; i < poly()->getMesh()->numFaces(); ++i) {
 		const POLY::Face* face = poly()->getMesh()->getFace(i);
 		const Plane& plane = face->plane();
@@ -104,7 +104,7 @@ const POLY::Face* BallPolyContact::getFarthestPlane(float& planeToCenter, const 
 const POLY::Edge* BallPolyContact::getClosestEdge(const POLY::Face* face, float& edgeToCenter, const Vector3& ballInPoly)
 {
 	edgeToCenter = FLT_MAX;
-	POLY::Edge* answer = NULL;
+	POLY::Edge* answer = nullptr;
 	for (size_t i = 0; i < face->numEdges(); ++i) {
 		POLY::Edge* testEdge = face->getEdge(i);
 		Line line = testEdge->computeLine();
@@ -121,7 +121,7 @@ const POLY::Edge* BallPolyContact::getClosestEdge(const POLY::Face* face, float&
 const POLY::Edge* BallPolyContact::getClosestInVoronoiEdge(const POLY::Face* face, float& edgeToCenter, const Vector3& ballInPoly)
 {
 	edgeToCenter = FLT_MAX;
-	POLY::Edge* answer = NULL;
+	POLY::Edge* answer = nullptr;
 	for (size_t i = 0; i < face->numEdges(); ++i) {
 		POLY::Edge* testEdge = face->getEdge(i);
 		Line line = testEdge->computeLine();
@@ -138,9 +138,9 @@ const POLY::Edge* BallPolyContact::getClosestInVoronoiEdge(const POLY::Face* fac
 const POLY::Vertex* BallPolyContact::getClosestVertex(const POLY::Edge* edge, float& vertexToCenter, const Vector3& ballInPoly)
 {
 	vertexToCenter = FLT_MAX;
-	const POLY::Vertex* answer = NULL;
+	const POLY::Vertex* answer = nullptr;
 	for (size_t i = 0; i < 2; ++i) {
-		const POLY::Vertex* testVertex = edge->getVertex(NULL, i);
+		const POLY::Vertex* testVertex = edge->getVertex(nullptr, i);
 		const Vector3& testOffset =  testVertex->getOffset();
 		float distance = (ballInPoly - testOffset).magnitude();
 		if (distance < vertexToCenter) {
@@ -165,7 +165,7 @@ BallPlaneConnector* BallPolyContact::newBallPlaneConnector(const POLY::Face* fac
 									    face->getId()	);			// id of this face
     }
     else
-        return NULL;
+        return nullptr;
 }
 
 BallEdgeConnector* BallPolyContact::newBallEdgeConnector(const POLY::Edge* edge)
@@ -176,12 +176,12 @@ BallEdgeConnector* BallPolyContact::newBallEdgeConnector(const POLY::Edge* edge)
 									    getPrimitive(1)->getBody(),
 									    *contactParams,
 									    ball()->getRadius(),
-									    edge->getVertexOffset(NULL, 0),		// face == NULL means get vertex 0
-									    edge->computeNormal(NULL),
+									    edge->getVertexOffset(nullptr, 0),		// face == nullptr means get vertex 0
+									    edge->computeNormal(nullptr),
 									    edge->getId()		);		// id of edge 
     }
     else
-        return NULL;
+        return nullptr;
 }
 
 
@@ -198,7 +198,7 @@ BallVertexConnector* BallPolyContact::newBallVertexConnector(const POLY::Vertex*
 									    vertex->getId()			);		// for comparing
     }
     else
-        return NULL;
+        return nullptr;
 }
 
 

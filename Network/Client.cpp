@@ -77,13 +77,13 @@ Client::~Client(void)
 Client* Client::findClient(const RBX::Instance* context, bool testInDatamodel)
 {
 	const ServiceProvider* serviceProvider = ServiceProvider::findServiceProvider(context);
-	RBXASSERT(!testInDatamodel || serviceProvider!=NULL);
+	RBXASSERT(!testInDatamodel || serviceProvider!=nullptr);
 	return ServiceProvider::find<Client>(serviceProvider);
 }
 
 bool Client::clientIsPresent(const RBX::Instance* context, bool testInDatamodel)
 {
-	return findClient(context, testInDatamodel) != NULL;
+	return findClient(context, testInDatamodel) != nullptr;
 }
 
 bool Client::physicsOutBandwidthExceeded(const RBX::Instance* context)
@@ -236,7 +236,7 @@ void Client::onServiceProvider(ServiceProvider* oldProvider, ServiceProvider* ne
 		disconnect(); // We should have disconnected by now (in response to the Closing event)
 
 		Players* players = ServiceProvider::find<Players>(oldProvider);
-		players->setConnection(NULL);
+		players->setConnection(nullptr);
 	}
 
 	Super::onServiceProvider(oldProvider, newProvider);
@@ -246,7 +246,7 @@ void Client::onServiceProvider(ServiceProvider* oldProvider, ServiceProvider* ne
 		//We're in multiplayer mode, so burn out the studio tools
 		if(RBX::DataModel* dataModel = RBX::DataModel::get(this)){
 			if(dataModel->lockVerb.get())
-				dataModel->lockVerb->doIt(NULL);
+				dataModel->lockVerb->doIt(nullptr);
 		}
 
 		Players* players = ServiceProvider::create<Players>(newProvider);
@@ -404,7 +404,7 @@ void Client::HandleConnection(RakNet::Packet *packet)
         {
             // Disconnect
             proxy->unlockParent();
-            proxy->setParent(NULL);
+            proxy->setParent(nullptr);
         }
     }
 }

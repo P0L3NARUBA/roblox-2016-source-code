@@ -11,7 +11,7 @@ namespace RBX {
 
 REFLECTION_BEGIN();
 static const Reflection::PropDescriptor<Seat, bool> propDisabled("Disabled", "Control", &Seat::getDisabled, &Seat::setDisabled);
-static const Reflection::RefPropDescriptor<Seat, Humanoid> propOccupant("Occupant", "Control", &Seat::getOccupant, NULL, Reflection::PropertyDescriptor::SCRIPTING);
+static const Reflection::RefPropDescriptor<Seat, Humanoid> propOccupant("Occupant", "Control", &Seat::getOccupant, nullptr, Reflection::PropertyDescriptor::SCRIPTING);
 static Reflection::RemoteEventDesc<Seat, void(shared_ptr<Instance>)> event_createSeatWeld(&Seat::createSeatWeldSignal, "RemoteCreateSeatWeld", "humanoid", Security::None, Reflection::RemoteEventCommon::REPLICATE_ONLY,	Reflection::RemoteEventCommon::CLIENT_SERVER);
 static Reflection::RemoteEventDesc<Seat, void()> event_destroySeatWeld(&Seat::destroySeatWeldSignal, "RemoteDestroySeatWeld", Security::None, Reflection::RemoteEventCommon::REPLICATE_ONLY, Reflection::RemoteEventCommon::CLIENT_SERVER);
 REFLECTION_END();

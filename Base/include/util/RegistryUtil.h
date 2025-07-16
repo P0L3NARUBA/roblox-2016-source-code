@@ -39,8 +39,8 @@ public:
       Reads an arbitrary amount of data from a binary registry key.
       returns false if the key could not be read for any reason.
     
-      @param valueData pointer to the output buffer of sufficient size. Pass NULL as valueData in order to have available data size returned in dataSize.
-      @param dataSize size of the output buffer.  When NULL is passed for valueData, contains the size of available data on successful return.
+      @param valueData pointer to the output buffer of sufficient size. Pass nullptr as valueData in order to have available data size returned in dataSize.
+      @param dataSize size of the output buffer.  When nullptr is passed for valueData, contains the size of available data on successful return.
     */
     static bool readBinaryData(const std::string& key, BYTE* valueData, UINT32& dataSize);
 

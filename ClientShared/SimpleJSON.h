@@ -14,7 +14,7 @@ typedef void (*parser)(const char *stream);
 #define END_DATA_MAP()
 
 #define DATA_MAP_IMPL_START(className)			\
-	className *className::_thisPtr = NULL;			\
+	className *className::_thisPtr = nullptr;			\
 	void className::Init() {						\
 
 #define DATA_MAP_IMPL_END()	\

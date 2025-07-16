@@ -33,9 +33,9 @@ static struct curl_slist *slist_get_last(struct curl_slist *list)
 {
   struct curl_slist     *item;
 
-  /* if caller passed us a NULL, return now */
+  /* if caller passed us a nullptr, return now */
   if(!list)
-    return NULL;
+    return nullptr;
 
   /* loop through to find the last item */
   item = list;
@@ -51,7 +51,7 @@ static struct curl_slist *slist_get_last(struct curl_slist *list)
  * should have been malloc()ated. Curl_slist_append_nodup always returns
  * the address of the first record, so that you can use this function as an
  * initialization function as well as an append function.
- * If an error occurs, NULL is returned and the string argument is NOT
+ * If an error occurs, nullptr is returned and the string argument is NOT
  * released.
  */
 struct curl_slist *Curl_slist_append_nodup(struct curl_slist *list, char *data)
@@ -63,9 +63,9 @@ struct curl_slist *Curl_slist_append_nodup(struct curl_slist *list, char *data)
 
   new_item = malloc(sizeof(struct curl_slist));
   if(!new_item)
-    return NULL;
+    return nullptr;
 
-  new_item->next = NULL;
+  new_item->next = nullptr;
   new_item->data = data;
 
   /* if this is the first item, then new_item *is* the list */
@@ -90,7 +90,7 @@ struct curl_slist *curl_slist_append(struct curl_slist *list,
   char *dupdata = strdup(data);
 
   if(!dupdata)
-    return NULL;
+    return nullptr;
 
   list = Curl_slist_append_nodup(list, dupdata);
   if(!list)
@@ -101,12 +101,12 @@ struct curl_slist *curl_slist_append(struct curl_slist *list,
 
 /*
  * Curl_slist_duplicate() duplicates a linked list. It always returns the
- * address of the first record of the cloned list or NULL in case of an
- * error (or if the input list was NULL).
+ * address of the first record of the cloned list or nullptr in case of an
+ * error (or if the input list was nullptr).
  */
 struct curl_slist *Curl_slist_duplicate(struct curl_slist *inlist)
 {
-  struct curl_slist *outlist = NULL;
+  struct curl_slist *outlist = nullptr;
   struct curl_slist *tmp;
 
   while(inlist) {
@@ -114,7 +114,7 @@ struct curl_slist *Curl_slist_duplicate(struct curl_slist *inlist)
 
     if(!tmp) {
       curl_slist_free_all(outlist);
-      return NULL;
+      return nullptr;
     }
 
     outlist = tmp;

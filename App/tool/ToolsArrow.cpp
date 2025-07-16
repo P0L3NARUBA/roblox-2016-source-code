@@ -67,7 +67,7 @@ Decal* ArrowToolBase::findDecal(PartInstance* p, const shared_ptr<InputObject>& 
 {
 	// try to grab decal if there is one and this part is selected already
 	int surfId;
-	Surface s = getSurface(workspace, inputObject, NULL, p, surfId);
+	Surface s = getSurface(workspace, inputObject, nullptr, p, surfId);
 	if (s.getPartInstance())
 	{
 		if (p->getChildren())
@@ -85,7 +85,7 @@ Decal* ArrowToolBase::findDecal(PartInstance* p, const shared_ptr<InputObject>& 
 			}
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 shared_ptr<MouseCommand> ArrowToolBase::onMouseDown(const shared_ptr<InputObject>& inputObject)

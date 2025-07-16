@@ -254,7 +254,7 @@ void MegaDragger::removeParts()
 {
 	for(size_t i = 0; i<dragParts.size(); i++){
 		if(shared_ptr<PartInstance> part = dragParts[i].lock()){
-			part->setParent(NULL);	
+			part->setParent(nullptr);	
 		}
 	}
 	joined = true;

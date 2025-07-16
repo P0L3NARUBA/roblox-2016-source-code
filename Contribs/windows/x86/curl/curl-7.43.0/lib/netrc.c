@@ -49,7 +49,7 @@ enum host_lookup_state {
 /*
  * @unittest: 1304
  *
- * *loginp and *passwordp MUST be allocated if they aren't NULL when passed
+ * *loginp and *passwordp MUST be allocated if they aren't nullptr when passed
  * in.
  */
 int Curl_parsenetrc(const char *host,
@@ -191,7 +191,7 @@ int Curl_parsenetrc(const char *host,
           break;
         } /* switch (state) */
 
-        tok = strtok_r(NULL, " \t\n", &tok_buf);
+        tok = strtok_r(nullptr, " \t\n", &tok_buf);
       } /* while(tok) */
     } /* while fgets() */
 

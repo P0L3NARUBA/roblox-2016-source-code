@@ -143,7 +143,7 @@ VI_LOCATION   loc;
     im = (STR_IM*)get_next_elem(&vbd->vdim);
     if(im->len == 0xFFFFFFFF) continue;
 		get_read_loc(&im->loc);
-    read_vld_data(im->len, NULL);
+    read_vld_data(im->len, nullptr);
   }
   end_read_vld();
   end_rw(&vbd->vdim);
@@ -169,7 +169,7 @@ lpSTR_IM      im;
 VI_LOCATION   loc;
 
   init_vbd(NewVbd);
-  if(NULL == (buf = (char*)SGMalloc(OldVbd->max_len))) goto err;
+  if(nullptr == (buf = (char*)SGMalloc(OldVbd->max_len))) goto err;
 
 //   VLD
   begin_rw(&OldVbd->vdim, 0);
@@ -192,7 +192,7 @@ VI_LOCATION   loc;
     im = (STR_IM*)get_next_elem(&NewVbd->vdim);
     if(im->len == 0xFFFFFFFF) continue;
 		get_read_loc(&im->loc);
-    read_vld_data(im->len, NULL);
+    read_vld_data(im->len, nullptr);
   }
   end_read_vld();
   end_rw(&NewVbd->vdim);

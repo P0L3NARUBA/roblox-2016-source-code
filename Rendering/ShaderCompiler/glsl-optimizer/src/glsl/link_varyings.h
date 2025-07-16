@@ -217,7 +217,7 @@ private:
 
    /**
     * If find_candidate() has been called, pointer to the tfeedback_candidate
-    * data structure that was found.  Otherwise NULL.
+    * data structure that was found.  Otherwise nullptr.
     */
    const tfeedback_candidate *matched_candidate;
 

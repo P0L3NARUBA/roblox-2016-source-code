@@ -91,7 +91,7 @@ class ir_print_glsl_visitor : public ir_visitor {
 public:
 	ir_print_glsl_visitor(string_buffer& buf, global_print_tracker* globals_, PrintGlslMode mode_, bool use_precision_, const _mesa_glsl_parse_state* state_)
 		: buffer(buf)
-		, loopstate(NULL)
+		, loopstate(nullptr)
 		, inside_loop_body(false)
 		, skipped_this_ir(false)
 		, previous_skipped(false)
@@ -901,7 +901,7 @@ void ir_print_glsl_visitor::visit(ir_texture *ir)
 		buffer.asprintf_append ("Lod");
 	if (ir->op == ir_txd)
 		buffer.asprintf_append ("Grad");
-    if (ir->offset != NULL)
+    if (ir->offset != nullptr)
         buffer.asprintf_append ("Offset");
 	
 	if (state->es_shader)
@@ -954,7 +954,7 @@ void ir_print_glsl_visitor::visit(ir_texture *ir)
 	}
 
 	// texel offset
-	if (ir->offset != NULL)
+	if (ir->offset != nullptr)
 	{
 		buffer.asprintf_append (", ");
 		ir->offset->accept(this);
@@ -1077,7 +1077,7 @@ bool ir_print_glsl_visitor::try_print_array_assignment (ir_dereference* lhs, ir_
 	if (this->state->language_version >= 120)
 		return false;
 	ir_dereference_variable* rhsarr = rhs->as_dereference_variable();
-	if (rhsarr == NULL)
+	if (rhsarr == nullptr)
 		return false;
 	const glsl_type* lhstype = lhs->type;
 	const glsl_type* rhstype = rhsarr->type;
@@ -1181,7 +1181,7 @@ static bool try_print_increment (ir_print_glsl_visitor* vis, ir_assignment* ir)
 	
 	// Needs to write to whole variable
 	ir_variable* lhsVar = ir->whole_variable_written();
-	if (lhsVar == NULL)
+	if (lhsVar == nullptr)
 		return false;
 	
 	// Types must match
@@ -1194,7 +1194,7 @@ static bool try_print_increment (ir_print_glsl_visitor* vis, ir_assignment* ir)
 	
 	// rhs0 must be variable deref, same one as lhs
 	ir_dereference_variable* rhsDeref = rhsOp->operands[0]->as_dereference_variable();
-	if (rhsDeref == NULL)
+	if (rhsDeref == nullptr)
 		return false;
 	if (lhsVar != rhsDeref->var)
 		return false;
@@ -1270,7 +1270,7 @@ void ir_print_glsl_visitor::visit(ir_assignment *ir)
 		
 		if (!skip_assign)
 		{
-			emit_assignment_part(ir->lhs, rhsOp->operands[0], ir->write_mask, NULL);
+			emit_assignment_part(ir->lhs, rhsOp->operands[0], ir->write_mask, nullptr);
 			buffer.asprintf_append ("; ");
 		}
 		emit_assignment_part(ir->lhs, rhsOp->operands[1], ir->write_mask, rhsOp->operands[2]);
@@ -1289,7 +1289,7 @@ void ir_print_glsl_visitor::visit(ir_assignment *ir)
 	  buffer.asprintf_append (" ");
    }
 	
-	emit_assignment_part (ir->lhs, ir->rhs, ir->write_mask, NULL);
+	emit_assignment_part (ir->lhs, ir->rhs, ir->write_mask, nullptr);
 }
 
 
@@ -1310,7 +1310,7 @@ void print_float (string_buffer& buffer, float f)
 	char tmp[64];
 	snprintf(tmp, 64, "%.7g", f);
 
-	char* posE = NULL;
+	char* posE = nullptr;
 	posE = strchr(tmp, 'e');
 	if (!posE)
 		posE = strchr(tmp, 'E');
@@ -1331,7 +1331,7 @@ void print_float (string_buffer& buffer, float f)
 	// While gcc would print something like 1.0e+07, MSVC will print 1.0e+007 -
 	// only for exponential notation, it seems, will add one extra useless zero. Let's try to remove
 	// that so compiler output matches.
-	if (posE != NULL)
+	if (posE != nullptr)
 	{
 		if((posE[1] == '+' || posE[1] == '-') && posE[2] == '0')
 		{
@@ -1348,7 +1348,7 @@ void print_float (string_buffer& buffer, float f)
 	buffer.asprintf_append ("%s", tmp);
 
 	// need to append ".0"?
-	if (!strchr(tmp,'.') && (posE == NULL))
+	if (!strchr(tmp,'.') && (posE == nullptr))
 		buffer.asprintf_append(".0");
 }
 
@@ -1503,7 +1503,7 @@ ir_print_glsl_visitor::visit(ir_discard *ir)
 {
    buffer.asprintf_append ("discard");
 
-   if (ir->condition != NULL) {
+   if (ir->condition != nullptr) {
       buffer.asprintf_append (" TODO ");
       ir->condition->accept(this);
    }
@@ -1548,7 +1548,7 @@ ir_print_glsl_visitor::visit(ir_if *ir)
 
 bool ir_print_glsl_visitor::can_emit_canonical_for (loop_variable_state *ls)
 {
-	if (ls == NULL)
+	if (ls == nullptr)
 		return false;
 	
 	if (ls->induction_variables.is_empty())
@@ -1626,7 +1626,7 @@ bool ir_print_glsl_visitor::emit_canonical_for (ir_loop* ir)
 		if (term_expr)
 		{
 			// Binary comparison conditions
-			const char* termOp = NULL;
+			const char* termOp = nullptr;
 			switch (term_expr->operation)
 			{
 				case ir_binop_less: termOp = ">="; break;
@@ -1637,7 +1637,7 @@ bool ir_print_glsl_visitor::emit_canonical_for (ir_loop* ir)
 				case ir_binop_nequal: termOp = "=="; break;
 				default: break;
 			}
-			if (termOp != NULL)
+			if (termOp != nullptr)
 			{
 				term_expr->operands[0]->accept(this);
 				buffer.asprintf_append(" %s ", termOp);

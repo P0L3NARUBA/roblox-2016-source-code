@@ -172,7 +172,7 @@ D_POINT 	point;
 
 	if( surf_dat->sdtype & SURF_APPR ){
 		if( direction==0 ){
-			if( (line=(D_POINT*)SGMalloc(surf_dat->P.n*sizeof(D_POINT)))==NULL) return FALSE;
+			if( (line=(D_POINT*)SGMalloc(surf_dat->P.n*sizeof(D_POINT)))==nullptr) return FALSE;
 // 
 			for( i=0; i<surf_dat->P.n; i++ ){
 				read_elem(&surf_dat->P.vdim, surf_dat->P.n*count+i, &node);
@@ -199,7 +199,7 @@ D_POINT 	point;
 				}
 			}
 		}else{
-			if( (line=(D_POINT*)SGMalloc(surf_dat->P.m*sizeof(D_POINT)))==NULL) return FALSE;
+			if( (line=(D_POINT*)SGMalloc(surf_dat->P.m*sizeof(D_POINT)))==nullptr) return FALSE;
 // 
 			for( number=0, i=0; i<surf_dat->P.m; i++, number+=surf_dat->P.n ){
 				read_elem(&surf_dat->P.vdim, surf_dat->P.n*i+count, &node );
@@ -288,9 +288,9 @@ BOOL add_break_surf_line( lpSURF_DAT surf_dat, short direction, short num ){
 
      	if( spline.numU > 2*(MAX_POINT_ON_SURFACE+surf_dat->degree_q+1) ){
        	SGFree( surf_dat->v );
-        if( ( surf_dat->v=(sgFloat*)SGMalloc( spline.nump*sizeof(sgFloat) ) ) == NULL ) goto err1;
+        if( ( surf_dat->v=(sgFloat*)SGMalloc( spline.nump*sizeof(sgFloat) ) ) == nullptr ) goto err1;
         SGFree( surf_dat->V );
-        if( ( surf_dat->V=(sgFloat*)SGMalloc( spline.numU*sizeof(sgFloat) ) ) == NULL ) goto err1;
+        if( ( surf_dat->V=(sgFloat*)SGMalloc( spline.numU*sizeof(sgFloat) ) ) == nullptr ) goto err1;
       }
 // Put new surface parameters from spline structure to surface structure
 			for( j=0; j<spline.nump; j++ ) surf_dat->v[j]=spline.u[j];
@@ -339,9 +339,9 @@ BOOL add_break_surf_line( lpSURF_DAT surf_dat, short direction, short num ){
 
      	if( spline.numU > 2*(MAX_POINT_ON_SURFACE+surf_dat->degree_p+1) ){
        	SGFree( surf_dat->u );
-        if( ( surf_dat->u=(sgFloat*)SGMalloc( spline.nump*sizeof(sgFloat) ) ) == NULL ) goto err1;
+        if( ( surf_dat->u=(sgFloat*)SGMalloc( spline.nump*sizeof(sgFloat) ) ) == nullptr ) goto err1;
         SGFree( surf_dat->U );
-        if( ( surf_dat->U=(sgFloat*)SGMalloc( spline.numU*sizeof(sgFloat) ) ) == NULL ) goto err1;
+        if( ( surf_dat->U=(sgFloat*)SGMalloc( spline.numU*sizeof(sgFloat) ) ) == nullptr ) goto err1;
       }
 // Put new surface parameters from spline structure to surface structure
 			for( j=0; j<spline.nump; j++ ) surf_dat->u[j]=spline.u[j];

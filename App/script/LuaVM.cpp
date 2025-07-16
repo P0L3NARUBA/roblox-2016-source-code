@@ -19,7 +19,7 @@ struct lua_State;
 // If you are getting to this point in a debugger, you probably added a lua_*
 // call to one of the VM protected sections.
 void lua_vmhooked_handler(lua_State* L) {
-    VMProtectBeginVirtualization(NULL);
+    VMProtectBeginVirtualization(nullptr);
     RBX::Tokens::sendStatsToken.addFlagFast(HATE_LUA_VM_HOOKED);
     RBX::DataModel* dm = RBX::DataModel::get(RobloxExtraSpace::get(L)->context());
     if (dm)

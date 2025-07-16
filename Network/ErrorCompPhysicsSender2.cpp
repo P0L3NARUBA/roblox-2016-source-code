@@ -86,7 +86,7 @@ void ErrorCompPhysicsSender2::step()
 	newMovingAssemblies.clear();
 
 	// Prepare the data needed to compute errors
-	const ModelInstance* characterModel = NULL;
+	const ModelInstance* characterModel = nullptr;
 	CoordinateFrame focus;
 	if (const Player* player = replicator.findTargetPlayer()) {
 		if (player->hasCharacterHead(focus)) {
@@ -261,7 +261,7 @@ int ErrorCompPhysicsSender2::sendPacket(int maxPackets, PacketPriority packetPri
 					if (replicator.isStreamingEnabled())
 						*bitStream << true; // done
 					else
-						replicator.serializeId(*bitStream, NULL);
+						replicator.serializeId(*bitStream, nullptr);
 
 					// Send ID_PHYSICS
 					replicator.rakPeer->Send(bitStream, packetPriority, UNRELIABLE, PHYSICS_CHANNEL, replicator.remotePlayerId, false);
@@ -298,7 +298,7 @@ int ErrorCompPhysicsSender2::sendPacket(int maxPackets, PacketPriority packetPri
 		if (replicator.isStreamingEnabled())
 			*bitStream << true; // done
 		else
-			replicator.serializeId(*bitStream, NULL);
+			replicator.serializeId(*bitStream, nullptr);
 
 		// Send ID_PHYSICS
 		replicator.rakPeer->Send(bitStream, packetPriority, UNRELIABLE, PHYSICS_CHANNEL, replicator.remotePlayerId, false);
@@ -413,7 +413,7 @@ bool ErrorCompPhysicsSender2::sendPhysicsData(RakNet::BitStream& bitStream, cons
 	sendDetailed = nugget.sendDetailed;
     CoordinateFrame cFrame = nugget.part->getCoordinateFrame();
     float accumulatedError;
-	return PhysicsSender::sendPhysicsData(bitStream, nugget.part.get(), sendDetailed, currentStepTimestamp, cFrame, accumulatedError, NULL);
+	return PhysicsSender::sendPhysicsData(bitStream, nugget.part.get(), sendDetailed, currentStepTimestamp, cFrame, accumulatedError, nullptr);
 }
 
 void ErrorCompPhysicsSender2::writeAssembly(RakNet::BitStream& bitStream, const Assembly* assembly, Compressor::CompressionType compressionType, bool crossPacketCompression)

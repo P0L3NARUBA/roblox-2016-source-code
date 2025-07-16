@@ -523,7 +523,7 @@ namespace RBX {
 		apiRequest.throttlingPriority = throttlePriority;
 		apiRequest.setHttp(httpRequest);
 
-		executeApiRequest(apiRequest, throttlePriority, NULL);
+		executeApiRequest(apiRequest, throttlePriority, nullptr);
 
 		response = apiRequest.syncResponse;
 	}
@@ -581,7 +581,7 @@ namespace RBX {
 	int HttpRbxApiService::getPlayerNum()
 	{
 		const ServiceProvider* serviceProvider = ServiceProvider::findServiceProvider(this);
-		if (serviceProvider == NULL) 
+		if (serviceProvider == nullptr) 
 		{
 			RBXASSERT(false);
 			return 0;

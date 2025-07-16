@@ -10,8 +10,8 @@ namespace RBX {
 
 
 GeoPair::GeoPair() 
-: body0(NULL)
-, body1(NULL)
+: body0(nullptr)
+, body1(nullptr)
 {}
 
 

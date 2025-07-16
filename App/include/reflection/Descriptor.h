@@ -26,7 +26,7 @@ namespace RBX
 				const Descriptor* preferred;	// used if isDeprecated 
 				Attributes()
 					:isDeprecated(false)
-					,preferred(NULL)
+					,preferred(nullptr)
 				{}
 				static Attributes deprecated(const Descriptor& preferred)
 				{

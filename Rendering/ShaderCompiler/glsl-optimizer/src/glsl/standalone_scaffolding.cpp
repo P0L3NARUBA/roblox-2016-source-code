@@ -64,7 +64,7 @@ _mesa_new_shader(struct gl_context *ctx, GLuint name, GLenum type)
    (void) ctx;
 
    assert(type == GL_FRAGMENT_SHADER || type == GL_VERTEX_SHADER);
-   shader = rzalloc(NULL, struct gl_shader);
+   shader = rzalloc(nullptr, struct gl_shader);
    if (shader) {
       shader->Type = type;
       shader->Stage = _mesa_shader_enum_to_shader_stage(type);

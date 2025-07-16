@@ -215,12 +215,12 @@ short		i, j;//, k, number;
 sgFloat 	/*w,*/ *N_j, *N_i;
 //W_NODE  P, node;
 
-	if( ( N_j = (sgFloat*)SGMalloc( (surf_dat->P.m+3 )*sizeof(sgFloat) ) ) == NULL ) return FALSE;
+	if( ( N_j = (sgFloat*)SGMalloc( (surf_dat->P.m+3 )*sizeof(sgFloat) ) ) == nullptr ) return FALSE;
 	for( j=0; j<surf_dat->P.m; j++ )
 		if( (surf_dat->V[j]<=v) && (v<=surf_dat->V[j+surf_dat->degree_q+1]))
 			N_j[j]=nurbs_basis_func( j, surf_dat->degree_q, surf_dat->V, v);
 
-	if( ( N_i = (sgFloat*)SGMalloc( (surf_dat->P.n+3 )*sizeof(sgFloat) ) ) == NULL ) goto err;
+	if( ( N_i = (sgFloat*)SGMalloc( (surf_dat->P.n+3 )*sizeof(sgFloat) ) ) == nullptr ) goto err;
 	for( i=0; i<surf_dat->P.n; i++ )
 		if( (surf_dat->U[i]<=u) && (u<=surf_dat->U[i+surf_dat->degree_p+1]))
 			N_i[i]=nurbs_basis_func( i, surf_dat->degree_p, surf_dat->U, u);
@@ -253,7 +253,7 @@ hOBJ		hobj, hspl;
 
 	init_vdim( ribs, sizeof(hOBJ) );
 	hobj = list->hhead;  // list begining
-	while( hobj != NULL ){ // while objects exist into list
+	while( hobj != nullptr ){ // while objects exist into list
 		if( !transform_to_NURBS( hobj, &hspl)) goto err;
 		if( !add_elem( ribs, &hspl )) goto err;
 		get_next_item_z( SEL_LIST, hobj, &hobj );
@@ -315,7 +315,7 @@ D_POINT			point;
 OSTATUS 		status;
 
 	hobj = list->hhead;  // list begining
-	while( hobj != NULL ){ // while objects exist into list
+	while( hobj != nullptr ){ // while objects exist into list
 		read_elem( ribs, i, &sply_dat );
 		if (!get_status_path(hobj, &status)) return FALSE;
 		if (status & ST_CLOSE) {
@@ -386,11 +386,11 @@ BOOL   ret=FALSE;
 short	 i;
 sgFloat *N_i, *N_i1, *N_j;
 
-	if((N_i=(sgFloat*)SGMalloc(srf_dat->P.n*sizeof(sgFloat)))==NULL) return FALSE;
+	if((N_i=(sgFloat*)SGMalloc(srf_dat->P.n*sizeof(sgFloat)))==nullptr) return FALSE;
 
-	if((N_i1=(sgFloat*)SGMalloc((srf_dat->P.n-1)*sizeof(sgFloat)))==NULL) goto err;
+	if((N_i1=(sgFloat*)SGMalloc((srf_dat->P.n-1)*sizeof(sgFloat)))==nullptr) goto err;
 
-	if((N_j=(sgFloat*)SGMalloc(srf_dat->P.m*sizeof(sgFloat)))==NULL) goto err;
+	if((N_j=(sgFloat*)SGMalloc(srf_dat->P.m*sizeof(sgFloat)))==nullptr) goto err;
 
 	for( i=0; i<srf_dat->P.n; i++ )
 		if( srf_dat->U[i] <= u && u <= srf_dat->U[i+srf_dat->degree_p+1] )
@@ -502,11 +502,11 @@ BOOL   ret=FALSE;
 short	 i;
 sgFloat *N_i, *N_j, *N_j1;
 
-	if((N_i=(sgFloat*)SGMalloc(srf_dat->P.n*sizeof(sgFloat)))==NULL) return FALSE;
+	if((N_i=(sgFloat*)SGMalloc(srf_dat->P.n*sizeof(sgFloat)))==nullptr) return FALSE;
 
-	if((N_j=(sgFloat*)SGMalloc(srf_dat->P.m*sizeof(sgFloat)))==NULL) return FALSE;
+	if((N_j=(sgFloat*)SGMalloc(srf_dat->P.m*sizeof(sgFloat)))==nullptr) return FALSE;
 
-	if((N_j1=(sgFloat*)SGMalloc((srf_dat->P.m-1)*sizeof(sgFloat)))==NULL) goto err;
+	if((N_j1=(sgFloat*)SGMalloc((srf_dat->P.m-1)*sizeof(sgFloat)))==nullptr) goto err;
 
 	for( i=0; i<srf_dat->P.n; i++ )
 		if( srf_dat->U[i] <= u && u <= srf_dat->U[i+srf_dat->degree_p+1] )

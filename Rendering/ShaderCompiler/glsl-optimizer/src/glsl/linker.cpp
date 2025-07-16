@@ -125,7 +125,7 @@ public:
 	 }
       }
 
-      if (ir->return_deref != NULL) {
+      if (ir->return_deref != nullptr) {
 	 ir_variable *const var = ir->return_deref->variable_referenced();
 
 	 if (strcmp(name, var->name) == 0) {
@@ -425,7 +425,7 @@ parse_program_resource_name(const GLchar *name,
    if ((i == 0) || name[i-1] != '[')
       return -1;
 
-   long array_index = strtol(&name[i], NULL, 10);
+   long array_index = strtol(&name[i], nullptr, 10);
    if (array_index < 0)
       return -1;
 
@@ -440,7 +440,7 @@ link_invalidate_variable_locations(exec_list *ir)
    foreach_in_list(ir_instruction, node, ir) {
       ir_variable *const var = node->as_variable();
 
-      if (var == NULL)
+      if (var == nullptr)
          continue;
 
       /* Only assign locations for variables that lack an explicit location.
@@ -533,7 +533,7 @@ void
 validate_vertex_shader_executable(struct gl_shader_program *prog,
 				  struct gl_shader *shader)
 {
-   if (shader == NULL)
+   if (shader == nullptr)
       return;
 
    /* From the GLSL 1.10 spec, page 48:
@@ -592,7 +592,7 @@ void
 validate_fragment_shader_executable(struct gl_shader_program *prog,
 				    struct gl_shader *shader)
 {
-   if (shader == NULL)
+   if (shader == nullptr)
       return;
 
    find_assignment_visitor frag_color("gl_FragColor");
@@ -619,7 +619,7 @@ void
 validate_geometry_shader_executable(struct gl_shader_program *prog,
 				    struct gl_shader *shader)
 {
-   if (shader == NULL)
+   if (shader == nullptr)
       return;
 
    unsigned num_vertices = vertices_per_prim(prog->Geom.InputType);
@@ -637,7 +637,7 @@ static void
 validate_geometry_shader_emissions(struct gl_context *ctx,
                                    struct gl_shader_program *prog)
 {
-   if (prog->_LinkedShaders[MESA_SHADER_GEOMETRY] != NULL) {
+   if (prog->_LinkedShaders[MESA_SHADER_GEOMETRY] != nullptr) {
       find_emit_vertex_visitor emit_vertex(ctx->Const.MaxVertexStreams - 1);
       emit_vertex.run(prog->_LinkedShaders[MESA_SHADER_GEOMETRY]->ir);
       if (emit_vertex.error()) {
@@ -696,13 +696,13 @@ cross_validate_globals(struct gl_shader_program *prog,
     */
    glsl_symbol_table variables;
    for (unsigned i = 0; i < num_shaders; i++) {
-      if (shader_list[i] == NULL)
+      if (shader_list[i] == nullptr)
 	 continue;
 
       foreach_in_list(ir_instruction, node, shader_list[i]->ir) {
 	 ir_variable *const var = node->as_variable();
 
-	 if (var == NULL)
+	 if (var == nullptr)
 	    continue;
 
 	 if (uniforms_only && (var->data.mode != ir_var_uniform))
@@ -719,7 +719,7 @@ cross_validate_globals(struct gl_shader_program *prog,
 	  * initializers, the values of the initializers must be the same.
 	  */
 	 ir_variable *const existing = variables.get_variable(var->name);
-	 if (existing != NULL) {
+	 if (existing != nullptr) {
 	    if (var->type != existing->type) {
 	       /* Consider the types to be "the same" if both types are arrays
 		* of the same type and one of the arrays is implicitly sized.
@@ -836,8 +836,8 @@ cross_validate_globals(struct gl_shader_program *prog,
 	     * behavior matches the implemented behavior of at least one other
 	     * vendor, so we'll implement that for all GLSL versions.
 	     */
-	    if (var->constant_initializer != NULL) {
-	       if (existing->constant_initializer != NULL) {
+	    if (var->constant_initializer != nullptr) {
+	       if (existing->constant_initializer != nullptr) {
 		  if (!var->constant_initializer->has_value(existing->constant_initializer)) {
 		     linker_error(prog, "initializers for %s "
 				  "`%s' have differing values\n",
@@ -859,14 +859,14 @@ cross_validate_globals(struct gl_shader_program *prog,
 		   */
 		  existing->constant_initializer =
 		     var->constant_initializer->clone(ralloc_parent(existing),
-						      NULL);
+						      nullptr);
 	       }
 	    }
 
 	    if (var->data.has_initializer) {
 	       if (existing->data.has_initializer
-		   && (var->constant_initializer == NULL
-		       || existing->constant_initializer == NULL)) {
+		   && (var->constant_initializer == nullptr
+		       || existing->constant_initializer == nullptr)) {
 		  linker_error(prog,
 			       "shared global variable `%s' has multiple "
 			       "non-constant initializers.\n",
@@ -938,7 +938,7 @@ interstage_cross_validate_uniform_blocks(struct gl_shader_program *prog)
       for (unsigned int j = 0; j < max_num_uniform_blocks; j++)
 	 prog->UniformBlockStageIndex[i][j] = -1;
 
-      if (sh == NULL)
+      if (sh == nullptr)
 	 continue;
 
       for (unsigned int j = 0; j < sh->NumUniformBlocks; j++) {
@@ -973,9 +973,9 @@ populate_symbol_table(gl_shader *sh)
       ir_variable *var;
       ir_function *func;
 
-      if ((func = inst->as_function()) != NULL) {
+      if ((func = inst->as_function()) != nullptr) {
 	 sh->symbols->add_function(func);
-      } else if ((var = inst->as_variable()) != NULL) {
+      } else if ((var = inst->as_variable()) != nullptr) {
          if (var->data.mode != ir_var_temporary)
             sh->symbols->add_variable(var);
       }
@@ -1022,17 +1022,17 @@ remap_variables(ir_instruction *inst, struct gl_shader *target,
 	 if (ir->var->data.mode == ir_var_temporary) {
 	    ir_variable *var = (ir_variable *) hash_table_find(temps, ir->var);
 
-	    assert(var != NULL);
+	    assert(var != nullptr);
 	    ir->var = var;
 	    return visit_continue;
 	 }
 
 	 ir_variable *const existing =
 	    this->symbols->get_variable(ir->var->name);
-	 if (existing != NULL)
+	 if (existing != nullptr)
 	    ir->var = existing;
 	 else {
-	    ir_variable *copy = ir->var->clone(this->target, NULL);
+	    ir_variable *copy = ir->var->clone(this->target, nullptr);
 
 	    this->symbols->add_variable(copy);
 	    this->instructions->push_head(copy);
@@ -1080,7 +1080,7 @@ exec_node *
 move_non_declarations(exec_list *instructions, exec_node *last,
 		      bool make_copies, gl_shader *target)
 {
-   hash_table *temps = NULL;
+   hash_table *temps = nullptr;
 
    if (make_copies)
       temps = hash_table_ctor(0, hash_table_pointer_hash,
@@ -1096,18 +1096,18 @@ move_non_declarations(exec_list *instructions, exec_node *last,
          continue;
 
       ir_variable *var = inst->as_variable();
-      if ((var != NULL) && (var->data.mode != ir_var_temporary))
+      if ((var != nullptr) && (var->data.mode != ir_var_temporary))
 	 continue;
 
       assert(inst->as_assignment()
              || inst->as_call()
              || inst->as_if() /* for initializers with the ?: operator */
-	     || ((var != NULL) && (var->data.mode == ir_var_temporary)));
+	     || ((var != nullptr) && (var->data.mode == ir_var_temporary)));
 
       if (make_copies) {
-	 inst = inst->clone(target, NULL);
+	 inst = inst->clone(target, nullptr);
 
-	 if (var != NULL)
+	 if (var != nullptr)
 	    hash_table_insert(temps, inst, var);
 	 else
 	    remap_variables(inst, target, temps);
@@ -1132,7 +1132,7 @@ ir_function_signature *
 link_get_main_function_signature(gl_shader *sh)
 {
    ir_function *const f = sh->symbols->get_function("main");
-   if (f != NULL) {
+   if (f != nullptr) {
       exec_list void_parameters;
 
       /* Look for the 'void main()' signature and ensure that it's defined.
@@ -1143,13 +1143,13 @@ link_get_main_function_signature(gl_shader *sh)
        * shaders) because that would have already been caught above.
        */
       ir_function_signature *sig =
-         f->matching_signature(NULL, &void_parameters, false);
-      if ((sig != NULL) && sig->is_defined) {
+         f->matching_signature(nullptr, &void_parameters, false);
+      if ((sig != nullptr) && sig->is_defined) {
 	 return sig;
       }
    }
 
-   return NULL;
+   return nullptr;
 }
 
 
@@ -1161,7 +1161,7 @@ link_get_main_function_signature(gl_shader *sh)
 class array_sizing_visitor : public ir_hierarchical_visitor {
 public:
    array_sizing_visitor()
-      : mem_ctx(ralloc_context(NULL)),
+      : mem_ctx(ralloc_context(nullptr)),
         unnamed_interfaces(hash_table_ctor(0, hash_table_pointer_hash,
                                            hash_table_pointer_compare))
    {
@@ -1200,7 +1200,7 @@ public:
           */
          ir_variable **interface_vars = (ir_variable **)
             hash_table_find(this->unnamed_interfaces, ifc_type);
-         if (interface_vars == NULL) {
+         if (interface_vars == nullptr) {
             interface_vars = rzalloc_array(mem_ctx, ir_variable *,
                                            ifc_type->length);
             hash_table_insert(this->unnamed_interfaces, interface_vars,
@@ -1208,7 +1208,7 @@ public:
          }
          unsigned index = ifc_type->field_index(var->name);
          assert(index < ifc_type->length);
-         assert(interface_vars[index] == NULL);
+         assert(interface_vars[index] == nullptr);
          interface_vars[index] = var;
       }
       return visit_continue;
@@ -1223,7 +1223,7 @@ public:
    void fixup_unnamed_interface_types()
    {
       hash_table_call_foreach(this->unnamed_interfaces,
-                              fixup_unnamed_interface_type, NULL);
+                              fixup_unnamed_interface_type, nullptr);
    }
 
 private:
@@ -1236,7 +1236,7 @@ private:
       if ((*type)->is_unsized_array()) {
          *type = glsl_type::get_array_instance((*type)->fields.array,
                                                max_array_access + 1);
-         assert(*type != NULL);
+         assert(*type != nullptr);
       }
    }
 
@@ -1290,7 +1290,7 @@ private:
              num_fields * sizeof(*fields));
       bool interface_type_changed = false;
       for (unsigned i = 0; i < num_fields; i++) {
-         if (interface_vars[i] != NULL &&
+         if (interface_vars[i] != nullptr &&
              fields[i].type != interface_vars[i]->type) {
             fields[i].type = interface_vars[i]->type;
             interface_type_changed = true;
@@ -1307,7 +1307,7 @@ private:
                                            ifc_type->name);
       delete [] fields;
       for (unsigned i = 0; i < num_fields; i++) {
-         if (interface_vars[i] != NULL)
+         if (interface_vars[i] != nullptr)
             interface_vars[i]->change_interface_type(new_ifc_type);
       }
    }
@@ -1589,27 +1589,27 @@ link_intrastage_shaders(void *mem_ctx,
 			struct gl_shader **shader_list,
 			unsigned num_shaders)
 {
-   struct gl_uniform_block *uniform_blocks = NULL;
+   struct gl_uniform_block *uniform_blocks = nullptr;
 
    /* Check that global variables defined in multiple shaders are consistent.
     */
    cross_validate_globals(prog, shader_list, num_shaders, false);
    if (!prog->LinkStatus)
-      return NULL;
+      return nullptr;
 
    /* Check that interface blocks defined in multiple shaders are consistent.
     */
    validate_intrastage_interface_blocks(prog, (const gl_shader **)shader_list,
                                         num_shaders);
    if (!prog->LinkStatus)
-      return NULL;
+      return nullptr;
 
    /* Link up uniform blocks defined within this stage. */
    const unsigned num_uniform_blocks =
       link_uniform_blocks(mem_ctx, prog, shader_list, num_shaders,
                           &uniform_blocks);
    if (!prog->LinkStatus)
-      return NULL;
+      return nullptr;
 
    /* Check that there is only a single definition of each function signature
     * across all shaders.
@@ -1618,7 +1618,7 @@ link_intrastage_shaders(void *mem_ctx,
       foreach_in_list(ir_instruction, node, shader_list[i]->ir) {
 	 ir_function *const f = node->as_function();
 
-	 if (f == NULL)
+	 if (f == nullptr)
 	    continue;
 
 	 for (unsigned j = i + 1; j < num_shaders; j++) {
@@ -1628,7 +1628,7 @@ link_intrastage_shaders(void *mem_ctx,
 	    /* If the other shader has no function (and therefore no function
 	     * signatures) with the same name, skip to the next shader.
 	     */
-	    if (other == NULL)
+	    if (other == nullptr)
 	       continue;
 
 	    foreach_in_list(ir_function_signature, sig, &f->signatures) {
@@ -1636,13 +1636,13 @@ link_intrastage_shaders(void *mem_ctx,
 		  continue;
 
 	       ir_function_signature *other_sig =
-		  other->exact_matching_signature(NULL, &sig->parameters);
+		  other->exact_matching_signature(nullptr, &sig->parameters);
 
-	       if ((other_sig != NULL) && other_sig->is_defined
+	       if ((other_sig != nullptr) && other_sig->is_defined
 		   && !other_sig->is_builtin()) {
 		  linker_error(prog, "function `%s' is multiply defined",
 			       f->name);
-		  return NULL;
+		  return nullptr;
 	       }
 	    }
 	 }
@@ -1656,21 +1656,21 @@ link_intrastage_shaders(void *mem_ctx,
     * it to the shader.  Repeat until there are no undefined references or
     * until a reference cannot be resolved.
     */
-   gl_shader *main = NULL;
+   gl_shader *main = nullptr;
    for (unsigned i = 0; i < num_shaders; i++) {
-      if (link_get_main_function_signature(shader_list[i]) != NULL) {
+      if (link_get_main_function_signature(shader_list[i]) != nullptr) {
 	 main = shader_list[i];
 	 break;
       }
    }
 
-   if (main == NULL) {
+   if (main == nullptr) {
       linker_error(prog, "%s shader lacks `main'\n",
 		   _mesa_shader_stage_to_string(shader_list[0]->Stage));
-      return NULL;
+      return nullptr;
    }
 
-   gl_shader *linked = ctx->Driver.NewShader(NULL, 0, main->Type);
+   gl_shader *linked = ctx->Driver.NewShader(nullptr, 0, main->Type);
    linked->ir = new(linked) exec_list;
    clone_ir_list(mem_ctx, linked->ir, main->ir);
 
@@ -1722,7 +1722,7 @@ link_intrastage_shaders(void *mem_ctx,
       gl_shader **linking_shaders = (gl_shader **)
          calloc(num_shaders + 1, sizeof(gl_shader *));
 
-      ok = linking_shaders != NULL;
+      ok = linking_shaders != nullptr;
 
       if (ok) {
          memcpy(linking_shaders, shader_list, num_shaders * sizeof(gl_shader *));
@@ -1741,7 +1741,7 @@ link_intrastage_shaders(void *mem_ctx,
 
    if (!ok) {
       ctx->Driver.DeleteShader(ctx, linked);
-      return NULL;
+      return nullptr;
    }
 
    /* At this point linked should contain all of the linked IR, so
@@ -1791,13 +1791,13 @@ static void
 update_array_sizes(struct gl_shader_program *prog)
 {
    for (unsigned i = 0; i < MESA_SHADER_STAGES; i++) {
-	 if (prog->_LinkedShaders[i] == NULL)
+	 if (prog->_LinkedShaders[i] == nullptr)
 	    continue;
 
       foreach_in_list(ir_instruction, node, prog->_LinkedShaders[i]->ir) {
 	 ir_variable *const var = node->as_variable();
 
-	 if ((var == NULL) || (var->data.mode != ir_var_uniform) ||
+	 if ((var == nullptr) || (var->data.mode != ir_var_uniform) ||
 	     !var->type->is_array())
 	    continue;
 
@@ -1814,7 +1814,7 @@ update_array_sizes(struct gl_shader_program *prog)
 
 	 unsigned int size = var->data.max_array_access;
 	 for (unsigned j = 0; j < MESA_SHADER_STAGES; j++) {
-	       if (prog->_LinkedShaders[j] == NULL)
+	       if (prog->_LinkedShaders[j] == nullptr)
 		  continue;
 
 	    foreach_in_list(ir_instruction, node2, prog->_LinkedShaders[j]->ir) {
@@ -1915,7 +1915,7 @@ assign_attribute_or_color_locations(gl_shader_program *prog,
 	  || (target_index == MESA_SHADER_FRAGMENT));
 
    gl_shader *const sh = prog->_LinkedShaders[target_index];
-   if (sh == NULL)
+   if (sh == nullptr)
       return true;
 
    /* Operate in a total of four passes.
@@ -1964,7 +1964,7 @@ assign_attribute_or_color_locations(gl_shader_program *prog,
    foreach_in_list(ir_instruction, node, sh->ir) {
       ir_variable *const var = node->as_variable();
 
-      if ((var == NULL) || (var->data.mode != (unsigned) direction))
+      if ((var == nullptr) || (var->data.mode != (unsigned) direction))
 	 continue;
 
       if (var->data.explicit_location) {
@@ -2183,7 +2183,7 @@ demote_shader_inputs_and_outputs(gl_shader *sh, enum ir_variable_mode mode)
    foreach_in_list(ir_instruction, node, sh->ir) {
       ir_variable *const var = node->as_variable();
 
-      if ((var == NULL) || (var->data.mode != int(mode)))
+      if ((var == nullptr) || (var->data.mode != int(mode)))
 	 continue;
 
       /* A shader 'in' or 'out' variable is only really an input or output if
@@ -2204,7 +2204,7 @@ demote_shader_inputs_and_outputs(gl_shader *sh, enum ir_variable_mode mode)
 static void
 store_fragdepth_layout(struct gl_shader_program *prog)
 {
-   if (prog->_LinkedShaders[MESA_SHADER_FRAGMENT] == NULL) {
+   if (prog->_LinkedShaders[MESA_SHADER_FRAGMENT] == nullptr) {
       return;
    }
 
@@ -2220,7 +2220,7 @@ store_fragdepth_layout(struct gl_shader_program *prog)
    foreach_in_list(ir_instruction, node, ir) {
       ir_variable *const var = node->as_variable();
 
-      if (var == NULL || var->data.mode != ir_var_shader_out) {
+      if (var == nullptr || var->data.mode != ir_var_shader_out) {
          continue;
       }
 
@@ -2258,7 +2258,7 @@ check_resources(struct gl_context *ctx, struct gl_shader_program *prog)
    for (unsigned i = 0; i < MESA_SHADER_STAGES; i++) {
       struct gl_shader *sh = prog->_LinkedShaders[i];
 
-      if (sh == NULL)
+      if (sh == nullptr)
 	 continue;
 
       if (sh->num_samplers > ctx->Const.Program[i].MaxTextureImageUnits) {
@@ -2393,7 +2393,7 @@ reserve_explicit_locations(struct gl_shader_program *prog,
 
       /* Initialize allocated space. */
       for (unsigned i = prog->NumUniformRemapTable; i < max_loc + 1; i++)
-         prog->UniformRemapTable[i] = NULL;
+         prog->UniformRemapTable[i] = nullptr;
 
       prog->NumUniformRemapTable = max_loc + 1;
    }
@@ -2480,28 +2480,28 @@ check_explicit_uniform_locations(struct gl_context *ctx,
 void
 link_shaders(struct gl_context *ctx, struct gl_shader_program *prog)
 {
-   tfeedback_decl *tfeedback_decls = NULL;
+   tfeedback_decl *tfeedback_decls = nullptr;
    unsigned num_tfeedback_decls = prog->TransformFeedback.NumVarying;
 
-   void *mem_ctx = ralloc_context(NULL); // temporary linker context
+   void *mem_ctx = ralloc_context(nullptr); // temporary linker context
 
    prog->LinkStatus = true; /* All error paths will set this to false */
    prog->Validated = false;
    prog->_Used = false;
 
    ralloc_free(prog->InfoLog);
-   prog->InfoLog = ralloc_strdup(NULL, "");
+   prog->InfoLog = ralloc_strdup(nullptr, "");
 
    ralloc_free(prog->UniformBlocks);
-   prog->UniformBlocks = NULL;
+   prog->UniformBlocks = nullptr;
    prog->NumUniformBlocks = 0;
    for (int i = 0; i < MESA_SHADER_STAGES; i++) {
       ralloc_free(prog->UniformBlockStageIndex[i]);
-      prog->UniformBlockStageIndex[i] = NULL;
+      prog->UniformBlockStageIndex[i] = nullptr;
    }
 
    ralloc_free(prog->AtomicBuffers);
-   prog->AtomicBuffers = NULL;
+   prog->AtomicBuffers = nullptr;
    prog->NumAtomicBuffers = 0;
    prog->ARB_fragment_coord_conventions_enable = false;
 
@@ -2568,10 +2568,10 @@ link_shaders(struct gl_context *ctx, struct gl_shader_program *prog)
    }
 
    for (unsigned int i = 0; i < MESA_SHADER_STAGES; i++) {
-      if (prog->_LinkedShaders[i] != NULL)
+      if (prog->_LinkedShaders[i] != nullptr)
 	 ctx->Driver.DeleteShader(ctx, prog->_LinkedShaders[i]);
 
-      prog->_LinkedShaders[i] = NULL;
+      prog->_LinkedShaders[i] = nullptr;
    }
 
    /* Link all shaders for a particular stage and validate the result.
@@ -2621,7 +2621,7 @@ link_shaders(struct gl_context *ctx, struct gl_shader_program *prog)
    unsigned prev;
 
    for (prev = 0; prev <= MESA_SHADER_FRAGMENT; prev++) {
-      if (prog->_LinkedShaders[prev] != NULL)
+      if (prog->_LinkedShaders[prev] != nullptr)
          break;
    }
 
@@ -2633,7 +2633,7 @@ link_shaders(struct gl_context *ctx, struct gl_shader_program *prog)
     * stage.
     */
    for (unsigned i = prev + 1; i <= MESA_SHADER_FRAGMENT; i++) {
-      if (prog->_LinkedShaders[i] == NULL)
+      if (prog->_LinkedShaders[i] == nullptr)
          continue;
 
       validate_interstage_inout_blocks(prog, prog->_LinkedShaders[prev],
@@ -2657,7 +2657,7 @@ link_shaders(struct gl_context *ctx, struct gl_shader_program *prog)
       goto done;
 
    for (unsigned int i = 0; i < MESA_SHADER_STAGES; i++) {
-      if (prog->_LinkedShaders[i] != NULL)
+      if (prog->_LinkedShaders[i] != nullptr)
          lower_named_interface_blocks(mem_ctx, prog->_LinkedShaders[i]);
    }
 
@@ -2682,7 +2682,7 @@ link_shaders(struct gl_context *ctx, struct gl_shader_program *prog)
     * some of that unused.
     */
    for (unsigned i = 0; i < MESA_SHADER_STAGES; i++) {
-      if (prog->_LinkedShaders[i] == NULL)
+      if (prog->_LinkedShaders[i] == nullptr)
 	 continue;
 
       detect_recursion_linked(prog, prog->_LinkedShaders[i]->ir);
@@ -2704,7 +2704,7 @@ link_shaders(struct gl_context *ctx, struct gl_shader_program *prog)
 
    /* Mark all generic shader inputs and outputs as unpaired. */
    for (unsigned i = MESA_SHADER_VERTEX; i <= MESA_SHADER_FRAGMENT; i++) {
-      if (prog->_LinkedShaders[i] != NULL) {
+      if (prog->_LinkedShaders[i] != nullptr) {
          link_invalidate_variable_locations(prog->_LinkedShaders[i]->ir);
       }
    }
@@ -2724,7 +2724,7 @@ link_shaders(struct gl_context *ctx, struct gl_shader_program *prog)
 
    unsigned first;
    for (first = 0; first <= MESA_SHADER_FRAGMENT; first++) {
-      if (prog->_LinkedShaders[first] != NULL)
+      if (prog->_LinkedShaders[first] != nullptr)
 	 break;
    }
 
@@ -2756,7 +2756,7 @@ link_shaders(struct gl_context *ctx, struct gl_shader_program *prog)
     */
    int last, next;
    for (last = MESA_SHADER_FRAGMENT; last >= 0; last--) {
-      if (prog->_LinkedShaders[last] != NULL)
+      if (prog->_LinkedShaders[last] != nullptr)
          break;
    }
 
@@ -2768,13 +2768,13 @@ link_shaders(struct gl_context *ctx, struct gl_shader_program *prog)
           * locations for use by transform feedback.
           */
          if (!assign_varying_locations(ctx, mem_ctx, prog,
-                                       sh, NULL,
+                                       sh, nullptr,
                                        num_tfeedback_decls, tfeedback_decls,
                                        0))
             goto done;
       }
 
-      do_dead_builtin_varyings(ctx, sh, NULL,
+      do_dead_builtin_varyings(ctx, sh, nullptr,
                                num_tfeedback_decls, tfeedback_decls);
 
       if (!prog->SeparateShader)
@@ -2790,15 +2790,15 @@ link_shaders(struct gl_context *ctx, struct gl_shader_program *prog)
        */
       gl_shader *const sh = prog->_LinkedShaders[first];
 
-      do_dead_builtin_varyings(ctx, NULL, sh,
+      do_dead_builtin_varyings(ctx, nullptr, sh,
                                num_tfeedback_decls, tfeedback_decls);
 
       if (prog->SeparateShader) {
          if (!assign_varying_locations(ctx, mem_ctx, prog,
-                                       NULL /* producer */,
+                                       nullptr /* producer */,
                                        sh /* consumer */,
                                        0 /* num_tfeedback_decls */,
-                                       NULL /* tfeedback_decls */,
+                                       nullptr /* tfeedback_decls */,
                                        0 /* gs_input_vertices */))
             goto done;
       } else
@@ -2810,7 +2810,7 @@ link_shaders(struct gl_context *ctx, struct gl_shader_program *prog)
 
    next = last;
    for (int i = next - 1; i >= 0; i--) {
-      if (prog->_LinkedShaders[i] == NULL)
+      if (prog->_LinkedShaders[i] == nullptr)
          continue;
 
       gl_shader *const sh_i = prog->_LinkedShaders[i];
@@ -2868,9 +2868,9 @@ link_shaders(struct gl_context *ctx, struct gl_shader_program *prog)
     * behavior specified in GLSL specification.
     */
    if (!prog->SeparateShader && ctx->API == API_OPENGLES2) {
-      if (prog->_LinkedShaders[MESA_SHADER_VERTEX] == NULL) {
+      if (prog->_LinkedShaders[MESA_SHADER_VERTEX] == nullptr) {
 	 linker_error(prog, "program lacks a vertex shader\n");
-      } else if (prog->_LinkedShaders[MESA_SHADER_FRAGMENT] == NULL) {
+      } else if (prog->_LinkedShaders[MESA_SHADER_FRAGMENT] == nullptr) {
 	 linker_error(prog, "program lacks a fragment shader\n");
       }
    }
@@ -2880,7 +2880,7 @@ link_shaders(struct gl_context *ctx, struct gl_shader_program *prog)
 done:
    for (unsigned i = 0; i < MESA_SHADER_STAGES; i++) {
       free(shader_list[i]);
-      if (prog->_LinkedShaders[i] == NULL)
+      if (prog->_LinkedShaders[i] == nullptr)
 	 continue;
 
       /* Do a final validation step to make sure that the IR wasn't
@@ -2894,10 +2894,10 @@ done:
       /* The symbol table in the linked shaders may contain references to
        * variables that were removed (e.g., unused uniforms).  Since it may
        * contain junk, there is no possible valid use.  Delete it and set the
-       * pointer to NULL.
+       * pointer to nullptr.
        */
       delete prog->_LinkedShaders[i]->symbols;
-      prog->_LinkedShaders[i]->symbols = NULL;
+      prog->_LinkedShaders[i]->symbols = nullptr;
    }
 
    ralloc_free(mem_ctx);

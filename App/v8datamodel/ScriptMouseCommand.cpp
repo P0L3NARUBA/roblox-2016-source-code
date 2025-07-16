@@ -22,7 +22,7 @@ ScriptMouseCommand::ScriptMouseCommand(Workspace* workspace)
 ScriptMouseCommand::~ScriptMouseCommand()
 {
 	FASTLOG1(FLog::MouseCommandLifetime, "ScriptMouseCommand destroyed: %p", this);
-	mouse->setWorkspace(NULL);
+	mouse->setWorkspace(nullptr);
 }
 
 

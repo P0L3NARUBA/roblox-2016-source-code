@@ -67,7 +67,7 @@ protected:
     DWORD ThreadProc();
     BOOL  IsQueued()
     {
-        return m_List != NULL;
+        return m_List != nullptr;
     }
 
     //  The critical section MUST be held when this is called

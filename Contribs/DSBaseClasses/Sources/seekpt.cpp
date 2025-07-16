@@ -41,7 +41,7 @@ STDMETHODIMP CSeekingPassThru::NonDelegatingQueryInterface(REFIID riid, void ** 
 
 CSeekingPassThru::CSeekingPassThru( TCHAR *pName, LPUNKNOWN pUnk, HRESULT *phr )
                             : CUnknown(pName, pUnk, phr),
-                            m_pPosPassThru(NULL)
+                            m_pPosPassThru(nullptr)
 {
 }
 
@@ -74,7 +74,7 @@ STDMETHODIMP CSeekingPassThru::Init(BOOL bRendererSeeking, IPin *pPin)
         } else {
             if (FAILED(hr)) {
                 delete m_pPosPassThru;
-                m_pPosPassThru = NULL;
+                m_pPosPassThru = nullptr;
             }
         }
     }

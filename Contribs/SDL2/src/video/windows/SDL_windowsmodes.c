@@ -105,7 +105,7 @@ WIN_GetDisplayMode(_THIS, LPCTSTR deviceName, DWORD index, SDL_DisplayMode * mod
     mode->driverdata = data;
 
     if (index == ENUM_CURRENT_SETTINGS
-        && (hdc = CreateDC(deviceName, NULL, NULL, NULL)) != NULL) {
+        && (hdc = CreateDC(deviceName, nullptr, nullptr, nullptr)) != nullptr) {
         char bmi_data[sizeof(BITMAPINFOHEADER) + 256 * sizeof(RGBQUAD)];
         LPBITMAPINFO bmi;
         HBITMAP hbm;
@@ -130,7 +130,7 @@ WIN_GetDisplayMode(_THIS, LPCTSTR deviceName, DWORD index, SDL_DisplayMode * mod
             monitor_rect.top = devmode.dmPosition.y;
             monitor_rect.right = monitor_rect.left + 1;
             monitor_rect.bottom = monitor_rect.top + 1;
-            EnumDisplayMonitors(NULL, &monitor_rect, WIN_GetMonitorDPI, (LPARAM)&dpi_data);
+            EnumDisplayMonitors(nullptr, &monitor_rect, WIN_GetMonitorDPI, (LPARAM)&dpi_data);
         } else {
             // We don't have the Windows 8.1 routine so just
             // get system DPI.
@@ -151,8 +151,8 @@ WIN_GetDisplayMode(_THIS, LPCTSTR deviceName, DWORD index, SDL_DisplayMode * mod
         bmi->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
 
         hbm = CreateCompatibleBitmap(hdc, 1, 1);
-        GetDIBits(hdc, hbm, 0, 1, NULL, bmi, DIB_RGB_COLORS);
-        GetDIBits(hdc, hbm, 0, 1, NULL, bmi, DIB_RGB_COLORS);
+        GetDIBits(hdc, hbm, 0, 1, nullptr, bmi, DIB_RGB_COLORS);
+        GetDIBits(hdc, hbm, 0, 1, nullptr, bmi, DIB_RGB_COLORS);
         DeleteObject(hbm);
         DeleteDC(hdc);
         if (bmi->bmiHeader.biCompression == BI_BITFIELDS) {
@@ -252,7 +252,7 @@ WIN_InitModes(_THIS)
         for (i = 0; ; ++i) {
             TCHAR DeviceName[32];
 
-            if (!EnumDisplayDevices(NULL, i, &device, 0)) {
+            if (!EnumDisplayDevices(nullptr, i, &device, 0)) {
                 break;
             }
             if (!(device.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP)) {
@@ -366,9 +366,9 @@ WIN_SetDisplayMode(_THIS, SDL_VideoDisplay * display, SDL_DisplayMode * mode)
     LONG status;
 
     if (mode->driverdata == display->desktop_mode.driverdata) {
-        status = ChangeDisplaySettingsEx(displaydata->DeviceName, NULL, NULL, 0, NULL);
+        status = ChangeDisplaySettingsEx(displaydata->DeviceName, nullptr, nullptr, 0, nullptr);
     } else {
-        status = ChangeDisplaySettingsEx(displaydata->DeviceName, &data->DeviceMode, NULL, CDS_FULLSCREEN, NULL);
+        status = ChangeDisplaySettingsEx(displaydata->DeviceName, &data->DeviceMode, nullptr, CDS_FULLSCREEN, nullptr);
     }
     if (status != DISP_CHANGE_SUCCESSFUL) {
         const char *reason = "Unknown reason";

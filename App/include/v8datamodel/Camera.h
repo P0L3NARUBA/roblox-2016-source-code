@@ -82,7 +82,7 @@ public:
 	bool isFirstPersonCamera() const;	// hack for now - this should be in CameraSubject?? discuss
 
 	bool isPartInFrustum(const PartInstance& part) const;
-	bool isPartVisibleFast(const PartInstance& part, const ContactManager& contactManager, const HitTestFilter* filter = NULL) const; // uses only one ray to do check (can have inaccurate results, but takes 1/4 the time)
+	bool isPartVisibleFast(const PartInstance& part, const ContactManager& contactManager, const HitTestFilter* filter = nullptr) const; // uses only one ray to do check (can have inaccurate results, but takes 1/4 the time)
 
 	bool isLockedToFirstPerson() const;
 

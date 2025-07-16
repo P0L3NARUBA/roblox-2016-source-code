@@ -60,7 +60,7 @@ REFLECTION_BEGIN();
 static Reflection::BoundFuncDesc<Server, void(int, int)> server_startFunction(&Server::start, "Start", "port", 0, "threadSleepTime", 20, Security::Plugin);
 static Reflection::BoundFuncDesc<Server, void(int)> f_disconnect(&Server::stop, "Stop", "blockDuration", 1000, Security::LocalUser);
 static Reflection::BoundFuncDesc<Server, int()> f_GetClientCount(&Server::getClientCount, "GetClientCount", Security::LocalUser);
-static Reflection::PropDescriptor<Server, int> prop_Port("Port", category_Data, &Server::getPort, NULL);
+static Reflection::PropDescriptor<Server, int> prop_Port("Port", category_Data, &Server::getPort, nullptr);
 static Reflection::BoundFuncDesc<Server, void(bool)> func_SetIsPlayerAuthenticationRequired(&Server::setIsPlayerAuthenticationRequired, "SetIsPlayerAuthenticationRequired", "value", Security::Roblox);
 static Reflection::BoundFuncDesc<Server, void()> func_ConfigureAsCloudEditServer(&Server::configureAsCloudEditServer, "ConfigureAsCloudEditServer", Security::Roblox);
 
@@ -185,8 +185,8 @@ Server::~Server(void)
 bool Server::serverIsPresent(const Instance* context, bool testInDatamodel)
 {
 	const ServiceProvider* serviceProvider = ServiceProvider::findServiceProvider(context);
-	RBXASSERT(!testInDatamodel || serviceProvider!=NULL);
-	return ServiceProvider::find<Server>(serviceProvider)!=NULL;
+	RBXASSERT(!testInDatamodel || serviceProvider!=nullptr);
+	return ServiceProvider::find<Server>(serviceProvider)!=nullptr;
 }
 
 std::vector<std::string> Server::getAllIPv4Addresses()
@@ -205,7 +205,7 @@ std::vector<std::string> Server::getAllIPv4Addresses()
 	{
 		if( gethostname ( name, sizeof(name)) == 0)
 		{
-			if((hostinfo = gethostbyname(name)) != NULL)
+			if((hostinfo = gethostbyname(name)) != nullptr)
 			{
 				int nCount = 0;
 				while(hostinfo->h_addr_list[nCount])
@@ -225,13 +225,13 @@ std::vector<std::string> Server::getAllIPv4Addresses()
 	ipAddresses.push_back("127.0.0.1");
 
 #else
-    struct ifaddrs * ifAddrStruct = NULL;
-    struct ifaddrs * ifa = NULL;
-    void * tmpAddrPtr = NULL;
+    struct ifaddrs * ifAddrStruct = nullptr;
+    struct ifaddrs * ifa = nullptr;
+    void * tmpAddrPtr = nullptr;
     
     getifaddrs(&ifAddrStruct);
     
-    for (ifa = ifAddrStruct; ifa != NULL; ifa = ifa->ifa_next)
+    for (ifa = ifAddrStruct; ifa != nullptr; ifa = ifa->ifa_next)
     {
         if (!ifa->ifa_addr)
         {
@@ -246,7 +246,7 @@ std::vector<std::string> Server::getAllIPv4Addresses()
         }
     }
     
-    if (ifAddrStruct!=NULL)
+    if (ifAddrStruct!=nullptr)
         freeifaddrs(ifAddrStruct);
 #endif
 
@@ -308,7 +308,7 @@ void Server::start(int port, int threadSleepTime)
 
 static bool isReplicator(shared_ptr<Instance> instance)
 {
-	return Instance::fastDynamicCast<Replicator>(instance.get())!=NULL;
+	return Instance::fastDynamicCast<Replicator>(instance.get())!=nullptr;
 }
 
 int Server::getClientCount()
@@ -413,7 +413,7 @@ void Server::onServiceProvider(ServiceProvider* oldProvider, ServiceProvider* ne
 
 		if (players)
 		{
-			players->setConnection(NULL);
+			players->setConnection(nullptr);
 			stop();
 			players.reset();
 		}
@@ -544,7 +544,7 @@ boost::optional<std::string> Server::getScriptSourceFromInstance(Instance* insta
 
 bool Server::askAddChild(const Instance* instance) const
 {
-	return Instance::fastDynamicCast<ServerReplicator>(instance) != NULL;
+	return Instance::fastDynamicCast<ServerReplicator>(instance) != nullptr;
 }
 
 RakNet::PluginReceiveResult Server::OnReceive(RakNet::Packet *packet)
@@ -577,7 +577,7 @@ RakNet::PluginReceiveResult Server::OnReceive(RakNet::Packet *packet)
 				{
 					// Disconnect
 					proxy->unlockParent();
-					proxy->setParent(NULL);
+					proxy->setParent(nullptr);
 				}
 			}
 		}
@@ -723,7 +723,7 @@ NetworkOwnerJob* Server::getNetworkOwnerJob()
     }
     else
     {
-        return NULL;
+        return nullptr;
     }
 }
 

@@ -87,7 +87,7 @@ const Assembly* MovingNoPhysicsBase::getAssemblyConst() const
 	if (const Primitive* torso = getHumanoidConst()->getTorsoSlow()->getConstPartPrimitive()) {
 		return torso->getConstAssembly();
 	}
-	return NULL;
+	return nullptr;
 }
 
 void MovingNoPhysicsBase::applyImpulseToFloor(float dt)
@@ -162,7 +162,7 @@ void MovingNoPhysicsBase::onSimulatorStepImpl(float stepDt)
 			else
 				XZForce *= runningKMoveP(); // units: playerMass * m / s^2
 			float maxHorizontalForce = maxLinearMoveForce(); // units: playerMass * m / s^2
-			if (getFloorPrimitive() != NULL) {
+			if (getFloorPrimitive() != nullptr) {
 				maxHorizontalForce = maxLinearGroundMoveForce();
 			}
 

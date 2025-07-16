@@ -98,7 +98,7 @@ template<>
 shared_ptr<const ValueMap>& Variant::convert<shared_ptr<const ValueMap> >(void)
 {
 	shared_ptr<const ValueMap>* v = tryCast<shared_ptr<const ValueMap> >();
-	if (v==NULL)
+	if (v==nullptr)
 		throw std::runtime_error("Unable to cast to Map");
 	return *v;
 }

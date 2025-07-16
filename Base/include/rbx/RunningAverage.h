@@ -466,7 +466,7 @@ namespace RBX
 		Time lastTimestamp;
 
 	public:
-		ThrottlingHelper(int* eventsPerMinute, int* eventsPerObjectPerMinute = NULL) : // Designed to pass FInt
+		ThrottlingHelper(int* eventsPerMinute, int* eventsPerObjectPerMinute = nullptr) : // Designed to pass FInt
 			eventsPerMinute(eventsPerMinute),
 			eventsPerObjectPerMinute(eventsPerObjectPerMinute),
 			requestCounter(0),

@@ -306,7 +306,7 @@ IME_Init(SDL_VideoData *videodata, HWND hwnd)
     videodata->ime_hwnd_main = hwnd;
     if (SUCCEEDED(WIN_CoInitialize())) {
         videodata->ime_com_initialized = SDL_TRUE;
-        CoCreateInstance(&CLSID_TF_ThreadMgr, NULL, CLSCTX_INPROC_SERVER, &IID_ITfThreadMgr, (LPVOID *)&videodata->ime_threadmgr);
+        CoCreateInstance(&CLSID_TF_ThreadMgr, nullptr, CLSCTX_INPROC_SERVER, &IID_ITfThreadMgr, (LPVOID *)&videodata->ime_threadmgr);
     }
     videodata->ime_initialized = SDL_TRUE;
     videodata->ime_himm32 = SDL_LoadObject("imm32.dll");
@@ -641,7 +641,7 @@ IME_SetWindow(SDL_VideoData* videodata, HWND hwnd)
     videodata->ime_hwnd_current = hwnd;
     if (videodata->ime_threadmgr) {
         struct ITfDocumentMgr *document_mgr = 0;
-        if (SUCCEEDED(videodata->ime_threadmgr->lpVtbl->AssociateFocus(videodata->ime_threadmgr, hwnd, NULL, &document_mgr))) {
+        if (SUCCEEDED(videodata->ime_threadmgr->lpVtbl->AssociateFocus(videodata->ime_threadmgr, hwnd, nullptr, &document_mgr))) {
             if (document_mgr)
                 document_mgr->lpVtbl->Release(document_mgr);
         }
@@ -1189,7 +1189,7 @@ UILess_SetupSinks(SDL_VideoData *videodata)
     TfClientId clientid = 0;
     SDL_bool result = SDL_FALSE;
     ITfSource *source = 0;
-    if (FAILED(CoCreateInstance(&CLSID_TF_ThreadMgr, NULL, CLSCTX_INPROC_SERVER, &IID_ITfThreadMgrEx, (LPVOID *)&videodata->ime_threadmgrex)))
+    if (FAILED(CoCreateInstance(&CLSID_TF_ThreadMgr, nullptr, CLSCTX_INPROC_SERVER, &IID_ITfThreadMgrEx, (LPVOID *)&videodata->ime_threadmgrex)))
         return SDL_FALSE;
 
     if (FAILED(videodata->ime_threadmgrex->lpVtbl->ActivateEx(videodata->ime_threadmgrex, &clientid, TF_TMAE_UIELEMENTENABLEDONLY)))
@@ -1247,7 +1247,7 @@ StartDrawToBitmap(HDC hdc, HBITMAP *hhbm, int width, int height)
 {
     BITMAPINFO info;
     BITMAPINFOHEADER *infoHeader = &info.bmiHeader;
-    BYTE *bits = NULL;
+    BYTE *bits = nullptr;
     if (hhbm) {
         SDL_zero(info);
         infoHeader->biSize = sizeof(BITMAPINFOHEADER);
@@ -1268,7 +1268,7 @@ StopDrawToBitmap(HDC hdc, HBITMAP *hhbm)
 {
     if (hhbm && *hhbm) {
         DeleteObject(*hhbm);
-        *hhbm = NULL;
+        *hhbm = nullptr;
     }
 }
 
@@ -1371,7 +1371,7 @@ IME_RenderCandidateList(SDL_VideoData *videodata, HDC hdc)
     SIZE size = {0};
     SIZE candsizes[MAX_CANDLIST];
     SIZE maxcandsize = {0};
-    HBITMAP hbm = NULL;
+    HBITMAP hbm = nullptr;
     const int candcount = SDL_min(SDL_min(MAX_CANDLIST, videodata->ime_candcount), videodata->ime_candpgsize);
     SDL_bool vertical = videodata->ime_candvertical;
 
@@ -1499,7 +1499,7 @@ IME_RenderCandidateList(SDL_VideoData *videodata, HDC hdc)
         }
 
         DrawRect(hdc, left, top, right, bottom, candborder);
-        ExtTextOutW(hdc, left + candborder + candpadding, top + candborder + candpadding, 0, NULL, s, (int)SDL_wcslen(s), NULL);
+        ExtTextOutW(hdc, left + candborder + candpadding, top + candborder + candpadding, 0, nullptr, s, (int)SDL_wcslen(s), nullptr);
     }
     StopDrawToBitmap(hdc, &hbm);
 
@@ -1517,7 +1517,7 @@ IME_RenderCandidateList(SDL_VideoData *videodata, HDC hdc)
 static void
 IME_Render(SDL_VideoData *videodata)
 {
-    HDC hdc = CreateCompatibleDC(NULL);
+    HDC hdc = CreateCompatibleDC(nullptr);
 
     if (videodata->ime_candlist)
         IME_RenderCandidateList(videodata, hdc);

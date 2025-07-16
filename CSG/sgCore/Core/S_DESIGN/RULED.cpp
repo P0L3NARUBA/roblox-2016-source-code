@@ -15,14 +15,14 @@ BOOL Ruled_Surface( lpLISTH list, lpD_POINT spin, short q, short p, BOOL closed,
 	short    		degree;
 	MESHDD      mdd;
 	VDIM				ribs, rib_curves;
-	lpNPW       np = NULL;
+	lpNPW       np = nullptr;
 	SURF_DAT	  surf_dat;
   GEO_SURFACE	geo_surf;
 //==============================================================================
 
 	o_hcunit(surf_matr); //   
 	c_num_np	= -32767;
-	*hrez			= NULL;
+	*hrez			= nullptr;
 	if( !np_init_list(&c_list_str) ) goto err;
 
 //get curves from the list and put them into VDIM(sply_dat)
@@ -62,7 +62,7 @@ BOOL Ruled_Surface( lpLISTH list, lpD_POINT spin, short q, short p, BOOL closed,
 	if(closed && solid )
 	{
 		if ( (np = creat_np_mem(TNPW,MAXNOV,MAXNOE,MAXNOC, MAXNOF,
-			MAXNOE)) == NULL)  goto err2;
+			MAXNOE)) == nullptr)  goto err2;
 		np_init((lpNP)np);
 		np->ident = c_num_np++;
 		// 
@@ -86,7 +86,7 @@ BOOL Ruled_Surface( lpLISTH list, lpD_POINT spin, short q, short p, BOOL closed,
 		free_np_mem(&np);
 	}
 //------------------------------------------------------------------------------
-  if( ((*hrez)=create_BREP_surface(&geo_surf, &mdd ,false) ) == NULL ) goto err3;
+  if( ((*hrez)=create_BREP_surface(&geo_surf, &mdd ,false) ) == nullptr ) goto err3;
   free_geo_surf( &geo_surf );
 //------------------------------------------------------------------------------
   free_vdim(&mdd.vdim);
@@ -105,7 +105,7 @@ err1:
 err0:
 	free_vdim_sply(&ribs);
 err:
-    np_end_of_put(&c_list_str,NP_CANCEL,0,NULL);
+    np_end_of_put(&c_list_str,NP_CANCEL,0,nullptr);
 	return FALSE;
 }
 

@@ -54,7 +54,7 @@ class RobloxCustomEventWithArg: public QEvent
 public:
 	RobloxCustomEventWithArg(int eventType, boost::function<void()> eventArg) 
 	: QEvent(QEvent::Type(eventType)) 
-	, m_pEventArg(NULL)
+	, m_pEventArg(nullptr)
 	{
 		//make a copy
 		m_pEventArg = new boost::function<void()>(eventArg);
@@ -62,7 +62,7 @@ public:
 
 	~RobloxCustomEventWithArg()
 	{
-		delete m_pEventArg; m_pEventArg = NULL;
+		delete m_pEventArg; m_pEventArg = nullptr;
 	}
 
 	boost::function<void()>* m_pEventArg;
@@ -75,7 +75,7 @@ class PickerFrame : public QFrame
 public:
 	PickerFrame(QWidget *parent)
 	: QFrame(parent, Qt::Popup)
-	, m_pEventLoop(NULL)
+	, m_pEventLoop(nullptr)
 	{ 
 		setWindowFlags(Qt::Popup);
 		setFrameShape(QFrame::StyledPanel);
@@ -102,7 +102,7 @@ Q_SIGNALS:
 	
 protected:
 	void closeEvent(QCloseEvent *)
-	{ if (m_pEventLoop) m_pEventLoop->exit(); m_pEventLoop = NULL; }
+	{ if (m_pEventLoop) m_pEventLoop->exit(); m_pEventLoop = nullptr; }
 
 	void mouseMoveEvent(QMouseEvent *)
 	{ repaint(); }
@@ -219,7 +219,7 @@ public:
     CustomToolButton(QWidget *parent = 0);	
     virtual ~CustomToolButton();
 
-	virtual PickerFrame *getPickerFrame() { return NULL; }
+	virtual PickerFrame *getPickerFrame() { return nullptr; }
 
     void setCustomToolButtonStyle(Qt::ToolButtonStyle style) { m_toolButtonStyle = style; }
     Qt::ToolButtonStyle getCustomToolButtonStyle() const { return m_toolButtonStyle; }
@@ -287,7 +287,7 @@ class PopupLaunchEditor: public QWidget
 {
 	Q_OBJECT
 public:
-	PopupLaunchEditor(PropertyItem *pParentItem, QWidget *pParent, const QIcon &itemIcon, const QString &labelText, int buttonWidth, QWidget *proxyWidget=NULL);	
+	PopupLaunchEditor(PropertyItem *pParentItem, QWidget *pParent, const QIcon &itemIcon, const QString &labelText, int buttonWidth, QWidget *proxyWidget=nullptr);	
 
 private Q_SLOTS:
 	void onButtonClicked();

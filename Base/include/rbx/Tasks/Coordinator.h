@@ -30,7 +30,7 @@ namespace RBX
 		{
 			volatile TaskScheduler::Job* runningJob;
 		public:
-			Exclusive():runningJob(NULL) {}
+			Exclusive():runningJob(nullptr) {}
 			virtual bool isInhibited(TaskScheduler::Job* job);
 			virtual void onPreStep(TaskScheduler::Job* job);
 			virtual void onPostStep(TaskScheduler::Job* job);

@@ -204,12 +204,12 @@ static bool encrypt_des(const unsigned char *in, unsigned char *out,
                         const unsigned char *key_56)
 {
   const CK_MECHANISM_TYPE mech = CKM_DES_ECB; /* DES cipher in ECB mode */
-  PK11SlotInfo *slot = NULL;
+  PK11SlotInfo *slot = nullptr;
   char key[8];                                /* expanded 64 bit key */
   SECItem key_item;
-  PK11SymKey *symkey = NULL;
-  SECItem *param = NULL;
-  PK11Context *ctx = NULL;
+  PK11SymKey *symkey = nullptr;
+  SECItem *param = nullptr;
+  PK11Context *ctx = nullptr;
   int out_len;                                /* not used, required by NSS */
   bool rv = FALSE;
 
@@ -228,12 +228,12 @@ static bool encrypt_des(const unsigned char *in, unsigned char *out,
   key_item.data = (unsigned char *)key;
   key_item.len = sizeof(key);
   symkey = PK11_ImportSymKey(slot, mech, PK11_OriginUnwrap, CKA_ENCRYPT,
-                             &key_item, NULL);
+                             &key_item, nullptr);
   if(!symkey)
     goto fail;
 
   /* Create the DES encryption context */
-  param = PK11_ParamFromIV(mech, /* no IV in ECB mode */ NULL);
+  param = PK11_ParamFromIV(mech, /* no IV in ECB mode */ nullptr);
   if(!param)
     goto fail;
   ctx = PK11_CreateContextBySymKey(mech, CKA_ENCRYPT, symkey, param);
@@ -275,7 +275,7 @@ static bool encrypt_des(const unsigned char *in, unsigned char *out,
 
   /* Perform the encryption */
   err = CCCrypt(kCCEncrypt, kCCAlgorithmDES, kCCOptionECBMode, key,
-                kCCKeySizeDES, NULL, in, 8 /* inbuflen */, out,
+                kCCKeySizeDES, nullptr, in, 8 /* inbuflen */, out,
                 8 /* outbuflen */, &out_len);
 
   return err == kCCSuccess;
@@ -320,7 +320,7 @@ static bool encrypt_des(const unsigned char *in, unsigned char *out,
   DWORD len = 8;
 
   /* Acquire the crypto provider */
-  if(!CryptAcquireContext(&hprov, NULL, NULL, PROV_RSA_FULL,
+  if(!CryptAcquireContext(&hprov, nullptr, nullptr, PROV_RSA_FULL,
                           CRYPT_VERIFYCONTEXT))
     return FALSE;
 
@@ -554,7 +554,7 @@ CURLcode Curl_ntlm_core_mk_nt_hash(struct SessionHandle *data,
     (void)CC_MD4(pw, (CC_LONG)(2 * len), ntbuffer);
 #elif defined(USE_WIN32_CRYPTO)
     HCRYPTPROV hprov;
-    if(CryptAcquireContext(&hprov, NULL, NULL, PROV_RSA_FULL,
+    if(CryptAcquireContext(&hprov, nullptr, nullptr, PROV_RSA_FULL,
                            CRYPT_VERIFYCONTEXT)) {
       HCRYPTHASH hhash;
       if(CryptCreateHash(hprov, CALG_MD4, 0, 0, &hhash)) {
@@ -662,7 +662,7 @@ CURLcode Curl_ntlm_core_mk_ntlmv2_resp(unsigned char *ntlmv2hash,
 */
 
   unsigned int len = 0;
-  unsigned char *ptr = NULL;
+  unsigned char *ptr = nullptr;
   unsigned char hmac_output[NTLM_HMAC_MD5_LEN];
 #if defined(HAVE_LONGLONG)
   long long tw;
@@ -678,7 +678,7 @@ CURLcode Curl_ntlm_core_mk_ntlmv2_resp(unsigned char *ntlmv2hash,
     tw = 11644473600ULL * 10000000ULL;
   else
 #endif
-  tw = ((long long)time(NULL) + 11644473600ULL) * 10000000ULL;
+  tw = ((long long)time(nullptr) + 11644473600ULL) * 10000000ULL;
 
   /* Calculate the response len */
   len = NTLM_HMAC_MD5_LEN + NTLMv2_BLOB_LEN;

@@ -220,7 +220,7 @@ private:
             child[1] contains all values strictly
             larger.
 
-            Both may be NULL if there are not enough
+            Both may be nullptr if there are not enough
             values to bother recursing.
         */
         Node*               child[2];
@@ -230,13 +230,13 @@ private:
             this is a leaf node). */
         Array<Handle>       valueArray;
 
-        /** Creates node with NULL children */
+        /** Creates node with nullptr children */
         Node() {
             splitAxis     = Vector3::X_AXIS;
             splitLocation = 0;
             splitBounds   = AABox(-Vector3::inf(), Vector3::inf());
             for (int i = 0; i < 2; ++i) {
-                child[i] = NULL;
+                child[i] = nullptr;
             }
         }
 
@@ -248,7 +248,7 @@ private:
             splitLocation   = other.splitLocation;
             splitBounds     = other.splitBounds;            
             for (int i = 0; i < 2; ++i) {
-                child[i] = NULL;
+                child[i] = nullptr;
             }
         }
 
@@ -258,7 +258,7 @@ private:
             splitAxis     = Vector3::X_AXIS;
             splitLocation = 0;
             for (int i = 0; i < 2; ++i) {
-                child[i] = NULL;
+                child[i] = nullptr;
             }
 
             int n = endIndex - beginIndex + 1;
@@ -280,7 +280,7 @@ private:
 
         /** Returns true if this node is a leaf (no children) */
         inline bool isLeaf() const {
-            return (child[0] == NULL) && (child[1] == NULL);
+            return (child[0] == nullptr) && (child[1] == nullptr);
         }
 
 
@@ -291,7 +291,7 @@ private:
         void getHandles(Array<Handle>& handleArray) const {
             handleArray.append(valueArray);
             for (int i = 0; i < 2; ++i) {
-                if (child[i] != NULL) {
+                if (child[i] != nullptr) {
                     child[i]->getHandles(handleArray);
                 }
             }
@@ -325,11 +325,11 @@ private:
 		    Vector3 newHi = hi;
 		    newHi[splitAxis] = splitLocation;
 
-		    if (child[0] != NULL) {
+		    if (child[0] != nullptr) {
 			    child[0]->verifyNode(lo, newHi);
 		    }
 
-		    if (child[1] != NULL) {
+		    if (child[1] != nullptr) {
 			    child[1]->verifyNode(newLo, hi);
 		    }
 	    }
@@ -342,13 +342,13 @@ private:
             if (bounds.high()[splitAxis] < splitLocation) {
                 // Bounds are on the low side.  Recurse into the child
                 // if it exists.
-                if (child[0] != NULL) {
+                if (child[0] != nullptr) {
                     return child[0]->findDeepestContainingNode(bounds);
                 }
             } else if (bounds.low()[splitAxis] > splitLocation) {
                 // Bounds are on the high side, recurse into the child
                 // if it exists.
-                if (child[1] != NULL) {
+                if (child[1] != nullptr) {
                     return child[1]->findDeepestContainingNode(bounds);
                 }
             }
@@ -378,12 +378,12 @@ private:
             }
 
             // If the left child overlaps the box, recurse into it
-            if ((child[0] != NULL) && (box.low()[splitAxis] < splitLocation)) {
+            if ((child[0] != nullptr) && (box.low()[splitAxis] < splitLocation)) {
                 child[0]->getIntersectingMembers(box, sphere, members, useSphere);
             }
 
             // If the right child overlaps the box, recurse into it
-            if ((child[1] != NULL) && (box.high()[splitAxis] > splitLocation)) {
+            if ((child[1] != nullptr) && (box.high()[splitAxis] > splitLocation)) {
                 child[1]->getIntersectingMembers(box, sphere, members, useSphere);
             }
         }
@@ -416,7 +416,7 @@ private:
                    int endIndex, int valuesPerNode, 
                    int numMeanSplits)  {
 
-	    Node* node = NULL;
+	    Node* node = nullptr;
 	    
 	    if (endIndex - beginIndex + 1 <= valuesPerNode) {
 		    // Make a new leaf node
@@ -531,7 +531,7 @@ private:
 
         // Clone children
         for (int i = 0; i < 2; ++i) {
-            if (src->child[i] != NULL) {
+            if (src->child[i] != nullptr) {
                 dst->child[i] = cloneTree(src->child[i]);
             }
         }
@@ -548,10 +548,10 @@ public:
 
     /** To construct a balanced tree, insert the elements and then call
       AABSPTree::balance(). */
-    AABSPTree() : root(NULL) {}
+    AABSPTree() : root(nullptr) {}
 
 
-    AABSPTree(const AABSPTree& src) : root(NULL) {
+    AABSPTree(const AABSPTree& src) : root(nullptr) {
         *this = src;
     }
 
@@ -573,7 +573,7 @@ public:
     void clear() {
         memberTable.clear();
         delete root;
-        root = NULL;
+        root = nullptr;
     }
 
     int size() const {
@@ -593,7 +593,7 @@ public:
 
         Handle h(value);
 
-        if (root == NULL) {
+        if (root == nullptr) {
             // This is the first node; create a root node
             root = new Node();
         }
@@ -612,7 +612,7 @@ public:
         than inserting each element in turn.  You still need to balance
         the tree at the end.*/
     void insert(const Array<T>& valueArray) {
-        if (root == NULL) {
+        if (root == nullptr) {
             // Optimized case for an empty tree; don't bother
             // searching or reallocating the root node's valueArray
             // as we incrementally insert.
@@ -712,7 +712,7 @@ public:
      members are not uniformly distributed.
      */
     void balance(int valuesPerNode = 5, int numMeanSplits = 3) {
-        if (root == NULL) {
+        if (root == nullptr) {
             // Tree is empty
             return;
         }
@@ -789,7 +789,7 @@ public:
       @param members The results are appended to this array.
      */
     void getIntersectingMembers(const Array<Plane>& plane, Array<T>& members) const {
-        if (root == NULL) {
+        if (root == nullptr) {
             return;
         }
 
@@ -856,7 +856,7 @@ public:
         BoxIntersectionIterator() : isEnd(true) {}
         
         BoxIntersectionIterator(const AABox& b, const Node* root) : 
-           box(b), isEnd(root == NULL), nextValueArrayIndex(-1), node(const_cast<Node*>(root)) {
+           box(b), isEnd(root == nullptr), nextValueArrayIndex(-1), node(const_cast<Node*>(root)) {
 
            // We intentionally start at the "-1" index of the current node
            // so we can use the preincrement operator to move ourselves to
@@ -917,14 +917,14 @@ public:
 
 					// If the right child overlaps the box, push it onto the stack for
 					// processing.
-					if ((node->child[1] != NULL) &&
+					if ((node->child[1] != nullptr) &&
 						(box.high()[node->splitAxis] > node->splitLocation)) {
 						stack.push(node->child[1]);
 					}
                 
 					// If the left child overlaps the box, push it onto the stack for
 					// processing.
-					if ((node->child[0] != NULL) &&
+					if ((node->child[0] != nullptr) &&
 						(box.low()[node->splitAxis] < node->splitLocation)) {
 						stack.push(node->child[0]);
 					}
@@ -1004,7 +1004,7 @@ public:
      See also AABSPTree::beginBoxIntersection.
      */
     void getIntersectingMembers(const AABox& box, Array<T>& members) const {
-        if (root == NULL) {
+        if (root == nullptr) {
             return;
         }
         root->getIntersectingMembers(box, Sphere(Vector3::ZERO, 0), members, false);
@@ -1015,7 +1015,7 @@ public:
       @param members The results are appended to this array.
      */
     void getIntersectingMembers(const Sphere& sphere, Array<T>& members) const {
-        if (root == NULL) {
+        if (root == nullptr) {
             return;
         }
 
@@ -1072,7 +1072,7 @@ public:
 
 			    intersectionCache.resize(node->valueArray.length());
 			    
-			    if (node->child[0] == NULL && node->child[1] == NULL) {
+			    if (node->child[0] == nullptr && node->child[1] == nullptr) {
 				    startTime = minTime;
 				    endTime   = maxTime;
 				    endTime2  = square(maxTime);
@@ -1147,7 +1147,7 @@ public:
 
 	    RayIntersectionIterator(const Ray& r, const Node* root, bool skip)
             : minDistance(0), maxDistance(G3D::inf()), debugCounter(0),
-		    ray(r), isEnd(root == NULL),
+		    ray(r), isEnd(root == nullptr),
 		    stackLength(20), stackIndex(0), breakFrameIndex(-1),
             skipAABoxTests(skip)
 	    {
@@ -1227,7 +1227,7 @@ public:
 				    // children.
 				    
 				    Node* child = (s->nextChild >= 0) ?
-					    s->node->child[s->nextChild] : NULL;
+					    s->node->child[s->nextChild] : nullptr;
 				    double childStartTime = s->startTime;
 				    double childEndTime   = s->endTime;
 
@@ -1270,7 +1270,7 @@ public:
 				    // There could have been a resize on the array, so
 				    // do not use s (pointer into the array)!
 
-				    if (child != NULL) {
+				    if (child != nullptr) {
 					    ++stackIndex;
 					    stack[stackIndex].init(
                             child, ray,
@@ -1391,7 +1391,7 @@ public:
             Object*&    firstObject,
             double&     firstTime) {
 
-           firstObject   = NULL;
+           firstObject   = nullptr;
            firstDistance = inf();
 
            typedef AABSPTree<Object*>::RayIntersectionIterator IT;

@@ -141,7 +141,7 @@ bool attachCurrentProcessToDebugger()
             "VSJitDebugger.exe\" -p %lu",
             ::GetCurrentProcessId() );
 
-        BOOL created = ::CreateProcess(NULL,szBuf,NULL,NULL,FALSE,0,NULL,NULL,&sSi,&sPi);
+        BOOL created = ::CreateProcess(nullptr,szBuf,nullptr,nullptr,FALSE,0,nullptr,nullptr,&sSi,&sPi);
         if ( created == TRUE )
         {
             ::WaitForSingleObject(sPi.hProcess,INFINITE);
@@ -206,10 +206,10 @@ int main(int argc, char *argv[])
     // chance some float operation will occur.
     if (!G3D::System::hasSSE2())
     {
-        MessageBoxA(NULL, "This platform lacks SSE2 support.", "ROBLOX", MB_OK);
+        MessageBoxA(nullptr, "This platform lacks SSE2 support.", "ROBLOX", MB_OK);
         return false;
     }
-    CoInitialize(NULL);
+    CoInitialize(nullptr);
 #endif
 
 #ifdef Q_OS_MACX
@@ -270,7 +270,7 @@ int main(int argc, char *argv[])
 			versionNumber+= vi.GetFileVersionAsDotString();
 				
 			QMessageBox::information(
-				NULL,
+				nullptr,
 				"ROBLOX", 
 				versionNumber.c_str());
 			return 0;

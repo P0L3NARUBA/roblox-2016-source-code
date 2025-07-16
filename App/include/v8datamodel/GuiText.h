@@ -116,8 +116,8 @@ static const Reflection::PropDescriptor<Class, bool> prop_depTextWrap("TextWrap"
 static const Reflection::PropDescriptor<Class, bool> prop_TextScale("TextScaled", category_Text, &Class::getTextScale, &Class::setTextScale);																							\
 static const Reflection::EnumPropDescriptor<Class, TextService::XAlignment> prop_TextXAlignment("TextXAlignment", category_Text, &Class::getXAlignment, &Class::setXAlignment);															\
 static const Reflection::EnumPropDescriptor<Class, TextService::YAlignment> prop_TextYAlignment("TextYAlignment", category_Text, &Class::getYAlignment, &Class::setYAlignment);															\
-static const Reflection::PropDescriptor<Class, Vector2> prop_TextBounds("TextBounds", category_Text, &Class::getTextBounds, NULL, Reflection::PropertyDescriptor::UI);																	\
-static const Reflection::PropDescriptor<Class, bool>    prop_TextFits("TextFits", category_Text, &Class::getTextFits, NULL, Reflection::PropertyDescriptor::UI);																		\
+static const Reflection::PropDescriptor<Class, Vector2> prop_TextBounds("TextBounds", category_Text, &Class::getTextBounds, nullptr, Reflection::PropertyDescriptor::UI);																	\
+static const Reflection::PropDescriptor<Class, bool>    prop_TextFits("TextFits", category_Text, &Class::getTextFits, nullptr, Reflection::PropertyDescriptor::UI);																		\
 static const Reflection::PropDescriptor<Class, Color3>  prop_TextStrokeColor3("TextStrokeColor3", category_Text, &Class::getTextStrokeColor3, &Class::setTextStrokeColor3);							\
 static const Reflection::PropDescriptor<Class, float>   prop_TextStrokeTransparency("TextStrokeTransparency", category_Text, &Class::getTextStrokeTransparency, &Class::setTextStrokeTransparency);	\
 REFLECTION_END();                                                                                                                                                                                   \

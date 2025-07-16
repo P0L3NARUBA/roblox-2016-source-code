@@ -291,7 +291,7 @@ GuiObject* checkGuiObjectForNextDirection(const shared_ptr<GuiObject>& guiObject
 		return guiObject->getNextSelectionLeft();
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 GuiObject* BasePlayerGui::checkForTupleSelection(const Vector2& direction, const Rect2D& currentRect,
@@ -300,7 +300,7 @@ GuiObject* BasePlayerGui::checkForTupleSelection(const Vector2& direction, const
 	float minProjection = START_PROJECTION_DISTANCE;
 	float minIntersectionDist = minProjection;
 
-	GuiObject* nextSelectedGuiObject = NULL;
+	GuiObject* nextSelectedGuiObject = nullptr;
 
 	if (selectionTuple && selectionTuple->values.size() > 0)
 	{
@@ -336,7 +336,7 @@ GuiObject* BasePlayerGui::checkForDefaultGuiSelection(const Vector2& direction, 
 	float minProjection = START_PROJECTION_DISTANCE;
 	float minIntersectionDist = minProjection;
 
-	GuiObject* nextSelectedGuiObject = NULL;
+	GuiObject* nextSelectedGuiObject = nullptr;
 
 	std::vector<GuiObject*> guiObjectsToTest;
 	collectGuiObjects(guiObjectsToTest, this);
@@ -367,7 +367,7 @@ GuiObject* BasePlayerGui::selectNewGuiObject(const Vector2& direction)
 	GuiService* guiService = RBX::ServiceProvider::find<GuiService>(this);
 	if (!guiService)
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	Rect2D currentRect =  Rect2D::xywh(Vector2::zero(), Vector2::zero());
@@ -382,10 +382,10 @@ GuiObject* BasePlayerGui::selectNewGuiObject(const Vector2& direction)
 	}
 	else
 	{
-		return NULL;
+		return nullptr;
 	}
 
-	GuiObject* closestGuiObject = NULL;
+	GuiObject* closestGuiObject = nullptr;
 
 	if (GuiObject* newSelectedObject = checkGuiObjectForNextDirection(sharedSelectedGuiObject, direction))
 	{
@@ -539,7 +539,7 @@ GuiResponse BasePlayerGui::processInputOnChild(GuiBase2d* guiBase, const shared_
 GuiResponse BasePlayerGui::process(const shared_ptr<InputObject>& event)
 {
 	mouseWasOverGui = false;
-	Instance* mouseOverGuiBase = NULL;
+	Instance* mouseOverGuiBase = nullptr;
 
 	boost::shared_ptr<const Instances> c(this->getChildren().read());
 	if (c)
@@ -637,7 +637,7 @@ void PlayerGui::onServiceProvider(ServiceProvider* oldProvider, ServiceProvider*
 
 bool PlayerGui::askSetParent(const Instance* parent) const
 {
-	return Instance::fastDynamicCast<RBX::Network::Player>(parent)!=NULL;
+	return Instance::fastDynamicCast<RBX::Network::Player>(parent)!=nullptr;
 }
 bool PlayerGui::askForbidParent(const Instance* parent) const
 {
@@ -903,7 +903,7 @@ const char *const sCoreGuiService = "CoreGui";
 
 REFLECTION_BEGIN();
 static Reflection::RefPropDescriptor<CoreGuiService, GuiObject> prop_CoreSelectionImageObject("SelectionImageObject", category_Appearance, &CoreGuiService::getSelectionImageObject, &CoreGuiService::setSelectionImageObject, Reflection::PropertyDescriptor::STANDARD, Security::RobloxScript);
-static const Reflection::PropDescriptor<CoreGuiService, int> prop_Version("Version", category_Data, &CoreGuiService::getGuiVersion, NULL);
+static const Reflection::PropDescriptor<CoreGuiService, int> prop_Version("Version", category_Data, &CoreGuiService::getGuiVersion, nullptr);
 REFLECTION_END();
 
 CoreGuiService::CoreGuiService()
@@ -1000,7 +1000,7 @@ Instance* CoreGuiService::findGuiChild(const std::string &Name)
 				return iter->get();
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 void CoreGuiService::setGuiVisibility(bool visible)

@@ -47,7 +47,7 @@ struct FMODSystemRelease
     void operator()(FMOD::System* system)
     {
         FASTLOG(FLog::Sound, "Releasing FMOD.");
-        SoundService::checkResultNoThrow(system->release(), "release", NULL, system);
+        SoundService::checkResultNoThrow(system->release(), "release", nullptr, system);
     }
 };
 } // namespace
@@ -132,7 +132,7 @@ SoundService::SoundService()
 	,distancefactor(10.0f)
 	,rolloffscale(1.0f)
 	,ambientReverb(NoReverb)
-	,channelMaster(NULL)
+	,channelMaster(nullptr)
 	,currentListenerType(CameraListener)
     ,masterChannelFadeTimeMsec(0)
 	,masterChannelFadeStatus(FADE_STATUS_NONE)
@@ -158,8 +158,8 @@ void SoundService::openFmod()
         {
             FASTLOG(FLog::Sound, "Opening FMOD...");
 
-            FMOD::System *sys = NULL;
-            checkResult(FMOD::System_Create(&sys), "System_Create", this, NULL);		// Create the main system object.
+            FMOD::System *sys = nullptr;
+            checkResult(FMOD::System_Create(&sys), "System_Create", this, nullptr);		// Create the main system object.
             system.reset(sys, FMODSystemRelease());
 
             unsigned int version;
@@ -180,7 +180,7 @@ void SoundService::openFmod()
                 checkResultNoThrow(system->getDriver(&driver), "getDriver", this, system.get());
                 if (driver>=0)
                 {
-                    checkResultNoThrow(system->getDriverInfo(driver, RBX::RbxDbgInfo::s_instance.AudioDeviceName, DBG_STRING_MAX, NULL, NULL, NULL, NULL), "getDriverInfo", this, system.get());					
+                    checkResultNoThrow(system->getDriverInfo(driver, RBX::RbxDbgInfo::s_instance.AudioDeviceName, DBG_STRING_MAX, nullptr, nullptr, nullptr, nullptr), "getDriverInfo", this, system.get());					
                 }
             }
             else
@@ -205,7 +205,7 @@ void SoundService::openFmod()
             // WARNING 100 - is number of simultaneous channels played by fmod and has nothing todo with output channels of sound card
             checkResult(system->init(FInt::FMODSoundChannels, flags, 0), "init", this, system.get());
 
-			checkResult(system->createChannelGroup(NULL, &channelMaster), "createChannelGroup", this, system.get());
+			checkResult(system->createChannelGroup(nullptr, &channelMaster), "createChannelGroup", this, system.get());
 			channelMaster->setVolume(RBX::GameBasicSettings::singleton().getMasterVolume());
 
 			// listen for master volume changes
@@ -235,7 +235,7 @@ void SoundService::openFmod()
 FMOD::DSP* SoundService::createDSP(FMOD_DSP_DESCRIPTION &dspdesc)
 {
 	FASTLOG1(DFLog::SoundTrace, "SoundService::createDSP(%p)", this);
-	FMOD::DSP* dsp = NULL;
+	FMOD::DSP* dsp = nullptr;
 	try
 	{
 		StandardOut::singleton()->printf(MESSAGE_INFO, "SoundService::createDSP: system value = %p, enabled value = %d", system.get(), (int)enabled());
@@ -253,7 +253,7 @@ FMOD::DSP* SoundService::createDSP(FMOD_DSP_DESCRIPTION &dspdesc)
 		{
 			dsp->release();
 		}
-		dsp = NULL;
+		dsp = nullptr;
 	}
 	return dsp;
 }
@@ -469,7 +469,7 @@ void SoundService::onServiceProvider(ServiceProvider* oldProvider, ServiceProvid
 	soundJob.reset();
 
 	if (statsItem) {
-		statsItem->setParent(NULL);
+		statsItem->setParent(nullptr);
 		statsItem.reset();
 	}
 
@@ -542,10 +542,10 @@ void SoundService::step(const Time::Interval& timeSinceLastStep)
 	if (enabled())
 	{
 		Workspace* workspace = ServiceProvider::find<Workspace>(this);
-		if (workspace!=NULL)
+		if (workspace!=nullptr)
 		{
 			Camera* camera = workspace->getCamera();
-			if (camera!=NULL)
+			if (camera!=nullptr)
 			{
 				CoordinateFrame cf = getListenCFrame(camera);
 			
@@ -561,7 +561,7 @@ void SoundService::step(const Time::Interval& timeSinceLastStep)
 							FMOD_VECTOR listener_vel;
 							listener_vel.x = listener_vel.y = listener_vel.z = 0;
 							RBX::PVInstance* pv = dynamic_cast<PVInstance*>(camera->getCameraSubject());
-							RBX::PartInstance* part = pv ? pv->getPrimaryPart() : NULL;
+							RBX::PartInstance* part = pv ? pv->getPrimaryPart() : nullptr;
 							if (part)
 								convert(part->getVelocity().linear, listener_vel);
 
@@ -704,7 +704,7 @@ bool SoundService::isMuted()
 	{
 		bool isMuted = false;
 		
-		FMOD::System* systemCheck = NULL;
+		FMOD::System* systemCheck = nullptr;
 		FMOD_RESULT result = channelMaster->getSystemObject(&systemCheck);
 
 		if (result == FMOD_OK && systemCheck)
@@ -726,7 +726,7 @@ void SoundService::muteAllChannels(bool mute)
 
 	if (channelMaster)
 	{
-		FMOD::System* systemCheck = NULL;
+		FMOD::System* systemCheck = nullptr;
 		FMOD_RESULT result = channelMaster->getSystemObject(&systemCheck);
 
 		if (result == FMOD_OK && systemCheck)

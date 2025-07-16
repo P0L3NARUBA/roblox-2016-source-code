@@ -79,7 +79,7 @@ ir_expression_flattening_visitor::handle_rvalue(ir_rvalue **rvalue)
 
    assign = new(ctx) ir_assignment(new(ctx) ir_dereference_variable(var),
 				   ir,
-				   NULL);
+				   nullptr);
    base_ir->insert_before(assign);
 
    *rvalue = new(ctx) ir_dereference_variable(var);

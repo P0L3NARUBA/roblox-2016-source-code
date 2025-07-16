@@ -77,7 +77,7 @@ PUBLIC char * HTStrCaseStr (char * s1, char * s2)
 	}
 	ptr++;
     }
-    return NULL;
+    return nullptr;
 }
 
 /*
@@ -112,9 +112,9 @@ PUBLIC char * HTSACopy (char ** dest, const char * src)
 {
   if (*dest) HT_FREE(*dest);
   if (! src)
-    *dest = NULL;
+    *dest = nullptr;
   else {
-    if ((*dest  = (char  *) HT_MALLOC(strlen(src) + 1)) == NULL)
+    if ((*dest  = (char  *) HT_MALLOC(strlen(src) + 1)) == nullptr)
         HT_OUTOFMEM("HTSACopy");
     strcpy (*dest, src);
   }
@@ -128,11 +128,11 @@ PUBLIC char * HTSACat (char ** dest, const char * src)
   if (src && *src) {
     if (*dest) {
       int length = strlen (*dest);
-      if ((*dest  = (char  *) HT_REALLOC(*dest, length + strlen(src) + 1)) == NULL)
+      if ((*dest  = (char  *) HT_REALLOC(*dest, length + strlen(src) + 1)) == nullptr)
           HT_OUTOFMEM("HTSACat");
       strcpy (*dest + length, src);
     } else {
-      if ((*dest  = (char  *) HT_MALLOC(strlen(src) + 1)) == NULL)
+      if ((*dest  = (char  *) HT_MALLOC(strlen(src) + 1)) == nullptr)
           HT_OUTOFMEM("HTSACat");
       strcpy (*dest, src);
     }
@@ -148,7 +148,7 @@ PUBLIC char * StrAllocMCopy (char ** dest, ...)
     /* How much space do we need? */
     int needed = 0;
     va_start(pArgs, dest);
-    while ((p = va_arg(pArgs, char *)) != NULL) 
+    while ((p = va_arg(pArgs, char *)) != nullptr) 
 	needed += strlen(p);
     va_end(pArgs);
 
@@ -156,13 +156,13 @@ PUBLIC char * StrAllocMCopy (char ** dest, ...)
     if (needed) {
 
 	/* Allocate that amount of memory */
-	if ((*dest = (char *) HT_MALLOC(needed + 1)) == NULL)
+	if ((*dest = (char *) HT_MALLOC(needed + 1)) == nullptr)
 	    HT_OUTOFMEM("HTStrCpy");
 	p = *dest;
 
 	/* Fill the string */
 	va_start(pArgs, dest);
-	while ((argp = va_arg (pArgs, char *)) != NULL) {
+	while ((argp = va_arg (pArgs, char *)) != nullptr) {
 	    strcpy(p, argp);
 	    p += strlen(argp);
 	}
@@ -179,7 +179,7 @@ PUBLIC char * StrAllocMCat (char ** dest, ...)
     /* How much space do we need? */
     int needed = 0;
     va_start(pArgs, dest);
-    while ((p = va_arg(pArgs, char *)) != NULL) 
+    while ((p = va_arg(pArgs, char *)) != nullptr) 
 	needed += strlen(p);
     va_end(pArgs);
 
@@ -188,18 +188,18 @@ PUBLIC char * StrAllocMCat (char ** dest, ...)
 	/* (Re) Allocate the amount of memory needed */
 	if (*dest) {
 	    int dest_len = strlen(*dest);
-	    if ((*dest = (char *) HT_REALLOC(*dest, dest_len + needed + 1)) == NULL)
+	    if ((*dest = (char *) HT_REALLOC(*dest, dest_len + needed + 1)) == nullptr)
 		HT_OUTOFMEM("HTStrCat");
 	    p = *dest + dest_len;
 	} else {
-	    if ((*dest = (char  *) HT_MALLOC(needed + 1)) == NULL)
+	    if ((*dest = (char  *) HT_MALLOC(needed + 1)) == nullptr)
 		HT_OUTOFMEM("HTStrCat");
 	    p = *dest;
 	}
 
 	/* Fill the string */
 	va_start(pArgs, dest);
-	while ((argp = va_arg (pArgs, char *)) != NULL) {
+	while ((argp = va_arg (pArgs, char *)) != nullptr) {
 	    strcpy(p, argp);
 	    p += strlen(argp);
 	}
@@ -220,18 +220,18 @@ PUBLIC char * StrAllocMCat (char ** dest, ...)
 **
 **	return:	- Empty string if perfect match
 **		- pointer to part matched by wildcard if any
-**		- NULL if no match
+**		- nullptr if no match
 */
 PUBLIC char * HTStrMatch (const char * tmpl, const char * name)
 {
     while (*tmpl && *name && *tmpl==*name) tmpl++, name++;
-    return ((!*tmpl && !*name) || *tmpl=='*') ? (char *) name : (char *) NULL;
+    return ((!*tmpl && !*name) || *tmpl=='*') ? (char *) name : (char *) nullptr;
 }    
 
 PUBLIC char * HTStrCaseMatch (const char * tmpl, const char * name)
 {
     while (*tmpl && *name && TOUPPER(*tmpl)==TOUPPER(*name)) tmpl++, name++;
-    return ((!*tmpl && !*name) || *tmpl=='*') ? (char *) name : (char *) NULL;
+    return ((!*tmpl && !*name) || *tmpl=='*') ? (char *) name : (char *) nullptr;
 }    
 
 /*	Strip white space off a string

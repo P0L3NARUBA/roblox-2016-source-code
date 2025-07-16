@@ -198,7 +198,7 @@ GuiObject::GuiObject(const char* name, bool active)
 	, clipping(false)
 	, selectionBox(false)
 	, selectable(false)
-	, draggingEndedConnection(NULL)
+	, draggingEndedConnection(nullptr)
 	, CONSTRUCT_EVENT_REPLICATOR(GuiObject,GuiObject::mouseEnterSignal,event_MouseEnter,MouseEnter)
 	, CONSTRUCT_EVENT_REPLICATOR(GuiObject,GuiObject::mouseLeaveSignal,event_MouseLeave,MouseLeave)
 	, CONSTRUCT_EVENT_REPLICATOR(GuiObject,GuiObject::mouseMovedSignal,event_MouseMoved,MouseMoved)
@@ -295,7 +295,7 @@ static void InvokeTweenStatusCallback(boost::weak_ptr<GuiObject> weakThis, Lua::
 static void InvokeRemoveOnTweenEnd(boost::weak_ptr<GuiObject> weakThis,  Lua::WeakFunctionRef callback)
 {
 	if(shared_ptr<GuiObject> strongThis = weakThis.lock())
-		strongThis->setParent(NULL);
+		strongThis->setParent(nullptr);
 }
 
 bool GuiObject::tweenPosition(UDim2 endPosition, TweenEasingDirection style, TweenEasingStyle variance,float time,  bool overwrite, Lua::WeakFunctionRef callback)
@@ -791,7 +791,7 @@ void GuiObject::forceResize()
 }
 void GuiObject::checkForResize()
 {
-	Folder* folderParent = NULL;
+	Folder* folderParent = nullptr;
 
 	if(GuiBase2d* parent = Instance::fastDynamicCast<GuiBase2d>(getParent()))
 	{
@@ -799,9 +799,9 @@ void GuiObject::checkForResize()
 	} 
 	else if ((folderParent = Instance::fastDynamicCast<Folder>(getParent())))
 	{
-		GuiBase2d* guiParent = NULL;
+		GuiBase2d* guiParent = nullptr;
 		Instance *instParent = folderParent->getParent();
-		while (instParent != NULL && guiParent == NULL && folderParent != NULL)
+		while (instParent != nullptr && guiParent == nullptr && folderParent != nullptr)
 		{
 			folderParent = Instance::fastDynamicCast<Folder>(instParent);
 			guiParent = Instance::fastDynamicCast<GuiBase2d>(instParent);
@@ -899,14 +899,14 @@ void GuiObject::setClipping(bool value)
 GuiObject* GuiObject::firstAncestorClipping()
 {
 	Instance* parent = getParent();
-	while(parent != NULL)
+	while(parent != nullptr)
 	{
 		if(GuiObject* guiParent = fastDynamicCast<GuiObject>(parent))
 			if(guiParent->getClipping())
 				return guiParent;
 		parent = parent->getParent();
 	}
-	return NULL;
+	return nullptr;
 }
 
 void GuiObject::setDraggable(bool value)
@@ -953,7 +953,7 @@ Rect2D GuiObject::getClippedRect()
 {
 	GuiObject* ancestorClipper = firstAncestorClipping();
 	Rect2D clippedRect = getRect2D();
-	while(ancestorClipper != NULL)
+	while(ancestorClipper != nullptr)
 	{
 		clippedRect = ancestorClipper->getRect2D().intersect(clippedRect);
 		ancestorClipper = ancestorClipper->firstAncestorClipping();
@@ -1025,7 +1025,7 @@ void GuiObject::setSelectable(bool value)
 
 GuiObject* getRawPointer(weak_ptr<GuiObject> weakObject)
 {
-	GuiObject* rawPointer = NULL;
+	GuiObject* rawPointer = nullptr;
 	if (shared_ptr<GuiObject> sharedPointer = weakObject.lock())
 	{
 		rawPointer = sharedPointer.get();
@@ -1142,7 +1142,7 @@ Color4 GuiObject::getRenderBackgroundColor4() const
 void GuiObject::legacyRender2d(Adorn* adorn, const Rect2D& parentRectangle)
 {
 	//Only allow this when the object is not in the workspace
-	if(getParent() == NULL){
+	if(getParent() == nullptr){
 		handleResize(parentRectangle, true);
 
 		recursiveRender2d(adorn);
@@ -1172,7 +1172,7 @@ void GuiObject::render2dImpl(	Adorn* adorn,
 
 		GuiObject* clippingObject = firstAncestorClipping();
 
-		if (clippingObject == NULL || !absoluteRotation.empty())
+		if (clippingObject == nullptr || !absoluteRotation.empty())
 		{
 			adorn->rect2d(rect, _backgroundColor, absoluteRotation);
 			if(_borderSize > 0) adorn->outlineRect2d(rect, (float)_borderSize, _borderColor, absoluteRotation);
@@ -1315,7 +1315,7 @@ void GuiObject::render2dScale9Impl( Adorn* adorn,
 	Rect sizes[9];
 	computeScale9Sizes(sizes, rect, scaleEdgeSize, minSize);
 
-	if(guiImageDraw.setImage(adorn, texId, GuiDrawImage::NORMAL, NULL, this, ".Texture"))
+	if(guiImageDraw.setImage(adorn, texId, GuiDrawImage::NORMAL, nullptr, this, ".Texture"))
 	{
         Color4 color = Color4(Color3::white(), 1.0f - getBackgroundTransparency());
 
@@ -1328,7 +1328,7 @@ void GuiObject::render2dScale9Impl( Adorn* adorn,
 			{
 				Vector2 texul(colNum * 0.33333f, rowNum * 0.33333f);
 				Vector2 texbr((colNum + 1) * 0.33333f, (rowNum + 1) * 0.33333f);
-				if(clippingObject == NULL || !absoluteRotation.empty())
+				if(clippingObject == nullptr || !absoluteRotation.empty())
 					guiImageDraw.render2d(adorn, true, sizes[i], texul, texbr, color, absoluteRotation, Gui::NOTHING, false);
 				else
 					guiImageDraw.render2d(adorn, true, sizes[i], texul, texbr, color, clippingObject->getClippedRect(), Gui::NOTHING, false);
@@ -1450,7 +1450,7 @@ void GuiObject::render2dScale9Impl2(Adorn* adorn,
         {
             if(sizes[i].size().x > 0 && sizes[i].size().y > 0 && imageWidth > 0 && imageHeight > 0)
             {
-                if(clippingObject == NULL || !absoluteRotation.empty())
+                if(clippingObject == nullptr || !absoluteRotation.empty())
                     guiImageDraw.render2d(adorn, true, sizes[i], uvs[i].low, uvs[i].high, color, absoluteRotation, Gui::NOTHING, false);
                 else
                     guiImageDraw.render2d(adorn, true, sizes[i], uvs[i].low, uvs[i].high, color, clippingObject->getClippedRect(), Gui::NOTHING, false);
@@ -1571,7 +1571,7 @@ Vector2 GuiObject::render2dTextImpl(	Adorn* adorn,
 	GuiObject* clippingObject = firstAncestorClipping();
 	Vector2 wh = _textWrap ? rect.wh() : Vector2::zero();
 
-	if (clippingObject == NULL || !absoluteRotation.empty())
+	if (clippingObject == nullptr || !absoluteRotation.empty())
 	{
 		return adorn->drawFont2D(	_textName,
 									pos,
@@ -2019,7 +2019,7 @@ GuiButton::GuiButton(const char* name)
 	, clicked(false)
 	, modal(false)
 	, style(CUSTOM_STYLE)
-	, verb(NULL)
+	, verb(nullptr)
 	, verbToSet("")
     , shouldFireClickedEvent(true)
 	, CONSTRUCT_EVENT_REPLICATOR(GuiButton,GuiButton::mouseButton1ClickSignal,	event_MouseButton1Click,MouseButton1Click)
@@ -2091,7 +2091,7 @@ void GuiButton::onServiceProvider(ServiceProvider* oldProvider, ServiceProvider*
 void GuiButton::setVerb(std::string verbString)
 {
     // People were modifying verbString when it was loaded into a register by using CE.
-    VMProtectBeginMutation(NULL);
+    VMProtectBeginMutation(nullptr);
 	if(Workspace* workspace = ServiceProvider::find<Workspace>(this))
 	{
 #ifdef RBX_STUDIO_BUILD
@@ -2101,7 +2101,7 @@ void GuiButton::setVerb(std::string verbString)
         if (verb && verb->getVerbSecurity())
         {
             RBX::Security::setHackFlagVmp<LINE_RAND4>(RBX::Security::hackFlag10, HATE_VERB_SNATCH);
-            verb = NULL;
+            verb = nullptr;
         }
 #endif
 		verbToSet = "";
@@ -2295,8 +2295,8 @@ void GuiButton::render2dButtonImpl(Adorn* adorn, Rect2D& rect)
 		case ROBLOX_BUTTON_ROUND_DEFAULT_STYLE:
 		case ROBLOX_BUTTON_ROUND_DROPDOWN_STYLE:
 		{
-			const TextureId *pNormal = NULL;
-			const TextureId *pButtonPressed = NULL;
+			const TextureId *pNormal = nullptr;
+			const TextureId *pButtonPressed = nullptr;
 			switch (style) {
 				case ROBLOX_BUTTON_ROUND_DEFAULT_STYLE:
 					pNormal = &sNewBlue;
@@ -2408,8 +2408,8 @@ GuiResponse GuiButton::checkForSelectedObjectClick(const shared_ptr<InputObject>
                     {
                         mouseButton1ClickSignal();
 
-						VMProtectBeginMutation(NULL);
-						if (verb != NULL)
+						VMProtectBeginMutation(nullptr);
+						if (verb != nullptr)
 						{
 							clicked = false;
 							if (verb->isEnabled())
@@ -2480,8 +2480,8 @@ GuiResponse GuiButton::processMouseEvent(const shared_ptr<InputObject>& event)
     
     GuiResponse answer = Super::processMouseEvent(event);			//We need to call our classParent to deal with the state table
     
-    VMProtectBeginMutation(NULL);
-    if (verb != NULL && clicked)
+    VMProtectBeginMutation(nullptr);
+    if (verb != nullptr && clicked)
     {
         clicked = false;
         if (verb->isEnabled())

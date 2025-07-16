@@ -184,14 +184,14 @@ World::World() :
 #pragma warning(push)
 #pragma warning(disable: 4355) // 'this' : used in base member initializer list
 	contactManager(new ContactManager(this)),
-	cleanStage(new CleanStage(NULL, this)),
+	cleanStage(new CleanStage(nullptr, this)),
 #pragma warning(pop)
 	sendPhysics( new SendPhysics() ),
 	worldSteps(0),
 	worldStepId(0),
 	worldStepAccumulated(4.0f),         //Initialize 4 step so that we can run WorldSteps 240Hz consistently on the first run
 	inStepCode(false),
-	inJointNotification(NULL),
+	inJointNotification(nullptr),
 	numContacts(0),
 	numJoints(0),
 	numLinkCalls(0),
@@ -202,8 +202,8 @@ World::World() :
 	profilingFilter(new Profiling::CodeProfiler("Filter Time")),
 	profilingUiStep(new Profiling::CodeProfiler("UI Step")),
 	frmThrottle(1.0f),
-	bulletDispatcher(NULL),
-	bulletCollisionConfiguration(NULL),
+	bulletDispatcher(nullptr),
+	bulletCollisionConfiguration(nullptr),
     UIDGenerator( 0 ),
     physicsAnalyzerEnabled( false ),
 	fallenPartDestroyHeight(-500.0f),
@@ -255,7 +255,7 @@ World::~World()
 {
 	cleanStage->onPrimitiveRemoving(groundPrimitive);
 	RBXASSERT(groundPrimitive->getNumEdges() == 0);
-	groundPrimitive->setWorld(NULL);
+	groundPrimitive->setWorld(nullptr);
 
 	RBXASSERT(numJoints == 0);
 	RBXASSERT(numContacts == 0);
@@ -850,7 +850,7 @@ void World::reportTouchInfo(const TouchInfo& info)
 
 void World::reportTouchInfo(Primitive* p0, Primitive* p1, World::TouchInfo::Type T)
 {
-	const TouchInfo info = { NULL, NULL, shared_from(PartInstance::fromPrimitive(p0)), shared_from(PartInstance::fromPrimitive(p1)), T };
+	const TouchInfo info = { nullptr, nullptr, shared_from(PartInstance::fromPrimitive(p0)), shared_from(PartInstance::fromPrimitive(p1)), T };
 	touchReporting.append(info);
 }
 
@@ -889,7 +889,7 @@ void World::insertJoint(Joint* j)
 	assertNotInStep();
 
 // Re-entrancy problem - please capture and show complete stack to David B.
-	RBXASSERT(inJointNotification == NULL);		
+	RBXASSERT(inJointNotification == nullptr);		
 
 	Primitive* p0 = j->getPrimitive(0);
 	Primitive* p1 = j->getPrimitive(1);
@@ -910,7 +910,7 @@ void World::insertJoint(Joint* j)
         }
     }
 
-	Primitive* unGroundedPrimIfGroundedExists = NULL;
+	Primitive* unGroundedPrimIfGroundedExists = nullptr;
 	std::vector<Primitive*> combiningRoots;
 	bool isKernelJoint = Joint::isKernelJoint(j);
 	if (!isKernelJoint)
@@ -1022,8 +1022,8 @@ void World::gatherMechDataPreSplit(Joint* j, std::vector<Primitive*>& prim0Child
 	bool p1ParentOfp0 = false;
 	Primitive* prim0 = j->getPrimitive(0);
 	Primitive* prim1 = j->getPrimitive(1);
-	Primitive* rootMovingPrim0 = NULL;
-	Primitive* rootMovingPrim1 = NULL;
+	Primitive* rootMovingPrim0 = nullptr;
+	Primitive* rootMovingPrim1 = nullptr;
 	if (prim0 && prim1)
 	{
 		p0ParentOfp1 = prim0->isAncestorOf(prim1);
@@ -1069,7 +1069,7 @@ void World::gatherMechDataPreSplit(Joint* j, std::vector<Primitive*>& prim0Child
 
 void World::notifyMoved(Primitive* p)
 {
-	if (p == NULL) return;
+	if (p == nullptr) return;
 	p->getOwner()->notifyMoved();
 
 	for (int i = 0; i < p->numChildren(); ++i) {
@@ -1112,7 +1112,7 @@ void World::destroyJoint(Joint* j)
 	RBXASSERT(j);
 	inJointNotification = j;
 	autoDestroySignal(j);
-	inJointNotification = NULL;
+	inJointNotification = nullptr;
 }
 
 
@@ -1214,7 +1214,7 @@ void World::removePrimitive(Primitive* p, bool isStreamRemove)
         getKernel()->pgsSolver.clearBodyCache(p->getBody()->getUID());
     }
 
-	destroyAutoJoints(p, NULL, !isStreamRemove, !isStreamRemove);	
+	destroyAutoJoints(p, nullptr, !isStreamRemove, !isStreamRemove);	
 
 	contactManager->onPrimitiveRemoved(p);		// should destroy all contacts here
 
@@ -1223,10 +1223,10 @@ void World::removePrimitive(Primitive* p, bool isStreamRemove)
 	primitives.fastRemove(p);
     primitiveIndexation.erase( primitiveIndexation.find(p->getBody()->getUID()) );
 
-	p->setWorld(NULL);
+	p->setWorld(nullptr);
     p->getBody()->setUID( 0 );
 
-	RBXASSERT(p->getFirstEdge() == NULL);
+	RBXASSERT(p->getFirstEdge() == nullptr);
 	RBXASSERT(p->getNumEdges() == 0);
 	RBXASSERT(!inStepCode);
 	RBXASSERT(!p->getAssembly());
@@ -1239,7 +1239,7 @@ Primitive* World::getPrimitiveFromBodyUID( boost::uint64_t uid ) const
     const auto it = primitiveIndexation.find( uid );
     if( it == primitiveIndexation.end() )
     {
-        return NULL;
+        return nullptr;
     }
 
     return it->second;
@@ -1289,7 +1289,7 @@ void World::destroyAutoJoints(Primitive* p, std::set<Primitive*>* ignoreGroup, b
 		RBXASSERT(destroyJ->links(p));
 		Primitive* other = destroyJ->otherPrimitive(p);
 
-		if (doNotIgnore(other, ignoreGroup, NULL)) {
+		if (doNotIgnore(other, ignoreGroup, nullptr)) {
 			destroyJoint(destroyJ);
 		}
 	}
@@ -1348,7 +1348,7 @@ void World::destroyTerrainWeldJointsWithEmptyCells(Primitive* megaClusterPrim, c
 // note - leaves contacts intact, but in a non-active state
 void World::destroyAutoJoints(Primitive* p, bool includeExplicit)
 {
-	destroyAutoJoints(p, NULL, includeExplicit);
+	destroyAutoJoints(p, nullptr, includeExplicit);
 }
 
 void World::destroyAutoJointsToWorld(const G3D::Array<Primitive*>& primitives)	// ignores joints between them
@@ -1388,7 +1388,7 @@ void World::createAutoJoints(Primitive* p, std::set<Primitive*>* ignoreGroup, st
 				insertJoint(joint);
 				inJointNotification = joint;
 				autoJoinSignal(joint);
-				inJointNotification = NULL;
+				inJointNotification = nullptr;
 			}
 		}
 	}
@@ -1396,7 +1396,7 @@ void World::createAutoJoints(Primitive* p, std::set<Primitive*>* ignoreGroup, st
 
 void World::createAutoJoints(Primitive* p)
 {
-	createAutoJoints(p, NULL, NULL);
+	createAutoJoints(p, nullptr, nullptr);
 }
 
 void World::createAutoJointsToWorld(const G3D::Array<Primitive*>& primitives)	// ignores joints between them
@@ -1409,7 +1409,7 @@ void World::createAutoJointsToWorld(const G3D::Array<Primitive*>& primitives)	//
 	}
 
 	for (int i = 0; i < primitives.size(); ++i) {
-		createAutoJoints(primitives[i], &ignore, NULL);
+		createAutoJoints(primitives[i], &ignore, nullptr);
 	}
 }
 
@@ -1423,7 +1423,7 @@ void World::createAutoJointsToPrimitives(const G3D::Array<Primitive*>& primitive
 	}
 
 	for (int i = 0; i < primitives.size(); ++i) {
-		createAutoJoints(primitives[i], NULL, &group);
+		createAutoJoints(primitives[i], nullptr, &group);
 	}
 }
 

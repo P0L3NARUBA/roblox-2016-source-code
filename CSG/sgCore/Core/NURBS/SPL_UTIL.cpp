@@ -17,13 +17,13 @@ BOOL begin_use_sply(lpGEO_SPLINE geo_sply, lpSPLY_DAT sply_dat){
 
 // ---------------->>>>>>>>>     <<<<<<<<<<-------------
 //    
- 			if((sply_dat->knots    = (DA_POINT*)SGMalloc(geo_sply->nump*sizeof(DA_POINT))) == NULL) goto err;
+ 			if((sply_dat->knots    = (DA_POINT*)SGMalloc(geo_sply->nump*sizeof(DA_POINT))) == nullptr) goto err;
 			sply_dat->allocSizeFor_knots = geo_sply->nump;
-			if((sply_dat->P        = (W_NODE *)SGMalloc(geo_sply->nump*sizeof(W_NODE  ))) == NULL) goto err;
+			if((sply_dat->P        = (W_NODE *)SGMalloc(geo_sply->nump*sizeof(W_NODE  ))) == nullptr) goto err;
 			sply_dat->allocSizeFor_P = geo_sply->nump;
 
 //    
-			if((sply_dat->u = (sgFloat *)SGMalloc((geo_sply->nump)*sizeof(sgFloat))) == NULL) goto err;
+			if((sply_dat->u = (sgFloat *)SGMalloc((geo_sply->nump)*sizeof(sgFloat))) == nullptr) goto err;
 			sply_dat->allocSizeFor_u = geo_sply->nump;
 
 
@@ -48,7 +48,7 @@ BOOL begin_use_sply(lpGEO_SPLINE geo_sply, lpSPLY_DAT sply_dat){
 			else
 				i = geo_sply->nump+geo_sply->degree+1;
 
-			if((sply_dat->U = (sgFloat *)SGMalloc(i*sizeof(sgFloat))) == NULL) goto err;
+			if((sply_dat->U = (sgFloat *)SGMalloc(i*sizeof(sgFloat))) == nullptr) goto err;
 			sply_dat->allocSizeFor_U = i;
 
 
@@ -64,12 +64,12 @@ BOOL begin_use_sply(lpGEO_SPLINE geo_sply, lpSPLY_DAT sply_dat){
 			type = SPL_INT;
 // ---------------->>>>>>>>>   <<<<<<<<<<--------------------------
 //    
-			if((sply_dat->knots     = (DA_POINT*)SGMalloc(geo_sply->nump*sizeof(DA_POINT))) == NULL) goto err;
+			if((sply_dat->knots     = (DA_POINT*)SGMalloc(geo_sply->nump*sizeof(DA_POINT))) == nullptr) goto err;
 			sply_dat->allocSizeFor_knots = geo_sply->nump;
 
 
 //      
-			if((sply_dat->u = (sgFloat *)SGMalloc((geo_sply->nump)*sizeof(sgFloat))) == NULL) goto err;
+			if((sply_dat->u = (sgFloat *)SGMalloc((geo_sply->nump)*sizeof(sgFloat))) == nullptr) goto err;
 			sply_dat->allocSizeFor_u = geo_sply->nump;
 
 
@@ -81,7 +81,7 @@ BOOL begin_use_sply(lpGEO_SPLINE geo_sply, lpSPLY_DAT sply_dat){
 //     -
       i=geo_sply->numd+geo_sply->nump;
       if(geo_sply->type & SPLY_CLOSE) i+=2;
-      if((sply_dat->P = (W_NODE *)SGMalloc(i*sizeof(W_NODE))) == NULL) goto err;
+      if((sply_dat->P = (W_NODE *)SGMalloc(i*sizeof(W_NODE))) == nullptr) goto err;
 	  sply_dat->allocSizeFor_P = i;
 
 
@@ -91,7 +91,7 @@ BOOL begin_use_sply(lpGEO_SPLINE geo_sply, lpSPLY_DAT sply_dat){
 
 // ---------------->>>>>>>>>   <<<<<<<<<<--------------------
 //   
-			if((sply_dat->derivates = (SNODE *)SGMalloc(geo_sply->nump*sizeof(SNODE   ))) == NULL) goto err;
+			if((sply_dat->derivates = (SNODE *)SGMalloc(geo_sply->nump*sizeof(SNODE   ))) == nullptr) goto err;
 			sply_dat->allocSizeFor_derivates = geo_sply->nump;
 
 
@@ -111,7 +111,7 @@ BOOL begin_use_sply(lpGEO_SPLINE geo_sply, lpSPLY_DAT sply_dat){
 //    
 			if( geo_sply->numu )  i = geo_sply->numu;
 			else								  i = 2*(geo_sply->nump+geo_sply->degree+1);
-			if((sply_dat->U = (sgFloat *)SGMalloc(i*sizeof(sgFloat))) == NULL) goto err;
+			if((sply_dat->U = (sgFloat *)SGMalloc(i*sizeof(sgFloat))) == nullptr) goto err;
 			sply_dat->allocSizeFor_U = i;
 
 
@@ -175,28 +175,28 @@ BOOL init_sply_dat(char sdtype, short degree, short type, lpSPLY_DAT sply_dat ){
 		condition=0;
 
 		if ( type & SPL_APPR ) {	// 
-			if((sply_dat->knots    = (DA_POINT*)SGMalloc(num_point*sizeof(DA_POINT))) == NULL) goto err;
+			if((sply_dat->knots    = (DA_POINT*)SGMalloc(num_point*sizeof(DA_POINT))) == nullptr) goto err;
 			sply_dat->allocSizeFor_knots = num_point;
-			if((sply_dat->P        = (W_NODE *)SGMalloc(num_point*sizeof(W_NODE  ))) == NULL) goto err;
+			if((sply_dat->P        = (W_NODE *)SGMalloc(num_point*sizeof(W_NODE  ))) == nullptr) goto err;
 			sply_dat->allocSizeFor_P = num_point;
-			if((sply_dat->U = (sgFloat *)SGMalloc((num_point+degree+1)*sizeof(sgFloat))) == NULL) goto err;
+			if((sply_dat->U = (sgFloat *)SGMalloc((num_point+degree+1)*sizeof(sgFloat))) == nullptr) goto err;
 			sply_dat->allocSizeFor_U = num_point+degree+1;
 			for (i=0; i<num_point; i++)	sply_dat->P[i].vertex[3] = 1.;//   
 
 		} else {	// 
-			if((sply_dat->knots     = (DA_POINT*)SGMalloc(num_point*sizeof(DA_POINT))) == NULL) goto err;
+			if((sply_dat->knots     = (DA_POINT*)SGMalloc(num_point*sizeof(DA_POINT))) == nullptr) goto err;
 			sply_dat->allocSizeFor_knots = num_point;
-			if((sply_dat->derivates = (SNODE *)SGMalloc(num_point*sizeof(SNODE))) == NULL)    goto err;
+			if((sply_dat->derivates = (SNODE *)SGMalloc(num_point*sizeof(SNODE))) == nullptr)    goto err;
 			sply_dat->allocSizeFor_derivates = num_point;
-			if((sply_dat->P         = (W_NODE *)SGMalloc((2*num_point+2)*sizeof(W_NODE))) == NULL) goto err;
+			if((sply_dat->P         = (W_NODE *)SGMalloc((2*num_point+2)*sizeof(W_NODE))) == nullptr) goto err;
 			sply_dat->allocSizeFor_P = 2*num_point+2;
-			if((sply_dat->U = (sgFloat *)SGMalloc((2*(num_point+degree+1))*sizeof(sgFloat))) == NULL) goto err;
+			if((sply_dat->U = (sgFloat *)SGMalloc((2*(num_point+degree+1))*sizeof(sgFloat))) == nullptr) goto err;
 			sply_dat->allocSizeFor_U = 2*(num_point+degree+1);
 
 			for (i = 0; i < num_point; i++)	sply_dat->P[i].vertex[3] = 1.;
 		}
 //      
-		if((sply_dat->u = (sgFloat *)SGMalloc((num_point)*sizeof(sgFloat))) == NULL) goto err;
+		if((sply_dat->u = (sgFloat *)SGMalloc((num_point)*sizeof(sgFloat))) == nullptr) goto err;
 		sply_dat->allocSizeFor_u = num_point;
 
 	}
@@ -223,27 +223,27 @@ err:
 void free_sply_dat( lpSPLY_DAT sply_dat){
 	if (sply_dat->knots) {
 		SGFree(sply_dat->knots);
-		sply_dat->knots = NULL;
+		sply_dat->knots = nullptr;
 		sply_dat->allocSizeFor_knots = 0;
 	}
 	if (sply_dat->derivates) {
 		SGFree(sply_dat->derivates);
-		sply_dat->derivates = NULL;
+		sply_dat->derivates = nullptr;
 		sply_dat->allocSizeFor_derivates = 0;
 	}
 	if (sply_dat->P) {
 		SGFree(sply_dat->P);
-		sply_dat->P = NULL;
+		sply_dat->P = nullptr;
 		sply_dat->allocSizeFor_P = 0;
 	}
 	if (sply_dat->U) {
 		SGFree(sply_dat->U);
-		sply_dat->U = NULL;
+		sply_dat->U = nullptr;
 		sply_dat->allocSizeFor_U = 0;
 	}
 	if (sply_dat->u) {
 		SGFree(sply_dat->u);
-		sply_dat->u = NULL;
+		sply_dat->u = nullptr;
 		sply_dat->allocSizeFor_u = 0;
 	}
 }
@@ -255,7 +255,7 @@ BOOL create_geo_sply(lpSPLY_DAT sply_dat, lpGEO_SPLINE geo_sply){
 	lpSNODE    d;
 
 	if( sply_dat->numk < sply_dat->degree+1 ){
-		put_message(SPL_EMPTY_DATA, NULL, 0);
+		put_message(SPL_EMPTY_DATA, nullptr, 0);
 		return FALSE;
 	}
 
@@ -274,10 +274,10 @@ BOOL create_geo_sply(lpSPLY_DAT sply_dat, lpGEO_SPLINE geo_sply){
 
 // ---------------->>>>>>>>>   <<<<<<<<<<--------------------------
 		if((geo_sply->hpoint =
-				SGMalloc(sply_dat->nump*sizeof(DA_POINT))) == NULL) return FALSE;
+				SGMalloc(sply_dat->nump*sizeof(DA_POINT))) == nullptr) return FALSE;
 		p = (lpDA_POINT)geo_sply->hpoint;
 		if((geo_sply->hderivates =
-				SGMalloc(sply_dat->nump*sizeof(SNODE))) == NULL)	return FALSE;
+				SGMalloc(sply_dat->nump*sizeof(SNODE))) == nullptr)	return FALSE;
 		d = (lpSNODE)geo_sply->hderivates;
 
     for( i=0; i<sply_dat->nump; i++ )
@@ -301,7 +301,7 @@ BOOL create_geo_sply(lpSPLY_DAT sply_dat, lpGEO_SPLINE geo_sply){
 
 // ---------------->>>>>>>>>    <<<<<<<<<<-------------
 		if((geo_sply->hvector =
-				SGMalloc(sply_dat->numU*sizeof(sgFloat))) == NULL) return FALSE;
+				SGMalloc(sply_dat->numU*sizeof(sgFloat))) == nullptr) return FALSE;
 		u = (sgFloat*)geo_sply->hvector;
 		memcpy( u, sply_dat->U, sply_dat->numU*sizeof(sgFloat));
  		geo_sply->numu = sply_dat->numU;
@@ -309,7 +309,7 @@ BOOL create_geo_sply(lpSPLY_DAT sply_dat, lpGEO_SPLINE geo_sply){
 	}else{                             //
 // ---------------->>>>>>>>>   <<<<<<<<<<--------------------------
 		if((geo_sply->hpoint =
-				SGMalloc(sply_dat->numk*sizeof(DA_POINT))) == NULL) return FALSE;
+				SGMalloc(sply_dat->numk*sizeof(DA_POINT))) == nullptr) return FALSE;
 		p = (lpDA_POINT)geo_sply->hpoint;
 		memcpy( p, sply_dat->knots, sply_dat->numk*sizeof(DA_POINT));
 		geo_sply->nump = sply_dat->numk;
@@ -317,7 +317,7 @@ BOOL create_geo_sply(lpSPLY_DAT sply_dat, lpGEO_SPLINE geo_sply){
 // ---------------->>>>>>>>>   <<<<<<<<<<--------------------
 		if( sply_dat->numd ){
 			if((geo_sply->hderivates =
-					SGMalloc(sply_dat->numd*sizeof(SNODE))) == NULL)	return FALSE;
+					SGMalloc(sply_dat->numd*sizeof(SNODE))) == nullptr)	return FALSE;
 			d = (lpSNODE)geo_sply->hderivates;
 			for( j=0, i=0; i<sply_dat->numk; i++ )
 				if( sply_dat->derivates[i].num ){
@@ -329,7 +329,7 @@ BOOL create_geo_sply(lpSPLY_DAT sply_dat, lpGEO_SPLINE geo_sply){
 
 // ---------------->>>>>>>>>    <<<<<<<<<<-------------
 		if((geo_sply->hvector =
-				SGMalloc(sply_dat->numU*sizeof(sgFloat))) == NULL) return FALSE;
+				SGMalloc(sply_dat->numU*sizeof(sgFloat))) == nullptr) return FALSE;
 		u = (sgFloat*)geo_sply->hvector;
 		memcpy( u, sply_dat->U, sply_dat->numU*sizeof(sgFloat));
  		geo_sply->numu = sply_dat->numU;
@@ -344,7 +344,7 @@ lpDA_POINT p;
 lpSNODE    d;
 
 	if(sply_dat->sdtype & SPL_GEO) {
-		put_message(SPL_INTERNAL_ERROR, NULL, 0);
+		put_message(SPL_INTERNAL_ERROR, nullptr, 0);
 		return FALSE;
 	}
 
@@ -535,35 +535,35 @@ BOOL expand_spl( lpSPLY_DAT spline, short num, short degree, short type ){
 	}
 
 //  
-	if( spline->P ){   SGFree(spline->P); 	spline->P = NULL; spline->allocSizeFor_P=0;}
-	if( spline->U ){   SGFree(spline->U);	spline->U = NULL; spline->allocSizeFor_U=0;}
+	if( spline->P ){   SGFree(spline->P); 	spline->P = nullptr; spline->allocSizeFor_P=0;}
+	if( spline->U ){   SGFree(spline->U);	spline->U = nullptr; spline->allocSizeFor_U=0;}
 	if( type == 0 || type == 2 ){
-		if( spline->knots){	SGFree(spline->knots); spline->knots = NULL; spline->allocSizeFor_knots=0;}
-		if( spline->u)		{	SGFree(spline->u);     spline->u = NULL; spline->allocSizeFor_u=0;}
-		if( spline->derivates ){	SGFree(spline->derivates); spline->derivates = NULL; spline->allocSizeFor_derivates=0;}
+		if( spline->knots){	SGFree(spline->knots); spline->knots = nullptr; spline->allocSizeFor_knots=0;}
+		if( spline->u)		{	SGFree(spline->u);     spline->u = nullptr; spline->allocSizeFor_u=0;}
+		if( spline->derivates ){	SGFree(spline->derivates); spline->derivates = nullptr; spline->allocSizeFor_derivates=0;}
 	}
 
 // Alloc memory
 	size = sizeof(W_NODE)*(MAX_POINT_ON_SPLINE+num);
-	if( ( spline->P = (W_NODE *)SGMalloc(size)) == NULL ) goto err1;
+	if( ( spline->P = (W_NODE *)SGMalloc(size)) == nullptr ) goto err1;
 	spline->allocSizeFor_P=MAX_POINT_ON_SPLINE+num;
 
 	size = sizeof(sgFloat)*(MAX_POINT_ON_SPLINE+num+degree+1);
-	if( ( spline->U = (sgFloat *)SGMalloc(size)) == NULL ) goto err1;
+	if( ( spline->U = (sgFloat *)SGMalloc(size)) == nullptr ) goto err1;
 	spline->allocSizeFor_U=MAX_POINT_ON_SPLINE+num+degree+1;
 
 	if( type == 0 || type == 2 ){
 		size = sizeof(DA_POINT)*(MAX_POINT_ON_SPLINE+num);
-		if( ( spline->knots = (DA_POINT*)SGMalloc(size)) == NULL ) goto err1;
+		if( ( spline->knots = (DA_POINT*)SGMalloc(size)) == nullptr ) goto err1;
 		spline->allocSizeFor_knots=MAX_POINT_ON_SPLINE+num;
 
 		size = sizeof(sgFloat)*(MAX_POINT_ON_SPLINE+num);
-		if( ( spline->u = (sgFloat *)SGMalloc(size)) == NULL ) goto err1;
+		if( ( spline->u = (sgFloat *)SGMalloc(size)) == nullptr ) goto err1;
 		spline->allocSizeFor_u=MAX_POINT_ON_SPLINE+num;
 
 		if( type == 0 ){
 			size = sizeof(SNODE)*(MAX_POINT_ON_SPLINE+num);
-			if( ( spline->derivates = (SNODE *)SGMalloc(size)) == NULL ) goto err1;
+			if( ( spline->derivates = (SNODE *)SGMalloc(size)) == nullptr ) goto err1;
 			spline->allocSizeFor_derivates=MAX_POINT_ON_SPLINE+num;
 		}
 	}

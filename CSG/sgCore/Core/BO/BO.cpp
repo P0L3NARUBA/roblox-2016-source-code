@@ -10,12 +10,12 @@ BOOL b_list_lable(lpNP_STR_LIST list, hOBJ hobj);
 static short b_np_label(NP_TYPE_POINT met);
 
 static WORD app_idn_a;
-static lpNP_STR_LIST list_str = NULL;
+static lpNP_STR_LIST list_str = nullptr;
 
 short         key, object_number, ident_c;
-lpNPW         npa = NULL, npb = NULL;
-VADR          hbo_mem = NULL;
-hINDEX        hindex_a = NULL, hindex_b = NULL;
+lpNPW         npa = nullptr, npb = nullptr;
+VADR          hbo_mem = nullptr;
+hINDEX        hindex_a = nullptr, hindex_b = nullptr;
 NP_STR_LIST   lista,listb;
 VLD           vld_c;
 int           num_index_a, num_index_b;
@@ -32,7 +32,7 @@ OSCAN_COD boolean_operation(hOBJ hobj_a, hOBJ hobj_b, CODE_OPERATION code_operat
 	NP_STR        str1 , str2;
 	REGION_3D     gab_a = {{1.e35,1.e35,1.e35},{-1.e35,-1.e35,-1.e35}};
 	REGION_3D     gab_b = {{1.e35,1.e35,1.e35},{-1.e35,-1.e35,-1.e35}};
-	hOBJ          hobj_c = NULL;
+	hOBJ          hobj_c = nullptr;
 	lpOBJ         obj_a, obj_b;
 	lpGEO_BREP    lpgeobrep_a, lpgeobrep_b;
 	WORD  			  app_idn_b;
@@ -43,7 +43,7 @@ OSCAN_COD boolean_operation(hOBJ hobj_a, hOBJ hobj_b, CODE_OPERATION code_operat
 	NP_TYPE_POINT	answer;
 
 	flg_exist = 1;
-	if (hobj_a == NULL || hobj_b == NULL ||
+	if (hobj_a == nullptr || hobj_b == nullptr ||
 			code_operation < UNION || code_operation > LINE_INTER /*PENETRATE*/) {
 		put_message(EMPTY_MSG,GetIDS(IDS_SG028),0);
 		return OSBREAK;
@@ -105,7 +105,7 @@ bo:
 	app_idn_b = lpgeobrep_b->ident_np + 32767;   
 	app_idn_a = 32767 - lpgeobrep_a->ident_np;   
 	if (app_idn_a < app_idn_b) {
-		put_message(IDENT_OVER,NULL,0);             
+		put_message(IDENT_OVER,nullptr,0);             
 		return OSBREAK;
 	}
 	app_idn_a = lpgeobrep_a->ident_np + 32767; 
@@ -132,7 +132,7 @@ bo:
 	else                         nof = 0;
 	if (npwg->maxnoc < 2*MAXNOC) noc = 2*MAXNOC - npwg->maxnoc;
 	else                         noc = 0;
-	if ( !(o_expand_np(npwg, nov, noe, nof, noc)) ) return NULL;
+	if ( !(o_expand_np(npwg, nov, noe, nof, noc)) ) return nullptr;
 */
 	npwg->type = TNPW;
 	np_init(npwg);
@@ -144,12 +144,12 @@ bo:
 	list_str = &lista;
 	if ( (rt = o_scan(hobj_a,&sc)) != OSTRUE )  goto norm;
 	if (ctrl_c_press) {												 
-		put_message(CTRL_C_PRESS, NULL, 0);
+		put_message(CTRL_C_PRESS, nullptr, 0);
 		rt = OSBREAK;
 		goto norm;
 	}
 	
-	if ((hindex_a = b_index_np(&lista,&gab_b)) == NULL)
+	if ((hindex_a = b_index_np(&lista,&gab_b)) == nullptr)
     {
         rt = OSBREAK; goto norm;
     }
@@ -163,12 +163,12 @@ bo:
 	list_str = &listb;
 	if ( (rt = o_scan(hobj_b,&sc)) != OSTRUE )  goto norm;
 	if (ctrl_c_press) {												
-		put_message(CTRL_C_PRESS, NULL, 0);
+		put_message(CTRL_C_PRESS, nullptr, 0);
 		rt = OSBREAK;
 		goto norm;
 	}
 	
-	if ((hindex_b = b_index_np(&listb,&gab_a)) == NULL)
+	if ((hindex_b = b_index_np(&listb,&gab_a)) == nullptr)
     {
         rt = OSBREAK; goto norm;
     }
@@ -187,7 +187,7 @@ bo:
         rt = OSBREAK; goto norm;
     }
 	if ( (npb = creat_np_mem(TNPW,MAXNOV,MAXNOE,MAXNOF,MAXNOF,MAXNOE))
-				== NULL )
+				== nullptr )
     {
         rt = OSBREAK; goto norm;
     }
@@ -218,7 +218,7 @@ bo:
                 rt = OSBREAK; goto norm;
             }
 			if ( !(b_lnp(&str1,&str2)) ) {  		   
-				end_rw(&lista.nb);   ;//nb b = NULL;
+				end_rw(&lista.nb);   ;//nb b = nullptr;
 				rt = OSSKIP;
 				goto norm;
 			}
@@ -231,7 +231,7 @@ bo:
 			}
 			write_elem(&listb.vdim,*b,&str2);
 		}
-		end_rw(&lista.nb);   //nb b = NULL;
+		end_rw(&lista.nb);   //nb b = nullptr;
 		if (str1.lab == 2)  {
 			if ( !(overwrite_np(&lista.bnp,str1.hnp,npa,TNPW)) )
             {
@@ -241,13 +241,13 @@ bo:
 		}
 		write_elem(&lista.vdim,ii,&str1);
 		if (ctrl_c_press) {											
-			put_message(CTRL_C_PRESS, NULL, 0);
+			put_message(CTRL_C_PRESS, nullptr, 0);
 			rt = OSBREAK;
 			goto norm;
 		}
 	}
-	read_user_data_mem  = NULL;
-	add_user_data_mem   = NULL;
+	read_user_data_mem  = nullptr;
+	add_user_data_mem   = nullptr;
 
 //	end_grad  (num_proc , ii);
 	num_proc = -1;
@@ -344,7 +344,7 @@ fr:
         rt = OSBREAK; goto norm;
     }
 	if (ctrl_c_press) { 											  
-		put_message(CTRL_C_PRESS, NULL, 0);
+		put_message(CTRL_C_PRESS, nullptr, 0);
 		rt = OSBREAK;
 		goto norm;
 	}
@@ -353,7 +353,7 @@ fr:
 		object_number = 2;
 		if ( !(b_list_del(&listb, hobj_b)) ) { rt = OSBREAK; goto norm; }
 		if (ctrl_c_press) {											 
-			put_message(CTRL_C_PRESS, NULL, 0);
+			put_message(CTRL_C_PRESS, nullptr, 0);
 			rt = OSBREAK;
 			goto norm;
 		}
@@ -373,7 +373,7 @@ fr:
 			write_elem(&lista.vdim,ii,&str1);
 		}
 		if (ctrl_c_press) { 										
-			put_message(CTRL_C_PRESS, NULL, 0);
+			put_message(CTRL_C_PRESS, nullptr, 0);
 			rt = OSBREAK;
 			goto norm;
 		}
@@ -393,7 +393,7 @@ fr:
 				write_elem(&listb.vdim,ii,&str2);
 			}
 			if (ctrl_c_press) { 											
-				put_message(CTRL_C_PRESS, NULL, 0);
+				put_message(CTRL_C_PRESS, nullptr, 0);
 				rt = OSBREAK;
 				goto norm;
 			}
@@ -409,16 +409,16 @@ norm:
 	bo_free_user_data(npwg);
 	bo_free_user_data(npb);
 	free_np_mem(&npb);
-	if (hindex_a != NULL) { SGFree(hindex_a); hindex_a = NULL; }
-	if (hindex_b != NULL) { SGFree(hindex_b); hindex_b = NULL; }
-	if ( lista.number_all > 0) np_end_of_put(&lista,NP_CANCEL,0,NULL);
-	if ( listb.number_all > 0) np_end_of_put(&listb,NP_CANCEL,0,NULL);
-	read_user_data_buf  = NULL;
-	write_user_data_buf	= NULL;
-	size_user_data      = NULL;
-	expand_user_data    = NULL;
-	read_user_data_mem  = NULL;
-	add_user_data_mem   = NULL;
+	if (hindex_a != nullptr) { SGFree(hindex_a); hindex_a = nullptr; }
+	if (hindex_b != nullptr) { SGFree(hindex_b); hindex_b = nullptr; }
+	if ( lista.number_all > 0) np_end_of_put(&lista,NP_CANCEL,0,nullptr);
+	if ( listb.number_all > 0) np_end_of_put(&listb,NP_CANCEL,0,nullptr);
+	read_user_data_buf  = nullptr;
+	write_user_data_buf	= nullptr;
+	size_user_data      = nullptr;
+	expand_user_data    = nullptr;
+	read_user_data_mem  = nullptr;
+	add_user_data_mem   = nullptr;
 	np_free_stack();
 	return rt;
 }
@@ -429,7 +429,7 @@ static OSCAN_COD bo_scan(hOBJ hobj,lpSCAN_CONTROL lpsc)
 	lpD_POINT v;
 
 	if (ctrl_c_press) { 												
-		put_message(CTRL_C_PRESS, NULL, 0);
+		put_message(CTRL_C_PRESS, nullptr, 0);
 		return OSBREAK;
 	}
 	if (lpsc->type != OBREP) return OSTRUE; 
@@ -456,11 +456,11 @@ hINDEX b_index_np(lpNP_STR_LIST list, lpREGION_3D gab)
 {
 	short      number_np,i;
 	lpNP_STR str;
-	hINDEX   hindex;//nb  = NULL;
+	hINDEX   hindex;//nb  = nullptr;
 	lpINDEX  index;
 
 	number_np = list->number_all;       
-	if ( (hindex = SGMalloc(sizeof(INDEX)*number_np)) == NULL) 		return NULL;
+	if ( (hindex = SGMalloc(sizeof(INDEX)*number_np)) == nullptr) 		return nullptr;
 	index = (lpINDEX)hindex;
 
 	begin_rw(&list->vdim,0);
@@ -518,7 +518,7 @@ BOOL b_list_del(lpNP_STR_LIST list, hOBJ hobj)
 			write_elem(&list->vdim,ii,&str);
 		} else pr = 1;
 		if (ctrl_c_press) { 											
-			put_message(CTRL_C_PRESS, NULL, 0);
+			put_message(CTRL_C_PRESS, nullptr, 0);
 			goto err;
 		}
 	}

@@ -1224,7 +1224,7 @@ RLEAlphaSurface(SDL_Surface * surface)
     /* Now that we have it encoded, release the original pixels */
     if (!(surface->flags & SDL_PREALLOC)) {
         SDL_free(surface->pixels);
-        surface->pixels = NULL;
+        surface->pixels = nullptr;
     }
 
     /* realloc the buffer to release unused memory */
@@ -1306,7 +1306,7 @@ RLEColorkeySurface(SDL_Surface * surface)
     }
 
     rlebuf = (Uint8 *) SDL_malloc(maxsize);
-    if (rlebuf == NULL) {
+    if (rlebuf == nullptr) {
         return SDL_OutOfMemory();
     }
 
@@ -1384,12 +1384,12 @@ RLEColorkeySurface(SDL_Surface * surface)
     /* Now that we have it encoded, release the original pixels */
     if (!(surface->flags & SDL_PREALLOC)) {
         SDL_free(surface->pixels);
-        surface->pixels = NULL;
+        surface->pixels = nullptr;
     }
 
     /* realloc the buffer to release unused memory */
     {
-        /* If realloc returns NULL, the original block is left intact */
+        /* If realloc returns nullptr, the original block is left intact */
         Uint8 *p = SDL_realloc(rlebuf, dst - rlebuf);
         if (!p)
             p = rlebuf;
@@ -1555,7 +1555,7 @@ SDL_UnRLESurface(SDL_Surface * surface, int recode)
                 }
 
                 /* fill it with the background color */
-                SDL_FillRect(surface, NULL, surface->map->info.colorkey);
+                SDL_FillRect(surface, nullptr, surface->map->info.colorkey);
 
                 /* now render the encoded surface */
                 full.x = full.y = 0;
@@ -1574,7 +1574,7 @@ SDL_UnRLESurface(SDL_Surface * surface, int recode)
             ~(SDL_COPY_RLE_COLORKEY | SDL_COPY_RLE_ALPHAKEY);
 
         SDL_free(surface->map->data);
-        surface->map->data = NULL;
+        surface->map->data = nullptr;
     }
 }
 

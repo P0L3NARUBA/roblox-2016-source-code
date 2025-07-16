@@ -52,14 +52,14 @@ loop_variable::record_reference(bool in_assignee,
                                 ir_assignment *current_assignment)
 {
    if (in_assignee) {
-      assert(current_assignment != NULL);
+      assert(current_assignment != nullptr);
 
       if (in_conditional_code_or_nested_loop ||
-          current_assignment->condition != NULL) {
+          current_assignment->condition != nullptr) {
          this->conditional_or_nested_assignment = true;
       }
 
-      if (this->first_assignment == NULL) {
+      if (this->first_assignment == nullptr) {
          assert(this->num_assignments == 0);
 
          this->first_assignment = current_assignment;
@@ -85,7 +85,7 @@ loop_state::loop_state()
 										 hash_table_pointer_compare);
    this->ht_variables = hash_table_ctor(0, hash_table_pointer_hash,
 										 hash_table_pointer_compare);
-   this->mem_ctx = ralloc_context(NULL);
+   this->mem_ctx = ralloc_context(nullptr);
    this->loop_found = false;
 }
 
@@ -142,7 +142,7 @@ loop_state::reference_variable(ir_variable *var, bool assignment)
 	void *ref = hash_table_find(this->ht_variables, var);
 
 	// variable declaration was not seen or already discarded, just ignore
-	if (ref == NULL)
+	if (ref == nullptr)
 		return;
 
 	if (ref == unreferenced_variable && assignment)
@@ -265,7 +265,7 @@ loop_variable_state::get_or_insert(ir_variable *var, bool in_assignee)
 {
    loop_variable *lv = this->get(var);
 
-   if (lv == NULL) {
+   if (lv == nullptr) {
       lv = this->insert(var);
       lv->read_before_write = !in_assignee;
    }
@@ -315,7 +315,7 @@ void loop_enter_callback(class ir_instruction *ir, void *data)
 }
 
 loop_analysis::loop_analysis(loop_state *loops)
-   : loops(loops), if_statement_depth(0), current_assignment(NULL), first_pass(false)
+   : loops(loops), if_statement_depth(0), current_assignment(nullptr), first_pass(false)
 {
    /* empty */
    data_enter = this;
@@ -436,7 +436,7 @@ loop_analysis::visit_leave(ir_loop *ir)
 
       ir_if *if_stmt = ((ir_instruction *) node)->as_if();
 
-      if ((if_stmt != NULL) && is_loop_terminator(if_stmt))
+      if ((if_stmt != nullptr) && is_loop_terminator(if_stmt))
 	 ls->insert(if_stmt);
       else
 	 break;
@@ -445,7 +445,7 @@ loop_analysis::visit_leave(ir_loop *ir)
 
    foreach_in_list_safe(loop_variable, lv, &ls->variables) {
        ir_variable *var = lv->var;
-       if (var != NULL) {
+       if (var != nullptr) {
            lv->initial_value = find_initial_value(ir, var, &lv->initial_value_ir);
        }
       /* Move variables that are already marked as being loop constant to
@@ -512,7 +512,7 @@ loop_analysis::visit_leave(ir_loop *ir)
        * invariant, and they should have already been filtered out.
        */
       assert(lv->num_assignments == 1);
-      assert(lv->first_assignment != NULL);
+      assert(lv->first_assignment != nullptr);
 
       /* The assignment to the variable in the loop must be unconditional and
        * not inside a nested loop.
@@ -526,7 +526,7 @@ loop_analysis::visit_leave(ir_loop *ir)
        */
       ir_rvalue *const inc =
 	 get_basic_induction_increment(lv->first_assignment, ls->var_hash);
-      if (inc != NULL) {
+      if (inc != nullptr) {
          lv->increment = inc;
 
          if (loops->insert_inductor(lv, ls, ir)) {
@@ -549,7 +549,7 @@ loop_analysis::visit_leave(ir_loop *ir)
        * about the former here.
        */
       ir_expression *cond = if_stmt->condition->as_expression();
-      if (cond == NULL)
+      if (cond == nullptr)
 	 continue;
 
       switch (cond->operation) {
@@ -565,7 +565,7 @@ loop_analysis::visit_leave(ir_loop *ir)
 	 ir_constant *limit = cond->operands[1]->as_constant();
 	 enum ir_expression_operation cmp = cond->operation;
 
-	 if (limit == NULL) {
+	 if (limit == nullptr) {
 	    counter = cond->operands[1]->as_dereference_variable();
 	    limit = cond->operands[0]->as_constant();
 
@@ -578,18 +578,18 @@ loop_analysis::visit_leave(ir_loop *ir)
 	    }
 	 }
 
-	 if ((counter == NULL) || (limit == NULL))
+	 if ((counter == nullptr) || (limit == nullptr))
 	    break;
 
 	 ir_variable *var = counter->variable_referenced();
 
          loop_variable *lv = ls->get(var);
-         if (lv != NULL && lv->is_induction_var()) {
+         if (lv != nullptr && lv->is_induction_var()) {
             t->iterations = calculate_iterations(lv->initial_value, limit, lv->increment,
                                                  cmp);
 
             if (t->iterations >= 0 &&
-                (ls->limiting_terminator == NULL ||
+                (ls->limiting_terminator == nullptr ||
                  t->iterations < ls->limiting_terminator->iterations)) {
                ls->limiting_terminator = t;
             }
@@ -647,7 +647,7 @@ loop_analysis::visit_leave(ir_assignment *ir)
       return visit_continue;
 
    assert(this->current_assignment == ir);
-   this->current_assignment = NULL;
+   this->current_assignment = nullptr;
 
    return visit_continue;
 }
@@ -684,7 +684,7 @@ public:
       loop_variable *lv =
 	 (loop_variable *) hash_table_find(this->loop_variables, ir->var);
 
-      assert(lv != NULL);
+      assert(lv != nullptr);
 
       if (lv->is_loop_constant()) {
 	 return visit_continue;
@@ -716,10 +716,10 @@ get_basic_induction_increment(ir_assignment *ir, hash_table *var_hash)
    /* The RHS must be a binary expression.
     */
    ir_expression *const rhs = ir->rhs->as_expression();
-   if ((rhs == NULL)
+   if ((rhs == nullptr)
        || ((rhs->operation != ir_binop_add)
 	   && (rhs->operation != ir_binop_sub)))
-      return NULL;
+      return nullptr;
 
    /* One of the of operands of the expression must be the variable assigned.
     * If the operation is subtraction, the variable in question must be the
@@ -732,31 +732,31 @@ get_basic_induction_increment(ir_assignment *ir, hash_table *var_hash)
 
    if (((op0 != var) && (op1 != var))
        || ((op1 == var) && (rhs->operation == ir_binop_sub)))
-      return NULL;
+      return nullptr;
 
    ir_rvalue *inc = (op0 == var) ? rhs->operands[1] : rhs->operands[0];
 
-   if (inc->as_constant() == NULL) {
+   if (inc->as_constant() == nullptr) {
       ir_variable *const inc_var = inc->variable_referenced();
-      if (inc_var != NULL) {
+      if (inc_var != nullptr) {
 	 loop_variable *lv =
 	    (loop_variable *) hash_table_find(var_hash, inc_var);
 
-         if (lv == NULL || !lv->is_loop_constant()) {
-            assert(lv != NULL);
-            inc = NULL;
+         if (lv == nullptr || !lv->is_loop_constant()) {
+            assert(lv != nullptr);
+            inc = nullptr;
          }
       } else
-	 inc = NULL;
+	 inc = nullptr;
    }
 
-   if ((inc != NULL) && (rhs->operation == ir_binop_sub)) {
+   if ((inc != nullptr) && (rhs->operation == ir_binop_sub)) {
       void *mem_ctx = ralloc_parent(ir);
 
       inc = new(mem_ctx) ir_expression(ir_unop_neg,
 				       inc->type,
-				       inc->clone(mem_ctx, NULL),
-				       NULL);
+				       inc->clone(mem_ctx, nullptr),
+				       nullptr);
    }
 
    return inc;
@@ -778,7 +778,7 @@ is_loop_terminator(ir_if *ir)
 
    ir_instruction *const inst =
       (ir_instruction *) ir->then_instructions.get_head();
-   if (inst == NULL)
+   if (inst == nullptr)
       return false;
 
    if (inst->ir_type != ir_type_loop_jump)

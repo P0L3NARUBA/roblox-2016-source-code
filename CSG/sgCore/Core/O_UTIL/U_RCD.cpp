@@ -41,7 +41,7 @@ UCHAR          *hdfield;
 	//    
 	//    
 	len = (WORD)(32*(numfld + 1) + 1);
-	if((hdrec = (char*)SGMalloc(len)) == NULL) {
+	if((hdrec = (char*)SGMalloc(len)) == nullptr) {
 		rcd->err = RCDERR_NOMEM;
 		return FALSE;
 	}
@@ -66,15 +66,15 @@ UCHAR          *hdfield;
 	if(!story_data(&rcd->bd, len, hdrec)){
 		rcd->err = RCDERR_WRITE;
 		SGFree(hdrec);
- //nb 		hdrec = NULL;
+ //nb 		hdrec = nullptr;
 		rcd_close(rcd);
 		return FALSE;
 	}
 	SGFree(hdrec);
- //	hdrec = NULL;
+ //	hdrec = nullptr;
 	if(!rcd_close(rcd))
 		return FALSE;
-	return rcd_open(rcd, name, NULL);
+	return rcd_open(rcd, name, nullptr);
 badfld:
 	rcd->err = RCDERR_BADFIELD;
 	return FALSE;
@@ -113,8 +113,8 @@ RCDRECINFO        ri;
 	if(lrec == 0 || lrec > 4000) goto badfile;
 	if((ULONG)(lrec*recnum + lhdr + ((recnum) ? 1:0)) != rcd->bd.len_file) goto badfile;
 	if(hdr[15] != 0) goto codefile;
-	if((rcd->record = (char*)SGMalloc(lrec)) == NULL) goto nomem;
-	if((rcd->fld = (RCDFIELD*)SGMalloc(fldnum*sizeof(RCDFIELD))) == NULL) goto nomem;
+	if((rcd->record = (char*)SGMalloc(lrec)) == nullptr) goto nomem;
+	if((rcd->fld = (RCDFIELD*)SGMalloc(fldnum*sizeof(RCDFIELD))) == nullptr) goto nomem;
 	//   ,   
 	lcontrol = 1;
 	for(i = 0; i < fldnum; i++){
@@ -214,8 +214,8 @@ RCDRECINFO        ri;
 	if(lrec == 0 || lrec > 4000) goto badfile;
 	if((ULONG)(lrec*recnum + lhdr + ((recnum) ? 1:0)) != rcd->bd.len_file) goto badfile;
 	if(hdr[15] != 0) goto codefile;
-	if((rcd->record = (char*)SGMalloc(lrec)) == NULL) goto nomem;
-	if((rcd->fld = (RCDFIELD*)SGMalloc(fldnum*sizeof(RCDFIELD))) == NULL) goto nomem;
+	if((rcd->record = (char*)SGMalloc(lrec)) == nullptr) goto nomem;
+	if((rcd->fld = (RCDFIELD*)SGMalloc(fldnum*sizeof(RCDFIELD))) == nullptr) goto nomem;
 	//   ,   
 	lcontrol = 1;
 	for(i = 0; i < fldnum; i++){
@@ -452,10 +452,10 @@ void * rcd_alloc_and_getvalue_bynum(lpRECORDSET rcd, short fieldnum)
 void * value;
 short     size;
 
-	if(!rcd_bookmark(rcd) && !rcd->newrec) return NULL;
+	if(!rcd_bookmark(rcd) && !rcd->newrec) return nullptr;
 	if(fieldnum < 0 || fieldnum >= rcd->fldnum){
 		rcd->err = RCDERR_BADFIELDNUM;
-		return NULL;
+		return nullptr;
 	}
 	switch(rcd->fld[fieldnum].type){
 		case 'C':
@@ -470,16 +470,16 @@ short     size;
 			break;
 		default:
 			rcd->err = RCDERR_UNKFIELDTYPE;
-			return NULL;
+			return nullptr;
 	}
 	value = SGMalloc(size);
-	if(value == NULL){
+	if(value == nullptr){
 		 rcd->err = RCDERR_NOMEM;
-		 return NULL;
+		 return nullptr;
 	}
 	if(!rcd_getvalue_bynum(rcd, fieldnum, value)){
 		SGFree(value);
-		return NULL;
+		return nullptr;
 	}
 	return value;
 }
@@ -675,7 +675,7 @@ short fieldnum;
 void * rcd_alloc_and_getvalue(lpRECORDSET rcd, char *fieldname)
 {
 short fieldnum;
-	if(!rcd_getfieldnum(rcd, fieldname, &fieldnum)) return NULL;
+	if(!rcd_getfieldnum(rcd, fieldname, &fieldnum)) return nullptr;
 	return rcd_alloc_and_getvalue_bynum(rcd, fieldnum);
 }
 
@@ -703,11 +703,11 @@ BOOL rcd_close(lpRECORDSET rcd)
 //   
 {
 	if(rcd->fld) SGFree(rcd->fld);
-	rcd->fld = NULL;
+	rcd->fld = nullptr;
 	if(rcd->record) SGFree(rcd->record);
-	rcd->record = NULL;
+	rcd->record = nullptr;
 	if(rcd->filter) SGFree(rcd->filter);
-	rcd->filter = NULL;
+	rcd->filter = nullptr;
 	free_vdim(&rcd->vd);
 	if(!close_buf(&rcd->bd)){
 		rcd->err = RCDERR_CLOSE;
@@ -720,7 +720,7 @@ BOOL rcd_close(lpRECORDSET rcd)
 
 void rcd_put_message(lpRECORDSET rcd)
 {
-	put_message(MSG_RCDERR_NOERR + rcd->err, NULL, 0);
+	put_message(MSG_RCDERR_NOERR + rcd->err, nullptr, 0);
 }
 
 static BOOL rcd_find(lpRECORDSET rcd, char *str, int sirec, int eirec, short step)
@@ -800,12 +800,12 @@ RCDRECINFO ri;
 	if(rcd->filter){
 		oldfilter = TRUE;
 		SGFree(rcd->filter);
-		rcd->filter = NULL;
+		rcd->filter = nullptr;
 	}
-	if(str != NULL){
+	if(str != nullptr){
 		l = (short)strlen(str);
 		if(l != 0){
-			if((rcd->filter = (char*)SGMalloc(l + 1)) == NULL) goto merr;
+			if((rcd->filter = (char*)SGMalloc(l + 1)) == nullptr) goto merr;
 			strcpy(rcd->filter, str);
 		}
 	}
@@ -922,7 +922,7 @@ short            i;
 			goto err;
 		}
 		SGFree(value);
- //nb 		value = NULL;
+ //nb 		value = nullptr;
 	}
 //nb met:
 	value = uc_alloc_and_get_express_value_s(express, &type, &len, &s);
@@ -932,7 +932,7 @@ short            i;
 		goto err;
 	}
 	if(s != UC_NORMAL){
-		put_message(ERR_LOGICAL_EXPRESSION, NULL, 0);
+		put_message(ERR_LOGICAL_EXPRESSION, nullptr, 0);
 		rcd->err = RCDERR_SYNTAX;
 		goto err;
 	}

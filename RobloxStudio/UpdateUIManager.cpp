@@ -72,7 +72,7 @@ UpdateUIManager& UpdateUIManager::Instance()
 }
 
 UpdateUIManager::UpdateUIManager()
-: m_pRobloxMainWindow(NULL)
+: m_pRobloxMainWindow(nullptr)
 , m_PauseStatusBar(0)
 , m_isRunning(false)
 , m_dockRestoreStates(eDW_MAX)
@@ -317,7 +317,7 @@ void UpdateUIManager::init(RobloxMainWindow *pMainWindow)
 
     m_isTaskBarInitialized 		= false;
     m_isIndeterminateProgress 	= false;
-    m_taskbar 					= NULL;
+    m_taskbar 					= nullptr;
 
     HRESULT hr = ::CoCreateInstance(
         CLSID_TaskbarList,
@@ -336,7 +336,7 @@ void UpdateUIManager::init(RobloxMainWindow *pMainWindow)
         else
         {
             m_taskbar->Release();
-            m_taskbar = NULL;
+            m_taskbar = nullptr;
         }
     }
 #endif
@@ -458,7 +458,7 @@ void UpdateUIManager::onMenuShow()
 	if (pSender->inherits("QMenu"))
 	{
 		QList<QAction*> menuActions = ((const QMenu *)pSender)->actions();
-		QAction *pAction = NULL;
+		QAction *pAction = nullptr;
 		bool checkedState = false, enabledState = false;
 		for (int i = 0; i < menuActions.size(); ++i) 
 		{
@@ -515,7 +515,7 @@ void UpdateUIManager::onMenuHide()
 void UpdateUIManager::setDefaultApplicationState()
 {
 	QList<QAction*> allActions = m_pRobloxMainWindow->findChildren<QAction *>();
-	QAction *pAction = NULL;
+	QAction *pAction = nullptr;
 
 	for (int i = 0; i < allActions.size(); ++i) 
 	{
@@ -593,7 +593,7 @@ void UpdateUIManager::updateToolbarTask()
 			    const QList<RibbonGallery*> galleries = group->findChildren<RibbonGallery*>();
 			    for (int j = 0; j < galleries.count(); j++)
 			    {
-				    const bool galleryEnabled = RobloxDocManager::Instance().getPlayDoc() != NULL;
+				    const bool galleryEnabled = RobloxDocManager::Instance().getPlayDoc() != nullptr;
 				    galleries[j]->setEnabled(galleryEnabled);
 			    }
 
@@ -884,7 +884,7 @@ void UpdateUIManager::setBusy(bool busy, bool useWaitCursor)
         {
             QIcon icon = m_pRobloxMainWindow->style()->standardIcon(QStyle::SP_MessageBoxWarning);
 
-            HICON overlay_icon = icon.isNull() ? NULL : icon.pixmap(48).toWinHICON();
+            HICON overlay_icon = icon.isNull() ? nullptr : icon.pixmap(48).toWinHICON();
             m_taskbar->SetOverlayIcon(m_pRobloxMainWindow->winId(),overlay_icon,L"Busy");
 
             if ( overlay_icon )
@@ -915,7 +915,7 @@ void UpdateUIManager::setBusy(bool busy, bool useWaitCursor)
             QApplication::focusWidget()->setFocus();
         else
             m_pRobloxMainWindow->setFocus();
-        m_BusyFocusWidget = NULL;
+        m_BusyFocusWidget = nullptr;
         
         // enable all main actions
         QList<QAction*> actions = m_BusyEnabledActions.keys();
@@ -938,7 +938,7 @@ void UpdateUIManager::setBusy(bool busy, bool useWaitCursor)
 #if WINVER >= 0x601
         // restore task bar overlay icon
         if ( m_isTaskBarInitialized )
-            m_taskbar->SetOverlayIcon(m_pRobloxMainWindow->winId(),NULL,L"");
+            m_taskbar->SetOverlayIcon(m_pRobloxMainWindow->winId(),nullptr,L"");
 #endif
     }
 
@@ -1026,7 +1026,7 @@ void UpdateUIManager::hideProgress(QProgressBar* progressBar)
         // reset the "main" progress bar used to synchronize the task bar
         if ( progressBar == m_taskProgressBar )
         {
-            configureTaskBar(NULL);
+            configureTaskBar(nullptr);
             if ( !m_ProgressBars.empty() )
                 configureTaskBar(m_ProgressBars.back());
         }        
@@ -1168,16 +1168,16 @@ void UpdateUIManager::commonContextMenuActions(QList<QAction *> &commonActions, 
 	commonActions.append(m_pRobloxMainWindow->duplicateSelectionAction);
 	commonActions.append(m_pRobloxMainWindow->deleteSelectedAction);
 	commonActions.append(m_pRobloxMainWindow->renameObjectAction);
-	commonActions.append(NULL);
+	commonActions.append(nullptr);
 	commonActions.append(m_pRobloxMainWindow->groupSelectionAction);
 	commonActions.append(m_pRobloxMainWindow->ungroupSelectionAction);
 	commonActions.append(m_pRobloxMainWindow->selectChildrenAction);
 	commonActions.append(m_pRobloxMainWindow->zoomExtentsAction);
 
-	commonActions.append(NULL);
+	commonActions.append(nullptr);
 	commonActions.append(m_pRobloxMainWindow->insertIntoFileAction);
 
-	commonActions.append(NULL);
+	commonActions.append(nullptr);
 	commonActions.append(m_pRobloxMainWindow->selectionSaveToFileAction);
 	commonActions.append(m_pRobloxMainWindow->saveToRobloxAction);
 	commonActions.append(m_pRobloxMainWindow->createNewLinkedSourceAction);
@@ -1284,7 +1284,7 @@ QAction* UpdateUIManager::getAction(const QString &actionName)
 	QList<QAction*> allActions = m_pRobloxMainWindow->findChildren<QAction*>(actionName);
 	if (allActions.size())
 		return allActions.at(0);
-	return NULL;
+	return nullptr;
 }
 
 QList<QString> UpdateUIManager::getDockActionNames() const

@@ -328,7 +328,7 @@ namespace RBX
 			{
 				if (frameRateManagerStatsItem)
 				{
-					frameRateManagerStatsItem->setParent(NULL);
+					frameRateManagerStatsItem->setParent(nullptr);
 					frameRateManagerStatsItem.reset();
 				}
 
@@ -636,11 +636,11 @@ namespace RBX
 
 			if (name == "Delta Between Renders")
 			{
-				return frm != NULL ? frm->GetFrameTimeAverage() : 0.0;
+				return frm != nullptr ? frm->GetFrameTimeAverage() : 0.0;
 			}
 			else if (name == "Total Render")
 			{
-				return frm != NULL ? frm->GetRenderTimeAverage() : 0.0;
+				return frm != nullptr ? frm->GetRenderTimeAverage() : 0.0;
 			}
 			else if (name == "Present Time")
 			{
@@ -664,7 +664,7 @@ namespace RBX
 					(name == "RenderStatsPassUI") ? &visualEngine->getRenderStats()->passUI :
 					(name == "RenderStatsPass3dAdorns") ? &visualEngine->getRenderStats()->pass3DAdorns :
 					(name == "RenderStatsPassTotal") ? &visualEngine->getRenderStats()->passTotal :
-					NULL;
+					nullptr;
 
 				if (!stats) return "unknown pass";
 
@@ -1489,7 +1489,7 @@ namespace RBX
 				if (videoFrameVertexStreamer && frameDataCallback)
 				{
 					frameDataCallback(visualEngine->getDevice());
-					// this has to be checked again, as frameDataCallback can stop video recording and NULL it
+					// this has to be checked again, as frameDataCallback can stop video recording and nullptr it
 					if (videoFrameVertexStreamer)
 						drawRecordingFrame(context);
 				}
@@ -1709,7 +1709,7 @@ namespace RBX
 
 				RBX::ServiceProvider::find<RBX::Workspace>(dataModel.get())->assemble();
 
-				renderPrepareImpl(NULL, /* updateViewport= */ false);
+				renderPrepareImpl(nullptr, /* updateViewport= */ false);
 
 				// Clear adorn rendering queue
 				visualEngine->getAdorn()->finishRenderPass();
@@ -1765,7 +1765,7 @@ namespace RBX
 			if (Camera* camera = dataModel->getWorkspace()->getCamera())
 				camera->setViewport(Vector2int16(width, height));
 
-			renderPrepareImpl(NULL, /* updateViewport= */ false);
+			renderPrepareImpl(nullptr, /* updateViewport= */ false);
 
 			if (crop)
 			{

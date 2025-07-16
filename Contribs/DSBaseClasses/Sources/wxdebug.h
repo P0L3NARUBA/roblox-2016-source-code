@@ -176,7 +176,7 @@ typedef struct tag_ObjectDesc {
     // (public entry points compile to nothing) so if you go trying to call
     // any of the private entry points in your source they won't compile
 
-    #define NAME(_x_) ((TCHAR *) NULL)
+    #define NAME(_x_) ((TCHAR *) nullptr)
 
     #define DbgInitialise(hInst)
     #define DbgTerminate()
@@ -220,9 +220,9 @@ typedef struct tag_ObjectDesc {
 #endif
 
 
-// Checks a pointer which should be non NULL - can be used as follows.
+// Checks a pointer which should be non nullptr - can be used as follows.
 
-#define CheckPointer(p,ret) {if((p)==NULL) return (ret);}
+#define CheckPointer(p,ret) {if((p)==nullptr) return (ret);}
 
 //   HRESULT Foo(VOID *pBar)
 //   {

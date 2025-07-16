@@ -18,7 +18,7 @@ static      bool     reorient_matr_from_path(hOBJ obj_header, MATR mtrx, bool cl
 	//      sig
 	for (num_elem = 0; num_elem < vdim.num_elem; num_elem++) 
 	{
-		if ((lpnode = (MNODE*)get_next_elem(&vdim)) == NULL) {
+		if ((lpnode = (MNODE*)get_next_elem(&vdim)) == nullptr) {
 			end_rw(&vdim);
 			goto badRet;
 		}
@@ -63,7 +63,7 @@ sgCObject*  sgKinematic::Rotation(const sgC2DObject&  rotObj,
 											short  meridians_count/*=24*/)
 {
 	if (fabs(angl_degree)<0.00001)
-		return NULL;
+		return nullptr;
 
 	lpOBJ lpRotObjHandle = (lpOBJ)GetObjectHandle(&rotObj);
 
@@ -71,8 +71,8 @@ sgCObject*  sgKinematic::Rotation(const sgC2DObject&  rotObj,
 	sgFloat    plD;
 	bool isPl = rotObj.IsPlane(&plN,&plD);
 	if (rotObj.IsSelfIntersecting() ||
-		(!rotObj.IsPlane(&plN,NULL) && !rotObj.IsLinear()))
-			return NULL;
+		(!rotObj.IsPlane(&plN,nullptr) && !rotObj.IsLinear()))
+			return nullptr;
 	
 	// ,       
 	if (isPl)
@@ -80,12 +80,12 @@ sgCObject*  sgKinematic::Rotation(const sgC2DObject&  rotObj,
 		if (sgSpaceMath::GetPlanePointDistance(axePnt1,plN,plD)>0.00001)
 		{
 			global_sg_error = SG_ER_BAD_ARGUMENT_CONFLICT_BEETWEEN_ARGS;
-			return NULL;
+			return nullptr;
 		}
 		if (sgSpaceMath::GetPlanePointDistance(axePnt2,plN,plD)>0.00001)
 		{
 			global_sg_error = SG_ER_BAD_ARGUMENT_CONFLICT_BEETWEEN_ARGS;
-			return NULL;
+			return nullptr;
 		}
 	}
 	else
@@ -98,19 +98,19 @@ sgCObject*  sgKinematic::Rotation(const sgC2DObject&  rotObj,
 			sgSpaceMath::IsPointsOnOneLine(begP,endP,axePnt2))
 		{
 			global_sg_error = SG_ER_BAD_ARGUMENT_CONFLICT_BEETWEEN_ARGS;
-			return NULL;
+			return nullptr;
 		}
 		SG_VECTOR pllNN;
 		sgFloat pllDD;
 		if (!sgSpaceMath::PlaneFromPoints(axePnt1,axePnt2,begP,pllNN,pllDD))
 		{
 			global_sg_error = SG_ER_BAD_ARGUMENT_CONFLICT_BEETWEEN_ARGS;
-			return NULL;
+			return nullptr;
 		}
 		if (sgSpaceMath::GetPlanePointDistance(endP,pllNN,pllDD)>0.00001)
 		{
 			global_sg_error = SG_ER_BAD_ARGUMENT_CONFLICT_BEETWEEN_ARGS;
-			return NULL;
+			return nullptr;
 		}
 		
 		//      
@@ -144,7 +144,7 @@ sgCObject*  sgKinematic::Rotation(const sgC2DObject&  rotObj,
 	{
 		assert(0);
 		global_sg_error = SG_ER_INTERNAL;
-		return NULL;
+		return nullptr;
 	}
 
 	short oldMeridiansCount = sg_m_num_meridians;
@@ -156,12 +156,12 @@ sgCObject*  sgKinematic::Rotation(const sgC2DObject&  rotObj,
 		sg_m_num_meridians=36;
 
 
-	hOBJ hobj=NULL;
+	hOBJ hobj=nullptr;
 	if (!rev_mesh(lpRotObjHandle, angl_degree/180.0*M_PI, isClose, 0, matr, FALSE, &hobj))
 	{
 		global_sg_error = SG_ER_INTERNAL;
 		sg_m_num_meridians = oldMeridiansCount;
-		return NULL;
+		return nullptr;
 	}
 
 	o_minv(matr, matr);
@@ -181,22 +181,22 @@ sgCObject*   sgKinematic::Extrude(const sgC2DObject&  outContour,
 {
 	SG_VECTOR aaaVec = extrDir;
 	if (!sgSpaceMath::NormalVector(aaaVec))
-		return NULL;
+		return nullptr;
 
 	sgC2DObject* f_o = const_cast<sgC2DObject*>(&outContour);
 
 	if (f_o->GetType()!=SG_OT_LINE)
-		if (!f_o->IsPlane(NULL,NULL) || f_o->IsSelfIntersecting())
+		if (!f_o->IsPlane(nullptr,nullptr) || f_o->IsSelfIntersecting())
 		{
 			global_sg_error = SG_ER_BAD_ARGUMENT_UNKNOWN;
-			return NULL;
+			return nullptr;
 		}
 
     int real_otvs_count = (f_o->IsClosed())?holes_count:0;
 	bool real_is_close = (f_o->IsClosed())?isClose:false;
 
 
-	hOBJ*  select_list_before = NULL;
+	hOBJ*  select_list_before = nullptr;
 	int    select_list_before_size = 0;
 	if (selected.num>0)
 	{
@@ -220,7 +220,7 @@ sgCObject*   sgKinematic::Extrude(const sgC2DObject&  outContour,
 	object_statuses[0] = ((lpOBJ)GetObjectHandle(f_o))->status;
 
 
-	hOBJ* otvs_handls = NULL;
+	hOBJ* otvs_handls = nullptr;
 	if (real_otvs_count>0)
 		otvs_handls = (hOBJ*)SGMalloc(sizeof(hOBJ)*real_otvs_count);
 	for (int i=0;i<real_otvs_count;i++)
@@ -245,7 +245,7 @@ sgCObject*   sgKinematic::Extrude(const sgC2DObject&  outContour,
 		SGFree(select_list_before);
 
 		global_sg_error = SG_ER_BAD_ARGUMENT_CONFLICT_BEETWEEN_ARGS;
-		return NULL;
+		return nullptr;
 	}
 	if (otvs_handls)
 		SGFree(otvs_handls);
@@ -253,8 +253,8 @@ sgCObject*   sgKinematic::Extrude(const sgC2DObject&  outContour,
 	LISTH listh_otv;
 	init_listh(&listh_otv);
 	
-	hOBJ tmpHndl=NULL;
-	lpOBJ obj = NULL;
+	hOBJ tmpHndl=nullptr;
+	lpOBJ obj = nullptr;
 
 	tmpHndl = GetObjectHandle(f_o);
 	
@@ -287,7 +287,7 @@ sgCObject*   sgKinematic::Extrude(const sgC2DObject&  outContour,
 
 		global_sg_error = SG_ER_INTERNAL;
 
-		return NULL;
+		return nullptr;
 	}
 
 	for (int i=0;i<real_otvs_count;i++)
@@ -324,22 +324,22 @@ sgCObject*   sgKinematic::Spiral(const sgC2DObject&  outContour,
 	sgC2DObject* f_o = const_cast<sgC2DObject*>(&outContour);
 
 	if (fabs(screw_step)<0.0001 || fabs(screw_height)<0.0001)
-		return NULL;
+		return nullptr;
 
 	if ((screw_step*screw_height)<0.0)
 		screw_height = screw_height*-1.0;
 
 	if (f_o->GetType()!=SG_OT_LINE)
-		if (!f_o->IsPlane(NULL,NULL) || f_o->IsSelfIntersecting())
+		if (!f_o->IsPlane(nullptr,nullptr) || f_o->IsSelfIntersecting())
 		{
 			global_sg_error = SG_ER_BAD_ARGUMENT_UNKNOWN;
-			return NULL;
+			return nullptr;
 		}
 
 	int real_otvs_count = (f_o->IsClosed())?holes_count:0;
 	bool real_is_close = (f_o->IsClosed())?isClose:false;
 
-	hOBJ*  select_list_before = NULL;
+	hOBJ*  select_list_before = nullptr;
 	int    select_list_before_size = 0;
 	if (selected.num>0)
 	{
@@ -363,7 +363,7 @@ sgCObject*   sgKinematic::Spiral(const sgC2DObject&  outContour,
 	object_statuses[0] = ((lpOBJ)GetObjectHandle(f_o))->status;
 
 
-	hOBJ* otvs_handls = NULL;
+	hOBJ* otvs_handls = nullptr;
 	if (real_otvs_count>0)
 		otvs_handls = (hOBJ*)SGMalloc(sizeof(hOBJ)*real_otvs_count);
 	for (int i=0;i<real_otvs_count;i++)
@@ -388,7 +388,7 @@ sgCObject*   sgKinematic::Spiral(const sgC2DObject&  outContour,
 		SGFree(select_list_before);
 
 		global_sg_error = SG_ER_BAD_ARGUMENT_CONFLICT_BEETWEEN_ARGS;
-		return NULL;
+		return nullptr;
 	}
 	if (otvs_handls)
 		SGFree(otvs_handls);
@@ -396,8 +396,8 @@ sgCObject*   sgKinematic::Spiral(const sgC2DObject&  outContour,
 	LISTH listh_otv;
 	init_listh(&listh_otv);
 	
-	hOBJ tmpHndl=NULL;
-	lpOBJ obj = NULL;
+	hOBJ tmpHndl=nullptr;
+	lpOBJ obj = nullptr;
 
 	tmpHndl = GetObjectHandle(f_o);
 	attach_item_tail_z(SEL_LIST,&listh_otv, tmpHndl);
@@ -431,7 +431,7 @@ sgCObject*   sgKinematic::Spiral(const sgC2DObject&  outContour,
 
 		global_sg_error = SG_ER_INTERNAL;
 
-		return NULL;
+		return nullptr;
 	}
 
 	for (int i=0;i<real_otvs_count;i++)
@@ -478,16 +478,16 @@ sgCObject*   sgKinematic::Pipe(const sgC2DObject&  outContour,
 	sgC2DObject* napravl = const_cast<sgC2DObject*>(&guideContour);
 
 	if (f_o->GetType()!=SG_OT_LINE)
-		if (!f_o->IsPlane(NULL,NULL) || f_o->IsSelfIntersecting())
+		if (!f_o->IsPlane(nullptr,nullptr) || f_o->IsSelfIntersecting())
 		{
 			global_sg_error = SG_ER_BAD_ARGUMENT_UNKNOWN;
-			return NULL;
+			return nullptr;
 		}
 
 	int real_otvs_count = (f_o->IsClosed())?holes_count:0;
 	bool real_is_close = (f_o->IsClosed())?isClose:false;
 
-	hOBJ*  select_list_before = NULL;
+	hOBJ*  select_list_before = nullptr;
 	int    select_list_before_size = 0;
 	if (selected.num>0)
 	{
@@ -512,7 +512,7 @@ sgCObject*   sgKinematic::Pipe(const sgC2DObject&  outContour,
 
 
 
-	hOBJ* otvs_handls = NULL;
+	hOBJ* otvs_handls = nullptr;
 	if (real_otvs_count>0)
 		otvs_handls = (hOBJ*)SGMalloc(sizeof(hOBJ)*real_otvs_count);
 	for (int i=0;i<real_otvs_count;i++)
@@ -539,7 +539,7 @@ sgCObject*   sgKinematic::Pipe(const sgC2DObject&  outContour,
 		SGFree(select_list_before);
 
 		global_sg_error = SG_ER_BAD_ARGUMENT_CONFLICT_BEETWEEN_ARGS;
-		return NULL;
+		return nullptr;
 	}
 	if (otvs_handls)
 		SGFree(otvs_handls);
@@ -547,8 +547,8 @@ sgCObject*   sgKinematic::Pipe(const sgC2DObject&  outContour,
 	LISTH listh_otv;
 	init_listh(&listh_otv);
 	
-	hOBJ tmpHndl=NULL;
-	lpOBJ obj = NULL;
+	hOBJ tmpHndl=nullptr;
+	lpOBJ obj = nullptr;
 
 	tmpHndl = GetObjectHandle(f_o);
 	
@@ -582,7 +582,7 @@ sgCObject*   sgKinematic::Pipe(const sgC2DObject&  outContour,
 		SGFree(select_list_before);
 
 		global_sg_error = SG_ER_INTERNAL;
-		return NULL;
+		return nullptr;
 	}
 	if (!read_elem(&vdim_path, 0, &mnode0))
 	{
@@ -600,7 +600,7 @@ sgCObject*   sgKinematic::Pipe(const sgC2DObject&  outContour,
 		SGFree(select_list_before);
 
 		global_sg_error = SG_ER_BAD_ARGUMENT_CONFLICT_BEETWEEN_ARGS;
-		return NULL;
+		return nullptr;
 	}
 	if (!read_elem(&vdim_path, 1, &mnode1))
 	{
@@ -618,7 +618,7 @@ sgCObject*   sgKinematic::Pipe(const sgC2DObject&  outContour,
 		SGFree(select_list_before);
 
 		global_sg_error = SG_ER_INTERNAL;
-		return NULL;
+		return nullptr;
 	}
 	dpoint_sub(&mnode1.p, &mnode0.p, &norm);
 
@@ -639,7 +639,7 @@ sgCObject*   sgKinematic::Pipe(const sgC2DObject&  outContour,
 		SGFree(select_list_before);
 
 		global_sg_error = SG_ER_INTERNAL;
-		return NULL;
+		return nullptr;
 	}
 
 	if (!get_status_path(listh_otv.hhead, &first_obraz_status))
@@ -659,7 +659,7 @@ sgCObject*   sgKinematic::Pipe(const sgC2DObject&  outContour,
 		SGFree(select_list_before);
 
 		global_sg_error = SG_ER_INTERNAL;
-		return NULL;
+		return nullptr;
 	}
 
 	MATR  return_matrix;
@@ -676,7 +676,7 @@ sgCObject*   sgKinematic::Pipe(const sgC2DObject&  outContour,
 	o_hcunit(matr);
 	o_tdtran(matr,dpoint_inv(&p2,&p));
 	SG_VECTOR plNorm;
-	f_o->IsPlane(&plNorm,NULL);
+	f_o->IsPlane(&plNorm,nullptr);
 	memcpy(&p,&plNorm,sizeof(D_POINT));
 	o_hcrot1(matr,&p);
 	o_hcmult(matr,matri);
@@ -736,7 +736,7 @@ sgCObject*   sgKinematic::Pipe(const sgC2DObject&  outContour,
 					SGFree(select_list_before);
 
 					global_sg_error = SG_ER_INTERNAL;
-					return NULL;
+					return nullptr;
 			}
 			if (code == 1) 
 			{
@@ -781,7 +781,7 @@ sgCObject*   sgKinematic::Pipe(const sgC2DObject&  outContour,
 
 		global_sg_error = SG_ER_INTERNAL;
 
-		return NULL;
+		return nullptr;
 	}
 
 	trans_listh(return_matrix, &listh_otv, SEL_LIST);
@@ -936,16 +936,16 @@ static short  test_on_valid_solid(hOBJ htrace, hOBJ hcontour,
 	o_minv(matr, matr);
 	if (!begin_rw(&vdim, 0)) goto er;
 	for (i = 0; i < vdim.num_elem; i++) {
-		if ((node = (lpMNODE)get_next_elem(&vdim)) == NULL) goto er1;
+		if ((node = (lpMNODE)get_next_elem(&vdim)) == nullptr) goto er1;
 		o_hcncrd(matr, &node->p, &node->p);
 	}
 	end_rw(&vdim);
 	//     
 	if (!begin_rw(&vdim, 0)) goto er;
-	if ((node = (lpMNODE)get_next_elem(&vdim)) == NULL) goto er1;
+	if ((node = (lpMNODE)get_next_elem(&vdim)) == nullptr) goto er1;
 	test = node->p;
 	for (i = 1; i < vdim.num_elem; i++) {
-		if ((node = (lpMNODE)get_next_elem(&vdim)) == NULL) goto er1;
+		if ((node = (lpMNODE)get_next_elem(&vdim)) == nullptr) goto er1;
 		if (i > 1) {
 			if (test_to_cross(&test, &node->p, &p)) goto ex0;
 		}
@@ -957,7 +957,7 @@ static short  test_on_valid_solid(hOBJ htrace, hOBJ hcontour,
 	test = node1.p;
 	if (!begin_rw(&vdim, 0)) goto er;
 	for (i = 0; i < vdim.num_elem - 1; i++) {
-		if ((node = (lpMNODE)get_next_elem(&vdim)) == NULL) goto er1;
+		if ((node = (lpMNODE)get_next_elem(&vdim)) == nullptr) goto er1;
 		if (i) {
 			if (test_to_cross(&test, &node->p, &p)) goto ex0;
 		}

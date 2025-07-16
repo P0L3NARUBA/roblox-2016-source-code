@@ -23,7 +23,7 @@ using namespace Voxel;
 
 BulletShapeCellContact::BulletShapeCellContact(Primitive* p0, Primitive* p1, const Vector3int16& cell, World* contactWorld)
 	: CellMeshContact(p0, p1, Vector3int32(cell))
-	, bulletNPAlgorithm(NULL)
+	, bulletNPAlgorithm(nullptr)
 	, world(contactWorld)
 {
     Grid* grid = static_cast<MegaClusterInstance*>(p0->getOwner())->getVoxelGrid();
@@ -46,7 +46,7 @@ BulletShapeCellContact::BulletShapeCellContact(Primitive* p0, Primitive* p1, con
 
 BulletShapeCellContact::BulletShapeCellContact(Primitive* p0, Primitive* p1, const Vector3int32& feature, const shared_ptr<btCollisionShape>& customShape, World* contactWorld)
 	: CellMeshContact(p0, p1, feature)
-	, bulletNPAlgorithm(NULL)
+	, bulletNPAlgorithm(nullptr)
 	, customShape(customShape)
 	, world(contactWorld)
 {
@@ -96,7 +96,7 @@ void BulletShapeCellContact::deleteConnectors(BulletConnectorArray& deleteConnec
 
 void BulletShapeCellContact::removeAllConnectorsFromKernel()
 {
-	Kernel* kernel = NULL;
+	Kernel* kernel = nullptr;
 	for (size_t i = 0; i < polyConnectors.size(); ++i) {
 		if (polyConnectors[i]->isInKernel()) {
 			kernel = kernel ? kernel : getKernel();		// small optimization - getKernel walks the IPipelines
@@ -107,7 +107,7 @@ void BulletShapeCellContact::removeAllConnectorsFromKernel()
 
 void BulletShapeCellContact::putAllConnectorsInKernel()
 {
-	Kernel* kernel = NULL;
+	Kernel* kernel = nullptr;
 	for (size_t i = 0; i < polyConnectors.size(); ++i) {
 		if (!polyConnectors[i]->isInKernel())
 		{
@@ -282,7 +282,7 @@ BulletShapeCellConnector* BulletShapeCellContact::matchClosestFeature(BulletShap
 			return answer;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 void BulletShapeCellContact::updateContactPoints()
@@ -310,7 +310,7 @@ BulletShapeCellConnector* BulletShapeCellContact::newBulletShapeCellConnector(bt
 											);			// id of this face
     }
     else
-        return NULL;
+        return nullptr;
 }
 
 void BulletShapeCellContact::findClosestBulletCellFeatures(BulletConnectorArray& newConnectors)

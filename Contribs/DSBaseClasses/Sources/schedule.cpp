@@ -117,7 +117,7 @@ HRESULT CAMSchedule::Unadvise(DWORD_PTR dwAdviseCookie)
     CAdvisePacket * p_prev = &head;
     CAdvisePacket * p_n;
     m_Serialize.Lock();
-    while ( p_n = p_prev->Next() ) // The Next() method returns NULL when it hits z
+    while ( p_n = p_prev->Next() ) // The Next() method returns nullptr when it hits z
     {
         if ( p_n->m_dwAdviseCookie == dwAdviseCookie )
         {
@@ -164,7 +164,7 @@ REFERENCE_TIME CAMSchedule::Advise( const REFERENCE_TIME & rtTime )
 
         if (pAdvise->m_bPeriodic == TRUE)
         {
-            ReleaseSemaphore(pAdvise->m_hNotify,1,NULL);
+            ReleaseSemaphore(pAdvise->m_hNotify,1,nullptr);
             pAdvise->m_rtEventTime += pAdvise->m_rtPeriod;
             ShuntHead();
         }

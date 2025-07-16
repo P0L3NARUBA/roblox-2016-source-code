@@ -160,18 +160,18 @@ private:
         Clones a whole chain;
         */
         Node* clone(MemoryManager::Ref& mm) {
-           return create(this->entry.key, this->entry.value, hashCode, (next == NULL) ? NULL : next->clone(mm), mm);
+           return create(this->entry.key, this->entry.value, hashCode, (next == nullptr) ? nullptr : next->clone(mm), mm);
         }
     };
 
     void checkIntegrity() const {
 #       ifdef G3D_DEBUG
-           debugAssert(m_bucket == NULL || isValidHeapPointer(m_bucket));
+           debugAssert(m_bucket == nullptr || isValidHeapPointer(m_bucket));
            for (size_t b = 0; b < m_numBuckets; ++b) {
                Node* node = m_bucket[b];
-               debugAssert(node == NULL || isValidHeapPointer(node));
-               while (node != NULL) {
-                   debugAssert(node == NULL || isValidHeapPointer(node));
+               debugAssert(node == nullptr || isValidHeapPointer(node));
+               while (node != nullptr) {
+                   debugAssert(node == nullptr || isValidHeapPointer(node));
                    node = node->next;
                }
            }
@@ -185,7 +185,7 @@ private:
      Array of Node*. 
 
      We don't use Array<Node*> because Table is lower-level than Array.
-     Some elements may be NULL.
+     Some elements may be nullptr.
      */
     Node**              m_bucket;
     
@@ -214,15 +214,15 @@ private:
 
         // Allocate a new m_bucket array with the new size
         m_bucket = (Node**)alloc(sizeof(Node*) * newSize);
-        // Set all pointers to NULL
+        // Set all pointers to nullptr
         System::memset(m_bucket, 0, newSize * sizeof(Node*));
-        debugAssertM(m_bucket != NULL, "MemoryManager::alloc returned NULL. Out of memory.");
+        debugAssertM(m_bucket != nullptr, "MemoryManager::alloc returned nullptr. Out of memory.");
         // Move each node to its new hash location
         for (size_t b = 0; b < m_numBuckets; ++b) {
             Node* node = oldBucket[b];
          
             // There is a linked list of nodes at this m_bucket
-            while (node != NULL) {
+            while (node != nullptr) {
                 // Hang onto the old next pointer
                 Node* nextNode = node->next;
         
@@ -236,7 +236,7 @@ private:
             }
 
             // Drop the old pointer for cleanliness when debugging
-            oldBucket[b] = NULL;
+            oldBucket[b] = nullptr;
         }
 
         // Delete the old storage
@@ -252,17 +252,17 @@ private:
             return;
         }
 
-        debugAssert(m_bucket == NULL);
+        debugAssert(m_bucket == nullptr);
         m_size = h.m_size;
         m_numBuckets = h.m_numBuckets;
         m_bucket = (Node**)alloc(sizeof(Node*) * m_numBuckets);
-        // No need to NULL elements since we're about to overwrite them
+        // No need to nullptr elements since we're about to overwrite them
 
         for (size_t b = 0; b < m_numBuckets; ++b) {
-            if (h.m_bucket[b] != NULL) {
+            if (h.m_bucket[b] != nullptr) {
                 m_bucket[b] = h.m_bucket[b]->clone(m_memoryManager);
             } else {
-                m_bucket[b] = NULL;
+                m_bucket[b] = nullptr;
             }
         }
 
@@ -277,15 +277,15 @@ private:
 
         for (size_t b = 0; b < m_numBuckets; b++) {
             Node* node = m_bucket[b];
-            while (node != NULL) {
+            while (node != nullptr) {
                 Node* next = node->next;
                 Node::destroy(node, m_memoryManager);
                 node = next;
             }
-            m_bucket[b] = NULL;
+            m_bucket[b] = nullptr;
         }
         free(m_bucket);
-        m_bucket     = NULL;
+        m_bucket     = nullptr;
         m_numBuckets = 0;
         m_size       = 0;
     }
@@ -295,18 +295,18 @@ public:
     /**
      Creates an empty hash table using the default MemoryManager.
      */
-    Table() : m_bucket(NULL) {
+    Table() : m_bucket(nullptr) {
         m_memoryManager = MemoryManager::create();
         m_numBuckets = 0;
         m_size       = 0;
-        m_bucket     = NULL;
+        m_bucket     = nullptr;
         checkIntegrity();
     }
 
     /** Changes the internal memory manager to m */
     void clearAndSetMemoryManager(const MemoryManager::Ref& m) {
         clear();
-        debugAssert(m_bucket == NULL);
+        debugAssert(m_bucket == nullptr);
         m_memoryManager = m;
     }
 
@@ -335,7 +335,7 @@ public:
         m_memoryManager = MemoryManager::create();
         m_numBuckets = 0;
         m_size = 0;
-        m_bucket = NULL;
+        m_bucket = nullptr;
         this->copyFrom(h);
         checkIntegrity();
     }
@@ -361,7 +361,7 @@ public:
         for (size_t b = 0; b < m_numBuckets; b++) {
             size_t  count = 0;
             Node*   node = m_bucket[b];
-            while (node != NULL) {
+            while (node != nullptr) {
                 node = node->next;
                 ++count;
             }
@@ -383,9 +383,9 @@ public:
 
         for (size_t b = 0; b < m_numBuckets; b++) {
             Node* node = m_bucket[b];
-            if (node != NULL) {
+            if (node != nullptr) {
                 ++num;
-                while (node != NULL) {
+                while (node != nullptr) {
                     node = node->next;
                     ++count;
                 }
@@ -463,7 +463,7 @@ public:
          Looks at the current element first.
          */
         void findNext() {
-            while (node == NULL) {
+            while (node == nullptr) {
                 index++;
                 if (index >= m_numBuckets) {
                     isDone = true;
@@ -551,7 +551,7 @@ public:
         freeMemory();
         m_numBuckets = 0;
         m_size = 0;
-        m_bucket = NULL;
+        m_bucket = nullptr;
     }
 
    
@@ -585,11 +585,11 @@ private:
        // Go to the m_bucket
        Node* n = m_bucket[b];
 
-       if (n == NULL) {
+       if (n == nullptr) {
            return false;
        }
 
-       Node* previous = NULL;
+       Node* previous = nullptr;
       
        // Try to find the node
        do {
@@ -597,7 +597,7 @@ private:
               // This is the node; remove it
 
               // Replace the previous's next pointer
-              if (previous == NULL) {
+              if (previous == nullptr) {
                   m_bucket[b] = n->next;
               } else {
                   previous->next = n->next;
@@ -615,7 +615,7 @@ private:
 
           previous = n;
           n = n->next;
-      } while (n != NULL);
+      } while (n != nullptr);
 
       return false;
       //alwaysAssertM(false, "Tried to remove a key that was not in the table.");
@@ -644,7 +644,7 @@ private:
 
    Entry* getEntryPointer(const Key& key) const {
        if (m_numBuckets == 0) {
-           return NULL;
+           return nullptr;
        }
 
        size_t  code = HashFunc::hashCode(key);
@@ -652,25 +652,25 @@ private:
 
        Node* node = m_bucket[b];
 
-       while (node != NULL) {
+       while (node != nullptr) {
            if ((node->hashCode == code) && EqualsFunc::equals(node->entry.key, key)) {
                return &(node->entry);
            }
            node = node->next;
        }
 
-        return NULL;
+        return nullptr;
    }
 
 public:
    
     /** If a value that is EqualsFunc to @a member is present, returns a pointer to the 
-        version stored in the data structure, otherwise returns NULL.
+        version stored in the data structure, otherwise returns nullptr.
      */
    const Key* getKeyPointer(const Key& key) const {
        const Entry* e = getEntryPointer(key);
-       if (e == NULL) {
-           return NULL;
+       if (e == nullptr) {
+           return nullptr;
        } else {
            return &(e->key);
        }
@@ -682,12 +682,12 @@ public:
     */
    Value& get(const Key& key) const {
        Entry* e = getEntryPointer(key);
-       debugAssertM(e != NULL, "Key not found");
+       debugAssertM(e != nullptr, "Key not found");
        return e->value;
    }
 
 
-   /** Returns a pointer to the element if it exists, or NULL if it does not.
+   /** Returns a pointer to the element if it exists, or nullptr if it does not.
        Note that if your value type <i>is</i> a pointer, the return value is 
        a pointer to a pointer.  Do not remove the element while holding this 
        pointer.
@@ -699,7 +699,7 @@ public:
      */
    Value* getPointer(const Key& key) const {
        if (m_numBuckets == 0) {
-           return NULL;
+           return nullptr;
        }
 
        size_t code = HashFunc::hashCode(key);
@@ -707,7 +707,7 @@ public:
 
        Node* node = m_bucket[b];
 
-       while (node != NULL) {
+       while (node != nullptr) {
           if ((node->hashCode == code) && EqualsFunc::equals(node->entry.key, key)) {
              // found key
              return &(node->entry.value);
@@ -716,7 +716,7 @@ public:
       }
 
       // Failed to find key
-      return NULL;
+      return nullptr;
    }
 
    /**
@@ -725,7 +725,7 @@ public:
     */
    bool get(const Key& key, Value& val) const {
        Value* v = getPointer(key);
-       if (v != NULL) {
+       if (v != nullptr) {
            val = *v;
            return true;
        } else {
@@ -753,8 +753,8 @@ public:
         Node* n = m_bucket[b];
 
         // No m_bucket, so this must be the first
-        if (n == NULL) {
-            m_bucket[b] = Node::create(key, code, NULL, m_memoryManager);
+        if (n == nullptr) {
+            m_bucket[b] = Node::create(key, code, nullptr, m_memoryManager);
             ++m_size;
             created = true;
             return m_bucket[b]->entry;
@@ -778,7 +778,7 @@ public:
 
             n = n->next;
             ++bucketLength;
-        } while (n != NULL);
+        } while (n != nullptr);
 
         const size_t maxBucketLength = 3;
         // (Don't bother changing the size of the table if all entries
@@ -841,7 +841,7 @@ public:
 
        Node* node = m_bucket[b];
 
-       while (node != NULL) {
+       while (node != nullptr) {
            if ((node->hashCode == code) && EqualsFunc::equals(node->entry.key, key)) {
               return true;
            }
@@ -874,7 +874,7 @@ public:
        keyArray.resize(0, DONT_SHRINK_UNDERLYING_ARRAY);
        for (size_t i = 0; i < m_numBuckets; i++) {
            Node* node = m_bucket[i];
-           while (node != NULL) {
+           while (node != nullptr) {
                keyArray.append(node->entry.key);
                node = node->next;
            }
@@ -887,7 +887,7 @@ public:
    void deleteKeys() {
        for (size_t i = 0; i < m_numBuckets; i++) {
            Node* node = m_bucket[i];
-           while (node != NULL) {
+           while (node != nullptr) {
                delete node->entry.key;
                node = node->next;
            }
@@ -901,14 +901,14 @@ public:
     at most once.
 
     Does not clear the table, so you are left with a table
-    of NULL pointers.
+    of nullptr pointers.
     */
    void deleteValues() {
        for (size_t i = 0; i < m_numBuckets; ++i) {
            Node* node = m_bucket[i];
-           while (node != NULL) {
+           while (node != nullptr) {
                delete node->entry.value;
-               node->entry.value = NULL;
+               node->entry.value = nullptr;
                node = node->next;
            }
        }

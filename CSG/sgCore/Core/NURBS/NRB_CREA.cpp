@@ -18,7 +18,7 @@ BOOL calculate_P(lpSPLY_DAT sply_dat, short condition){
 		if( ( sply_dat->sdtype&SPL_GEO ) ){
 //			if( sply_dat->nump > sply_dat->numk){
 //				SGFree( sply_dat->knots );
-//				if( (sply_dat->knots = SGMalloc(sply_dat->nump*sizeof(DA_POINT)))== NULL) return FALSE;
+//				if( (sply_dat->knots = SGMalloc(sply_dat->nump*sizeof(DA_POINT)))== nullptr) return FALSE;
 //      }
 		}
 		for( i=0; i<sply_dat->nump; i++ )
@@ -26,7 +26,7 @@ BOOL calculate_P(lpSPLY_DAT sply_dat, short condition){
 													(lpD_POINT)&sply_dat->knots[i], 0);
 		sply_dat->numk = sply_dat->nump;
 	}else{                             // interpolative spline
-		if( (A = mem_matrix( k+1, k+1 )) == NULL)	return FALSE;
+		if( (A = mem_matrix( k+1, k+1 )) == nullptr)	return FALSE;
 		write_P_from_knots( sply_dat, condition ); //rigth part of equation
 		nurbs_matrix_create( sply_dat, p_c, A, condition );
 

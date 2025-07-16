@@ -336,7 +336,7 @@ namespace RBX
                     return (const void*&)(hsce); // odd, but required syntax for this horrible conversion.
                 }
 #endif
-                return NULL;
+                return nullptr;
             }
 
             unsigned int checkComputeEvent(); // this was added due to exploits.

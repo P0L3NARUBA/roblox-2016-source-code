@@ -15,8 +15,8 @@
 namespace RBX {
 
 BulletShapeContact::BulletShapeContact(Primitive* p0, Primitive* p1, World* contactWorld) : Contact(p0, p1)
-		, bulletManifold(NULL)
-		, bulletNPAlgorithm(NULL)
+		, bulletManifold(nullptr)
+		, bulletNPAlgorithm(nullptr)
 		, world(contactWorld)
 { 
 }
@@ -59,7 +59,7 @@ void BulletShapeContact::deleteConnectors(BulletConnectorArray& deleteConnectors
 
 void BulletShapeContact::removeAllConnectorsFromKernel()
 {
-	Kernel* kernel = NULL;
+	Kernel* kernel = nullptr;
 	for (size_t i = 0; i < polyConnectors.size(); ++i) {
 		if (polyConnectors[i]->isInKernel()) {
 			kernel = kernel ? kernel : getKernel();		// small optimization - getKernel walks the IPipelines
@@ -70,7 +70,7 @@ void BulletShapeContact::removeAllConnectorsFromKernel()
 
 void BulletShapeContact::putAllConnectorsInKernel()
 {
-	Kernel* kernel = NULL;
+	Kernel* kernel = nullptr;
 	for (size_t i = 0; i < polyConnectors.size(); ++i) {
 		//if (!polyConnectors[i]->isInKernel()  &&
 		//	 polyConnectors[i]->getContactPoint().length < -ContactConnector::overlapGoal()) {
@@ -180,7 +180,7 @@ BulletShapeConnector* BulletShapeContact::matchClosestFeature(BulletShapeConnect
 			return answer;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 void BulletShapeContact::updateContactPoints()
@@ -207,7 +207,7 @@ BulletShapeConnector* BulletShapeContact::newBulletShapeConnector(btCollisionObj
 										);			// id of this face
     }
     else
-        return NULL;
+        return nullptr;
 }
 
 void BulletShapeContact::findClosestFeatures(BulletConnectorArray& newConnectors)

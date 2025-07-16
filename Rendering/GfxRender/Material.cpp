@@ -128,7 +128,7 @@ void Material::addTechnique(const Technique& technique)
 
 const Technique* Material::getBestTechnique(unsigned int lodIndex, RenderQueue::Pass pass) const
 {
-    const Technique* best = NULL;
+    const Technique* best = nullptr;
     
 	for (size_t i = 0; i < techniques.size(); ++i)
     {

@@ -46,7 +46,7 @@ BOOL init_buf(lpBUFFER_DAT bd,char* name, BUFTYPE regim)
 		u_handler_err(code);
 		return FALSE;
 	}
-	if ( (bd->buf = (char *)SGMalloc(SIZE_VPAGE)) == NULL ) {
+	if ( (bd->buf = (char *)SGMalloc(SIZE_VPAGE)) == nullptr ) {
 		nb_close(bd->handle);
 		u_handler_err(UE_NO_VMEMORY);
 		return FALSE;
@@ -114,7 +114,7 @@ ULONG load_data(lpBUFFER_DAT bd, ULONG len, void* data)
   rezult = 0;
 	pdata = (char*)data;
 	cur_data = 0;
-  if ( bd->flg_no_read ) data = NULL;
+  if ( bd->flg_no_read ) data = nullptr;
 
 	while (len) {
 		if ( len + bd->cur_buf <= bd->len_buf) {
@@ -160,7 +160,7 @@ WORD load_str(lpBUFFER_DAT bd, WORD len, char * data)
 	rezult = 0;
 	pdata = (char *)data;
 	cur_data = 0;
-	if ( bd->flg_no_read ) data = NULL;
+	if ( bd->flg_no_read ) data = nullptr;
 
 //	len--;			//    ( 26.01.98)
 	len--;			//   

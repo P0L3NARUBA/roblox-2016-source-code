@@ -1,7 +1,7 @@
 #define GLOBALS
 
-#include "buffers.h"
-#include "common.h"
+#include "buffers.hlsli"
+#include "common.hlsli"
 
 #ifdef SINGLE_FACE
 TEX_DECLARE2D(SkyboxFace, 0);

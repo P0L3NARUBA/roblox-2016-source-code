@@ -55,7 +55,7 @@ namespace RBX
 		/*override*/ void setSize(const G3D::Vector3& _size);
 
 	public:
-		TriangleMesh() : version(PHYSICS_SERIAL_VERSION), centerToCornerDistance(0.0), boundingBoxMesh(NULL)
+		TriangleMesh() : version(PHYSICS_SERIAL_VERSION), centerToCornerDistance(0.0), boundingBoxMesh(nullptr)
 		{			
 			boundingBoxMesh = new Block();
 			bulletCollisionObject.reset(new btCollisionObject());
@@ -63,7 +63,7 @@ namespace RBX
 		~TriangleMesh();
 
 		// Getters
-        const BulletDecompWrapper* getCompound() const { return compound ? &*compound : NULL; }
+        const BulletDecompWrapper* getCompound() const { return compound ? &*compound : nullptr; }
 
 		int getVersion() { return version; }
 

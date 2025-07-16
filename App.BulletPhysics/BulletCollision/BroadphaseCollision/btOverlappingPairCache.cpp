@@ -149,7 +149,7 @@ btBroadphasePair* btHashedOverlappingPairCache::findPair(btBroadphaseProxy* prox
 
 	if (hash >= m_hashTable.size())
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	int index = m_hashTable[hash];
@@ -160,7 +160,7 @@ btBroadphasePair* btHashedOverlappingPairCache::findPair(btBroadphaseProxy* prox
 
 	if (index == BT_NULL_PAIR)
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	btAssert(index < m_overlappingPairArray.size());
@@ -226,7 +226,7 @@ btBroadphasePair* btHashedOverlappingPairCache::internalAddPair(btBroadphaseProx
 
 
 	btBroadphasePair* pair = internalFindPair(proxy0, proxy1, hash);
-	if (pair != NULL)
+	if (pair != nullptr)
 	{
 		return pair;
 	}
@@ -285,7 +285,7 @@ void* btHashedOverlappingPairCache::removeOverlappingPair(btBroadphaseProxy* pro
 	int	hash = static_cast<int>(getHash(static_cast<unsigned int>(proxyId1),static_cast<unsigned int>(proxyId2)) & (m_overlappingPairArray.capacity()-1));
 
 	btBroadphasePair* pair = internalFindPair(proxy0, proxy1, hash);
-	if (pair == NULL)
+	if (pair == nullptr)
 	{
 		return 0;
 	}

@@ -60,7 +60,7 @@ void SpanningTree::insertSpanningTreeEdge(SpanningEdge* insertEdge)
 	RBXASSERT(!insertEdge->inSpanningTree());
 
 	int lightSide = 0;	
-	SpanningEdge* deActivate = NULL;
+	SpanningEdge* deActivate = nullptr;
 	SpanningTree::findLightestUpstream(insertEdge, deActivate, lightSide);
 
 	if (!deActivate || SpanningEdge::heavierEdge(insertEdge, deActivate))	
@@ -74,7 +74,7 @@ void SpanningTree::removeSpanningTreeEdge(SpanningEdge* removeEdge)
 {
 	RBXASSERT(removeEdge->inSpanningTree());
 
-	SpanningNode* newParentNode = NULL;
+	SpanningNode* newParentNode = nullptr;
 	SpanningEdge* heaviest = findHeaviestDownstream(removeEdge->getChildSpanningNode(), newParentNode);
 
 	swapTree(removeEdge, heaviest, newParentNode);
@@ -221,8 +221,8 @@ void SpanningTree::findLightestUpstream(SpanningNode* n0, SpanningNode* n1, int 
 	}
 	else {
 		if (n0 != n1) {
-			SpanningNode* n0Parent = n0 ? testEdgeToParent(0, n0, answer, lightSide) : NULL;
-			SpanningNode* n1Parent = n1 ? testEdgeToParent(1, n1, answer, lightSide) : NULL;
+			SpanningNode* n0Parent = n0 ? testEdgeToParent(0, n0, answer, lightSide) : nullptr;
+			SpanningNode* n1Parent = n1 ? testEdgeToParent(1, n1, answer, lightSide) : nullptr;
 			findLightestUpstream(n0Parent, n1Parent, d0-1, d1-1, answer, lightSide);
 		}
 	}
@@ -289,8 +289,8 @@ SpanningEdge* SpanningTree::findHeaviestDownstream(SpanningNode* node, SpanningN
 	std::set<SpanningNode*> downstreamTree;
 	buildDownstreamTree(node, downstreamTree);
 
-	SpanningEdge* heaviest = NULL;
-	newParent = NULL;
+	SpanningEdge* heaviest = nullptr;
+	newParent = nullptr;
 
 	std::set<SpanningNode*>::const_iterator it;
 	for (it = downstreamTree.begin(); it != downstreamTree.end(); ++it)

@@ -4149,7 +4149,7 @@ uint64_t RakPeerInterface::Get64BitUniqueRandomNumber(void)
 
 #else
 	struct timeval tv;
-	gettimeofday(&tv, NULL);
+	gettimeofday(&tv, nullptr);
 	return tv.tv_usec + tv.tv_sec * 1000000;
 #endif
 }
@@ -5806,7 +5806,7 @@ RAK_THREAD_DECLARATION(RakNet::RecvFromLoop)
 	while ( rakPeer->endThreads == false )
 	{
 		recvFromStruct=rakPeer->bufferedPackets.Allocate( _FILE_AND_LINE_ );
-		if (recvFromStruct != NULL)
+		if (recvFromStruct != nullptr)
 		{
 			recvFromStruct->s=s;
 			recvFromStruct->remotePortRakNetWasStartedOn_PS3=remotePortRakNetWasStartedOn_PS3;
@@ -5856,13 +5856,13 @@ RAK_THREAD_DECLARATION(RakNet::UpdateNetworkLoop)
 		rakPeer->threadSleepTimer = 1;
 
 	// 2nd parameter of false means synchronization timer instead of manual-reset timer
-	timerHandle = CreateWaitableTimer( NULL, FALSE, 0 );
+	timerHandle = CreateWaitableTimer( nullptr, FALSE, 0 );
 
 	RakAssert( timerHandle );
 
 	dueTime.QuadPart = -10000 * rakPeer->threadSleepTimer; // 10000 is 1 ms?
 
-	BOOL success = SetWaitableTimer( timerHandle, &dueTime, rakPeer->threadSleepTimer, NULL, NULL, FALSE );
+	BOOL success = SetWaitableTimer( timerHandle, &dueTime, rakPeer->threadSleepTimer, nullptr, nullptr, FALSE );
     (void) success;
 	RakAssert( success );
 

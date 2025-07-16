@@ -1,6 +1,6 @@
 #include "../sg.h"
 
-void (*u_ted_exit)  (void) = NULL;
+void (*u_ted_exit)  (void) = nullptr;
 
 BOOL ted_text_init(lpDTED_TEXT dtt, short max_line)
     

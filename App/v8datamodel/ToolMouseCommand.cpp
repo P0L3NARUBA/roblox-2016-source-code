@@ -39,7 +39,7 @@ void ToolMouseCommand::updateTargetPoint(const shared_ptr<InputObject>& inputObj
 	Vector3 hitWorld;
 	if (Humanoid* h = Humanoid::getLocalHumanoidFromContext(tool.get()))
 	{
-		if (!getPartByLocalCharacter(workspace, inputObject, NULL, hitWorld)) 
+		if (!getPartByLocalCharacter(workspace, inputObject, nullptr, hitWorld)) 
 		{
 			RBX::RbxRay ray = getSearchRay(inputObject);
 			PartInstance* head = h->getHeadSlow();

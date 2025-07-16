@@ -3,7 +3,7 @@
 static BOOL b_grup(lpNP_STR_LIST list, lpLISTH list_brep, hOBJ hobj);
 static BOOL b_put_new(lpNPW np, lpNP_STR_LIST list);
 
-short  * mem_ident = NULL;
+short  * mem_ident = nullptr;
 
 BOOL b_form_model_list(lpLISTH list_brep, hOBJ hobj)
 {
@@ -12,7 +12,7 @@ BOOL b_form_model_list(lpLISTH list_brep, hOBJ hobj)
 	lpNP_STR    str;
 
 	if ( (mem_ident = (short*)SGMalloc(sizeof(npwg->ident)*(lista.number_all +
-				 listb.number_all))) == NULL ) return FALSE;
+				 listb.number_all))) == nullptr ) return FALSE;
 
 	if ( !np_init_list(&list_new) ) goto err;
 
@@ -30,7 +30,7 @@ BOOL b_form_model_list(lpLISTH list_brep, hOBJ hobj)
 		}
 	}
 	end_rw(&lista.vdim);
-	np_end_of_put(&lista,NP_CANCEL,0,NULL);
+	np_end_of_put(&lista,NP_CANCEL,0,nullptr);
 
 	if ( brept1 && flg_exist ) {       
 		begin_rw(&listb.vdim,0);
@@ -47,12 +47,12 @@ BOOL b_form_model_list(lpLISTH list_brep, hOBJ hobj)
 			}
 		}
 		end_rw(&listb.vdim);
-		np_end_of_put(&listb,NP_CANCEL,0,NULL);
+		np_end_of_put(&listb,NP_CANCEL,0,nullptr);
 	}
 	SGFree(mem_ident);
 
 	if ( !list_new.number_all ) {
-		np_end_of_put(&list_new,NP_CANCEL,0,NULL);
+		np_end_of_put(&list_new,NP_CANCEL,0,nullptr);
 		return TRUE;
 	}
 	if ( !b_grup(&list_new, list_brep, hobj) ) return FALSE;
@@ -60,9 +60,9 @@ BOOL b_form_model_list(lpLISTH list_brep, hOBJ hobj)
 	return TRUE;
 err:
 	SGFree(mem_ident);
-	np_end_of_put(&lista,NP_CANCEL,0,NULL);
-	np_end_of_put(&listb,NP_CANCEL,0,NULL);
-	np_end_of_put(&list_new,NP_CANCEL,0,NULL);
+	np_end_of_put(&lista,NP_CANCEL,0,nullptr);
+	np_end_of_put(&listb,NP_CANCEL,0,nullptr);
+	np_end_of_put(&list_new,NP_CANCEL,0,nullptr);
 	return FALSE;
 }
 
@@ -73,8 +73,8 @@ BOOL b_grup(lpNP_STR_LIST list, lpLISTH list_brep, hOBJ hobj)
   int					number, number_old, istr;
 	lpNP_STR    str_t1;
 	NP_STR      str_t,str;
-	int *    b = NULL;
-	hOBJ        hbrep  = NULL;
+	int *    b = nullptr;
+	hOBJ        hbrep  = nullptr;
 	lpOBJ       brep, obj;
 	lpGEO_BREP  lpgeobrep;
 	VLD         vld;
@@ -120,11 +120,11 @@ BOOL b_grup(lpNP_STR_LIST list, lpLISTH list_brep, hOBJ hobj)
 					str_t.lab = 1; str_t.ort = 0;              
 					write_elem(&list->vdim,index,&str_t);
 				}
-				end_rw(&list->nb);   b = NULL;
+				end_rw(&list->nb);   b = nullptr;
 			}
 		} while (number != list->number_np && number != number_old);
 mod:
-		if ( ( hbrep = o_alloc(OBREP)) == NULL)	goto err;
+		if ( ( hbrep = o_alloc(OBREP)) == nullptr)	goto err;
 		brep = (lpOBJ)hbrep;
 		obj = (lpOBJ)hobj;
 		brep->color 		 = obj->color;
@@ -158,7 +158,7 @@ mod:
 		lnp.listh = vld.listh;
 		lnp.num_np = number;
 		if ( !put_np_brep(&lnp,&lpgeobrep->num)) {
-//		if ( !put_np_brep(&lpgeobrep->npd,&vld.listh,number,COMMON,NULL)) {
+//		if ( !put_np_brep(&lpgeobrep->npd,&vld.listh,number,COMMON,nullptr)) {
 			goto err;
 		}
 		copy_obj_attrib(hobj, hbrep);
@@ -170,8 +170,8 @@ mod:
 
 err:
 	number = 0;
-	if (b != NULL) 		 end_rw(&list->nb);
-	if (hbrep != NULL) o_free(hbrep,NULL);
+	if (b != nullptr) 		 end_rw(&list->nb);
+	if (hbrep != nullptr) o_free(hbrep,nullptr);
 cancel:
 	np_str_free(list);
 	return number;

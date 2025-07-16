@@ -25,13 +25,13 @@ float PolyPolyContact::epsilonDistance()
 
 PolyPolyContact::PolyPolyContact(Primitive* p0, Primitive* p1)
 	: PolyContact(p0, p1)
-	, bestPair(NULL)
+	, bestPair(nullptr)
 {
 }
 
 PolyPolyContact::~PolyPolyContact()
 {
-	resetBestPair(NULL);
+	resetBestPair(nullptr);
 }
 
 
@@ -83,7 +83,7 @@ void PolyPolyContact::findBestPair()
     EdgeEdgePair edgeEdge(getPrimitive(0), getPrimitive(1), *contactParams);
 
     PolyPair* testPairs[] = {&face0, &face1, &edgeEdge};
-    PolyPair* betterPair = NULL;
+    PolyPair* betterPair = nullptr;
 
     for (size_t i = 0; i < 2; ++i) {				// only doing face face - Tim - if you set this to 3 we will get EdgeEdgePairs.
 	    PolyPair* testPair = testPairs[i];
@@ -115,7 +115,7 @@ void PolyPolyContact::resetBestPair(PolyPair* pairOnStack)
 {
 	if (bestPair) {
 		delete bestPair;
-		bestPair = NULL;
+		bestPair = nullptr;
 	}
 
 	if (pairOnStack) {
@@ -147,8 +147,8 @@ const Poly* PolyPair::poly1() const
 FaceFacePair::FaceFacePair(Primitive* p0, Primitive* p1, const ContactParams& contactParams) 
 	: PolyPair(p0, p1, contactParams)
 	, mainFace(poly0()->getMesh()->getFace(0))
-	, otherFace(NULL)
-	, nextBestOtherFace(NULL)
+	, otherFace(nullptr)
+	, nextBestOtherFace(nullptr)
 {}
 
 
@@ -170,10 +170,10 @@ float FaceFacePair::test()
 	computeVertices(verticesInObject, otherInMe);
 
 	// do current first - could be > 0.0
-	const Vertex* closeVertex = NULL;
+	const Vertex* closeVertex = nullptr;
 	float biggestDistance = closestVertex(mainFace, verticesInObject, closeVertex);
 	if (biggestDistance > 0.0) {
-		otherFace = NULL;
+		otherFace = nullptr;
 		return biggestDistance;			// separating plane - blow out
 	}
 
@@ -181,14 +181,14 @@ float FaceFacePair::test()
 	for (size_t i = 0; i < faceMesh->numFaces(); ++i) {
 		const POLY::Face* face = faceMesh->getFace(i);
 		if (face != mainFace) {
-			const Vertex* tempVertex = NULL;
+			const Vertex* tempVertex = nullptr;
 			float distance = closestVertex(face, verticesInObject, tempVertex);	
 			if (distance > biggestDistance) {
 				biggestDistance = distance;
 				mainFace = face;
 				closeVertex = tempVertex;
 				if (distance > 0.0) {			// separating plane - blow out
-					otherFace = NULL;				// make sure we are not using this - no contact
+					otherFace = nullptr;				// make sure we are not using this - no contact
 					return biggestDistance;
 				}
 			}
@@ -233,11 +233,11 @@ float FaceFacePair::closestVertex(const POLY::Face* face, const FixedArray<Vecto
 
 const POLY::Face* FaceFacePair::findOtherFace(const Vertex* closeVertex)
 {
-	const POLY::Face* bestFace = NULL;
+	const POLY::Face* bestFace = nullptr;
 	float bestAlignment = -2.0;	
 	const float nextBestAlignmentTol = 0.4;	//How close the second best must be in terms of dot prod alignment
 	const float nextBestAlignmentReq = 0.3;	//If the if the face normals are any less aligned faces should not hit
-	nextBestOtherFace = NULL;
+	nextBestOtherFace = nullptr;
 	CoordinateFrame faceInOther = primitive[1]->getCoordinateFrame().toObjectSpace(primitive[0]->getCoordinateFrame());
 
 	Plane planeInOther = faceInOther.toWorldSpace(mainFace->plane());

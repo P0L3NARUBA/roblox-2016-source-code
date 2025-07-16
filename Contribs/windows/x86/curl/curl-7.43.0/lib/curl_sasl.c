@@ -242,7 +242,7 @@ static CURLcode sasl_digest_get_qop_values(const char *options, int *value)
     return CURLE_OUT_OF_MEMORY;
 
   token = strtok_r(tmp, ",", &tok_buf);
-  while(token != NULL) {
+  while(token != nullptr) {
     if(Curl_raw_equal(token, DIGEST_QOP_VALUE_STRING_AUTH))
       *value |= DIGEST_QOP_VALUE_AUTH;
     else if(Curl_raw_equal(token, DIGEST_QOP_VALUE_STRING_AUTH_INT))
@@ -250,7 +250,7 @@ static CURLcode sasl_digest_get_qop_values(const char *options, int *value)
     else if(Curl_raw_equal(token, DIGEST_QOP_VALUE_STRING_AUTH_CONF))
       *value |= DIGEST_QOP_VALUE_AUTH_CONF;
 
-    token = strtok_r(NULL, ",", &tok_buf);
+    token = strtok_r(nullptr, ",", &tok_buf);
   }
 
   free(tmp);
@@ -312,7 +312,7 @@ static CURLcode sasl_create_plain_message(struct SessionHandle *data,
   plainauth = malloc(2 * ulen + plen + 2);
   if(!plainauth) {
     *outlen = 0;
-    *outptr = NULL;
+    *outptr = nullptr;
     return CURLE_OUT_OF_MEMORY;
   }
 
@@ -413,7 +413,7 @@ static CURLcode sasl_decode_cram_md5_message(const char *chlg64, char **outptr,
   CURLcode result = CURLE_OK;
   size_t chlg64len = strlen(chlg64);
 
-  *outptr = NULL;
+  *outptr = nullptr;
   *outlen = 0;
 
   /* Decode the challenge if necessary */
@@ -516,7 +516,7 @@ static CURLcode sasl_decode_digest_md5_message(const char *chlg64,
                                                char *qop, size_t qlen)
 {
   CURLcode result = CURLE_OK;
-  unsigned char *chlg = NULL;
+  unsigned char *chlg = nullptr;
   size_t chlglen = 0;
   size_t chlg64len = strlen(chlg64);
 
@@ -589,7 +589,7 @@ CURLcode Curl_sasl_create_digest_md5_message(struct SessionHandle *data,
   CURLcode result = CURLE_OK;
   size_t i;
   MD5_context *ctxt;
-  char *response = NULL;
+  char *response = nullptr;
   unsigned char digest[MD5_DIGEST_LEN];
   char HA1_hex[2 * MD5_DIGEST_LEN + 1];
   char HA2_hex[2 * MD5_DIGEST_LEN + 1];
@@ -604,7 +604,7 @@ CURLcode Curl_sasl_create_digest_md5_message(struct SessionHandle *data,
   char nonceCount[] = "00000001";
   char method[]     = "AUTHENTICATE";
   char qop[]        = DIGEST_QOP_VALUE_STRING_AUTH;
-  char *spn         = NULL;
+  char *spn         = nullptr;
 
   /* Decode the challange message */
   result = sasl_decode_digest_md5_message(chlg64, nonce, sizeof(nonce),
@@ -759,8 +759,8 @@ CURLcode Curl_sasl_decode_digest_http_message(const char *chlg,
   bool before = FALSE; /* got a nonce before */
   bool foundAuth = FALSE;
   bool foundAuthInt = FALSE;
-  char *token = NULL;
-  char *tmp = NULL;
+  char *token = nullptr;
+  char *tmp = nullptr;
 
   /* If we already have received a nonce, keep that in mind */
   if(digest->nonce)
@@ -809,14 +809,14 @@ CURLcode Curl_sasl_decode_digest_http_message(const char *chlg,
           return CURLE_OUT_OF_MEMORY;
 
         token = strtok_r(tmp, ",", &tok_buf);
-        while(token != NULL) {
+        while(token != nullptr) {
           if(Curl_raw_equal(token, DIGEST_QOP_VALUE_STRING_AUTH)) {
             foundAuth = TRUE;
           }
           else if(Curl_raw_equal(token, DIGEST_QOP_VALUE_STRING_AUTH_INT)) {
             foundAuthInt = TRUE;
           }
-          token = strtok_r(NULL, ",", &tok_buf);
+          token = strtok_r(nullptr, ",", &tok_buf);
         }
 
         free(tmp);
@@ -909,11 +909,11 @@ CURLcode Curl_sasl_create_digest_http_message(struct SessionHandle *data,
   unsigned char ha1[33];/* 32 digits and 1 zero byte */
   unsigned char ha2[33];/* 32 digits and 1 zero byte */
   char cnoncebuf[33];
-  char *cnonce = NULL;
+  char *cnonce = nullptr;
   size_t cnonce_sz = 0;
   char *userp_quoted;
-  char *response = NULL;
-  char *tmp = NULL;
+  char *response = nullptr;
+  char *tmp = nullptr;
 
   if(!digest->nc)
     digest->nc = 1;
@@ -1175,7 +1175,7 @@ static CURLcode sasl_create_xoauth2_message(struct SessionHandle *data,
                                             char **outptr, size_t *outlen)
 {
   CURLcode result = CURLE_OK;
-  char *xoauth = NULL;
+  char *xoauth = nullptr;
 
   /* Generate the message */
   xoauth = aprintf("user=%s\1auth=Bearer %s\1\1", user, bearer);
@@ -1233,7 +1233,7 @@ void Curl_sasl_cleanup(struct connectdata *conn, unsigned int authused)
  *
  * ptr    [in]     - The mechanism string.
  * maxlen [in]     - Maximum mechanism string length.
- * len    [out]    - If not NULL, effective name length.
+ * len    [out]    - If not nullptr, effective name length.
  *
  * Returns the SASL mechanism token or 0 if no match.
  */
@@ -1377,8 +1377,8 @@ CURLcode Curl_sasl_start(struct SASL *sasl, struct connectdata *conn,
   CURLcode result = CURLE_OK;
   struct SessionHandle *data = conn->data;
   unsigned int enabledmechs;
-  const char *mech = NULL;
-  char *resp = NULL;
+  const char *mech = nullptr;
+  char *resp = nullptr;
   size_t len = 0;
   saslstate state1 = SASL_STOP;
   saslstate state2 = SASL_FINAL;
@@ -1412,7 +1412,7 @@ CURLcode Curl_sasl_start(struct SASL *sasl, struct connectdata *conn,
                                                       conn->passwd,
                                                       sasl->params->service,
                                                       sasl->mutual_auth,
-                                                      NULL, &conn->krb5,
+                                                      nullptr, &conn->krb5,
                                                       &resp, &len);
     }
     else
@@ -1477,7 +1477,7 @@ CURLcode Curl_sasl_start(struct SASL *sasl, struct connectdata *conn,
     if(resp && sasl->params->maxirlen &&
        strlen(mech) + len > sasl->params->maxirlen) {
       free(resp);
-      resp = NULL;
+      resp = nullptr;
     }
 
     if(mech) {
@@ -1505,10 +1505,10 @@ CURLcode Curl_sasl_continue(struct SASL *sasl, struct connectdata *conn,
   CURLcode result = CURLE_OK;
   struct SessionHandle *data = conn->data;
   saslstate newstate = SASL_FINAL;
-  char *resp = NULL;
+  char *resp = nullptr;
 #if !defined(CURL_DISABLE_CRYPTO_AUTH)
   char *serverdata;
-  char *chlg = NULL;
+  char *chlg = nullptr;
   size_t chlglen = 0;
 #endif
   size_t len = 0;
@@ -1595,7 +1595,7 @@ CURLcode Curl_sasl_continue(struct SASL *sasl, struct connectdata *conn,
     result = Curl_sasl_create_gssapi_user_message(data, conn->user,
                                                   conn->passwd,
                                                   sasl->params->service,
-                                                  sasl->mutual_auth, NULL,
+                                                  sasl->mutual_auth, nullptr,
                                                   &conn->krb5,
                                                   &resp, &len);
     newstate = SASL_GSSAPI_TOKEN;
@@ -1605,7 +1605,7 @@ CURLcode Curl_sasl_continue(struct SASL *sasl, struct connectdata *conn,
     if(sasl->mutual_auth) {
       /* Decode the user token challenge and create the optional response
          message */
-      result = Curl_sasl_create_gssapi_user_message(data, NULL, NULL, NULL,
+      result = Curl_sasl_create_gssapi_user_message(data, nullptr, nullptr, nullptr,
                                                     sasl->mutual_auth,
                                                     serverdata, &conn->krb5,
                                                     &resp, &len);

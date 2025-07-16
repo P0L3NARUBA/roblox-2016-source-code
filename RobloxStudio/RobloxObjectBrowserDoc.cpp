@@ -72,7 +72,7 @@ void decorate(ObjectBrowserItem* item, const RBX::Reflection::Descriptor* desc)
 	item->setText(desc->name.c_str());
 
 	QFont font = item->font();
-	RBX::Reflection::Metadata::Item* metadata = NULL;
+	RBX::Reflection::Metadata::Item* metadata = nullptr;
 	QIcon icon;
 	switch(typeToInt(desc))
 	{
@@ -206,12 +206,12 @@ static bool compareFunc(ObjectBrowserItem* item1, ObjectBrowserItem* item2)
 }
 
 RobloxObjectBrowserDoc::RobloxObjectBrowserDoc()
-	: m_ObjectBrowser(NULL)
-	, m_vSplitter(NULL)
-	, m_hSplitter(NULL)
-	, m_ClassList(NULL)
-	, m_MemberList(NULL)
-	, m_DeclarationView(NULL)
+	: m_ObjectBrowser(nullptr)
+	, m_vSplitter(nullptr)
+	, m_hSplitter(nullptr)
+	, m_ClassList(nullptr)
+	, m_MemberList(nullptr)
+	, m_DeclarationView(nullptr)
 	, m_displayName(QString("Object Browser"))	
 {
 }
@@ -228,7 +228,7 @@ bool RobloxObjectBrowserDoc::open(RobloxMainWindow *pMainWindow, const QString&)
 {
 	bool success = false;
 	try{
-		if(m_ObjectBrowser == NULL)
+		if(m_ObjectBrowser == nullptr)
 		{
 			m_ObjectBrowser = new QWidget(pMainWindow);
 
@@ -345,7 +345,7 @@ void RobloxObjectBrowserDoc::initializeAllViews()
 	m_ClassList->init();
 			
 	// Member List
-	onClassSelected(m_ClassList->currentItem(), NULL);
+	onClassSelected(m_ClassList->currentItem(), nullptr);
 	
 	// Declaration View
 }
@@ -426,7 +426,7 @@ void ClassListWidget::insertEnum(const RBX::Reflection::EnumDescriptor* enumDesc
 
 MemberListWidget::MemberListWidget(QWidget* parent)
 : QListWidget(parent)
-, m_descriptor(NULL)
+, m_descriptor(nullptr)
 , m_showInheritedMembers(true)
 {
 }
@@ -662,7 +662,7 @@ void DeclarationView::updateDeclarationView(ObjectBrowserItem* item)
 	bool bDeprecated = false;
 	std::string summary;
 
-	RBX::Reflection::Metadata::Item* metadata = NULL;
+	RBX::Reflection::Metadata::Item* metadata = nullptr;
 
 	if (const RBX::Reflection::FunctionDescriptor* fd = dynamic_cast<const RBX::Reflection::FunctionDescriptor*>(desc))
 	{

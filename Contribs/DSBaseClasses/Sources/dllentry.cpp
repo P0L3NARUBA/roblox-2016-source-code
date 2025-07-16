@@ -73,7 +73,7 @@ CClassFactory::QueryInterface(REFIID riid,void **ppv)
 {
     CheckPointer(ppv,E_POINTER)
     ValidateReadWritePtr(ppv,sizeof(PVOID));
-    *ppv = NULL;
+    *ppv = nullptr;
 
     // any interface on this object is the object pointer.
     if ((riid == IID_IUnknown) || (riid == IID_IClassFactory)) {
@@ -115,7 +115,7 @@ CClassFactory::CreateInstance(
 
     /* Enforce the normal OLE rules regarding interfaces and delegation */
 
-    if (pUnkOuter != NULL) {
+    if (pUnkOuter != nullptr) {
         if (IsEqualIID(riid,IID_IUnknown) == FALSE) {
             return ResultFromScode(E_NOINTERFACE);
         }
@@ -126,7 +126,7 @@ CClassFactory::CreateInstance(
     HRESULT hr = NOERROR;
     CUnknown *pObj = m_pTemplate->CreateInstance(pUnkOuter, &hr);
 
-    if (pObj == NULL) {
+    if (pObj == nullptr) {
 	if (SUCCEEDED(hr)) {
 	    hr = E_OUTOFMEMORY;
 	}
@@ -189,7 +189,7 @@ DllGetClassObject(
 
     // traverse the array of templates looking for one with this
     // class id
-    for (int i = 0; i < NULL; i++) {
+    for (int i = 0; i < nullptr; i++) {
         const CFactoryTemplate * pT = 0;
         if (pT->IsClassID(rClsID)) {
 
@@ -197,7 +197,7 @@ DllGetClassObject(
             // template
 
             *pv = (LPVOID) (LPUNKNOWN) new CClassFactory(pT);
-            if (*pv == NULL) {
+            if (*pv == nullptr) {
                 return E_OUTOFMEMORY;
             }
             ((LPUNKNOWN)*pv)->AddRef();
@@ -217,9 +217,9 @@ DllInitClasses(BOOL bLoading)
 
     // traverse the array of templates calling the init routine
     // if they have one
-    for (int i = 0; i < NULL; i++) {
+    for (int i = 0; i < nullptr; i++) {
         const CFactoryTemplate* pT = 0;
-        if (pT->m_lpfnInit != NULL) {
+        if (pT->m_lpfnInit != nullptr) {
             (*pT->m_lpfnInit)(bLoading, pT->m_ClsID);
         }
     }
@@ -298,9 +298,9 @@ DllEntryPoint(HINSTANCE hInstance, ULONG ulReason, LPVOID pv)
             TCHAR FullName[_MAX_PATH];      // Load the full path and module name
             TCHAR *pName;                   // Searches from the end for a backslash
 
-            GetModuleFileName(NULL,FullName,_MAX_PATH);
+            GetModuleFileName(nullptr,FullName,_MAX_PATH);
             pName = _tcsrchr(FullName,'\\');
-            if (pName == NULL) {
+            if (pName == nullptr) {
                 pName = FullName;
             } else {
                 pName++;

@@ -76,10 +76,10 @@ CURLcode Curl_SOCKS5_gssapi_negotiate(int sockindex,
   SecPkgContext_Sizes sspi_sizes;
   CredHandle cred_handle;
   CtxtHandle sspi_context;
-  PCtxtHandle context_handle = NULL;
+  PCtxtHandle context_handle = nullptr;
   SecPkgCredentials_Names names;
   TimeStamp expiry;
-  char *service_name = NULL;
+  char *service_name = nullptr;
   unsigned short us_length;
   unsigned long qop;
   unsigned char socksreq[4]; /* room for GSS-API exchange header only */
@@ -114,7 +114,7 @@ CURLcode Curl_SOCKS5_gssapi_negotiate(int sockindex,
 
   sspi_recv_token.BufferType = SECBUFFER_TOKEN;
   sspi_recv_token.cbBuffer = 0;
-  sspi_recv_token.pvBuffer = NULL;
+  sspi_recv_token.pvBuffer = nullptr;
 
   output_desc.cBuffers = 1;
   output_desc.pBuffers = &sspi_send_token;
@@ -122,7 +122,7 @@ CURLcode Curl_SOCKS5_gssapi_negotiate(int sockindex,
 
   sspi_send_token.BufferType = SECBUFFER_TOKEN;
   sspi_send_token.cbBuffer = 0;
-  sspi_send_token.pvBuffer = NULL;
+  sspi_send_token.pvBuffer = nullptr;
 
   wrap_desc.cBuffers = 3;
   wrap_desc.pBuffers = sspi_w_token;
@@ -131,13 +131,13 @@ CURLcode Curl_SOCKS5_gssapi_negotiate(int sockindex,
   cred_handle.dwLower = 0;
   cred_handle.dwUpper = 0;
 
-  status = s_pSecFn->AcquireCredentialsHandle(NULL,
+  status = s_pSecFn->AcquireCredentialsHandle(nullptr,
                                               (TCHAR *) TEXT("Kerberos"),
                                               SECPKG_CRED_OUTBOUND,
-                                              NULL,
-                                              NULL,
-                                              NULL,
-                                              NULL,
+                                              nullptr,
+                                              nullptr,
+                                              nullptr,
+                                              nullptr,
                                               &cred_handle,
                                               &expiry);
 
@@ -177,7 +177,7 @@ CURLcode Curl_SOCKS5_gssapi_negotiate(int sockindex,
 
     if(sspi_recv_token.pvBuffer) {
       s_pSecFn->FreeContextBuffer(sspi_recv_token.pvBuffer);
-      sspi_recv_token.pvBuffer = NULL;
+      sspi_recv_token.pvBuffer = nullptr;
       sspi_recv_token.cbBuffer = 0;
     }
 
@@ -228,13 +228,13 @@ CURLcode Curl_SOCKS5_gssapi_negotiate(int sockindex,
 
     if(sspi_send_token.pvBuffer) {
       s_pSecFn->FreeContextBuffer(sspi_send_token.pvBuffer);
-      sspi_send_token.pvBuffer = NULL;
+      sspi_send_token.pvBuffer = nullptr;
     }
     sspi_send_token.cbBuffer = 0;
 
     if(sspi_recv_token.pvBuffer) {
       s_pSecFn->FreeContextBuffer(sspi_recv_token.pvBuffer);
-      sspi_recv_token.pvBuffer = NULL;
+      sspi_recv_token.pvBuffer = nullptr;
     }
     sspi_recv_token.cbBuffer = 0;
 
@@ -446,13 +446,13 @@ CURLcode Curl_SOCKS5_gssapi_negotiate(int sockindex,
            sspi_w_token[2].pvBuffer, sspi_w_token[2].cbBuffer);
 
     s_pSecFn->FreeContextBuffer(sspi_w_token[0].pvBuffer);
-    sspi_w_token[0].pvBuffer = NULL;
+    sspi_w_token[0].pvBuffer = nullptr;
     sspi_w_token[0].cbBuffer = 0;
     s_pSecFn->FreeContextBuffer(sspi_w_token[1].pvBuffer);
-    sspi_w_token[1].pvBuffer = NULL;
+    sspi_w_token[1].pvBuffer = nullptr;
     sspi_w_token[1].cbBuffer = 0;
     s_pSecFn->FreeContextBuffer(sspi_w_token[2].pvBuffer);
-    sspi_w_token[2].pvBuffer = NULL;
+    sspi_w_token[2].pvBuffer = nullptr;
     sspi_w_token[2].cbBuffer = 0;
 
     us_length = htons((short)sspi_send_token.cbBuffer);
@@ -539,7 +539,7 @@ CURLcode Curl_SOCKS5_gssapi_negotiate(int sockindex,
     sspi_w_token[0].BufferType = SECBUFFER_STREAM;
     sspi_w_token[1].BufferType = SECBUFFER_DATA;
     sspi_w_token[1].cbBuffer = 0;
-    sspi_w_token[1].pvBuffer = NULL;
+    sspi_w_token[1].pvBuffer = nullptr;
 
     status = s_pSecFn->DecryptMessage(&sspi_context,
                                       &wrap_desc,

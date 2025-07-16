@@ -9,7 +9,7 @@
 #include <boost/type_traits.hpp>
 
 #if defined RBX_PLATFORM_IOS
-#define NULL_FUNCTION_PTR typeof(NULL)
+#define NULL_FUNCTION_PTR typeof(nullptr)
 #else
 #define NULL_FUNCTION_PTR int
 #endif
@@ -389,7 +389,7 @@ namespace RBX
 
 		private:
 			RefType(const char* name)
-				:Type(name, "Ref", (T*)NULL)
+				:Type(name, "Ref", (T*)nullptr)
 			{}
 		};
 
@@ -452,8 +452,8 @@ namespace RBX
 				return getValue(instance);
 			}
 			/*implement*/ void setRefValue(DescribedBase* instance, DescribedBase* value) const {
-				// if value!=NULL then ensure it is the proper type. If value==NULL then it is OK
-				RefClass* v = value!=NULL ? boost::polymorphic_cast<RefClass*>(value) : NULL;
+				// if value!=nullptr then ensure it is the proper type. If value==nullptr then it is OK
+				RefClass* v = value!=nullptr ? boost::polymorphic_cast<RefClass*>(value) : nullptr;
 				setValue(instance, v);
 			}
 			/*implement*/ void setRefValueUnsafe(DescribedBase* instance, DescribedBase* value) const {
@@ -2504,7 +2504,7 @@ namespace RBX
 
 		public:
 			CustomBoundFuncDesc(CustomFunctionPtr function, const char* name, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
-				: BoundFuncDesc<Class, Signature, 0>(NULL, name, security, attributes)
+				: BoundFuncDesc<Class, Signature, 0>(nullptr, name, security, attributes)
 				, customFunction(function)
 			{
 				this->kind = FunctionDescriptor::Kind_Custom;
@@ -2524,7 +2524,7 @@ namespace RBX
 
 		public:
 			CustomBoundFuncDesc(CustomFunctionPtr function, const char* name, const char* arg1Name, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
-				: BoundFuncDesc<Class, Signature, 1>(NULL, name, arg1Name, security, attributes)
+				: BoundFuncDesc<Class, Signature, 1>(nullptr, name, arg1Name, security, attributes)
 				, customFunction(function)
 			{
 				this->kind = FunctionDescriptor::Kind_Custom;
@@ -2544,7 +2544,7 @@ namespace RBX
 
 		public:
 			CustomBoundFuncDesc(CustomFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
-				: BoundFuncDesc<Class, Signature, 2>(NULL, name, arg1Name, arg2Name, security, attributes)
+				: BoundFuncDesc<Class, Signature, 2>(nullptr, name, arg1Name, arg2Name, security, attributes)
 				, customFunction(function)
 			{
 				this->kind = FunctionDescriptor::Kind_Custom;
@@ -2564,7 +2564,7 @@ namespace RBX
 
 		public:
 			CustomBoundFuncDesc(CustomFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
-				: BoundFuncDesc<Class, Signature, 3>(NULL, name, arg1Name, arg2Name, arg3Name, security, attributes)
+				: BoundFuncDesc<Class, Signature, 3>(nullptr, name, arg1Name, arg2Name, arg3Name, security, attributes)
 				, customFunction(function)
 			{
 				this->kind = FunctionDescriptor::Kind_Custom;
@@ -2584,7 +2584,7 @@ namespace RBX
 
 		public:
 			CustomBoundFuncDesc(CustomFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, const char* arg4Name, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
-				: BoundFuncDesc<Class, Signature, 4>(NULL, name, arg1Name, arg2Name, arg3Name, arg4Name, security, attributes)
+				: BoundFuncDesc<Class, Signature, 4>(nullptr, name, arg1Name, arg2Name, arg3Name, arg4Name, security, attributes)
 				, customFunction(function)
 			{
 				this->kind = FunctionDescriptor::Kind_Custom;

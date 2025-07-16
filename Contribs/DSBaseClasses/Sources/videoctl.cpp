@@ -83,7 +83,7 @@ BOOL WINAPI GetDialogSize(int iResourceID,
                              GetDesktopWindow(),
                              pDlgProc,
                              lParam);
-    if (hwnd == NULL) {
+    if (hwnd == nullptr) {
         return FALSE;
     }
 
@@ -538,8 +538,8 @@ STDMETHODIMP CAggDrawSurface::UpdateOverlayZOrder(DWORD dwFlags,LPDIRECTDRAWSURF
 // and unloading the library and creating the initial IDirectDraw interface
 
 CLoadDirectDraw::CLoadDirectDraw() :
-    m_pDirectDraw(NULL),
-    m_hDirectDraw(NULL)
+    m_pDirectDraw(nullptr),
+    m_hDirectDraw(nullptr)
 {
 }
 
@@ -592,7 +592,7 @@ HRESULT CLoadDirectDraw::LoadDirectDraw(LPSTR szDevice)
         m_hDirectDraw = LoadLibrary(TEXT("DDRAW.DLL"));
         SetErrorMode(ErrorMode);
 
-        if (m_hDirectDraw == NULL) {
+        if (m_hDirectDraw == nullptr) {
             DbgLog((LOG_ERROR,1,TEXT("Can't load DDRAW.DLL")));
             NOTE("No library");
             return E_NOINTERFACE;
@@ -608,7 +608,7 @@ HRESULT CLoadDirectDraw::LoadDirectDraw(LPSTR szDevice)
 						"DirectDrawEnumerateExA");
 
     // We don't NEED DirectDrawEnumerateEx, that's just for multimon stuff
-    if (pDrawCreate == NULL || pDrawEnum == NULL) {
+    if (pDrawCreate == nullptr || pDrawEnum == nullptr) {
         DbgLog((LOG_ERROR,1,TEXT("Can't get functions: Create=%x Enum=%x"),
 			pDrawCreate, pDrawEnum));
         NOTE("No entry point");
@@ -617,7 +617,7 @@ HRESULT CLoadDirectDraw::LoadDirectDraw(LPSTR szDevice)
     }
 
     DbgLog((LOG_TRACE,3,TEXT("Creating DDraw for device %s"),
-					szDevice ? szDevice : "<NULL>"));
+					szDevice ? szDevice : "<nullptr>"));
 
     // Create a DirectDraw display provider for this device, using the fancy
     // multimon-aware version, if it exists
@@ -628,7 +628,7 @@ HRESULT CLoadDirectDraw::LoadDirectDraw(LPSTR szDevice)
         m_pDirectDraw = DirectDrawCreateFromDevice(szDevice, pDrawCreate,
 								pDrawEnum);
 
-    if (m_pDirectDraw == NULL) {
+    if (m_pDirectDraw == nullptr) {
             DbgLog((LOG_ERROR,1,TEXT("Can't create DDraw")));
             NOTE("No instance");
             ReleaseDirectDraw();
@@ -653,7 +653,7 @@ void CLoadDirectDraw::ReleaseDirectDraw()
     if (m_pDirectDraw) {
         NOTE("Releasing instance");
         m_pDirectDraw->Release();
-        m_pDirectDraw = NULL;
+        m_pDirectDraw = nullptr;
     }
 
 }
@@ -665,7 +665,7 @@ HRESULT CLoadDirectDraw::IsDirectDrawLoaded()
 {
     NOTE("Entering IsDirectDrawLoaded");
 
-    if (m_pDirectDraw == NULL) {
+    if (m_pDirectDraw == nullptr) {
         NOTE("DirectDraw not loaded");
         return S_FALSE;
     }
@@ -679,9 +679,9 @@ LPDIRECTDRAW CLoadDirectDraw::GetDirectDraw()
 {
     NOTE("Entering GetDirectDraw");
 
-    if (m_pDirectDraw == NULL) {
+    if (m_pDirectDraw == nullptr) {
         NOTE("No DirectDraw");
-        return NULL;
+        return nullptr;
     }
 
     NOTE("Returning DirectDraw");
@@ -698,10 +698,10 @@ LPDIRECTDRAW CLoadDirectDraw::GetDirectDraw()
 BOOL CLoadDirectDraw::IsDirectDrawVersion1()
 {
 
-    if (m_pDirectDraw == NULL)
+    if (m_pDirectDraw == nullptr)
 	return FALSE;
 
-    IDirectDraw2 *p = NULL;
+    IDirectDraw2 *p = nullptr;
     HRESULT hr = m_pDirectDraw->QueryInterface(IID_IDirectDraw2, (void **)&p);
     if (p)
 	p->Release();

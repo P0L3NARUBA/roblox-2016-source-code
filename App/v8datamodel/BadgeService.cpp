@@ -137,7 +137,7 @@ namespace RBX {
 			return;
 		}
 
-		if(ServiceProvider::find<Network::Players>(this)->getPlayerByID(userId).get() == NULL){
+		if(ServiceProvider::find<Network::Players>(this)->getPlayerByID(userId).get() == nullptr){
 			StandardOut::singleton()->printf(MESSAGE_WARNING, "Sorry, player with userId=%d is not in this level at the moment", userId);
 			resumeFunction(false);
 			return;

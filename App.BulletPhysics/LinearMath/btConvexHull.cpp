@@ -79,7 +79,7 @@ btVector3  ThreePlaneIntersection(const btPlane &p0,const btPlane &p1, const btP
 
 }
 
-btScalar   DistanceBetweenLines(const btVector3 &ustart, const btVector3 &udir, const btVector3 &vstart, const btVector3 &vdir, btVector3 *upoint=NULL, btVector3 *vpoint=NULL);
+btScalar   DistanceBetweenLines(const btVector3 &ustart, const btVector3 &udir, const btVector3 &vstart, const btVector3 &vdir, btVector3 *upoint=nullptr, btVector3 *vpoint=nullptr);
 btVector3  TriNormal(const btVector3 &v0, const btVector3 &v1, const btVector3 &v2);
 btVector3  NormalOf(const btVector3 *vert, const int n);
 
@@ -433,7 +433,7 @@ btHullTriangle*	HullLibrary::allocateTriangle(int a,int b,int c)
 void	HullLibrary::deAllocateTriangle(btHullTriangle* tri)
 {
 	btAssert(m_tris[tri->id]==tri);
-	m_tris[tri->id]=NULL;
+	m_tris[tri->id]=nullptr;
 	tri->~btHullTriangle();
 	btAlignedFree(tri);
 }
@@ -465,7 +465,7 @@ void HullLibrary::extrude(btHullTriangle *t0,int v)
 btHullTriangle* HullLibrary::extrudable(btScalar epsilon)
 {
 	int i;
-	btHullTriangle *t=NULL;
+	btHullTriangle *t=nullptr;
 	for(i=0;i<m_tris.size();i++)
 	{
 		if(!t || (m_tris[i] && t->rise<m_tris[i]->rise))
@@ -473,7 +473,7 @@ btHullTriangle* HullLibrary::extrudable(btScalar epsilon)
 			t = m_tris[i];
 		}
 	}
-	return (t->rise >epsilon)?t:NULL ;
+	return (t->rise >epsilon)?t:nullptr ;
 }
 
 

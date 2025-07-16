@@ -78,7 +78,7 @@ lpGEO_POINT   point;
 
 	obj = (lpOBJ)hobj;
 	point = (lpGEO_POINT)obj->geo_data;
-	create_ucs_matr1(1, point, NULL, NULL, matr_lcs_gcs, 0, 1);
+	create_ucs_matr1(1, point, nullptr, nullptr, matr_lcs_gcs, 0, 1);
   return TRUE;
 }
 
@@ -89,7 +89,7 @@ lpGEO_LINE    line;
 
 	obj = (lpOBJ)hobj;
 	line = (lpGEO_LINE)obj->geo_data;
-	create_ucs_matr1(2, &line->v1, &line->v2, NULL, matr_lcs_gcs, 0, 1);
+	create_ucs_matr1(2, &line->v1, &line->v2, nullptr, matr_lcs_gcs, 0, 1);
   return TRUE;
 }
 
@@ -108,7 +108,7 @@ OSTATUS       status;
 	obj = (lpOBJ)hobj;
 	status = (OSTATUS)(obj->status & ST_FLAT);
 	if (!status) { //   
-		create_ucs_matr1(2, &p[0], &p[1], NULL, matr_lcs_gcs, 0, 1);
+		create_ucs_matr1(2, &p[0], &p[1], nullptr, matr_lcs_gcs, 0, 1);
 	} else { //  
 	  if (!set_flat_on_path(hobj, &plane)) return FALSE;
 	  dvector_product(&plane.v, dpoint_sub(&p[1],&p[0],&p[2]), &p[2]);

@@ -90,7 +90,7 @@ Tool::Tool()
 , backendToolState(NOTHING)
 , frontendActivationState(0)
 , enabled(true)
-, workspaceForToolMouseCommand(NULL)
+, workspaceForToolMouseCommand(nullptr)
 , handleTouched(FLog::TouchedSignal != 0)
 , droppable(true)
 , toolTip("")
@@ -123,7 +123,7 @@ void Tool::render3dSelect(Adorn* adorn, SelectState selectState)
 
 bool Tool::characterCanUnequipTool(ModelInstance *character)
 {
-	if (character == NULL) 
+	if (character == nullptr) 
 		return true;
 
 	Humanoid* humanoid = Humanoid::modelIsCharacter(character);
@@ -192,7 +192,7 @@ void Tool::moveAllToolsToBackpack(Network::Player* player)
 shared_ptr<Mouse> Tool::createMouse()
 {
 	shared_ptr<Mouse> mouse = Creatable<Instance>::create<Mouse>();
-	mouse->setWorkspace(NULL);
+	mouse->setWorkspace(nullptr);
 	return mouse;
 }
 
@@ -308,7 +308,7 @@ Tool::ToolState Tool::computeDesiredState(Instance* testParent)
 
 	if (humanoid->getUseR15())
 	{
-		if (Instance::fastDynamicCast<PartInstance>(humanoid->getParent()->findFirstChildByName("RightHand")) == NULL)
+		if (Instance::fastDynamicCast<PartInstance>(humanoid->getParent()->findFirstChildByName("RightHand")) == nullptr)
 			return HAS_TORSO;
 	} else {
 		if (!(humanoid->getRightArmSlow() && humanoid->getRightShoulder())) {
@@ -519,7 +519,7 @@ void Tool::upTo_Equipped()
 
 void Tool::downFrom_Equipped(bool connectTouchEvent)
 {
-	ModelInstance* oldCharacter = NULL;
+	ModelInstance* oldCharacter = nullptr;
 
 	if (weld)
 	{
@@ -529,7 +529,7 @@ void Tool::downFrom_Equipped(bool connectTouchEvent)
 		{
 			oldCharacter = Instance::fastDynamicCast<ModelInstance>(oldArm->getParent());
 		}
-		weld->setParent(NULL);
+		weld->setParent(nullptr);
 		weld.reset();
 	}
 
@@ -778,7 +778,7 @@ void Tool::onAncestorChanged(const AncestorChanged& event)
 
 		if (backendProcessing)
 		{
-			Player* player = NULL;
+			Player* player = nullptr;
 
 			if (frontendProcessing) // solo play
 				ownWeld = true;
@@ -832,7 +832,7 @@ void Tool::onUnequipped()
 {
 	if (workspaceForToolMouseCommand) {
 		workspaceForToolMouseCommand->setDefaultMouseCommand();
-		workspaceForToolMouseCommand = NULL;
+		workspaceForToolMouseCommand = nullptr;
 	}
 }
 
@@ -1023,7 +1023,7 @@ void Tool::setGrip(const CoordinateFrame& value)
 
 		raisePropertyChanged(prop_Grip);
 
-		if (weld != NULL)
+		if (weld != nullptr)
 		{
 			// all this does not occur client side
 			RBXASSERT(Network::Players::backendProcessing(this));
@@ -1151,14 +1151,14 @@ void Tool::setRequiresHandle(bool value)
 Attachment *Tool::findFirstAttachmentByName(const Instance *part, const std::string& findName)
 {
 	if (!part || !part->getChildren())
-		return NULL;
+		return nullptr;
 
 	const Instances& children = *part->getChildren();
 
 	for (size_t i = 0; i < children.size(); ++i) 
 	{
 		Attachment *attach = Instance::fastDynamicCast<Attachment>(children[i].get());
-		if (attach == NULL)
+		if (attach == nullptr)
 			continue;
 
 		if (attach->getName() == findName) {
@@ -1166,31 +1166,31 @@ Attachment *Tool::findFirstAttachmentByName(const Instance *part, const std::str
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 
 Attachment *Tool::findFirstAttachmentByNameRecursive(const Instance *part, const std::string& findName)
 {
 	if (!part)
-		return NULL;
+		return nullptr;
 
 	// breadth-first search
 	Attachment *child = findFirstAttachmentByName(part, findName);
-	if (child != NULL)
+	if (child != nullptr)
 		return child;
 
 	if (!part->getChildren())
-		return NULL;
+		return nullptr;
 	const Instances& children = *part->getChildren();
 
 	for (size_t i = 0; i < children.size(); ++i) {
 		child = findFirstAttachmentByNameRecursive(children[i].get(), findName);
-		if (child != NULL)
+		if (child != nullptr)
 			return child;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 

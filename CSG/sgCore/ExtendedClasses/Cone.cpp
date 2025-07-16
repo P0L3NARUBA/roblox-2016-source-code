@@ -23,7 +23,7 @@ sgCCone* sgCCone::Create(sgFloat rad_1,sgFloat rad_2,sgFloat heig, short merid)
 		rad_2<eps_d) ||
 		heig<eps_d ||
 		merid<2)
-		return NULL;
+		return nullptr;
 
 	sgFloat par[4];
 	par[0] = rad_1;

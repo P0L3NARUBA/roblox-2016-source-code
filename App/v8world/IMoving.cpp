@@ -20,7 +20,7 @@ namespace RBX {
 IMoving::IMoving() 
 : stepsToSleep(0)			
 , lastUpdateTime(Time::nowFast())
-, iMovingManager(NULL)
+, iMovingManager(nullptr)
 {}
 
 IMoving::~IMoving()

@@ -36,7 +36,7 @@ namespace RBX {
 		void insertRaw(const Instances& instances, Instance* requestedParent, PartArray& partArray, bool suppressMove = false);
 		void insertToTree(const Instances& instances, Instance* requestedParent, bool suppressMove = false, bool lerpCameraInStudio = true);
 
-		void insert3dView(const Instances& instances, PromptMode promptMode, bool suppressMove, const Vector3* positionHint = NULL, bool lerpCameraInStudio = true);
+		void insert3dView(const Instances& instances, PromptMode promptMode, bool suppressMove, const Vector3* positionHint = nullptr, bool lerpCameraInStudio = true);
 		void insertRemoteCharacterView(const Instances& instances, PartArray& partArray, const Vector3* positionHint, PromptMode promptMode, bool suppressMove = false);
 		void insertCharacterView(const Instances& instances, PartArray& partArray);
 		void insertIdeView(const Instances& instances, PartArray& partArray, PromptMode promptMode,
@@ -52,8 +52,8 @@ namespace RBX {
 			Instance* requestedParent,
 			InsertMode insertMode,				// RAW: don't move, TREE: only move up, 3D_View: insert point
 			PromptMode promptMode,
-			const Vector3* positionHint = NULL,
-			Instances* remaining = NULL,
+			const Vector3* positionHint = nullptr,
+			Instances* remaining = nullptr,
 			bool forceSuppressMove = false,
 			bool lerpCameraInStudio = true);
 
@@ -74,8 +74,8 @@ namespace RBX {
 			Instance* requestedParent,
 			InsertMode insertMode,				// RAW: don't move, TREE: only move up, 3D_View: insert point
 			PromptMode promptMode,
-			const Vector3* positionHint = NULL,
-			Instances* remaining = NULL,
+			const Vector3* positionHint = nullptr,
+			Instances* remaining = nullptr,
 			bool lerpCameraInStudio = true);
 
 		// Instead of putting parts in the camera's focus, we focus the camera on where parts were pasted
@@ -84,8 +84,8 @@ namespace RBX {
 			Instance* requestedParent,
 			InsertMode insertMode,				// RAW: don't move, TREE: only move up, 3D_View: insert point
 			PromptMode promptMode,
-			const Vector3* positionHint = NULL,
-			Instances* remaining = NULL,
+			const Vector3* positionHint = nullptr,
+			Instances* remaining = nullptr,
 			bool lerpCameraInStudio = true);
 
 		Vector3 computeCharacterInsertPoint(const Vector3& sizeOfInsertedModel); 

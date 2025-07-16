@@ -41,7 +41,7 @@ RobloxTextOutputWidget::RobloxTextOutputWidget(QWidget* parent)
     // listen for changes to the editor settings
     m_PropertyChangedConnection = AuthoringSettings::singleton().propertyChangedSignal.connect(
         boost::bind(&RobloxTextOutputWidget::onPropertyChanged,this,_1));
-    onPropertyChanged(NULL);
+    onPropertyChanged(nullptr);
 
     connect(
         &Roblox::Instance(),SIGNAL(newOutputMessage(const QString,RBX::MessageType)), 

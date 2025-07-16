@@ -13,7 +13,7 @@ short create_cyl_np(lpLISTH listh, sgFloat  *par, BOOL constr)
 	VLD         vld;
 	MESHDD      mdd;
 	MNODE       node;
-	lpNPW       np = NULL;
+	lpNPW       np = nullptr;
 	sgFloat      k_i, step_i;
 
 	c_num_np = -32767;
@@ -87,14 +87,14 @@ err2:
 
 		add_np_mem(&vld,npwg,TNPB);
 		*listh = vld.listh;
-		np_end_of_put(&c_list_str,NP_CANCEL,0,NULL);
+		np_end_of_put(&c_list_str,NP_CANCEL,0,nullptr);
     c_num_np = 3;
 		goto end;
 	}
 
 //   
 	if ((np = creat_np_mem(TNPW,MAXNOV,MAXNOE,MAXNOC, MAXNOF,
-													MAXNOE)) == NULL)  goto err1;
+													MAXNOE)) == nullptr)  goto err1;
 	np_init((lpNP)np);
 
 	np_face(np, r, n, 0.,&c_num_np);								  //  
@@ -120,7 +120,7 @@ err1:
 	free_np_mem(&np);
 err:
 	free_vdim(&mdd.vdim);
-	np_end_of_put(&c_list_str,NP_CANCEL,0,NULL);
+	np_end_of_put(&c_list_str,NP_CANCEL,0,nullptr);
   c_num_np = 0;
 end:
   return c_num_np;

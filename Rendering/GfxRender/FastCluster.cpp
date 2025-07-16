@@ -87,7 +87,7 @@ public:
     {
         RBXASSERT(boneIndex < bones.size());
         
-        const HumanoidIdentifier* hi = humanoidIdentifier.humanoid ? &humanoidIdentifier : NULL;
+        const HumanoidIdentifier* hi = humanoidIdentifier.humanoid ? &humanoidIdentifier : nullptr;
         
 		MaterialGenerator::Result material = visualEngine->getMaterialGenerator()->createMaterial(part, decal, hi, materialFlags);
         
@@ -166,8 +166,8 @@ public:
             
     unsigned int finalize(FastCluster* cluster, FastClusterSharedGeometry& sharedGeometry)
     {
-        Vertex* sharedVertexData = NULL;			
-        unsigned short* sharedIndexData = NULL;
+        Vertex* sharedVertexData = nullptr;			
+        unsigned short* sharedIndexData = nullptr;
         unsigned int sharedVertexOffset = 0;
         unsigned int sharedIndexOffset = 0;
 
@@ -372,12 +372,12 @@ private:
     RBX::PartInstance* getLastPart(const MaterialGroup& mg)
     {
         if (mg.batches.empty())
-            return NULL;
+            return nullptr;
             
         const Batch& batch = mg.batches.back();
         
         if (batch.instances.empty())
-            return NULL;
+            return nullptr;
             
         return batch.instances.back().part;
     }
@@ -460,7 +460,7 @@ private:
         Vector3 boundsMin = Vector3::maxFinite();
         Vector3 boundsMax = Vector3::minFinite();
         
-        const HumanoidIdentifier* hi = humanoidIdentifier.humanoid ? &humanoidIdentifier : NULL;
+        const HumanoidIdentifier* hi = humanoidIdentifier.humanoid ? &humanoidIdentifier : nullptr;
 
         for (size_t i = 0; i < batch.instances.size(); ++i)
         {
@@ -518,7 +518,7 @@ struct PartBindingNullPredicate
 {
     template <typename T> bool operator()(const T& part) const
     {
-        return part.binding == NULL;
+        return part.binding == nullptr;
     }
 };
 
@@ -639,7 +639,7 @@ FastClusterBinding::FastClusterBinding(FastCluster* cluster, const shared_ptr<Pa
 {
     bindProperties(part);
     
-    RBXASSERT(part->getGfxPart() == NULL);
+    RBXASSERT(part->getGfxPart() == nullptr);
     part->setGfxPart(cluster);
     
     FASTLOG4(FLog::RenderFastCluster, "FastCluster[%p]: bound part %p to binding %p (%d connections)", cluster, part.get(), this, connections.size());
@@ -694,7 +694,7 @@ void FastClusterBinding::unbind()
 {
     FASTLOG4(FLog::RenderFastCluster, "FastCluster[%p]: unbind part %p from binding %p (%d connections)", cluster, partInstance.get(), this, connections.size());
     
-    RBXASSERT(partInstance->getGfxPart() == cluster || partInstance->getGfxPart() == NULL);
+    RBXASSERT(partInstance->getGfxPart() == cluster || partInstance->getGfxPart() == nullptr);
     GfxBinding::unbind();
 }
 
@@ -816,7 +816,7 @@ void FastCluster::checkCluster()
 
                 part.binding->unbind();
                 delete part.binding;
-                part.binding = NULL;
+                part.binding = nullptr;
 
                 getVisualEngine()->getSceneUpdater()->queuePartToCreate(instance);
 
@@ -869,7 +869,7 @@ void FastCluster::checkBindings()
             FASTLOG2(FLog::RenderFastCluster, "FastCluster[%p]: part %p is no longer in workspace", this, part.instance);
     
             delete part.binding;
-            part.binding = NULL;
+            part.binding = nullptr;
         }
         else
         {
@@ -883,7 +883,7 @@ void FastCluster::checkBindings()
                 
                 part.binding->unbind();
                 delete part.binding;
-                part.binding = NULL;
+                part.binding = nullptr;
                 
                 getVisualEngine()->getSceneUpdater()->queuePartToCreate(instance);
             }
@@ -988,10 +988,10 @@ unsigned int FastCluster::updateGeometry(AsyncResult* asyncResult)
 
     // for FW cluster all parts use one pseudo-bone
     if (fw)
-        generator.addBone(NULL);
+        generator.addBone(nullptr);
     
     // generate geometry for parts
-    RBX::Clump* lastClump = NULL;
+    RBX::Clump* lastClump = nullptr;
     
     for (size_t parti = 0; parti < parts.size(); ++parti)
     {
@@ -1016,7 +1016,7 @@ unsigned int FastCluster::updateGeometry(AsyncResult* asyncResult)
         
         // add part geometry
         if (part.instance->getTransparencyUi() < 1)
-			generator.addInstance(boneIndex, part.instance, NULL, materialFlags, partTransparent ? RenderQueue::Id_Transparent : RenderQueue::Id_Opaque, asyncResult);
+			generator.addInstance(boneIndex, part.instance, nullptr, materialFlags, partTransparent ? RenderQueue::Id_Transparent : RenderQueue::Id_Opaque, asyncResult);
         
         // add part decals / textures
         if ((part.instance->getCookie() & PartCookie::HAS_DECALS) && part.instance->getChildren() && !ignoreDecals)

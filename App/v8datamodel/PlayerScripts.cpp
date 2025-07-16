@@ -23,7 +23,7 @@ PlayerScripts::PlayerScripts()
 
 bool PlayerScripts::askSetParent(const Instance* parent) const
 {
-	return Instance::fastDynamicCast<RBX::Network::Player>(parent) != NULL;
+	return Instance::fastDynamicCast<RBX::Network::Player>(parent) != nullptr;
 }
 
 bool PlayerScripts::askForbidParent(const Instance* parent) const
@@ -33,13 +33,13 @@ bool PlayerScripts::askForbidParent(const Instance* parent) const
 
 bool PlayerScripts::askAddChild(const Instance* instance) const
 {
-	if (Instance::fastDynamicCast<Folder>(instance) != NULL)
+	if (Instance::fastDynamicCast<Folder>(instance) != nullptr)
 		return true;
 
-	if (Instance::fastDynamicCast<ModuleScript>(instance) != NULL)
+	if (Instance::fastDynamicCast<ModuleScript>(instance) != nullptr)
 		return true;
 
-	return Instance::fastDynamicCast<RBX::LocalScript>(instance) != NULL;
+	return Instance::fastDynamicCast<RBX::LocalScript>(instance) != nullptr;
 }
 
 bool PlayerScripts::askForbidChild(const Instance* instance) const
@@ -136,7 +136,7 @@ StarterPlayerScripts::StarterPlayerScripts()
 
 bool StarterPlayerScripts::askSetParent(const Instance* parent) const
 {
-	return Instance::fastDynamicCast<RBX::StarterPlayerService>(parent) != NULL;
+	return Instance::fastDynamicCast<RBX::StarterPlayerService>(parent) != nullptr;
 }
 
 bool StarterPlayerScripts::askForbidParent(const Instance* parent) const
@@ -146,13 +146,13 @@ bool StarterPlayerScripts::askForbidParent(const Instance* parent) const
 
 bool StarterPlayerScripts::askAddChild(const Instance* instance) const
 {
-	if (Instance::fastDynamicCast<Folder>(instance) != NULL)
+	if (Instance::fastDynamicCast<Folder>(instance) != nullptr)
 		return true;
 
-	if (Instance::fastDynamicCast<ModuleScript>(instance) != NULL)
+	if (Instance::fastDynamicCast<ModuleScript>(instance) != nullptr)
 		return true;
 
-	return Instance::fastDynamicCast<RBX::LocalScript>(instance) != NULL;
+	return Instance::fastDynamicCast<RBX::LocalScript>(instance) != nullptr;
 }
 
 bool StarterPlayerScripts::askForbidChild(const Instance* instance) const
@@ -207,7 +207,7 @@ void StarterPlayerScripts::InitializeDefaultScriptsRunService(RunTransition tran
 	if (transition.newState == RS_RUNNING && transition.oldState == RS_STOPPED)
 	{
 		InitializeDefaultScripts();
-		if (initializeDefaultScriptsConnection != NULL)
+		if (initializeDefaultScriptsConnection != nullptr)
 			initializeDefaultScriptsConnection.disconnect();
 	}
 }
@@ -340,7 +340,7 @@ StarterCharacterScripts::StarterCharacterScripts()
 
 bool StarterCharacterScripts::askAddChild(const Instance* instance) const
 {
-	if (Instance::fastDynamicCast<Script>(instance) != NULL)
+	if (Instance::fastDynamicCast<Script>(instance) != nullptr)
 		return true;
 
 	return Super::askAddChild(instance);

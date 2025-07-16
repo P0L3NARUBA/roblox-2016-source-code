@@ -23,7 +23,7 @@ namespace RBX {
 		//
 		// Viewport
 		/*override*/ Rect2D getViewport() const;
-        virtual const Camera* getCamera() const { return NULL; }
+        virtual const Camera* getCamera() const { return nullptr; }
 
 		/////////////////////////////////////////////////
 		//

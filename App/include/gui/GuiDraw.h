@@ -67,8 +67,8 @@ namespace RBX {
 		void setImageSize(const Vector2& _size);
 		Vector2 getImageSize() const;
 
-		bool setImage(Adorn* adorn, const TextureId& textureId, unsigned imageState, Vector2* outSize = NULL, Instance* contextInstance = NULL, const char* context = "");
-		bool setImageFromName(Adorn* adorn, const std::string& textureName, unsigned imageState, Instance* contextInstance = NULL, const char* context = "");
+		bool setImage(Adorn* adorn, const TextureId& textureId, unsigned imageState, Vector2* outSize = nullptr, Instance* contextInstance = nullptr, const char* context = "");
+		bool setImageFromName(Adorn* adorn, const std::string& textureName, unsigned imageState, Instance* contextInstance = nullptr, const char* context = "");
 		
 		void computeUV(Vector2& uvtl, Vector2& uvbr, const Vector2& imageRectOffset, const Vector2& imageRectSize, const Vector2& imageSize);
 	};

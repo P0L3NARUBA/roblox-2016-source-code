@@ -52,11 +52,11 @@ void DumpErrorUploader::Upload(const std::string& url)
     HANDLE hMutex; 
 
     hMutex = CreateMutex( 
-        NULL,                        // default security descriptor
+        nullptr,                        // default security descriptor
         TRUE,                       // own the mutex
         TEXT("RobloxCrashDumpUploaderMutex"));  // object name
 
-    if (hMutex == NULL) 
+    if (hMutex == nullptr) 
 	{
 		RBX::StandardOut::singleton()->printf(RBX::MESSAGE_ERROR, "CreateMutex error: %d\n", GetLastError() );
 	}
@@ -160,7 +160,7 @@ RBX::worker_thread::work_result DumpErrorUploader::run(shared_ptr<data> _data)
 			if(_data->hInterprocessMutex)
 			{
 				CloseHandle(_data->hInterprocessMutex);
-				_data->hInterprocessMutex = NULL;
+				_data->hInterprocessMutex = nullptr;
 			}
 
 			if (_data->dmpFileCount > 0)

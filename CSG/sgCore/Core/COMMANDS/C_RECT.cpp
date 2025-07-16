@@ -52,11 +52,11 @@ hOBJ create_rectangle(sgFloat height, sgFloat width, D_POINT p0, D_POINT pX, D_P
  	lcs_oxy(&p0, &pX, &pY, m);
   for (i = 0; i < 4; i++)
 	  o_hcncrd(m, &p[i], &p[i]);
-	if (create_line(&p[0], &p[1], &path.listh) == NULL) goto err;
-	if (create_line(&p[1], &p[2], &path.listh) == NULL) goto err;
-	if (create_line(&p[2], &p[3], &path.listh) == NULL) goto err;
-	if (create_line(&p[3], &p[0], &path.listh) == NULL) goto err;
-  if ((hpath = o_alloc(OPATH)) == NULL) goto err;
+	if (create_line(&p[0], &p[1], &path.listh) == nullptr) goto err;
+	if (create_line(&p[1], &p[2], &path.listh) == nullptr) goto err;
+	if (create_line(&p[2], &p[3], &path.listh) == nullptr) goto err;
+	if (create_line(&p[3], &p[0], &path.listh) == nullptr) goto err;
+  if ((hpath = o_alloc(OPATH)) == nullptr) goto err;
   obj = (lpOBJ)hpath;
   set_obj_nongeo_par(obj);
   memcpy(obj->geo_data, &path, geo_size[OPATH]);
@@ -80,13 +80,13 @@ hOBJ create_rectangle(sgFloat height, sgFloat width, D_POINT p0, D_POINT pX, D_P
 	}
 	else
 	{
-		if (set_flat_on_path(hpath, NULL))
+		if (set_flat_on_path(hpath, nullptr))
 			obj->status |= ST_FLAT;
 		else      
 			obj->status &= ~ST_FLAT;
 	}
-	//if (!set_flat_on_path(hpath, NULL)) goto err2;
-	if ((cod = test_self_cross_path(hpath, NULL)) == OSFALSE) goto err2;
+	//if (!set_flat_on_path(hpath, nullptr)) goto err2;
+	if ((cod = test_self_cross_path(hpath, nullptr)) == OSFALSE) goto err2;
 	if (cod == OSTRUE) {
 		obj = (lpOBJ)hpath;
 		obj->status |= ST_SIMPLE;
@@ -95,11 +95,11 @@ hOBJ create_rectangle(sgFloat height, sgFloat width, D_POINT p0, D_POINT pX, D_P
   return hpath;
 err2:
 	autodelete_obj(hpath);
-	return NULL;
+	return nullptr;
 err:
-	while ((hobj = path.listh.hhead) != NULL) {
+	while ((hobj = path.listh.hhead) != nullptr) {
 		o_free(hobj, &path.listh);
 	}
-	return NULL;
+	return nullptr;
 }
 //--

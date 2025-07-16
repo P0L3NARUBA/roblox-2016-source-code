@@ -60,7 +60,7 @@ void RobloxDiagnosticsViewItem::onChildRemoved(boost::shared_ptr<RBX::Instance> 
 	if (!item)
 		return;
 
-	RobloxDiagnosticsViewItem* pItemToDelete = NULL;
+	RobloxDiagnosticsViewItem* pItemToDelete = nullptr;
 	for(int ii=0; ii<childCount(); ii++)
 	{
 		RobloxDiagnosticsViewItem* pViewItem = dynamic_cast<RobloxDiagnosticsViewItem*>(child(ii));
@@ -74,7 +74,7 @@ void RobloxDiagnosticsViewItem::onChildRemoved(boost::shared_ptr<RBX::Instance> 
 	if(pItemToDelete)
 	{
 		delete pItemToDelete;
-		pItemToDelete = NULL;
+		pItemToDelete = nullptr;
 	}
 
 	if (!isExpanded() && childCount() > 0)					
@@ -215,7 +215,7 @@ void RobloxDiagnosticsView::onChildRemoved(boost::shared_ptr<RBX::Instance> chil
 	if (!item)
 		return;
 
-	RobloxDiagnosticsViewItem* pItemToDelete = NULL;
+	RobloxDiagnosticsViewItem* pItemToDelete = nullptr;
 	for(int ii=0; ii<topLevelItemCount(); ii++)
 	{
 		RobloxDiagnosticsViewItem* pViewItem = dynamic_cast<RobloxDiagnosticsViewItem*>(topLevelItem(ii));
@@ -229,7 +229,7 @@ void RobloxDiagnosticsView::onChildRemoved(boost::shared_ptr<RBX::Instance> chil
 	if(pItemToDelete)
 	{
 		delete pItemToDelete;
-		pItemToDelete = NULL;
+		pItemToDelete = nullptr;
 	}
 }
 

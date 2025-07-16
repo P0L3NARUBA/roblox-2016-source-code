@@ -82,7 +82,7 @@ bool SelectionHighlightAdornable::getSelectionDimensions(Workspace* workspace,
 void SelectionHighlightAdornable::render(shared_ptr<Instance> instance, Part part,
 	float lineThickness, Adorn* adorn)
 {
-	bool isFaceInstance = Instance::fastSharedDynamicCast<FaceInstance>(instance) != NULL;
+	bool isFaceInstance = Instance::fastSharedDynamicCast<FaceInstance>(instance) != nullptr;
 	Draw::selectionBox(part, adorn, isFaceInstance ? Color3::orange() : Draw::selectColor(),
 		lineThickness);
 	if (shared_ptr<ModelInstance> m = Instance::fastSharedDynamicCast<ModelInstance>(instance))
@@ -98,7 +98,7 @@ void SelectionHighlightAdornable::render(shared_ptr<Instance> instance, Part par
 
 void SelectionHighlightAdornable::render3dAdorn(Adorn* adorn)
 {
-	DataModel* dm = NULL;
+	DataModel* dm = nullptr;
 	if (RobloxIDEDoc* ideDoc = RobloxDocManager::Instance().getPlayDoc())
 	{
 		dm = ideDoc->getDataModel();

@@ -96,7 +96,7 @@ bool RBX::Network::isPlayerAuthenticationEnabled()
 
 bool RBX::Network::isNetworkClient(const Instance* context)
 {
-	return ServiceProvider::find<Client>(context) != NULL;
+	return ServiceProvider::find<Client>(context) != nullptr;
 }
 
 #if defined(RBX_RCC_SECURITY)

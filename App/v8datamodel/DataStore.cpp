@@ -284,7 +284,7 @@ namespace RBX {
 		CachedKeys::iterator it = cachedKeys.find(key);
 		RBXASSERT(it != cachedKeys.end());
 
-		if (DataModel::get(this) == NULL) {
+		if (DataModel::get(this) == nullptr) {
 			FASTLOG(FLog::DataStore, "Data model is destroyed, cancel transform");
 			return;
 		}
@@ -304,7 +304,7 @@ namespace RBX {
 			StandardOut::singleton()->print(MESSAGE_ERROR, e.what());
 		}
 
-		if (result.get() == NULL || result->values.size() == 0 || result->at(0).isVoid()) {
+		if (result.get() == nullptr || result->values.size() == 0 || result->at(0).isVoid()) {
 			FASTLOG(FLog::DataStore, "Transform function returned nil, update is cancelled");
 			resumeFunction(result);
 			return;
@@ -719,7 +719,7 @@ namespace RBX {
 
 	rbx::signals::connection DataStore::onUpdate(std::string key, Lua::WeakFunctionRef callback)
 	{
-		if (!checkAccess(key, NULL))
+		if (!checkAccess(key, nullptr))
 			return rbx::signals::connection();
 
 		FASTLOGS(FLog::DataStore, "Subscribed to key %s", key);
@@ -1029,7 +1029,7 @@ namespace RBX {
 
 		double minValueHolder, maxValueHolder;
 
-		double* minValueP = NULL, *maxValueP = NULL;
+		double* minValueP = nullptr, *maxValueP = nullptr;
 
 		if(!minValue.isVoid()) {
 			minValueHolder = minValue.get<double>();

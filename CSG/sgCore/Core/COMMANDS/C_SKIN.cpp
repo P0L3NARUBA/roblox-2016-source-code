@@ -18,7 +18,7 @@ typedef struct {
 	hOBJ			hobj;
 } SKIN_DATA;
 
-static SKIN_DATA *skin_data = NULL;
+static SKIN_DATA *skin_data = nullptr;
 static OSCAN_COD skin4_geo_scan(hOBJ hobj, lpSCAN_CONTROL lpsc);
 
 //------------------------------------------------------------------------------
@@ -30,8 +30,8 @@ BOOL init_get_point_on_path(hOBJ hobj, sgFloat *length){
 	lpOBJ					obj;
 	BOOL					ret = TRUE;
 
-	if ((skin_data = (SKIN_DATA*)SGMalloc(sizeof(SKIN_DATA))) == NULL) {
-		put_message(NOT_ENOUGH_HEAP, NULL, 0);
+	if ((skin_data = (SKIN_DATA*)SGMalloc(sizeof(SKIN_DATA))) == nullptr) {
+		put_message(NOT_ENOUGH_HEAP, nullptr, 0);
 		return FALSE;
 	}
 	obj = (lpOBJ)hobj;
@@ -76,7 +76,7 @@ void term_get_point_on_path(void)
 			put_message(EMPTY_MSG,GetIDS(IDS_SG242),0);
 			break;
 	}
-	SGFree(skin_data); skin_data = NULL;
+	SGFree(skin_data); skin_data = nullptr;
 	return;
 }
 
@@ -89,7 +89,7 @@ BOOL get_point_on_path(sgFloat t, lpD_POINT p)
 
 	if (!skin_data) {
 		
-		put_message(INTERNAL_ERROR,NULL,0);
+		put_message(INTERNAL_ERROR,nullptr,0);
 		return FALSE;
 	}
 	if (t < 0.) t = 0.;
@@ -107,7 +107,7 @@ BOOL get_point_on_path(sgFloat t, lpD_POINT p)
 		sc.data = &data;
 		if (o_scan(skin_data->hobj,&sc) == OSFALSE) ret = FALSE;
 	}
-	if (ret == FALSE) {SGFree(skin_data); skin_data = NULL;}
+	if (ret == FALSE) {SGFree(skin_data); skin_data = nullptr;}
 	return ret;
 }
 

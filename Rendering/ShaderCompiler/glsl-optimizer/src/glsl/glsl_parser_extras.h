@@ -349,7 +349,7 @@ struct _mesa_glsl_parse_state {
    /**
     * During AST to IR conversion, pointer to current IR function
     *
-    * Will be \c NULL whenever the AST to IR conversion is not inside a
+    * Will be \c nullptr whenever the AST to IR conversion is not inside a
     * function definition.
     */
    class ir_function_signature *current_function;

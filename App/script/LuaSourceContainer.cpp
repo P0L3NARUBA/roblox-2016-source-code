@@ -47,7 +47,7 @@ LuaSourceContainer* isScriptWithLinkedSource(shared_ptr<Instance> descendant, Co
 			return baseScript;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 void wrap(DataModel* dm, boost::function<void()> callback)
@@ -194,7 +194,7 @@ void LuaSourceContainer::processRemoteEvent(const Reflection::EventDescriptor& d
 	{
 		shared_ptr<Network::Player> player = Network::Players::findPlayerWithAddress(source, this);
 		shared_ptr<Instance> editor = currentEditor.lock();
-		bool granted = player != NULL && editor == NULL;
+		bool granted = player != nullptr && editor == nullptr;
 		if (granted)
 		{
 			setCurrentEditor(player.get());

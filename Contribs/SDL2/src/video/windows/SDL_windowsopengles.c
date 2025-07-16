@@ -51,8 +51,8 @@ WIN_GLES_LoadLibrary(_THIS, const char *path) {
 #endif
     }
     
-    if (_this->egl_data == NULL) {
-        return SDL_EGL_LoadLibrary(_this, NULL, EGL_DEFAULT_DISPLAY);
+    if (_this->egl_data == nullptr) {
+        return SDL_EGL_LoadLibrary(_this, nullptr, EGL_DEFAULT_DISPLAY);
     }
 
     return 0;
@@ -78,8 +78,8 @@ WIN_GLES_CreateContext(_THIS, SDL_Window * window)
         _this->GL_SwapWindow = WIN_GL_SwapWindow;
         _this->GL_DeleteContext = WIN_GL_DeleteContext;
 
-        if (WIN_GL_LoadLibrary(_this, NULL) != 0) {
-            return NULL;
+        if (WIN_GL_LoadLibrary(_this, nullptr) != 0) {
+            return nullptr;
         }
 
         return WIN_GL_CreateContext(_this, window);
@@ -109,8 +109,8 @@ WIN_GLES_SetupWindow(_THIS, SDL_Window * window)
     SDL_GLContext current_ctx = SDL_GL_GetCurrentContext();
 
 
-    if (_this->egl_data == NULL) {
-        if (SDL_EGL_LoadLibrary(_this, NULL, EGL_DEFAULT_DISPLAY) < 0) {
+    if (_this->egl_data == nullptr) {
+        if (SDL_EGL_LoadLibrary(_this, nullptr, EGL_DEFAULT_DISPLAY) < 0) {
             SDL_EGL_UnloadLibrary(_this);
             return -1;
         }

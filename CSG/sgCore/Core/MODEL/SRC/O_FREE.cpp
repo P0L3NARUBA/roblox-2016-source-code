@@ -46,7 +46,7 @@ static OSCAN_COD free_pre_scan(hOBJ hobj,lpSCAN_CONTROL lpsc)
 //    FreeDnmInfo(hobj);  //   
 
 		num = ((lpGEO_INSERT)obj->geo_data)->num;
-    if ( (blk = (lpIBLOCK)get_elem(&vd_blocks,num)) != NULL ) {
+    if ( (blk = (lpIBLOCK)get_elem(&vd_blocks,num)) != nullptr ) {
       blk->count--;
     }
 		SGFree(hobj);

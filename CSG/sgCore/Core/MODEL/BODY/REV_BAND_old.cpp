@@ -14,7 +14,7 @@ short create_spheric_band_np( lpLISTH listh, sgFloat  *par ){
 	int			  n_merd = (int)par[4]; //- 
 	BOOL			zu		 = TRUE;//par[5]; //   
 	MESHDD      mdd;
-	lpNPW       np = NULL;
+	lpNPW       np = nullptr;
 
 	c_num_np = -32767;
 	if ( !np_init_list(&c_list_str) ) return FALSE;
@@ -23,7 +23,7 @@ short create_spheric_band_np( lpLISTH listh, sgFloat  *par ){
 	if (!(np_mesh4p(&c_list_str,&c_num_np,&mdd,0.))) goto err1;
 
 	if( zu ){
-		if ((np = creat_np_mem(TNPW,MAXNOV,MAXNOE,MAXNOC, MAXNOF, MAXNOE)) == NULL)  goto err1;
+		if ((np = creat_np_mem(TNPW,MAXNOV,MAXNOE,MAXNOC, MAXNOF, MAXNOE)) == nullptr)  goto err1;
 		np_init((lpNP)np);
 //    
 		if( fabs(coeff2) != 1 ){
@@ -64,7 +64,7 @@ err2:
 err1:
 	free_vdim(&mdd.vdim);
 err0:
-	np_end_of_put(&c_list_str,NP_CANCEL,0,NULL);
+	np_end_of_put(&c_list_str,NP_CANCEL,0,nullptr);
 	return FALSE;
 }
 
@@ -79,7 +79,7 @@ static  BOOL create_spheric_band( lpMESHDD g, sgFloat r,	sgFloat c1,
 	hOBJ			  hobj;
 
 // 
-	if( (hobj = create_my_arc(  c1, c2, r )) == NULL ) return FALSE;
+	if( (hobj = create_my_arc(  c1, c2, r )) == nullptr ) return FALSE;
 
 	init_vdim(&g->vdim,sizeof(MNODE));
 
@@ -101,7 +101,7 @@ static  BOOL create_spheric_band( lpMESHDD g, sgFloat r,	sgFloat c1,
 
 	if (!begin_rw(&vdim_band, 0)) goto err1;
 	for (num_elem = 0; num_elem < vdim_band.num_elem; num_elem++) {
-		if ((node = (lpMNODE)get_next_elem(&vdim_band)) == NULL) goto err2;
+		if ((node = (lpMNODE)get_next_elem(&vdim_band)) == nullptr) goto err2;
 //
 		mask = 0;
 		if (!(node->num & AP_CONSTR)) mask = CONSTR_U;
@@ -110,14 +110,14 @@ static  BOOL create_spheric_band( lpMESHDD g, sgFloat r,	sgFloat c1,
 // 
 		if( !rotate_point( g, &node->p, NUM_REV_POINTS, fi, mask ) ) goto err2;
 	}
-	o_free( hobj, NULL );
+	o_free( hobj, nullptr );
 	end_rw(&vdim_band);
 	free_vdim(&vdim_band);
 	return TRUE;
 err2:
 	end_rw(&vdim_band);
 err1:
-	o_free( hobj, NULL );
+	o_free( hobj, nullptr );
 	free_vdim(&vdim_band);
 	free_vdim(&g->vdim);
 	return FALSE;
@@ -151,8 +151,8 @@ static  hOBJ create_my_arc(sgFloat coef1, sgFloat coef2, sgFloat r )
 	arc.ve.z=r*sin(fi_e);
 	arc.angle=-(fi_b-fi_e);
 	calc_arc_ab(&arc);
-	if((hobj = o_alloc(OARC)) == NULL)
-		return NULL;
+	if((hobj = o_alloc(OARC)) == nullptr)
+		return nullptr;
 	obj = (lpOBJ)hobj;
 	memcpy(obj->geo_data, &arc, sizeof(arc));
 	return hobj;// '

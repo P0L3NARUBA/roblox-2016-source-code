@@ -240,7 +240,7 @@ void PhysicsSender::sendTouches(PacketPriority packetPriority)
 		writeTouches(*bitStream, maxStreamSize, touchPairs);
 
 		// Packet "end" tag
-		replicator.serializeId(*bitStream, NULL);
+		replicator.serializeId(*bitStream, nullptr);
 
 		// Send ID_PHYSICS_TOUCHES
 		replicator.rakPeer->Send(bitStream, packetPriority, RELIABLE_ORDERED, PHYSICS_CHANNEL, replicator.remotePlayerId, false);
@@ -254,7 +254,7 @@ void PhysicsSender::sendTouches(PacketPriority packetPriority)
 	}
 };
 
-PhysicsSender::PhysicsSender(Replicator& replicator) : replicator(replicator), sendPacketsPerStep(DFInt::NumPhysicsPacketsPerStep), senderStats(NULL), touchPairsId(0)
+PhysicsSender::PhysicsSender(Replicator& replicator) : replicator(replicator), sendPacketsPerStep(DFInt::NumPhysicsPacketsPerStep), senderStats(nullptr), touchPairsId(0)
 {
 
 	physicsService = shared_from(ServiceProvider::find<PhysicsService>(&replicator));
@@ -348,7 +348,7 @@ void PhysicsSender::sendMechanismCFrames(RakNet::BitStream& bitStream, const Par
     // send each part's cframe if they are in streamed region
     const_cast<Mechanism*>(mechanism)->visitPrimitives(boost::bind(&PhysicsSender::sendChildPrimitiveCoordinateFrame, this, _1, &bitStream, &replicator, compressionType));
 
-	replicator.serializeId(bitStream, NULL); // token: done
+	replicator.serializeId(bitStream, nullptr); // token: done
 
     if (senderStats)
     {
@@ -569,7 +569,7 @@ bool PhysicsSender::sendPhysicsData(RakNet::BitStream& bitStream, const PartInst
 	RBXASSERT(part);
 	if (part && Assembly::isAssemblyRootPrimitive(part->getConstPartPrimitive()))
 	{
-        senderStats = NULL;
+        senderStats = nullptr;
         if (replicator.settings().trackPhysicsDetails)
         {
             senderStats = &(replicator.replicatorStats.physicsSenderStats);
@@ -599,7 +599,7 @@ bool PhysicsSender::sendPhysicsData(RakNet::BitStream& bitStream, const PartInst
 					}
 					else
 					{
-						replicator.serializeId(bitStream, NULL); // token: done with this mechanism
+						replicator.serializeId(bitStream, nullptr); // token: done with this mechanism
 						return false;
 					}
 				}

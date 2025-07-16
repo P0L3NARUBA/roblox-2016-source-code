@@ -10,6 +10,9 @@ const char* const RBX::sSky = "Sky";
 
 using namespace RBX;
 
+Reflection::PropDescriptor<Sky, int> Sky::prop_StarCount("StarCount", category_Appearance, &Sky::getNumStars, &Sky::setNumStars);
+Reflection::BoundProp<bool> Sky::prop_CelestialBodiesShown("CelestialBodiesShown", category_Appearance, &Sky::drawCelestialBodies);
+
 Reflection::PropDescriptor<Sky, TextureId> Sky::prop_Up("Up", category_Appearance, &Sky::getSkyboxUp, &Sky::setSkyboxUp);
 Reflection::PropDescriptor<Sky, TextureId> Sky::prop_Left("Left", category_Appearance, &Sky::getSkyboxLf, &Sky::setSkyboxLf);
 Reflection::PropDescriptor<Sky, TextureId> Sky::prop_Right("Right", category_Appearance, &Sky::getSkyboxRt, &Sky::setSkyboxRt);
@@ -17,8 +20,8 @@ Reflection::PropDescriptor<Sky, TextureId> Sky::prop_Back("Back", category_Appea
 Reflection::PropDescriptor<Sky, TextureId> Sky::prop_Front("Front", category_Appearance, &Sky::getSkyboxFt, &Sky::setSkyboxFt);
 Reflection::PropDescriptor<Sky, TextureId> Sky::prop_Down("Down", category_Appearance, &Sky::getSkyboxDn, &Sky::setSkyboxDn);
 
-Reflection::PropDescriptor<Sky, int> Sky::prop_StarCount("StarCount", category_Appearance, &Sky::getNumStars, &Sky::setNumStars);
-Reflection::BoundProp<bool> Sky::prop_CelestialBodiesShown("CelestialBodiesShown", category_Appearance, &Sky::drawCelestialBodies);
+Reflection::PropDescriptor<Sky, bool>      Sky::prop_UseHDRI("Use HDRI", category_Appearance, &Sky::getUseHDRI, &Sky::setUseHDRI);
+Reflection::PropDescriptor<Sky, TextureId> Sky::prop_HDRI("HDRI", category_Appearance, &Sky::getHDRI, &Sky::setHDRI);
 
 Reflection::PropDescriptor<Sky, TextureId> Sky::prop_SkyUp("SkyboxUp", category_Appearance, &Sky::getSkyboxUp, &Sky::setSkyboxUp, Reflection::PropertyDescriptor::Attributes::deprecated(prop_Up, Reflection::PropertyDescriptor::HIDDEN_SCRIPTING));
 Reflection::PropDescriptor<Sky, TextureId> Sky::prop_SkyLf("SkyboxLf", category_Appearance, &Sky::getSkyboxLf, &Sky::setSkyboxLf, Reflection::PropertyDescriptor::Attributes::deprecated(prop_Left, Reflection::PropertyDescriptor::HIDDEN_SCRIPTING));
@@ -29,24 +32,27 @@ Reflection::PropDescriptor<Sky, TextureId> Sky::prop_SkyDn("SkyboxDn", category_
 
 Sky::Sky()
 :drawCelestialBodies(true)
-,numStars(3000)
+, numStars(3000)
+, useHDRI(false)
 {
 	setName("Sky");
 
-    skyUp = ContentId::fromAssets("textures/sky/sky1024_up.dds");	
-    skyLf = ContentId::fromAssets("textures/sky/sky1024_lf.dds");	
-    skyRt = ContentId::fromAssets("textures/sky/sky1024_rt.dds");	
-    skyBk = ContentId::fromAssets("textures/sky/sky1024_bk.dds");	
-    skyFt = ContentId::fromAssets("textures/sky/sky1024_ft.dds");	
-    skyDn = ContentId::fromAssets("textures/sky/sky1024_dn.dds");
+    skyUp = ContentId::fromAssets("textures/sky/sky512_up.tex");
+    skyLf = ContentId::fromAssets("textures/sky/sky512_lf.tex");
+    skyRt = ContentId::fromAssets("textures/sky/sky512_rt.tex");
+    skyBk = ContentId::fromAssets("textures/sky/sky512_bk.tex");
+    skyFt = ContentId::fromAssets("textures/sky/sky512_ft.tex");
+    skyDn = ContentId::fromAssets("textures/sky/sky512_dn.tex");
+
+    HDRI = ContentId::fromAssets()
 }
 
 void Sky::setNumStars(int value)
 {
 	value = std::min(value, 5000);
 	value = std::max(value, 0);
-	if (value != numStars)
-	{
+
+	if (value != numStars) {
 		numStars = value;
 		raisePropertyChanged(prop_StarCount);
 	}
@@ -54,8 +60,7 @@ void Sky::setNumStars(int value)
 
 void Sky::setSkyboxBk(const TextureId& texId)
 {
-    if (texId != skyBk)
-    {
+    if (texId != skyBk) {
         skyBk = texId;
         raisePropertyChanged(prop_SkyBk);
     }
@@ -63,8 +68,7 @@ void Sky::setSkyboxBk(const TextureId& texId)
 
 void Sky::setSkyboxDn(const TextureId& texId)
 {
-    if (texId != skyDn)
-    {
+    if (texId != skyDn) {
         skyDn = texId;
         raisePropertyChanged(prop_SkyDn);
     }
@@ -72,8 +76,7 @@ void Sky::setSkyboxDn(const TextureId& texId)
 
 void Sky::setSkyboxLf(const TextureId& texId)
 {
-    if (texId != skyLf)
-    {
+    if (texId != skyLf) {
         skyLf = texId;
         raisePropertyChanged(prop_SkyLf);
     }
@@ -81,16 +84,14 @@ void Sky::setSkyboxLf(const TextureId& texId)
 
 void Sky::setSkyboxRt(const TextureId& texId)
 {
-    if (texId != skyRt)
-    {
+    if (texId != skyRt) {
         skyRt = texId;
         raisePropertyChanged(prop_SkyRt);
     }
 }
 void Sky::setSkyboxUp(const TextureId& texId)
 {
-    if (texId != skyUp)
-    {
+    if (texId != skyUp) {
         skyUp = texId;
         raisePropertyChanged(prop_SkyUp);
     }
@@ -98,9 +99,24 @@ void Sky::setSkyboxUp(const TextureId& texId)
 
 void Sky::setSkyboxFt(const TextureId&  texId)
 {
-    if (texId != skyFt)
-    {
+    if (texId != skyFt) {
         skyFt = texId;    
         raisePropertyChanged(prop_SkyFt);
     }
+}
+
+void Sky::setUseHDRI(bool value)
+{
+	if (value != useHDRI) {
+		useHDRI = value;
+		raisePropertyChanged(prop_UseHDRI);
+	}
+}
+
+void Sky::setHDRI(const TextureId& texId)
+{
+	if (texId != HDRI) {
+		HDRI = texId;
+		raisePropertyChanged(prop_HDRI);
+	}
 }

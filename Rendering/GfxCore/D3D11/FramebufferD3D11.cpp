@@ -17,7 +17,7 @@ namespace Graphics
         {
 			RBXASSERT(type == Texture::Type_2D);
 
-            ID3D11DepthStencilView* depthStencilView = NULL;
+            ID3D11DepthStencilView* depthStencilView = nullptr;
 
 			D3D11_DEPTH_STENCIL_VIEW_DESC descDSV = {};
 
@@ -78,7 +78,7 @@ namespace Graphics
                 break;
             }
 
-            ID3D11RenderTargetView* renderTargetView = NULL;
+            ID3D11RenderTargetView* renderTargetView = nullptr;
 
             hr = device11->CreateRenderTargetView(texture, &descRTV, &renderTargetView);
             if (FAILED(hr))
@@ -105,8 +105,8 @@ namespace Graphics
         descDepth.CPUAccessFlags = 0;
         descDepth.MiscFlags = 0;
 
-        ID3D11Texture2D* rtTexture = NULL;
-        HRESULT hr = device11->CreateTexture2D( &descDepth, NULL, &rtTexture );
+        ID3D11Texture2D* rtTexture = nullptr;
+        HRESULT hr = device11->CreateTexture2D( &descDepth, nullptr, &rtTexture );
         if (FAILED(hr))
             throw RBX::runtime_error("Error creating render target texture: %x", hr);
 
@@ -139,7 +139,7 @@ namespace Graphics
 			descDSV.Format = static_cast<DXGI_FORMAT>(TextureD3D11::getInternalFormat(format));
 			descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 
-			ID3D11DepthStencilView* depthStencilView = NULL;
+			ID3D11DepthStencilView* depthStencilView = nullptr;
 			HRESULT hr = device11->CreateDepthStencilView(texture, &descDSV, &depthStencilView);
 			RBXASSERT(SUCCEEDED(hr));
 
@@ -151,7 +151,7 @@ namespace Graphics
 			descRTV.Format = static_cast<DXGI_FORMAT>(TextureD3D11::getInternalFormat(format));
             descRTV.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 
-			ID3D11RenderTargetView* renderTargetView = NULL;
+			ID3D11RenderTargetView* renderTargetView = nullptr;
 			HRESULT hr = device11->CreateRenderTargetView(texture, &descRTV, &renderTargetView);
 			RBXASSERT(SUCCEEDED(hr));
 
@@ -237,8 +237,8 @@ namespace Graphics
         desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
         desc.MiscFlags = 0;
         
-        ID3D11Texture2D* tempTex = NULL;
-        HRESULT hr = device11->getDevice11()->CreateTexture2D(&desc, NULL, reinterpret_cast<ID3D11Texture2D**>(&tempTex));
+        ID3D11Texture2D* tempTex = nullptr;
+        HRESULT hr = device11->getDevice11()->CreateTexture2D(&desc, nullptr, reinterpret_cast<ID3D11Texture2D**>(&tempTex));
         if (FAILED(hr))
             throw RBX::runtime_error("Download frame buffer cant create temp texture %x", hr);
 

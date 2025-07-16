@@ -429,11 +429,11 @@ int minus1mod3[3] = {2, 0, 1};
 #define setareabound(otri, value)                                             \
   ((sgFloat *) (otri).tri)[m->areaboundindex] = value
 
-#define deadtri(tria)  ((tria)[1] == (triangle) NULL)
+#define deadtri(tria)  ((tria)[1] == (triangle) nullptr)
 
 #define killtri(tria)                                                         \
-  (tria)[1] = (triangle) NULL;                                                \
-  (tria)[3] = (triangle) NULL
+  (tria)[1] = (triangle) nullptr;                                                \
+  (tria)[3] = (triangle) nullptr
 
 #define sdecode(sptr, osub)                                                   \
   (osub).ssorient = (int) ((unsigned long) (sptr) & (unsigned long) 1l);      \
@@ -498,11 +498,11 @@ int minus1mod3[3] = {2, 0, 1};
   (((osub1).ss == (osub2).ss) &&                                              \
    ((osub1).ssorient == (osub2).ssorient))
 
-#define deadsubseg(sub)  ((sub)[1] == (subseg) NULL)
+#define deadsubseg(sub)  ((sub)[1] == (subseg) nullptr)
 
 #define killsubseg(sub)                                                       \
-  (sub)[1] = (subseg) NULL;                                                   \
-  (sub)[2] = (subseg) NULL
+  (sub)[1] = (subseg) nullptr;                                                   \
+  (sub)[2] = (subseg) nullptr
 
 #define tspivot(otri, osub)                                                   \
   sptr = (subseg) (otri).tri[6 + (otri).orient];                              \
@@ -570,7 +570,7 @@ int *trimalloc(int size)
   int *memptr;
 
   memptr = (int*)malloc((unsigned int) size);
-  if (memptr == (int *) NULL) {
+  if (memptr == (int *) nullptr) {
     //  TRACE("Error:  Out of memory.\n");
     exit(1);
   }
@@ -637,7 +637,7 @@ void parsecommandline(int argc, char **argv, struct behavior *b)
 									k++;
 								}
 								workstring[k] = '\0';
-								b->minangle = (sgFloat) strtod(workstring, (char **) NULL);
+								b->minangle = (sgFloat) strtod(workstring, (char **) nullptr);
 						} else {
 							b->minangle = 20.0;
 						}
@@ -655,7 +655,7 @@ void parsecommandline(int argc, char **argv, struct behavior *b)
 									k++;
 								}
 								workstring[k] = '\0';
-								b->maxarea = (sgFloat) strtod(workstring, (char **) NULL);
+								b->maxarea = (sgFloat) strtod(workstring, (char **) nullptr);
 								if (b->maxarea <= 0.0) {
 									//  TRACE("Error:  Maximum area must be greater than zero.\n");
 									exit(1);
@@ -829,7 +829,7 @@ void poolrestart(struct memorypool *pool)
   /* There are lots of unallocated items left in this block. */
   pool->unallocateditems = pool->itemsfirstblock;
   /* The stack of deallocated items is empty. */
-  pool->deaditemstack = (int *) NULL;
+  pool->deaditemstack = (int *) nullptr;
 }
 
 void poolinit(struct memorypool *pool, int bytecount, int itemcount,
@@ -861,14 +861,14 @@ void poolinit(struct memorypool *pool, int bytecount, int itemcount,
  pool->firstblock = (int **)
     trimalloc(pool->itemsfirstblock * pool->itembytes + (int) sizeof(int *) +
               pool->alignbytes);
-  /* Set the next block pointer to NULL. */
-  *(pool->firstblock) = (int *) NULL;
+  /* Set the next block pointer to nullptr. */
+  *(pool->firstblock) = (int *) nullptr;
   poolrestart(pool);
 }
 
 void pooldeinit(struct memorypool *pool)
 {
-  while (pool->firstblock != (int **) NULL) {
+  while (pool->firstblock != (int **) nullptr) {
     pool->nowblock = (int **) *(pool->firstblock);
     trifree((int *) pool->firstblock);
     pool->firstblock = pool->nowblock;
@@ -883,21 +883,21 @@ int *poolalloc(struct memorypool *pool)
 
   /* First check the linked list of dead items.  If the list is not   */
   /*   empty, allocate an item from the list rather than a fresh one. */
-  if (pool->deaditemstack != (int *) NULL) {
+  if (pool->deaditemstack != (int *) nullptr) {
     newitem = pool->deaditemstack;               /* Take first item in list. */
     pool->deaditemstack = * (int **) pool->deaditemstack;
   } else {
     /* Check if there are any free items left in the current block. */
     if (pool->unallocateditems == 0) {
       /* Check if another block must be allocated. */
-      if (*(pool->nowblock) == (int *) NULL) {
+      if (*(pool->nowblock) == (int *) nullptr) {
         /* Allocate a new block of items, pointed to by the previous block. */
         newblock = (int **) trimalloc(pool->itemsperblock * pool->itembytes +
                                        (int) sizeof(int *) +
                                        pool->alignbytes);
         *(pool->nowblock) = (int *) newblock;
-        /* The next block pointer is NULL. */
-        *newblock = (int *) NULL;
+        /* The next block pointer is nullptr. */
+        *newblock = (int *) nullptr;
       }
 
       /* Move to the new block. */
@@ -959,7 +959,7 @@ int *traverse(struct memorypool *pool)
 
   /* Stop upon exhausting the list of items. */
   if (pool->pathitem == pool->nextitem) {
-    return (int *) NULL;
+    return (int *) nullptr;
   }
 
   /* Check whether any untraversed items remain in the current block. */
@@ -1008,10 +1008,10 @@ void dummyinit(struct mesh *m, struct behavior *b, int trianglewords,
   m->dummytri[0] = (triangle) m->dummytri;
   m->dummytri[1] = (triangle) m->dummytri;
   m->dummytri[2] = (triangle) m->dummytri;
-  /* Three NULL vertices. */
-  m->dummytri[3] = (triangle) NULL;
-  m->dummytri[4] = (triangle) NULL;
-  m->dummytri[5] = (triangle) NULL;
+  /* Three nullptr vertices. */
+  m->dummytri[3] = (triangle) nullptr;
+  m->dummytri[4] = (triangle) nullptr;
+  m->dummytri[5] = (triangle) nullptr;
 
   if (b->usesegments) {
     m->dummysubbase = (subseg *) trimalloc(subsegwords * (int) sizeof(subseg) +
@@ -1023,9 +1023,9 @@ void dummyinit(struct mesh *m, struct behavior *b, int trianglewords,
        (alignptr % (unsigned long) m->subsegs.alignbytes));
     m->dummysub[0] = (subseg) m->dummysub;
     m->dummysub[1] = (subseg) m->dummysub;
-    /* Two NULL vertices. */
-    m->dummysub[2] = (subseg) NULL;
-    m->dummysub[3] = (subseg) NULL;
+    /* Two nullptr vertices. */
+    m->dummysub[2] = (subseg) nullptr;
+    m->dummysub[3] = (subseg) nullptr;
     /* Initialize the two adjoining triangles to be "outer space." */
     m->dummysub[4] = (subseg) m->dummytri;
     m->dummysub[5] = (subseg) m->dummytri;
@@ -1126,8 +1126,8 @@ triangle *triangletraverse(struct mesh *m)
 
   do {
     newtriangle = (triangle *) traverse(&m->triangles);
-    if (newtriangle == (triangle *) NULL) {
-      return (triangle *) NULL;
+    if (newtriangle == (triangle *) nullptr) {
+      return (triangle *) nullptr;
     }
   } while (deadtri(newtriangle));                         /* Skip dead ones. */
   return newtriangle;
@@ -1147,8 +1147,8 @@ subseg *subsegtraverse(struct mesh *m)
 
   do {
     newsubseg = (subseg *) traverse(&m->subsegs);
-    if (newsubseg == (subseg *) NULL) {
-      return (subseg *) NULL;
+    if (newsubseg == (subseg *) nullptr) {
+      return (subseg *) nullptr;
     }
   } while (deadsubseg(newsubseg));                        /* Skip dead ones. */
   return newsubseg;
@@ -1168,8 +1168,8 @@ vertex vertextraverse(struct mesh *m)
 
   do {
     newvertex = (vertex) traverse(&m->vertices);
-    if (newvertex == (vertex) NULL) {
-      return (vertex) NULL;
+    if (newvertex == (vertex) nullptr) {
+      return (vertex) nullptr;
     }
   } while (vertextype(newvertex) == DEADVERTEX);          /* Skip dead ones. */
   return newvertex;
@@ -1179,9 +1179,9 @@ vertex vertextraverse(struct mesh *m)
 
 void badsubsegdealloc(struct mesh *m, struct badsubseg *dyingseg)
 {
-  /* Set subsegment's origin to NULL.  This makes it possible to detect dead */
+  /* Set subsegment's origin to nullptr.  This makes it possible to detect dead */
   /*   subsegments when traversing the list of all encroached subsegments.   */
-  dyingseg->subsegorg = (vertex) NULL;
+  dyingseg->subsegorg = (vertex) nullptr;
   pooldealloc(&m->badsubsegs, (int *) dyingseg);
 }
 
@@ -1195,10 +1195,10 @@ struct badsubseg *badsubsegtraverse(struct mesh *m)
 
   do {
     newseg = (struct badsubseg *) traverse(&m->badsubsegs);
-    if (newseg == (struct badsubseg *) NULL) {
-      return (struct badsubseg *) NULL;
+    if (newseg == (struct badsubseg *) nullptr) {
+      return (struct badsubseg *) nullptr;
     }
-  } while (newseg->subsegorg == (vertex) NULL);           /* Skip dead ones. */
+  } while (newseg->subsegorg == (vertex) nullptr);           /* Skip dead ones. */
   return newseg;
 }
 
@@ -1264,10 +1264,10 @@ void maketriangle(struct mesh *m, struct behavior *b, struct otri *newotri)
   newotri->tri[0] = (triangle) m->dummytri;
   newotri->tri[1] = (triangle) m->dummytri;
   newotri->tri[2] = (triangle) m->dummytri;
-  /* Three NULL vertices. */
-  newotri->tri[3] = (triangle) NULL;
-  newotri->tri[4] = (triangle) NULL;
-  newotri->tri[5] = (triangle) NULL;
+  /* Three nullptr vertices. */
+  newotri->tri[3] = (triangle) nullptr;
+  newotri->tri[4] = (triangle) nullptr;
+  newotri->tri[5] = (triangle) nullptr;
   if (b->usesegments) {
     /* Initialize the three adjoining subsegments to be the omnipresent */
     /*   subsegment.                                                    */
@@ -1292,9 +1292,9 @@ void makesubseg(struct mesh *m, struct osub *newsubseg)
   /*   subsegment.                                                  */
   newsubseg->ss[0] = (subseg) m->dummysub;
   newsubseg->ss[1] = (subseg) m->dummysub;
-  /* Two NULL vertices. */
-  newsubseg->ss[2] = (subseg) NULL;
-  newsubseg->ss[3] = (subseg) NULL;
+  /* Two nullptr vertices. */
+  newsubseg->ss[2] = (subseg) nullptr;
+  newsubseg->ss[3] = (subseg) nullptr;
   /* Initialize the two adjoining triangles to be "outer space." */
   newsubseg->ss[4] = (subseg) m->dummytri;
   newsubseg->ss[5] = (subseg) m->dummytri;
@@ -2860,7 +2860,7 @@ void triangleinit(struct mesh *m)
   m->vertices.itembytes = m->triangles.itembytes = m->subsegs.itembytes =
     m->viri.itembytes = m->badsubsegs.itembytes = m->badtriangles.itembytes =
     m->flipstackers.itembytes = m->splaynodes.itembytes = 0;
-  m->recenttri.tri = (triangle *) NULL; /* No triangle has been visited yet. */
+  m->recenttri.tri = (triangle *) nullptr; /* No triangle has been visited yet. */
   m->undeads = 0;                       /* No eliminated input vertices yet. */
   m->samples = 1;         /* Point location should take at least one sample. */
   m->checksegments = 0;   /* There are no segments in the triangulation yet. */
@@ -2900,7 +2900,7 @@ void checkmesh(struct mesh *m, struct behavior *b)
   /* Run through the list of triangles, checking each one. */
   traversalinit(&m->triangles);
   triangleloop.tri = triangletraverse(m);
-  while (triangleloop.tri != (triangle *) NULL) {
+  while (triangleloop.tri != (triangle *) nullptr) {
     /* Check all three edges of the triangle. */
     for (triangleloop.orient = 0; triangleloop.orient < 3;
          triangleloop.orient++) {
@@ -2989,7 +2989,7 @@ void checkdelaunay(struct mesh *m, struct behavior *b)
   /* Run through the list of triangles, checking each one. */
   traversalinit(&m->triangles);
   triangleloop.tri = triangletraverse(m);
-  while (triangleloop.tri != (triangle *) NULL) {
+  while (triangleloop.tri != (triangle *) nullptr) {
     /* Check all three edges of the triangle. */
     for (triangleloop.orient = 0; triangleloop.orient < 3;
          triangleloop.orient++) {
@@ -3083,7 +3083,7 @@ void enqueuebadtriang(struct mesh *m, struct behavior *b,
   }
 
   /* Are we inserting into an empty queue? */
-  if (m->queuefront[queuenumber] == (struct badtriang *) NULL) {
+  if (m->queuefront[queuenumber] == (struct badtriang *) nullptr) {
     /* Yes, we are inserting into an empty queue.     */
     /*   Will this become the highest-priority queue? */
     if (queuenumber > m->firstnonemptyq) {
@@ -3094,7 +3094,7 @@ void enqueuebadtriang(struct mesh *m, struct behavior *b,
       /* No, this is not the highest-priority queue. */
       /*   Find the queue with next higher priority. */
       i = queuenumber + 1;
-      while (m->queuefront[i] == (struct badtriang *) NULL) {
+      while (m->queuefront[i] == (struct badtriang *) nullptr) {
         i++;
       }
       /* Mark the newly nonempty queue as following a higher-priority queue. */
@@ -3110,7 +3110,7 @@ void enqueuebadtriang(struct mesh *m, struct behavior *b,
   /* Maintain a pointer to the last triangle of the queue. */
   m->queuetail[queuenumber] = badtri;
   /* Newly enqueued bad triangle has no successor in the queue. */
-  badtri->nexttriang = (struct badtriang *) NULL;
+  badtri->nexttriang = (struct badtriang *) nullptr;
 }
 
 #endif /* not CDT_ONLY */
@@ -3140,9 +3140,9 @@ struct badtriang *dequeuebadtriang(struct mesh *m)
 {
   struct badtriang *result;
 
-  /* If no queues are nonempty, return NULL. */
+  /* If no queues are nonempty, return nullptr. */
   if (m->firstnonemptyq < 0) {
-    return (struct badtriang *) NULL;
+    return (struct badtriang *) nullptr;
   }
   /* Find the first triangle of the highest-priority queue. */
   result = m->queuefront[m->firstnonemptyq];
@@ -3614,7 +3614,7 @@ void makevertexmap(struct mesh *m, struct behavior *b)
   }
   traversalinit(&m->triangles);
   triangleloop.tri = triangletraverse(m);
-  while (triangleloop.tri != (triangle *) NULL) {
+  while (triangleloop.tri != (triangle *) nullptr) {
     /* Check all three vertices of the triangle. */
     for (triangleloop.orient = 0; triangleloop.orient < 3;
          triangleloop.orient++) {
@@ -3754,7 +3754,7 @@ enum locateresult locate(struct mesh *m, struct behavior *b,
 
   /* If a recently encountered triangle has been recorded and has not been */
   /*   deallocated, test it as a good starting point.                      */
-  if (m->recenttri.tri != (triangle *) NULL) {
+  if (m->recenttri.tri != (triangle *) nullptr) {
     if (!deadtri(m->recenttri.tri)) {
       org(m->recenttri, torg);
       if ((torg[0] == searchpoint[0]) && (torg[1] == searchpoint[1])) {
@@ -4116,7 +4116,7 @@ enum insertvertexresult insertvertex(struct mesh *m, struct behavior *b,
     //  TRACE("  Inserting (%.12g, %.12g).\n", newvertex[0], newvertex[1]);
   }
 
-  if (splitseg == (struct osub *) NULL) {
+  if (splitseg == (struct osub *) nullptr) {
     /* Find the location of the vertex to be inserted.  Check if a good */
     /*   starting triangle has already been provided by the caller.     */
     if (searchtri->tri == m->dummytri) {
@@ -4146,7 +4146,7 @@ enum insertvertexresult insertvertex(struct mesh *m, struct behavior *b,
   }
   if ((intersect == ONEDGE) || (intersect == OUTSIDE)) {
     /* The vertex falls on an edge or boundary. */
-    if (m->checksegments && (splitseg == (struct osub *) NULL)) {
+    if (m->checksegments && (splitseg == (struct osub *) nullptr)) {
       /* Check whether the vertex falls on a subsegment. */
       tspivot(horiz, brokensubseg);
       if (brokensubseg.ss != m->dummysub) {
@@ -4268,7 +4268,7 @@ enum insertvertexresult insertvertex(struct mesh *m, struct behavior *b,
       bond(newtopright, newbotright);
     }
 
-    if (splitseg != (struct osub *) NULL) {
+    if (splitseg != (struct osub *) nullptr) {
       /* Split the subsegment into two. */
       setsdest(*splitseg, newvertex);
       ssymself(*splitseg);
@@ -4405,7 +4405,7 @@ enum insertvertexresult insertvertex(struct mesh *m, struct behavior *b,
       poolrestart(&m->flipstackers);
       m->lastflip = (struct flipstacker *) poolalloc(&m->flipstackers);
       m->lastflip->flippedtri = encode(horiz);
-      m->lastflip->prevflip = (struct flipstacker *) NULL;
+      m->lastflip->prevflip = (struct flipstacker *) nullptr;
     }
 
 #ifdef SELF_CHECK
@@ -4588,7 +4588,7 @@ enum insertvertexresult insertvertex(struct mesh *m, struct behavior *b,
           }
 
 #ifdef SELF_CHECK
-          if (newvertex != (vertex) NULL) {
+          if (newvertex != (vertex) nullptr) {
             if (counterclockwise(m, b, leftvertex, newvertex, rightvertex) <
                 0.0) {
               //  TRACE("Internal error in insertvertex():\n");
@@ -4829,7 +4829,7 @@ void undovertex(struct mesh *m, struct behavior *b)
 
   /* Walk through the list of transformations (flips and a vertex insertion) */
   /*   in the reverse of the order in which they were done, and undo them.   */
-  while (m->lastflip != (struct flipstacker *) NULL) {
+  while (m->lastflip != (struct flipstacker *) nullptr) {
     /* Find a triangle involved in the last unreversed transformation. */
     decode(m->lastflip->flippedtri, fliptri);
 
@@ -4837,7 +4837,7 @@ void undovertex(struct mesh *m, struct behavior *b)
     /*   triangle into three (by inserting a vertex in the triangle), a    */
     /*   bisection of two triangles into four (by inserting a vertex in an */
     /*   edge), or an edge flip.                                           */
-    if (m->lastflip->prevflip == (struct flipstacker *) NULL) {
+    if (m->lastflip->prevflip == (struct flipstacker *) nullptr) {
       /* Restore a triangle that was split into three triangles, */
       /*   so it is again one triangle.                          */
       dprev(fliptri, botleft);
@@ -4894,7 +4894,7 @@ void undovertex(struct mesh *m, struct behavior *b)
       }
 
       /* This is the end of the list, sneakily encoded. */
-      m->lastflip->prevflip = (struct flipstacker *) NULL;
+      m->lastflip->prevflip = (struct flipstacker *) nullptr;
     } else {
       /* Undo an edge flip. */
       unflip(m, b, &fliptri);
@@ -5142,7 +5142,7 @@ void mergehulls(struct mesh *m, struct behavior *b, struct otri *farleft,
   lnextself(baseedge);
   setorg(baseedge, innerrightorg);
   setdest(baseedge, innerleftdest);
-  /* Apex is intentionally left NULL. */
+  /* Apex is intentionally left nullptr. */
   if (b->verbose > 2) {
     //  TRACE("  Creating base bounding ");
   //  printtriangle(m, b, &baseedge);
@@ -5177,7 +5177,7 @@ void mergehulls(struct mesh *m, struct behavior *b, struct otri *farleft,
       maketriangle(m, b, &nextedge);
       setorg(nextedge, lowerleft);
       setdest(nextedge, lowerright);
-      /* Apex is intentionally left NULL. */
+      /* Apex is intentionally left nullptr. */
       /* Connect it to the bounding boxes of the two triangulations. */
       bond(nextedge, baseedge);
       lnextself(nextedge);
@@ -5221,9 +5221,9 @@ void mergehulls(struct mesh *m, struct behavior *b, struct otri *farleft,
       lprev(leftcand, nextedge);
       symself(nextedge);
       apex(nextedge, nextapex);
-      /* If nextapex is NULL, then no vertex would be exposed; the */
+      /* If nextapex is nullptr, then no vertex would be exposed; the */
       /*   triangulation would have been eaten right through.      */
-      if (nextapex != (vertex) NULL) {
+      if (nextapex != (vertex) nullptr) {
         /* Check whether the edge is Delaunay. */
         badedge = incircle(m, b, lowerleft, lowerright, upperleft, nextapex) >
                   0.0;
@@ -5242,9 +5242,9 @@ void mergehulls(struct mesh *m, struct behavior *b, struct otri *farleft,
           bond(nextedge, outercasing);
           /* Correct the vertices to reflect the edge flip. */
           setorg(leftcand, lowerleft);
-          setdest(leftcand, NULL);
+          setdest(leftcand, nullptr);
           setapex(leftcand, nextapex);
-          setorg(nextedge, NULL);
+          setorg(nextedge, nullptr);
           setdest(nextedge, upperleft);
           setapex(nextedge, nextapex);
           /* Consider the newly exposed vertex. */
@@ -5252,7 +5252,7 @@ void mergehulls(struct mesh *m, struct behavior *b, struct otri *farleft,
           /* What vertex would be exposed if another edge were deleted? */
           otricopy(sidecasing, nextedge);
           apex(nextedge, nextapex);
-          if (nextapex != (vertex) NULL) {
+          if (nextapex != (vertex) nullptr) {
             /* Check whether the edge is Delaunay. */
             badedge = incircle(m, b, lowerleft, lowerright, upperleft,
                                nextapex) > 0.0;
@@ -5269,9 +5269,9 @@ void mergehulls(struct mesh *m, struct behavior *b, struct otri *farleft,
       lnext(rightcand, nextedge);
       symself(nextedge);
       apex(nextedge, nextapex);
-      /* If nextapex is NULL, then no vertex would be exposed; the */
+      /* If nextapex is nullptr, then no vertex would be exposed; the */
       /*   triangulation would have been eaten right through.      */
-      if (nextapex != (vertex) NULL) {
+      if (nextapex != (vertex) nullptr) {
         /* Check whether the edge is Delaunay. */
         badedge = incircle(m, b, lowerleft, lowerright, upperright, nextapex) >
                   0.0;
@@ -5289,18 +5289,18 @@ void mergehulls(struct mesh *m, struct behavior *b, struct otri *farleft,
           lnextself(nextedge);
           bond(nextedge, outercasing);
           /* Correct the vertices to reflect the edge flip. */
-          setorg(rightcand, NULL);
+          setorg(rightcand, nullptr);
           setdest(rightcand, lowerright);
           setapex(rightcand, nextapex);
           setorg(nextedge, upperright);
-          setdest(nextedge, NULL);
+          setdest(nextedge, nullptr);
           setapex(nextedge, nextapex);
           /* Consider the newly exposed vertex. */
           upperright = nextapex;
           /* What vertex would be exposed if another edge were deleted? */
           otricopy(sidecasing, nextedge);
           apex(nextedge, nextapex);
-          if (nextapex != (vertex) NULL) {
+          if (nextapex != (vertex) nullptr) {
             /* Check whether the edge is Delaunay. */
             badedge = incircle(m, b, lowerleft, lowerright, upperright,
                                nextapex) > 0.0;
@@ -5357,11 +5357,11 @@ void divconqrecurse(struct mesh *m, struct behavior *b, vertex *sortarray,
     maketriangle(m, b, farleft);
     setorg(*farleft, sortarray[0]);
     setdest(*farleft, sortarray[1]);
-    /* The apex is intentionally left NULL. */
+    /* The apex is intentionally left nullptr. */
     maketriangle(m, b, farright);
     setorg(*farright, sortarray[1]);
     setdest(*farright, sortarray[0]);
-    /* The apex is intentionally left NULL. */
+    /* The apex is intentionally left nullptr. */
     bond(*farleft, *farright);
     lprevself(*farleft);
     lnextself(*farright);
@@ -5397,7 +5397,7 @@ void divconqrecurse(struct mesh *m, struct behavior *b, vertex *sortarray,
       setdest(tri2, sortarray[1]);
       setorg(tri3, sortarray[1]);
       setdest(tri3, sortarray[2]);
-      /* All apices are intentionally left NULL. */
+      /* All apices are intentionally left nullptr. */
       bond(midtri, tri1);
       bond(tri2, tri3);
       lnextself(midtri);
@@ -5422,7 +5422,7 @@ void divconqrecurse(struct mesh *m, struct behavior *b, vertex *sortarray,
       setorg(midtri, sortarray[0]);
       setdest(tri1, sortarray[0]);
       setorg(tri3, sortarray[0]);
-      /* Apices of tri1, tri2, and tri3 are left NULL. */
+      /* Apices of tri1, tri2, and tri3 are left nullptr. */
       if (area > 0.0) {
         /* The vertices are in counterclockwise order. */
         setdest(midtri, sortarray[1]);
@@ -5737,9 +5737,9 @@ long incrementaldelaunay(struct mesh *m, struct behavior *b)
   }
   traversalinit(&m->vertices);
   vertexloop = vertextraverse(m);
-  while (vertexloop != (vertex) NULL) {
+  while (vertexloop != (vertex) nullptr) {
     starttri.tri = m->dummytri;
-    if (insertvertex(m, b, vertexloop, &starttri, (struct osub *) NULL, 0, 0,
+    if (insertvertex(m, b, vertexloop, &starttri, (struct osub *) nullptr, 0, 0,
                      0.0) == DUPLICATEVERTEX) {
       if (!b->quiet) {
         //  TRACE(
@@ -5894,7 +5894,7 @@ void createeventheap(struct mesh *m, struct event ***eventheap,
     (*events)[i].ykey = thisvertex[1];
     eventheapinsert(*eventheap, i, *events + i);
   }
-  *freeevents = (struct event *) NULL;
+  *freeevents = (struct event *) nullptr;
   for (i = maxevents - 1; i >= m->invertices; i--) {
     (*events)[i].eventptr = (int *) *freeevents;
     *freeevents = *events + i;
@@ -5968,14 +5968,14 @@ void check4deadevent(struct otri *checktri, struct event **freeevents,
   int eventnum;
 
   org(*checktri, eventvertex);
-  if (eventvertex != (vertex) NULL) {
+  if (eventvertex != (vertex) nullptr) {
     deadevent = (struct event *) eventvertex;
     eventnum = deadevent->heapposition;
     deadevent->eventptr = (int *) *freeevents;
     *freeevents = deadevent;
     eventheapdelete(eventheap, *heapsize, eventnum);
     (*heapsize)--;
-    setorg(*checktri, NULL);
+    setorg(*checktri, nullptr);
   }
 }
 
@@ -5992,8 +5992,8 @@ struct splaynode *splay(struct mesh *m, struct splaynode *splaytree,
   vertex checkvertex;
   int rightofroot, rightofchild;
 
-  if (splaytree == (struct splaynode *) NULL) {
-    return (struct splaynode *) NULL;
+  if (splaytree == (struct splaynode *) nullptr) {
+    return (struct splaynode *) nullptr;
   }
   dest(splaytree->keyedge, checkvertex);
   if (checkvertex == splaytree->keydest) {
@@ -6004,17 +6004,17 @@ struct splaynode *splay(struct mesh *m, struct splaynode *splaytree,
     } else {
       child = splaytree->lchild;
     }
-    if (child == (struct splaynode *) NULL) {
+    if (child == (struct splaynode *) nullptr) {
       return splaytree;
     }
     dest(child->keyedge, checkvertex);
     if (checkvertex != child->keydest) {
       child = splay(m, child, searchpoint, searchtri);
-      if (child == (struct splaynode *) NULL) {
+      if (child == (struct splaynode *) nullptr) {
         if (rightofroot) {
-          splaytree->rchild = (struct splaynode *) NULL;
+          splaytree->rchild = (struct splaynode *) nullptr;
         } else {
-          splaytree->lchild = (struct splaynode *) NULL;
+          splaytree->lchild = (struct splaynode *) nullptr;
         }
         return splaytree;
       }
@@ -6028,7 +6028,7 @@ struct splaynode *splay(struct mesh *m, struct splaynode *splaytree,
       grandchild = splay(m, child->lchild, searchpoint, searchtri);
       child->lchild = grandchild;
     }
-    if (grandchild == (struct splaynode *) NULL) {
+    if (grandchild == (struct splaynode *) nullptr) {
       if (rightofroot) {
         splaytree->rchild = child->lchild;
         child->lchild = splaytree;
@@ -6065,22 +6065,22 @@ struct splaynode *splay(struct mesh *m, struct splaynode *splaytree,
     righttree = splay(m, splaytree->rchild, searchpoint, searchtri);
 
     pooldealloc(&m->splaynodes, (int *) splaytree);
-    if (lefttree == (struct splaynode *) NULL) {
+    if (lefttree == (struct splaynode *) nullptr) {
       return righttree;
-    } else if (righttree == (struct splaynode *) NULL) {
+    } else if (righttree == (struct splaynode *) nullptr) {
       return lefttree;
-    } else if (lefttree->rchild == (struct splaynode *) NULL) {
+    } else if (lefttree->rchild == (struct splaynode *) nullptr) {
       lefttree->rchild = righttree->lchild;
       righttree->lchild = lefttree;
       return righttree;
-    } else if (righttree->lchild == (struct splaynode *) NULL) {
+    } else if (righttree->lchild == (struct splaynode *) nullptr) {
       righttree->lchild = lefttree->rchild;
       lefttree->rchild = righttree;
       return lefttree;
     } else {
 /*      //  TRACE("Holy Toledo!!!\n"); */
       leftright = lefttree->rchild;
-      while (leftright->rchild != (struct splaynode *) NULL) {
+      while (leftright->rchild != (struct splaynode *) nullptr) {
         leftright = leftright->rchild;
       }
       leftright->rchild = righttree;
@@ -6101,17 +6101,17 @@ struct splaynode *splayinsert(struct mesh *m, struct splaynode *splayroot,
   newsplaynode = (struct splaynode *) poolalloc(&m->splaynodes);
   otricopy(*newkey, newsplaynode->keyedge);
   dest(*newkey, newsplaynode->keydest);
-  if (splayroot == (struct splaynode *) NULL) {
-    newsplaynode->lchild = (struct splaynode *) NULL;
-    newsplaynode->rchild = (struct splaynode *) NULL;
+  if (splayroot == (struct splaynode *) nullptr) {
+    newsplaynode->lchild = (struct splaynode *) nullptr;
+    newsplaynode->rchild = (struct splaynode *) nullptr;
   } else if (rightofhyperbola(m, &splayroot->keyedge, searchpoint)) {
     newsplaynode->lchild = splayroot;
     newsplaynode->rchild = splayroot->rchild;
-    splayroot->rchild = (struct splaynode *) NULL;
+    splayroot->rchild = (struct splaynode *) nullptr;
   } else {
     newsplaynode->lchild = splayroot->lchild;
     newsplaynode->rchild = splayroot;
-    splayroot->lchild = (struct splaynode *) NULL;
+    splayroot->lchild = (struct splaynode *) nullptr;
   }
   return newsplaynode;
 }
@@ -6195,7 +6195,7 @@ long sweeplinedelaunay(struct mesh *m, struct behavior *b)
 
   poolinit(&m->splaynodes, sizeof(struct splaynode), SPLAYNODEPERBLOCK,
            SPLAYNODEPERBLOCK, POINTER, 0);
-  splayroot = (struct splaynode *) NULL;
+  splayroot = (struct splaynode *) nullptr;
 
   if (b->verbose) {
     //  TRACE("  Placing vertices in event heap.\n");
@@ -6264,7 +6264,7 @@ long sweeplinedelaunay(struct mesh *m, struct behavior *b)
         lprev(fliptri, bottommost);
       }
       flip(m, b, &fliptri);
-      setapex(fliptri, NULL);
+      setapex(fliptri, nullptr);
       lprev(fliptri, lefttri);
       lnext(fliptri, righttri);
       sym(lefttri, farlefttri);
@@ -6492,7 +6492,7 @@ long reconstruct(struct mesh *m, struct behavior *b, char *elefilename,
   if (b->poly) {
 
     m->insegments = numberofsegments;
-    segmentmarkers = segmentmarkerlist != (int *) NULL;
+    segmentmarkers = segmentmarkerlist != (int *) nullptr;
 
     /* Create the subsegments. */
     for (segmentnumber = 1; segmentnumber <= m->insegments; segmentnumber++) {
@@ -6526,7 +6526,7 @@ long reconstruct(struct mesh *m, struct behavior *b, char *elefilename,
   traversalinit(&m->triangles);
   triangleloop.tri = triangletraverse(m);
   elementnumber = b->firstnumber;
-  while (triangleloop.tri != (triangle *) NULL) {
+  while (triangleloop.tri != (triangle *) nullptr) {
 
     /* Copy the triangle's three corners. */
     for (j = 0; j < 3; j++) {
@@ -6628,7 +6628,7 @@ long reconstruct(struct mesh *m, struct behavior *b, char *elefilename,
     traversalinit(&m->subsegs);
     subsegloop.ss = subsegtraverse(m);
     segmentnumber = b->firstnumber;
-    while (subsegloop.ss != (subseg *) NULL) {
+    while (subsegloop.ss != (subseg *) nullptr) {
 
       end[0] = segmentlist[vertexindex++];
       end[1] = segmentlist[vertexindex++];
@@ -6950,7 +6950,7 @@ void conformingedge(struct mesh *m, struct behavior *b,
   /* No known triangle to search from. */
   searchtri1.tri = m->dummytri;
   /* Attempt to insert the new vertex. */
-  success = insertvertex(m, b, newvertex, &searchtri1, (struct osub *) NULL,
+  success = insertvertex(m, b, newvertex, &searchtri1, (struct osub *) nullptr,
                          0, 0, 0.0);
   if (success == DUPLICATEVERTEX) {
     if (b->verbose > 2) {
@@ -7167,9 +7167,9 @@ void insertsegment(struct mesh *m, struct behavior *b,
   }
 
   /* Find a triangle whose origin is the segment's first endpoint. */
-  checkvertex = (vertex) NULL;
+  checkvertex = (vertex) nullptr;
   encodedtri = vertex2tri(endpoint1);
-  if (encodedtri != (triangle) NULL) {
+  if (encodedtri != (triangle) nullptr) {
     decode(encodedtri, searchtri1);
 /*
 	try
@@ -7178,7 +7178,7 @@ void insertsegment(struct mesh *m, struct behavior *b,
 	}
 	catch (...)
 	{
-		checkvertex = NULL;
+		checkvertex = nullptr;
 	}*/
 	org(searchtri1, checkvertex);
   }
@@ -7209,9 +7209,9 @@ void insertsegment(struct mesh *m, struct behavior *b,
   org(searchtri1, endpoint1);
 
   /* Find a triangle whose origin is the segment's second endpoint. */
-  checkvertex = (vertex) NULL;
+  checkvertex = (vertex) nullptr;
   encodedtri = vertex2tri(endpoint2);
-  if (encodedtri != (triangle) NULL) {
+  if (encodedtri != (triangle) nullptr) {
     decode(encodedtri, searchtri2);
     org(searchtri2, checkvertex);
   }
@@ -7305,7 +7305,7 @@ void formskeleton(struct mesh *m, struct behavior *b, int *segmentlist,
 
     strcpy(polyfilename, "input");
     m->insegments = numberofsegments;
-    segmentmarkers = segmentmarkerlist != (int *) NULL;
+    segmentmarkers = segmentmarkerlist != (int *) nullptr;
     index = 0;
 
     /* If the input vertices are collinear, there is no triangulation, */
@@ -7452,7 +7452,7 @@ void plague(struct mesh *m, struct behavior *b)
   /*   their neighbors, then to their neighbors' neighbors.          */
   traversalinit(&m->viri);
   virusloop = (triangle **) traverse(&m->viri);
-  while (virusloop != (triangle **) NULL) {
+  while (virusloop != (triangle **) nullptr) {
     testtri.tri = *virusloop;
     /* A triangle is marked as infected by messing with one of its pointers */
     /*   to subsegments, setting it to an illegal value.  Hence, we have to */
@@ -7538,7 +7538,7 @@ void plague(struct mesh *m, struct behavior *b)
 
   traversalinit(&m->viri);
   virusloop = (triangle **) traverse(&m->viri);
-  while (virusloop != (triangle **) NULL) {
+  while (virusloop != (triangle **) nullptr) {
     testtri.tri = *virusloop;
 
     /* Check each of the three corners of the triangle for elimination. */
@@ -7547,10 +7547,10 @@ void plague(struct mesh *m, struct behavior *b)
     for (testtri.orient = 0; testtri.orient < 3; testtri.orient++) {
       org(testtri, testvertex);
       /* Check if the vertex has already been tested. */
-      if (testvertex != (vertex) NULL) {
+      if (testvertex != (vertex) nullptr) {
         killorg = 1;
         /* Mark the corner of the triangle as having been tested. */
-        setorg(testtri, NULL);
+        setorg(testtri, nullptr);
         /* Walk counterclockwise about the vertex. */
         onext(testtri, neighbor);
         /* Stop upon reaching a boundary or the starting triangle. */
@@ -7558,7 +7558,7 @@ void plague(struct mesh *m, struct behavior *b)
                (!otriequal(neighbor, testtri))) {
           if (infected(neighbor)) {
             /* Mark the corner of this triangle as having been tested. */
-            setorg(neighbor, NULL);
+            setorg(neighbor, nullptr);
           } else {
             /* A live triangle.  The vertex survives. */
             killorg = 0;
@@ -7574,7 +7574,7 @@ void plague(struct mesh *m, struct behavior *b)
           while (neighbor.tri != m->dummytri) {
             if (infected(neighbor)) {
             /* Mark the corner of this triangle as having been tested. */
-              setorg(neighbor, NULL);
+              setorg(neighbor, nullptr);
             } else {
               /* A live triangle.  The vertex survives. */
               killorg = 0;
@@ -7639,7 +7639,7 @@ void regionplague(struct mesh *m, struct behavior *b,
   /*   neighbors.                                                          */
   traversalinit(&m->viri);
   virusloop = (triangle **) traverse(&m->viri);
-  while (virusloop != (triangle **) NULL) {
+  while (virusloop != (triangle **) nullptr) {
     testtri.tri = *virusloop;
     /* A triangle is marked as infected by messing with one of its pointers */
     /*   to subsegments, setting it to an illegal value.  Hence, we have to */
@@ -7702,7 +7702,7 @@ void regionplague(struct mesh *m, struct behavior *b,
   }
   traversalinit(&m->viri);
   virusloop = (triangle **) traverse(&m->viri);
-  while (virusloop != (triangle **) NULL) {
+  while (virusloop != (triangle **) nullptr) {
     testtri.tri = *virusloop;
     uninfect(testtri);
     virusloop = (triangle **) traverse(&m->viri);
@@ -7840,7 +7840,7 @@ void carveholes(struct mesh *m, struct behavior *b, sgFloat *holelist, int holes
       traversalinit(&m->triangles);
       triangleloop.orient = 0;
       triangleloop.tri = triangletraverse(m);
-      while (triangleloop.tri != (triangle *) NULL) {
+      while (triangleloop.tri != (triangle *) nullptr) {
         setelemattribute(triangleloop, m->eextras, 0.0);
         triangleloop.tri = triangletraverse(m);
       }
@@ -7885,7 +7885,7 @@ void tallyencs(struct mesh *m, struct behavior *b)
   traversalinit(&m->subsegs);
   subsegloop.ssorient = 0;
   subsegloop.ss = subsegtraverse(m);
-  while (subsegloop.ss != (subseg *) NULL) {
+  while (subsegloop.ss != (subseg *) nullptr) {
     /* If the segment is encroached, add it to the list. */
     dummy = checkseg4encroach(m, b, &subsegloop, 0.0);
     subsegloop.ss = subsegtraverse(m);
@@ -7935,7 +7935,7 @@ void splitencsegs(struct mesh *m, struct behavior *b, int triflaws)
   while ((m->badsubsegs.items > 0) && (m->steinerleft != 0)) {
     traversalinit(&m->badsubsegs);
     encloop = badsubsegtraverse(m);
-    while ((encloop != (struct badsubseg *) NULL) && (m->steinerleft != 0)) {
+    while ((encloop != (struct badsubseg *) nullptr) && (m->steinerleft != 0)) {
       sdecode(encloop->encsubseg, currentenc);
       sorg(currentenc, eorg);
       sdest(currentenc, edest);
@@ -8105,7 +8105,7 @@ void tallyfaces(struct mesh *m, struct behavior *b)
   traversalinit(&m->triangles);
   triangleloop.orient = 0;
   triangleloop.tri = triangletraverse(m);
-  while (triangleloop.tri != (triangle *) NULL) {
+  while (triangleloop.tri != (triangle *) nullptr) {
     /* If the triangle is bad, enqueue it. */
     testtriangle(m, b, &triangleloop);
     triangleloop.tri = triangletraverse(m);
@@ -8184,7 +8184,7 @@ void splittriangle(struct mesh *m, struct behavior *b,
 
       /* Insert the circumcenter, searching from the edge of the triangle, */
       /*   and maintain the Delaunay property of the triangulation.        */
-      success = insertvertex(m, b, newvertex, &badotri, (struct osub *) NULL,
+      success = insertvertex(m, b, newvertex, &badotri, (struct osub *) nullptr,
                              1, 1, minedge);
       if (success == SUCCESSFULVERTEX) {
         if (m->steinerleft > 0) {
@@ -8263,7 +8263,7 @@ void enforcequality(struct mesh *m, struct behavior *b)
              BADTRIPERBLOCK, POINTER, 0);
     /* Initialize the queues of bad triangles. */
     for (i = 0; i < 64; i++) {
-      m->queuefront[i] = (struct badtriang *) NULL;
+      m->queuefront[i] = (struct badtriang *) nullptr;
     }
     m->firstnonemptyq = -1;
     /* Test all triangles to see if they're bad. */
@@ -8326,12 +8326,12 @@ void highorder(struct mesh *m, struct behavior *b)
     //  TRACE("Adding vertices for second-order triangles.\n");
   }
   
-  m->vertices.deaditemstack = (int *) NULL;
+  m->vertices.deaditemstack = (int *) nullptr;
 
   traversalinit(&m->triangles);
   triangleloop.tri = triangletraverse(m);
   
-  while (triangleloop.tri != (triangle *) NULL) {
+  while (triangleloop.tri != (triangle *) nullptr) {
     for (triangleloop.orient = 0; triangleloop.orient < 3;
          triangleloop.orient++) {
       sym(triangleloop, trisym);
@@ -8408,7 +8408,7 @@ void transfernodes(struct mesh *m, struct behavior *b, sgFloat *pointlist,
     for (j = 0; j < numberofpointattribs; j++) {
       vertexloop[2 + j] = pointattriblist[attribindex++];
     }
-    if (pointmarkerlist != (int *) NULL) {
+    if (pointmarkerlist != (int *) nullptr) {
       /* Read a vertex marker. */
       setvertexmark(vertexloop, pointmarkerlist[i]);
     } else {
@@ -8455,16 +8455,16 @@ void writenodes(struct mesh *m, struct behavior *b, sgFloat **pointlist,
     //  TRACE("Writing vertices.\n");
   }
   /* Allocate memory for output vertices if necessary. */
-  if (*pointlist == (sgFloat *) NULL) {
+  if (*pointlist == (sgFloat *) nullptr) {
     *pointlist = (sgFloat *) trimalloc(outvertices * 2 * sizeof(sgFloat));
   }
   /* Allocate memory for output vertex attributes if necessary. */
-  if ((m->nextras > 0) && (*pointattriblist == (sgFloat *) NULL)) {
+  if ((m->nextras > 0) && (*pointattriblist == (sgFloat *) nullptr)) {
     *pointattriblist = (sgFloat *) trimalloc(outvertices * m->nextras *
                                           sizeof(sgFloat));
   }
   /* Allocate memory for output vertex markers if necessary. */
-  if (!b->nobound && (*pointmarkerlist == (int *) NULL)) {
+  if (!b->nobound && (*pointmarkerlist == (int *) nullptr)) {
     *pointmarkerlist = (int *) trimalloc(outvertices * sizeof(int));
   }
   plist = *pointlist;
@@ -8476,7 +8476,7 @@ void writenodes(struct mesh *m, struct behavior *b, sgFloat **pointlist,
   traversalinit(&m->vertices);
   vertexnumber = b->firstnumber;
   vertexloop = vertextraverse(m);
-  while (vertexloop != (vertex) NULL) {
+  while (vertexloop != (vertex) nullptr) {
     if (!b->jettison || (vertextype(vertexloop) != UNDEADVERTEX)) {
       /* X and y coordinates. */
       plist[coordindex++] = vertexloop[0];
@@ -8505,7 +8505,7 @@ void numbernodes(struct mesh *m, struct behavior *b)
   traversalinit(&m->vertices);
   vertexnumber = b->firstnumber;
   vertexloop = vertextraverse(m);
-  while (vertexloop != (vertex) NULL) {
+  while (vertexloop != (vertex) nullptr) {
     setvertexmark(vertexloop, vertexnumber);
     if (!b->jettison || (vertextype(vertexloop) != UNDEADVERTEX)) {
       vertexnumber++;
@@ -8533,13 +8533,13 @@ void writeelements(struct mesh *m, struct behavior *b,
     //  TRACE("Writing triangles.\n");
   }
   /* Allocate memory for output triangles if necessary. */
-  if (*trianglelist == (int *) NULL) {
+  if (*trianglelist == (int *) nullptr) {
     *trianglelist = (int *) trimalloc(m->triangles.items *
                                       ((b->order + 1) * (b->order + 2) / 2) *
                                       sizeof(int));
   }
   /* Allocate memory for output triangle attributes if necessary. */
-  if ((m->eextras > 0) && (*triangleattriblist == (sgFloat *) NULL)) {
+  if ((m->eextras > 0) && (*triangleattriblist == (sgFloat *) nullptr)) {
     *triangleattriblist = (sgFloat *) trimalloc(m->triangles.items * m->eextras *
                                              sizeof(sgFloat));
   }
@@ -8552,7 +8552,7 @@ void writeelements(struct mesh *m, struct behavior *b,
   triangleloop.tri = triangletraverse(m);
   triangleloop.orient = 0;
   elementnumber = b->firstnumber;
-  while (triangleloop.tri != (triangle *) NULL) {
+  while (triangleloop.tri != (triangle *) nullptr) {
     org(triangleloop, p1);
     dest(triangleloop, p2);
     apex(triangleloop, p3);
@@ -8603,11 +8603,11 @@ void writepoly(struct mesh *m, struct behavior *b,
     //  TRACE("Writing segments.\n");
   }
   /* Allocate memory for output segments if necessary. */
-  if (*segmentlist == (int *) NULL) {
+  if (*segmentlist == (int *) nullptr) {
     *segmentlist = (int *) trimalloc(m->subsegs.items * 2 * sizeof(int));
   }
   /* Allocate memory for output segment markers if necessary. */
-  if (!b->nobound && (*segmentmarkerlist == (int *) NULL)) {
+  if (!b->nobound && (*segmentmarkerlist == (int *) nullptr)) {
     *segmentmarkerlist = (int *) trimalloc(m->subsegs.items * sizeof(int));
   }
   slist = *segmentlist;
@@ -8618,7 +8618,7 @@ void writepoly(struct mesh *m, struct behavior *b,
   subsegloop.ss = subsegtraverse(m);
   subsegloop.ssorient = 0;
   subsegnumber = b->firstnumber;
-  while (subsegloop.ss != (subseg *) NULL) {
+  while (subsegloop.ss != (subseg *) nullptr) {
     sorg(subsegloop, endpoint1);
     sdest(subsegloop, endpoint2);
     /* Copy indices of the segment's two endpoints. */
@@ -8654,11 +8654,11 @@ void writeedges(struct mesh *m, struct behavior *b,
     //  TRACE("Writing edges.\n");
   }
   /* Allocate memory for edges if necessary. */
-  if (*edgelist == (int *) NULL) {
+  if (*edgelist == (int *) nullptr) {
     *edgelist = (int *) trimalloc(m->edges * 2 * sizeof(int));
   }
   /* Allocate memory for edge markers if necessary. */
-  if (!b->nobound && (*edgemarkerlist == (int *) NULL)) {
+  if (!b->nobound && (*edgemarkerlist == (int *) nullptr)) {
     *edgemarkerlist = (int *) trimalloc(m->edges * sizeof(int));
   }
   elist = *edgelist;
@@ -8675,7 +8675,7 @@ void writeedges(struct mesh *m, struct behavior *b,
   /*   adjacent triangle, operate on the edge only if the current triangle */
   /*   has a smaller pointer than its neighbor.  This way, each edge is    */
   /*   considered only once.                                               */
-  while (triangleloop.tri != (triangle *) NULL) {
+  while (triangleloop.tri != (triangle *) nullptr) {
     for (triangleloop.orient = 0; triangleloop.orient < 3;
          triangleloop.orient++) {
       sym(triangleloop, trisym);
@@ -8741,15 +8741,15 @@ void writevoronoi(struct mesh *m, struct behavior *b, sgFloat **vpointlist,
     //  TRACE("Writing Voronoi vertices.\n");
   }
   /* Allocate memory for Voronoi vertices if necessary. */
-  if (*vpointlist == (sgFloat *) NULL) {
+  if (*vpointlist == (sgFloat *) nullptr) {
     *vpointlist = (sgFloat *) trimalloc(m->triangles.items * 2 * sizeof(sgFloat));
   }
   /* Allocate memory for Voronoi vertex attributes if necessary. */
-  if (*vpointattriblist == (sgFloat *) NULL) {
+  if (*vpointattriblist == (sgFloat *) nullptr) {
     *vpointattriblist = (sgFloat *) trimalloc(m->triangles.items * m->nextras *
                                            sizeof(sgFloat));
   }
-  *vpointmarkerlist = (int *) NULL;
+  *vpointmarkerlist = (int *) nullptr;
   plist = *vpointlist;
   palist = *vpointattriblist;
   coordindex = 0;
@@ -8759,7 +8759,7 @@ void writevoronoi(struct mesh *m, struct behavior *b, sgFloat **vpointlist,
   triangleloop.tri = triangletraverse(m);
   triangleloop.orient = 0;
   vnodenumber = b->firstnumber;
-  while (triangleloop.tri != (triangle *) NULL) {
+  while (triangleloop.tri != (triangle *) nullptr) {
     org(triangleloop, torg);
     dest(triangleloop, tdest);
     apex(triangleloop, tapex);
@@ -8785,12 +8785,12 @@ void writevoronoi(struct mesh *m, struct behavior *b, sgFloat **vpointlist,
     //  TRACE("Writing Voronoi edges.\n");
   }
   /* Allocate memory for output Voronoi edges if necessary. */
-  if (*vedgelist == (int *) NULL) {
+  if (*vedgelist == (int *) nullptr) {
     *vedgelist = (int *) trimalloc(m->edges * 2 * sizeof(int));
   }
-  *vedgemarkerlist = (int *) NULL;
+  *vedgemarkerlist = (int *) nullptr;
   /* Allocate memory for output Voronoi norms if necessary. */
-  if (*vnormlist == (sgFloat *) NULL) {
+  if (*vnormlist == (sgFloat *) nullptr) {
     *vnormlist = (sgFloat *) trimalloc(m->edges * 2 * sizeof(sgFloat));
   }
   elist = *vedgelist;
@@ -8806,7 +8806,7 @@ void writevoronoi(struct mesh *m, struct behavior *b, sgFloat **vpointlist,
   /*   adjacent triangle, operate on the edge only if the current triangle */
   /*   has a smaller pointer than its neighbor.  This way, each edge is    */
   /*   considered only once.                                               */
-  while (triangleloop.tri != (triangle *) NULL) {
+  while (triangleloop.tri != (triangle *) nullptr) {
     for (triangleloop.orient = 0; triangleloop.orient < 3;
          triangleloop.orient++) {
       sym(triangleloop, trisym);
@@ -8856,7 +8856,7 @@ void writeneighbors(struct mesh *m, struct behavior *b, int **neighborlist)
     //  TRACE("Writing neighbors.\n");
   }
   /* Allocate memory for neighbors if necessary. */
-  if (*neighborlist == (int *) NULL) {
+  if (*neighborlist == (int *) nullptr) {
     *neighborlist = (int *) trimalloc(m->triangles.items * 3 * sizeof(int));
   }
   nlist = *neighborlist;
@@ -8866,7 +8866,7 @@ void writeneighbors(struct mesh *m, struct behavior *b, int **neighborlist)
   triangleloop.tri = triangletraverse(m);
   triangleloop.orient = 0;
   elementnumber = b->firstnumber;
-  while (triangleloop.tri != (triangle *) NULL) {
+  while (triangleloop.tri != (triangle *) nullptr) {
     * (int *) (triangleloop.tri + 6) = (int) elementnumber;
     triangleloop.tri = triangletraverse(m);
     elementnumber++;
@@ -8876,7 +8876,7 @@ void writeneighbors(struct mesh *m, struct behavior *b, int **neighborlist)
   traversalinit(&m->triangles);
   triangleloop.tri = triangletraverse(m);
   elementnumber = b->firstnumber;
-  while (triangleloop.tri != (triangle *) NULL) {
+  while (triangleloop.tri != (triangle *) nullptr) {
     triangleloop.orient = 1;
     sym(triangleloop, trisym);
     neighbor1 = * (int *) (trisym.tri + 6);
@@ -8963,7 +8963,7 @@ void quality_statistics(struct mesh *m, struct behavior *b)
   traversalinit(&m->triangles);
   triangleloop.tri = triangletraverse(m);
   triangleloop.orient = 0;
-  while (triangleloop.tri != (triangle *) NULL) {
+  while (triangleloop.tri != (triangle *) nullptr) {
     org(triangleloop, p[0]);
     dest(triangleloop, p[1]);
     apex(triangleloop, p[2]);
@@ -9215,9 +9215,9 @@ void triangulate(char *triswitches, struct triangulateio *in,
 
   /* Ensure that no vertex can be mistaken for a triangular bounding */
   /*   box vertex in insertvertex().                                 */
-  m.infvertex1 = (vertex) NULL;
-  m.infvertex2 = (vertex) NULL;
-  m.infvertex3 = (vertex) NULL;
+  m.infvertex1 = (vertex) nullptr;
+  m.infvertex2 = (vertex) nullptr;
+  m.infvertex3 = (vertex) nullptr;
 
   if (b.usesegments) {
     m.checksegments = 1;                /* Segments will be introduced next. */
@@ -9275,7 +9275,7 @@ void triangulate(char *triswitches, struct triangulateio *in,
   } else {
     out->numberofsegments = m.hullsize;
   }
-  if (vorout != (struct triangulateio *) NULL) {
+  if (vorout != (struct triangulateio *) nullptr) {
     vorout->numberofpoints = m.triangles.items;
     vorout->numberofpointattributes = m.nextras;
     vorout->numberofedges = m.edges;
@@ -9328,8 +9328,8 @@ void triangulate(char *triswitches, struct triangulateio *in,
         out->holelist = in->holelist;
         out->regionlist = in->regionlist;
       } else {
-        out->holelist = (sgFloat *) NULL;
-        out->regionlist = (sgFloat *) NULL;
+        out->holelist = (sgFloat *) nullptr;
+        out->regionlist = (sgFloat *) nullptr;
       }
 
     }
@@ -9611,16 +9611,16 @@ bool CTriangulator::ClearNotAll()
 	if (out_data->normlist)
 		free(out_data->normlist);
 
-	out_data->triangleattributelist = NULL;
-	out_data->trianglearealist = NULL;
-	out_data->neighborlist = NULL;
-	out_data->segmentlist = NULL;
-	out_data->segmentmarkerlist = NULL;
-	out_data->holelist = NULL;
-	out_data->regionlist = NULL;
-	out_data->edgelist = NULL;
-	out_data->edgemarkerlist = NULL;
-	out_data->normlist = NULL;
+	out_data->triangleattributelist = nullptr;
+	out_data->trianglearealist = nullptr;
+	out_data->neighborlist = nullptr;
+	out_data->segmentlist = nullptr;
+	out_data->segmentmarkerlist = nullptr;
+	out_data->holelist = nullptr;
+	out_data->regionlist = nullptr;
+	out_data->edgelist = nullptr;
+	out_data->edgemarkerlist = nullptr;
+	out_data->normlist = nullptr;
 	
 	return true;
 }
@@ -9660,8 +9660,8 @@ bool    CTriangulator::SetPoint(unsigned int point_index, sgFloat pX, sgFloat pY
 	struct triangulateio*  in_data = reinterpret_cast<struct triangulateio*>(m_in);
 	struct triangulateio*  out_data = reinterpret_cast<struct triangulateio*>(m_out);
 
-	if (in_data==NULL || in_data->pointlist==NULL || point_index>=(unsigned int)in_data->numberofpoints ||
-		in_data->pointmarkerlist==NULL || in_data->pointattributelist==NULL)
+	if (in_data==nullptr || in_data->pointlist==nullptr || point_index>=(unsigned int)in_data->numberofpoints ||
+		in_data->pointmarkerlist==nullptr || in_data->pointattributelist==nullptr)
 		return false;
 
 	in_data->pointlist[2*point_index] = pX;
@@ -9674,8 +9674,8 @@ bool    CTriangulator::SetPoint(unsigned int point_index, sgFloat pX, sgFloat pY
 }
 
 bool    CTriangulator::SetAllPoints(unsigned int points_count, const sgFloat* all_points,
-									const sgFloat* points_attrs/*=NULL*/, 
-									const int* points_marks/*=NULL*/)
+									const sgFloat* points_attrs/*=nullptr*/, 
+									const int* points_marks/*=nullptr*/)
 {
 	if (!SetPointsCount(points_count))
 		return false;
@@ -9683,8 +9683,8 @@ bool    CTriangulator::SetAllPoints(unsigned int points_count, const sgFloat* al
 	struct triangulateio*  in_data = reinterpret_cast<struct triangulateio*>(m_in);
 	struct triangulateio*  out_data = reinterpret_cast<struct triangulateio*>(m_out);
 
-	if (in_data==NULL || in_data->pointlist==NULL || all_points==NULL ||
-		in_data->pointmarkerlist==NULL || in_data->pointattributelist==NULL)
+	if (in_data==nullptr || in_data->pointlist==nullptr || all_points==nullptr ||
+		in_data->pointmarkerlist==nullptr || in_data->pointattributelist==nullptr)
 		return false;
 
 	memcpy(in_data->pointlist,all_points,in_data->numberofpoints * 2 * sizeof(sgFloat));
@@ -9763,11 +9763,11 @@ bool CTriangulator::SetSegment(unsigned int segment_index, int start_ind, int en
 	struct triangulateio*  in_data = reinterpret_cast<struct triangulateio*>(m_in);
 	struct triangulateio*  out_data = reinterpret_cast<struct triangulateio*>(m_out);
 
-	if (in_data==NULL || in_data->pointlist==NULL || in_data->segmentlist==NULL || 
+	if (in_data==nullptr || in_data->pointlist==nullptr || in_data->segmentlist==nullptr || 
 		segment_index>=(unsigned int)in_data->numberofsegments ||
 		start_ind>=in_data->numberofpoints ||
 		end_ind>=in_data->numberofpoints ||
-		in_data->segmentmarkerlist==NULL)
+		in_data->segmentmarkerlist==nullptr)
 		return false;
 
 	in_data->segmentlist[2*segment_index] = start_ind;
@@ -9778,7 +9778,7 @@ bool CTriangulator::SetSegment(unsigned int segment_index, int start_ind, int en
 }
 
 bool CTriangulator::SetAllSegments(unsigned int segments_count, const int* all_segments,
-								   const int* segments_marks/*=NULL*/)
+								   const int* segments_marks/*=nullptr*/)
 {
 	if (!SetSegmentsCount(segments_count))
 		return false;
@@ -9786,10 +9786,10 @@ bool CTriangulator::SetAllSegments(unsigned int segments_count, const int* all_s
 	struct triangulateio*  in_data = reinterpret_cast<struct triangulateio*>(m_in);
 	struct triangulateio*  out_data = reinterpret_cast<struct triangulateio*>(m_out);
 
-	if (in_data==NULL || in_data->pointlist==NULL || 
-		in_data->segmentlist==NULL || all_segments==NULL ||
+	if (in_data==nullptr || in_data->pointlist==nullptr || 
+		in_data->segmentlist==nullptr || all_segments==nullptr ||
 		in_data->numberofsegments!=segments_count ||
-		in_data->segmentmarkerlist==NULL)
+		in_data->segmentmarkerlist==nullptr)
 		return false;
 
 	memcpy(in_data->segmentlist,all_segments,in_data->numberofsegments*2*sizeof(int));
@@ -9825,8 +9825,8 @@ bool  CTriangulator::SetHole(unsigned int hole_index, sgFloat pX, sgFloat pY)
 	struct triangulateio*  in_data = reinterpret_cast<struct triangulateio*>(m_in);
 	struct triangulateio*  out_data = reinterpret_cast<struct triangulateio*>(m_out);
 
-	if (in_data==NULL || in_data->pointlist==NULL || in_data->segmentlist==NULL || 
-		in_data->holelist==NULL ||
+	if (in_data==nullptr || in_data->pointlist==nullptr || in_data->segmentlist==nullptr || 
+		in_data->holelist==nullptr ||
 		hole_index>=(unsigned int)in_data->numberofholes)
 			return false;
 
@@ -9844,8 +9844,8 @@ bool  CTriangulator::SetAllHoles(unsigned int holes_count, const sgFloat* all_ho
 	struct triangulateio*  in_data = reinterpret_cast<struct triangulateio*>(m_in);
 	struct triangulateio*  out_data = reinterpret_cast<struct triangulateio*>(m_out);
 
-	if (in_data==NULL || in_data->pointlist==NULL || 
-		in_data->holelist==NULL || all_holes==NULL ||
+	if (in_data==nullptr || in_data->pointlist==nullptr || 
+		in_data->holelist==nullptr || all_holes==nullptr ||
 		in_data->numberofholes!=holes_count)
 		return false;
 
@@ -9862,24 +9862,24 @@ bool   CTriangulator::StartTriangulate()
 	struct triangulateio*  in_data = reinterpret_cast<struct triangulateio*>(m_in);
 	struct triangulateio*  out_data = reinterpret_cast<struct triangulateio*>(m_out);
 
-	if (in_data==NULL || 
+	if (in_data==nullptr || 
 		in_data->numberofpoints==0 ||
 		in_data->numberofpointattributes==0 ||
-		in_data->pointlist==NULL ||
-		in_data->pointmarkerlist==NULL ||
-		in_data->pointattributelist==NULL ||
+		in_data->pointlist==nullptr ||
+		in_data->pointmarkerlist==nullptr ||
+		in_data->pointattributelist==nullptr ||
 		in_data->numberofsegments==0 ||
-		in_data->segmentlist==NULL ||
-		in_data->segmentmarkerlist==NULL)
+		in_data->segmentlist==nullptr ||
+		in_data->segmentmarkerlist==nullptr)
 			return false;
 
 	try
 	{
         // ROBLOX CHANGE
 		if (triangulation_temp_flag==SG_DELAUNAY_TRIANGULATION)
-			triangulate("pzqPQ", in_data, out_data, (struct triangulateio *) NULL);//Delone
+			triangulate("pzqPQ", in_data, out_data, (struct triangulateio *) nullptr);//Delone
 		else
-		    triangulate("pzPQ", in_data, out_data, (struct triangulateio *) NULL);
+		    triangulate("pzPQ", in_data, out_data, (struct triangulateio *) nullptr);
         // END ROBLOX CHANGE
 	}
 	catch (...) 
@@ -9894,7 +9894,7 @@ bool  CTriangulator::GetPointsCount(unsigned int& points_count) const
 	struct triangulateio*  in_data = reinterpret_cast<struct triangulateio*>(m_in);
 	struct triangulateio*  out_data = reinterpret_cast<struct triangulateio*>(m_out);
 
-	if (out_data==NULL || out_data->pointlist==NULL)
+	if (out_data==nullptr || out_data->pointlist==nullptr)
 	{
 		points_count=0;
 		return false;
@@ -9908,7 +9908,7 @@ bool  CTriangulator::GetPoint(unsigned int point_index, sgFloat& pX, sgFloat& pY
 	struct triangulateio*  in_data = reinterpret_cast<struct triangulateio*>(m_in);
 	struct triangulateio*  out_data = reinterpret_cast<struct triangulateio*>(m_out);
 
-	if (out_data==NULL || out_data->pointlist==NULL || point_index>=(unsigned int)out_data->numberofpoints)
+	if (out_data==nullptr || out_data->pointlist==nullptr || point_index>=(unsigned int)out_data->numberofpoints)
 	{
 		pX=0;
 		pY=0;
@@ -9924,7 +9924,7 @@ bool  CTriangulator::GetTrianglesCount(unsigned int& tr_count) const
 	struct triangulateio*  in_data = reinterpret_cast<struct triangulateio*>(m_in);
 	struct triangulateio*  out_data = reinterpret_cast<struct triangulateio*>(m_out);
 
-	if (out_data==NULL || out_data->pointlist==NULL || out_data->trianglelist==NULL)
+	if (out_data==nullptr || out_data->pointlist==nullptr || out_data->trianglelist==nullptr)
 	{
 		tr_count=0;
 		return false;
@@ -9938,9 +9938,9 @@ bool  CTriangulator::GetTriangle(unsigned int tr_index, int& ver1, int& ver2, in
 	struct triangulateio*  in_data = reinterpret_cast<struct triangulateio*>(m_in);
 	struct triangulateio*  out_data = reinterpret_cast<struct triangulateio*>(m_out);
 
-	if (out_data==NULL || out_data->pointlist==NULL || 
+	if (out_data==nullptr || out_data->pointlist==nullptr || 
 		tr_index>=(unsigned int)out_data->numberoftriangles ||
-		out_data->trianglelist==NULL)
+		out_data->trianglelist==nullptr)
 	{
 		ver1=0;
 		ver2=0;
@@ -9957,8 +9957,8 @@ const sgFloat* CTriangulator::GetPointsAttributes() const
 {
 	struct triangulateio*  out_data = reinterpret_cast<struct triangulateio*>(m_out);
 
-	if (out_data==NULL)
-		return NULL;
+	if (out_data==nullptr)
+		return nullptr;
 	return out_data->pointattributelist;
 }
 
@@ -9966,8 +9966,8 @@ const int* CTriangulator::GetPointsMarks() const
 {
 	struct triangulateio*  out_data = reinterpret_cast<struct triangulateio*>(m_out);
 
-	if (out_data==NULL)
-		return NULL;
+	if (out_data==nullptr)
+		return nullptr;
 	return out_data->pointmarkerlist;
 }
 

@@ -3,8 +3,8 @@
 BOOL surface_end( lpVLD vld, lpLNP lnp, lpGEO_SURFACE geo_surf ){
 BOOL       ret=FALSE;
 int        size;
-sgFloat		 *lpparam/* = NULL*/;
-lpDA_POINT lppoint/*=NULL*/;
+sgFloat		 *lpparam/* = nullptr*/;
+lpDA_POINT lppoint/*=nullptr*/;
 lpSNODE    lpderiv;
 
   if (!add_vld_data(vld, sizeof(geo_surf->type),      &geo_surf->type)) goto err;

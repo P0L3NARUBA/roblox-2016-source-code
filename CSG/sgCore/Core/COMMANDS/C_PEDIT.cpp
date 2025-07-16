@@ -25,7 +25,7 @@ short get_primitive_param(hOBJ hobj, void **par, sgFloat *scale)
 			if (!read_elem(&vd_brep, brep->num, &lnp)) ret = -1;
 			else {
 				csg = (lpCSG)lnp.hcsg;
-				if ((*par = SGMalloc(csg->size)) != NULL) {
+				if ((*par = SGMalloc(csg->size)) != nullptr) {
 					ret = lnp.kind;
 					memcpy(*par, csg->data, csg->size);
 				} else ret = -1;

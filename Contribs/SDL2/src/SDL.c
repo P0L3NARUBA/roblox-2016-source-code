@@ -170,7 +170,7 @@ SDL_InitSubSystem(Uint32 flags)
     if ((flags & SDL_INIT_VIDEO)){
 #if !SDL_VIDEO_DISABLED
         if (SDL_PrivateShouldInitSubsystem(SDL_INIT_VIDEO)) {
-            if (SDL_VideoInit(NULL) < 0) {
+            if (SDL_VideoInit(nullptr) < 0) {
                 return (-1);
             }
         }
@@ -184,7 +184,7 @@ SDL_InitSubSystem(Uint32 flags)
     if ((flags & SDL_INIT_AUDIO)){
 #if !SDL_AUDIO_DISABLED
         if (SDL_PrivateShouldInitSubsystem(SDL_INIT_AUDIO)) {
-            if (SDL_AudioInit(NULL) < 0) {
+            if (SDL_AudioInit(nullptr) < 0) {
                 return (-1);
             }
         }

@@ -151,16 +151,16 @@ bool DocTabManager::setCurrentDoc(IRobloxDoc& doc)
 /**
  * Gets the current selected tab.
  * 
- * @return doc if tab is selected, NULL if no tab is selected or doc not found
+ * @return doc if tab is selected, nullptr if no tab is selected or doc not found
  */
 IRobloxDoc* DocTabManager::getCurrentDoc() const
 {
     const int index = m_TabWidget->currentIndex();
     if ( index == -1 )
-        return NULL;
+        return nullptr;
 
     if ( m_FakeTab->isVisible() )
-        return NULL;
+        return nullptr;
 
     return m_Docs[index];
 }
@@ -173,7 +173,7 @@ void DocTabManager::onCurrentChanged(int index)
 {
     if ( index == -1 )
     {
-        RobloxDocManager::Instance().setCurrentDoc(NULL);
+        RobloxDocManager::Instance().setCurrentDoc(nullptr);
     }
     else if ( !m_FakeTab->isVisible() && index < m_Docs.size())
     {

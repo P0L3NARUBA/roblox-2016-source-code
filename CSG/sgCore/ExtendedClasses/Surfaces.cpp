@@ -6,7 +6,7 @@ sgCObject*  sgSurfaces::Face(const sgC2DObject&  outContour,
 {
 	sgC2DObject* f_o = const_cast<sgC2DObject*>(&outContour);
 	
-	hOBJ*  select_list_before = NULL;
+	hOBJ*  select_list_before = nullptr;
 	int    select_list_before_size = 0;
 	if (selected.num>0)
 	{
@@ -29,7 +29,7 @@ sgCObject*  sgSurfaces::Face(const sgC2DObject&  outContour,
 	short*  object_statuses = (short*)SGMalloc((holes_count+1)*sizeof(short));
 	object_statuses[0] = ((lpOBJ)GetObjectHandle(f_o))->status;
 
-	hOBJ* otvs_handls = NULL;
+	hOBJ* otvs_handls = nullptr;
 	if (holes_count>0)
 	   otvs_handls = (hOBJ*)SGMalloc(sizeof(hOBJ)*holes_count);
 	for (int i=0;i<holes_count;i++)
@@ -55,7 +55,7 @@ sgCObject*  sgSurfaces::Face(const sgC2DObject&  outContour,
 		SGFree(select_list_before);
 
 		global_sg_error = SG_ER_BAD_ARGUMENT_CONFLICT_BEETWEEN_ARGS;
-		return NULL;
+		return nullptr;
 	}
 	if (otvs_handls)
 		SGFree(otvs_handls);
@@ -63,8 +63,8 @@ sgCObject*  sgSurfaces::Face(const sgC2DObject&  outContour,
 	LISTH listh_otv;
 	init_listh(&listh_otv);
 	
-	hOBJ tmpHndl=NULL;
-	lpOBJ obj = NULL;
+	hOBJ tmpHndl=nullptr;
+	lpOBJ obj = nullptr;
 
 	tmpHndl = GetObjectHandle(f_o);
 	
@@ -93,7 +93,7 @@ sgCObject*  sgSurfaces::Face(const sgC2DObject&  outContour,
 
 		global_sg_error = SG_ER_INTERNAL;
 	
-		return NULL;
+		return nullptr;
 	}
 
 	for (int i=0;i<holes_count;i++)
@@ -148,13 +148,13 @@ static   bool  sort_curves_for_coons_command(const sgC2DObject& firstSide,
 	obj_handles[0]  = GetObjectHandle(&firstSide);
 	obj_handles[1]  = GetObjectHandle(&secondSide);
 	obj_handles[2]  = GetObjectHandle(&thirdSide);
-	obj_handles[3]  = (fourthSide)?GetObjectHandle(fourthSide):NULL;
+	obj_handles[3]  = (fourthSide)?GetObjectHandle(fourthSide):nullptr;
 
 	int i;
 	for (i=0;i<4;i++)
 	{
 		if (!obj_handles[i]) continue;
-		if (!init_get_point_on_path(obj_handles[i], NULL)) return false;
+		if (!init_get_point_on_path(obj_handles[i], nullptr)) return false;
 		if (!get_point_on_path(0., &(begins_and_ends[i].begin_of_curve))) return false;
 		if (!get_point_on_path(1., &(begins_and_ends[i].end_of_curve))) return false;
 		term_get_point_on_path();
@@ -221,14 +221,14 @@ searchThird:
 
 searchFourth:
 
-	if (fourthSide==NULL)
+	if (fourthSide==nullptr)
 	{
 		if (!dpoint_eq(&curFinish, &(begins_and_ends[0].begin_of_curve), eps_d))
 		{
 			assert(0);
 			return false;
 		}
-		fou_hObj = NULL;
+		fou_hObj = nullptr;
 		need_reverse_fou = false;
 		return true;
 	}
@@ -280,7 +280,7 @@ sgCObject*  sgSurfaces::Coons(const sgC2DObject& firstSide,
 		(fourthSide && fourthSide->IsClosed()))
 	{
 		global_sg_error = SG_ER_BAD_ARGUMENT_UNKNOWN;
-		return NULL;
+		return nullptr;
 	}
 
 	if (firstSide.IsSelfIntersecting() ||
@@ -289,7 +289,7 @@ sgCObject*  sgSurfaces::Coons(const sgC2DObject& firstSide,
 		(fourthSide && fourthSide->IsSelfIntersecting()))
 	{
 		global_sg_error = SG_ER_BAD_ARGUMENT_UNKNOWN;
-		return NULL;
+		return nullptr;
 	}
 
 	hOBJ			hnew;
@@ -302,12 +302,12 @@ sgCObject*  sgSurfaces::Coons(const sgC2DObject& firstSide,
 							reverse[0],reverse[1],reverse[2],reverse[3]))
 	{
 		global_sg_error = SG_ER_BAD_ARGUMENT_CONFLICT_BEETWEEN_ARGS;
-		return NULL;
+		return nullptr;
 	}
 
-	if (fourthSide == NULL) {	//     u2
+	if (fourthSide == nullptr) {	//     u2
 		hobj[3] = hobj[2];
-		hobj[2] = NULL;
+		hobj[2] = nullptr;
 		reverse[3] = reverse[2];
 	}
 	
@@ -328,7 +328,7 @@ sgCObject*  sgSurfaces::Coons(const sgC2DObject& firstSide,
 	D_POINT p_1,p_2;
 	for (i = 0; i < 4; i++) 
 	{
-		if (hobj[i] == NULL) continue;
+		if (hobj[i] == nullptr) continue;
 		int jnum = ((i % 2) == 0) ? n_u : n_v;
 		sgFloat dt = 1. / (jnum - 1);
 		sgFloat t;
@@ -338,15 +338,15 @@ sgCObject*  sgSurfaces::Coons(const sgC2DObject& firstSide,
 		} else {
 			t = 0.;
 		}
-		if (!init_get_point_on_path(hobj[i], NULL))
+		if (!init_get_point_on_path(hobj[i], nullptr))
 		{
 			assert(0);
 			global_sg_error = SG_ER_INTERNAL;
 			for (i = 0; i < 4; i++) 
 				free_vdim(&vdim[i]);
-			return NULL;
+			return nullptr;
 		}
-		if (fourthSide == NULL && i==1) {
+		if (fourthSide == nullptr && i==1) {
 			//   pstart    
 			if (reverse[i]) 
 				t = 0.; 
@@ -358,7 +358,7 @@ sgCObject*  sgSurfaces::Coons(const sgC2DObject& firstSide,
 				global_sg_error = SG_ER_INTERNAL;
 				for (i = 0; i < 4; i++) 
 					free_vdim(&vdim[i]);
-				return NULL;
+				return nullptr;
 			}
 			if (reverse[i])  //RA
 				t = 1.; 
@@ -378,7 +378,7 @@ sgCObject*  sgSurfaces::Coons(const sgC2DObject& firstSide,
 				global_sg_error = SG_ER_INTERNAL;
 				for (i = 0; i < 4; i++) 
 					free_vdim(&vdim[i]);
-				return NULL;
+				return nullptr;
 			}
 			if (!add_elem(&vdim[i], &p_2))
 			{
@@ -386,12 +386,12 @@ sgCObject*  sgSurfaces::Coons(const sgC2DObject& firstSide,
 				global_sg_error = SG_ER_INTERNAL;
 				for (i = 0; i < 4; i++) 
 					free_vdim(&vdim[i]);
-				return NULL;
+				return nullptr;
 			}
 		}
 		term_get_point_on_path();
 	}
-	if (fourthSide == NULL) 
+	if (fourthSide == nullptr) 
 	{	//     
 		for (i = 0; i < n_v; i++) {
 			if (!add_elem(&vdim[2], &p_1))
@@ -400,7 +400,7 @@ sgCObject*  sgSurfaces::Coons(const sgC2DObject& firstSide,
 				global_sg_error = SG_ER_INTERNAL;
 				for (i = 0; i < 4; i++) 
 					free_vdim(&vdim[i]);
-				return NULL;
+				return nullptr;
 			}
 		}
 	}
@@ -411,7 +411,7 @@ sgCObject*  sgSurfaces::Coons(const sgC2DObject& firstSide,
 		global_sg_error = SG_ER_INTERNAL;
 		for (i = 0; i < 4; i++) 
 			free_vdim(&vdim[i]);
-		return NULL;
+		return nullptr;
 	}
 		
 	for (i = 0; i < 4; i++) 
@@ -429,13 +429,13 @@ sgCObject*  sgSurfaces::Mesh(short dimens_1,
 	if (dimens_1<2 || dimens_2<2)
 	{
 		global_sg_error = SG_ER_BAD_ARGUMENT_UNKNOWN;
-		return NULL;
+		return nullptr;
 	}
 
-	if (pnts==NULL)
+	if (pnts==nullptr)
 	{
 		global_sg_error = SG_ER_BAD_ARGUMENT_NULL_POINTER;
-		return NULL;
+		return nullptr;
 	}
 
 	LISTH    listh_res;
@@ -457,7 +457,7 @@ sgCObject*  sgSurfaces::Mesh(short dimens_1,
 			{
 				free_vdim(&mesh_data.vdim);
 				global_sg_error = SG_ER_INTERNAL;
-				return NULL;
+				return nullptr;
 			}
 		}
 	}
@@ -469,7 +469,7 @@ sgCObject*  sgSurfaces::Mesh(short dimens_1,
 		assert(0);
 		global_sg_error = SG_ER_INTERNAL;
 		free_vdim(&mesh_data.vdim);
-		return NULL;
+		return nullptr;
 	}
 
 	hOBJ hnew = listh_res.hhead;
@@ -479,7 +479,7 @@ sgCObject*  sgSurfaces::Mesh(short dimens_1,
 		assert(0);
 		global_sg_error = SG_ER_INTERNAL;
 		free_vdim(&mesh_data.vdim);
-		return NULL;
+		return nullptr;
 	}
 
 	free_vdim(&mesh_data.vdim);
@@ -490,14 +490,14 @@ sgCObject*  sgSurfaces::Mesh(short dimens_1,
 
 sgCObject*  sgSurfaces::SewSurfaces(const sgC3DObject** surfaces, int surf_count)
 {
-	if (surfaces==NULL || surf_count<2)
+	if (surfaces==nullptr || surf_count<2)
 	{
 		global_sg_error = SG_ER_BAD_ARGUMENT_NULL_POINTER;
-		return NULL;
+		return nullptr;
 	}
 
 
-	hOBJ*  select_list_before = NULL;
+	hOBJ*  select_list_before = nullptr;
 	int    select_list_before_size = 0;
 	if (selected.num>0)
 	{
@@ -520,7 +520,7 @@ sgCObject*  sgSurfaces::SewSurfaces(const sgC3DObject** surfaces, int surf_count
 	short*  object_statuses = (short*)SGMalloc((surf_count)*sizeof(short));
 	for (int i=0;i<surf_count;i++)
 	{
-		if (surfaces[i]==NULL)
+		if (surfaces[i]==nullptr)
 		{
 			for (int j=0;j<i;j++)
 			{
@@ -533,7 +533,7 @@ sgCObject*  sgSurfaces::SewSurfaces(const sgC3DObject** surfaces, int surf_count
 			SGFree(select_list_before);
 
 			global_sg_error = SG_ER_INTERNAL;
-			return NULL;
+			return nullptr;
 		}
 		object_statuses[i] = ((lpOBJ)GetObjectHandle(surfaces[i]))->status;
 	}
@@ -545,7 +545,7 @@ sgCObject*  sgSurfaces::SewSurfaces(const sgC3DObject** surfaces, int surf_count
 	for (int i=0;i<surf_count;i++)
 		attach_item_tail_z(SEL_LIST,&listh_surf, GetObjectHandle(surfaces[i]));
 	
-	hOBJ hnew = NULL;
+	hOBJ hnew = nullptr;
 
 	if(!sew(&listh_surf,&hnew, eps_d))
 	{
@@ -561,7 +561,7 @@ sgCObject*  sgSurfaces::SewSurfaces(const sgC3DObject** surfaces, int surf_count
 
 		global_sg_error = SG_ER_INTERNAL;
 
-		return NULL;
+		return nullptr;
 	}
 
 	for (int i=0;i<surf_count;i++)
@@ -614,7 +614,7 @@ sgCObject*  sgSurfaces::LinearSurfaceFromSections(const sgC2DObject& firstSide,
 	LISTH					listh_ribs;
 	init_listh(&listh_ribs);
 
-	hOBJ*  select_list_before = NULL;
+	hOBJ*  select_list_before = nullptr;
 	int    select_list_before_size = 0;
 	if (selected.num>0)
 	{
@@ -651,7 +651,7 @@ sgCObject*  sgSurfaces::LinearSurfaceFromSections(const sgC2DObject& firstSide,
 	
 	hOBJ hnew;
 	bool isSidesClosed = (firstSide.IsClosed() && secondSide.IsClosed());
-	bool canSolid = (isClose && isSidesClosed && firstSide.IsPlane(NULL,NULL) && secondSide.IsPlane(NULL,NULL));
+	bool canSolid = (isClose && isSidesClosed && firstSide.IsPlane(nullptr,nullptr) && secondSide.IsPlane(nullptr,nullptr));
 	//----------------Ruled_surface----------------->>>>>>>>>>>>>
 	if (!Ruled_Surface(&listh_ribs, spin_pnts, degree, p,
 		isSidesClosed, canSolid, &hnew)) 
@@ -665,7 +665,7 @@ sgCObject*  sgSurfaces::LinearSurfaceFromSections(const sgC2DObject& firstSide,
 
 		global_sg_error = SG_ER_INTERNAL;
 
-		return NULL;	
+		return nullptr;	
 	}
 
 	detach_item_z(SEL_LIST,&listh_ribs, GetObjectHandle(&firstSide));
@@ -690,9 +690,9 @@ sgCObject*  sgSurfaces::SplineSurfaceFromSections(const sgC2DObject** sections,
 													 bool isClose)
 {
 
-	if (sections==NULL || sections_count<3 || params==NULL)
+	if (sections==nullptr || sections_count<3 || params==nullptr)
 	{
-		return NULL;
+		return nullptr;
 	}
 	short degree=0;
 	short q=0;
@@ -713,7 +713,7 @@ sgCObject*  sgSurfaces::SplineSurfaceFromSections(const sgC2DObject** sections,
 	LISTH	listh_ribs;
 	init_listh(&listh_ribs);
 
-	hOBJ*  select_list_before = NULL;
+	hOBJ*  select_list_before = nullptr;
 	int    select_list_before_size = 0;
 	if (selected.num>0)
 	{
@@ -736,7 +736,7 @@ sgCObject*  sgSurfaces::SplineSurfaceFromSections(const sgC2DObject** sections,
 	short*  object_statuses = (short*)SGMalloc((sections_count)*sizeof(short));
 	for (int i=0;i<sections_count;i++)
 	{
-		if (sections[i]==NULL)    
+		if (sections[i]==nullptr)    
 		{
 			for (int j=0;j<i;j++)
 			{
@@ -749,7 +749,7 @@ sgCObject*  sgSurfaces::SplineSurfaceFromSections(const sgC2DObject** sections,
 			SGFree(select_list_before);
 
 			global_sg_error = SG_ER_INTERNAL;
-			return NULL;
+			return nullptr;
 		}
 		object_statuses[i] = ((lpOBJ)GetObjectHandle(sections[i]))->status;
 	}
@@ -789,7 +789,7 @@ sgCObject*  sgSurfaces::SplineSurfaceFromSections(const sgC2DObject** sections,
 
 		global_sg_error = SG_ER_INTERNAL;
 
-		return NULL;	
+		return nullptr;	
 	}
 
 	SGFree(spin_pnts);

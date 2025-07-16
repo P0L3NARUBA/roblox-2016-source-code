@@ -205,11 +205,11 @@ public:
    ast_expression(const char *identifier) :
       oper(ast_identifier)
    {
-      subexpressions[0] = NULL;
-      subexpressions[1] = NULL;
-      subexpressions[2] = NULL;
+      subexpressions[0] = nullptr;
+      subexpressions[1] = nullptr;
+      subexpressions[2] = nullptr;
       primary_expression.identifier = identifier;
-      this->non_lvalue_description = NULL;
+      this->non_lvalue_description = nullptr;
    }
 
    static const char *operator_string(enum ast_operators op);
@@ -253,7 +253,7 @@ public:
     * can't be l-values.  For example, pre- or post-incerement expressions.
     *
     * \note
-    * This pointer may be \c NULL.
+    * This pointer may be \c nullptr.
     */
    const char *non_lvalue_description;
 };
@@ -272,7 +272,7 @@ class ast_function_expression : public ast_expression {
 public:
    ast_function_expression(ast_expression *callee)
       : ast_expression(ast_function_call, callee,
-		       NULL, NULL),
+		       nullptr, nullptr),
 	cons(false)
    {
       /* empty */
@@ -280,7 +280,7 @@ public:
 
    ast_function_expression(class ast_type_specifier *type)
       : ast_expression(ast_function_call, (ast_expression *) type,
-		       NULL, NULL),
+		       nullptr, nullptr),
 	cons(true)
    {
       /* empty */
@@ -351,8 +351,8 @@ public:
 class ast_aggregate_initializer : public ast_expression {
 public:
    ast_aggregate_initializer()
-      : ast_expression(ast_aggregate, NULL, NULL, NULL),
-        constructor_type(NULL)
+      : ast_expression(ast_aggregate, nullptr, nullptr, nullptr),
+        constructor_type(nullptr)
    {
       /* empty */
    }
@@ -361,7 +361,7 @@ public:
     * glsl_type of the aggregate, which is inferred from the LHS of whatever
     * the aggregate is being used to initialize.  This can't be inferred at
     * parse time (since the parser deals with ast_type_specifiers, not
-    * glsl_types), so the parser leaves it NULL.  However, the ast-to-hir
+    * glsl_types), so the parser leaves it nullptr.  However, the ast-to-hir
     * conversion code makes sure to fill it in with the appropriate type
     * before hir() is called.
     */
@@ -688,7 +688,7 @@ public:
 
    /** Construct a type specifier from a type name */
    ast_type_specifier(const char *name) 
-      : type_name(name), structure(NULL), array_specifier(NULL),
+      : type_name(name), structure(nullptr), array_specifier(nullptr),
 	default_precision(ast_precision_none)
    {
       /* empty */
@@ -696,7 +696,7 @@ public:
 
    /** Construct a type specifier from a structure definition */
    ast_type_specifier(ast_struct_specifier *s)
-      : type_name(s->name), structure(s), array_specifier(NULL),
+      : type_name(s->name), structure(s), array_specifier(nullptr),
 	default_precision(ast_precision_none)
    {
       /* empty */
@@ -725,7 +725,7 @@ public:
    virtual void print(void) const;
    bool has_qualifiers() const;
 
-   ast_fully_specified_type() : qualifier(), specifier(NULL)
+   ast_fully_specified_type() : qualifier(), specifier(nullptr)
    {
 	   qualifier.precision = ast_precision_none;
    }
@@ -753,7 +753,7 @@ public:
 
    /**
     * Flags for redeclarations. In these cases, no type is specified, to
-    * `type` is allowed to be NULL. In all other cases, this would be an error.
+    * `type` is allowed to be nullptr. In all other cases, this would be an error.
     */
    int invariant;     /** < `invariant` redeclaration */
    int precise;       /** < `precise` redeclaration */
@@ -763,9 +763,9 @@ public:
 class ast_parameter_declarator : public ast_node {
 public:
    ast_parameter_declarator() :
-      type(NULL),
-      identifier(NULL),
-      array_specifier(NULL),
+      type(nullptr),
+      identifier(nullptr),
+      array_specifier(nullptr),
       formal_parameter(false),
       is_void(false)
    {
@@ -858,7 +858,7 @@ public:
 			  struct _mesa_glsl_parse_state *state);
 
    /**
-    * An test value of NULL means 'default'.
+    * An test value of nullptr means 'default'.
     */
    ast_expression *test_value;
 };
@@ -1008,7 +1008,7 @@ public:
 
 class ast_function_definition : public ast_node {
 public:
-   ast_function_definition() : prototype(NULL), body(NULL)
+   ast_function_definition() : prototype(nullptr), body(nullptr)
    {
    }
 
@@ -1026,7 +1026,7 @@ public:
    ast_interface_block(ast_type_qualifier layout,
                        const char *instance_name,
                        ast_array_specifier *array_specifier)
-   : layout(layout), block_name(NULL), instance_name(instance_name),
+   : layout(layout), block_name(nullptr), instance_name(instance_name),
      array_specifier(array_specifier)
    {
    }
@@ -1041,7 +1041,7 @@ public:
     * Declared name of the block instance, if specified.
     *
     * If the block does not have an instance name, this field will be
-    * \c NULL.
+    * \c nullptr.
     */
    const char *instance_name;
 
@@ -1052,7 +1052,7 @@ public:
     * Declared array size of the block instance
     *
     * If the block is not declared as an array or if the block instance array
-    * is unsized, this field will be \c NULL.
+    * is unsized, this field will be \c nullptr.
     */
    ast_array_specifier *array_specifier;
 };

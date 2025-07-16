@@ -63,7 +63,7 @@ BOOL poly_mesh64(short color, lpLISTH listh)
 				line.v1 = p1;
 				line.v2 = p2;
 				if ( !cr_add_obj(OLINE, color, (lpGEO_SIMPLE)&line,
-												 listh, NULL, FALSE)) goto err2;
+												 listh, nullptr, FALSE)) goto err2;
 				continue;
 			}
 			if (!get_vertex(&vertex, num3, count, &p3)) goto err2;

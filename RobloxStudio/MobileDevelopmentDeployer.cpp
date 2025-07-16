@@ -82,7 +82,7 @@ int MobileDevelopmentDeployer::generateNewPairCode()
     int newPairCode = 0;
 
     // make current unix time the seed (should be random enough)
-    G3D::Random generator(std::time(NULL));
+    G3D::Random generator(std::time(nullptr));
     
     for ( int i = 0; i < forcedPairCodeSize(); ++i)
     {
@@ -478,6 +478,6 @@ void MobileDevelopmentDeployer::on_disconnected()
         
 		tcpClient->disconnectFromHost();
 		tcpClient->deleteLater();
-		tcpClient = NULL;
+		tcpClient = nullptr;
 	}
 }

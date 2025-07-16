@@ -122,7 +122,7 @@ namespace RBX
 				RenderEntity* solidEntity;
 				RenderEntity* waterEntity;
 
-				ChunkData() : solidEntity(NULL), waterEntity(NULL), solidQuads(0), waterQuads(0), solidDirty(false), waterDirty(false)
+				ChunkData() : solidEntity(nullptr), waterEntity(nullptr), solidQuads(0), waterQuads(0), solidDirty(false), waterDirty(false)
 				{
 				}
 			};

@@ -62,13 +62,13 @@ extern DECLSPEC SDL_Window * SDLCALL SDL_GetKeyboardFocus(void);
 /**
  *  \brief Get a snapshot of the current state of the keyboard.
  *
- *  \param numkeys if non-NULL, receives the length of the returned array.
+ *  \param numkeys if non-nullptr, receives the length of the returned array.
  *
  *  \return An array of key states. Indexes into this array are obtained by using ::SDL_Scancode values.
  *
  *  \b Example:
  *  \code
- *  const Uint8 *state = SDL_GetKeyboardState(NULL);
+ *  const Uint8 *state = SDL_GetKeyboardState(nullptr);
  *  if ( state[SDL_SCANCODE_RETURN] )   {
  *      printf("<RETURN> is pressed.\n");
  *  }

@@ -576,7 +576,7 @@ Vector3 Dragger::safeMoveYDrop_EXT(  const G3D::Array<Primitive*>& primitives,
 	//sort prims based upon the y value 
 	//TODO: do this only once when we select the prims?
 	G3D::Array<Primitive*> tempPrimitives(primitives);
-	Primitive* tempPrim = NULL;
+	Primitive* tempPrim = nullptr;
 	for (int ii=0; ii < (int)primExtents.size(); ++ii)
 	{
 		for (int jj=0; jj < (int)primExtents.size() - ii -1; ++jj)
@@ -867,8 +867,8 @@ bool Dragger::checkBallPolyIntersection(const Primitive* ballPrim, const Coordin
 	// check if edge is intersecting with sphere
 	for (unsigned int j = 0; j < polyMesh->numEdges(); j++)
 	{
-		p1      = ballCFrame.pointToObjectSpace(polyCFrame.pointToWorldSpace(polyMesh->getEdge(j)->getVertexOffset(NULL, 0)));
-		p2      = ballCFrame.pointToObjectSpace(polyCFrame.pointToWorldSpace(polyMesh->getEdge(j)->getVertexOffset(NULL, 1)));
+		p1      = ballCFrame.pointToObjectSpace(polyCFrame.pointToWorldSpace(polyMesh->getEdge(j)->getVertexOffset(nullptr, 0)));
+		p2      = ballCFrame.pointToObjectSpace(polyCFrame.pointToWorldSpace(polyMesh->getEdge(j)->getVertexOffset(nullptr, 1)));
 		edgeRay = RbxRay(p1, (p2 - p1).direction());
 
 		if ((const_cast<Ball*>(ballGeom))->hitTest(edgeRay, hitPoint, unusedSurfaceNormal))

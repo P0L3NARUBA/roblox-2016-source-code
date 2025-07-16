@@ -34,7 +34,7 @@ namespace RBX {
 		/*override*/ void onDescendantAdded(Instance* instance);
 		/*override*/ void onDescendantRemoving(const shared_ptr<Instance>& instance);
 		/*override*/ bool askAddChild(const Instance* instance) const {
-			return Instance::fastDynamicCast<JointInstance>(instance)!=NULL;
+			return Instance::fastDynamicCast<JointInstance>(instance)!=nullptr;
 		}
 		/*override*/ void onServiceProvider(ServiceProvider* oldProvider, ServiceProvider* newProvider);
 

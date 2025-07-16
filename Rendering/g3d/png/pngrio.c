@@ -32,10 +32,10 @@ void /* PRIVATE */
 png_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
 {
    png_debug1(4, "reading %d bytes", (int)length);
-   if (png_ptr->read_data_fn != NULL)
+   if (png_ptr->read_data_fn != nullptr)
       (*(png_ptr->read_data_fn))(png_ptr, data, length);
    else
-      png_error(png_ptr, "Call to NULL read function");
+      png_error(png_ptr, "Call to nullptr read function");
 }
 
 #if !defined(PNG_NO_STDIO)
@@ -50,13 +50,13 @@ png_default_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
 {
    png_size_t check;
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
    /* fread() returns 0 on error, so it is OK to store this in a png_size_t
     * instead of an int, which is what fread() actually returns.
     */
 #if defined(_WIN32_WCE)
-   if ( !ReadFile((HANDLE)(png_ptr->io_ptr), data, length, &check, NULL) )
+   if ( !ReadFile((HANDLE)(png_ptr->io_ptr), data, length, &check, nullptr) )
       check = 0;
 #else
    check = (png_size_t)fread(data, (png_size_t)1, length,
@@ -82,7 +82,7 @@ png_default_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
    png_byte *n_data;
    png_FILE_p io_ptr;
 
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
    /* Check if data really is near. If so, use usual code. */
    n_data = (png_byte *)CVT_PTR_NOCHECK(data);
@@ -90,7 +90,7 @@ png_default_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
    if ((png_bytep)n_data == data)
    {
 #if defined(_WIN32_WCE)
-      if ( !ReadFile((HANDLE)(png_ptr->io_ptr), data, length, &check, NULL) )
+      if ( !ReadFile((HANDLE)(png_ptr->io_ptr), data, length, &check, nullptr) )
          check = 0;
 #else
       check = fread(n_data, 1, length, io_ptr);
@@ -106,7 +106,7 @@ png_default_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
       {
          read = MIN(NEAR_BUF_SIZE, remaining);
 #if defined(_WIN32_WCE)
-         if ( !ReadFile((HANDLE)(io_ptr), buf, read, &err, NULL) )
+         if ( !ReadFile((HANDLE)(io_ptr), buf, read, &err, nullptr) )
             err = 0;
 #else
          err = fread(buf, (png_size_t)1, read, io_ptr);
@@ -133,26 +133,26 @@ png_default_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
  * This function takes as its arguments:
  * png_ptr      - pointer to a png input data structure
  * io_ptr       - pointer to user supplied structure containing info about
- *                the input functions.  May be NULL.
+ *                the input functions.  May be nullptr.
  * read_data_fn - pointer to a new input function that takes as its
  *                arguments a pointer to a png_struct, a pointer to
  *                a location where input data can be stored, and a 32-bit
  *                unsigned int that is the number of bytes to be read.
  *                To exit and output any fatal error messages the new write
  *                function should call png_error(png_ptr, "Error msg").
- *                May be NULL, in which case libpng's default function will
+ *                May be nullptr, in which case libpng's default function will
  *                be used.
  */
 void PNGAPI
 png_set_read_fn(png_structp png_ptr, png_voidp io_ptr,
    png_rw_ptr read_data_fn)
 {
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
    png_ptr->io_ptr = io_ptr;
 
 #if !defined(PNG_NO_STDIO)
-   if (read_data_fn != NULL)
+   if (read_data_fn != nullptr)
       png_ptr->read_data_fn = read_data_fn;
    else
       png_ptr->read_data_fn = png_default_read_data;
@@ -161,17 +161,17 @@ png_set_read_fn(png_structp png_ptr, png_voidp io_ptr,
 #endif
 
    /* It is an error to write to a read device */
-   if (png_ptr->write_data_fn != NULL)
+   if (png_ptr->write_data_fn != nullptr)
    {
-      png_ptr->write_data_fn = NULL;
+      png_ptr->write_data_fn = nullptr;
       png_warning(png_ptr,
          "It's an error to set both read_data_fn and write_data_fn in the ");
       png_warning(png_ptr,
-         "same structure.  Resetting write_data_fn to NULL.");
+         "same structure.  Resetting write_data_fn to nullptr.");
    }
 
 #if defined(PNG_WRITE_FLUSH_SUPPORTED)
-   png_ptr->output_flush_fn = NULL;
+   png_ptr->output_flush_fn = nullptr;
 #endif
 }
 #endif /* PNG_READ_SUPPORTED */

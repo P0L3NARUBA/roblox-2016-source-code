@@ -229,7 +229,7 @@ void InsertService::onServiceProvider(ServiceProvider* oldProvider, ServiceProvi
 
 void InsertService::insertResultsReady(std::string key, shared_ptr<Instance> container)
 {
-	boost::function<void(shared_ptr<Instance>)> resumeFunction = NULL;
+	boost::function<void(shared_ptr<Instance>)> resumeFunction = nullptr;
 
 
 	{
@@ -247,7 +247,7 @@ void InsertService::insertResultsReady(std::string key, shared_ptr<Instance> con
 
 void InsertService::insertResultsError(std::string key, std::string message)
 {
-	boost::function<void(std::string)> errorFunction = NULL;
+	boost::function<void(std::string)> errorFunction = nullptr;
 	{
 		boost::recursive_mutex::scoped_lock lock(callbackSync);
 		CallbackLibrary::iterator iter = callbackLibrary.find(key);
@@ -430,7 +430,7 @@ void InsertService::internalDelete(shared_ptr<Instance> instance)
     }
     if (Network::Players::backendProcessing(this))
     {
-        instance->setParent(NULL);
+        instance->setParent(nullptr);
     }
     else
     {
@@ -441,7 +441,7 @@ void InsertService::internalDelete(shared_ptr<Instance> instance)
 //Runs in a write task
 void InsertService::backendInsertReady(std::string key, shared_ptr<Instance> pseudoRoot, AsyncHttpQueue::RequestResult requestResult, shared_ptr<std::exception> requestError)
 {
-	if (requestError.get() == NULL || !DFFlag::InsertServiceLoadModelErrorDoNotCreateEmpty)
+	if (requestError.get() == nullptr || !DFFlag::InsertServiceLoadModelErrorDoNotCreateEmpty)
 	{
 		try
 		{
@@ -467,7 +467,7 @@ void InsertService::backendInsertReady(std::string key, shared_ptr<Instance> pse
 		if (DFFlag::GASendInsertRequestFail)
 		{
 			DataModel* dm = DataModel::get(this);
-			if (dm != NULL)
+			if (dm != nullptr)
 			{
 				RBX::Analytics::GoogleAnalytics::trackEvent(GA_CATEGORY_GAME, "InsertServiceException", "PlaceID", dm->getPlaceID());
 			}
@@ -475,7 +475,7 @@ void InsertService::backendInsertReady(std::string key, shared_ptr<Instance> pse
 		if (DFFlag::InfluxSendInsertRequestFail)
 		{
 			DataModel* dm = DataModel::get(this);
-			if (dm != NULL)
+			if (dm != nullptr)
 			{
 				boost::unordered_set<RBX::Analytics::InfluxDb::Point> points;
 				rapidjson::Value placeIDNode;

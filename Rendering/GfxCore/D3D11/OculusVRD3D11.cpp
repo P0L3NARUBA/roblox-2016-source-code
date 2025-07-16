@@ -28,7 +28,7 @@ namespace Graphics
 	static TypeCreateDXGIFactory getFactoryCreationFunction()
     {
         HMODULE module = LoadLibraryA("d3d11.dll");
-        if (!module) return NULL;
+        if (!module) return nullptr;
 
 		return (TypeCreateDXGIFactory)GetProcAddress(module, "CreateDXGIFactory");
     }
@@ -37,22 +37,22 @@ namespace Graphics
 	{
         // Allow to use null/default adapter for applications that may render a window without an HMD.
 		if ((luid.HighPart | luid.LowPart) == 0)
-			return NULL;
+			return nullptr;
 
 		TypeCreateDXGIFactory createFactory = getFactoryCreationFunction();
 		if (!createFactory)
-			return NULL;
+			return nullptr;
 
 		// Try to find adapter by LUID
-		IDXGIFactory* factory = NULL;
+		IDXGIFactory* factory = nullptr;
 		if (FAILED(createFactory(__uuidof(IDXGIFactory), (void**)&factory)))
-			return NULL;
+			return nullptr;
 
 		UINT index = 0;
 
         for (;;)
         {
-            IDXGIAdapter* adapter = NULL;
+            IDXGIAdapter* adapter = nullptr;
 
 			if (SUCCEEDED(factory->EnumAdapters(index, &adapter)) && adapter)
 			{
@@ -73,7 +73,7 @@ namespace Graphics
 
 		ReleaseCheck(factory);
 
-		return NULL;
+		return nullptr;
     }
 
 	static DeviceVR::Pose getPose(const ovrPosef& pose, unsigned int statusFlags)
@@ -101,7 +101,7 @@ namespace Graphics
 		shared_ptr<Framebuffer> fb[kMaxCount];
 		ovrSwapTextureSet* textureSet;
 
-		VRTexture(): textureSet(NULL)
+		VRTexture(): textureSet(nullptr)
 		{
 		}
 	};
@@ -116,7 +116,7 @@ namespace Graphics
 		double sensorSampleTime;
 		ovrTrackingState trackingState;
 
-		OculusVRD3D11(): session(NULL), sensorSampleTime(0)
+		OculusVRD3D11(): session(nullptr), sensorSampleTime(0)
 		{
 		}
 
@@ -296,7 +296,7 @@ namespace Graphics
 		if (!OVR_SUCCESS(vrResult))
 		{
 			FASTLOG1(FLog::VR, "VR: ovr_Initialize returned %d", vrResult);
-			return NULL;
+			return nullptr;
 		}
 
 		ovrSession session;
@@ -310,7 +310,7 @@ namespace Graphics
 
 			ovr_Shutdown();
 
-			return NULL;
+			return nullptr;
 		}
 
 		OculusVRD3D11* vr = new OculusVRD3D11();

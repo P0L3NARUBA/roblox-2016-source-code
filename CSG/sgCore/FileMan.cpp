@@ -18,7 +18,7 @@ bool sgFileManager::ExportSTL(const sgCScene*, const char* file_name)
 
 bool sgFileManager::GetFileHeader(const char* file_name, sgFileManager::SG_FILE_HEADER& file_header)
 {
-	FILE* fl = NULL;
+	FILE* fl = nullptr;
 
 	try
 	{
@@ -60,10 +60,10 @@ bool sgFileManager::GetFileHeader(const char* file_name, sgFileManager::SG_FILE_
 
 bool  sgFileManager::GetUserData(const char* file_name, void* usetData)
 {
-	if (file_name==NULL || usetData==NULL || usetData==NULL)
+	if (file_name==nullptr || usetData==nullptr || usetData==nullptr)
 		return false;
 
-	FILE* fl = NULL;
+	FILE* fl = nullptr;
 
 	try
 	{
@@ -115,7 +115,7 @@ bool sgFileManager::Open(const sgCScene*, const char* file_name)
 {
   if (application_interface && application_interface->GetProgresser())
     application_interface->GetProgresser()->InitProgresser(2);
-  if (append_from_file(const_cast<char*>(file_name), TRUE, NULL, TRUE)!=G_OK)
+  if (append_from_file(const_cast<char*>(file_name), TRUE, nullptr, TRUE)!=G_OK)
   {
     if (application_interface && application_interface->GetProgresser())
       application_interface->GetProgresser()->StopProgresser();
@@ -159,7 +159,7 @@ bool sgFileManager::ImportDXF(const sgCScene*, const char* file_name)
 {
   MATR mtr;
   hOBJ  htail, hobj;
-  htail = NULL;
+  htail = nullptr;
   if (objects.num>0)
 	  htail = objects.htail;
   if (application_interface && application_interface->GetProgresser())
@@ -209,7 +209,7 @@ bool sgFileManager::ImportSTL(const sgCScene*, const char* file_name,bool  solid
 	MATR mtr;
 	o_hcunit(mtr);
 	hOBJ  htail, hobj;
-	htail = NULL;
+	htail = nullptr;
 	if (objects.num>0)
 		htail = objects.htail;
 	if (application_interface && application_interface->GetProgresser())
@@ -257,7 +257,7 @@ bool sgFileManager::ImportSTL(const sgCScene*, const char* file_name,bool  solid
 const void* sgFileManager::ObjectToBitArray(const sgCObject* obj, unsigned long& arrSize)
 {
 	if (!obj)
-		return NULL;
+		return nullptr;
 
 	char nametmp[144];
 	BOOL cod = FALSE;
@@ -272,7 +272,7 @@ const void* sgFileManager::ObjectToBitArray(const sgCObject* obj, unsigned long&
 
 	appl_init();
 	if (!init_buf(&bd,nametmp,BUF_NEWINMEM)) {
-		return NULL;
+		return nullptr;
 	}
 	bool was_sel = false;
 	if (obj->IsSelect())
@@ -285,11 +285,11 @@ const void* sgFileManager::ObjectToBitArray(const sgCObject* obj, unsigned long&
 	init_listh(&oLis);
 	attach_item_tail_z(SEL_LIST,&oLis,GetObjectHandle(obj));
 	int cnt = 1;
-	if ( !o_save_list(&bd,&oLis,SEL_LIST,&cnt,NULL,NULL) ) 	
+	if ( !o_save_list(&bd,&oLis,SEL_LIST,&cnt,nullptr,nullptr) ) 	
 	{
 		close_buf(&bd);
 		nb_unlink(nametmp);
-		return NULL;
+		return nullptr;
 	}
 	detach_item_z(SEL_LIST,&oLis,GetObjectHandle(obj));
 	init_listh(&oLis);
@@ -304,7 +304,7 @@ const void* sgFileManager::ObjectToBitArray(const sgCObject* obj, unsigned long&
 	{
 		close_buf(&bd);
 		nb_unlink(nametmp);
-		return NULL;
+		return nullptr;
 	}
 	
 	lpOBJ lpO = (lpOBJ)GetObjectHandle(obj);
@@ -314,7 +314,7 @@ const void* sgFileManager::ObjectToBitArray(const sgCObject* obj, unsigned long&
 		SGFree(lpO->bit_buffer);
 	}
 
-	lpO->bit_buffer = NULL;
+	lpO->bit_buffer = nullptr;
 	lpO->bit_buffer_size = 0;
 
 	lpO->bit_buffer_size = sz;
@@ -324,7 +324,7 @@ const void* sgFileManager::ObjectToBitArray(const sgCObject* obj, unsigned long&
 	{
 		close_buf(&bd);
 		nb_unlink(nametmp);
-		return NULL;
+		return nullptr;
 	}
 
 	if (load_data(&bd, lpO->bit_buffer_size, lpO->bit_buffer)!=lpO->bit_buffer_size)
@@ -332,7 +332,7 @@ const void* sgFileManager::ObjectToBitArray(const sgCObject* obj, unsigned long&
 		assert(0);
 		close_buf(&bd);
 		nb_unlink(nametmp);
-		return NULL;
+		return nullptr;
 	}
 
 	close_buf(&bd);
@@ -345,7 +345,7 @@ const void* sgFileManager::ObjectToBitArray(const sgCObject* obj, unsigned long&
 sgCObject*  sgFileManager::BitArrayToObject(const void* bitArray, unsigned long arrSize)
 {
 	if (!bitArray || arrSize<1)
-		return NULL;
+		return nullptr;
 
 	char nametmp[144];
 	BOOL cod = FALSE;
@@ -360,14 +360,14 @@ sgCObject*  sgFileManager::BitArrayToObject(const void* bitArray, unsigned long 
 
 	appl_init();
 	if (!init_buf(&bd,nametmp,BUF_NEWINMEM)) {
-		return NULL;
+		return nullptr;
 	}
 
 	if (!story_data(&bd,arrSize,const_cast<void*>(bitArray)))
 	{
 		close_buf(&bd);
 		nb_unlink(nametmp);
-		return NULL;
+		return nullptr;
 	}
 
 	hOBJ obj_new;
@@ -375,16 +375,16 @@ sgCObject*  sgFileManager::BitArrayToObject(const void* bitArray, unsigned long 
 	{
 		close_buf(&bd);
 		nb_unlink(nametmp);
-		return NULL;
+		return nullptr;
 	}
 	LISTH  oLis;
 	init_listh(&oLis);
 	short cnt = 1;
-	if ( !o_load_list(&bd,&oLis,SEL_LIST,&cnt,0,NULL) ) 
+	if ( !o_load_list(&bd,&oLis,SEL_LIST,&cnt,0,nullptr) ) 
 	{
 		close_buf(&bd);
 		nb_unlink(nametmp);
-		return NULL;
+		return nullptr;
 	}
 	obj_new = oLis.hhead;
 	if (obj_new)
@@ -404,15 +404,15 @@ sgCObject*   sgFileManager::ObjectFromTriangles(const SG_VERT* vertexes, long ve
 									float smooth_angle_in_radians/*=30.0*3.14159265/180.0*/,
 									bool  solids_checking/*=false*/)
 {
-	if (vertexes==NULL || vert_count<3 || triangles==NULL || tr_count<1)
-		return NULL;
+	if (vertexes==nullptr || vert_count<3 || triangles==nullptr || tr_count<1)
+		return nullptr;
 	NPTRP			trp;
 	TRI_BIAND	    trb;
 	D_POINT		    pp, min, max;
 	MATR			m, matr, matri;
 	hOBJ			hobj;
 	long            i;
-	sgCObject* ooo = NULL;
+	sgCObject* ooo = nullptr;
 
 	//  :   
 	min.x = min.y = min.z =  1.e35;
@@ -435,7 +435,7 @@ sgCObject*   sgFileManager::ObjectFromTriangles(const SG_VERT* vertexes, long ve
 	o_hcmult(matr, m);
 
 	//  
-	if ( !begin_tri_biand(&trb) ) return NULL;
+	if ( !begin_tri_biand(&trb) ) return nullptr;
 
 	sgFloat  old_smooth_angle = c_smooth_angle;
 	c_smooth_angle = smooth_angle_in_radians;
@@ -489,8 +489,8 @@ err:
 	free_vdim(&trb.vdtri);
 	free_vdim(&trb.coor);
 	if ( trb.indv ) SGFree(trb.indv);
-	np_end_of_put(&trb.list_str,NP_CANCEL,0,NULL); //  
-	trb.indv = NULL;
+	np_end_of_put(&trb.list_str,NP_CANCEL,0,nullptr); //  
+	trb.indv = nullptr;
 	c_smooth_angle = old_smooth_angle;
 	return ooo;
 }

@@ -276,7 +276,7 @@ static const SDL_Keycode SDL_default_keymap[SDL_NUM_SCANCODES] = {
 };
 
 static const char *SDL_scancode_names[SDL_NUM_SCANCODES] = {
-    NULL, NULL, NULL, NULL,
+    nullptr, nullptr, nullptr, nullptr,
     "A",
     "B",
     "C",
@@ -373,7 +373,7 @@ static const char *SDL_scancode_names[SDL_NUM_SCANCODES] = {
     "Keypad 9",
     "Keypad 0",
     "Keypad .",
-    NULL,
+    nullptr,
     "Application",
     "Power",
     "Keypad =",
@@ -403,11 +403,11 @@ static const char *SDL_scancode_names[SDL_NUM_SCANCODES] = {
     "Mute",
     "VolumeUp",
     "VolumeDown",
-    NULL, NULL, NULL,
+    nullptr, nullptr, nullptr,
     "Keypad ,",
     "Keypad = (AS400)",
-    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-    NULL, NULL, NULL, NULL, NULL, NULL,
+    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
     "AltErase",
     "SysReq",
     "Cancel",
@@ -420,7 +420,7 @@ static const char *SDL_scancode_names[SDL_NUM_SCANCODES] = {
     "Clear / Again",
     "CrSel",
     "ExSel",
-    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
     "Keypad 00",
     "Keypad 000",
     "ThousandsSeparator",
@@ -467,7 +467,7 @@ static const char *SDL_scancode_names[SDL_NUM_SCANCODES] = {
     "Keypad Octal",
     "Keypad Decimal",
     "Keypad Hexadecimal",
-    NULL, NULL,
+    nullptr, nullptr,
     "Left Ctrl",
     "Left Shift",
     "Left Alt",
@@ -476,9 +476,9 @@ static const char *SDL_scancode_names[SDL_NUM_SCANCODES] = {
     "Right Shift",
     "Right Alt",
     "Right GUI",
-    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-    NULL,
+    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+    nullptr,
     "ModeSwitch",
     "AudioNext",
     "AudioPrev",
@@ -969,7 +969,7 @@ SDL_GetKeyFromName(const char *name)
     SDL_Keycode key;
 
         /* Check input */
-        if (name == NULL) return SDLK_UNKNOWN;
+        if (name == nullptr) return SDLK_UNKNOWN;
 
     /* If it's a single UTF-8 character, then that's the keycode itself */
     key = *(const unsigned char *)name;

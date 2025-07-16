@@ -321,15 +321,15 @@ public:
 
 DoublePropertyItem::DoublePropertyItem(const RBX::Reflection::PropertyDescriptor *pPropertyDescriptor)
 	: PropertyItem(pPropertyDescriptor)
-	, m_SpinBox(NULL)
-	, m_Slider(NULL)
+	, m_SpinBox(nullptr)
+	, m_Slider(nullptr)
 {
 }
 
 DoublePropertyItem::DoublePropertyItem(PropertyItem *pParentItem, const QString &name)
 	: PropertyItem(pParentItem, name)
-	, m_SpinBox(NULL)
-	, m_Slider(NULL)
+	, m_SpinBox(nullptr)
+	, m_Slider(nullptr)
 {
 }
 
@@ -459,11 +459,11 @@ void DoublePropertyItem::setModelData(QWidget *editor)
 			commitModification();
 
 			m_SpinBox->removeEventFilter(this);
-			m_SpinBox = NULL;
+			m_SpinBox = nullptr;
 		}
 
 		m_Slider->removeEventFilter(this);
-		m_Slider = NULL;	
+		m_Slider = nullptr;	
 	}
 	else
 	{
@@ -641,7 +641,7 @@ public:
 
 BrickColorPropertyItem::BrickColorPropertyItem(const RBX::Reflection::PropertyDescriptor *pPropertyDescriptor)
 : PropertyItem(pPropertyDescriptor)
-, m_pPopupLaunchEditor(NULL)
+, m_pPopupLaunchEditor(nullptr)
 {
 }
 
@@ -728,7 +728,7 @@ void BrickColorPropertyItem::buttonClicked(const QString& buttonName)
 		getTreeWidget()->resetOriginalValues();
 	}
 
-	m_pPopupLaunchEditor = NULL;
+	m_pPopupLaunchEditor = nullptr;
 }
 
 void BrickColorPropertyItem::updatePropertyValueQColor(QColor selectedColor)
@@ -767,15 +767,15 @@ void BrickColorPropertyItem::updatePropertyValue(int selectedColor)
 //--------------------------------------------------------------------------------------------
 ColorPropertyItem::ColorPropertyItem(const RBX::Reflection::PropertyDescriptor *pPropertyDescriptor)
 	: PropertyItem(pPropertyDescriptor)
-	, m_pPopupLaunchEditor(NULL)
-	, m_pProxyLineEdit(NULL)
+	, m_pPopupLaunchEditor(nullptr)
+	, m_pProxyLineEdit(nullptr)
 {
 }
 
 ColorPropertyItem::ColorPropertyItem(PropertyItem* parent, const QString& name)
     : PropertyItem(parent, name)
-    , m_pPopupLaunchEditor(NULL)
-    , m_pProxyLineEdit(NULL)
+    , m_pPopupLaunchEditor(nullptr)
+    , m_pProxyLineEdit(nullptr)
 {
 }
 
@@ -892,7 +892,7 @@ void ColorPropertyItem::buttonClicked(const QString& buttonName)
 		}
 	}
 
-	m_pPopupLaunchEditor = NULL; m_pProxyLineEdit = NULL;
+	m_pPopupLaunchEditor = nullptr; m_pProxyLineEdit = nullptr;
 }
 
 void ColorPropertyItem::updatePropertyValue(QColor selectedColor)
@@ -936,7 +936,7 @@ void ColorPropertyItem::setModelData(QWidget *editor)
 			updateIcon();
 		}
 
-		m_pPopupLaunchEditor = NULL; m_pProxyLineEdit = NULL;
+		m_pPopupLaunchEditor = nullptr; m_pProxyLineEdit = nullptr;
 	}
 
 }
@@ -1085,7 +1085,7 @@ class PrimaryPartPropertyItem: public PropertyItem
 public:
 	PrimaryPartPropertyItem(const RBX::Reflection::PropertyDescriptor *pPropertyDescriptor)
 	: PropertyItem(pPropertyDescriptor)
-	, m_pPrimaryPartSelEditor(NULL)
+	, m_pPrimaryPartSelEditor(nullptr)
 	{
 		setFlags(Qt::NoItemFlags);
 	}
@@ -1164,7 +1164,7 @@ public:
 		{
 			// remove primary part
 			if (m_pModelInstance)
-				m_pModelInstance->setPrimaryPartSetByUser(NULL);
+				m_pModelInstance->setPrimaryPartSetByUser(nullptr);
 			setVariantValue(std::string(""));
 			// close editor
 			if (!m_pPrimaryPartSelEditor.isNull())
@@ -2854,7 +2854,7 @@ public:
 //--------------------------------------------------------------------------------------------
 PropertyItem::PropertyItem(const RBX::Reflection::PropertyDescriptor *pPropertyDescriptor)
 : m_pPropertyDescriptor(pPropertyDescriptor)
-, m_pParentItem(NULL)
+, m_pParentItem(nullptr)
 , m_isMultiValued(false)
 , m_hasExceptionError(false)
 {
@@ -2865,7 +2865,7 @@ PropertyItem::PropertyItem(const RBX::Reflection::PropertyDescriptor *pPropertyD
 }
 
 PropertyItem::PropertyItem(PropertyItem *pParentItem, const QString &itemName)
-: m_pPropertyDescriptor(NULL)
+: m_pPropertyDescriptor(nullptr)
 , m_pParentItem(pParentItem)
 , m_isMultiValued(false)
 , m_hasExceptionError(false)
@@ -3002,7 +3002,7 @@ PropertyItem* PropertyItem::createItem(const RBX::Reflection::PropertyDescriptor
 	if (pPropertyDescriptor->hasStringValue())
 		return new StringPropertyItem(pPropertyDescriptor);
 
-	return NULL;
+	return nullptr;
 }
 
 bool materialPropertiesIsEnabled(const InstanceList &instances)

@@ -333,7 +333,7 @@ private:
 //
 inline Constraint::Constraint( Types _type, Body* _bodyA, Body* _bodyB, uint8_t _dimensions ): type( _type ), dimensions( _dimensions ), bodyA( _bodyA ), bodyB( _bodyB ), uid( 0 ), broken( false )
 {
-    RBXASSERT( _bodyA != NULL );
+    RBXASSERT( _bodyA != nullptr );
     cacheData = new ConstraintCache[ dimensions ];
 }
 

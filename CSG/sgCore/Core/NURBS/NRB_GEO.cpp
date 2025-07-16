@@ -17,8 +17,8 @@ static void Create_Trim_Spline( sgFloat *U_new, lpW_NODE P_new, sgFloat *u_new,
 BOOL Create_Multy_Point( lpSPLY_DAT spline, sgFloat t1, short type ){
 BOOL		rt=FALSE;
 short		nump_new, k, r, s;
-sgFloat 	*U_new=NULL, *u_new=NULL;
-W_NODE  *P_new=NULL;
+sgFloat 	*U_new=nullptr, *u_new=nullptr;
+W_NODE  *P_new=nullptr;
 
 //k  - position the t1 into  control vector
 //s  - number of t1 into control vector
@@ -54,8 +54,8 @@ BOOL Get_Part_Spline_Geo(lpSPLY_DAT spline, sgFloat t1, sgFloat t2,
 												 lpGEO_SPLINE geo_spline){
 BOOL			rt=FALSE;
 short			bound1, bound2;
-sgFloat 		*U_new1=NULL, *u_new1=NULL;
-W_NODE  	*P_new1=NULL;
+sgFloat 		*U_new1=nullptr, *u_new1=nullptr;
+W_NODE  	*P_new1=nullptr;
 SPLY_DAT  sply_dat;
 
 //extract spline part by inserting knots
@@ -85,8 +85,8 @@ BOOL Get_Part_Spline_Dat(lpSPLY_DAT spline, sgFloat t1, sgFloat t2,
 												 lpSPLY_DAT sply_dat){
 BOOL			rt=FALSE;
 short			bound1, bound2;
-sgFloat 		*U_new1=NULL, *u_new1=NULL;
-W_NODE  	*P_new1=NULL;
+sgFloat 		*U_new1=nullptr, *u_new1=nullptr;
+W_NODE  	*P_new1=nullptr;
 
 //extract spline part by inserting knots
 	if( !Extract_Spline_Part(spline, t1, t2, &U_new1, &P_new1, &u_new1, &bound1, &bound2 ) ) goto err;
@@ -108,13 +108,13 @@ static BOOL Extract_Spline_Part(lpSPLY_DAT spline, sgFloat t1, sgFloat t2,
 																short *bound1, short *bound2 ){
 BOOL		rt=FALSE;
 short			i, nump_new1, nump_new2, k, r, s;
-sgFloat 	*U_new2=NULL, *u_new2=NULL;
-W_NODE  *P_new2=NULL;
+sgFloat 	*U_new2=nullptr, *u_new2=nullptr;
+W_NODE  *P_new2=nullptr;
 
 //insert knots on the first end
-	if( (*P_new1=(W_NODE *)SGMalloc(spline->nump*sizeof(W_NODE))) == NULL ) goto err;
-	if( (*U_new1=(sgFloat *)SGMalloc(spline->numU*sizeof(sgFloat))) == NULL ) goto err;
-	if( (*u_new1=(sgFloat *)SGMalloc(spline->nump*sizeof(sgFloat))) == NULL ) goto err;
+	if( (*P_new1=(W_NODE *)SGMalloc(spline->nump*sizeof(W_NODE))) == nullptr ) goto err;
+	if( (*U_new1=(sgFloat *)SGMalloc(spline->numU*sizeof(sgFloat))) == nullptr ) goto err;
+	if( (*u_new1=(sgFloat *)SGMalloc(spline->nump*sizeof(sgFloat))) == nullptr ) goto err;
 
 //convert into 4D-space
 	for( i=0; i<spline->nump; i++ ){
@@ -131,9 +131,9 @@ W_NODE  *P_new2=NULL;
 	if( (r=spline->degree-s+1)>0 ){ // need to insert knots
 		if( !Insert_Knot( *U_new1, *P_new1, *u_new1, nump_new1, spline->degree,
 											t1, &U_new2, &P_new2, &u_new2, &nump_new2, r, k, s ) ) goto err;
-		SGFree(*U_new1); *U_new1=U_new2; U_new2=NULL;
-		SGFree(*u_new1); *u_new1=u_new2; u_new2=NULL;
-		SGFree(*P_new1); *P_new1=P_new2; P_new2=NULL;
+		SGFree(*U_new1); *U_new1=U_new2; U_new2=nullptr;
+		SGFree(*u_new1); *u_new1=u_new2; u_new2=nullptr;
+		SGFree(*P_new1); *P_new1=P_new2; P_new2=nullptr;
 		nump_new1=nump_new2;
 // for left end only
 		(*bound1)=k-s+1;
@@ -144,9 +144,9 @@ W_NODE  *P_new2=NULL;
 	if( (r=spline->degree-s+1)>0 ){
 		if( !Insert_Knot( *U_new1, *P_new1, *u_new1, nump_new1, spline->degree,
 											t2, &U_new2, &P_new2, &u_new2, &nump_new2, r, k, s ) ) goto err;
-		SGFree(*U_new1); *U_new1=U_new2; U_new2=NULL;
-		SGFree(*u_new1); *u_new1=u_new2; u_new2=NULL;
-		SGFree(*P_new1); *P_new1=P_new2; P_new2=NULL;
+		SGFree(*U_new1); *U_new1=U_new2; U_new2=nullptr;
+		SGFree(*u_new1); *u_new1=u_new2; u_new2=nullptr;
+		SGFree(*P_new1); *P_new1=P_new2; P_new2=nullptr;
  //		nump_new1=nump_new2;
 // for right end only
 		(*bound2)=k+r;
@@ -231,24 +231,24 @@ BOOL Two_Spline_Union_Dat(lpSPLY_DAT sply_dat1, lpSPLY_DAT sply_dat2,
 	/*	BOOL        ret;
 		short       i, d, new_nump; //,r;
 		sgFloat      delta;
-		sgFloat      *U_new1, *u_new1;//, *U_new2=NULL;
-		W_NODE      *P_new1;//, *P_new2=NULL;
+		sgFloat      *U_new1, *u_new1;//, *U_new2=nullptr;
+		W_NODE      *P_new1;//, *P_new2=nullptr;
 
 		//write points and weights from first spline
-		if( (P_new1=(W_NODE *)SGMalloc((sply_dat1->nump+sply_dat2->nump)*sizeof(W_NODE))) == NULL ) return FALSE;
+		if( (P_new1=(W_NODE *)SGMalloc((sply_dat1->nump+sply_dat2->nump)*sizeof(W_NODE))) == nullptr ) return FALSE;
 		memcpy( P_new1, sply_dat2->P, sply_dat2->nump*sizeof(W_NODE) );
 		//add second spline into new one
 		for( i=0; i<sply_dat1->nump; i++ ) P_new1[sply_dat2->nump+i-1] = sply_dat1->P[i];
 
 		// write parameters
-		if( (u_new1=(sgFloat *)SGMalloc((sply_dat1->nump+sply_dat2->nump)*sizeof(sgFloat))) == NULL ) goto err;
+		if( (u_new1=(sgFloat *)SGMalloc((sply_dat1->nump+sply_dat2->nump)*sizeof(sgFloat))) == nullptr ) goto err;
 		memcpy( u_new1, sply_dat2->u, sply_dat2->nump*sizeof(sgFloat) );
 		delta=sply_dat2->u[sply_dat2->nump-1];
 		for( i=0; i<sply_dat1->nump; i++ ) u_new1[sply_dat2->nump+i-1] = sply_dat1->u[i]+delta;
 
 		// write vector
 		d=sply_dat1->degree+1;
-		if( (U_new1=(sgFloat *)SGMalloc((sply_dat1->numU+sply_dat2->numU)*sizeof(sgFloat))) == NULL ) goto err;
+		if( (U_new1=(sgFloat *)SGMalloc((sply_dat1->numU+sply_dat2->numU)*sizeof(sgFloat))) == nullptr ) goto err;
 		memcpy( U_new1, sply_dat2->U, sply_dat2->numU*sizeof(sgFloat) );
 		delta=sply_dat2->U[sply_dat2->numU-1];
 		for(i=d; i<sply_dat1->numU; i++ ) U_new1[sply_dat2->numU+i-d-1]=sply_dat1->U[i]+delta;
@@ -281,26 +281,26 @@ sgFloat			delta;
 sgFloat 			*U_new1, *u_new1;
 W_NODE  		*P_new1;
 
-	P_new1 = NULL;
-	u_new1 = NULL;
-	U_new1 = NULL;
+	P_new1 = nullptr;
+	u_new1 = nullptr;
+	U_new1 = nullptr;
 
 //write points and weights from first spline
-  if( (P_new1=(W_NODE *)SGMalloc((sply_dat1->nump+sply_dat2->nump)*sizeof(W_NODE))) == NULL ) return FALSE;
+  if( (P_new1=(W_NODE *)SGMalloc((sply_dat1->nump+sply_dat2->nump)*sizeof(W_NODE))) == nullptr ) return FALSE;
   memcpy( P_new1, sply_dat2->P, sply_dat2->nump*sizeof(W_NODE) );
 //add second spline into new one
   for( i=0; i<sply_dat1->nump; i++ ) 
 	  P_new1[sply_dat2->nump+i-1] = sply_dat1->P[i];
 
 // write parameters
-	if( (u_new1=(sgFloat *)SGMalloc((sply_dat1->nump+sply_dat2->nump)*sizeof(sgFloat))) == NULL ) goto err;
+	if( (u_new1=(sgFloat *)SGMalloc((sply_dat1->nump+sply_dat2->nump)*sizeof(sgFloat))) == nullptr ) goto err;
   memcpy( u_new1, sply_dat2->u, sply_dat2->nump*sizeof(sgFloat) );
   delta=sply_dat2->u[sply_dat2->nump-1];
   for( i=0; i<sply_dat1->nump; i++ ) u_new1[sply_dat2->nump+i-1] = sply_dat1->u[i]+delta;
 
 // write vector
 	d=sply_dat1->degree+1;
-	if( (U_new1=(sgFloat *)SGMalloc((sply_dat1->numU+sply_dat2->numU)*sizeof(sgFloat))) == NULL ) goto err;
+	if( (U_new1=(sgFloat *)SGMalloc((sply_dat1->numU+sply_dat2->numU)*sizeof(sgFloat))) == nullptr ) goto err;
   memcpy( U_new1, sply_dat2->U, sply_dat2->numU*sizeof(sgFloat) );
 	delta=sply_dat2->U[sply_dat2->numU-1];
 	for(i=d; i<sply_dat1->numU; i++ ) U_new1[sply_dat2->numU+i-d-1]=sply_dat1->U[i]+delta;
@@ -381,15 +381,15 @@ err:
 BOOL Increase_Spline_Degree(lpSPLY_DAT sply_dat, short new_degree){
 BOOL		rt=FALSE;
 short 		i, j, k, l, m, r, s, k1, add, m_del;
-short			nump_new1, nump_new2, degree_plus, *r_insert=NULL;
-sgFloat 	*U_new1, *u_new1, *U_new2=NULL, *u_new2=NULL, *par_insert=NULL;
-W_NODE  *P_new1, *P_new2=NULL;
+short			nump_new1, nump_new2, degree_plus, *r_insert=nullptr;
+sgFloat 	*U_new1, *u_new1, *U_new2=nullptr, *u_new2=nullptr, *par_insert=nullptr;
+W_NODE  *P_new1, *P_new2=nullptr;
 
 	add=new_degree-sply_dat->degree;
 	degree_plus=sply_dat->degree+1;
 
-	if( (P_new1=(W_NODE *)SGMalloc(sply_dat->nump*sizeof(W_NODE))) == NULL) return FALSE;
-	if( (u_new1=(sgFloat *)SGMalloc(sply_dat->nump*sizeof(sgFloat))) == NULL) goto err;
+	if( (P_new1=(W_NODE *)SGMalloc(sply_dat->nump*sizeof(W_NODE))) == nullptr) return FALSE;
+	if( (u_new1=(sgFloat *)SGMalloc(sply_dat->nump*sizeof(sgFloat))) == nullptr) goto err;
 	for( i=0; i<sply_dat->nump; i++ ){
 		memcpy( &P_new1[i], &sply_dat->P[i], sizeof(W_NODE) );
     u_new1[i]=sply_dat->u[i];
@@ -401,7 +401,7 @@ W_NODE  *P_new1, *P_new2=NULL;
 		Increase_Composite_Curve_Degree( P_new1, &P_new2, u_new1, &u_new2, degree_plus,
     																 &nump_new2, sply_dat->degree, add);
 //create new control knots vector
-		if( (U_new1=(sgFloat *)SGMalloc((nump_new2+new_degree+1)*sizeof(sgFloat)))==NULL) goto err;
+		if( (U_new1=(sgFloat *)SGMalloc((nump_new2+new_degree+1)*sizeof(sgFloat)))==nullptr) goto err;
 		for(i=0; i<new_degree+1; i++) { U_new1[i]=0.; U_new1[i+new_degree+1]=1.;}
 		k=2*(new_degree+1);
 	}else{ // It's not Beze Curve - create composite curve from initial curve
@@ -410,8 +410,8 @@ W_NODE  *P_new1, *P_new2=NULL;
 		nump_new1=sply_dat->nump;
 
 		m=0;
-		if((r_insert  =(short *)SGMalloc((sply_dat->nump-degree_plus)*sizeof(short)))==NULL) goto err;
-		if((par_insert=(sgFloat *)SGMalloc((sply_dat->nump-degree_plus)*sizeof(sgFloat)))==NULL) goto err1;
+		if((r_insert  =(short *)SGMalloc((sply_dat->nump-degree_plus)*sizeof(short)))==nullptr) goto err;
+		if((par_insert=(sgFloat *)SGMalloc((sply_dat->nump-degree_plus)*sizeof(sgFloat)))==nullptr) goto err1;
 
 //insert knots on the each parameter
 		for(i=degree_plus, j=1; j<=sply_dat->nump-degree_plus; i++, j++	) {
@@ -425,9 +425,9 @@ W_NODE  *P_new1, *P_new2=NULL;
 				if( !Insert_Knot( U_new1, P_new1, u_new1, nump_new1, sply_dat->degree,
 													sply_dat->U[i], &U_new2, &P_new2, &u_new2, &nump_new2, r, k1, s ) ) goto err;
 
-				SGFree(U_new1); U_new1=U_new2; U_new2=NULL;
-        SGFree(u_new1); u_new1=u_new2; u_new2=NULL;
-				SGFree(P_new1); P_new1=P_new2; P_new2=NULL;
+				SGFree(U_new1); U_new1=U_new2; U_new2=nullptr;
+        SGFree(u_new1); u_new1=u_new2; u_new2=nullptr;
+				SGFree(P_new1); P_new1=P_new2; P_new2=nullptr;
 				nump_new1=nump_new2;	nump_new2=0;
 			}
 		}
@@ -437,7 +437,7 @@ W_NODE  *P_new1, *P_new2=NULL;
 		k=0;
 		SGFree(U_new1);
 //create new control knots vector
-		if( (U_new1=(sgFloat *)SGMalloc((nump_new2+new_degree+1)*sizeof(sgFloat)))==NULL) goto err1;
+		if( (U_new1=(sgFloat *)SGMalloc((nump_new2+new_degree+1)*sizeof(sgFloat)))==nullptr) goto err1;
 
 		for(i=0; i<new_degree+1; i++) U_new1[k++]=0.;
 		for( j=1; j<=sply_dat->nump-degree_plus; j+=s	) {
@@ -455,8 +455,8 @@ W_NODE  *P_new1, *P_new2=NULL;
 										 new_degree, par_insert[i], r_insert[i]);
 
 		k-=m_del;
-		SGFree( par_insert ); par_insert=NULL;
-		SGFree( r_insert );     r_insert=NULL;
+		SGFree( par_insert ); par_insert=nullptr;
+		SGFree( r_insert );     r_insert=nullptr;
 	}
 
 //modify spline structure for increase degree
@@ -524,13 +524,13 @@ short 		ii;
 sgFloat		*U;
 lpW_NODE  P_tmp;
 
-	if( (P_tmp=(W_NODE *)SGMalloc( sply_dat->nump*sizeof(W_NODE)))==NULL) return FALSE;
+	if( (P_tmp=(W_NODE *)SGMalloc( sply_dat->nump*sizeof(W_NODE)))==nullptr) return FALSE;
 	memcpy(P_tmp, sply_dat->P, sply_dat->nump*sizeof(W_NODE));
 	for( ii=0; ii<sply_dat->nump; ii++)
 		memcpy( &sply_dat->P[ii], &P_tmp[sply_dat->nump-1-ii], sizeof(W_NODE));
 	SGFree(P_tmp);
 
-	if( (U=(sgFloat *)SGMalloc( sply_dat->numU*sizeof(sgFloat)))==NULL)	goto err;
+	if( (U=(sgFloat *)SGMalloc( sply_dat->numU*sizeof(sgFloat)))==nullptr)	goto err;
 	memcpy(U, sply_dat->U, sply_dat->numU*sizeof(sgFloat));
 	for( ii=0; ii<sply_dat->numU; ii++){
 		U[ii]-=1.;
@@ -559,7 +559,7 @@ BOOL Modify_Spline_Str( lpSPLY_DAT sply_dat, sgFloat *U_new, short numu,
 //write control vector
 	if( numu>MAX_POINT_ON_SPLINE ){
   	SGFree( sply_dat->U );
-    if( (sply_dat->U=(sgFloat *)SGMalloc(numu*sizeof(sgFloat)))==NULL ) return FALSE;
+    if( (sply_dat->U=(sgFloat *)SGMalloc(numu*sizeof(sgFloat)))==nullptr ) return FALSE;
   }
 	memcpy( sply_dat->U, U_new, numu*sizeof(sgFloat) );
 	sply_dat->numU=numu;
@@ -569,9 +569,9 @@ BOOL Modify_Spline_Str( lpSPLY_DAT sply_dat, sgFloat *U_new, short numu,
   	SGFree( sply_dat->P );
     SGFree( sply_dat->knots );
     SGFree( sply_dat->u );
-    if( (sply_dat->P=(W_NODE *)SGMalloc(nump*sizeof(W_NODE)))==NULL) return FALSE;
-    if( (sply_dat->knots=(DA_POINT*)SGMalloc(nump*sizeof(DA_POINT)))==NULL) return FALSE;
-	  if( (sply_dat->u=(sgFloat *)SGMalloc(nump*sizeof(sgFloat)))==NULL ) return FALSE;
+    if( (sply_dat->P=(W_NODE *)SGMalloc(nump*sizeof(W_NODE)))==nullptr) return FALSE;
+    if( (sply_dat->knots=(DA_POINT*)SGMalloc(nump*sizeof(DA_POINT)))==nullptr) return FALSE;
+	  if( (sply_dat->u=(sgFloat *)SGMalloc(nump*sizeof(sgFloat)))==nullptr ) return FALSE;
   }
 	memcpy( sply_dat->P, P_new, nump*sizeof(W_NODE) );
 	memcpy( sply_dat->u, u_new, nump*sizeof(sgFloat) );

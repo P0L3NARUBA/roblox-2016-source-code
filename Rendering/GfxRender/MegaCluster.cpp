@@ -1387,12 +1387,12 @@ namespace RBX
 			: visualEngine(visualEngine)
 			, useShaders(false)
 			, ignoreWaterUpdatesForTesting(false)
-			, storage(NULL)
+			, storage(nullptr)
 		{
 			RBXASSERT(part->getPartType() == MEGACLUSTER_PART);
 			partInstance = part;
 
-			RBXASSERT(partInstance->getGfxPart() == NULL);
+			RBXASSERT(partInstance->getGfxPart() == nullptr);
 			partInstance->setGfxPart(this);
 
 			MegaClusterInstance* mci = boost::polymorphic_downcast<MegaClusterInstance*>(part.get());
@@ -1464,7 +1464,7 @@ namespace RBX
 				FASTLOG2(FLog::TerrainCellListener, "MegaCluster: disconnecting %p from storage %p", this, storage);
 				storage->disconnectListener(this);
 
-				storage = NULL;
+				storage = nullptr;
 			}
 		}
 
@@ -1679,7 +1679,7 @@ namespace RBX
 
 			*outQuads = quads;
 
-			if (quads == 0) return NULL;
+			if (quads == 0) return nullptr;
 
 			shared_ptr<VertexBuffer> vbuf;
 
@@ -1722,7 +1722,7 @@ namespace RBX
 
 			*outQuads = quads;
 
-			if (quads == 0) return NULL;
+			if (quads == 0) return nullptr;
 
 			shared_ptr<VertexBuffer> vbuf;
 

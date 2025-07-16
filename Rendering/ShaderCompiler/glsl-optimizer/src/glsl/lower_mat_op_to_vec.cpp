@@ -42,7 +42,7 @@ public:
    ir_mat_op_to_vec_visitor()
    {
       this->made_progress = false;
-      this->mem_ctx = NULL;
+      this->mem_ctx = nullptr;
    }
 
    ir_visitor_status visit_leave(ir_assignment *);
@@ -111,7 +111,7 @@ ir_mat_op_to_vec_visitor::get_element(ir_dereference *val, int col, int row)
 ir_dereference *
 ir_mat_op_to_vec_visitor::get_column(ir_dereference *val, int row)
 {
-   val = val->clone(mem_ctx, NULL);
+   val = val->clone(mem_ctx, nullptr);
 
    if (val->type->is_matrix()) {
       val = new(mem_ctx) ir_dereference_array(val,
@@ -177,7 +177,7 @@ ir_mat_op_to_vec_visitor::do_mul_mat_vec(ir_dereference *result,
       expr = new(mem_ctx) ir_expression(ir_binop_add, expr, mul_expr);
    }
 
-   result = result->clone(mem_ctx, NULL);
+   result = result->clone(mem_ctx, nullptr);
    assign = new(mem_ctx) ir_assignment(result, expr);
    base_ir->insert_before(assign);
 }
@@ -194,11 +194,11 @@ ir_mat_op_to_vec_visitor::do_mul_vec_mat(ir_dereference *result,
       ir_expression *column_expr;
       ir_assignment *column_assign;
 
-      column_result = result->clone(mem_ctx, NULL);
+      column_result = result->clone(mem_ctx, nullptr);
       column_result = new(mem_ctx) ir_swizzle(column_result, i, 0, 0, 0, 1);
 
       column_expr = new(mem_ctx) ir_expression(ir_binop_dot,
-					       a->clone(mem_ctx, NULL),
+					       a->clone(mem_ctx, nullptr),
 					       get_column(b, i));
 
       column_assign = new(mem_ctx) ir_assignment(column_result,
@@ -220,7 +220,7 @@ ir_mat_op_to_vec_visitor::do_mul_mat_scalar(ir_dereference *result,
 
       column_expr = new(mem_ctx) ir_expression(ir_binop_mul,
 					       get_column(a, i),
-					       b->clone(mem_ctx, NULL));
+					       b->clone(mem_ctx, nullptr));
 
       column_assign = new(mem_ctx) ir_assignment(get_column(result, i),
 						 column_expr);
@@ -271,7 +271,7 @@ ir_mat_op_to_vec_visitor::do_equal_mat_mat(ir_dereference *result,
 	 new(this->mem_ctx) ir_dereference_variable(tmp_bvec);
 
       ir_assignment *const assign =
-	 new(this->mem_ctx) ir_assignment(lhs, cmp, NULL, (1U << i));
+	 new(this->mem_ctx) ir_assignment(lhs, cmp, nullptr, (1U << i));
 
       this->base_ir->insert_before(assign);
    }
@@ -283,7 +283,7 @@ ir_mat_op_to_vec_visitor::do_equal_mat_mat(ir_dereference *result,
       any = new(this->mem_ctx) ir_expression(ir_unop_logic_not, any);
 
    ir_assignment *const assign =
-      new(mem_ctx) ir_assignment(result->clone(mem_ctx, NULL), any);
+      new(mem_ctx) ir_assignment(result->clone(mem_ctx, nullptr), any);
    base_ir->insert_before(assign);
 }
 

@@ -284,7 +284,7 @@ namespace Graphics
 		GeometryGenerator count;
 		Humanoid* humanoid = SceneUpdater::getHumanoid(part);
         HumanoidIdentifier humanoidIdentifier(humanoid);
-        const HumanoidIdentifier* hi = humanoidIdentifier.humanoid ? &humanoidIdentifier : NULL;
+        const HumanoidIdentifier* hi = humanoidIdentifier.humanoid ? &humanoidIdentifier : nullptr;
 
 		// Material flags
 		bool ignoreDecals = false;
@@ -332,7 +332,7 @@ namespace Graphics
             options.flags &= ~GeometryGenerator::Flag_RandomizeBlockAppearance; 
 
 			// MODEL
-			models.push_back(Model(partName, count.getVertexCount(), count.getIndexCount(), NULL));
+			models.push_back(Model(partName, count.getVertexCount(), count.getIndexCount(), nullptr));
 			Model& model = models.back();
 
 			GeometryGenerator generator(&model.vertices[0], &model.indices[0], 0);
@@ -392,7 +392,7 @@ namespace Graphics
 	{
 		if (PartInstance* part = Instance::fastDynamicCast<PartInstance>(instance))
 		{
-			processPart(part, NULL);
+			processPart(part, nullptr);
 
 			if ((part->getCookie() & PartCookie::HAS_DECALS) && part->getChildren())
 			{

@@ -23,7 +23,7 @@ BOOL create_equ_path2(hOBJ hobj, lpD_PLANE lpPlane, sgFloat height1, sgFloat hei
 	OSCAN_COD		cod;
 	sgFloat 			k;
 
-	*hobj_equ = NULL;
+	*hobj_equ = nullptr;
 	if (lpPlane) plane = *lpPlane;
 	else {
 		if (!set_flat_on_path(hobj, &plane)) goto falseLab;
@@ -61,12 +61,12 @@ BOOL create_equ_path2(hOBJ hobj, lpD_PLANE lpPlane, sgFloat height1, sgFloat hei
 	idf = zcf_get_first_face(&cut2);
 	idp = zcp_get_first_path_in_face(&cut2, idf);
 	if ( !idp ) {    
-//		put_message(MSG_SHU_022, NULL, 1);
+//		put_message(MSG_SHU_022, nullptr, 1);
 		zc_free(&cut2);
 //		ret = G_OK;
 		return TRUE;
 	}
-	if ((*hobj_equ = o_alloc(OPATH)) == NULL)	goto err;
+	if ((*hobj_equ = o_alloc(OPATH)) == nullptr)	goto err;
 	obj_path = (lpOBJ)(*hobj_equ);
 	geo_path = (lpGEO_PATH)obj_path->geo_data;
 	o_hcunit(geo_path->matr);
@@ -83,7 +83,7 @@ BOOL create_equ_path2(hOBJ hobj, lpD_PLANE lpPlane, sgFloat height1, sgFloat hei
 		p.z = 0;
 		o_hcncrd(matr2, &p, &vk);
 		modify_limits_by_point(&vk, &min, &max);
-		if((hobj_line = o_alloc(OLINE)) == NULL) goto err2;
+		if((hobj_line = o_alloc(OLINE)) == nullptr) goto err2;
 		obj_line = (lpOBJ)hobj_line;
 		obj_line->hhold = *hobj_equ;
 		geo_line = (lpGEO_LINE)(obj_line->geo_data);
@@ -107,13 +107,13 @@ BOOL create_equ_path2(hOBJ hobj, lpD_PLANE lpPlane, sgFloat height1, sgFloat hei
 	}
 	else
 	{
-		if (set_flat_on_path(*hobj_equ, NULL))
+		if (set_flat_on_path(*hobj_equ, nullptr))
 			obj_path->status |= ST_FLAT;
 		else      
 			obj_path->status &= ~ST_FLAT;
 	}
-	//if (!set_flat_on_path(*hobj_equ, NULL)) goto err2;
-	if ((cod = test_self_cross_path(*hobj_equ,NULL)) == OSFALSE) goto err2;
+	//if (!set_flat_on_path(*hobj_equ, nullptr)) goto err2;
+	if ((cod = test_self_cross_path(*hobj_equ,nullptr)) == OSFALSE) goto err2;
 	zc_free(&cut2);
 	if (cod == OSTRUE) {
 		obj_path = (lpOBJ)(*hobj_equ);
@@ -121,13 +121,13 @@ BOOL create_equ_path2(hOBJ hobj, lpD_PLANE lpPlane, sgFloat height1, sgFloat hei
 	}
 	return TRUE;
 err2:
-	o_free(*hobj_equ, NULL);
-	*hobj_equ = NULL;
+	o_free(*hobj_equ, nullptr);
+	*hobj_equ = nullptr;
 err:
 	zc_free(&cut2);
 cancel:
 	free_vdim(&vdim);
 falseLab:
-	put_message(MSG_SHU_037, NULL, 0);
+	put_message(MSG_SHU_037, nullptr, 0);
 	return FALSE;
 }

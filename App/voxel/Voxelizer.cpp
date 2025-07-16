@@ -806,7 +806,7 @@ namespace RBX { namespace Voxel {
 		FASTLOG3F(FLog::Voxelizer, "LightGrid: Asking spatial hash for parts, extents min: %fx%fx%f", chunkExtents.min().x, chunkExtents.min().y, chunkExtents.min().z);
 		FASTLOG3F(FLog::Voxelizer, "LightGrid: Asking spatial hash for parts, extents max: %fx%fx%f", chunkExtents.max().x, chunkExtents.max().y, chunkExtents.max().z);
 
-		DenseHashSet<Primitive*> result(NULL);
+		DenseHashSet<Primitive*> result(nullptr);
 
         {
             RBXPROFILER_SCOPE("Voxel", "getPrimitivesOverlapping");

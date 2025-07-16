@@ -43,7 +43,7 @@ lpD_POINT intersect_two_hobj(hOBJ hobj1, hOBJ hobj2, lpD_POINT vp, lpD_POINT p)
 err:
 	free_vdim(&int2hobj.points);
 	el_geo_err = EL_NO_INTER_POINT;
-	return NULL;
+	return nullptr;
 }
 
 static OSCAN_COD int2hobj_geo_scan(hOBJ hobj, lpSCAN_CONTROL lpsc)
@@ -96,10 +96,10 @@ static OSCAN_COD int2hobj_geo_scan_second(hOBJ hobj, lpSCAN_CONTROL lpsc)
 	}
 
 //!!!!!! type=1, ,   VDIM(D_POINT)  
-//!!!!!! VDIM2==NULL, .. type==1 ( type=0 VDIM2   
+//!!!!!! VDIM2==nullptr, .. type==1 ( type=0 VDIM2   
 //     
 	if( !intersection_with_spline( hspline, hother, 1,
-															 &data->points, NULL))return OSFALSE;
+															 &data->points, nullptr))return OSFALSE;
 
 /*
 	switch (TypeOther) {

@@ -312,7 +312,7 @@ namespace RBX
 	{
 		if (shared_ptr<DataModel> dm = weakDm.lock())
 		{
-			RBX::PointsService* pointsService = NULL;
+			RBX::PointsService* pointsService = nullptr;
 			{
 				pointsService = ServiceProvider::find<RBX::PointsService>(dm.get());
 				if (!pointsService)

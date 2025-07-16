@@ -336,7 +336,7 @@ Sint32 SDLTest_RandomIntegerInRange(Sint32 min, Sint32 max);
  *
  * Note: Returned string needs to be deallocated.
  *
- * \returns Newly allocated random string; or NULL if length was invalid or string could not be allocated.
+ * \returns Newly allocated random string; or nullptr if length was invalid or string could not be allocated.
  */
 char * SDLTest_RandomAsciiString();
 
@@ -350,7 +350,7 @@ char * SDLTest_RandomAsciiString();
  *
  * \param maxLength The maximum length of the generated string.
  *
- * \returns Newly allocated random string; or NULL if maxLength was invalid or string could not be allocated.
+ * \returns Newly allocated random string; or nullptr if maxLength was invalid or string could not be allocated.
  */
 char * SDLTest_RandomAsciiStringWithMaximumLength(int maxLength);
 
@@ -364,7 +364,7 @@ char * SDLTest_RandomAsciiStringWithMaximumLength(int maxLength);
  *
  * \param size The length of the generated string
  *
- * \returns Newly allocated random string; or NULL if size was invalid or string could not be allocated.
+ * \returns Newly allocated random string; or nullptr if size was invalid or string could not be allocated.
  */
 char * SDLTest_RandomAsciiStringOfSize(int size);
 

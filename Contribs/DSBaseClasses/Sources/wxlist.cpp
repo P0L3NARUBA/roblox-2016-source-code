@@ -20,7 +20,7 @@
    The list name must not conflict with MFC classes as an
    application may use both
 
-   The nodes form a doubly linked, NULL terminated chain with an anchor
+   The nodes form a doubly linked, nullptr terminated chain with an anchor
    block (the list object per se) holding pointers to the first and last
    nodes and a count of the nodes.
    There is a node cache to reduce the allocation and freeing overhead.
@@ -45,7 +45,7 @@
    1. Retaining the warts for compatibility
    2. Keeping an element count -i.e. counting whenever we do anything
       instead of only when we want the count.
-   3. Making the chain pointers NULL terminated.  If the list object
+   3. Making the chain pointers nullptr terminated.  If the list object
       itself looks just like a node and the list is kept as a ring then
       it reduces the number of special cases.  All inserts look the same.
 */
@@ -56,7 +56,7 @@
 /* set cursor to the position of each element of list in turn  */
 #define INTERNALTRAVERSELIST(list, cursor)               \
 for ( cursor = (list).GetHeadPositionI()           \
-    ; cursor!=NULL                               \
+    ; cursor!=nullptr                               \
     ; cursor = (list).Next(cursor)                \
     )
 
@@ -66,7 +66,7 @@ for ( cursor = (list).GetHeadPositionI()           \
 */
 #define INTERNALREVERSETRAVERSELIST(list, cursor)        \
 for ( cursor = (list).GetTailPositionI()           \
-    ; cursor!=NULL                               \
+    ; cursor!=nullptr                               \
     ; cursor = (list).Prev(cursor)                \
     )
 
@@ -83,8 +83,8 @@ CBaseList::CBaseList(TCHAR *pName,    // Descriptive list name
 #ifdef DEBUG
     CBaseObject(pName),
 #endif
-    m_pFirst(NULL),
-    m_pLast(NULL),
+    m_pFirst(nullptr),
+    m_pLast(nullptr),
     m_Count(0),
     m_Cache(iItems)
 {
@@ -94,8 +94,8 @@ CBaseList::CBaseList(TCHAR *pName) :  // Descriptive list name
 #ifdef DEBUG
     CBaseObject(pName),
 #endif
-    m_pFirst(NULL),
-    m_pLast(NULL),
+    m_pFirst(nullptr),
+    m_pLast(nullptr),
     m_Count(0),
     m_Cache(DEFAULTCACHE)
 {
@@ -107,8 +107,8 @@ CBaseList::CBaseList(CHAR *pName,    // Descriptive list name
 #ifdef DEBUG
     CBaseObject(pName),
 #endif
-    m_pFirst(NULL),
-    m_pLast(NULL),
+    m_pFirst(nullptr),
+    m_pLast(nullptr),
     m_Count(0),
     m_Cache(iItems)
 {
@@ -118,8 +118,8 @@ CBaseList::CBaseList(CHAR *pName) :  // Descriptive list name
 #ifdef DEBUG
     CBaseObject(pName),
 #endif
-    m_pFirst(NULL),
-    m_pLast(NULL),
+    m_pFirst(nullptr),
+    m_pLast(nullptr),
     m_Count(0),
     m_Cache(DEFAULTCACHE)
 {
@@ -165,7 +165,7 @@ void CBaseList::RemoveAll()
     /* Reset the object count and the list pointers */
 
     m_Count = 0;
-    m_pFirst = m_pLast = NULL;
+    m_pFirst = m_pLast = nullptr;
 
 } // RemoveAll
 
@@ -211,16 +211,16 @@ int CBaseList::GetCountI() const
 
 
 /* Return the object at rp, update rp to the next object from
-   the list or NULL if you have moved over the last object.
-   You may still call this function once we return NULL but
-   we will continue to return a NULL position value
+   the list or nullptr if you have moved over the last object.
+   You may still call this function once we return nullptr but
+   we will continue to return a nullptr position value
 */
 void *CBaseList::GetNextI(POSITION& rp) const
 {
     /* have we reached the end of the list */
 
-    if (rp == NULL) {
-        return NULL;
+    if (rp == nullptr) {
+        return nullptr;
     }
 
     /* Lock the object before continuing */
@@ -230,20 +230,20 @@ void *CBaseList::GetNextI(POSITION& rp) const
     /* Copy the original position then step on */
 
     CNode *pn = (CNode *) rp;
-    ASSERT(pn != NULL);
+    ASSERT(pn != nullptr);
     rp = (POSITION) pn->Next();
 
     /* Get the object at the original position from the list */
 
     pObject = pn->GetData();
-    // ASSERT(pObject != NULL);    // NULL pointers in the list are allowed.
+    // ASSERT(pObject != nullptr);    // nullptr pointers in the list are allowed.
     return pObject;
 } //GetNext
 
 
 
 /* Return the object at p.
-   Asking for the object at NULL ASSERTs then returns NULL
+   Asking for the object at nullptr ASSERTs then returns nullptr
    The object is NOT locked.  The list is not being changed
    in any way.  If another thread is busy deleting the object
    then locking would only result in a change from one bad
@@ -251,20 +251,20 @@ void *CBaseList::GetNextI(POSITION& rp) const
 */
 void *CBaseList::GetI(POSITION p) const
 {
-    if (p == NULL) {
-        return NULL;
+    if (p == nullptr) {
+        return nullptr;
     }
 
     CNode * pn = (CNode *) p;
     void *pObject = pn->GetData();
-    // ASSERT(pObject != NULL);    // NULL pointers in the list are allowed.
+    // ASSERT(pObject != nullptr);    // nullptr pointers in the list are allowed.
     return pObject;
 } //Get
 
 
 
 /* Return the first position in the list which holds the given pointer.
-   Return NULL if it's not found.
+   Return nullptr if it's not found.
 */
 POSITION CBaseList::FindI( void * pObj) const
 {
@@ -274,14 +274,14 @@ POSITION CBaseList::FindI( void * pObj) const
             return pn;
         }
     }
-    return NULL;
+    return nullptr;
 } // Find
 
 
 
 /* Remove the first node in the list (deletes the pointer to its object
    from the list, does not free the object itself).
-   Return the pointer to its object or NULL if empty
+   Return the pointer to its object or nullptr if empty
 */
 void *CBaseList::RemoveHeadI()
 {
@@ -299,7 +299,7 @@ void *CBaseList::RemoveHeadI()
 
 /* Remove the last node in the list (deletes the pointer to its object
    from the list, does not free the object itself).
-   Return the pointer to its object or NULL if empty
+   Return the pointer to its object or nullptr if empty
 */
 void *CBaseList::RemoveTailI()
 {
@@ -321,23 +321,23 @@ void *CBaseList::RemoveTailI()
    The node object that is freed as a result
    of this operation is added to the node cache where
    it can be used again.
-   Remove(NULL) is a harmless no-op - but probably is a wart.
+   Remove(nullptr) is a harmless no-op - but probably is a wart.
 */
 void *CBaseList::RemoveI(POSITION pos)
 {
     /* Lock the critical section before continuing */
 
-    // ASSERT (pos!=NULL);     // Removing NULL is to be harmless!
-    if (pos==NULL) return NULL;
+    // ASSERT (pos!=nullptr);     // Removing nullptr is to be harmless!
+    if (pos==nullptr) return nullptr;
 
 
     CNode *pCurrent = (CNode *) pos;
-    ASSERT(pCurrent != NULL);
+    ASSERT(pCurrent != nullptr);
 
     /* Update the previous node */
 
     CNode *pNode = pCurrent->Prev();
-    if (pNode == NULL) {
+    if (pNode == nullptr) {
         m_pFirst = pCurrent->Next();
     } else {
         pNode->SetNext(pCurrent->Next());
@@ -346,7 +346,7 @@ void *CBaseList::RemoveI(POSITION pos)
     /* Update the following node */
 
     pNode = pCurrent->Next();
-    if (pNode == NULL) {
+    if (pNode == nullptr) {
         m_pLast = pCurrent->Prev();
     } else {
         pNode->SetPrev(pCurrent->Prev());
@@ -356,10 +356,10 @@ void *CBaseList::RemoveI(POSITION pos)
 
     void *pObject = pCurrent->GetData();
 
-    // ASSERT(pObject != NULL);    // NULL pointers in the list are allowed.
+    // ASSERT(pObject != nullptr);    // nullptr pointers in the list are allowed.
 
     /* Try and add the node object to the cache -
-       a NULL return code from the cache means we ran out of room.
+       a nullptr return code from the cache means we ran out of room.
        The cache size is fixed by a constructor argument when the
        list is created and defaults to DEFAULTCACHE.
        This means that the cache will have room for this many
@@ -389,20 +389,20 @@ POSITION CBaseList::AddTailI(void *pObject)
     /* Lock the critical section before continuing */
 
     CNode *pNode;
-    // ASSERT(pObject);   // NULL pointers in the list are allowed.
+    // ASSERT(pObject);   // nullptr pointers in the list are allowed.
 
     /* If there is a node objects in the cache then use
        that otherwise we will have to create a new one */
 
     pNode = (CNode *) m_Cache.RemoveFromCache();
-    if (pNode == NULL) {
+    if (pNode == nullptr) {
         pNode = new CNode;
     }
 
     /* Check we have a valid object */
 
-    if (pNode == NULL) {
-        return NULL;
+    if (pNode == nullptr) {
+        return nullptr;
     }
 
     /* Initialise all the CNode object
@@ -410,10 +410,10 @@ POSITION CBaseList::AddTailI(void *pObject)
     */
 
     pNode->SetData(pObject);
-    pNode->SetNext(NULL);
+    pNode->SetNext(nullptr);
     pNode->SetPrev(m_pLast);
 
-    if (m_pLast == NULL) {
+    if (m_pLast == nullptr) {
         m_pFirst = pNode;
     } else {
         m_pLast->SetNext(pNode);
@@ -438,20 +438,20 @@ POSITION CBaseList::AddTailI(void *pObject)
 POSITION CBaseList::AddHeadI(void *pObject)
 {
     CNode *pNode;
-    // ASSERT(pObject);  // NULL pointers in the list are allowed.
+    // ASSERT(pObject);  // nullptr pointers in the list are allowed.
 
     /* If there is a node objects in the cache then use
        that otherwise we will have to create a new one */
 
     pNode = (CNode *) m_Cache.RemoveFromCache();
-    if (pNode == NULL) {
+    if (pNode == nullptr) {
         pNode = new CNode;
     }
 
     /* Check we have a valid object */
 
-    if (pNode == NULL) {
-        return NULL;
+    if (pNode == nullptr) {
+        return nullptr;
     }
 
     /* Initialise all the CNode object
@@ -461,10 +461,10 @@ POSITION CBaseList::AddHeadI(void *pObject)
     pNode->SetData(pObject);
 
     /* chain it in (set four pointers) */
-    pNode->SetPrev(NULL);
+    pNode->SetPrev(nullptr);
     pNode->SetNext(m_pFirst);
 
-    if (m_pFirst == NULL) {
+    if (m_pFirst == nullptr) {
         m_pLast = pNode;
     } else {
         m_pFirst->SetPrev(pNode);
@@ -492,7 +492,7 @@ BOOL CBaseList::AddTail(CBaseList *pList)
     POSITION pos = pList->GetHeadPositionI();
 
     while (pos) {
-       if (NULL == AddTailI(pList->GetNextI(pos))) {
+       if (nullptr == AddTailI(pList->GetNextI(pos))) {
            return FALSE;
        }
     }
@@ -518,7 +518,7 @@ BOOL CBaseList::AddHead(CBaseList *pList)
     POSITION pos;
 
     INTERNALREVERSETRAVERSELIST(*pList, pos) {
-        if (NULL== AddHeadI(pList->GetI(pos))){
+        if (nullptr== AddHeadI(pList->GetI(pos))){
             return FALSE;
         }
     }
@@ -529,33 +529,33 @@ BOOL CBaseList::AddHead(CBaseList *pList)
 
 /* Add the object after position p
    p is still valid after the operation.
-   AddAfter(NULL,x) adds x to the start - same as AddHead
-   Return the position of the new object, NULL if it failed
+   AddAfter(nullptr,x) adds x to the start - same as AddHead
+   Return the position of the new object, nullptr if it failed
 */
 POSITION  CBaseList::AddAfterI(POSITION pos, void * pObj)
 {
-    if (pos==NULL)
+    if (pos==nullptr)
         return AddHeadI(pObj);
 
     /* As someone else might be furkling with the list -
        Lock the critical section before continuing
     */
     CNode *pAfter = (CNode *) pos;
-    ASSERT(pAfter != NULL);
+    ASSERT(pAfter != nullptr);
     if (pAfter==m_pLast)
         return AddTailI(pObj);
 
     /* set pnode to point to a new node, preferably from the cache */
 
     CNode *pNode = (CNode *) m_Cache.RemoveFromCache();
-    if (pNode == NULL) {
+    if (pNode == nullptr) {
         pNode = new CNode;
     }
 
     /* Check we have a valid object */
 
-    if (pNode == NULL) {
-        return NULL;
+    if (pNode == nullptr) {
+        return nullptr;
     }
 
     /* Initialise all the CNode object
@@ -568,7 +568,7 @@ POSITION  CBaseList::AddAfterI(POSITION pos, void * pObj)
        and after node.  Chain it after pAfter, before pBefore.
     */
     CNode * pBefore = pAfter->Next();
-    ASSERT(pBefore != NULL);
+    ASSERT(pBefore != nullptr);
 
     /* chain it in (set four pointers) */
     pNode->SetPrev(pAfter);
@@ -590,7 +590,7 @@ BOOL CBaseList::AddAfter(POSITION p, CBaseList *pList)
     INTERNALTRAVERSELIST(*pList, pos) {
         /* p follows along the elements being added */
         p = AddAfterI(p, pList->GetI(pos));
-        if (p==NULL) return FALSE;
+        if (p==nullptr) return FALSE;
     }
     return TRUE;
 } // AddAfter(list)
@@ -600,29 +600,29 @@ BOOL CBaseList::AddAfter(POSITION p, CBaseList *pList)
 /* Mirror images:
    Add the element or list after position p.
    p is still valid after the operation.
-   AddBefore(NULL,x) adds x to the end - same as AddTail
+   AddBefore(nullptr,x) adds x to the end - same as AddTail
 */
 POSITION CBaseList::AddBeforeI(POSITION pos, void * pObj)
 {
-    if (pos==NULL)
+    if (pos==nullptr)
         return AddTailI(pObj);
 
     /* set pnode to point to a new node, preferably from the cache */
 
     CNode *pBefore = (CNode *) pos;
-    ASSERT(pBefore != NULL);
+    ASSERT(pBefore != nullptr);
     if (pBefore==m_pFirst)
         return AddHeadI(pObj);
 
     CNode * pNode = (CNode *) m_Cache.RemoveFromCache();
-    if (pNode == NULL) {
+    if (pNode == nullptr) {
         pNode = new CNode;
     }
 
     /* Check we have a valid object */
 
-    if (pNode == NULL) {
-        return NULL;
+    if (pNode == nullptr) {
+        return nullptr;
     }
 
     /* Initialise all the CNode object
@@ -636,7 +636,7 @@ POSITION CBaseList::AddBeforeI(POSITION pos, void * pObj)
     */
 
     CNode * pAfter = pBefore->Prev();
-    ASSERT(pAfter != NULL);
+    ASSERT(pAfter != nullptr);
 
     /* chain it in (set four pointers) */
     pNode->SetPrev(pAfter);
@@ -658,7 +658,7 @@ BOOL CBaseList::AddBefore(POSITION p, CBaseList *pList)
     INTERNALREVERSETRAVERSELIST(*pList, pos) {
         /* p follows along the elements being added */
         p = AddBeforeI(p, pList->GetI(pos));
-        if (p==NULL) return FALSE;
+        if (p==nullptr) return FALSE;
     }
     return TRUE;
 } // AddBefore(list)
@@ -673,7 +673,7 @@ BOOL CBaseList::AddBefore(POSITION p, CBaseList *pList)
    e.g.
       foo->MoveToTail(foo->GetHeadPosition(), bar);
           moves one element from the head of foo to the tail of bar
-      foo->MoveToTail(NULL, bar);
+      foo->MoveToTail(nullptr, bar);
           is a no-op
       foo->MoveToTail(foo->GetTailPosition, bar);
           concatenates foo onto the end of bar and empties foo.
@@ -695,40 +695,40 @@ BOOL CBaseList::MoveToTail
        6. Set/Reset any events
     */
 
-    if (pos==NULL) return TRUE;  // no-op.  Eliminates special cases later.
+    if (pos==nullptr) return TRUE;  // no-op.  Eliminates special cases later.
 
 
     /* Make cMove the number of nodes to move */
     CNode * p = (CNode *)pos;
     int cMove = 0;            // number of nodes to move
-    while(p!=NULL) {
+    while(p!=nullptr) {
        p = p->Prev();
        ++cMove;
     }
 
 
     /* Join the two chains together */
-    if (pList->m_pLast!=NULL)
+    if (pList->m_pLast!=nullptr)
         pList->m_pLast->SetNext(m_pFirst);
-    if (m_pFirst!=NULL)
+    if (m_pFirst!=nullptr)
         m_pFirst->SetPrev(pList->m_pLast);
 
 
     /* set first and last pointers */
     p = (CNode *)pos;
 
-    if (pList->m_pFirst==NULL)
+    if (pList->m_pFirst==nullptr)
         pList->m_pFirst = m_pFirst;
     m_pFirst = p->Next();
-    if (m_pFirst==NULL)
-        m_pLast = NULL;
+    if (m_pFirst==nullptr)
+        m_pLast = nullptr;
     pList->m_pLast = p;
 
 
     /* Break the chain after p to create the new pieces */
-    if (m_pFirst!=NULL)
-        m_pFirst->SetPrev(NULL);
-    p->SetNext(NULL);
+    if (m_pFirst!=nullptr)
+        m_pFirst->SetPrev(nullptr);
+    p->SetNext(nullptr);
 
 
     /* Adjust the counts */
@@ -750,7 +750,7 @@ BOOL CBaseList::MoveToTail
    e.g.
       foo->MoveToHead(foo->GetTailPosition(), bar);
           moves one element from the tail of foo to the head of bar
-      foo->MoveToHead(NULL, bar);
+      foo->MoveToHead(nullptr, bar);
           is a no-op
       foo->MoveToHead(foo->GetHeadPosition, bar);
           concatenates foo onto the start of bar and empties foo.
@@ -761,21 +761,21 @@ BOOL CBaseList::MoveToHead
 
     /* See the comments on the algorithm in MoveToTail */
 
-    if (pos==NULL) return TRUE;  // no-op.  Eliminates special cases later.
+    if (pos==nullptr) return TRUE;  // no-op.  Eliminates special cases later.
 
     /* Make cMove the number of nodes to move */
     CNode * p = (CNode *)pos;
     int cMove = 0;            // number of nodes to move
-    while(p!=NULL) {
+    while(p!=nullptr) {
        p = p->Next();
        ++cMove;
     }
 
 
     /* Join the two chains together */
-    if (pList->m_pFirst!=NULL)
+    if (pList->m_pFirst!=nullptr)
         pList->m_pFirst->SetPrev(m_pLast);
-    if (m_pLast!=NULL)
+    if (m_pLast!=nullptr)
         m_pLast->SetNext(pList->m_pFirst);
 
 
@@ -783,19 +783,19 @@ BOOL CBaseList::MoveToHead
     p = (CNode *)pos;
 
 
-    if (pList->m_pLast==NULL)
+    if (pList->m_pLast==nullptr)
         pList->m_pLast = m_pLast;
 
     m_pLast = p->Prev();
-    if (m_pLast==NULL)
-        m_pFirst = NULL;
+    if (m_pLast==nullptr)
+        m_pFirst = nullptr;
     pList->m_pFirst = p;
 
 
     /* Break the chain after p to create the new pieces */
-    if (m_pLast!=NULL)
-        m_pLast->SetNext(NULL);
-    p->SetPrev(NULL);
+    if (m_pLast!=nullptr)
+        m_pLast->SetNext(nullptr);
+    p->SetPrev(nullptr);
 
 
     /* Adjust the counts */
@@ -820,13 +820,13 @@ void CBaseList::Reverse()
        Run along the forward chain,
        For each node, set the reverse pointer to the one ahead of us.
        The reverse chain is now a copy of the old forward chain, including
-       the NULL termination.
+       the nullptr termination.
 
        Run along the reverse chain (i.e. old forward chain again)
        For each node set the forward pointer of the node ahead to point back
        to the one we're standing on.
        The first node needs special treatment,
-       it's new forward pointer is NULL.
+       it's new forward pointer is nullptr.
        Finally set the First/Last pointers
 
     */
@@ -834,7 +834,7 @@ void CBaseList::Reverse()
 
     // Yes we COULD use a traverse, but it would look funny!
     p = m_pFirst;
-    while (p!=NULL) {
+    while (p!=nullptr) {
         CNode * q;
         q = p->Next();
         p->SetNext(p->Prev());
@@ -849,13 +849,13 @@ void CBaseList::Reverse()
 
 #if 0     // old version
 
-    if (m_pFirst==NULL) return;          // empty list
-    if (m_pFirst->Next()==NULL) return;  // single node list
+    if (m_pFirst==nullptr) return;          // empty list
+    if (m_pFirst->Next()==nullptr) return;  // single node list
 
 
     /* run along forward chain */
     for ( p = m_pFirst
-        ; p!=NULL
+        ; p!=nullptr
         ; p = p->Next()
         ){
         p->SetPrev(p->Next());
@@ -863,12 +863,12 @@ void CBaseList::Reverse()
 
 
     /* special case first element */
-    m_pFirst->SetNext(NULL);     // fix the old first element
+    m_pFirst->SetNext(nullptr);     // fix the old first element
 
 
     /* run along new reverse chain i.e. old forward chain again */
     for ( p = m_pFirst           // start at the old first element
-        ; p->Prev()!=NULL        // while there's a node still to be set
+        ; p->Prev()!=nullptr        // while there's a node still to be set
         ; p = p->Prev()          // work in the same direction as before
         ){
         p->Prev()->SetNext(p);

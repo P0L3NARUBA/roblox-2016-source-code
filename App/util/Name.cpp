@@ -131,7 +131,7 @@ void Name::setOrderIndex()
 
 const Name& Name::declare(const char* const& sName) {
 
-	if (sName==NULL)
+	if (sName==nullptr)
 	{
 		return getNullName();
 	}
@@ -160,10 +160,10 @@ const Name& Name::declare(const char* const& sName) {
 }
 
 const Name& Name::lookup(const char* const& sName) {
-	if (sName==NULL)  
+	if (sName==nullptr)  
 		return getNullName();
 
-	const Name* result = NULL;
+	const Name* result = nullptr;
 	{
 		RBX::mutex::scoped_lock lock(mutex());
         const Name& (*thisFunction)(const char* const &) = &RBX::Name::lookup; // required due to overload.
@@ -176,7 +176,7 @@ const Name& Name::lookup(const char* const& sName) {
 	}
 
 	// Avoid recursively locking mutex().
-	return result != NULL ? *result : Name::getNullName();
+	return result != nullptr ? *result : Name::getNullName();
 }
 
 std::ostream& RBX::operator<<( std::ostream& os, const Name& name )

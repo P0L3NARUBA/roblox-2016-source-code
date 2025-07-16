@@ -35,7 +35,7 @@ const Reflection::PropDescriptor<BaseScript, bool> BaseScript::prop_Disabled("Di
 const Reflection::BoundFuncDesc<Script, std::string()> Script::func_GetHash(&Script::getHash, "GetHash", Security::RobloxPlace);
 
 BaseScript::BaseScript()
-	:workspace(NULL)
+	:workspace(nullptr)
 	,disabled(false)
 	,badLinkedScript(false)
 {
@@ -123,7 +123,7 @@ void BaseScript::onScriptIdChanged()
 RuntimeScriptService* BaseScript::computeNewWorkspace()
 {
 	if(isDisabled()){
-		return NULL;
+		return nullptr;
 	}
 	bool canRun = false;
 	Instance* parent = getParent();		// Find the new script owner
@@ -137,11 +137,11 @@ RuntimeScriptService* BaseScript::computeNewWorkspace()
 
 	if (canRun) {
 		RuntimeScriptService* answer = ServiceProvider::create<RuntimeScriptService>(this);
-		//answer might be NULL if we're shutting down and the script was not in the workspace
+		//answer might be nullptr if we're shutting down and the script was not in the workspace
 		return answer;
 	}
 	else {
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -152,7 +152,7 @@ void BaseScript::restartScript()
 	if(workspace != newWorkspace){
 		if (workspace) {
 			RuntimeScriptService* temp = workspace;
-			workspace = NULL;
+			workspace = nullptr;
 			temp->releaseScript(this);
 		}
 
@@ -174,7 +174,7 @@ void BaseScript::onAncestorChanged(const AncestorChanged& event)
 	{
 		if (workspace) {
 			RuntimeScriptService* temp = workspace;
-			workspace = NULL;
+			workspace = nullptr;
 			temp->releaseScript(this);
 		}
 
@@ -193,7 +193,7 @@ void BaseScript::onServiceProvider(ServiceProvider* oldProvider, ServiceProvider
 		if (workspace)
 		{
 			RuntimeScriptService* temp = workspace;
-			workspace = NULL;
+			workspace = nullptr;
 			temp->releaseScript(this);
 		}
 	}

@@ -58,7 +58,7 @@ public:
     ///
 	/// \pre IsBusy()==false
     /// \param path the path on the remote server you want to POST to. For example "index.html"
-    /// \param data A NULL terminated string to submit to the server
+    /// \param data A nullptr terminated string to submit to the server
 	/// \param contentType "Content-Type:" passed to post.
     void Post(const char *path, const char *data, const char *_contentType="application/x-www-form-urlencoded");
 
@@ -83,7 +83,7 @@ public:
 	/// Returns true when we have gotten all the data from the HTTP server.
     /// If this returns true then it's safe to Post() another request
 	/// Deallocate the packet as usual via TCPInterface
-    /// \param packet NULL or a packet associated with our host and port
+    /// \param packet nullptr or a packet associated with our host and port
    void ProcessTCPPacket(Packet *packet);
 
     /// Results of HTTP requests.  Standard response codes are < 999

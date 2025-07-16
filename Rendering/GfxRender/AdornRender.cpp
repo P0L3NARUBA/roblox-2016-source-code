@@ -455,7 +455,7 @@ Vector2 AdornRender::get2DStringBounds(const std::string& s, float size, Text::F
     if (!typesetter) 
         return Vector2::zero();
     
-    return typesetter->measure(s, size, availableSpace, NULL);
+    return typesetter->measure(s, size, availableSpace, nullptr);
 }
 
 TextureProxyBaseRef AdornRender::createTextureProxy(const ContentId& id, bool& waiting, bool bBlocking, const std::string& context)
@@ -714,7 +714,7 @@ void AdornRender::explosion(const Sphere& sphere)
 void AdornRender::preSubmitPass()
 {
 	currentHeight = visualEngine->getViewHeight();
-	vr = (visualEngine->getDevice()->getVR() != NULL);
+	vr = (visualEngine->getDevice()->getVR() != nullptr);
 }
 
 void AdornRender::postSubmitPass()

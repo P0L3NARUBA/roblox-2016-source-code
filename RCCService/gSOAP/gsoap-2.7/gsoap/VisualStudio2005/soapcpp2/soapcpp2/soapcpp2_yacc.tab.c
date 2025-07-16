@@ -131,14 +131,14 @@ Table	*classtable = (Table*)0,
 	*booltable = (Table*)0,
 	*templatetable = (Table*)0;
 
-char	*namespaceid = NULL;
+char	*namespaceid = nullptr;
 int	transient = 0;
 int	permission = 0;
 int	custom_header = 1;
 int	custom_fault = 1;
-Pragma	*pragmas = NULL;
-Tnode	*qname = NULL;
-Tnode	*xml = NULL;
+Pragma	*pragmas = nullptr;
+Tnode	*qname = nullptr;
+Tnode	*xml = nullptr;
 
 /* function prototypes for support routine section */
 static Entry	*undefined(Symbol*);
@@ -373,7 +373,7 @@ static const char * const yytname[] = {   "$","error","$undefined.","PRAGMA",
 "farg","arg","texp","spec","tspec","type","struct","class","enum","tname","base",
 "s2","s3","s4","s5","s6","store","constobj","abstract","virtual","ptrs","array",
 "arrayck","init","occurs","patt","cint","expr","cexp","qexp","oexp","obex","aexp",
-"abex","rexp","lexp","pexp", NULL
+"abex","rexp","lexp","pexp", nullptr
 };
 #endif
 
@@ -1368,7 +1368,7 @@ case 12:
 				*pp = (Pragma*)emalloc(sizeof(Pragma));
 				(*pp)->pragma = (char*)emalloc(strlen(yyvsp[0].s)+1);
 				strcpy((*pp)->pragma, yyvsp[0].s);
-				(*pp)->next = NULL;
+				(*pp)->next = nullptr;
 			  }
 			  else if ((i = atoi(yyvsp[0].s+2)) > 0)
 				yylineno = i;
@@ -2179,7 +2179,7 @@ case 108:
 #line 839 "soapcpp2_yacc.y"
 { if (!(p = entry(templatetable, yyvsp[0].sym)))
 			  {	p = enter(templatetable, yyvsp[0].sym);
-			  	p->info.typ = mktemplate(NULL, yyvsp[0].sym);
+			  	p->info.typ = mktemplate(nullptr, yyvsp[0].sym);
 			  	yyvsp[0].sym->token = TYPE;
 			  }
 			  yyval.typ = p->info.typ;
@@ -2637,8 +2637,8 @@ case 139:
 { if (transient == -2)
 			  	transient = 0;
 			  permission = 0;
-			  enterscope(mktable(NULL), 0);
-			  sp->entry = NULL;
+			  enterscope(mktable(nullptr), 0);
+			  sp->entry = nullptr;
 			;
     break;}
 case 140:
@@ -2646,15 +2646,15 @@ case 140:
 { if (transient == -2)
 			  	transient = 0;
 			  permission = 0;
-			  enterscope(mktable(NULL), 0);
-			  sp->entry = NULL;
+			  enterscope(mktable(nullptr), 0);
+			  sp->entry = nullptr;
 			  sp->grow = False;
 			;
     break;}
 case 141:
 #line 1236 "soapcpp2_yacc.y"
-{ enterscope(mktable(NULL), 0);
-			  sp->entry = NULL;
+{ enterscope(mktable(nullptr), 0);
+			  sp->entry = nullptr;
 			  sp->mask = True;
 			  sp->val = 1;
 			;
@@ -2672,8 +2672,8 @@ case 144:
 { if (sp->table->level == INTERNAL)
 			  	transient |= 1;
 			  permission = 0;
-			  enterscope(mktable(NULL), 0);
-			  sp->entry = NULL;
+			  enterscope(mktable(nullptr), 0);
+			  sp->entry = nullptr;
 			  sp->table->level = PARAM;
 			;
     break;}
@@ -2871,7 +2871,7 @@ case 178:
     break;}
 case 179:
 #line 1358 "soapcpp2_yacc.y"
-{ yyval.s = NULL; ;
+{ yyval.s = nullptr; ;
     break;}
 case 180:
 #line 1359 "soapcpp2_yacc.y"
@@ -3532,7 +3532,7 @@ add_fault(Table *gt)
 { Table *t;
   Entry *p1, *p2, *p3, *p4;
   Symbol *s1, *s2, *s3, *s4;
-  imported = NULL;
+  imported = nullptr;
   s1 = lookup("SOAP_ENV__Code");
   p1 = entry(classtable, s1);
   if (!p1 || !p1->info.typ->ref)
@@ -3591,7 +3591,7 @@ add_fault(Table *gt)
   s3 = lookup("SOAP_ENV__Fault");
   p3 = entry(classtable, s3);
   if (!p3 || !p3->info.typ->ref)
-  { t = mktable(NULL);
+  { t = mktable(nullptr);
     if (!p3)
       p3 = enter(classtable, s3);
     p3->info.typ = mkstruct(t, 9*4);
@@ -3630,7 +3630,7 @@ static void
 add_soap()
 { Symbol *s = lookup("soap");
   p = enter(classtable, s);
-  p->info.typ = mkstruct(NULL, 0);
+  p->info.typ = mkstruct(nullptr, 0);
   p->info.typ->transient = -2;
   p->info.typ->id = s;
 }
@@ -3656,7 +3656,7 @@ add_header(Table *gt)
 { Table *t;
   Entry *p;
   Symbol *s = lookup("SOAP_ENV__Header");
-  imported = NULL;
+  imported = nullptr;
   p = entry(classtable, s);
   if (!p || !p->info.typ->ref)
   { t = mktable((Table*)0);

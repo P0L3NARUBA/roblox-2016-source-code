@@ -67,9 +67,9 @@
 static SDL_bool s_bDeviceAdded = SDL_FALSE;
 static SDL_bool s_bDeviceRemoved = SDL_FALSE;
 static SDL_JoystickID s_nInstanceID = -1;
-static SDL_cond *s_condJoystickThread = NULL;
-static SDL_mutex *s_mutexJoyStickEnum = NULL;
-static SDL_Thread *s_threadJoystick = NULL;
+static SDL_cond *s_condJoystickThread = nullptr;
+static SDL_mutex *s_mutexJoyStickEnum = nullptr;
+static SDL_Thread *s_threadJoystick = nullptr;
 static SDL_bool s_bJoystickThreadQuit = SDL_FALSE;
 
 JoyStick_DeviceData *SYS_Joystick;    /* array to hold joystick ID values */
@@ -160,7 +160,7 @@ SDL_CreateDeviceNotification(SDL_DeviceNotificationData *data)
 
     data->coinitialized = WIN_CoInitialize();
 
-    data->wincl.hInstance = GetModuleHandle(NULL);
+    data->wincl.hInstance = GetModuleHandle(nullptr);
     data->wincl.lpszClassName = L"Message";
     data->wincl.lpfnWndProc = SDL_PrivateJoystickDetectProc;      /* This function is called by windows */
     data->wincl.cbSize = sizeof (WNDCLASSEX);
@@ -171,7 +171,7 @@ SDL_CreateDeviceNotification(SDL_DeviceNotificationData *data)
         return -1;
     }
 
-    data->messageWindow = (HWND)CreateWindowEx(0,  L"Message", NULL, 0, 0, 0, 0, 0, HWND_MESSAGE, NULL, NULL, NULL);
+    data->messageWindow = (HWND)CreateWindowEx(0,  L"Message", nullptr, 0, 0, 0, 0, 0, HWND_MESSAGE, nullptr, nullptr, nullptr);
     if (!data->messageWindow) {
         WIN_SetError("Failed to create message window for joystick autodetect");
         SDL_CleanupDeviceNotification(data);
@@ -306,12 +306,12 @@ SDL_SYS_JoystickInit(void)
 #if defined(__WIN32__) && !defined(HAVE_LIBC)
 #undef SDL_CreateThread
 #if SDL_DYNAMIC_API
-        s_threadJoystick= SDL_CreateThread_REAL(SDL_JoystickThread, "SDL_joystick", NULL, NULL, NULL);
+        s_threadJoystick= SDL_CreateThread_REAL(SDL_JoystickThread, "SDL_joystick", nullptr, nullptr, nullptr);
 #else
-        s_threadJoystick= SDL_CreateThread(SDL_JoystickThread, "SDL_joystick", NULL, NULL, NULL);
+        s_threadJoystick= SDL_CreateThread(SDL_JoystickThread, "SDL_joystick", nullptr, nullptr, nullptr);
 #endif
 #else
-        s_threadJoystick = SDL_CreateThread(SDL_JoystickThread, "SDL_joystick", NULL);
+        s_threadJoystick = SDL_CreateThread(SDL_JoystickThread, "SDL_joystick", nullptr);
 #endif
     }
     return SDL_SYS_NumJoysticks();
@@ -335,7 +335,7 @@ SDL_SYS_NumJoysticks()
 void
 SDL_SYS_JoystickDetect()
 {
-    JoyStick_DeviceData *pCurList = NULL;
+    JoyStick_DeviceData *pCurList = nullptr;
 #if !SDL_EVENTS_DISABLED
     SDL_Event event;
 #endif
@@ -351,7 +351,7 @@ SDL_SYS_JoystickDetect()
     s_bDeviceRemoved = SDL_FALSE;
 
     pCurList = SYS_Joystick;
-    SYS_Joystick = NULL;
+    SYS_Joystick = nullptr;
 
     /* Look for DirectInput joysticks, wheels, head trackers, gamepads, etc.. */
     SDL_DINPUT_JoystickDetect(&pCurList);
@@ -362,7 +362,7 @@ SDL_SYS_JoystickDetect()
     SDL_UnlockMutex(s_mutexJoyStickEnum);
 
     while (pCurList) {
-        JoyStick_DeviceData *pListNext = NULL;
+        JoyStick_DeviceData *pListNext = nullptr;
 
         if (pCurList->bXInputDevice) {
             SDL_XINPUT_MaybeRemoveDevice(pCurList->XInputUserId);
@@ -462,7 +462,7 @@ SDL_SYS_JoystickOpen(SDL_Joystick * joystick, int device_index)
     joystick->instance_id = joystickdevice->nInstanceID;
     joystick->hwdata =
         (struct joystick_hwdata *) SDL_malloc(sizeof(struct joystick_hwdata));
-    if (joystick->hwdata == NULL) {
+    if (joystick->hwdata == nullptr) {
         return SDL_OutOfMemory();
     }
     SDL_zerop(joystick->hwdata);
@@ -525,20 +525,20 @@ SDL_SYS_JoystickQuit(void)
         SDL_free(device);
         device = device_next;
     }
-    SYS_Joystick = NULL;
+    SYS_Joystick = nullptr;
 
     if (s_threadJoystick) {
         SDL_LockMutex(s_mutexJoyStickEnum);
         s_bJoystickThreadQuit = SDL_TRUE;
         SDL_CondBroadcast(s_condJoystickThread); /* signal the joystick thread to quit */
         SDL_UnlockMutex(s_mutexJoyStickEnum);
-        SDL_WaitThread(s_threadJoystick, NULL); /* wait for it to bugger off */
+        SDL_WaitThread(s_threadJoystick, nullptr); /* wait for it to bugger off */
 
         SDL_DestroyMutex(s_mutexJoyStickEnum);
         SDL_DestroyCond(s_condJoystickThread);
-        s_condJoystickThread= NULL;
-        s_mutexJoyStickEnum = NULL;
-        s_threadJoystick = NULL;
+        s_condJoystickThread= nullptr;
+        s_mutexJoyStickEnum = nullptr;
+        s_threadJoystick = nullptr;
     }
 
     SDL_DINPUT_JoystickQuit();

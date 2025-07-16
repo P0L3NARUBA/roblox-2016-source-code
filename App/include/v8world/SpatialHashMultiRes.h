@@ -254,7 +254,7 @@ namespace RBX {
 				refByPrimitives = 0;
 				this->level = -1;
 				this->hashId = -1;
-				next = NULL;
+				next = nullptr;
 				childMask = 0;
 				for (int i=0; i<8; i++)
 					children[i] = 0xffff;
@@ -277,8 +277,8 @@ namespace RBX {
 
 			~TreeNode() {
 				RBXASSERT(refByPrimitives == 0);
-				RBXASSERT(next == NULL);
-				next = NULL;
+				RBXASSERT(next == nullptr);
+				next = nullptr;
 			}
 
 			unsigned char hasChild(int i) {
@@ -305,8 +305,8 @@ namespace RBX {
 			SpatialNode(int l, int hashId, const Vector3int32& gridId)
 				: NodeBase(l, hashId, gridId)
 				, nextHashLink(0)
-				, primitive(NULL)
-				, treeNode(NULL)
+				, primitive(nullptr)
+				, treeNode(nullptr)
 			#ifdef _RBX_DEBUGGING_SPATIAL_HASH
 				, nextPrimitiveLink(0)
 				, prevPrimitiveLink(0)
@@ -315,9 +315,9 @@ namespace RBX {
 
 			~SpatialNode()
 			{
-				treeNode = NULL;
-				primitive = NULL;
-				nextHashLink = NULL;
+				treeNode = nullptr;
+				primitive = nullptr;
+				nextHashLink = nullptr;
 			}
 		};
 

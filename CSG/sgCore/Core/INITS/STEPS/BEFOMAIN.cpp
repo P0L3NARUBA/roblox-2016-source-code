@@ -79,7 +79,7 @@ char Buf[256];
       strcpy(Buf, "");
   }
   strcat(Buf, "Program reset");
-//  MessageBox(NULL, Buf, GetSystemName(), MB_OK|MB_ICONERROR);
+//  MessageBox(nullptr, Buf, GetSystemName(), MB_OK|MB_ICONERROR);
 	exit(code);
 }
 

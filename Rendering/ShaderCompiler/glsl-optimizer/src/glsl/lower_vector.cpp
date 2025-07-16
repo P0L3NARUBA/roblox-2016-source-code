@@ -63,14 +63,14 @@ is_extended_swizzle(ir_expression *ir)
 {
    /* Track any variables that are accessed by this expression.
     */
-   ir_variable *var = NULL;
+   ir_variable *var = nullptr;
 
    assert(ir->operation == ir_quadop_vector);
 
    for (unsigned i = 0; i < ir->type->vector_elements; i++) {
       ir_rvalue *op = ir->operands[i];
 
-      while (op != NULL) {
+      while (op != nullptr) {
 	 switch (op->ir_type) {
 	 case ir_type_constant: {
 	    const ir_constant *const c = op->as_constant();
@@ -78,18 +78,18 @@ is_extended_swizzle(ir_expression *ir)
 	    if (!c->is_one() && !c->is_zero() && !c->is_negative_one())
 	       return false;
 
-	    op = NULL;
+	    op = nullptr;
 	    break;
 	 }
 
 	 case ir_type_dereference_variable: {
 	    ir_dereference_variable *const d = (ir_dereference_variable *) op;
 
-	    if ((var != NULL) && (var != d->var))
+	    if ((var != nullptr) && (var != d->var))
 	       return false;
 
 	    var = d->var;
-	    op = NULL;
+	    op = nullptr;
 	    break;
 	 }
 
@@ -123,7 +123,7 @@ lower_vector_visitor::handle_rvalue(ir_rvalue **rvalue)
       return;
 
    ir_expression *expr = (*rvalue)->as_expression();
-   if ((expr == NULL) || (expr->operation != ir_quadop_vector))
+   if ((expr == nullptr) || (expr->operation != ir_quadop_vector))
       return;
 
    if (this->dont_lower_swz && is_extended_swizzle(expr))
@@ -165,7 +165,7 @@ lower_vector_visitor::handle_rvalue(ir_rvalue **rvalue)
    for (unsigned i = 0; i < expr->type->vector_elements; i++) {
       const ir_constant *const c = expr->operands[i]->as_constant();
 
-      if (c == NULL)
+      if (c == nullptr)
 	 continue;
 
       switch (expr->type->base_type) {
@@ -191,7 +191,7 @@ lower_vector_visitor::handle_rvalue(ir_rvalue **rvalue)
 				  &d);
       ir_dereference *const lhs = new(mem_ctx) ir_dereference_variable(temp);
       ir_assignment *const assign =
-	 new(mem_ctx) ir_assignment(lhs, c, NULL, write_mask);
+	 new(mem_ctx) ir_assignment(lhs, c, nullptr, write_mask);
 
       this->base_ir->insert_before(assign);
    }
@@ -204,7 +204,7 @@ lower_vector_visitor::handle_rvalue(ir_rvalue **rvalue)
 
       ir_dereference *const lhs = new(mem_ctx) ir_dereference_variable(temp);
       ir_assignment *const assign =
-	 new(mem_ctx) ir_assignment(lhs, expr->operands[i], NULL, (1U << i));
+	 new(mem_ctx) ir_assignment(lhs, expr->operands[i], nullptr, (1U << i));
 
       this->base_ir->insert_before(assign);
       assigned++;

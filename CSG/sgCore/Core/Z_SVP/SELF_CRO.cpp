@@ -1,7 +1,7 @@
 #include "../sg.h"
 
 /*
-		      (hobj2 == NULL)
+		      (hobj2 == nullptr)
 		       
 
 		: OSTRUE -     
@@ -44,17 +44,17 @@ err1:
 		line1.v1 = node.p;
 		for (i = 1; i < vdim.num_elem - 1; i++) {
 			if (ctrl_c_press) {
-				put_message(CTRL_C_PRESS, NULL, 0);
+				put_message(CTRL_C_PRESS, nullptr, 0);
         goto err;
 			}
 			if (!begin_rw(&vdim, i)) goto err;
-			if ( (lpnode = (lpMNODE)get_next_elem(&vdim)) == NULL ) goto err1;
+			if ( (lpnode = (lpMNODE)get_next_elem(&vdim)) == nullptr ) goto err1;
 			line2.v1 = line1.v2 = lpnode->p;
 			dpoint_minmax(&line1.v1, 2, &mn1, &mx1);
 			for (j = i + 1; j < vdim.num_elem; j++) {
 				count1++;
 //				if (!(count1 % step)) step_grad(num_proc , count1);
-				if ( (lpnode = (lpMNODE)get_next_elem(&vdim)) == NULL ) goto err1;
+				if ( (lpnode = (lpMNODE)get_next_elem(&vdim)) == nullptr ) goto err1;
 				line2.v2 = lpnode->p;
 				dpoint_minmax(&line2.v1, 2, &mn2, &mx2);
 				el_geo_err = EL_OK;
@@ -101,19 +101,19 @@ brk:
 		else             step = count / 100;
 //		num_proc = start_grad(GetIDS(IDS_SG047), count);
 		if (!begin_rw(&vdim, 0)) goto err2;
-		if ( (lpnode = (lpMNODE)get_next_elem(&vdim)) == NULL ) goto err3;
+		if ( (lpnode = (lpMNODE)get_next_elem(&vdim)) == nullptr ) goto err3;
 		line1.v1 = lpnode->p;
 		for (i = 1; i < vdim.num_elem; i++) {
-			if ( (lpnode = (lpMNODE)get_next_elem(&vdim)) == NULL ) goto err3;
+			if ( (lpnode = (lpMNODE)get_next_elem(&vdim)) == nullptr ) goto err3;
 			line1.v2 = lpnode->p;
 			dpoint_minmax(&line1.v1, 2, &mn1, &mx1);
 			if (!begin_rw(&vdim2, 0)) goto err3;
-			if ( (lpnode = (lpMNODE)get_next_elem(&vdim2)) == NULL ) goto err4;
+			if ( (lpnode = (lpMNODE)get_next_elem(&vdim2)) == nullptr ) goto err4;
 			line2.v1 = lpnode->p;
 			for (j = 1; j < vdim2.num_elem; j++) {
 				count1++;
 //				if (!(count1 % step)) step_grad(num_proc , count1);
-				if ( (lpnode = (lpMNODE)get_next_elem(&vdim2)) == NULL ) goto err4;
+				if ( (lpnode = (lpMNODE)get_next_elem(&vdim2)) == nullptr ) goto err4;
 				line2.v2 = lpnode->p;
 				dpoint_minmax(&line2.v1, 2, &mn2, &mx2);
 				el_geo_err = EL_OK;

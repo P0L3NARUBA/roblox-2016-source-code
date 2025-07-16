@@ -132,7 +132,7 @@ void * btGenericMemoryPool::allocate(size_t size_bytes)
 	// allocate directly on pool
 	alloc_pos = allocate_from_pool(element_count);
 
-	if(alloc_pos == BT_UINT_MAX) return NULL; // not space
+	if(alloc_pos == BT_UINT_MAX) return nullptr; // not space
 	return get_element_data(alloc_pos);
 }
 
@@ -170,7 +170,7 @@ btGenericPoolAllocator::~btGenericPoolAllocator()
 // creates a pool
 btGenericMemoryPool * btGenericPoolAllocator::push_new_pool()
 {
-	if(m_pool_count >= BT_DEFAULT_MAX_POOLS) return NULL;
+	if(m_pool_count >= BT_DEFAULT_MAX_POOLS) return nullptr;
 
 	btGenericMemoryPool * newptr = (btGenericMemoryPool *)btAlignedAlloc(sizeof(btGenericMemoryPool),16);
 
@@ -185,7 +185,7 @@ btGenericMemoryPool * btGenericPoolAllocator::push_new_pool()
 void * btGenericPoolAllocator::failback_alloc(size_t size_bytes)
 {
 
-	btGenericMemoryPool * pool = NULL;
+	btGenericMemoryPool * pool = nullptr;
 
 
 	if(size_bytes<=get_pool_capacity())
@@ -193,7 +193,7 @@ void * btGenericPoolAllocator::failback_alloc(size_t size_bytes)
 		pool = 	push_new_pool();
 	}
 
-	if(pool==NULL) // failback
+	if(pool==nullptr) // failback
 	{
 		return btAlignedAlloc(size_bytes,16);
 	}
@@ -214,10 +214,10 @@ bool btGenericPoolAllocator::failback_free(void * pointer)
 */
 void * btGenericPoolAllocator::allocate(size_t size_bytes)
 {
-	void * ptr = NULL;
+	void * ptr = nullptr;
 
 	size_t i = 0;
-	while(i<m_pool_count && ptr == NULL)
+	while(i<m_pool_count && ptr == nullptr)
 	{
 		ptr = m_pools[i]->allocate(size_bytes);
 		++i;

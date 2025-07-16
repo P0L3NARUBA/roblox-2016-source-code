@@ -88,7 +88,7 @@ bool KeySequenceEdit::eventFilter(QObject* o, QEvent* e)
         menu->clear();
 
         QAction *clearAction = new QAction(tr("Clear Shortcut"), menu);
-        menu->insertAction(NULL, clearAction);
+        menu->insertAction(nullptr, clearAction);
         clearAction->setEnabled(!m_keySequence.isEmpty());
         connect(clearAction, SIGNAL(triggered()), this, SLOT(slotClearShortcut()));
 
@@ -611,7 +611,7 @@ RobloxKeyboardConfigWidget::RobloxKeyboardConfigWidget(RobloxMainWindow& MainWin
                                                        QWidget* parent)
     : QWidget(parent)
     , m_mainWindow(MainWindow)
-	, m_filterEdit(NULL)
+	, m_filterEdit(nullptr)
 {
     initialize();
 }

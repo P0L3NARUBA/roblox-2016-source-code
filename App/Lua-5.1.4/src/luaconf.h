@@ -313,7 +313,7 @@ namespace RBX
 #include <stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-#define lua_readline(L,b,p)	((void)L, ((b)=readline(p)) != NULL)
+#define lua_readline(L,b,p)	((void)L, ((b)=readline(p)) != nullptr)
 #define lua_saveline(L,idx) \
 	if (lua_strlen(L,idx) > 0)  /* non-empty line? */ \
 	  add_history(lua_tostring(L, idx));  /* add it to history */
@@ -321,7 +321,7 @@ namespace RBX
 #else
 #define lua_readline(L,b,p)	\
 	((void)L, fputs(p, stdout), fflush(stdout),  /* show prompt */ \
-	fgets(b, LUA_MAXINPUT, stdin) != NULL)  /* get line */
+	fgets(b, LUA_MAXINPUT, stdin) != nullptr)  /* get line */
 #define lua_saveline(L,idx)	{ (void)L; (void)idx; }
 #define lua_freeline(L,b)	{ (void)L; (void)b; }
 #endif
@@ -715,7 +715,7 @@ catch (RBX::base_exception const& e)	\
 
 #else
 #define LUA_TMPNAMBUFSIZE	L_tmpnam
-#define lua_tmpnam(b,e)		{ e = (tmpnam(b) == NULL); }
+#define lua_tmpnam(b,e)		{ e = (tmpnam(b) == nullptr); }
 #endif
 
 #endif
@@ -773,7 +773,7 @@ class RobloxExtraSpace : public RBX::Intrusive::Set<RobloxExtraSpace>::Hook
 		// We need to keep track of all Nodes so that we can clear them on shutdown.
 		// See eraseRefsFromAllNodes
 		AllThreads allThreads;
-		Shared():threadCount(0),context(NULL) {}
+		Shared():threadCount(0),context(nullptr) {}
 	};
 	const boost::shared_ptr<Shared> shared;
 	typedef RBX::Lua::WeakThreadRef::Node Node;

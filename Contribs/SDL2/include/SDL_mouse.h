@@ -82,7 +82,7 @@ extern DECLSPEC SDL_Window * SDLCALL SDL_GetMouseFocus(void);
  *  The current button state is returned as a button bitmask, which can
  *  be tested using the SDL_BUTTON(X) macros, and x and y are set to the
  *  mouse cursor position relative to the focus window for the currently
- *  selected mouse.  You can pass NULL for either x or y.
+ *  selected mouse.  You can pass nullptr for either x or y.
  */
 extern DECLSPEC Uint32 SDLCALL SDL_GetMouseState(int *x, int *y);
 
@@ -103,8 +103,8 @@ extern DECLSPEC Uint32 SDLCALL SDL_GetMouseState(int *x, int *y);
  *        doing and have a good reason to use this function, you probably want
  *        SDL_GetMouseState() instead.
  *
- *  \param x Returns the current X coord, relative to the desktop. Can be NULL.
- *  \param y Returns the current Y coord, relative to the desktop. Can be NULL.
+ *  \param x Returns the current X coord, relative to the desktop. Can be nullptr.
+ *  \param y Returns the current Y coord, relative to the desktop. Can be nullptr.
  *  \return The current button state as a bitmask, which can be tested using the SDL_BUTTON(X) macros.
  *
  *  \sa SDL_GetMouseState
@@ -123,7 +123,7 @@ extern DECLSPEC Uint32 SDLCALL SDL_GetRelativeMouseState(int *x, int *y);
 /**
  *  \brief Moves the mouse to the given position within the window.
  *
- *  \param window The window to move the mouse into, or NULL for the current mouse focus
+ *  \param window The window to move the mouse into, or nullptr for the current mouse focus
  *  \param x The x coordinate within the window
  *  \param y The y coordinate within the window
  *

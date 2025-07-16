@@ -7,8 +7,8 @@ bool        ignore_undo_redo = false;
 UR_ELEMENT::UR_ELEMENT()
 {
 	op_type = NONE;
-	obj = NULL;
-	matrix = NULL;
+	obj = nullptr;
+	matrix = nullptr;
 }
 
 CommandsGroup::~CommandsGroup()
@@ -70,7 +70,7 @@ bool CommandsGroup::Inverse()
 			break;
 		case TRANS_OBJ:
 			{
-				if (m_commands[i].matrix==NULL)
+				if (m_commands[i].matrix==nullptr)
 				{
 					assert(0);
 					return false;
@@ -106,7 +106,7 @@ bool CommandsGroup::Execute()
 		{
 		case ADD_OBJ:
 			assert(objects.num!=0);
-			assert(((lpOBJ)(m_commands[i].obj))->extendedClass!=NULL);
+			assert(((lpOBJ)(m_commands[i].obj))->extendedClass!=nullptr);
 			detached_objects.push_back(((lpOBJ)(m_commands[i].obj))->extendedClass);
 			detach_item_z(OBJ_LIST, &objects, m_commands[i].obj); 
 			break;
@@ -117,7 +117,7 @@ bool CommandsGroup::Execute()
 			break;
 		case TRANS_OBJ:
 			assert(objects.num!=0);
-			assert(((lpOBJ)(m_commands[i].obj))->extendedClass!=NULL);
+			assert(((lpOBJ)(m_commands[i].obj))->extendedClass!=nullptr);
 			{
 				sgCMatrix mmm(m_commands[i].matrix);
 				ignore_undo_redo = true;
@@ -140,8 +140,8 @@ bool CommandsGroup::Execute()
 						{
 							//   
 							obj = (lpOBJ)hobj;
-							obj->hhold = NULL;
-							hOBJ nextObj = NULL;
+							obj->hhold = nullptr;
+							hOBJ nextObj = nullptr;
 							get_next_item_z(OBJ_LIST, hobj, &nextObj);
 							detach_item_z(OBJ_LIST, &geo.listh, hobj);
 							hobj = nextObj;
@@ -159,8 +159,8 @@ bool CommandsGroup::Execute()
 						{
 							//   
 							obj = (lpOBJ)hobj;
-							obj->hhold = NULL;
-							hOBJ nextObj = NULL;
+							obj->hhold = nullptr;
+							hOBJ nextObj = nullptr;
 							get_next_item_z(OBJ_LIST, hobj, &nextObj);
 							detach_item_z(OBJ_LIST, &geo.listh, hobj);
 							hobj = nextObj;

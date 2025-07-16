@@ -1,14 +1,14 @@
 #include "../sg.h"
 
-BOOL (*trian_pre_brep)  (hOBJ hobj)                                    = NULL;
-BOOL (*trian_post_brep) (BOOL ret, hOBJ hobj)                          = NULL;
-BOOL (*trian_pre_np)    (lpNPW npw, short num_np)                        = NULL;
-BOOL (*trian_post_np)   (BOOL ret, lpNPW npw, short num_np)              = NULL;
-BOOL (*trian_pre_face)  (lpNPW npw, short num_np, short numf)              = NULL;
-BOOL (*trian_put_face)  (lpNPW npw, short numf, short lv, short *v, short *vi) = NULL;
-BOOL (*trian_post_face) (BOOL ret, lpNPW npw, short num_np, short numf)    = NULL;
+BOOL (*trian_pre_brep)  (hOBJ hobj)                                    = nullptr;
+BOOL (*trian_post_brep) (BOOL ret, hOBJ hobj)                          = nullptr;
+BOOL (*trian_pre_np)    (lpNPW npw, short num_np)                        = nullptr;
+BOOL (*trian_post_np)   (BOOL ret, lpNPW npw, short num_np)              = nullptr;
+BOOL (*trian_pre_face)  (lpNPW npw, short num_np, short numf)              = nullptr;
+BOOL (*trian_put_face)  (lpNPW npw, short numf, short lv, short *v, short *vi) = nullptr;
+BOOL (*trian_post_face) (BOOL ret, lpNPW npw, short num_np, short numf)    = nullptr;
 
-lpTR_INFO tr_info = NULL;
+lpTR_INFO tr_info = nullptr;
 BOOL      trian_error = FALSE;  
 
 BOOL trian_alloc(lpNPW npw, short num_np, short max_v);
@@ -70,19 +70,19 @@ short *info;
 
 BOOL trian_alloc(lpNPW npw, short num_np, short max_v){
 
-	if ((tr_info = (TR_INFO*)SGMalloc(sizeof(TR_INFO))) == NULL) goto err;
+	if ((tr_info = (TR_INFO*)SGMalloc(sizeof(TR_INFO))) == nullptr) goto err;
 	tr_info->npw    = npw;
 	tr_info->num_np = num_np;
 	tr_info->max_v  = max_v;
-	if((tr_info->mb  = (short*)SGMalloc(sizeof(short)*(npw->noc + 1))) == NULL)        goto err;
-	if((tr_info->me  = (short*)SGMalloc(sizeof(short)*(npw->noc + 1))) == NULL)        goto err;
-	if((tr_info->m   = (short*)SGMalloc(sizeof(short)*(npw->nov + npw->noe))) == NULL) goto err;
-	if((tr_info->mv  = (short*)SGMalloc(sizeof(short)*(npw->nov + npw->noe))) == NULL) goto err;
-	if((tr_info->mr  = (short*)SGMalloc(sizeof(short)*(npw->nov + npw->noe))) == NULL) goto err;
-	if((tr_info->mrv = (short*)SGMalloc(sizeof(short)*(npw->nov + npw->noe))) == NULL) goto err;
-	if((tr_info->mpr = (UCHAR*)SGMalloc(npw->nov + 1)) == NULL)                      goto err;
-	if((tr_info->x   = (sgFloat*)SGMalloc(sizeof(sgFloat)*(npw->nov + 1))) == NULL)     goto err;
-	if((tr_info->y   = (sgFloat*)SGMalloc(sizeof(sgFloat)*(npw->nov + 1))) == NULL)     goto err;
+	if((tr_info->mb  = (short*)SGMalloc(sizeof(short)*(npw->noc + 1))) == nullptr)        goto err;
+	if((tr_info->me  = (short*)SGMalloc(sizeof(short)*(npw->noc + 1))) == nullptr)        goto err;
+	if((tr_info->m   = (short*)SGMalloc(sizeof(short)*(npw->nov + npw->noe))) == nullptr) goto err;
+	if((tr_info->mv  = (short*)SGMalloc(sizeof(short)*(npw->nov + npw->noe))) == nullptr) goto err;
+	if((tr_info->mr  = (short*)SGMalloc(sizeof(short)*(npw->nov + npw->noe))) == nullptr) goto err;
+	if((tr_info->mrv = (short*)SGMalloc(sizeof(short)*(npw->nov + npw->noe))) == nullptr) goto err;
+	if((tr_info->mpr = (UCHAR*)SGMalloc(npw->nov + 1)) == nullptr)                      goto err;
+	if((tr_info->x   = (sgFloat*)SGMalloc(sizeof(sgFloat)*(npw->nov + 1))) == nullptr)     goto err;
+	if((tr_info->y   = (sgFloat*)SGMalloc(sizeof(sgFloat)*(npw->nov + 1))) == nullptr)     goto err;
   return TRUE;
 err:
   trian_free();
@@ -101,7 +101,7 @@ void trian_free(void){
 		if(tr_info->x)   SGFree(tr_info->x);
 		if(tr_info->y)   SGFree(tr_info->y);
 		SGFree(tr_info);
-		tr_info = NULL;
+		tr_info = nullptr;
 	}
 }
 

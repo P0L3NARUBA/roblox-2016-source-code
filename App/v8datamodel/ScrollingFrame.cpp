@@ -34,7 +34,7 @@ namespace RBX
 	const Reflection::PropDescriptor<ScrollingFrame, UDim2> prop_canvasSize("CanvasSize", category_Scrolling, &ScrollingFrame::getCanvasSize, &ScrollingFrame::setCanvasSize);
 	const Reflection::PropDescriptor<ScrollingFrame, Vector2> prop_canvasPosition("CanvasPosition", category_Scrolling, &ScrollingFrame::getCanvasPosition, &ScrollingFrame::luaSetCanvasPosition);
 
-	const Reflection::PropDescriptor<ScrollingFrame, Vector2> prop_absWindowSize("AbsoluteWindowSize", category_Scrolling, &ScrollingFrame::getAbsoluteWindowSize, NULL);
+	const Reflection::PropDescriptor<ScrollingFrame, Vector2> prop_absWindowSize("AbsoluteWindowSize", category_Scrolling, &ScrollingFrame::getAbsoluteWindowSize, nullptr);
 
 	const Reflection::PropDescriptor<ScrollingFrame, int> prop_scrollBarThickness("ScrollBarThickness", category_Scrolling, &ScrollingFrame::getScrollBarThickness, &ScrollingFrame::setScrollBarThickness);
 
@@ -122,7 +122,7 @@ namespace RBX
 			return;
 		}
 
-		RBX::GuiObject* selectedObject = NULL;
+		RBX::GuiObject* selectedObject = nullptr;
 		if (*desc == GuiService::prop_selectedGuiObject)
 		{
 			selectedObject = guiService->getSelectedGuiObjectLua();
@@ -1099,7 +1099,7 @@ namespace RBX
 
 	void ScrollingFrame::renderScrollbarSection(Adorn* adorn, GuiDrawImage& drawImage, const TextureId& image, const char* context, const Rect2D& imageRect, const Rotation2D& rotation)
 	{
-		if (drawImage.setImage(adorn, image, GuiDrawImage::NORMAL, NULL, this, context))
+		if (drawImage.setImage(adorn, image, GuiDrawImage::NORMAL, nullptr, this, context))
 		{
 			Vector2 lowerUV(0,0);
 			Vector2 upperUV(1,1);

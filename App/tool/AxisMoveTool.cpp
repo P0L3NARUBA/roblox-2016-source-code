@@ -78,7 +78,7 @@ void AxisToolBase::onMouseMove(const shared_ptr<InputObject>& inputObject)
 		&&	(inputObject->get2DPosition() - downPoint2d).length() > 4)
 	{
 		ServiceClient< FilteredSelection<PVInstance> > pvSelection(this->workspace);
-		megaDragger.reset(new MegaDragger(	NULL, 
+		megaDragger.reset(new MegaDragger(	nullptr, 
 											pvSelection->items(), 
 											workspace));
 

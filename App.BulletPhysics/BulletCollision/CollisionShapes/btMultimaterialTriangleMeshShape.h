@@ -102,10 +102,10 @@ public:
         for(int i = 0; i < m_meshInterface->getNumSubParts(); i++)
         {
             btAlignedFree(m_materialValues[i]);
-            m_materialLookup[i] = NULL;
+            m_materialLookup[i] = nullptr;
         }
         btAlignedFree(m_materialValues);
-        m_materialLookup = NULL;
+        m_materialLookup = nullptr;
 */
     }
 	//debugging

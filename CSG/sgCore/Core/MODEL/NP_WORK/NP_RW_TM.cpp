@@ -11,7 +11,7 @@ BOOL np_read_np_tmp(lpNPW npw)
 	VI_LOCATION viloc;
 	WORD 				size;
 	BOOL cod;
-	if (npw != NULL) {
+	if (npw != nullptr) {
     get_first_np_loc( &vld.listh, &viloc);
 		begin_read_vld(&viloc);
 		cod = read_np_mem(npw);
@@ -42,14 +42,14 @@ BOOL np_write_np_tmp(lpNPW npw)
 }
 BOOL  np_new_user_data(lpNPW np)
 {
-	if ( (np->user = SGMalloc(sizeof(NP_USER_GRU)*(np->maxnoe+1))) == NULL) 	return FALSE;
+	if ( (np->user = SGMalloc(sizeof(NP_USER_GRU)*(np->maxnoe+1))) == nullptr) 	return FALSE;
 	memset(np->user,0,sizeof(NP_USER_GRU)*(np->maxnoe+1));
 	return TRUE;
 }
 void  np_free_user_data(lpNPW np)
 {
 	if ( np->user ) SGFree(np->user);
-	np->user = NULL;
+	np->user = nullptr;
 }
 BOOL np_add_user_data_mem(lpVLD vld,lpNPW npw)
 {

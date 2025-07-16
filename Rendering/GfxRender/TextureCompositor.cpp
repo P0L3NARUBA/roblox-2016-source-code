@@ -184,7 +184,7 @@ public:
         shared_ptr<FileMeshData> cachedMesh = boost::static_pointer_cast<FileMeshData>(mcp->requestContent(meshId, ContentProvider::PRIORITY_MESH, false, result));
 
 		if (result == AsyncHttpQueue::Waiting)
-            return NULL;
+            return nullptr;
 
         shared_ptr<GeometryBatch>& cache = meshes[meshId];
 
@@ -369,7 +369,7 @@ public:
 private:
     struct LayerData
     {
-        LayerData(): desc(MeshId(), TextureId()), mesh(NULL)
+        LayerData(): desc(MeshId(), TextureId()), mesh(nullptr)
         {
         }
         

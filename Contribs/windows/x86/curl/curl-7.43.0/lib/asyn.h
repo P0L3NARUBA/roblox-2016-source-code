@@ -119,7 +119,7 @@ CURLcode Curl_resolver_is_resolved(struct connectdata *conn,
  * waits for a resolve to finish. This function should be avoided since using
  * this risk getting the multi interface to "hang".
  *
- * If 'entry' is non-NULL, make it point to the resolved dns entry
+ * If 'entry' is non-nullptr, make it point to the resolved dns entry
  *
  * Returns CURLE_COULDNT_RESOLVE_HOST if the host was not resolved, and
  * CURLE_OPERATION_TIMEDOUT if a time-out occurred.

@@ -41,10 +41,10 @@ FASTFLAG(WebkitDeveloperToolsEnabled);
 FASTFLAG(StudioEnableWebKitPlugins);
 
 RobloxWebDoc::RobloxWebDoc(const QString& displayName, const QString& keyName)
-: m_pWebView(NULL)
-, m_pWrapperWidget(NULL)
-, m_pWorkspace(new RbxWorkspace(this, NULL))
-, m_pAddrInputComboBox(NULL)
+: m_pWebView(nullptr)
+, m_pWrapperWidget(nullptr)
+, m_pWorkspace(new RbxWorkspace(this, nullptr))
+, m_pAddrInputComboBox(nullptr)
 , m_displayName(displayName)
 , m_currentUrl("")
 , m_homeUrl("")

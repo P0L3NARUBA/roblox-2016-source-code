@@ -423,7 +423,7 @@ namespace boost
 #if !(defined(__MINGW32__) || defined (__MINGW64__))
         DWORD size = 0;
 
-        GetLogicalProcessorInformation(NULL, &size);
+        GetLogicalProcessorInformation(nullptr, &size);
         if (ERROR_INSUFFICIENT_BUFFER != GetLastError())
             return 0;
 
@@ -543,7 +543,7 @@ namespace boost
                 if(time_left.milliseconds > min_timer_wait_period)
                 {
                     // for a long-enough timeout, use a waitable timer (which tracks clock changes)
-                    timer_handle=CreateWaitableTimer(NULL,false,NULL);
+                    timer_handle=CreateWaitableTimer(nullptr,false,nullptr);
                     if(timer_handle!=0)
                     {
                         LARGE_INTEGER due_time=get_due_time(target_time);
@@ -633,7 +633,7 @@ namespace boost
                 if(time_left.milliseconds > min_timer_wait_period)
                 {
                     // for a long-enough timeout, use a waitable timer (which tracks clock changes)
-                    timer_handle=CreateWaitableTimer(NULL,false,NULL);
+                    timer_handle=CreateWaitableTimer(nullptr,false,nullptr);
                     if(timer_handle!=0)
                     {
                         LARGE_INTEGER due_time=get_due_time(target_time);
@@ -787,7 +787,7 @@ namespace boost
                     return &current_node->second;
                 }
             }
-            return NULL;
+            return nullptr;
         }
 
         void* get_tss_data(void const* key)
@@ -796,7 +796,7 @@ namespace boost
             {
                 return current_node->value;
             }
-            return NULL;
+            return nullptr;
         }
 
         void add_new_tss_node(void const* key,

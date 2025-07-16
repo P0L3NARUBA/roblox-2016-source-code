@@ -18,11 +18,11 @@ namespace RBX {
 
 		IStage* getStage(IStage::StageType stageType) const;	
 	public:
-		IPipelined() : currentStage(NULL)
+		IPipelined() : currentStage(nullptr)
 		{}
 	
 		virtual ~IPipelined() {
-			RBXASSERT(currentStage == NULL);
+			RBXASSERT(currentStage == nullptr);
 			currentStage = static_cast<IStage*>(Debugable::badMemory());
 		}
 
@@ -35,7 +35,7 @@ namespace RBX {
 		void removeFromStage(IStage* stage);
 
 		bool inPipeline() const {
-			return (currentStage != NULL);
+			return (currentStage != nullptr);
 		}
 
 		const IStage* getCurrentStage() const {return currentStage;}
@@ -76,7 +76,7 @@ namespace RBX {
 
 		World* findWorld() {
 			if (!currentStage) {
-				return NULL;
+				return nullptr;
 			}
 			else {
 				IStage* worldStage = (!inKernel()) ? currentStage : currentStage->getUpstream();

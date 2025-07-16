@@ -180,7 +180,7 @@ public:
 
 public Q_SLOTS:
 
-    bool fileSave(IRobloxDoc* pDoc = NULL);
+    bool fileSave(IRobloxDoc* pDoc = nullptr);
 
 	bool openRecentFile(const QString& fileName);
 	void openStartPage(bool checked, QString optionalQueryParams = "");
@@ -206,7 +206,7 @@ private Q_SLOTS:
 	void fileNew();
 	void fileOpen();
 	void fileClose();
-	bool fileSaveAs(IRobloxDoc *pDoc=NULL);
+	bool fileSaveAs(IRobloxDoc *pDoc=nullptr);
 	bool filePublishedProjects();
 	bool openRecentFile();
 	void publishGame();

@@ -43,7 +43,7 @@ SDL_TLSGet(SDL_TLSID id)
 
     storage = SDL_SYS_GetTLSData();
     if (!storage || id == 0 || id > storage->limit) {
-        return NULL;
+        return nullptr;
     }
     return storage->array[id-1].data;
 }
@@ -69,8 +69,8 @@ SDL_TLSSet(SDL_TLSID id, const void *value, void (*destructor)(void *))
         }
         storage->limit = newlimit;
         for (i = oldlimit; i < newlimit; ++i) {
-            storage->array[i].data = NULL;
-            storage->array[i].destructor = NULL;
+            storage->array[i].data = nullptr;
+            storage->array[i].destructor = nullptr;
         }
         if (SDL_SYS_SetTLSData(storage) != 0) {
             return -1;
@@ -95,7 +95,7 @@ SDL_TLSCleanup()
                 storage->array[i].destructor(storage->array[i].data);
             }
         }
-        SDL_SYS_SetTLSData(NULL);
+        SDL_SYS_SetTLSData(nullptr);
         SDL_free(storage);
     }
 }
@@ -124,7 +124,7 @@ SDL_Generic_GetTLSData()
 {
     SDL_threadID thread = SDL_ThreadID();
     SDL_TLSEntry *entry;
-    SDL_TLSData *storage = NULL;
+    SDL_TLSData *storage = nullptr;
 
 #if !SDL_THREADS_DISABLED
     if (!SDL_generic_TLS_mutex) {
@@ -136,7 +136,7 @@ SDL_Generic_GetTLSData()
             SDL_generic_TLS_mutex = mutex;
             if (!SDL_generic_TLS_mutex) {
                 SDL_AtomicUnlock(&tls_lock);
-                return NULL;
+                return nullptr;
             }
         }
         SDL_AtomicUnlock(&tls_lock);
@@ -166,7 +166,7 @@ SDL_Generic_SetTLSData(SDL_TLSData *storage)
 
     /* SDL_Generic_GetTLSData() is always called first, so we can assume SDL_generic_TLS_mutex */
     SDL_LockMutex(SDL_generic_TLS_mutex);
-    prev = NULL;
+    prev = nullptr;
     for (entry = SDL_generic_TLS; entry; entry = entry->next) {
         if (entry->thread == thread) {
             if (storage) {
@@ -238,10 +238,10 @@ SDL_GetErrBuf(void)
     }
     if (!errbuf) {
         /* Mark that we're in the middle of allocating our buffer */
-        SDL_TLSSet(tls_errbuf, ALLOCATION_IN_PROGRESS, NULL);
+        SDL_TLSSet(tls_errbuf, ALLOCATION_IN_PROGRESS, nullptr);
         errbuf = (SDL_error *)SDL_malloc(sizeof(*errbuf));
         if (!errbuf) {
-            SDL_TLSSet(tls_errbuf, NULL, NULL);
+            SDL_TLSSet(tls_errbuf, nullptr, nullptr);
             return &SDL_global_errbuf;
         }
         SDL_zerop(errbuf);
@@ -321,45 +321,45 @@ SDL_CreateThread(int (SDLCALL * fn) (void *),
 
     /* Allocate memory for the thread info structure */
     thread = (SDL_Thread *) SDL_malloc(sizeof(*thread));
-    if (thread == NULL) {
+    if (thread == nullptr) {
         SDL_OutOfMemory();
-        return (NULL);
+        return (nullptr);
     }
     SDL_zerop(thread);
     thread->status = -1;
     SDL_AtomicSet(&thread->state, SDL_THREAD_STATE_ALIVE);
 
     /* Set up the arguments for the thread */
-    if (name != NULL) {
+    if (name != nullptr) {
         thread->name = SDL_strdup(name);
-        if (thread->name == NULL) {
+        if (thread->name == nullptr) {
             SDL_OutOfMemory();
             SDL_free(thread);
-            return (NULL);
+            return (nullptr);
         }
     }
 
     /* Set up the arguments for the thread */
     args = (thread_args *) SDL_malloc(sizeof(*args));
-    if (args == NULL) {
+    if (args == nullptr) {
         SDL_OutOfMemory();
         if (thread->name) {
             SDL_free(thread->name);
         }
         SDL_free(thread);
-        return (NULL);
+        return (nullptr);
     }
     args->func = fn;
     args->data = data;
     args->info = thread;
     args->wait = SDL_CreateSemaphore(0);
-    if (args->wait == NULL) {
+    if (args->wait == nullptr) {
         if (thread->name) {
             SDL_free(thread->name);
         }
         SDL_free(thread);
         SDL_free(args);
-        return (NULL);
+        return (nullptr);
     }
 
     /* Create the thread and go! */
@@ -377,7 +377,7 @@ SDL_CreateThread(int (SDLCALL * fn) (void *),
             SDL_free(thread->name);
         }
         SDL_free(thread);
-        thread = NULL;
+        thread = nullptr;
     }
     SDL_DestroySemaphore(args->wait);
     SDL_free(args);
@@ -405,7 +405,7 @@ SDL_GetThreadName(SDL_Thread * thread)
     if (thread) {
         return thread->name;
     } else {
-        return NULL;
+        return nullptr;
     }
 }
 
@@ -446,7 +446,7 @@ SDL_DetachThread(SDL_Thread * thread)
         if ((thread_state == SDL_THREAD_STATE_DETACHED) || (thread_state == SDL_THREAD_STATE_CLEANED)) {
             return;  /* already detached (you shouldn't call this twice!) */
         } else if (thread_state == SDL_THREAD_STATE_ZOMBIE) {
-            SDL_WaitThread(thread, NULL);  /* already done, clean it up. */
+            SDL_WaitThread(thread, nullptr);  /* already done, clean it up. */
         } else {
             SDL_assert(0 && "Unexpected thread state");
         }

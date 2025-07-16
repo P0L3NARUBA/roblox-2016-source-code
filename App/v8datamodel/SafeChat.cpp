@@ -42,7 +42,7 @@ void SafeChat::loadChildren(ChatOption *node, const XmlElement *DOMsubTree)
 
 	// this is a recursive depth-first tree traversal that mirrors the DOM on-disk
 
-	for(const XmlElement *x = DOMsubTree->findFirstChildByTag(utterance); x != NULL; x = DOMsubTree->findNextChildWithSameTag(x))
+	for(const XmlElement *x = DOMsubTree->findFirstChildByTag(utterance); x != nullptr; x = DOMsubTree->findNextChildWithSameTag(x))
 	{
 		
 		std::string text;

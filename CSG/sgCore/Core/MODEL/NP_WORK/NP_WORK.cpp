@@ -314,8 +314,8 @@ short np_max(lpNPW np)
 
 	nof = noe = nov = noc =0;
 
-  if ( (lv = (char*)SGMalloc(sizeof(char)*(np->nov+1))) == NULL) return 0;
-	if ( (lc = (char*)SGMalloc(sizeof(char)*(np->noc+1))) == NULL) {
+  if ( (lv = (char*)SGMalloc(sizeof(char)*(np->nov+1))) == nullptr) return 0;
+	if ( (lc = (char*)SGMalloc(sizeof(char)*(np->noc+1))) == nullptr) {
 		SGFree(lv);
     return 0;
 	}

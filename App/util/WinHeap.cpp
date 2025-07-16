@@ -26,14 +26,14 @@ namespace RBX
 				char temp[512];
 				sprintf(temp, "Unable to set low frag heap.  GetLastError returns %d\n", GetLastError());
 
-				::MessageBox(	NULL, 
+				::MessageBox(	nullptr, 
 								temp,
 								"Set Low Frag Heap", 
 								MB_OK );
 			}
 			else
 			{
-				::MessageBox(	NULL, 
+				::MessageBox(	nullptr, 
 								"set heap worked!",
 								"Set Low Frag Heap", 
 								MB_OK );
@@ -46,7 +46,7 @@ namespace RBX
 							HeapCompatibilityInformation,
 							&HeapFragValue,
 							sizeof(HeapFragValue),
-							NULL);
+							nullptr);
 */
 
 		}

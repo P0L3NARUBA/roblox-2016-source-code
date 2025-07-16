@@ -23,11 +23,11 @@ short test_inside_path(hOBJ htest, hOBJ hout, lpD_PLANE plane)
 	num = 0;
 	if (!begin_rw(&vdim, 0)) goto err;
 	for (j = 0; j < vdim.num_elem; j++) {
-		if ( (lpmnode = (lpMNODE)get_next_elem(&vdim)) == NULL) goto err1;
+		if ( (lpmnode = (lpMNODE)get_next_elem(&vdim)) == nullptr) goto err1;
 		o_hcncrd(m, &lpmnode->p, &ep);
 		if (j) {
 			if((n = test_cont_int(&bp, &ep, &p)) < 0) {
-				put_message(INTERNAL_ERROR, NULL, 0);
+				put_message(INTERNAL_ERROR, nullptr, 0);
 				goto err1;
 			}
 			num += n;

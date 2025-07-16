@@ -54,7 +54,7 @@ void Flag::setTeamColor(BrickColor color)
 
 void Flag::onServiceProvider(ServiceProvider* oldProvider, ServiceProvider* newProvider)
 {
-	if (oldProvider == NULL) {
+	if (oldProvider == nullptr) {
 		if (Network::Players::backendProcessing(this)) {
 			if (PartInstance *part = this->getHandle()) {
 				flagTouched = part->onDemandWrite()->touchedSignal.connect(boost::bind(&Flag::onEvent_flagTouched, this, _1));
@@ -66,7 +66,7 @@ void Flag::onServiceProvider(ServiceProvider* oldProvider, ServiceProvider* newP
 
 	Super::onServiceProvider(oldProvider, newProvider);
 
-	if (newProvider == NULL) {
+	if (newProvider == nullptr) {
 		flagTouched.disconnect();
 	}
 }
@@ -120,7 +120,7 @@ FlagStand *Flag::getJoinedStand()
 	{
 		Primitive *handlePrim = handle->getPartPrimitive();
 		RigidJoint *r = handlePrim->getFirstRigid();
-		while(r != NULL)
+		while(r != nullptr)
 		{
 			PartInstance *p = PartInstance::fromPrimitive(r->otherPrimitive(handlePrim));
 			FlagStand *fs = Instance::fastDynamicCast<FlagStand>(p); // ASSUME: A part's parent will be the flag, if this is a flag.
@@ -128,7 +128,7 @@ FlagStand *Flag::getJoinedStand()
 			r = handlePrim->getNextRigid(r);
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 

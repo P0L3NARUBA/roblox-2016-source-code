@@ -58,7 +58,7 @@ Contact::Contact(Primitive* p0,
 	, lastUiContactStep(-2)
 	, numTouchCycles(0)
 {
-    contactParams = NULL;
+    contactParams = nullptr;
 }
 
 Contact::~Contact() 
@@ -68,8 +68,8 @@ Contact::~Contact()
 
     if(contactParams)
         delete contactParams;
-	setPrimitive(0, NULL);
-	setPrimitive(1, NULL);
+	setPrimitive(0, nullptr);
+	setPrimitive(1, nullptr);
 }
 
 
@@ -216,7 +216,7 @@ ContactConnector* BallBallContact::getConnector(int i)
 void BallBallContact::deleteAllConnectors() {
 	if (ballBallConnector) {
 		deleteConnector(ballBallConnector);
-		ballBallConnector = NULL;
+		ballBallConnector = nullptr;
 	}
 }
 
@@ -286,7 +286,7 @@ void BallBlockContact::deleteAllConnectors()
 {
 	if (ballBlockConnector) {
 		deleteConnector(ballBlockConnector);
-		ballBlockConnector = NULL;
+		ballBlockConnector = nullptr;
 	}
 }
 
@@ -389,7 +389,7 @@ Block* BlockBlockContact::block(int i) {
 ContactConnector* BlockBlockContact::getConnector(int i)
 {
     if( !myData )
-        return NULL;
+        return nullptr;
     else
 		return myData->getConnector(i);
 }
@@ -418,7 +418,7 @@ GeoPairConnector* BlockBlockContact::findGeoPairConnector(	Body* b0,
     if( myData && contactParams )
 	    return myData->findGeoPairConnector(b0, b1, _pairType, param0, param1);
     else
-        return NULL;
+        return nullptr;
 }
 
 bool BlockBlockContact::computeIsColliding(float overlapIgnored)
@@ -508,7 +508,7 @@ void BlockBlockContact::loadGeoPairPointPlane(	int pointBody,
 												NormalId pointFaceID, 
 												NormalId planeFaceID) 
 {
-	GeoPairConnector* geoPair = NULL;
+	GeoPairConnector* geoPair = nullptr;
 	if((geoPair = findGeoPairConnector(getBody(pointBody), getBody(planeBody), POINT_PLANE_PAIR, pointID, planeFaceID)))
 	{
 		if(geoFeaturesOverlap(pointBody, planeBody, pointID, pointFaceID, planeFaceID))
@@ -579,7 +579,7 @@ bool BlockBlockContact::getBestPlaneEdge(float overlapIgnored, bool& planeContac
 
 BlockBlockContact::BlockBlockContact(Primitive* p0, Primitive* p1) : Contact(p0, p1)
 {
-    myData = NULL;
+    myData = nullptr;
 }
 
 BlockBlockContact::~BlockBlockContact( void )
@@ -643,10 +643,10 @@ GeoPairConnector* BlockBlockContactData::findGeoPairConnector(	Body* b0,
 			    return found;
 		    }
 	    }
-		return NULL;
+		return nullptr;
     }
     else
-        return NULL;
+        return nullptr;
 }
 
 bool BlockBlockContactData::stepContact() 

@@ -230,7 +230,7 @@ SDL_EnclosePoints(const SDL_Point * points, int count, const SDL_Rect * clip,
             }
             if (!added) {
                 /* Special case: if no result was requested, we are done */
-                if (result == NULL) {
+                if (result == nullptr) {
                     return SDL_TRUE;
                 }
 
@@ -256,7 +256,7 @@ SDL_EnclosePoints(const SDL_Point * points, int count, const SDL_Rect * clip,
         }
     } else {
         /* Special case: if no result was requested, we are done */
-        if (result == NULL) {
+        if (result == nullptr) {
             return SDL_TRUE;
         }
 

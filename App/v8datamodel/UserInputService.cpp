@@ -158,10 +158,10 @@ namespace RBX {
 	static Reflection::BoundFuncDesc<UserInputService, InputObject::UserInputType()> func_getLastInputType(&UserInputService::getLastInputType, "GetLastInputType", Security::None);
 	static Reflection::EventDesc<UserInputService, void(InputObject::UserInputType)> event_lastInputTypeChanged(&UserInputService::lastInputTypeChangedSignal, "LastInputTypeChanged", "lastInputType", Security::None);
 
-    static const Reflection::PropDescriptor<UserInputService, bool>  prop_TouchEnabled("TouchEnabled", category_Data, &UserInputService::getTouchEnabled, NULL);
-    static const Reflection::PropDescriptor<UserInputService, bool>  prop_KeyboardEnabled("KeyboardEnabled", category_Data, &UserInputService::getKeyboardEnabled, NULL);
-    static const Reflection::PropDescriptor<UserInputService, bool>  prop_MouseEnabled("MouseEnabled", category_Data, &UserInputService::getMouseEnabled, NULL);
-    static const Reflection::PropDescriptor<UserInputService, bool>  prop_GamepadEnabled("GamepadEnabled", category_Data, &UserInputService::getGamepadEnabled, NULL);
+    static const Reflection::PropDescriptor<UserInputService, bool>  prop_TouchEnabled("TouchEnabled", category_Data, &UserInputService::getTouchEnabled, nullptr);
+    static const Reflection::PropDescriptor<UserInputService, bool>  prop_KeyboardEnabled("KeyboardEnabled", category_Data, &UserInputService::getKeyboardEnabled, nullptr);
+    static const Reflection::PropDescriptor<UserInputService, bool>  prop_MouseEnabled("MouseEnabled", category_Data, &UserInputService::getMouseEnabled, nullptr);
+    static const Reflection::PropDescriptor<UserInputService, bool>  prop_GamepadEnabled("GamepadEnabled", category_Data, &UserInputService::getGamepadEnabled, nullptr);
 
 	//todo: Remove these events/functions
 	static Reflection::EventDesc<UserInputService, void()> event_JumpRequest(&UserInputService::jumpRequestEvent, "JumpRequest", Security::None);
@@ -239,8 +239,8 @@ namespace RBX {
     static Reflection::BoundFuncDesc<UserInputService, shared_ptr<Instance>(void)> func_getCurrentGravity(&UserInputService::getGravity, "GetDeviceGravity", Security::None);
     static Reflection::BoundFuncDesc<UserInputService, shared_ptr<const Reflection::Tuple>(void)> func_getCurrentRotation(&UserInputService::getRotation, "GetDeviceRotation", Security::None);
     
-    static const Reflection::PropDescriptor<UserInputService, bool>  prop_accelerometerEnabled("AccelerometerEnabled", category_Data, &UserInputService::getAccelerometerEnabled, NULL);
-    static const Reflection::PropDescriptor<UserInputService, bool>  prop_gyroscopeEnabled("GyroscopeEnabled", category_Data, &UserInputService::getGyroscopeEnabled, NULL);
+    static const Reflection::PropDescriptor<UserInputService, bool>  prop_accelerometerEnabled("AccelerometerEnabled", category_Data, &UserInputService::getAccelerometerEnabled, nullptr);
+    static const Reflection::PropDescriptor<UserInputService, bool>  prop_gyroscopeEnabled("GyroscopeEnabled", category_Data, &UserInputService::getGyroscopeEnabled, nullptr);
 
 	// Gamepad Stuff
 	static Reflection::BoundFuncDesc<UserInputService, shared_ptr<const Reflection::ValueArray>()> func_getConnectedGamepads(&UserInputService::getConnectedGamepads, "GetConnectedGamepads", Security::None);
@@ -257,10 +257,10 @@ namespace RBX {
 	static Reflection::BoundFuncDesc<UserInputService, void(InputObject::UserInputType, bool)> func_setNavigationGamepad(&UserInputService::setNavigationGamepad, "SetNavigationGamepad", "gamepadEnum", "enabled", Security::None);
 
 	// VR Stuff
-    static const Reflection::PropDescriptor<UserInputService, bool> prop_IsVREnabled("IsVREnabled", category_Data, &UserInputService::getVREnabled, NULL, Reflection::PropertyDescriptor::Attributes::deprecated());
-	static const Reflection::PropDescriptor<UserInputService, CoordinateFrame> prop_UserHeadCFrame("UserHeadCFrame", category_Data, &UserInputService::getUserHeadCFrame, NULL, Reflection::PropertyDescriptor::Attributes::deprecated());
+    static const Reflection::PropDescriptor<UserInputService, bool> prop_IsVREnabled("IsVREnabled", category_Data, &UserInputService::getVREnabled, nullptr, Reflection::PropertyDescriptor::Attributes::deprecated());
+	static const Reflection::PropDescriptor<UserInputService, CoordinateFrame> prop_UserHeadCFrame("UserHeadCFrame", category_Data, &UserInputService::getUserHeadCFrame, nullptr, Reflection::PropertyDescriptor::Attributes::deprecated());
 
-    static const Reflection::PropDescriptor<UserInputService, bool> prop_VREnabled("VREnabled", category_Data, &UserInputService::getVREnabled, NULL);
+    static const Reflection::PropDescriptor<UserInputService, bool> prop_VREnabled("VREnabled", category_Data, &UserInputService::getVREnabled, nullptr);
 	static const Reflection::BoundFuncDesc<UserInputService, void()> func_RecenterUserHeadCFrame(&UserInputService::recenterUserHeadCFrame, "RecenterUserHeadCFrame", Security::None);
 	static const Reflection::BoundFuncDesc<UserInputService, CoordinateFrame(UserInputService::UserCFrame)> func_GetUserCFrame(&UserInputService::getUserCFrameLua, "GetUserCFrame", "type", Security::None);
 	static const Reflection::EventDesc<UserInputService, void(UserInputService::UserCFrame, CoordinateFrame value)> event_UserCFrameChanged(&UserInputService::userCFrameChanged, "UserCFrameChanged", "type", "value", Security::None);
@@ -1749,7 +1749,7 @@ namespace RBX {
         std::string clipBoardText = "";
         
 #if defined(_WIN32) && !defined(RBX_PLATFORM_DURANGO) && !defined(RBX_PLATFORM_UWP)
-        if(::OpenClipboard(NULL))
+        if(::OpenClipboard(nullptr))
 		{
 			HANDLE hData = ::GetClipboardData(CF_TEXT);
 			if(hData)
@@ -2243,7 +2243,7 @@ namespace RBX {
 		{
 			return lastDownGuiObjectRight;
 		}
-		GuiObject* none = NULL;
+		GuiObject* none = nullptr;
 		return weak_from(none);
 	}
 

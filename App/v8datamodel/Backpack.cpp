@@ -36,7 +36,7 @@ bool Backpack::scriptShouldRun(BaseScript* script)
 	{
 		RBX::Network::Player* localPlayer = Network::Players::findLocalPlayer(this);
 		bool isLocalBackpack = (this->getParent() == localPlayer);
-		bool isLocalScript = (script->fastDynamicCast<LocalScript>() != NULL);
+		bool isLocalScript = (script->fastDynamicCast<LocalScript>() != nullptr);
 			
 		if (isLocalBackpack && isLocalScript)
 		{

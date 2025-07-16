@@ -31,13 +31,13 @@ __inline double png_strtod(png_structp png_ptr, PNG_CONST char *nptr, char **end
    int len;
    wchar_t *str, *end;
 
-   len = MultiByteToWideChar(CP_ACP, 0, nptr, -1, NULL, 0);
+   len = MultiByteToWideChar(CP_ACP, 0, nptr, -1, nullptr, 0);
    str = (wchar_t *)png_malloc(png_ptr, len * png_sizeof(wchar_t));
-   if ( NULL != str )
+   if ( nullptr != str )
    {
       MultiByteToWideChar(CP_ACP, 0, nptr, -1, str, len);
       result = wcstod(str, &end);
-      len = WideCharToMultiByte(CP_ACP, 0, end, -1, NULL, 0, NULL, NULL);
+      len = WideCharToMultiByte(CP_ACP, 0, end, -1, nullptr, 0, nullptr, nullptr);
       *endptr = (char *)nptr + (png_strlen(nptr) - len + 1);
       png_free(png_ptr, str);
    }
@@ -136,7 +136,7 @@ png_read_chunk_header(png_structp png_ptr)
 void /* PRIVATE */
 png_crc_read(png_structp png_ptr, png_bytep buf, png_size_t length)
 {
-   if (png_ptr == NULL)
+   if (png_ptr == nullptr)
       return;
    png_read_data(png_ptr, buf, length);
    png_calculate_crc(png_ptr, buf, length);
@@ -241,28 +241,28 @@ png_decompress_chunk(png_structp png_ptr, int comp_type,
       png_ptr->zstream.avail_out = (uInt)png_ptr->zbuf_size;
 
       text_size = 0;
-      text = NULL;
+      text = nullptr;
 
       while (png_ptr->zstream.avail_in)
       {
          ret = inflate(&png_ptr->zstream, Z_PARTIAL_FLUSH);
          if (ret != Z_OK && ret != Z_STREAM_END)
          {
-            if (png_ptr->zstream.msg != NULL)
+            if (png_ptr->zstream.msg != nullptr)
                png_warning(png_ptr, png_ptr->zstream.msg);
             else
                png_warning(png_ptr, msg);
             inflateReset(&png_ptr->zstream);
             png_ptr->zstream.avail_in = 0;
 
-            if (text ==  NULL)
+            if (text ==  nullptr)
             {
                text_size = prefix_size + png_sizeof(msg) + 1;
                text = (png_charp)png_malloc_warn(png_ptr, text_size);
-               if (text ==  NULL)
+               if (text ==  nullptr)
                  {
                     png_free(png_ptr, png_ptr->chunkdata);
-                    png_ptr->chunkdata = NULL;
+                    png_ptr->chunkdata = nullptr;
                     png_error(png_ptr, "Not enough memory to decompress chunk");
                  }
                png_memcpy(text, png_ptr->chunkdata, prefix_size);
@@ -280,15 +280,15 @@ png_decompress_chunk(png_structp png_ptr, int comp_type,
          }
          if (!png_ptr->zstream.avail_out || ret == Z_STREAM_END)
          {
-            if (text == NULL)
+            if (text == nullptr)
             {
                text_size = prefix_size +
                    png_ptr->zbuf_size - png_ptr->zstream.avail_out;
                text = (png_charp)png_malloc_warn(png_ptr, text_size + 1);
-               if (text ==  NULL)
+               if (text ==  nullptr)
                {
                   png_free(png_ptr, png_ptr->chunkdata);
-                  png_ptr->chunkdata = NULL;
+                  png_ptr->chunkdata = nullptr;
                   png_error(png_ptr,
                     "Not enough memory to decompress chunk.");
                }
@@ -305,11 +305,11 @@ png_decompress_chunk(png_structp png_ptr, int comp_type,
                text = (png_charp)png_malloc_warn(png_ptr,
                   (png_uint_32)(text_size +
                   png_ptr->zbuf_size - png_ptr->zstream.avail_out + 1));
-               if (text == NULL)
+               if (text == nullptr)
                {
                   png_free(png_ptr, tmp);
                   png_free(png_ptr, png_ptr->chunkdata);
-                  png_ptr->chunkdata = NULL;
+                  png_ptr->chunkdata = nullptr;
                   png_error(png_ptr,
                     "Not enough memory to decompress chunk..");
                }
@@ -355,13 +355,13 @@ png_decompress_chunk(png_structp png_ptr, int comp_type,
             "Incomplete compressed datastream in chunk other than IDAT");
 #endif
          text_size = prefix_size;
-         if (text ==  NULL)
+         if (text ==  nullptr)
          {
             text = (png_charp)png_malloc_warn(png_ptr, text_size+1);
-            if (text == NULL)
+            if (text == nullptr)
               {
                 png_free(png_ptr, png_ptr->chunkdata);
-                png_ptr->chunkdata = NULL;
+                png_ptr->chunkdata = nullptr;
                 png_error(png_ptr, "Not enough memory for text.");
               }
             png_memcpy(text, png_ptr->chunkdata, prefix_size);
@@ -592,7 +592,7 @@ png_handle_PLTE(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 #if defined(PNG_READ_tRNS_SUPPORTED)
    if (png_ptr->color_type == PNG_COLOR_TYPE_PALETTE)
    {
-      if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_tRNS))
+      if (info_ptr != nullptr && (info_ptr->valid & PNG_INFO_tRNS))
       {
          if (png_ptr->num_trans > (png_uint_16)num)
          {
@@ -655,7 +655,7 @@ png_handle_gAMA(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       /* Should be an error, but we can cope with it */
       png_warning(png_ptr, "Out of place gAMA chunk");
 
-   if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_gAMA)
+   if (info_ptr != nullptr && (info_ptr->valid & PNG_INFO_gAMA)
 #if defined(PNG_READ_sRGB_SUPPORTED)
       && !(info_ptr->valid & PNG_INFO_sRGB)
 #endif
@@ -687,7 +687,7 @@ png_handle_gAMA(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       }
 
 #if defined(PNG_READ_sRGB_SUPPORTED)
-   if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_sRGB))
+   if (info_ptr != nullptr && (info_ptr->valid & PNG_INFO_sRGB))
       if (PNG_OUT_OF_RANGE(igamma, 45500L, 500))
       {
          png_warning(png_ptr,
@@ -736,7 +736,7 @@ png_handle_sBIT(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       /* Should be an error, but we can cope with it */
       png_warning(png_ptr, "Out of place sBIT chunk");
    }
-   if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_sBIT))
+   if (info_ptr != nullptr && (info_ptr->valid & PNG_INFO_sBIT))
    {
       png_warning(png_ptr, "Duplicate sBIT chunk");
       png_crc_finish(png_ptr, length);
@@ -805,7 +805,7 @@ png_handle_cHRM(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       /* Should be an error, but we can cope with it */
       png_warning(png_ptr, "Missing PLTE before cHRM");
 
-   if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_cHRM)
+   if (info_ptr != nullptr && (info_ptr->valid & PNG_INFO_cHRM)
 #if defined(PNG_READ_sRGB_SUPPORTED)
       && !(info_ptr->valid & PNG_INFO_sRGB)
 #endif
@@ -859,7 +859,7 @@ png_handle_cHRM(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 #endif
 
 #if defined(PNG_READ_sRGB_SUPPORTED)
-   if ((info_ptr != NULL) && (info_ptr->valid & PNG_INFO_sRGB))
+   if ((info_ptr != nullptr) && (info_ptr->valid & PNG_INFO_sRGB))
       {
       if (PNG_OUT_OF_RANGE(int_x_white, 31270,  1000) ||
           PNG_OUT_OF_RANGE(int_y_white, 32900,  1000) ||
@@ -923,7 +923,7 @@ png_handle_sRGB(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       /* Should be an error, but we can cope with it */
       png_warning(png_ptr, "Out of place sRGB chunk");
 
-   if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_sRGB))
+   if (info_ptr != nullptr && (info_ptr->valid & PNG_INFO_sRGB))
    {
       png_warning(png_ptr, "Duplicate sRGB chunk");
       png_crc_finish(png_ptr, length);
@@ -950,7 +950,7 @@ png_handle_sRGB(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    }
 
 #if defined(PNG_READ_gAMA_SUPPORTED) && defined(PNG_READ_GAMMA_SUPPORTED)
-   if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_gAMA))
+   if (info_ptr != nullptr && (info_ptr->valid & PNG_INFO_gAMA))
    {
    png_fixed_point igamma;
 #ifdef PNG_FIXED_POINT_SUPPORTED
@@ -980,7 +980,7 @@ png_handle_sRGB(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 
 #ifdef PNG_READ_cHRM_SUPPORTED
 #ifdef PNG_FIXED_POINT_SUPPORTED
-   if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_cHRM))
+   if (info_ptr != nullptr && (info_ptr->valid & PNG_INFO_cHRM))
       if (PNG_OUT_OF_RANGE(info_ptr->int_x_white, 31270,  1000) ||
           PNG_OUT_OF_RANGE(info_ptr->int_y_white, 32900,  1000) ||
           PNG_OUT_OF_RANGE(info_ptr->int_x_red,   64000L, 1000) ||
@@ -1026,7 +1026,7 @@ png_handle_iCCP(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       /* Should be an error, but we can cope with it */
       png_warning(png_ptr, "Out of place iCCP chunk");
 
-   if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_iCCP))
+   if (info_ptr != nullptr && (info_ptr->valid & PNG_INFO_iCCP))
    {
       png_warning(png_ptr, "Duplicate iCCP chunk");
       png_crc_finish(png_ptr, length);
@@ -1050,7 +1050,7 @@ png_handle_iCCP(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    if (png_crc_finish(png_ptr, skip))
    {
       png_free(png_ptr, png_ptr->chunkdata);
-      png_ptr->chunkdata = NULL;
+      png_ptr->chunkdata = nullptr;
       return;
    }
 
@@ -1067,7 +1067,7 @@ png_handle_iCCP(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    if ( profile >= png_ptr->chunkdata + slength - 1)
    {
       png_free(png_ptr, png_ptr->chunkdata);
-      png_ptr->chunkdata = NULL;
+      png_ptr->chunkdata = nullptr;
       png_warning(png_ptr, "Malformed iCCP chunk");
       return;
    }
@@ -1090,7 +1090,7 @@ png_handle_iCCP(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    if ( prefix_length > data_length || profile_length < 4)
    {
       png_free(png_ptr, png_ptr->chunkdata);
-      png_ptr->chunkdata = NULL;
+      png_ptr->chunkdata = nullptr;
       png_warning(png_ptr, "Profile size field missing from iCCP chunk");
       return;
    }
@@ -1108,7 +1108,7 @@ png_handle_iCCP(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    if (profile_size > profile_length)
    {
       png_free(png_ptr, png_ptr->chunkdata);
-      png_ptr->chunkdata = NULL;
+      png_ptr->chunkdata = nullptr;
       png_warning(png_ptr, "Ignoring truncated iCCP profile.");
       return;
    }
@@ -1116,7 +1116,7 @@ png_handle_iCCP(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    png_set_iCCP(png_ptr, info_ptr, png_ptr->chunkdata,
      compression_type, png_ptr->chunkdata + prefix_length, profile_length);
    png_free(png_ptr, png_ptr->chunkdata);
-   png_ptr->chunkdata = NULL;
+   png_ptr->chunkdata = nullptr;
 }
 #endif /* PNG_READ_iCCP_SUPPORTED */
 
@@ -1163,7 +1163,7 @@ png_handle_sPLT(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    if (png_crc_finish(png_ptr, skip))
    {
       png_free(png_ptr, png_ptr->chunkdata);
-      png_ptr->chunkdata = NULL;
+      png_ptr->chunkdata = nullptr;
       return;
    }
 
@@ -1177,7 +1177,7 @@ png_handle_sPLT(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    if (entry_start > (png_bytep)png_ptr->chunkdata + slength - 2)
    {
       png_free(png_ptr, png_ptr->chunkdata);
-      png_ptr->chunkdata = NULL;
+      png_ptr->chunkdata = nullptr;
       png_warning(png_ptr, "malformed sPLT chunk");
       return;
    }
@@ -1190,7 +1190,7 @@ png_handle_sPLT(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    if (data_length % entry_size)
    {
       png_free(png_ptr, png_ptr->chunkdata);
-      png_ptr->chunkdata = NULL;
+      png_ptr->chunkdata = nullptr;
       png_warning(png_ptr, "sPLT chunk has bad length");
       return;
    }
@@ -1204,7 +1204,7 @@ png_handle_sPLT(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    }
    new_palette.entries = (png_sPLT_entryp)png_malloc_warn(
        png_ptr, new_palette.nentries * png_sizeof(png_sPLT_entry));
-   if (new_palette.entries == NULL)
+   if (new_palette.entries == nullptr)
    {
        png_warning(png_ptr, "sPLT chunk requires too much memory");
        return;
@@ -1260,7 +1260,7 @@ png_handle_sPLT(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    png_set_sPLT(png_ptr, info_ptr, &new_palette, 1);
 
    png_free(png_ptr, png_ptr->chunkdata);
-   png_ptr->chunkdata = NULL;
+   png_ptr->chunkdata = nullptr;
    png_free(png_ptr, new_palette.entries);
 }
 #endif /* PNG_READ_sPLT_SUPPORTED */
@@ -1281,7 +1281,7 @@ png_handle_tRNS(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       png_crc_finish(png_ptr, length);
       return;
    }
-   else if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_tRNS))
+   else if (info_ptr != nullptr && (info_ptr->valid & PNG_INFO_tRNS))
    {
       png_warning(png_ptr, "Duplicate tRNS chunk");
       png_crc_finish(png_ptr, length);
@@ -1384,7 +1384,7 @@ png_handle_bKGD(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       png_crc_finish(png_ptr, length);
       return;
    }
-   else if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_bKGD))
+   else if (info_ptr != nullptr && (info_ptr->valid & PNG_INFO_bKGD))
    {
       png_warning(png_ptr, "Duplicate bKGD chunk");
       png_crc_finish(png_ptr, length);
@@ -1472,7 +1472,7 @@ png_handle_hIST(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       png_crc_finish(png_ptr, length);
       return;
    }
-   else if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_hIST))
+   else if (info_ptr != nullptr && (info_ptr->valid & PNG_INFO_hIST))
    {
       png_warning(png_ptr, "Duplicate hIST chunk");
       png_crc_finish(png_ptr, length);
@@ -1521,7 +1521,7 @@ png_handle_pHYs(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       png_crc_finish(png_ptr, length);
       return;
    }
-   else if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_pHYs))
+   else if (info_ptr != nullptr && (info_ptr->valid & PNG_INFO_pHYs))
    {
       png_warning(png_ptr, "Duplicate pHYs chunk");
       png_crc_finish(png_ptr, length);
@@ -1564,7 +1564,7 @@ png_handle_oFFs(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       png_crc_finish(png_ptr, length);
       return;
    }
-   else if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_oFFs))
+   else if (info_ptr != nullptr && (info_ptr->valid & PNG_INFO_oFFs))
    {
       png_warning(png_ptr, "Duplicate oFFs chunk");
       png_crc_finish(png_ptr, length);
@@ -1611,7 +1611,7 @@ png_handle_pCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       png_crc_finish(png_ptr, length);
       return;
    }
-   else if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_pCAL))
+   else if (info_ptr != nullptr && (info_ptr->valid & PNG_INFO_pCAL))
    {
       png_warning(png_ptr, "Duplicate pCAL chunk");
       png_crc_finish(png_ptr, length);
@@ -1622,7 +1622,7 @@ png_handle_pCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       length + 1);
    png_free(png_ptr, png_ptr->chunkdata);
    png_ptr->chunkdata = (png_charp)png_malloc_warn(png_ptr, length + 1);
-   if (png_ptr->chunkdata == NULL)
+   if (png_ptr->chunkdata == nullptr)
      {
        png_warning(png_ptr, "No memory for pCAL purpose.");
        return;
@@ -1633,7 +1633,7 @@ png_handle_pCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    if (png_crc_finish(png_ptr, 0))
    {
       png_free(png_ptr, png_ptr->chunkdata);
-      png_ptr->chunkdata = NULL;
+      png_ptr->chunkdata = nullptr;
       return;
    }
 
@@ -1651,7 +1651,7 @@ png_handle_pCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    {
       png_warning(png_ptr, "Invalid pCAL data");
       png_free(png_ptr, png_ptr->chunkdata);
-      png_ptr->chunkdata = NULL;
+      png_ptr->chunkdata = nullptr;
       return;
    }
 
@@ -1672,7 +1672,7 @@ png_handle_pCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    {
       png_warning(png_ptr, "Invalid pCAL parameters for equation type");
       png_free(png_ptr, png_ptr->chunkdata);
-      png_ptr->chunkdata = NULL;
+      png_ptr->chunkdata = nullptr;
       return;
    }
    else if (type >= PNG_EQUATION_LAST)
@@ -1686,10 +1686,10 @@ png_handle_pCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    png_debug(3, "Allocating pCAL parameters array");
    params = (png_charpp)png_malloc_warn(png_ptr,
       (png_uint_32)(nparams * png_sizeof(png_charp))) ;
-   if (params == NULL)
+   if (params == nullptr)
      {
        png_free(png_ptr, png_ptr->chunkdata);
-       png_ptr->chunkdata = NULL;
+       png_ptr->chunkdata = nullptr;
        png_warning(png_ptr, "No memory for pCAL params.");
        return;
      }
@@ -1708,7 +1708,7 @@ png_handle_pCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       {
          png_warning(png_ptr, "Invalid pCAL data");
          png_free(png_ptr, png_ptr->chunkdata);
-         png_ptr->chunkdata = NULL;
+         png_ptr->chunkdata = nullptr;
          png_free(png_ptr, params);
          return;
       }
@@ -1718,7 +1718,7 @@ png_handle_pCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       units, params);
 
    png_free(png_ptr, png_ptr->chunkdata);
-   png_ptr->chunkdata = NULL;
+   png_ptr->chunkdata = nullptr;
    png_free(png_ptr, params);
 }
 #endif
@@ -1749,7 +1749,7 @@ png_handle_sCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       png_crc_finish(png_ptr, length);
       return;
    }
-   else if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_sCAL))
+   else if (info_ptr != nullptr && (info_ptr->valid & PNG_INFO_sCAL))
    {
       png_warning(png_ptr, "Duplicate sCAL chunk");
       png_crc_finish(png_ptr, length);
@@ -1759,7 +1759,7 @@ png_handle_sCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    png_debug1(2, "Allocating and reading sCAL chunk data (%lu bytes)",
       length + 1);
    png_ptr->chunkdata = (png_charp)png_malloc_warn(png_ptr, length + 1);
-   if (png_ptr->chunkdata == NULL)
+   if (png_ptr->chunkdata == nullptr)
    {
       png_warning(png_ptr, "Out of memory while processing sCAL chunk");
       return;
@@ -1770,7 +1770,7 @@ png_handle_sCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    if (png_crc_finish(png_ptr, 0))
    {
       png_free(png_ptr, png_ptr->chunkdata);
-      png_ptr->chunkdata = NULL;
+      png_ptr->chunkdata = nullptr;
       return;
    }
 
@@ -1788,7 +1788,7 @@ png_handle_sCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 #else
 #ifdef PNG_FIXED_POINT_SUPPORTED
    swidth = (png_charp)png_malloc_warn(png_ptr, png_strlen(ep) + 1);
-   if (swidth == NULL)
+   if (swidth == nullptr)
    {
       png_warning(png_ptr, "Out of memory while processing sCAL chunk width");
       return;
@@ -1809,7 +1809,7 @@ png_handle_sCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       png_free(png_ptr, swidth);
 #endif
       png_free(png_ptr, png_ptr->chunkdata);
-      png_ptr->chunkdata = NULL;
+      png_ptr->chunkdata = nullptr;
       return;
    }
 
@@ -1823,7 +1823,7 @@ png_handle_sCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 #else
 #ifdef PNG_FIXED_POINT_SUPPORTED
    sheight = (png_charp)png_malloc_warn(png_ptr, png_strlen(ep) + 1);
-   if (sheight == NULL)
+   if (sheight == nullptr)
    {
       png_warning(png_ptr, "Out of memory while processing sCAL chunk height");
       return;
@@ -1840,7 +1840,7 @@ png_handle_sCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    {
       png_warning(png_ptr, "Invalid sCAL data");
       png_free(png_ptr, png_ptr->chunkdata);
-      png_ptr->chunkdata = NULL;
+      png_ptr->chunkdata = nullptr;
 #if defined(PNG_FIXED_POINT_SUPPORTED) && !defined(PNG_FLOATING_POINT_SUPPORTED)
       png_free(png_ptr, swidth);
       png_free(png_ptr, sheight);
@@ -1858,7 +1858,7 @@ png_handle_sCAL(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 #endif
 
    png_free(png_ptr, png_ptr->chunkdata);
-   png_ptr->chunkdata = NULL;
+   png_ptr->chunkdata = nullptr;
 #if defined(PNG_FIXED_POINT_SUPPORTED) && !defined(PNG_FLOATING_POINT_SUPPORTED)
    png_free(png_ptr, swidth);
    png_free(png_ptr, sheight);
@@ -1877,7 +1877,7 @@ png_handle_tIME(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 
    if (!(png_ptr->mode & PNG_HAVE_IHDR))
       png_error(png_ptr, "Out of place tIME chunk");
-   else if (info_ptr != NULL && (info_ptr->valid & PNG_INFO_tIME))
+   else if (info_ptr != nullptr && (info_ptr->valid & PNG_INFO_tIME))
    {
       png_warning(png_ptr, "Duplicate tIME chunk");
       png_crc_finish(png_ptr, length);
@@ -1942,7 +1942,7 @@ png_handle_tEXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    png_free(png_ptr, png_ptr->chunkdata);
 
    png_ptr->chunkdata = (png_charp)png_malloc_warn(png_ptr, length + 1);
-   if (png_ptr->chunkdata == NULL)
+   if (png_ptr->chunkdata == nullptr)
    {
      png_warning(png_ptr, "No memory to process text chunk.");
      return;
@@ -1953,7 +1953,7 @@ png_handle_tEXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    if (png_crc_finish(png_ptr, skip))
    {
       png_free(png_ptr, png_ptr->chunkdata);
-      png_ptr->chunkdata = NULL;
+      png_ptr->chunkdata = nullptr;
       return;
    }
 
@@ -1969,18 +1969,18 @@ png_handle_tEXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 
    text_ptr = (png_textp)png_malloc_warn(png_ptr,
       (png_uint_32)png_sizeof(png_text));
-   if (text_ptr == NULL)
+   if (text_ptr == nullptr)
    {
      png_warning(png_ptr, "Not enough memory to process text chunk.");
      png_free(png_ptr, png_ptr->chunkdata);
-     png_ptr->chunkdata = NULL;
+     png_ptr->chunkdata = nullptr;
      return;
    }
    text_ptr->compression = PNG_TEXT_COMPRESSION_NONE;
    text_ptr->key = key;
 #ifdef PNG_iTXt_SUPPORTED
-   text_ptr->lang = NULL;
-   text_ptr->lang_key = NULL;
+   text_ptr->lang = nullptr;
+   text_ptr->lang_key = nullptr;
    text_ptr->itxt_length = 0;
 #endif
    text_ptr->text = text;
@@ -1989,7 +1989,7 @@ png_handle_tEXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    ret = png_set_text_2(png_ptr, info_ptr, text_ptr, 1);
 
    png_free(png_ptr, png_ptr->chunkdata);
-   png_ptr->chunkdata = NULL;
+   png_ptr->chunkdata = nullptr;
    png_free(png_ptr, text_ptr);
    if (ret)
      png_warning(png_ptr, "Insufficient memory to process text chunk.");
@@ -2029,7 +2029,7 @@ png_handle_zTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 
    png_free(png_ptr, png_ptr->chunkdata);
    png_ptr->chunkdata = (png_charp)png_malloc_warn(png_ptr, length + 1);
-   if (png_ptr->chunkdata == NULL)
+   if (png_ptr->chunkdata == nullptr)
    {
      png_warning(png_ptr, "Out of memory processing zTXt chunk.");
      return;
@@ -2039,7 +2039,7 @@ png_handle_zTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    if (png_crc_finish(png_ptr, 0))
    {
       png_free(png_ptr, png_ptr->chunkdata);
-      png_ptr->chunkdata = NULL;
+      png_ptr->chunkdata = nullptr;
       return;
    }
 
@@ -2053,7 +2053,7 @@ png_handle_zTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    {
       png_warning(png_ptr, "Truncated zTXt chunk");
       png_free(png_ptr, png_ptr->chunkdata);
-      png_ptr->chunkdata = NULL;
+      png_ptr->chunkdata = nullptr;
       return;
    }
    else
@@ -2073,18 +2073,18 @@ png_handle_zTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 
    text_ptr = (png_textp)png_malloc_warn(png_ptr,
       (png_uint_32)png_sizeof(png_text));
-   if (text_ptr == NULL)
+   if (text_ptr == nullptr)
    {
      png_warning(png_ptr, "Not enough memory to process zTXt chunk.");
      png_free(png_ptr, png_ptr->chunkdata);
-     png_ptr->chunkdata = NULL;
+     png_ptr->chunkdata = nullptr;
      return;
    }
    text_ptr->compression = comp_type;
    text_ptr->key = png_ptr->chunkdata;
 #ifdef PNG_iTXt_SUPPORTED
-   text_ptr->lang = NULL;
-   text_ptr->lang_key = NULL;
+   text_ptr->lang = nullptr;
+   text_ptr->lang_key = nullptr;
    text_ptr->itxt_length = 0;
 #endif
    text_ptr->text = png_ptr->chunkdata + prefix_len;
@@ -2094,7 +2094,7 @@ png_handle_zTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 
    png_free(png_ptr, text_ptr);
    png_free(png_ptr, png_ptr->chunkdata);
-   png_ptr->chunkdata = NULL;
+   png_ptr->chunkdata = nullptr;
    if (ret)
      png_error(png_ptr, "Insufficient memory to store zTXt chunk.");
 }
@@ -2134,7 +2134,7 @@ png_handle_iTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 
    png_free(png_ptr, png_ptr->chunkdata);
    png_ptr->chunkdata = (png_charp)png_malloc_warn(png_ptr, length + 1);
-   if (png_ptr->chunkdata == NULL)
+   if (png_ptr->chunkdata == nullptr)
    {
      png_warning(png_ptr, "No memory to process iTXt chunk.");
      return;
@@ -2144,7 +2144,7 @@ png_handle_iTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    if (png_crc_finish(png_ptr, 0))
    {
       png_free(png_ptr, png_ptr->chunkdata);
-      png_ptr->chunkdata = NULL;
+      png_ptr->chunkdata = nullptr;
       return;
    }
 
@@ -2163,7 +2163,7 @@ png_handle_iTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    {
       png_warning(png_ptr, "Truncated iTXt chunk");
       png_free(png_ptr, png_ptr->chunkdata);
-      png_ptr->chunkdata = NULL;
+      png_ptr->chunkdata = nullptr;
       return;
    }
    else
@@ -2180,7 +2180,7 @@ png_handle_iTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    {
       png_warning(png_ptr, "Truncated iTXt chunk");
       png_free(png_ptr, png_ptr->chunkdata);
-      png_ptr->chunkdata = NULL;
+      png_ptr->chunkdata = nullptr;
       return;
    }
 
@@ -2191,7 +2191,7 @@ png_handle_iTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
    {
       png_warning(png_ptr, "Malformed iTXt chunk");
       png_free(png_ptr, png_ptr->chunkdata);
-      png_ptr->chunkdata = NULL;
+      png_ptr->chunkdata = nullptr;
       return;
    }
 
@@ -2205,11 +2205,11 @@ png_handle_iTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
        data_len = png_strlen(png_ptr->chunkdata + prefix_len);
    text_ptr = (png_textp)png_malloc_warn(png_ptr,
       (png_uint_32)png_sizeof(png_text));
-   if (text_ptr == NULL)
+   if (text_ptr == nullptr)
    {
      png_warning(png_ptr, "Not enough memory to process iTXt chunk.");
      png_free(png_ptr, png_ptr->chunkdata);
-     png_ptr->chunkdata = NULL;
+     png_ptr->chunkdata = nullptr;
      return;
    }
    text_ptr->compression = (int)comp_flag + 1;
@@ -2224,7 +2224,7 @@ png_handle_iTXt(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 
    png_free(png_ptr, text_ptr);
    png_free(png_ptr, png_ptr->chunkdata);
-   png_ptr->chunkdata = NULL;
+   png_ptr->chunkdata = nullptr;
    if (ret)
      png_error(png_ptr, "Insufficient memory to store iTXt chunk.");
 }
@@ -2258,7 +2258,7 @@ png_handle_unknown(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
       if (png_handle_as_unknown(png_ptr, png_ptr->chunk_name) !=
            PNG_HANDLE_CHUNK_ALWAYS
 #if defined(PNG_READ_USER_CHUNKS_SUPPORTED)
-           && png_ptr->read_user_chunk_fn == NULL
+           && png_ptr->read_user_chunk_fn == nullptr
 #endif
         )
 #endif
@@ -2268,7 +2268,7 @@ png_handle_unknown(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 #if defined(PNG_READ_UNKNOWN_CHUNKS_SUPPORTED)
    if ((png_ptr->flags & PNG_FLAG_KEEP_UNKNOWN_CHUNKS)
 #if defined(PNG_READ_USER_CHUNKS_SUPPORTED)
-       || (png_ptr->read_user_chunk_fn != NULL)
+       || (png_ptr->read_user_chunk_fn != nullptr)
 #endif
         )
    {
@@ -2286,14 +2286,14 @@ png_handle_unknown(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
        png_ptr->unknown_chunk.name[png_sizeof(png_ptr->unknown_chunk.name)-1] = '\0';
        png_ptr->unknown_chunk.size = (png_size_t)length;
        if (length == 0)
-         png_ptr->unknown_chunk.data = NULL;
+         png_ptr->unknown_chunk.data = nullptr;
        else
        {
          png_ptr->unknown_chunk.data = (png_bytep)png_malloc(png_ptr, length);
          png_crc_read(png_ptr, (png_bytep)png_ptr->unknown_chunk.data, length);
        }
 #if defined(PNG_READ_USER_CHUNKS_SUPPORTED)
-       if (png_ptr->read_user_chunk_fn != NULL)
+       if (png_ptr->read_user_chunk_fn != nullptr)
        {
           /* Callback to user unknown chunk handler */
           int ret;
@@ -2317,7 +2317,7 @@ png_handle_unknown(png_structp png_ptr, png_infop info_ptr, png_uint_32 length)
 #endif
        png_set_unknown_chunks(png_ptr, info_ptr, &png_ptr->unknown_chunk, 1);
        png_free(png_ptr, png_ptr->unknown_chunk.data);
-       png_ptr->unknown_chunk.data = NULL;
+       png_ptr->unknown_chunk.data = nullptr;
    }
    else
 #endif
@@ -2580,7 +2580,7 @@ png_do_read_interlace(png_structp png_ptr)
 #endif
 
    png_debug(1, "in png_do_read_interlace");
-   if (row != NULL && row_info != NULL)
+   if (row != nullptr && row_info != nullptr)
    {
       png_uint_32 final_width;
 

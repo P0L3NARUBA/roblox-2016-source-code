@@ -55,9 +55,9 @@ namespace {
 class lower_clip_distance_visitor : public ir_rvalue_visitor {
 public:
    explicit lower_clip_distance_visitor(gl_shader_stage shader_stage)
-      : progress(false), old_clip_distance_1d_var(NULL),
-        old_clip_distance_2d_var(NULL), new_clip_distance_1d_var(NULL),
-        new_clip_distance_2d_var(NULL), shader_stage(shader_stage)
+      : progress(false), old_clip_distance_1d_var(nullptr),
+        old_clip_distance_2d_var(nullptr), new_clip_distance_1d_var(nullptr),
+        new_clip_distance_2d_var(nullptr), shader_stage(shader_stage)
    {
    }
 
@@ -127,7 +127,7 @@ lower_clip_distance_visitor::visit(ir_variable *ir)
       unsigned new_size = (ir->type->array_size() + 3) / 4;
 
       /* Clone the old var so that we inherit all of its properties */
-      this->new_clip_distance_1d_var = ir->clone(ralloc_parent(ir), NULL);
+      this->new_clip_distance_1d_var = ir->clone(ralloc_parent(ir), nullptr);
 
       /* And change the properties that we need to change */
       this->new_clip_distance_1d_var->name
@@ -152,7 +152,7 @@ lower_clip_distance_visitor::visit(ir_variable *ir)
       unsigned new_size = (ir->type->element_type()->array_size() + 3) / 4;
 
       /* Clone the old var so that we inherit all of its properties */
-      this->new_clip_distance_2d_var = ir->clone(ralloc_parent(ir), NULL);
+      this->new_clip_distance_2d_var = ir->clone(ralloc_parent(ir), nullptr);
 
       /* And change the properties that we need to change */
       this->new_clip_distance_2d_var->name
@@ -243,7 +243,7 @@ lower_clip_distance_visitor::is_clip_distance_vec8(ir_rvalue *ir)
    /* Note that geometry shaders contain gl_ClipDistance both as an input
     * (which is a 2D array) and an output (which is a 1D array), so it's
     * possible for both this->old_clip_distance_1d_var and
-    * this->old_clip_distance_2d_var to be non-NULL in the same shader.
+    * this->old_clip_distance_2d_var to be non-nullptr in the same shader.
     */
 
    if (this->old_clip_distance_1d_var) {
@@ -274,7 +274,7 @@ lower_clip_distance_visitor::is_clip_distance_vec8(ir_rvalue *ir)
  * - gl_ClipDistance    => gl_ClipDistanceMESA    (if gl_ClipDistance is 1D)
  * - gl_ClipDistance[i] => gl_ClipDistanceMESA[i] (if gl_ClipDistance is 2D)
  *
- * Otherwise return NULL.
+ * Otherwise return nullptr.
  */
 ir_rvalue *
 lower_clip_distance_visitor::lower_clip_distance_vec8(ir_rvalue *ir)
@@ -301,18 +301,18 @@ lower_clip_distance_visitor::lower_clip_distance_vec8(ir_rvalue *ir)
          }
       }
    }
-   return NULL;
+   return nullptr;
 }
 
 
 void
 lower_clip_distance_visitor::handle_rvalue(ir_rvalue **rv)
 {
-   if (*rv == NULL)
+   if (*rv == nullptr)
       return;
 
    ir_dereference_array *const array_deref = (*rv)->as_dereference_array();
-   if (array_deref == NULL)
+   if (array_deref == nullptr)
       return;
 
    /* Replace any expression that indexes one of the floats in gl_ClipDistance
@@ -321,7 +321,7 @@ lower_clip_distance_visitor::handle_rvalue(ir_rvalue **rv)
     */
    ir_rvalue *lowered_vec8 =
       this->lower_clip_distance_vec8(array_deref->array);
-   if (lowered_vec8 != NULL) {
+   if (lowered_vec8 != nullptr) {
       this->progress = true;
       ir_rvalue *array_index;
       ir_rvalue *swizzle_index;
@@ -358,7 +358,7 @@ lower_clip_distance_visitor::fix_lhs(ir_assignment *ir)
       ir_dereference *const new_lhs = (ir_dereference *) expr->operands[0];
       ir->rhs = new(mem_ctx) ir_expression(ir_triop_vector_insert,
 					   glsl_type::vec4_type,
-					   new_lhs->clone(mem_ctx, NULL),
+					   new_lhs->clone(mem_ctx, nullptr),
 					   ir->rhs,
 					   expr->operands[1]);
       ir->set_lhs(new_lhs);
@@ -402,9 +402,9 @@ lower_clip_distance_visitor::visit_leave(ir_assignment *ir)
       int array_size = ir->lhs->type->array_size();
       for (int i = 0; i < array_size; ++i) {
          ir_dereference_array *new_lhs = new(ctx) ir_dereference_array(
-            ir->lhs->clone(ctx, NULL), new(ctx) ir_constant(i));
+            ir->lhs->clone(ctx, nullptr), new(ctx) ir_constant(i));
          ir_dereference_array *new_rhs = new(ctx) ir_dereference_array(
-            ir->rhs->clone(ctx, NULL), new(ctx) ir_constant(i));
+            ir->rhs->clone(ctx, nullptr), new(ctx) ir_constant(i));
          this->handle_rvalue((ir_rvalue **) &new_rhs);
 
          /* Handle the LHS after creating the new assignment.  This must
@@ -509,7 +509,7 @@ lower_clip_distance_visitor::visit_leave(ir_call *ir)
              */
             ir_assignment *new_assignment = new(ctx) ir_assignment(
                new(ctx) ir_dereference_variable(temp_clip_distance),
-               actual_param->clone(ctx, NULL));
+               actual_param->clone(ctx, nullptr));
             this->base_ir->insert_before(new_assignment);
             this->visit_new_assignment(new_assignment);
          }
@@ -521,7 +521,7 @@ lower_clip_distance_visitor::visit_leave(ir_call *ir)
              * afterwards to make sure it gets lowered.
              */
             ir_assignment *new_assignment = new(ctx) ir_assignment(
-               actual_param->clone(ctx, NULL),
+               actual_param->clone(ctx, nullptr),
                new(ctx) ir_dereference_variable(temp_clip_distance));
             this->base_ir->insert_after(new_assignment);
             this->visit_new_assignment(new_assignment);

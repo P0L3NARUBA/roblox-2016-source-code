@@ -102,7 +102,7 @@ BOOL get_status_path(hOBJ hpath, OSTATUS *status)
 			spline = (lpGEO_SPLINE)obj->geo_data;
 			*status = ST_SIMPLE;
 			if (spline->type & SPLY_CLOSE) *status |= ST_CLOSE;
-			if (!set_flat_on_path(hpath, NULL)) return FALSE;
+			if (!set_flat_on_path(hpath, nullptr)) return FALSE;
 			obj = (lpOBJ)hpath;
 			*status |= (obj->status & ST_FLAT);
 			break;
@@ -111,7 +111,7 @@ BOOL get_status_path(hOBJ hpath, OSTATUS *status)
 			*status = (OSTATUS)(obj->status & (ST_FLAT | ST_SIMPLE | ST_CLOSE));
 			break;
 		default:
-			put_message(MSG_BAD_OBJ_FOR_PATH,NULL, 0);
+			put_message(MSG_BAD_OBJ_FOR_PATH,nullptr, 0);
 			return FALSE;
 	}
 	return TRUE;
@@ -134,7 +134,7 @@ BOOL get_flat_path(hOBJ hpath)
 		case OPATH:
 			return (status & ST_FLAT) ? TRUE : FALSE;
 		case OSPLINE:
-			return (status & ST_FLAT) ? TRUE : FALSE;//set_flat_on_path(hpath, NULL);
+			return (status & ST_FLAT) ? TRUE : FALSE;//set_flat_on_path(hpath, nullptr);
 	}
 	return FALSE;
 }
@@ -200,13 +200,13 @@ hOBJ create_path_by_point(lpD_POINT p, short num)
 	lpGEO_LINE	geo_line;
 	OSCAN_COD		cod;
 
-	if ( (obj_path = (OBJ*)o_alloc(OPATH)) == NULL)	return FALSE;
+	if ( (obj_path = (OBJ*)o_alloc(OPATH)) == nullptr)	return FALSE;
 	geo_path = (lpGEO_PATH)(obj_path->geo_data);
 	o_hcunit(geo_path->matr);
 	init_listh(&(geo_path->listh));
 	for (i=0; i < num-1; i++) {					
 	 if (!dpoint_eq(&p[i], &p[i+1], eps_d)) {
-		 if((obj_line = (OBJ*)o_alloc(OLINE)) == NULL) goto err;
+		 if((obj_line = (OBJ*)o_alloc(OLINE)) == nullptr) goto err;
 		 obj_line->hhold = obj_path;
 		 geo_line = (lpGEO_LINE)(obj_line->geo_data);
 		 geo_line->v1 = p[i];
@@ -225,19 +225,19 @@ hOBJ create_path_by_point(lpD_POINT p, short num)
 	}
 	else
 	{
-		if (set_flat_on_path(obj_path, NULL))
+		if (set_flat_on_path(obj_path, nullptr))
 			obj_path->status |= ST_FLAT;
 		else      
 			obj_path->status &= ~ST_FLAT;
 	}
-	//if (!set_flat_on_path(obj_path, NULL)) goto err;
-	if ((cod = test_self_cross_path(obj_path,NULL)) == OSFALSE) goto err;
+	//if (!set_flat_on_path(obj_path, nullptr)) goto err;
+	if ((cod = test_self_cross_path(obj_path,nullptr)) == OSFALSE) goto err;
 	if (cod == OSTRUE) {
 		obj_path->status |= ST_SIMPLE;
 	}
 
 	return obj_path;
 err:
-	o_free(obj_path, NULL);
-	return NULL;
+	o_free(obj_path, nullptr);
+	return nullptr;
 }

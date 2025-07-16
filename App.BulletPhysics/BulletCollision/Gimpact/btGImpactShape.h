@@ -331,7 +331,7 @@ public:
 
 		CompoundPrimitiveManager()
 		{
-			m_compoundShape = NULL;
+			m_compoundShape = nullptr;
 		}
 
 		virtual bool is_trimesh() const
@@ -554,7 +554,7 @@ public:
 
 		TrimeshPrimitiveManager()
 		{
-			m_meshInterface = NULL;
+			m_meshInterface = nullptr;
 			m_part = 0;
 			m_margin = 0.01f;
 			m_scale = btVector3(1.f,1.f,1.f);
@@ -626,7 +626,7 @@ public:
 				return;
 			}
 			m_meshInterface->unLockReadOnlyVertexBase(m_part);
-			vertexbase = NULL;
+			vertexbase = nullptr;
 			m_lock_count = 0;
 		}
 
@@ -768,7 +768,7 @@ public:
 	{
         (void) index;
 		btAssert(0);
-		return NULL;
+		return nullptr;
 	}
 
 
@@ -778,7 +778,7 @@ public:
 	{
         (void) index;
 		btAssert(0);
-		return NULL;
+		return nullptr;
 	}
 
 	//! Gets the children transform
@@ -1029,7 +1029,7 @@ public:
 	virtual const btPrimitiveManagerBase * getPrimitiveManager()  const
 	{
 		btAssert(0);
-		return NULL;
+		return nullptr;
 	}
 
 
@@ -1102,7 +1102,7 @@ public:
 	{
         (void) index;
 		btAssert(0);
-		return NULL;
+		return nullptr;
 	}
 
 
@@ -1111,7 +1111,7 @@ public:
 	{
         (void) index;
 		btAssert(0);
-		return NULL;
+		return nullptr;
 	}
 
 	//! Gets the children transform

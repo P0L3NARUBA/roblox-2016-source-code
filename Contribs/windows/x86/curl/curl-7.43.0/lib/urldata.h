@@ -581,7 +581,7 @@ struct Curl_async {
 #define SECONDARYSOCKET 1
 
 /* These function pointer types are here only to allow easier typecasting
-   within the source when we need to cast between data pointers (such as NULL)
+   within the source when we need to cast between data pointers (such as nullptr)
    and function pointers. */
 typedef CURLcode (*Curl_do_more_func)(struct connectdata *, int *);
 typedef CURLcode (*Curl_done_func)(struct connectdata *, CURLcode, bool);
@@ -610,11 +610,11 @@ enum upgrade101 {
  */
 struct SingleRequest {
   curl_off_t size;        /* -1 if unknown at this point */
-  curl_off_t *bytecountp; /* return number of bytes read or NULL */
+  curl_off_t *bytecountp; /* return number of bytes read or nullptr */
 
   curl_off_t maxdownload; /* in bytes, the maximum amount of data to fetch,
                              -1 means unlimited */
-  curl_off_t *writebytecountp; /* return number of bytes written or NULL */
+  curl_off_t *writebytecountp; /* return number of bytes written or nullptr */
 
   curl_off_t bytecount;         /* total number of bytes read */
   curl_off_t writebytecount;    /* number of bytes written */
@@ -846,7 +846,7 @@ struct connectdata {
 
   /* 'dns_entry' is the particular host we use. This points to an entry in the
      DNS cache and it will not get pruned while locked. It gets unlocked in
-     Curl_done(). This entry will be NULL if the connection is re-used as then
+     Curl_done(). This entry will be nullptr if the connection is re-used as then
      there is no name resolve done. */
   struct Curl_dns_entry *dns_entry;
 
@@ -1105,7 +1105,7 @@ struct PureInfo {
 
 
 struct Progress {
-  long lastshow; /* time() of the last displayed progress meter or NULL to
+  long lastshow; /* time() of the last displayed progress meter or nullptr to
                     force redraw at next call */
   curl_off_t size_dl; /* total expected size */
   curl_off_t size_ul; /* total expected size */
@@ -1206,7 +1206,7 @@ struct UrlState {
   /* buffers to store authentication data in, as parsed from input options */
   struct timeval keeps_speed; /* for the progress meter really */
 
-  struct connectdata *lastconnect; /* The last connection, NULL if undefined */
+  struct connectdata *lastconnect; /* The last connection, nullptr if undefined */
 
   char *headerbuff; /* allocated buffer to store headers in */
   size_t headersize;   /* size of the allocation */
@@ -1358,7 +1358,7 @@ enum dupstring {
   STRING_KEY_PASSWD,      /* plain text private key password */
   STRING_KEY_TYPE,        /* format for private key (default: PEM) */
   STRING_KRB_LEVEL,       /* krb security level */
-  STRING_NETRC_FILE,      /* if not NULL, use this instead of trying to find
+  STRING_NETRC_FILE,      /* if not nullptr, use this instead of trying to find
                              $HOME/.netrc */
   STRING_PROXY,           /* proxy to use */
   STRING_SET_RANGE,       /* range, if used */
@@ -1427,8 +1427,8 @@ struct UserDefined {
                      this. */
   void *out;         /* CURLOPT_WRITEDATA */
   void *in;          /* CURLOPT_READDATA */
-  void *writeheader; /* write the header to this if non-NULL */
-  void *rtp_out;     /* write RTP to this if non-NULL */
+  void *writeheader; /* write the header to this if non-nullptr */
+  void *rtp_out;     /* write RTP to this if non-nullptr */
   long use_port;     /* which port to use (when not using default) */
   unsigned long httpauth;  /* kind of HTTP authentication to use (bitmask) */
   unsigned long proxyauth; /* kind of proxy authentication to use (bitmask) */
@@ -1452,8 +1452,8 @@ struct UserDefined {
   curl_write_callback fwrite_header; /* function that stores headers */
   curl_write_callback fwrite_rtp;    /* function that stores interleaved RTP */
   curl_read_callback fread_func;     /* function that reads the input */
-  int is_fread_set; /* boolean, has read callback been set to non-NULL? */
-  int is_fwrite_set; /* boolean, has write callback been set to non-NULL? */
+  int is_fread_set; /* boolean, has read callback been set to non-nullptr? */
+  int is_fwrite_set; /* boolean, has write callback been set to non-nullptr? */
   curl_progress_callback fprogress; /* OLD and deprecated progress callback  */
   curl_xferinfo_callback fxferinfo; /* progress callback */
   curl_debug_callback fdebug;      /* function that write informational data */
@@ -1667,10 +1667,10 @@ struct SessionHandle {
   int numsocks;
 
   struct Names dns;
-  struct Curl_multi *multi;    /* if non-NULL, points to the multi handle
+  struct Curl_multi *multi;    /* if non-nullptr, points to the multi handle
                                   struct to which this "belongs" when used by
                                   the multi interface */
-  struct Curl_multi *multi_easy; /* if non-NULL, points to the multi handle
+  struct Curl_multi *multi_easy; /* if non-nullptr, points to the multi handle
                                     struct to which this "belongs" when used
                                     by the easy interface */
   struct Curl_share *share;    /* Share, handles global variable mutexing */

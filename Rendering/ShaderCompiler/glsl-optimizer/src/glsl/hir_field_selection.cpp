@@ -32,7 +32,7 @@ _mesa_ast_field_selection_to_hir(const ast_expression *expr,
 				 struct _mesa_glsl_parse_state *state)
 {
    void *ctx = state;
-   ir_rvalue *result = NULL;
+   ir_rvalue *result = nullptr;
    ir_rvalue *op;
 
    op = expr->subexpressions[0]->hir(instructions, state);
@@ -56,7 +56,7 @@ _mesa_ast_field_selection_to_hir(const ast_expression *expr,
 			  "structure",
 			  expr->primary_expression.identifier);
       }
-   } else if (expr->subexpressions[1] != NULL) {
+   } else if (expr->subexpressions[1] != nullptr) {
       /* Handle "method calls" in GLSL 1.20 - namely, array.length() */
       state->check_version(120, 300, &loc, "methods not supported");
 
@@ -101,7 +101,7 @@ _mesa_ast_field_selection_to_hir(const ast_expression *expr,
       ir_swizzle *swiz = ir_swizzle::create(op,
 					    expr->primary_expression.identifier,
 					    op->type->vector_elements);
-      if (swiz != NULL) {
+      if (swiz != nullptr) {
 	 result = swiz;
       } else {
 	 /* FINISHME: Logging of error messages should be moved into

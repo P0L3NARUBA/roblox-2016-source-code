@@ -132,7 +132,7 @@ Primitive* PrimIterator::findParent(Primitive* p, SearchType searchType)
 		return parent;
 	}
 	else {
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -145,13 +145,13 @@ Primitive* PrimIterator::findFirstChild(Primitive* p, SearchType searchType)
 			return child;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 
 Primitive* PrimIterator::findNextSibling(Primitive* parent, Primitive* sibling, SearchType searchType)
 {
-	Primitive* latched = NULL;
+	Primitive* latched = nullptr;
 
 	for (int i = 0; i < parent->numChildren(); ++i) {
 		Primitive* child = parent->getTypedChild<Primitive>(i);
@@ -167,14 +167,14 @@ Primitive* PrimIterator::findNextSibling(Primitive* parent, Primitive* sibling, 
 			}
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 
 Primitive* PrimIterator::findNextRelative(Primitive* parent, Primitive* p, SearchType searchType)
 {
 	if (!parent) {
-		return NULL;
+		return nullptr;
 	}
 	else if (Primitive* sibling = findNextSibling(parent, p, searchType)) {
 		return sibling;

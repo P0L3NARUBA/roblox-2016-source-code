@@ -24,7 +24,7 @@ static lpD_POINT get_ptr_to_begin(OBJTYPE type, void * geo, UCHAR direct);
 BOOL set_contacts_on_path(hOBJ hobj)
 {
 	SCAN_CONTROL 	sc;
-	CONTACT_DATA	data = {NULL, NULL, 0, 0};
+	CONTACT_DATA	data = {nullptr, nullptr, 0, 0};
 	lpOBJ					obj;
 
 	init_scan(&sc);

@@ -23,7 +23,7 @@ BOOL SGLoadModel(char* name, lpD_POINT p_min, lpD_POINT p_max,
 	if ( !SGLoadHeader(&bd, p_min, p_max, /*pProp,*/ &Header_Version) )	goto err;
 	if (matr) f3d_gabar_project1(matr, p_min, p_max, p_min, p_max);
 	if ( !o_load_list(&bd, &selected, SEL_LIST, &count, Header_Version,
-                    /*((Header_Version>=VER_HEAD_1_4) ?*/ NULL /*: pProp)*/))	goto err;
+                    /*((Header_Version>=VER_HEAD_1_4) ?*/ nullptr /*: pProp)*/))	goto err;
 	if ( file_unit != sgw_unit ) {
 		sgFloat	tmp;
 		MATR		matr;
@@ -78,7 +78,7 @@ BOOL SGLoadHeader(lpBUFFER_DAT bd, lpD_POINT p_min, lpD_POINT p_max, UCHAR* Head
 err:
   /*if(!SPropErrMsgCode)
     SPropErrMsgCode = UNKNOWN_FILE; 
-	put_message(SPropErrMsgCode,	NULL, 0);*/
+	put_message(SPropErrMsgCode,	nullptr, 0);*/
 	return FALSE;
 }
 
@@ -126,7 +126,7 @@ bool sg_save_model(char *name, BOOL sel_flag, int *count,
 		strcpy(tmpFH.signature,SG_FILE_SIGNATURE);
 		tmpFH.major_ver = KERNEL_VERSION_MAJOR;
 		tmpFH.minor_ver = KERNEL_VERSION_MINOR;
-		if (userData==NULL)
+		if (userData==nullptr)
 			tmpFH.userBlockSize = 0;
 		else
 			tmpFH.userBlockSize = userDataSize;

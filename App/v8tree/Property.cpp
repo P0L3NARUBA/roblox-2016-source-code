@@ -359,9 +359,9 @@ bool StringConverter<G3D::Color3>::convertToValue(const std::string& text, G3D::
 		// This is an HTML color: #rrggbb
 		if (text.size()!=7)
 			return false;
-		value[0] = static_cast<float>(strtol(text.substr(1,2).c_str(), NULL, 16))/255.0f; 
-		value[1] = static_cast<float>(strtol(text.substr(3,2).c_str(), NULL, 16))/255.0f; 
-		value[2] = static_cast<float>(strtol(text.substr(5,2).c_str(), NULL, 16))/255.0f; 
+		value[0] = static_cast<float>(strtol(text.substr(1,2).c_str(), nullptr, 16))/255.0f; 
+		value[1] = static_cast<float>(strtol(text.substr(3,2).c_str(), nullptr, 16))/255.0f; 
+		value[2] = static_cast<float>(strtol(text.substr(5,2).c_str(), nullptr, 16))/255.0f; 
 		return true;
 	}
 
@@ -370,9 +370,9 @@ bool StringConverter<G3D::Color3>::convertToValue(const std::string& text, G3D::
 		// This is a color of the form 0xrrggbb
 		if (text.size()!=8)
 			return false;
-		value[0] = static_cast<float>(strtol(text.substr(2,2).c_str(), NULL, 16))/255.0f; 
-		value[1] = static_cast<float>(strtol(text.substr(4,2).c_str(), NULL, 16))/255.0f; 
-		value[2] = static_cast<float>(strtol(text.substr(6,2).c_str(), NULL, 16))/255.0f; 
+		value[0] = static_cast<float>(strtol(text.substr(2,2).c_str(), nullptr, 16))/255.0f; 
+		value[1] = static_cast<float>(strtol(text.substr(4,2).c_str(), nullptr, 16))/255.0f; 
+		value[2] = static_cast<float>(strtol(text.substr(6,2).c_str(), nullptr, 16))/255.0f; 
 		return true;
 	}
 

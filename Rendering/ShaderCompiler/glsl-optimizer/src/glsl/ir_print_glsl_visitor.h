@@ -70,13 +70,13 @@ public:
 	
 	void vasprintf_append(const char *fmt, va_list args)
 	{
-		assert (m_Ptr != NULL);
+		assert (m_Ptr != nullptr);
 		vasprintf_rewrite_tail (&m_Size, fmt, args);
 	}
 	
 	void vasprintf_rewrite_tail (size_t *start, const char *fmt, va_list args)
 	{
-		assert (m_Ptr != NULL);
+		assert (m_Ptr != nullptr);
 		
 		size_t new_length = printf_length(fmt, args);
 		size_t needed_length = m_Size + new_length + 1;

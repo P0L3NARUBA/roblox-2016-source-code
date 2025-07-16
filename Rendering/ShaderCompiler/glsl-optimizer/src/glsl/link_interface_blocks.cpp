@@ -52,7 +52,7 @@ struct interface_block_definition
     */
    explicit interface_block_definition(const ir_variable *var)
       : type(var->get_interface_type()),
-        instance_name(NULL),
+        instance_name(nullptr),
         array_size(-1)
    {
       if (var->is_interface_instance()) {
@@ -69,7 +69,7 @@ struct interface_block_definition
    const glsl_type *type;
 
    /**
-    * For a named interface block, the instance name.  Otherwise NULL.
+    * For a named interface block, the instance name.  Otherwise nullptr.
     */
    const char *instance_name;
 
@@ -108,14 +108,14 @@ intrastage_match(interface_block_definition *a,
    }
 
    /* Presence/absence of interface names must match. */
-   if ((a->instance_name == NULL) != (b->instance_name == NULL))
+   if ((a->instance_name == nullptr) != (b->instance_name == nullptr))
       return false;
 
    /* For uniforms, instance names need not match.  For shader ins/outs,
     * it's not clear from the spec whether they need to match, but
     * Mesa's implementation relies on them matching.
     */
-   if (a->instance_name != NULL && mode != ir_var_uniform &&
+   if (a->instance_name != nullptr && mode != ir_var_uniform &&
        strcmp(a->instance_name, b->instance_name) != 0) {
       return false;
    }
@@ -196,7 +196,7 @@ class interface_block_definitions
 {
 public:
    interface_block_definitions()
-      : mem_ctx(ralloc_context(NULL)),
+      : mem_ctx(ralloc_context(nullptr)),
         ht(hash_table_ctor(0, hash_table_string_hash,
                            hash_table_string_compare))
    {
@@ -210,7 +210,7 @@ public:
 
    /**
     * Lookup the interface definition having the given block name.  Return
-    * NULL if none is found.
+    * nullptr if none is found.
     */
    interface_block_definition *lookup(const char *block_name)
    {
@@ -256,7 +256,7 @@ validate_intrastage_interface_blocks(struct gl_shader_program *prog,
    interface_block_definitions uniform_interfaces;
 
    for (unsigned int i = 0; i < num_shaders; i++) {
-      if (shader_list[i] == NULL)
+      if (shader_list[i] == nullptr)
          continue;
 
       foreach_in_list(ir_instruction, node, shader_list[i]->ir) {
@@ -266,7 +266,7 @@ validate_intrastage_interface_blocks(struct gl_shader_program *prog,
 
          const glsl_type *iface_type = var->get_interface_type();
 
-         if (iface_type == NULL)
+         if (iface_type == nullptr)
             continue;
 
          interface_block_definitions *definitions;
@@ -292,7 +292,7 @@ validate_intrastage_interface_blocks(struct gl_shader_program *prog,
          interface_block_definition *prev_def =
             definitions->lookup(iface_type->name);
 
-         if (prev_def == NULL) {
+         if (prev_def == nullptr) {
             /* This is the first time we've seen the interface, so save
              * it into the appropriate data structure.
              */
@@ -334,7 +334,7 @@ validate_interstage_inout_blocks(struct gl_shader_program *prog,
          definitions.lookup(var->get_interface_type()->name);
 
       /* The consumer doesn't use this output block.  Ignore it. */
-      if (consumer_def == NULL)
+      if (consumer_def == nullptr)
          continue;
 
       const interface_block_definition producer_def(var);
@@ -355,7 +355,7 @@ validate_interstage_uniform_blocks(struct gl_shader_program *prog,
    interface_block_definitions definitions;
 
    for (int i = 0; i < num_stages; i++) {
-      if (stages[i] == NULL)
+      if (stages[i] == nullptr)
          continue;
 
       const gl_shader *stage = stages[i];
@@ -367,7 +367,7 @@ validate_interstage_uniform_blocks(struct gl_shader_program *prog,
          interface_block_definition *old_def =
             definitions.lookup(var->get_interface_type()->name);
          const interface_block_definition new_def(var);
-         if (old_def == NULL) {
+         if (old_def == nullptr) {
             definitions.store(new_def);
          } else {
             /* Interstage uniform matching rules are the same as intrastage

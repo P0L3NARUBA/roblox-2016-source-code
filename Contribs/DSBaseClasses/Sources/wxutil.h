@@ -261,8 +261,8 @@ private:
         iNextPut = iNextGet = 0;
         nMax = n;
         InitializeCriticalSection(&CritSect);
-        hSemPut = CreateSemaphore(NULL, n, n, NULL);
-        hSemGet = CreateSemaphore(NULL, 0, n, NULL);
+        hSemPut = CreateSemaphore(nullptr, n, n, nullptr);
+        hSemGet = CreateSemaphore(nullptr, 0, n, nullptr);
         QueueObjects = new T[n];
     }
 
@@ -379,7 +379,7 @@ void * __stdcall memmoveInternal(void *, const void *, size_t);
 inline void * __cdecl memchrInternal(const void *buf, int chr, size_t cnt)
 {
 #ifdef _X86_
-    void *pRet = NULL;
+    void *pRet = nullptr;
 
     _asm {
         cld                 // make sure we get the direction right
@@ -401,7 +401,7 @@ exit_memchr:
         cnt--;
     }
 
-    return(cnt ? (void *)buf : NULL);
+    return(cnt ? (void *)buf : nullptr);
 #endif
 }
 
@@ -464,7 +464,7 @@ STDAPI FreeBSTR(BSTR* pstr);
 // Return a wide string - allocating memory for it
 // Returns:
 //    S_OK          - no error
-//    E_POINTER     - ppszReturn == NULL
+//    E_POINTER     - ppszReturn == nullptr
 //    E_OUTOFMEMORY - can't allocate memory for returned string
 STDAPI AMGetWideString(LPCWSTR pszString, LPWSTR *ppszReturn);
 
@@ -472,9 +472,9 @@ STDAPI AMGetWideString(LPCWSTR pszString, LPWSTR *ppszReturn);
 DWORD WINAPI WaitDispatchingMessages(
     HANDLE hObject,
     DWORD dwWait,
-    HWND hwnd = NULL,
+    HWND hwnd = nullptr,
     UINT uMsg = 0,
-    HANDLE hEvent = NULL);
+    HANDLE hEvent = nullptr);
 
 // HRESULT_FROM_WIN32 converts ERROR_SUCCESS to a success code, but in
 // our use of HRESULT_FROM_WIN32, it typically means a function failed
@@ -495,34 +495,34 @@ class QzCComPtr
 {
 public:
 	typedef T _PtrClass;
-	QzCComPtr() {p=NULL;}
+	QzCComPtr() {p=nullptr;}
 	QzCComPtr(T* lp)
 	{
-		if ((p = lp) != NULL)
+		if ((p = lp) != nullptr)
 			p->AddRef();
 	}
 	QzCComPtr(const QzCComPtr<T>& lp)
 	{
-		if ((p = lp.p) != NULL)
+		if ((p = lp.p) != nullptr)
 			p->AddRef();
 	}
 	~QzCComPtr() {if (p) p->Release();}
-	void Release() {if (p) p->Release(); p=NULL;}
+	void Release() {if (p) p->Release(); p=nullptr;}
 	operator T*() {return (T*)p;}
-	T& operator*() {ASSERT(p!=NULL); return *p; }
+	T& operator*() {ASSERT(p!=nullptr); return *p; }
 	//The assert on operator& usually indicates a bug.  If this is really
 	//what is needed, however, take the address of the p member explicitly.
-	T** operator&() { ASSERT(p==NULL); return &p; }
-	T* operator->() { ASSERT(p!=NULL); return p; }
+	T** operator&() { ASSERT(p==nullptr); return &p; }
+	T* operator->() { ASSERT(p!=nullptr); return p; }
 	T* operator=(T* lp){return (T*)QzAtlComPtrAssign((IUnknown**)&p, lp);}
 	T* operator=(const QzCComPtr<T>& lp)
 	{
 		return (T*)QzAtlComPtrAssign((IUnknown**)&p, lp.p);
 	}
 #if _MSC_VER>1020
-	bool operator!(){return (p == NULL);}
+	bool operator!(){return (p == nullptr);}
 #else
-	BOOL operator!(){return (p == NULL) ? TRUE : FALSE;}
+	BOOL operator!(){return (p == nullptr) ? TRUE : FALSE;}
 #endif
 	T* p;
 };

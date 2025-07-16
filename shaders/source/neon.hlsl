@@ -1,8 +1,8 @@
 #define GLOBALS
 #define INSTANCED
 
-#include "buffers.h"
-#include "common.h"
+#include "buffers.hlsli"
+#include "common.hlsli"
 
 BasicVertexOutput BasicMaterialVS(InstancedBasicAppData IN) {
     BasicVertexOutput OUT;

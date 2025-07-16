@@ -70,10 +70,10 @@ struct timeval curlx_tvnow(void)
   */
 #ifdef HAVE_GETTIMEOFDAY
   else
-    (void)gettimeofday(&now, NULL);
+    (void)gettimeofday(&now, nullptr);
 #else
   else {
-    now.tv_sec = (long)time(NULL);
+    now.tv_sec = (long)time(nullptr);
     now.tv_usec = 0;
   }
 #endif
@@ -90,7 +90,7 @@ struct timeval curlx_tvnow(void)
   ** forward or backward in time.
   */
   struct timeval now;
-  (void)gettimeofday(&now, NULL);
+  (void)gettimeofday(&now, nullptr);
   return now;
 }
 
@@ -102,7 +102,7 @@ struct timeval curlx_tvnow(void)
   ** time() returns the value of time in seconds since the Epoch.
   */
   struct timeval now;
-  now.tv_sec = (long)time(NULL);
+  now.tv_sec = (long)time(nullptr);
   now.tv_usec = 0;
   return now;
 }

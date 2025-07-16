@@ -141,7 +141,7 @@ CURLcode Curl_output_digest(struct connectdata *conn,
      http://www.fngtps.com/2006/09/http-authentication
   */
 
-  if(authp->iestyle && ((tmp = strchr((char *)uripath, '?')) != NULL)) {
+  if(authp->iestyle && ((tmp = strchr((char *)uripath, '?')) != nullptr)) {
     size_t urilen = tmp - (char *)uripath;
 
     path = (unsigned char *) aprintf("%.*s", urilen, uripath);

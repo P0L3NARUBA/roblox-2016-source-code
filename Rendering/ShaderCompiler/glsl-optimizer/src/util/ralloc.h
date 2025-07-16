@@ -114,9 +114,9 @@ void *rzalloc_size(const void *ctx, size_t size) MALLOCLIKE;
  * memory.  Instead, it resizes it to a 0-byte ralloc context, just like
  * calling ralloc_size(ctx, 0).  This is different from talloc.
  *
- * \param ctx  The context to use for new allocation.  If \p ptr != NULL,
+ * \param ctx  The context to use for new allocation.  If \p ptr != nullptr,
  *             it must be the same as ralloc_parent(\p ptr).
- * \param ptr  Pointer to the memory to be resized.  May be NULL.
+ * \param ptr  Pointer to the memory to be resized.  May be nullptr.
  * \param size The amount of memory to allocate, in bytes.
  */
 void *reralloc_size(const void *ctx, void *ptr, size_t size);
@@ -168,9 +168,9 @@ void *reralloc_size(const void *ctx, void *ptr, size_t size);
  * More than a convenience function, this also checks for integer overflow when
  * multiplying \c sizeof(type) and \p count.  This is necessary for security.
  *
- * \param ctx   The context to use for new allocation.  If \p ptr != NULL,
+ * \param ctx   The context to use for new allocation.  If \p ptr != nullptr,
  *              it must be the same as ralloc_parent(\p ptr).
- * \param ptr   Pointer to the array to be resized.  May be NULL.
+ * \param ptr   Pointer to the array to be resized.  May be nullptr.
  * \param type  The element type.
  * \param count The number of elements to allocate.
  */
@@ -207,9 +207,9 @@ void *rzalloc_array_size(const void *ctx, size_t size, size_t count) MALLOCLIKE;
  * More than a convenience function, this also checks for integer overflow when
  * multiplying \c sizeof(type) and \p count.  This is necessary for security.
  *
- * \param ctx   The context to use for new allocation.  If \p ptr != NULL,
+ * \param ctx   The context to use for new allocation.  If \p ptr != nullptr,
  *              it must be the same as ralloc_parent(\p ptr).
- * \param ptr   Pointer to the array to be resized.  May be NULL.
+ * \param ptr   Pointer to the array to be resized.  May be nullptr.
  * \param size  The size of an individual element.
  * \param count The number of elements to allocate.
  *
@@ -428,7 +428,7 @@ public:                                                                  \
    static void* operator new(size_t size, void *mem_ctx)                 \
    {                                                                     \
       void *p = ralloc_size(mem_ctx, size);                              \
-      assert(p != NULL);                                                 \
+      assert(p != nullptr);                                                 \
       if (!HAS_TRIVIAL_DESTRUCTOR(TYPE))                                 \
          ralloc_set_destructor(p, _ralloc_destructor);                   \
       return p;                                                          \
@@ -441,7 +441,7 @@ public:                                                                  \
        * not called again.                                               \
        */                                                                \
       if (!HAS_TRIVIAL_DESTRUCTOR(TYPE))                                 \
-         ralloc_set_destructor(p, NULL);                                 \
+         ralloc_set_destructor(p, nullptr);                                 \
       ralloc_free(p);                                                    \
    }
 

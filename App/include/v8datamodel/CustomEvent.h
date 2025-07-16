@@ -39,7 +39,7 @@ private:
 					++itr) {
 				shared_ptr<CustomEventReceiver> receiver = itr->lock();
 				if (receiver) {
-					receiver->setSource(NULL);
+					receiver->setSource(nullptr);
 				}
 			}
 		}
@@ -65,7 +65,7 @@ public:
 	rbx::signal<void(shared_ptr<Instance>)> receiverDisconnected;
 
 	/*override*/ virtual bool askSetParent(const Instance* instance) const {
-		return Instance::fastDynamicCast<PartInstance>(instance) != NULL;
+		return Instance::fastDynamicCast<PartInstance>(instance) != nullptr;
 	}
 
 	/*override*/ virtual bool askForbidChild(const Instance* instance) const {

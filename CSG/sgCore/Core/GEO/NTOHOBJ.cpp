@@ -6,7 +6,7 @@ lpD_POINT near_to_hobj(hOBJ hobj, OBJTYPE type, lpD_POINT vp, lpD_POINT p)
 GEO_OBJ   geo;
 
   if(!true_geo_info(hobj, &type, &geo))
-		return NULL;
+		return nullptr;
   return near_to_geo_obj(type, &geo, vp, p);
 }
 
@@ -26,6 +26,6 @@ BOOL flag_arc;
 		case OARC:
       return near_3d_pa((lpGEO_ARC)geo, flag_arc, vp, p);
 		default:
-			return NULL;
+			return nullptr;
 	}
 }

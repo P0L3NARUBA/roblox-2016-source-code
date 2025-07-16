@@ -96,7 +96,7 @@ unsigned char	OEM2ANSI_Nice[256] = {
 char z_tolower(char c){
     
 char* d;
-  if(c && (d = strchr(rus_up, c)) != NULL)
+  if(c && (d = strchr(rus_up, c)) != nullptr)
 		return rus_dn[(short)(d - rus_up)];
 	if(isascii(c))if(isupper(c))
 		return (BYTE)(_tolower(c));
@@ -106,7 +106,7 @@ char* d;
 char z_toupper(char c){
    
 char* d;
-  if(c && (d = strchr(rus_dn, c)) != NULL)
+  if(c && (d = strchr(rus_dn, c)) != nullptr)
     return rus_up[(short)(d - rus_dn)];
   if(isascii(c))if(islower(c))
     return (BYTE)(_toupper(c));
@@ -115,14 +115,14 @@ char* d;
 
 BOOL z_isupper(char c){
     
-	if(c && strchr(rus_up, c) != NULL) return TRUE;
+	if(c && strchr(rus_up, c) != nullptr) return TRUE;
 	if(isascii(c))if(isupper(c))        return TRUE;
 	return FALSE;
 }
 
 BOOL z_islower(char c){
      
-	if(c && strchr(rus_dn, c) != NULL) return TRUE;
+	if(c && strchr(rus_dn, c) != nullptr) return TRUE;
 	if(isascii(c))if(islower(c))        return TRUE;
   return FALSE;
 }
@@ -279,7 +279,7 @@ sgFloat wnum;
 			continue;
 		}
     if(*inp == '.'){
-      if(flagpoint) return NULL;
+      if(flagpoint) return nullptr;
 			else {
        flagpoint = TRUE;
 			 continue;
@@ -294,10 +294,10 @@ sgFloat wnum;
 		}
 		break;
 	}
-  if(inp == txtnum || !flagd) return NULL;   //  
-  if(flagp && !flagdp)        return NULL;   //    
+  if(inp == txtnum || !flagd) return nullptr;   //  
+  if(flagp && !flagdp)        return nullptr;   //    
   ch = *inp; *inp = 0; wnum = atof(txtnum); *inp = ch;
-  if(wnum == 0. && flagnonul) return NULL;   //   atof
+  if(wnum == 0. && flagnonul) return nullptr;   //   atof
   *num = wnum;
 	return inp;
 }
@@ -459,7 +459,7 @@ char c, *s, *sb, *se, *sout;
   if(!(lspace = size - lenstr)) goto met; //    
 
   s = sb; nspace = 0;
-  while((s = strchr(s, ' ')) != NULL){ //  
+  while((s = strchr(s, ' ')) != nullptr){ //  
     nspace++;           //   
     while(*s == ' ') s++;
   }

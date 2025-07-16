@@ -360,14 +360,14 @@ void UserInput::sendMouseEvent(RBX::InputObject::UserInputType mouseEventType,
 
 	
 	if( RBX::UserInputService* userInputService = RBX::ServiceProvider::find<RBX::UserInputService>(dataModel.get()) )
-		userInputService->fireInputEvent(mouseEventObject, NULL);
+		userInputService->fireInputEvent(mouseEventObject, nullptr);
 		
 }
 
 void UserInput::sendEvent(shared_ptr<RBX::InputObject> event, bool processed)
 {
 	if( RBX::UserInputService* userInputService = RBX::ServiceProvider::find<RBX::UserInputService>(dataModel.get()) )
-		userInputService->fireInputEvent(event, NULL, processed);
+		userInputService->fireInputEvent(event, nullptr, processed);
 }
 
 bool UserInput::isFullScreenMode() const

@@ -60,7 +60,7 @@ STDMETHODIMP CPersistStream::NonDelegatingQueryInterface(REFIID riid, void **ppv
 HRESULT CPersistStream::WriteToStream(IStream *pStream)
 {
     // You can override this to do things like
-    // hr = pStream->Write(MyStructure, sizeof(MyStructure), NULL);
+    // hr = pStream->Write(MyStructure, sizeof(MyStructure), nullptr);
 
     return NOERROR;
 }
@@ -70,7 +70,7 @@ HRESULT CPersistStream::WriteToStream(IStream *pStream)
 HRESULT CPersistStream::ReadFromStream(IStream * pStream)
 {
     // You can override this to do things like
-    // hr = pStream->Read(MyStructure, sizeof(MyStructure), NULL);
+    // hr = pStream->Read(MyStructure, sizeof(MyStructure), nullptr);
 
     return NOERROR;
 }
@@ -129,7 +129,7 @@ STDAPI WriteInt(IStream *pIStream, int n)
 {
     WCHAR Buff[13];  // Allows for trailing null that we don't write
     wsprintfW(Buff, L"%011d ",n);
-    return pIStream->Write(&(Buff[0]), 12*sizeof(WCHAR), NULL);
+    return pIStream->Write(&(Buff[0]), 12*sizeof(WCHAR), nullptr);
 } // WriteInt
 
 
@@ -147,14 +147,14 @@ STDAPI_(int) ReadInt(IStream *pIStream, HRESULT &hr)
     unsigned int n = 0;    // result wil be n*Sign
     WCHAR wch;
 
-    hr = pIStream->Read( &wch, sizeof(wch), NULL);
+    hr = pIStream->Read( &wch, sizeof(wch), nullptr);
     if (FAILED(hr)) {
         return 0;
     }
 
     if (wch==L'-'){
         Sign = -1;
-        hr = pIStream->Read( &wch, sizeof(wch), NULL);
+        hr = pIStream->Read( &wch, sizeof(wch), nullptr);
         if (FAILED(hr)) {
             return 0;
         }
@@ -175,7 +175,7 @@ STDAPI_(int) ReadInt(IStream *pIStream, HRESULT &hr)
             return 0;
         }
 
-        hr = pIStream->Read( &wch, sizeof(wch), NULL);
+        hr = pIStream->Read( &wch, sizeof(wch), nullptr);
         if (FAILED(hr)) {
             return 0;
         }

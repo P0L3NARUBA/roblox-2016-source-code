@@ -115,8 +115,8 @@ local int base_dist[D_CODES];
 #endif /* GEN_TREES_H */
 
 struct static_tree_desc_s {
-    const ct_data *static_tree;  /* static tree or NULL */
-    const intf *extra_bits;      /* extra bits for each code or NULL */
+    const ct_data *static_tree;  /* static tree or nullptr */
+    const intf *extra_bits;      /* extra bits for each code or nullptr */
     int     extra_base;          /* base index for extra_bits */
     int     elems;               /* max number of elements in the tree */
     int     max_length;          /* max bit length for the codes */
@@ -330,7 +330,7 @@ void gen_trees_header()
     FILE *header = fopen("trees.h", "w");
     int i;
 
-    Assert (header != NULL, "Can't open trees.h");
+    Assert (header != nullptr, "Can't open trees.h");
     fprintf(header,
             "/* header created automatically with -DGEN_TREES_H */\n\n");
 
@@ -906,7 +906,7 @@ void ZLIB_INTERNAL _tr_align(s)
  */
 void ZLIB_INTERNAL _tr_flush_block(s, buf, stored_len, last)
     deflate_state *s;
-    charf *buf;       /* input block, or NULL if too old */
+    charf *buf;       /* input block, or nullptr if too old */
     ulg stored_len;   /* length of input block */
     int last;         /* one if this is the last block for a file */
 {
@@ -958,7 +958,7 @@ void ZLIB_INTERNAL _tr_flush_block(s, buf, stored_len, last)
     if (stored_len+4 <= opt_lenb && buf != (char*)0) {
                        /* 4: two words for the lengths */
 #endif
-        /* The test buf != NULL is only necessary if LIT_BUFSIZE > WSIZE.
+        /* The test buf != nullptr is only necessary if LIT_BUFSIZE > WSIZE.
          * Otherwise we can't have processed more than WSIZE input bytes since
          * the last block flush, because compression would have been
          * successful. If LIT_BUFSIZE <= WSIZE, it is never too late to

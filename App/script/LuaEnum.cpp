@@ -64,7 +64,7 @@ int Bridge<EnumDescriptorPtr, false>::on_index(const EnumDescriptorPtr& object, 
 		return 1;
 	}
 	const Reflection::EnumDescriptor::Item* item = object->lookup(name);
-	if (item!=NULL)
+	if (item!=nullptr)
 	{
 		EnumItem::push(L, item);
 		return 1;

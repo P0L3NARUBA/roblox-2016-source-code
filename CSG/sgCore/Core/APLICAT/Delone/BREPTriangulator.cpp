@@ -9,8 +9,8 @@ CBREPTriangulator::CBREPTriangulator(hOBJ objH):
         m_obj_handle(objH)
 {
   assert(objH);
-  m_list_str = NULL;
-  m_cur_np = NULL; 
+  m_list_str = nullptr;
+  m_cur_np = nullptr; 
 
   m_markers = (int*)malloc(MAX_COUNT_OF_NODES*sizeof(int));
   memset(m_markers,1,MAX_COUNT_OF_NODES*sizeof(int));
@@ -27,8 +27,8 @@ CBREPTriangulator::CBREPTriangulator(hOBJ objH):
   m_holes_count = 0;
 
   m_nTr = 0;   
-  m_allVertex = NULL;
-  m_allNormals = NULL;
+  m_allVertex = nullptr;
+  m_allNormals = nullptr;
 }
 
 CBREPTriangulator::~CBREPTriangulator()
@@ -45,16 +45,16 @@ CBREPTriangulator::~CBREPTriangulator()
 	if (m_holes_buffer)
 		free(m_holes_buffer);
 
-	m_markers = NULL;
+	m_markers = nullptr;
 
-	m_nodes_buffer = NULL;
-	m_normals_buffer = NULL;
+	m_nodes_buffer = nullptr;
+	m_normals_buffer = nullptr;
 	m_nodes_count = 0;
 
-	m_segments_buffer = NULL;
+	m_segments_buffer = nullptr;
 	m_segments_count = 0;
 
-	m_holes_buffer = NULL;
+	m_holes_buffer = nullptr;
 	m_holes_count = 0;
 
 	std::list<ONE_FACE_TRIANGLULATOR>::iterator Iter;

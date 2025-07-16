@@ -87,13 +87,13 @@ Number      Average       StdDev     Smallest      Largest Incident_Name
    At the end:
 
        HANDLE hFile;
-       hFile = CreateFile("Perf.log", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, 0, NULL);
+       hFile = CreateFile("Perf.log", GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, 0, nullptr);
        Msr_Dump(hFile);           // This writes the log out to the file
        CloseHandle(hFile);
 
            or
 
-       Msr_Dump(NULL);            // This writes it to DbgLog((LOG_TRACE,0, ... ));
+       Msr_Dump(nullptr);            // This writes it to DbgLog((LOG_TRACE,0, ... ));
                                   // but if you are writing it out to the debugger
                                   // then the times are probably all garbage because
                                   // the debugger can make things run awfully slow.
@@ -196,7 +196,7 @@ void WINAPI Msr_Integer(int Id, int n);
 
 // print out all the vaialable log (it may have wrapped) and then the statistics.
 // When the log wraps you lose log but the statistics are still complete.
-// hFIle==NULL => use DbgLog
+// hFIle==nullptr => use DbgLog
 // otherwise hFile must have come from CreateFile or OpenFile.
 
 void WINAPI Msr_Dump(HANDLE hFile);

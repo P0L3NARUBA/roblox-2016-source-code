@@ -343,7 +343,7 @@ namespace RBX
 			return GuiResponse::notSunk();
 		}
         
-        GuiObject* selectedObject = NULL;
+        GuiObject* selectedObject = nullptr;
         if (GuiObject* selectedGuiObject = guiService->getSelectedGuiObject())
         {
             selectedObject = selectedGuiObject;
@@ -361,15 +361,15 @@ namespace RBX
             {
 				if (isCoreGuiProcessing)
 				{
-					guiService->setSelectedCoreGuiObjectLua(NULL);
+					guiService->setSelectedCoreGuiObjectLua(nullptr);
 				}
 				else
 				{
-					guiService->setSelectedGuiObjectLua(NULL);
+					guiService->setSelectedGuiObjectLua(nullptr);
 				}
             }
 
-			selectedObject = NULL;
+			selectedObject = nullptr;
         }
         
         if (!selectedObject)
@@ -435,7 +435,7 @@ namespace RBX
 
 	GuiObject* GamepadService::getRandomShownGuiObject(Instance* object)
 	{
-		GuiObject* guiObject = NULL;
+		GuiObject* guiObject = nullptr;
 		if (GuiButton* guiButton = Instance::fastDynamicCast<GuiButton>(object))
 		{
 			guiObject = guiButton;
@@ -468,7 +468,7 @@ namespace RBX
 			}
 		}
 
-		return NULL;
+		return nullptr;
 	}
 
 	GuiResponse GamepadService::autoSelectGui()
@@ -487,7 +487,7 @@ namespace RBX
 				return GuiResponse::notSunk();
 			}
 
-            guiService->setSelectedGuiObjectLua(NULL);
+            guiService->setSelectedGuiObjectLua(nullptr);
 			return GuiResponse::sunk();
 		}
 		

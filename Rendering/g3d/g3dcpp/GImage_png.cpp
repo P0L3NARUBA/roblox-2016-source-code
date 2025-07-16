@@ -17,8 +17,8 @@ static void png_write_data(png_structp png_ptr,
     png_bytep data,
     png_size_t length) {
 
-    debugAssert( png_ptr->io_ptr != NULL );
-    debugAssert( data != NULL );
+    debugAssert( png_ptr->io_ptr != nullptr );
+    debugAssert( data != nullptr );
 
     ((BinaryOutput*)png_ptr->io_ptr)->writeBytes(data, length);
 }
@@ -36,7 +36,7 @@ static void png_error(
     png_const_charp error_msg) {
     
     (void)png_ptr;
-    debugAssert( error_msg != NULL );
+    debugAssert( error_msg != nullptr );
     
     png_ptr->error_ptr = const_cast<png_charp>(error_msg);
     longjmp(png_ptr->jmpbuf, 1);
@@ -57,9 +57,9 @@ static void png_read_data(
     png_size_t length) {
 
 
-        debugAssert( png_ptr->io_ptr != NULL );
+        debugAssert( png_ptr->io_ptr != nullptr );
         debugAssert( length >= 0 );
-        debugAssert( data != NULL );
+        debugAssert( data != nullptr );
 
         int64 pos = ((BinaryInput*)png_ptr->io_ptr)->getPosition();
         int64 binaryOutputLen = ((BinaryInput*)png_ptr->io_ptr)->getLength();
@@ -94,7 +94,7 @@ void GImage::encodePNG(
 
     out.setEndian(G3D_LITTLE_ENDIAN);
 
-    png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, png_error, png_warning);
+    png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, png_error, png_warning);
     if (! png_ptr) {
         throw GImage::Error("Unable to initialize PNG encoder." );
     }
@@ -187,8 +187,8 @@ void GImage::encodePNG(
 void GImage::decodePNG(
     BinaryInput&        input) {
 
-    png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, png_error, png_warning);
-    if (png_ptr == NULL) {
+    png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, png_error, png_warning);
+    if (png_ptr == nullptr) {
         throw GImage::Error("Unable to initialize PNG decoder.");
     }
     
@@ -199,14 +199,14 @@ void GImage::decodePNG(
     }
 
     png_infop info_ptr = png_create_info_struct(png_ptr);
-    if (info_ptr == NULL) {
-        png_destroy_read_struct(&png_ptr, (png_infopp)NULL, (png_infopp)NULL);
+    if (info_ptr == nullptr) {
+        png_destroy_read_struct(&png_ptr, (png_infopp)nullptr, (png_infopp)nullptr);
         throw GImage::Error("Unable to initialize PNG decoder.");
     }
 
     png_infop end_info = png_create_info_struct(png_ptr);
-    if (end_info == NULL) {
-        png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
+    if (end_info == nullptr) {
+        png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)nullptr);
         throw GImage::Error("Unable to initialize PNG decoder.");
     }
 
@@ -222,7 +222,7 @@ void GImage::decodePNG(
     int bit_depth, color_type, interlace_type;
     // this will validate the data it extracts from info_ptr
     png_get_IHDR(png_ptr, info_ptr, &png_width, &png_height, &bit_depth, &color_type,
-       &interlace_type, NULL, NULL);
+       &interlace_type, nullptr, nullptr);
 
     m_width  = static_cast<uint32>(png_width);
     m_height = static_cast<uint32>(png_height);
@@ -295,7 +295,7 @@ void GImage::decodePNG(
     for (uint32 pass = 0; pass < number_passes; ++pass) {
         for (uint32 y = 0; y < (uint32)m_height; ++y) {
             png_bytep rowPointer = &m_byte[m_width * m_channels * y]; 
-            png_read_rows(png_ptr, &rowPointer, NULL, 1);
+            png_read_rows(png_ptr, &rowPointer, nullptr, 1);
         }
     }
 

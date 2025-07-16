@@ -200,8 +200,8 @@ public:
 void visit_tree(ir_instruction *ir,
 		void (*callback_enter)(class ir_instruction *ir, void *data),
 		void *data_enter,
-		void (*callback_leave)(class ir_instruction *ir, void *data) = NULL,
-		void *data_leave = NULL);
+		void (*callback_leave)(class ir_instruction *ir, void *data) = nullptr,
+		void *data_leave = nullptr);
 
 ir_visitor_status visit_list_elements(ir_hierarchical_visitor *v, exec_list *l,
                                       bool statement_list = true);

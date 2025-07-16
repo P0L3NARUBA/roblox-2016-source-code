@@ -39,11 +39,11 @@ GlueJoint* GlueJoint::canBuildJoint(
 {
 	// 1. Surfaces
 	if (!compatibleSurfaces(p0, p1, nId0, nId1)) {
-		return NULL;
+		return nullptr;
 	}
 
 	if (!Joint::canBuildJointLoose(p0, p1, nId0, nId1)) {
-		return NULL;
+		return nullptr;
 	}
 
 	Face f0 = p0->getFaceInWorld(nId0);
@@ -70,7 +70,7 @@ GlueJoint* GlueJoint::canBuildJoint(
 		offset1World = offsetInP1.toWorldSpace(p1->getCoordinateFrame());
 
 		if (! Face::cornersAligned(offset0World, offset1World, Tolerance::jointMaxUnaligned()) )
-			return NULL;
+			return nullptr;
 	}
 		
 	CoordinateFrame jointCoord0 = p0->getFaceCoordInObject(nId0);

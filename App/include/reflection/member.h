@@ -174,7 +174,7 @@ namespace RBX
 			MemberDescriptorContainer(MemberDescriptorContainer* base)
 				:base(base), descriptorLookup("")
 			{
-				if (base!=NULL)
+				if (base!=nullptr)
 				{
 					// Grab base members that have already been declared
 					mergeMembers(base);
@@ -226,7 +226,7 @@ namespace RBX
 		public:
 			void declare(MemberDescriptorType* descriptor)
 			{
-				MemberDescriptorType* replaceable = NULL;
+				MemberDescriptorType* replaceable = nullptr;
 
 				{
 					typename Collection::iterator iter = std::lower_bound(descriptors.begin(), descriptors.end(), descriptor, compare);
@@ -319,7 +319,7 @@ SKIP:				;
 			{
                 MemberDescriptorType* const * item = descriptorLookup.find(name);
 
-				return item ? *item : NULL;
+				return item ? *item : nullptr;
 			}
 
 			/////////////////////////////////////////////////////////////////
@@ -344,7 +344,7 @@ SKIP:				;
 					declare(*iter);
 
 				// Recursively merge parent members as well
-				if (source->base!=NULL)
+				if (source->base!=nullptr)
 					mergeMembers(source->base);
 			}
 		};

@@ -35,24 +35,24 @@
 #endif
 
 /* DirectX function pointers for audio */
-static void* DSoundDLL = NULL;
+static void* DSoundDLL = nullptr;
 typedef HRESULT(WINAPI*fnDirectSoundCreate8)(LPGUID,LPDIRECTSOUND*,LPUNKNOWN);
 typedef HRESULT(WINAPI*fnDirectSoundEnumerateW)(LPDSENUMCALLBACKW, LPVOID);
 typedef HRESULT(WINAPI*fnDirectSoundCaptureEnumerateW)(LPDSENUMCALLBACKW,LPVOID);
-static fnDirectSoundCreate8 pDirectSoundCreate8 = NULL;
-static fnDirectSoundEnumerateW pDirectSoundEnumerateW = NULL;
-static fnDirectSoundCaptureEnumerateW pDirectSoundCaptureEnumerateW = NULL;
+static fnDirectSoundCreate8 pDirectSoundCreate8 = nullptr;
+static fnDirectSoundEnumerateW pDirectSoundEnumerateW = nullptr;
+static fnDirectSoundCaptureEnumerateW pDirectSoundCaptureEnumerateW = nullptr;
 
 static void
 DSOUND_Unload(void)
 {
-    pDirectSoundCreate8 = NULL;
-    pDirectSoundEnumerateW = NULL;
-    pDirectSoundCaptureEnumerateW = NULL;
+    pDirectSoundCreate8 = nullptr;
+    pDirectSoundEnumerateW = nullptr;
+    pDirectSoundCaptureEnumerateW = nullptr;
 
-    if (DSoundDLL != NULL) {
+    if (DSoundDLL != nullptr) {
         SDL_UnloadObject(DSoundDLL);
-        DSoundDLL = NULL;
+        DSoundDLL = nullptr;
     }
 }
 
@@ -65,7 +65,7 @@ DSOUND_Load(void)
     DSOUND_Unload();
 
     DSoundDLL = SDL_LoadObject("DSOUND.DLL");
-    if (DSoundDLL == NULL) {
+    if (DSoundDLL == nullptr) {
         SDL_SetError("DirectSound: failed to load DSOUND.DLL");
     } else {
         /* Now make sure we have DirectX 8 or better... */
@@ -154,9 +154,9 @@ static BOOL CALLBACK
 FindAllDevs(LPGUID guid, LPCWSTR desc, LPCWSTR module, LPVOID data)
 {
     const int iscapture = (int) ((size_t) data);
-    if (guid != NULL) {  /* skip default device */
+    if (guid != nullptr) {  /* skip default device */
         char *str = WIN_StringToUTF8(desc);
-        if (str != NULL) {
+        if (str != nullptr) {
             LPGUID cpyguid = (LPGUID) SDL_malloc(sizeof (GUID));
             SDL_memcpy(cpyguid, guid, sizeof (GUID));
             SDL_AddAudioDevice(iscapture, str, cpyguid);
@@ -239,7 +239,7 @@ DSOUND_PlayDevice(_THIS)
     if (this->hidden->locked_buf) {
         IDirectSoundBuffer_Unlock(this->hidden->mixbuf,
                                   this->hidden->locked_buf,
-                                  this->hidden->mixlen, NULL, 0);
+                                  this->hidden->mixlen, nullptr, 0);
     }
 
 }
@@ -253,7 +253,7 @@ DSOUND_GetDeviceBuf(_THIS)
     DWORD rawlen = 0;
 
     /* Figure out which blocks to fill next */
-    this->hidden->locked_buf = NULL;
+    this->hidden->locked_buf = nullptr;
     result = IDirectSoundBuffer_GetCurrentPosition(this->hidden->mixbuf,
                                                    &junk, &cursor);
     if (result == DSERR_BUFFERLOST) {
@@ -263,7 +263,7 @@ DSOUND_GetDeviceBuf(_THIS)
     }
     if (result != DS_OK) {
         SetDSerror("DirectSound GetCurrentPosition", result);
-        return (NULL);
+        return (nullptr);
     }
     cursor /= this->hidden->mixlen;
 #ifdef DEBUG_SOUND
@@ -287,18 +287,18 @@ DSOUND_GetDeviceBuf(_THIS)
     result = IDirectSoundBuffer_Lock(this->hidden->mixbuf, cursor,
                                      this->hidden->mixlen,
                                      (LPVOID *) & this->hidden->locked_buf,
-                                     &rawlen, NULL, &junk, 0);
+                                     &rawlen, nullptr, &junk, 0);
     if (result == DSERR_BUFFERLOST) {
         IDirectSoundBuffer_Restore(this->hidden->mixbuf);
         result = IDirectSoundBuffer_Lock(this->hidden->mixbuf, cursor,
                                          this->hidden->mixlen,
                                          (LPVOID *) & this->
-                                         hidden->locked_buf, &rawlen, NULL,
+                                         hidden->locked_buf, &rawlen, nullptr,
                                          &junk, 0);
     }
     if (result != DS_OK) {
         SetDSerror("DirectSound Lock", result);
-        return (NULL);
+        return (nullptr);
     }
     return (this->hidden->locked_buf);
 }
@@ -309,7 +309,7 @@ DSOUND_WaitDone(_THIS)
     Uint8 *stream = DSOUND_GetDeviceBuf(this);
 
     /* Wait for the playing chunk to finish */
-    if (stream != NULL) {
+    if (stream != nullptr) {
         SDL_memset(stream, this->spec.silence, this->hidden->mixlen);
         DSOUND_PlayDevice(this);
     }
@@ -322,19 +322,19 @@ DSOUND_WaitDone(_THIS)
 static void
 DSOUND_CloseDevice(_THIS)
 {
-    if (this->hidden != NULL) {
-        if (this->hidden->sound != NULL) {
-            if (this->hidden->mixbuf != NULL) {
+    if (this->hidden != nullptr) {
+        if (this->hidden->sound != nullptr) {
+            if (this->hidden->mixbuf != nullptr) {
                 /* Clean up the audio buffer */
                 IDirectSoundBuffer_Release(this->hidden->mixbuf);
-                this->hidden->mixbuf = NULL;
+                this->hidden->mixbuf = nullptr;
             }
             IDirectSound_Release(this->hidden->sound);
-            this->hidden->sound = NULL;
+            this->hidden->sound = nullptr;
         }
 
         SDL_free(this->hidden);
-        this->hidden = NULL;
+        this->hidden = nullptr;
     }
 }
 
@@ -401,7 +401,7 @@ CreateSecondary(_THIS, HWND focus)
     }
     format.dwReserved = 0;
     format.lpwfxFormat = &wfmt;
-    result = IDirectSound_CreateSoundBuffer(sndObj, &format, sndbuf, NULL);
+    result = IDirectSound_CreateSoundBuffer(sndObj, &format, sndbuf, nullptr);
     if (result != DS_OK) {
         return SetDSerror("DirectSound CreateSoundBuffer", result);
     }
@@ -435,13 +435,13 @@ DSOUND_OpenDevice(_THIS, void *handle, const char *devname, int iscapture)
     /* Initialize all variables that we clean on shutdown */
     this->hidden = (struct SDL_PrivateAudioData *)
         SDL_malloc((sizeof *this->hidden));
-    if (this->hidden == NULL) {
+    if (this->hidden == nullptr) {
         return SDL_OutOfMemory();
     }
     SDL_memset(this->hidden, 0, (sizeof *this->hidden));
 
     /* Open the audio device */
-    result = pDirectSoundCreate8(guid, &this->hidden->sound, NULL);
+    result = pDirectSoundCreate8(guid, &this->hidden->sound, nullptr);
     if (result != DS_OK) {
         DSOUND_CloseDevice(this);
         return SetDSerror("DirectSoundCreate", result);
@@ -455,7 +455,7 @@ DSOUND_OpenDevice(_THIS, void *handle, const char *devname, int iscapture)
         case AUDIO_F32:
             tried_format = SDL_TRUE;
             this->spec.format = test_format;
-            this->hidden->num_buffers = CreateSecondary(this, NULL);
+            this->hidden->num_buffers = CreateSecondary(this, nullptr);
             if (this->hidden->num_buffers > 0) {
                 valid_format = SDL_TRUE;
             }

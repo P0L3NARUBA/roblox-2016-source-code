@@ -90,7 +90,7 @@ DebuggerViewsManager::DebuggerViewsManager()
 	}
 	
 	//by default hide widgets
-	QAction* pToggleViewAction = NULL;
+	QAction* pToggleViewAction = nullptr;
 	QString icons[eDV_MAX];
 	icons[eDV_BREAKPOINTS] = QString::fromUtf8(":/16x16/images/Studio 2.0 icons/16x16/breakpoints.png");
 	icons[eDV_CALLSTACK] = QString::fromUtf8(":/16x16/images/Studio 2.0 icons/16x16/callStack.png");
@@ -276,7 +276,7 @@ public:
 	{;}
 
 	virtual QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const 
-	{ return NULL; }
+	{ return nullptr; }
 };
 
 //--------------------------------------------------------------------------------------------
@@ -315,7 +315,7 @@ void DebuggerTreeWidget::onItemChanged(QTreeWidgetItem* pItem, int column)
 void DebuggerTreeWidget::mousePressEvent(QMouseEvent *evt)
 {
 	if (!itemAt(evt->pos()))
-		setCurrentItem(NULL);
+		setCurrentItem(nullptr);
 	else
 		QTreeWidget::mousePressEvent(evt);
 }
@@ -395,7 +395,7 @@ int StackDetailsItem::getFrame()
 //--------------------------------------------------------------------------------------------
 CallStackTreeWidget::CallStackTreeWidget(QWidget* pParent)
 : DebuggerTreeWidget(pParent)
-, m_pPreviousItem(NULL)
+, m_pPreviousItem(nullptr)
 {
 	setWindowTitle("Call Stack");
 	setSortingEnabled(false);
@@ -414,7 +414,7 @@ CallStackTreeWidget::~CallStackTreeWidget()
 
 void CallStackTreeWidget::setCallStack(const RBX::Scripting::ScriptDebugger::Stack& stack)
 {
-	m_pPreviousItem = NULL;
+	m_pPreviousItem = nullptr;
 	clear();
 
 	for(RBX::Scripting::ScriptDebugger::Stack::const_iterator iter = stack.begin(); iter != stack.end(); ++iter)
@@ -438,7 +438,7 @@ void CallStackTreeWidget::onItemActivated(QTreeWidgetItem* pItem)
 	DebuggerTreeWidget::onItemActivated(pItem);
 	m_pPreviousItem = pItem;
 
-	setCurrentItem(NULL);
+	setCurrentItem(nullptr);
 }
 
 //--------------------------------------------------------------------------------------------
@@ -460,7 +460,7 @@ void CallStackDebuggersList::showPopup()
 // CallStackWidget
 //--------------------------------------------------------------------------------------------
 CallStackWidget::CallStackWidget(QWidget* pParent)
-: m_pCurrentDebuggerClient(NULL)
+: m_pCurrentDebuggerClient(nullptr)
 {
 	m_pCallStackTreeWidget = new CallStackTreeWidget(this);
 
@@ -499,7 +499,7 @@ void CallStackWidget::populateDebuggers(DebuggerClient* pDebuggerClient)
 	}
 
 	QString scriptName;
-	DebuggerClient* currentDebuggerClient = NULL;
+	DebuggerClient* currentDebuggerClient = nullptr;
 	boost::shared_ptr<RBX::Instance> script;
 	bool indexSet = false;
 
@@ -671,7 +671,7 @@ void BreakpointItem::activate()
 void BreakpointItem::deleteBreakpoint()
 {
 	RBX::DataModel::LegacyLock lock(DebuggerClientManager::Instance().getDataModel(), RBX::DataModelJob::Write);
-	m_spBreakpoint->setParent(NULL);
+	m_spBreakpoint->setParent(nullptr);
 	m_spBreakpoint.reset();
 }
 
@@ -780,7 +780,7 @@ void BreakpointsTreeWidget::deleteAllBreakpoints()
 		return;
 
 	int currentChild = 0;
-	BreakpointItem* pBreakpointItem = NULL;
+	BreakpointItem* pBreakpointItem = nullptr;
 
 	while (currentChild < numChild)
 	{
@@ -800,7 +800,7 @@ void BreakpointsTreeWidget::disableEnableAllBreakpoints()
 		return;
 
 	int currentChild = 0;
-	BreakpointItem* pBreakpointItem = NULL;
+	BreakpointItem* pBreakpointItem = nullptr;
 
 	bool breakpointEnabled = hasBreakpointsEnabled();
 
@@ -827,7 +827,7 @@ void BreakpointsTreeWidget::goToSourceCode()
 BreakpointItem* BreakpointsTreeWidget::findBreakpointItem(boost::shared_ptr<RBX::Scripting::DebuggerBreakpoint> spBreakpoint)
 {
 	int numChild = 	topLevelItemCount(), currentChild = 0;
-	BreakpointItem* pBreakpointItem = NULL;
+	BreakpointItem* pBreakpointItem = nullptr;
 
 	while (currentChild < numChild)
 	{
@@ -838,13 +838,13 @@ BreakpointItem* BreakpointsTreeWidget::findBreakpointItem(boost::shared_ptr<RBX:
 		++currentChild;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 BreakpointItem* BreakpointsTreeWidget::findBreakpointItem(int breakpointLine)
 {
 	int numChild = 	topLevelItemCount(), currentChild = 0;
-	BreakpointItem* pBreakpointItem = NULL;
+	BreakpointItem* pBreakpointItem = nullptr;
 
 	while (currentChild < numChild)
 	{
@@ -855,13 +855,13 @@ BreakpointItem* BreakpointsTreeWidget::findBreakpointItem(int breakpointLine)
 		++currentChild;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 bool BreakpointsTreeWidget::hasBreakpointsEnabled()
 {
 	int numChild = 	topLevelItemCount(), currentChild = 0;
-	BreakpointItem* pBreakpointItem = NULL;
+	BreakpointItem* pBreakpointItem = nullptr;
 
 	while (currentChild < numChild)
 	{
@@ -1159,7 +1159,7 @@ void WatchItem::deleteWatch()
 		return;
 
 	RBX::DataModel::LegacyLock lock(DebuggerClientManager::Instance().getDataModel(), RBX::DataModelJob::Write);
-	m_spWatch->setParent(NULL);
+	m_spWatch->setParent(nullptr);
 	m_spWatch.reset();
 }
 
@@ -1264,7 +1264,7 @@ public:
 			if (pDoc && (pDoc->docType() != IRobloxDoc::SCRIPT))
 			{
 				RBX::StandardOut::singleton()->print(RBX::MESSAGE_INFO, "Please open a script document to add a new watch expression");
-				return NULL;
+				return nullptr;
 			}
 		}
 
@@ -1300,7 +1300,7 @@ public:
 	}
 
 	QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const 
-	{  return NULL; }
+	{  return nullptr; }
 
 	void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 	{
@@ -1320,11 +1320,11 @@ public:
 //--------------------------------------------------------------------------------------------
 WatchTreeWidget::WatchTreeWidget(QWidget *pParent)
 : DebuggerTreeWidget(pParent)
-, m_pContextualMenu(NULL)
-, m_pCopyAction(NULL)
-, m_pAddWatchAction(NULL)
-, m_pDeleteWatchAction(NULL)
-, m_pDeleteAllWatchesAction(NULL)
+, m_pContextualMenu(nullptr)
+, m_pCopyAction(nullptr)
+, m_pAddWatchAction(nullptr)
+, m_pDeleteWatchAction(nullptr)
+, m_pDeleteAllWatchesAction(nullptr)
 , m_bIgnoreWatchModification(false)
 {
 	//set columns
@@ -1379,7 +1379,7 @@ void WatchTreeWidget::updateWatchValues(bool enable)
 	try
 	{
 		int numChild = 	topLevelItemCount(), currentChild = 0;
-		WatchItem* pWatchItem = NULL;
+		WatchItem* pWatchItem = nullptr;
 
 		setUpdatesEnabled(false);
 
@@ -1480,7 +1480,7 @@ void WatchTreeWidget::addWatch()
 		else
 		{
 			// control should not come here!
-			watchExpression = QInputDialog::getText(this, tr("Watch"), tr("Watch Expression:"), QLineEdit::Normal, watchExpression, NULL, Qt::WindowTitleHint | Qt::WindowSystemMenuHint);
+			watchExpression = QInputDialog::getText(this, tr("Watch"), tr("Watch Expression:"), QLineEdit::Normal, watchExpression, nullptr, Qt::WindowTitleHint | Qt::WindowSystemMenuHint);
 			if (!watchExpression.isEmpty())
 				DebuggerClientManager::Instance().addWatch(watchExpression);
 		}
@@ -1499,7 +1499,7 @@ void WatchTreeWidget::deleteAllWatches()
 	RBX::ScopedAssign<bool> ignoreWatchDeleteEvent(m_bIgnoreWatchModification, true);
 
 	int currentChild = 0;
-	WatchItem* pWatchItem = NULL;
+	WatchItem* pWatchItem = nullptr;
 
 	while (currentChild < numChild)
 	{
@@ -1567,7 +1567,7 @@ void WatchTreeWidget::mousePressEvent(QMouseEvent *event)
 WatchItem* WatchTreeWidget::findWatchItem(boost::shared_ptr<RBX::Scripting::DebuggerWatch> spWatch)
 {
 	int numChild = 	topLevelItemCount(), currentChild = 0;
-	WatchItem* pWatchItem = NULL;
+	WatchItem* pWatchItem = nullptr;
 
 	while (currentChild < numChild)
 	{
@@ -1578,7 +1578,7 @@ WatchItem* WatchTreeWidget::findWatchItem(boost::shared_ptr<RBX::Scripting::Debu
 		++currentChild;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 QString WatchTreeWidget::getFullName(QTreeWidgetItem *pItem)
@@ -1676,7 +1676,7 @@ void WatchWidget::onDeleteSelectedItem()
 //--------------------------------------------------------------------------------------------
 DebuggerToolTipWidget::DebuggerToolTipWidget(QWidget *pParent)
 : QTreeWidget(pParent)
-, m_pModifiedByMouse(NULL)
+, m_pModifiedByMouse(nullptr)
 {
 	setWindowFlags(Qt::ToolTip);
     setFocusPolicy(Qt::NoFocus);
@@ -1704,7 +1704,7 @@ void DebuggerToolTipWidget::showToolTip(const QPoint& pos, const QString &key, c
 	setRootIsDecorated(false);
 
 	//now again create the required items
-	QTreeWidgetItem *pTreeWidgetItem = addChildren(NULL);
+	QTreeWidgetItem *pTreeWidgetItem = addChildren(nullptr);
 
 	try
 	{
@@ -1733,7 +1733,7 @@ void DebuggerToolTipWidget::hideToolTip()
 	qApp->removeEventFilter(this);
 
 	m_pExpansionTimer->stop();
-	m_pModifiedByMouse = NULL;
+	m_pModifiedByMouse = nullptr;
 	m_Key = "";
 
 	hide();
@@ -1881,7 +1881,7 @@ void DebuggerToolTipWidget::onTimeout()
 					expandItem(pItem);
 			}
 
-			m_pModifiedByMouse = NULL;
+			m_pModifiedByMouse = nullptr;
 		}
 	}
 }
@@ -1931,7 +1931,7 @@ bool populateValues(QTreeWidgetItem *pParentItem, const QString &key, const RBX:
 					}
 					else
 					{
-						populateValues(addChildren(pParentItem), desc->name.c_str(), std::string("NULL"));
+						populateValues(addChildren(pParentItem), desc->name.c_str(), std::string("nullptr"));
 					}
 				}
 			}

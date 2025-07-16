@@ -49,7 +49,7 @@ public:
 
     CAggDirectDraw(TCHAR *pName,LPUNKNOWN pUnk) :
         CUnknown(pName,pUnk),
-        m_pDirectDraw(NULL) { };
+        m_pDirectDraw(nullptr) { };
 
     virtual CAggDirectDraw::~CAggDirectDraw() { };
 
@@ -100,7 +100,7 @@ public:
 
     CAggDrawSurface(TCHAR *pName,LPUNKNOWN pUnk) :
         CUnknown(pName,pUnk),
-        m_pDirectDrawSurface(NULL) { };
+        m_pDirectDrawSurface(nullptr) { };
 
     virtual ~CAggDrawSurface() { };
 

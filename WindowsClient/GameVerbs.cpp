@@ -66,7 +66,7 @@ static void PostImageFinished(std::string *response, std::exception *ex, weak_pt
 {
 	if(shared_ptr<RBX::DataModel> dataModel = weakDataModel.lock())
 	{
-		if ((ex == NULL) && (response->compare("ok") == 0))
+		if ((ex == nullptr) && (response->compare("ok") == 0))
 			dataModel->submitTask(boost::bind(&RBX::DataModel::ShowMessage, weak_ptr<RBX::DataModel>(dataModel), 1, "Image uploaded to Facebook", 2), RBX::DataModelJob::Write);
 		else
 		{
@@ -165,7 +165,7 @@ void ScreenshotVerb::uploadScreenshot(const std::string& filename)
 
 void RecordToggleVerb::action()
 {
-	CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+	CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
 	while(!stop)
 	{
 		jobWait.Wait();

@@ -113,7 +113,7 @@ void BinaryOutput::reallocBuffer(size_t bytes, size_t oldBufferLen) {
     //debugPrintf("reallocBuffer(%d, %d)\n", bytes, oldBufferLen);
 
     size_t newBufferLen = (int)(m_bufferLen * 1.5) + 100;
-    uint8* newBuffer = NULL;
+    uint8* newBuffer = nullptr;
 
     if ((m_filename == "<memory>") || (newBufferLen < MAX_BINARYOUTPUT_BUFFER_SIZE)) {
         // We're either writing to memory (in which case we *have* to try and allocate)
@@ -121,12 +121,12 @@ void BinaryOutput::reallocBuffer(size_t bytes, size_t oldBufferLen) {
 
         //debugPrintf("  realloc(%d)\n", newBufferLen); 
         newBuffer = (uint8*)System::realloc(m_buffer, newBufferLen);
-        if (newBuffer != NULL) {
+        if (newBuffer != nullptr) {
             m_maxBufferLen = newBufferLen;
         }
     }
 
-    if ((newBuffer == NULL) && (bytes > 0)) {
+    if ((newBuffer == nullptr) && (bytes > 0)) {
         // Realloc failed; we're probably out of memory.  Back out
         // the entire call and try to dump some data to disk.
         m_bufferLen = oldBufferLen;
@@ -148,7 +148,7 @@ BinaryOutput::BinaryOutput() {
     m_swapBytes = false;
     m_pos       = 0;
     m_filename  = "<memory>";
-    m_buffer = NULL;
+    m_buffer = nullptr;
     m_bufferLen = 0;
     m_maxBufferLen = 0;
     m_beginEndBits = 0;
@@ -167,7 +167,7 @@ BinaryOutput::BinaryOutput(
     m_alreadyWritten = 0;
     setEndian(fileEndian);
     m_filename = filename;
-    m_buffer = NULL;
+    m_buffer = nullptr;
     m_bufferLen = 0;
     m_maxBufferLen = 0;
     m_beginEndBits = 0;
@@ -199,9 +199,9 @@ void BinaryOutput::reset() {
 
 
 BinaryOutput::~BinaryOutput() {
-    debugAssert((m_buffer == NULL) || isValidHeapPointer(m_buffer));
+    debugAssert((m_buffer == nullptr) || isValidHeapPointer(m_buffer));
     System::free(m_buffer);
-    m_buffer = NULL;
+    m_buffer = nullptr;
     m_bufferLen = 0;
     m_maxBufferLen = 0;
 }
@@ -351,7 +351,7 @@ void BinaryOutput::writeStringEven(const char* s) {
     System::memcpy(m_buffer + m_pos, s, len);
     m_pos += len;
 
-    // Pad with another NULL
+    // Pad with another nullptr
     if ((len % 2) == 1) {
         writeUInt8(0);
     }

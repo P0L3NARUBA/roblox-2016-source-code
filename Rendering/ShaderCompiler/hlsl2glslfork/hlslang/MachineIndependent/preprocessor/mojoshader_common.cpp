@@ -50,14 +50,14 @@ static const char *hlmojo_stringcache_len_internal(hlmojo_StringCache *cache,
 {
     const uint8 hash = hlmojo_hash_string(str, len) & (cache->table_size-1);
     hlmojo_StringBucket *bucket = cache->hashtable[hash];
-    hlmojo_StringBucket *prev = NULL;
+    hlmojo_StringBucket *prev = nullptr;
     while (bucket)
     {
         const char *bstr = bucket->string;
         if ((strncmp(bstr, str, len) == 0) && (bstr[len] == 0))
         {
             // Matched! Move this to the front of the list.
-            if (prev != NULL)
+            if (prev != nullptr)
             {
                 assert(prev->next == bucket);
                 prev->next = bucket->next;
@@ -72,17 +72,17 @@ static const char *hlmojo_stringcache_len_internal(hlmojo_StringCache *cache,
 
     // no match!
     if (!addmissing)
-        return NULL;
+        return nullptr;
 
     // add to the table.
     bucket = (hlmojo_StringBucket *) cache->m(sizeof (hlmojo_StringBucket), cache->d);
-    if (bucket == NULL)
-        return NULL;
+    if (bucket == nullptr)
+        return nullptr;
     bucket->string = (char *) cache->m(len + 1, cache->d);
-    if (bucket->string == NULL)
+    if (bucket->string == nullptr)
     {
         cache->f(bucket, cache->d);
-        return NULL;
+        return nullptr;
     } // if
     memcpy(bucket->string, str, len);
     bucket->string[len] = '\0';
@@ -104,14 +104,14 @@ hlmojo_StringCache *hlmojo_stringcache_create(MOJOSHADER_hlslang_malloc m, MOJOS
     const size_t tablelen = sizeof (hlmojo_StringBucket *) * initial_table_size;
     hlmojo_StringCache *cache = (hlmojo_StringCache *) m(sizeof (hlmojo_StringCache), d);
     if (!cache)
-        return NULL;
+        return nullptr;
     memset(cache, '\0', sizeof (hlmojo_StringCache));
 
     cache->hashtable = (hlmojo_StringBucket **) m(tablelen, d);
     if (!cache->hashtable)
     {
         f(cache, d);
-        return NULL;
+        return nullptr;
     } // if
     memset(cache->hashtable, '\0', tablelen);
 
@@ -124,7 +124,7 @@ hlmojo_StringCache *hlmojo_stringcache_create(MOJOSHADER_hlslang_malloc m, MOJOS
 
 void hlmojo_stringcache_destroy(hlmojo_StringCache *cache)
 {
-    if (cache == NULL)
+    if (cache == nullptr)
         return;
 
     MOJOSHADER_hlslang_free f = cache->f;
@@ -134,7 +134,7 @@ void hlmojo_stringcache_destroy(hlmojo_StringCache *cache)
     for (i = 0; i < cache->table_size; i++)
     {
         hlmojo_StringBucket *bucket = cache->hashtable[i];
-        cache->hashtable[i] = NULL;
+        cache->hashtable[i] = nullptr;
         while (bucket)
         {
             hlmojo_StringBucket *next = bucket->next;
@@ -172,7 +172,7 @@ hlmojo_Buffer *hlmojo_buffer_create(size_t blksz, MOJOSHADER_hlslang_malloc m,
                       MOJOSHADER_hlslang_free f, void *d)
 {
     hlmojo_Buffer *buffer = (hlmojo_Buffer *) m(sizeof (hlmojo_Buffer), d);
-    if (buffer != NULL)
+    if (buffer != nullptr)
     {
         memset(buffer, '\0', sizeof (hlmojo_Buffer));
         buffer->block_size = blksz;
@@ -195,7 +195,7 @@ int hlmojo_buffer_append(hlmojo_Buffer *buffer, const void *_data, size_t len)
     if (len == 0)
         return 1;
 
-    if (buffer->tail != NULL)
+    if (buffer->tail != nullptr)
     {
         const size_t tailbytes = buffer->tail->bytes;
         const size_t avail = (tailbytes >= blocksize) ? 0 : blocksize - tailbytes;
@@ -217,13 +217,13 @@ int hlmojo_buffer_append(hlmojo_Buffer *buffer, const void *_data, size_t len)
         const size_t bytecount = len > blocksize ? len : blocksize;
         const size_t malloc_len = sizeof (hlmojo_BufferBlock) + bytecount;
         hlmojo_BufferBlock *item = (hlmojo_BufferBlock *) buffer->m(malloc_len, buffer->d);
-        if (item == NULL)
+        if (item == nullptr)
             return 0;
 
         item->data = ((uint8 *) item) + sizeof (hlmojo_BufferBlock);
         item->bytes = len;
-        item->next = NULL;
-        if (buffer->tail != NULL)
+        item->next = nullptr;
+        if (buffer->tail != nullptr)
             buffer->tail->next = item;
         else
             buffer->head = item;
@@ -262,7 +262,7 @@ int hlmojo_buffer_append_va(hlmojo_Buffer *buffer, const char *fmt, va_list va)
         return hlmojo_buffer_append(buffer, scratch, len);
 
     char *buf = (char *) buffer->m(len + 1, buffer->d);
-    if (buf == NULL)
+    if (buf == nullptr)
         return 0;
     va_copy(ap, va);
     vsnprintf(buf, len + 1, fmt, ap);  // rebuild it.
@@ -280,24 +280,24 @@ size_t hlmojo_buffer_size(hlmojo_Buffer *buffer)
 void hlmojo_buffer_empty(hlmojo_Buffer *buffer)
 {
     hlmojo_BufferBlock *item = buffer->head;
-    while (item != NULL)
+    while (item != nullptr)
     {
         hlmojo_BufferBlock *next = item->next;
         buffer->f(item, buffer->d);
         item = next;
     } // while
-    buffer->head = buffer->tail = NULL;
+    buffer->head = buffer->tail = nullptr;
     buffer->total_bytes = 0;
 } // hlmojo_buffer_empty
 
 char *hlmojo_buffer_flatten(hlmojo_Buffer *buffer)
 {
     char *retval = (char *) buffer->m(buffer->total_bytes + 1, buffer->d);
-    if (retval == NULL)
-        return NULL;
+    if (retval == nullptr)
+        return nullptr;
     hlmojo_BufferBlock *item = buffer->head;
     char *ptr = retval;
-    while (item != NULL)
+    while (item != nullptr)
     {
         hlmojo_BufferBlock *next = item->next;
         memcpy(ptr, item->data, item->bytes);
@@ -309,7 +309,7 @@ char *hlmojo_buffer_flatten(hlmojo_Buffer *buffer)
 
     assert(ptr == (retval + buffer->total_bytes));
 
-    buffer->head = buffer->tail = NULL;
+    buffer->head = buffer->tail = nullptr;
     buffer->total_bytes = 0;
 
     return retval;
@@ -317,7 +317,7 @@ char *hlmojo_buffer_flatten(hlmojo_Buffer *buffer)
 
 void hlmojo_buffer_destroy(hlmojo_Buffer *buffer)
 {
-    if (buffer != NULL)
+    if (buffer != nullptr)
     {
         MOJOSHADER_hlslang_free f = buffer->f;
         void *d = buffer->d;

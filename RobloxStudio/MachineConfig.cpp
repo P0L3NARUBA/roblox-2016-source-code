@@ -12,7 +12,7 @@
 // Roblox Studio Headers
 #include "RobloxSettings.h"
 
-MachineConfig* MachineConfig::machineConfig = NULL;
+MachineConfig* MachineConfig::machineConfig = nullptr;
 ////////////////////////////////////////////////////////////////////////////////////
 
 void MachineConfig::PostMachineConfiguration(bool authSuccess)

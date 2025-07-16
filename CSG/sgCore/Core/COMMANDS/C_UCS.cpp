@@ -79,17 +79,17 @@ BOOL place_ucs_to_lcs_common(hOBJ hobj, MATR matr_lcs_gcs, BOOL lcs_path)
 		case OPOINT:
 			obj = (lpOBJ)hobj;
 			point = (lpGEO_POINT)obj->geo_data;
-			create_ucs_matr1(1, point, NULL, NULL, matr_lcs_gcs, 0, 1);
+			create_ucs_matr1(1, point, nullptr, nullptr, matr_lcs_gcs, 0, 1);
 			break;
 		case OLINE:
 			obj = (lpOBJ)hobj;
 			line = (lpGEO_LINE)obj->geo_data;
-			create_ucs_matr1(2, &line->v1, &line->v2, NULL, matr_lcs_gcs, 0, 1);
+			create_ucs_matr1(2, &line->v1, &line->v2, nullptr, matr_lcs_gcs, 0, 1);
 			break;
 		case OPATH:
     	//++ SVP 19/09/2002
       {
-        void* 	    par = NULL;
+        void* 	    par = nullptr;
         lpGEO_PATH	path;
         hOBJ				hobj1;
 				D_POINT			p[3];
@@ -123,7 +123,7 @@ BOOL place_ucs_to_lcs_common(hOBJ hobj, MATR matr_lcs_gcs, BOOL lcs_path)
             }
         }
         if (par) {
-        	SGFree(par); par = NULL;
+        	SGFree(par); par = nullptr;
           break;
         }
       }
@@ -145,7 +145,7 @@ BOOL place_ucs_to_lcs_common(hOBJ hobj, MATR matr_lcs_gcs, BOOL lcs_path)
 				obj = (lpOBJ)hobj;
 				status = (OSTATUS)(obj->status & ST_FLAT);
 				if (!status) { 
-					create_ucs_matr1(2, &p[0], &p[1], NULL, matr_lcs_gcs, 0, 1);
+					create_ucs_matr1(2, &p[0], &p[1], nullptr, matr_lcs_gcs, 0, 1);
 				} else { 
 					if (!set_flat_on_path(hobj, &plane)) return FALSE;
 					dvector_product(&plane.v, dpoint_sub(&p[1],&p[0],&p[2]), &p[2]);

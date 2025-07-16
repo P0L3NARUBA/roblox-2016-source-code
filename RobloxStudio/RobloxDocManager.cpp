@@ -36,13 +36,13 @@ RobloxDocManager& RobloxDocManager::Instance()
 }
 
 RobloxDocManager::RobloxDocManager()
-: m_pMainWindow(NULL)
-, m_pCurrentDoc(NULL)
-, m_pPlayDoc(NULL)
-, m_pObjectBrowser(NULL)
-, m_pWebDoc(NULL)
-, m_DocTabManager(NULL)
-, m_DocDockManager(NULL)
+: m_pMainWindow(nullptr)
+, m_pCurrentDoc(nullptr)
+, m_pPlayDoc(nullptr)
+, m_pObjectBrowser(nullptr)
+, m_pWebDoc(nullptr)
+, m_DocTabManager(nullptr)
+, m_DocDockManager(nullptr)
 {
 }
 
@@ -64,8 +64,8 @@ void RobloxDocManager::initialize(RobloxMainWindow& mainWindow)
 
 void RobloxDocManager::shutDown()
 {
-    m_pCurrentDoc = NULL;
-    m_pPlayDoc = NULL;
+    m_pCurrentDoc = nullptr;
+    m_pPlayDoc = nullptr;
 	m_KeyDocMap.clear();
 
     delete m_DocTabManager;
@@ -77,9 +77,9 @@ void RobloxDocManager::shutDown()
     if(m_pWebDoc)
         delete m_pWebDoc;
 
-    m_DocTabManager = NULL;
-    m_DocDockManager = NULL;
-    m_pMainWindow = NULL;
+    m_DocTabManager = nullptr;
+    m_DocDockManager = nullptr;
+    m_pMainWindow = nullptr;
 }
 
 /**
@@ -153,7 +153,7 @@ void RobloxDocManager::deregisterScriptDoc(RobloxScriptDoc& doc)
 
 
 /**
- * Returns a handle to the ObjectBrowser, or NULL if it hasnt been created.
+ * Returns a handle to the ObjectBrowser, or nullptr if it hasnt been created.
  */
 RobloxObjectBrowserDoc* RobloxDocManager::getObjectBrowserDoc()
 {
@@ -169,7 +169,7 @@ RobloxScriptDoc* RobloxDocManager::findOpenScriptDoc(LuaSourceBuffer script)
 			return *itr;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 /**
@@ -178,7 +178,7 @@ RobloxScriptDoc* RobloxDocManager::findOpenScriptDoc(LuaSourceBuffer script)
  */
 IRobloxDoc* RobloxDocManager::getOrCreateDoc(IRobloxDoc::RBXDocType docType)
 {
-	RBX::BaldPtr<IRobloxDoc> pDoc = NULL;
+	RBX::BaldPtr<IRobloxDoc> pDoc = nullptr;
 	
     switch ( docType )
     {
@@ -222,15 +222,15 @@ IRobloxDoc* RobloxDocManager::getOrCreateDoc(IRobloxDoc::RBXDocType docType)
 RobloxScriptDoc* RobloxDocManager::openDoc(LuaSourceBuffer script)
 {
 	if (script.empty())
-		return NULL;
+		return nullptr;
 
 	boost::scoped_ptr<RBX::DataModel::LegacyLock> lock;
 
 	// Double click scripts in game explorer will attempt to open doc, only open
 	// script doc if we have a play doc.
-	if (m_pPlayDoc == NULL)
+	if (m_pPlayDoc == nullptr)
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	// RobloxScriptDoc::setScript needs a write lock
@@ -253,7 +253,7 @@ RobloxScriptDoc* RobloxDocManager::openDoc(LuaSourceBuffer script)
 		mb.setText("Unable to load script. If the script uses LinkedSource, the "
 			"LinkedSource may have been renamed or removed.");
 		mb.exec();
-		return NULL;
+		return nullptr;
 	}
 
 	// If the doc for this script already exists, then return the same
@@ -270,7 +270,7 @@ RobloxScriptDoc* RobloxDocManager::openDoc(LuaSourceBuffer script)
 		RBX::StandardOut::singleton()->printf(RBX::MESSAGE_INFO, "Error in opening script");
 		pDoc->close();
 		delete pDoc;
-		return NULL;
+		return nullptr;
 	}
 
     configureDocWidget(*pDoc);
@@ -326,8 +326,8 @@ void RobloxDocManager::removeDoc(IRobloxDoc& doc)
 
 	if ( &doc == m_pCurrentDoc )
     {
-        setCurrentDoc(NULL);
-        m_pCurrentDoc = NULL;
+        setCurrentDoc(nullptr);
+        m_pCurrentDoc = nullptr;
     }
 
 	if ( &doc == m_pPlayDoc )
@@ -342,7 +342,7 @@ void RobloxDocManager::removeDoc(IRobloxDoc& doc)
 		}
 		RBXASSERT(m_OpenScriptDocs.empty());
 
-		m_pPlayDoc = NULL;
+		m_pPlayDoc = nullptr;
     }
 
     if (m_DocTabManager && !m_DocTabManager->removeDoc(doc) )
@@ -357,7 +357,7 @@ void RobloxDocManager::removeDoc(IRobloxDoc& doc)
 
 /**
  * Sets the current doc.
- *  The doc may be NULL.  The old doc is deactivated.
+ *  The doc may be nullptr.  The old doc is deactivated.
  */
 void RobloxDocManager::setCurrentDoc(IRobloxDoc* doc)
 {
@@ -387,7 +387,7 @@ void RobloxDocManager::setCurrentDoc(IRobloxDoc* doc)
 	}
     else
 	{
-        RBX::PluginManager::singleton()->setCurrentDataModel(NULL);
+        RBX::PluginManager::singleton()->setCurrentDataModel(nullptr);
 	}
 
     UpdateUIManager::Instance().updateToolBars();

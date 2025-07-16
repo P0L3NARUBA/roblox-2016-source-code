@@ -1,6 +1,6 @@
 #define MATERIAL
 #include "default.hlsl"
-#include "lighting.hlsl"
+#include "lighting.hlsli"
 
 /* Main Textures */
 TEX_DECLARE2D(ShadowAtlas, 0);
@@ -16,14 +16,14 @@ TEX_DECLARECUBE(IndoorCubemapA, 7);
 TEX_DECLARECUBE(IndoorCubemapB, 8);
 
 /* Material Textures */
-TEX_DECLARE3D(Albedo, 10);      /* R: Albedo.r           , G: Albedo.g         , B: Albedo.b         , A: Alpha             */
-TEX_DECLARE3D(MatValues, 11);   /* R: Roughness          , G: Metalness        , B: Ambient Occlusion, A: Height            */
-TEX_DECLARE3D(NormalMap, 12);   /* R: Normal.x           , G: Normal.y         , B: Normal.z         , A: Unused            */
-TEX_DECLARE3D(Emission, 13);    /* R: Emission.r         , G: Emission.g       , B: Emission.b       , A: Emission Factor   */
-TEX_DECLARE3D(ClearcoatA, 14);  /* R: ClearcoatTint.r    , G: ClearcoatTint.g  , B: ClearcoatTint.b  , A: Clearcoat Factor  */
-                                /* R: Clearcoat Roughness, G: Clearcoat Factor , B: -----------------, A: ----------------- */
-TEX_DECLARE3D(ClearcoatB, 15);  /* R: Clearcoat Roughness, G: ClearcoatNormal.x, B: ClearcoatNormal.y, A: ClearcoatNormal.z */
-                    /* No Normals: R: Clearcoat Roughness, G: Unused           , B: -----------------, A: ----------------- */
+TEX_DECLARE2DARRAY(Albedo, 10);      /* R: Albedo.r           , G: Albedo.g         , B: Albedo.b         , A: Alpha             */
+TEX_DECLARE2DARRAY(MatValues, 11);   /* R: Roughness          , G: Metalness        , B: Ambient Occlusion, A: Height            */
+TEX_DECLARE2DARRAY(NormalMap, 12);   /* R: Normal.x           , G: Normal.y         , B: Normal.z         , A: Unused            */
+TEX_DECLARE2DARRAY(Emission, 13);    /* R: Emission.r         , G: Emission.g       , B: Emission.b       , A: Emission Factor   */
+TEX_DECLARE2DARRAY(ClearcoatA, 14);  /* R: ClearcoatTint.r    , G: ClearcoatTint.g  , B: ClearcoatTint.b  , A: Clearcoat Factor  */
+                                     /* R: Clearcoat Roughness, G: Clearcoat Factor , B: -----------------, A: ----------------- */
+TEX_DECLARE2DARRAY(ClearcoatB, 15);  /* R: Clearcoat Roughness, G: ClearcoatNormal.x, B: ClearcoatNormal.y, A: ClearcoatNormal.z */
+                         /* No Normals: R: Clearcoat Roughness, G: Unused           , B: -----------------, A: ----------------- */
 
 float4 MaterialPS(MaterialVertexOutput IN) : SV_TARGET {
     int MaterialIndex = IN.MaterialID;

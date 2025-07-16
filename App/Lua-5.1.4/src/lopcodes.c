@@ -53,7 +53,7 @@ const char *const luaP_opnames[NUM_OPCODES+1] = { /* ORDER OP */
   "CLOSE",
   "CLOSURE",
   "VARARG",
-  NULL
+  nullptr
 };
 #endif
 

@@ -64,15 +64,15 @@ public:
    /* "mode" can be either ir_var_shader_in or ir_var_shader_out */
    varying_info_visitor(ir_variable_mode mode, bool find_frag_outputs = false)
       : lower_texcoord_array(true),
-        texcoord_array(NULL),
+        texcoord_array(nullptr),
         texcoord_usage(0),
         find_frag_outputs(find_frag_outputs),
         lower_fragdata_array(true),
-        fragdata_array(NULL),
+        fragdata_array(nullptr),
         fragdata_usage(0),
         color_usage(0),
         tfeedback_color_usage(0),
-        fog(NULL),
+        fog(nullptr),
         has_fog(false),
         tfeedback_has_fog(false),
         mode(mode)
@@ -92,7 +92,7 @@ public:
          this->fragdata_array = var;
 
          ir_constant *index = ir->array_index->as_constant();
-         if (index == NULL) {
+         if (index == nullptr) {
             /* This is variable indexing. */
             this->fragdata_usage |= (1 << var->type->array_size()) - 1;
             this->lower_fragdata_array = false;
@@ -109,7 +109,7 @@ public:
          this->texcoord_array = var;
 
          ir_constant *index = ir->array_index->as_constant();
-         if (index == NULL) {
+         if (index == nullptr) {
             /* There is variable indexing, we can't lower the texcoord array.
              */
             this->texcoord_usage |= (1 << var->type->array_size()) - 1;
@@ -264,7 +264,7 @@ public:
                             unsigned external_texcoord_usage,
                             unsigned external_color_usage,
                             bool external_has_fog)
-      : info(info), new_fog(NULL)
+      : info(info), new_fog(nullptr)
    {
       void *const ctx = ir;
 
@@ -499,7 +499,7 @@ static void
 lower_fragdata_array(exec_list *ir)
 {
    varying_info_visitor info(ir_var_shader_out, true);
-   info.get(ir, 0, NULL);
+   info.get(ir, 0, nullptr);
 
    replace_varyings_visitor(ir, &info, 0, 0, 0);
 }
@@ -541,7 +541,7 @@ do_dead_builtin_varyings(struct gl_context *ctx,
    }
 
    if (consumer) {
-      consumer_info.get(consumer->ir, 0, NULL);
+      consumer_info.get(consumer->ir, 0, nullptr);
 
       if (!producer) {
          /* At least eliminate unused gl_TexCoord elements. */

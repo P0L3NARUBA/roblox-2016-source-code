@@ -19,7 +19,7 @@
 
 RobloxNetworkReply::RobloxNetworkReply(QNetworkReply* pReply, bool followRedirections)
 	: m_pReply(pReply)
-	, m_childReply(NULL)
+	, m_childReply(nullptr)
 	, m_followRedirections(followRedirections)
 {
 	// Set up the new network reply to follow redirection or signal if it's done

@@ -17,7 +17,7 @@ namespace
 #else
 		std::string fileName = convert_w2s(std::wstring(name));
 #endif
-		HANDLE file = CreateFile(fileName.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		HANDLE file = CreateFile(fileName.c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 		bool exists = false;
 		if (file != INVALID_HANDLE_VALUE)
 		{
@@ -55,7 +55,7 @@ std::wstring CookiesEngine::getCookiesFilePath()
 	path[0] = 0;
     
 	pathKey.Open(HKEY_CURRENT_USER, rbxRegPath);
-	if (pathKey.m_hKey != NULL)
+	if (pathKey.m_hKey != nullptr)
 	{
         
 		ULONG size = MAX_PATH;
@@ -74,7 +74,7 @@ void CookiesEngine::setCookiesFilePath(std::wstring &path)
 {
 	CRegKey pathKey;
 	pathKey.Create(HKEY_CURRENT_USER, rbxRegPath);
-	if (pathKey.m_hKey != NULL)
+	if (pathKey.m_hKey != nullptr)
 	{
 #ifdef UNICODE
 		pathKey.SetStringValue(rbxRegName, path.c_str());
@@ -169,7 +169,7 @@ int CookiesEngine::SetValue(std::string key, std::string value)
 		return -1;
 	}
     
-	CMutex m(NULL, FALSE, CookieFileMutext);
+	CMutex m(nullptr, FALSE, CookieFileMutext);
 	CMutexLock lock(m);
     
 	std::fstream f(fileName.c_str());
@@ -207,7 +207,7 @@ std::string CookiesEngine::GetValue(std::string key, int *errorCode, bool *exist
 		return std::string("");
 	}
     
-	CMutex m(NULL, FALSE, CookieFileMutext);
+	CMutex m(nullptr, FALSE, CookieFileMutext);
 	DWORD result = ::WaitForSingleObject(m, 1);
 	if (result == WAIT_TIMEOUT)
 	{
@@ -261,7 +261,7 @@ int CookiesEngine::DeleteValue(std::string key)
 		return -1;
 	}
     
-	CMutex m(NULL, FALSE, CookieFileMutext);
+	CMutex m(nullptr, FALSE, CookieFileMutext);
 	CMutexLock lock(m);
     
 	std::fstream f(fileName.c_str());

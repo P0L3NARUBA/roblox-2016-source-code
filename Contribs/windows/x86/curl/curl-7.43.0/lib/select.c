@@ -100,11 +100,11 @@ int Curl_wait_ms(int timeout_ms)
   initial_tv = curlx_tvnow();
   do {
 #if defined(HAVE_POLL_FINE)
-    r = poll(NULL, 0, pending_ms);
+    r = poll(nullptr, 0, pending_ms);
 #else
     pending_tv.tv_sec = pending_ms / 1000;
     pending_tv.tv_usec = (pending_ms % 1000) * 1000;
-    r = select(0, NULL, NULL, NULL, &pending_tv);
+    r = select(0, nullptr, nullptr, nullptr, &pending_tv);
 #endif /* HAVE_POLL_FINE */
     if(r != -1)
       break;
@@ -283,7 +283,7 @@ int Curl_socket_check(curl_socket_t readfd0, /* two sockets to read from */
       maxfd = writefd;
   }
 
-  ptimeout = (timeout_ms < 0) ? NULL : &pending_tv;
+  ptimeout = (timeout_ms < 0) ? nullptr : &pending_tv;
 
   do {
     if(timeout_ms > 0) {
@@ -321,8 +321,8 @@ int Curl_socket_check(curl_socket_t readfd0, /* two sockets to read from */
                &fds_read,
                &fds_write,
 #else
-               fds_read.fd_count ? &fds_read : NULL,
-               fds_write.fd_count ? &fds_write : NULL,
+               fds_read.fd_count ? &fds_read : nullptr,
+               fds_write.fd_count ? &fds_write : nullptr,
 #endif
                &fds_err, ptimeout);
     if(r != -1)
@@ -494,7 +494,7 @@ int Curl_poll(struct pollfd ufds[], unsigned int nfds, int timeout_ms)
   }
 #endif
 
-  ptimeout = (timeout_ms < 0) ? NULL : &pending_tv;
+  ptimeout = (timeout_ms < 0) ? nullptr : &pending_tv;
 
   do {
     if(timeout_ms > 0) {
@@ -513,9 +513,9 @@ int Curl_poll(struct pollfd ufds[], unsigned int nfds, int timeout_ms)
                   don't give it such arguments.  See the comment about this in
                   Curl_check_socket().
                */
-               fds_read.fd_count ? &fds_read : NULL,
-               fds_write.fd_count ? &fds_write : NULL,
-               fds_err.fd_count ? &fds_err : NULL,
+               fds_read.fd_count ? &fds_read : nullptr,
+               fds_write.fd_count ? &fds_write : nullptr,
+               fds_err.fd_count ? &fds_err : nullptr,
 #endif
                ptimeout);
     if(r != -1)

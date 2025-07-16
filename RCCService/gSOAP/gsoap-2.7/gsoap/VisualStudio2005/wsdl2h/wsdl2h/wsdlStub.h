@@ -86,7 +86,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         xs__annotation() : documentation(NULL) { }
+	         xs__annotation() : documentation(nullptr) { }
 	virtual ~xs__annotation() { }
 };
 #endif
@@ -222,7 +222,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         xs__any() : namespace_("##any"), processContents((enum xs__processContents)0), minOccurs(NULL), maxOccurs(NULL) { }
+	         xs__any() : namespace_("##any"), processContents((enum xs__processContents)0), minOccurs(nullptr), maxOccurs(nullptr) { }
 	virtual ~xs__any() { }
 };
 #endif
@@ -317,7 +317,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         xs__sequence() : minOccurs(NULL), maxOccurs(NULL), annotation(NULL) { }
+	         xs__sequence() : minOccurs(nullptr), maxOccurs(nullptr), annotation(nullptr) { }
 	virtual ~xs__sequence() { }
 };
 #endif
@@ -395,7 +395,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         xs__enumeration() : value(NULL), value_(NULL), annotation(NULL) { }
+	         xs__enumeration() : value(nullptr), value_(nullptr), annotation(nullptr) { }
 	virtual ~xs__enumeration() { }
 };
 #endif
@@ -416,7 +416,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         xs__pattern() : value(NULL) { }
+	         xs__pattern() : value(nullptr) { }
 	virtual ~xs__pattern() { }
 };
 #endif
@@ -438,7 +438,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         xs__simpleContent() : extension(NULL), restriction(NULL) { }
+	         xs__simpleContent() : extension(nullptr), restriction(nullptr) { }
 	virtual ~xs__simpleContent() { }
 };
 #endif
@@ -527,7 +527,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         xs__length() : value(NULL), fixed((bool)0) { }
+	         xs__length() : value(nullptr), fixed((bool)0) { }
 	virtual ~xs__length() { }
 };
 #endif
@@ -547,7 +547,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         xs__whiteSpace() : value(NULL) { }
+	         xs__whiteSpace() : value(nullptr) { }
 	virtual ~xs__whiteSpace() { }
 };
 #endif
@@ -647,7 +647,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         xs__union() : memberTypes(NULL) { }
+	         xs__union() : memberTypes(nullptr) { }
 	virtual ~xs__union() { }
 };
 #endif
@@ -670,7 +670,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         xs__complexContent() : mixed((bool)0), extension(NULL), restriction(NULL) { }
+	         xs__complexContent() : mixed((bool)0), extension(nullptr), restriction(nullptr) { }
 	virtual ~xs__complexContent() { }
 };
 #endif
@@ -876,7 +876,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         soap__binding() : transport(NULL), style(NULL) { }
+	         soap__binding() : transport(nullptr), style(nullptr) { }
 	virtual ~soap__binding() { }
 };
 #endif
@@ -897,7 +897,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         soap__operation() : soapAction(NULL), style(NULL) { }
+	         soap__operation() : soapAction(nullptr), style(nullptr) { }
 	virtual ~soap__operation() { }
 };
 #endif
@@ -920,7 +920,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         soap__body() : encodingStyle(NULL), parts(NULL), use((enum soap__useChoice)0), namespace_(NULL) { }
+	         soap__body() : encodingStyle(nullptr), parts(nullptr), use((enum soap__useChoice)0), namespace_(nullptr) { }
 	virtual ~soap__body() { }
 };
 #endif
@@ -943,7 +943,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         soap__fault() : name(NULL), encodingStyle(NULL), use((enum soap__useChoice)0), namespace_(NULL) { }
+	         soap__fault() : name(nullptr), encodingStyle(nullptr), use((enum soap__useChoice)0), namespace_(nullptr) { }
 	virtual ~soap__fault() { }
 };
 #endif
@@ -976,7 +976,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         soap__headerfault() : message(NULL), part(NULL), use((enum soap__useChoice)0), encodingStyle(NULL), namespace_(NULL), messageRef(NULL), partRef(NULL) { }
+	         soap__headerfault() : message(nullptr), part(nullptr), use((enum soap__useChoice)0), encodingStyle(nullptr), namespace_(nullptr), messageRef(nullptr), partRef(nullptr) { }
 	virtual ~soap__headerfault() { }
 };
 #endif
@@ -1010,7 +1010,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         soap__header() : message(NULL), part(NULL), use((enum soap__useChoice)0), encodingStyle(NULL), namespace_(NULL), messageRef(NULL), partRef(NULL) { }
+	         soap__header() : message(nullptr), part(nullptr), use((enum soap__useChoice)0), encodingStyle(nullptr), namespace_(nullptr), messageRef(nullptr), partRef(nullptr) { }
 	virtual ~soap__header() { }
 };
 #endif
@@ -1030,7 +1030,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         soap__address() : location(NULL) { }
+	         soap__address() : location(nullptr) { }
 	virtual ~soap__address() { }
 };
 #endif
@@ -1051,7 +1051,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         mime__content() : part(NULL), type(NULL) { }
+	         mime__content() : part(nullptr), type(nullptr) { }
 	virtual ~mime__content() { }
 };
 #endif
@@ -1074,7 +1074,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         mime__part() : soap__body_(NULL) { }
+	         mime__part() : soap__body_(nullptr) { }
 	virtual ~mime__part() { }
 };
 #endif
@@ -1115,7 +1115,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         dime__message() : layout(NULL) { }
+	         dime__message() : layout(nullptr) { }
 	virtual ~dime__message() { }
 };
 #endif
@@ -1135,7 +1135,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         http__address() : location(NULL) { }
+	         http__address() : location(nullptr) { }
 	virtual ~http__address() { }
 };
 #endif
@@ -1155,7 +1155,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         http__binding() : verb(NULL) { }
+	         http__binding() : verb(nullptr) { }
 	virtual ~http__binding() { }
 };
 #endif
@@ -1175,7 +1175,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         http__operation() : location(NULL) { }
+	         http__operation() : location(nullptr) { }
 	virtual ~http__operation() { }
 };
 #endif
@@ -1201,7 +1201,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         sd__serviceData() : name(NULL), type(NULL), nillable((bool)0), minOccurs(NULL), maxOccurs(NULL), mutability((enum sd__mutability)2), modifiable((bool)0) { }
+	         sd__serviceData() : name(nullptr), type(nullptr), nillable((bool)0), minOccurs(nullptr), maxOccurs(nullptr), mutability((enum sd__mutability)2), modifiable((bool)0) { }
 	virtual ~sd__serviceData() { }
 };
 #endif
@@ -1222,7 +1222,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         sd__staticServiceDataValues() : __type(0), _any(NULL) { }
+	         sd__staticServiceDataValues() : __type(0), _any(nullptr) { }
 	virtual ~sd__staticServiceDataValues() { }
 };
 #endif
@@ -1247,7 +1247,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         gwsdl__portType() : name(NULL), extends(NULL), documentation(NULL), sd__staticServiceDataValues_(NULL) { }
+	         gwsdl__portType() : name(nullptr), extends(nullptr), documentation(nullptr), sd__staticServiceDataValues_(nullptr) { }
 	virtual ~gwsdl__portType() { }
 };
 #endif
@@ -1298,7 +1298,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         wsdl__types() : documentation(NULL) { }
+	         wsdl__types() : documentation(nullptr) { }
 	virtual ~wsdl__types() { }
 };
 #endif
@@ -1356,7 +1356,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         wsdl__message() : name(NULL), documentation(NULL) { }
+	         wsdl__message() : name(nullptr), documentation(nullptr) { }
 	virtual ~wsdl__message() { }
 };
 #endif
@@ -1466,7 +1466,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         wsdl__operation() : name(NULL), parameterOrder(NULL), documentation(NULL), input(NULL), output(NULL) { }
+	         wsdl__operation() : name(nullptr), parameterOrder(nullptr), documentation(nullptr), input(nullptr), output(nullptr) { }
 	virtual ~wsdl__operation() { }
 };
 #endif
@@ -1489,7 +1489,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         wsdl__portType() : name(NULL), documentation(NULL) { }
+	         wsdl__portType() : name(nullptr), documentation(nullptr) { }
 	virtual ~wsdl__portType() { }
 };
 #endif
@@ -1515,7 +1515,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         wsdl__ext_input() : documentation(NULL), dime__message_(NULL), soap__body_(NULL), mime__multipartRelated_(NULL), mime__content_(NULL) { }
+	         wsdl__ext_input() : documentation(nullptr), dime__message_(nullptr), soap__body_(nullptr), mime__multipartRelated_(nullptr), mime__content_(nullptr) { }
 	virtual ~wsdl__ext_input() { }
 };
 #endif
@@ -1541,7 +1541,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         wsdl__ext_output() : documentation(NULL), dime__message_(NULL), soap__body_(NULL), mime__multipartRelated_(NULL), mime__content_(NULL) { }
+	         wsdl__ext_output() : documentation(nullptr), dime__message_(nullptr), soap__body_(nullptr), mime__multipartRelated_(nullptr), mime__content_(nullptr) { }
 	virtual ~wsdl__ext_output() { }
 };
 #endif
@@ -1685,7 +1685,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         wsdl__service() : name(NULL), documentation(NULL) { }
+	         wsdl__service() : name(nullptr), documentation(nullptr) { }
 	virtual ~wsdl__service() { }
 };
 #endif

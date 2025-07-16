@@ -122,11 +122,11 @@ static void free_ssl_structs(struct ssl_connect_data *connssl)
 {
   if(connssl->ssl) {
     ssl_free (connssl->ssl);
-    connssl->ssl = NULL;
+    connssl->ssl = nullptr;
   }
   if(connssl->ssl_ctx) {
     ssl_ctx_free(connssl->ssl_ctx);
-    connssl->ssl_ctx = NULL;
+    connssl->ssl_ctx = nullptr;
   }
 }
 
@@ -139,7 +139,7 @@ static CURLcode connect_prep(struct connectdata *conn, int sockindex)
 {
   struct SessionHandle *data = conn->data;
   SSL_CTX *ssl_ctx;
-  SSL *ssl = NULL;
+  SSL *ssl = nullptr;
   int cert_types[] = {SSL_OBJ_X509_CERT, SSL_OBJ_PKCS12, 0};
   int key_types[] = {SSL_OBJ_RSA_KEY, SSL_OBJ_PKCS8, SSL_OBJ_PKCS12, 0};
   int i, ssl_fcn_return;
@@ -176,17 +176,17 @@ static CURLcode connect_prep(struct connectdata *conn, int sockindex)
 
   /* Allocate an SSL_CTX struct */
   ssl_ctx = ssl_ctx_new(client_option, SSL_DEFAULT_CLNT_SESS);
-  if(ssl_ctx == NULL) {
+  if(ssl_ctx == nullptr) {
     failf(data, "unable to create client SSL context");
     return CURLE_SSL_CONNECT_ERROR;
   }
 
   conn->ssl[sockindex].ssl_ctx = ssl_ctx;
-  conn->ssl[sockindex].ssl = NULL;
+  conn->ssl[sockindex].ssl = nullptr;
 
   /* Load the trusted CA cert bundle file */
   if(data->set.ssl.CAfile) {
-    if(ssl_obj_load(ssl_ctx, SSL_OBJ_X509_CACERT, data->set.ssl.CAfile, NULL)
+    if(ssl_obj_load(ssl_ctx, SSL_OBJ_X509_CACERT, data->set.ssl.CAfile, nullptr)
        != SSL_OK) {
       infof(data, "error reading ca cert file %s \n",
             data->set.ssl.CAfile);
@@ -212,7 +212,7 @@ static CURLcode connect_prep(struct connectdata *conn, int sockindex)
     /* Instead of trying to analyze cert type here, let axTLS try them all. */
     while(cert_types[i] != 0) {
       ssl_fcn_return = ssl_obj_load(ssl_ctx, cert_types[i],
-                                    data->set.str[STRING_CERT], NULL);
+                                    data->set.str[STRING_CERT], nullptr);
       if(ssl_fcn_return == SSL_OK) {
         infof(data, "successfully read cert file %s \n",
               data->set.str[STRING_CERT]);
@@ -236,7 +236,7 @@ static CURLcode connect_prep(struct connectdata *conn, int sockindex)
     /* Instead of trying to analyze key type here, let axTLS try them all. */
     while(key_types[i] != 0) {
       ssl_fcn_return = ssl_obj_load(ssl_ctx, key_types[i],
-                                    data->set.str[STRING_KEY], NULL);
+                                    data->set.str[STRING_KEY], nullptr);
       if(ssl_fcn_return == SSL_OK) {
         infof(data, "successfully read key file %s \n",
               data->set.str[STRING_KEY]);
@@ -266,7 +266,7 @@ static CURLcode connect_prep(struct connectdata *conn, int sockindex)
                          ssl_sessionid, (uint8_t)ssl_idsize);
   }
   else
-    ssl = ssl_client_new(ssl_ctx, conn->sock[sockindex], NULL, 0);
+    ssl = ssl_client_new(ssl_ctx, conn->sock[sockindex], nullptr, 0);
 
   conn->ssl[sockindex].ssl = ssl;
   return CURLE_OK;
@@ -318,7 +318,7 @@ static CURLcode connect_finish(struct connectdata *conn, int sockindex)
      risk of an inifite loop */
   for(dns_altname_index = 0; ; dns_altname_index++) {
     dns_altname = ssl_get_cert_subject_alt_dnsname(ssl, dns_altname_index);
-    if(dns_altname == NULL) {
+    if(dns_altname == nullptr) {
       break;
     }
     found_subject_alt_names = 1;
@@ -348,7 +348,7 @@ static CURLcode connect_finish(struct connectdata *conn, int sockindex)
     /* Per RFC2818, when no Subject Alt Names were available, examine the peer
        CN as a legacy fallback */
     peer_CN = ssl_get_cert_dn(ssl, SSL_X509_CERT_COMMON_NAME);
-    if(peer_CN == NULL) {
+    if(peer_CN == nullptr) {
       if(data->set.ssl.verifyhost) {
         Curl_axtls_close(conn, sockindex);
         failf(data, "unable to obtain common name from peer certificate");
@@ -420,7 +420,7 @@ CURLcode Curl_axtls_connect_nonblocking(
          fact that axtls does not expose any knowledge about when work needs
          to be performed. This can save ~25% of time on SSL handshakes. */
       for(i=0; i<5; i++) {
-        ssl_fcn_return = ssl_read(conn->ssl[sockindex].ssl, NULL);
+        ssl_fcn_return = ssl_read(conn->ssl[sockindex].ssl, nullptr);
         if(ssl_fcn_return < 0) {
           Curl_axtls_close(conn, sockindex);
           ssl_display_error(ssl_fcn_return); /* goes to stdout. */
@@ -478,7 +478,7 @@ Curl_axtls_connect(struct connectdata *conn,
   /* Check to make sure handshake was ok. */
   while(ssl_handshake_status(ssl) != SSL_OK) {
     /* check allowed time left */
-    timeout_ms = Curl_timeleft(data, NULL, TRUE);
+    timeout_ms = Curl_timeleft(data, nullptr, TRUE);
 
     if(timeout_ms < 0) {
       /* no need to continue if time already is up */
@@ -486,7 +486,7 @@ Curl_axtls_connect(struct connectdata *conn,
       return CURLE_OPERATION_TIMEDOUT;
     }
 
-    ssl_fcn_return = ssl_read(ssl, NULL);
+    ssl_fcn_return = ssl_read(ssl, nullptr);
     if(ssl_fcn_return < 0) {
       Curl_axtls_close(conn, sockindex);
       ssl_display_error(ssl_fcn_return); /* goes to stdout. */

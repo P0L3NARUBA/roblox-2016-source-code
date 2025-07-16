@@ -41,7 +41,7 @@ void PolyContact::deleteConnectors(ConnectorArray& deleteConnectors)
 
 void PolyContact::removeAllConnectorsFromKernel()
 {
-	Kernel* kernel = NULL;
+	Kernel* kernel = nullptr;
 	for (size_t i = 0; i < polyConnectors.size(); ++i) {
 		if (polyConnectors[i]->isInKernel()) {
 			kernel = kernel ? kernel : getKernel();		// small optimization - getKernel walks the IPipelines
@@ -52,7 +52,7 @@ void PolyContact::removeAllConnectorsFromKernel()
 
 void PolyContact::putAllConnectorsInKernel()
 {
-	Kernel* kernel = NULL;
+	Kernel* kernel = nullptr;
 	for (size_t i = 0; i < polyConnectors.size(); ++i) {
 		if (!polyConnectors[i]->isInKernel() &&
 			 polyConnectors[i]->getContactPoint().length < -ContactConnector::overlapGoal()) {
@@ -139,7 +139,7 @@ PolyConnector* PolyContact::matchClosestFeature(PolyConnector* newConnector)
 			return answer;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 void PolyContact::updateContactPoints()

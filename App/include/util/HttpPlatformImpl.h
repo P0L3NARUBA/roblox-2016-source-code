@@ -107,7 +107,7 @@ public:
 
     bool isValid() const
     {
-        return NULL != cacheEntry;
+        return nullptr != cacheEntry;
     }
 
     const std::string& getInvalidReason() const
@@ -136,7 +136,7 @@ public:
 
 
     // Converts the URL to a known location on disk and tries to open and return that file.
-    // Returns NULL if file could not be opened.
+    // Returns nullptr if file could not be opened.
     static CacheResult open(const char* assetUrl, const char* cdnUrl);
 
     // Atomically update the file with new data and returned a new CacheEntry to it.
@@ -179,9 +179,9 @@ struct HttpOptions
         ,cachePolicy(cachePolicy)
         ,connectTimeoutMillis(connectTimeoutMillis)
         ,performTimeoutMillis(performTimeoutMillis)
-        ,postData(NULL)
-        ,hdrContentType(NULL)
-        ,addlHeaders(NULL)
+        ,postData(nullptr)
+        ,hdrContentType(nullptr)
+        ,addlHeaders(nullptr)
     {}
 
     void setPostData(std::istream* dataStream, bool compressed)

@@ -141,7 +141,7 @@ ir_constant_propagation_visitor::handle_rvalue(ir_rvalue **rvalue)
    if (!type->is_scalar() && !type->is_vector())
       return;
 
-   ir_swizzle *swiz = NULL;
+   ir_swizzle *swiz = nullptr;
    ir_dereference_variable *deref = (*rvalue)->as_dereference_variable();
    if (!deref) {
       swiz = (*rvalue)->as_swizzle();
@@ -158,7 +158,7 @@ ir_constant_propagation_visitor::handle_rvalue(ir_rvalue **rvalue)
 
    for (unsigned int i = 0; i < type->components(); i++) {
       int channel;
-      acp_entry *found = NULL;
+      acp_entry *found = nullptr;
 
       if (swiz) {
 	 switch (i) {
@@ -389,7 +389,7 @@ ir_constant_propagation_visitor::visit_enter(ir_loop *ir)
 void
 ir_constant_propagation_visitor::kill(ir_variable *var, unsigned write_mask)
 {
-   assert(var != NULL);
+   assert(var != nullptr);
 
    /* We don't track non-vectors. */
    if (!var->type->is_vector() && !var->type->is_scalar())

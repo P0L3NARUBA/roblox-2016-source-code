@@ -261,7 +261,7 @@ public:
 	//! this constructor doesn't build the tree. you must call	buildSet
 	btGImpactBvh()
 	{
-		m_primitive_manager = NULL;
+		m_primitive_manager = nullptr;
 	}
 
 	//! this constructor doesn't build the tree. you must call	buildSet

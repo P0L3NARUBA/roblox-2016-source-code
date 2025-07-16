@@ -157,7 +157,7 @@ namespace Graphics
 		std::vector<GlyphLine> lines;
 		
 		Vector2int16 intAvailableSpace = Vector2int16(availableSpace / scale);
-		Vector2int16 intSize = layout(s, &lines, sizeIndex, intAvailableSpace, useAvailableSpace, false, NULL);
+		Vector2int16 intSize = layout(s, &lines, sizeIndex, intAvailableSpace, useAvailableSpace, false, nullptr);
 		
 		const Glyph* glyphTableSize = glyphTable + info.glyphCount * sizeIndex;
 		
@@ -412,7 +412,7 @@ namespace Graphics
 		std::vector<GlyphLine> lines;
 		
 		Vector2int16 intAvailableSpace = Vector2int16(availableSpace / scale);
-		Vector2int16 intSize = layout(s, &lines, sizeIndex, intAvailableSpace, useAvailableSpace, false, NULL);
+		Vector2int16 intSize = layout(s, &lines, sizeIndex, intAvailableSpace, useAvailableSpace, false, nullptr);
 		
 		const Glyph* glyphTableSize = glyphTable + info.glyphCount * sizeIndex;
 		
@@ -482,10 +482,10 @@ namespace Graphics
 		float scale = height / sizeTable[sizeIndex] / retinaScale;
 
 		Vector2int16 intAvailableSpace = Vector2int16(availableSpace / scale);
-		Vector2int16 intSize = layout(s, NULL, sizeIndex, intAvailableSpace, useAvailableSpace, DFFlag::TextScaleDontWrapInWords, textFits);
+		Vector2int16 intSize = layout(s, nullptr, sizeIndex, intAvailableSpace, useAvailableSpace, DFFlag::TextScaleDontWrapInWords, textFits);
 
 		if (DFFlag::TextScaleDontWrapInWords && textFits == false) {
-			intSize = layout(s, NULL, sizeIndex, intAvailableSpace, useAvailableSpace, false, textFits);
+			intSize = layout(s, nullptr, sizeIndex, intAvailableSpace, useAvailableSpace, false, textFits);
 		}
 
 		return Vector2(intSize) * scale;

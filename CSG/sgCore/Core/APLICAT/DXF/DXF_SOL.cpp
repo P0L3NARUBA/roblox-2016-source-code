@@ -76,25 +76,25 @@ BOOL dxf_solid(lpLISTH listh, lpVDIM faces)
 		line.v1 = p1;
 		line.v2 = p2;
 		if ( !cr_add_obj(OLINE, color, (lpGEO_SIMPLE)&line,
-										 &listh2, NULL, FALSE)) goto err;
+										 &listh2, nullptr, FALSE)) goto err;
 	}
 	if (!dpoint_eq(&p2, &p3, eps_d)) {
 		line.v1 = p2;
 		line.v2 = p3;
 		if ( !cr_add_obj(OLINE, color, (lpGEO_SIMPLE)&line,
-										 &listh2, NULL, FALSE)) goto err;
+										 &listh2, nullptr, FALSE)) goto err;
 	}
 	if (!dpoint_eq(&p3, &p4, eps_d)) {
 		line.v1 = p3;
 		line.v2 = p4;
 		if ( !cr_add_obj(OLINE, color, (lpGEO_SIMPLE)&line,
-										 &listh2, NULL, FALSE)) goto err;
+										 &listh2, nullptr, FALSE)) goto err;
 	}
 	if (!dpoint_eq(&p4, &p1, eps_d)) {
 		line.v1 = p4;
 		line.v2 = p1;
 		if ( !cr_add_obj(OLINE, color, (lpGEO_SIMPLE)&line,
-										 &listh2, NULL, FALSE)) goto err;
+										 &listh2, nullptr, FALSE)) goto err;
 	}
 	if (!listh2.num) return TRUE;
 	memset(&path, 0, sizeof(path));

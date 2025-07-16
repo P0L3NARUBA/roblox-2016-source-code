@@ -18,14 +18,14 @@ BOOL Skin_Surface( lpLISTH list, lpD_POINT spin, short n_section, short q, short
 	BOOL				cod;
 	MESHDD      mdd;
 	VDIM				ribs, rib_curves;
-	lpNPW       np = NULL;
+	lpNPW       np = nullptr;
 	SURF_DAT	  surf_dat;
   GEO_SURFACE	geo_surf;
 //==============================================================================
 
 	o_hcunit(surf_matr); //   
 	c_num_np	= -32767;
-	*hrez			= NULL;
+	*hrez			= nullptr;
 	if ( !np_init_list(&c_list_str) ) return FALSE;
 
 //get curves from the list and put them into VDIM(sply_dat)
@@ -61,7 +61,7 @@ BOOL Skin_Surface( lpLISTH list, lpD_POINT spin, short n_section, short q, short
 //create bottoms
 	if( closed_u && solid && !closed_v ){
 		if ( (np = creat_np_mem(TNPW,MAXNOV,MAXNOE,MAXNOC, MAXNOF,
-														MAXNOE)) == NULL)  goto err2;
+														MAXNOE)) == nullptr)  goto err2;
 		np_init((lpNP)np);
 		np->ident = c_num_np++;
 		if( !put_top_bottom( np, &mdd )) goto err3;
@@ -83,7 +83,7 @@ BOOL Skin_Surface( lpLISTH list, lpD_POINT spin, short n_section, short q, short
 	free_np_mem(&np);
 	}
 //------------------------------------------------------------------------------
-  if( ((*hrez)=create_BREP_surface(&geo_surf, &mdd,false )) == NULL ) goto err2;
+  if( ((*hrez)=create_BREP_surface(&geo_surf, &mdd,false )) == nullptr ) goto err2;
   
  	free_geo_surf( &geo_surf );
 	free_vdim_sply(&ribs);

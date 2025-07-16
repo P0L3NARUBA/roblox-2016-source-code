@@ -174,9 +174,9 @@ void RibbonSliderPane::setScrollButtons(bool on)
         disconnect(d.m_buttonUp, SIGNAL(pressed()), this, SLOT(increment()));
         disconnect(d.m_buttonDown, SIGNAL(pressed()), this, SLOT(decrement()));
         delete d.m_buttonUp;
-        d.m_buttonUp = NULL;
+        d.m_buttonUp = nullptr;
         delete d.m_buttonDown;
-        d.m_buttonDown = NULL;
+        d.m_buttonDown = nullptr;
     }
 }
 

@@ -193,14 +193,14 @@ static void destroy_async_data (struct Curl_async *async)
     if(res) {
       if(res->temp_ai) {
         Curl_freeaddrinfo(res->temp_ai);
-        res->temp_ai = NULL;
+        res->temp_ai = nullptr;
       }
       free(res);
     }
-    async->os_specific = NULL;
+    async->os_specific = nullptr;
   }
 
-  async->hostname = NULL;
+  async->hostname = nullptr;
 }
 
 /*
@@ -314,7 +314,7 @@ CURLcode Curl_resolver_is_resolved(struct connectdata *conn,
     conn->async.os_specific;
   CURLcode result = CURLE_OK;
 
-  *dns = NULL;
+  *dns = nullptr;
 
   waitperform(conn, 0);
 
@@ -322,7 +322,7 @@ CURLcode Curl_resolver_is_resolved(struct connectdata *conn,
     (void)Curl_addrinfo_callback(conn, res->last_status, res->temp_ai);
     /* temp_ai ownership is moved to the connection, so we need not free-up
        them */
-    res->temp_ai = NULL;
+    res->temp_ai = nullptr;
     if(!conn->async.dns) {
       failf(data, "Could not resolve: %s (%s)",
             conn->async.hostname, ares_strerror(conn->async.status));
@@ -344,7 +344,7 @@ CURLcode Curl_resolver_is_resolved(struct connectdata *conn,
  * waits for a resolve to finish. This function should be avoided since using
  * this risk getting the multi interface to "hang".
  *
- * If 'entry' is non-NULL, make it point to the resolved dns entry
+ * If 'entry' is non-nullptr, make it point to the resolved dns entry
  *
  * Returns CURLE_COULDNT_RESOLVE_HOST if the host was not resolved, and
  * CURLE_OPERATION_TIMEDOUT if a time-out occurred.
@@ -532,18 +532,18 @@ Curl_addrinfo *Curl_resolver_getaddrinfo(struct connectdata *conn,
 
   bufp = strdup(hostname);
   if(bufp) {
-    struct ResolverResults *res = NULL;
+    struct ResolverResults *res = nullptr;
     free(conn->async.hostname);
     conn->async.hostname = bufp;
     conn->async.port = port;
     conn->async.done = FALSE;   /* not done */
     conn->async.status = 0;     /* clear */
-    conn->async.dns = NULL;     /* clear */
+    conn->async.dns = nullptr;     /* clear */
     res = calloc(sizeof(struct ResolverResults), 1);
     if(!res) {
       free(conn->async.hostname);
-      conn->async.hostname = NULL;
-      return NULL;
+      conn->async.hostname = nullptr;
+      return nullptr;
     }
     conn->async.os_specific = res;
 
@@ -580,7 +580,7 @@ Curl_addrinfo *Curl_resolver_getaddrinfo(struct connectdata *conn,
 
     *waitp = 1; /* expect asynchronous response */
   }
-  return NULL; /* no struct yet */
+  return nullptr; /* no struct yet */
 }
 
 CURLcode Curl_set_dns_servers(struct SessionHandle *data,
@@ -589,7 +589,7 @@ CURLcode Curl_set_dns_servers(struct SessionHandle *data,
   CURLcode result = CURLE_NOT_BUILT_IN;
   int ares_result;
 
-  /* If server is NULL or empty, this would purge all DNS servers
+  /* If server is nullptr or empty, this would purge all DNS servers
    * from ares library, which will cause any and all queries to fail.
    * So, just return OK if none are configured and don't actually make
    * any changes to c-ares.  This lets c-ares use it's defaults, which

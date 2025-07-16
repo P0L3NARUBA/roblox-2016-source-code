@@ -21,7 +21,7 @@ public:
         : uMsg(u), dwFlags(dw), lpParam(lp), pEvent(pEvnt) {}
 
     CMsg()
-        : uMsg(0), dwFlags(0L), lpParam(NULL), pEvent(NULL) {}
+        : uMsg(0), dwFlags(0L), lpParam(nullptr), pEvent(nullptr) {}
 };
 
 // This is the actual thread class.  It exports all the usual thread control
@@ -47,9 +47,9 @@ protected:
 public:
     CMsgThread()
         : m_ThreadId(0),
-        m_hThread(NULL),
+        m_hThread(nullptr),
         m_lWaiting(0),
-        m_hSem(NULL),
+        m_hSem(nullptr),
         // make a list with a cache of 5 items
         m_ThreadQueue(NAME("MsgThread list"), 5)
         {
@@ -67,7 +67,7 @@ public:
     BOOL CreateThread();
 
     BOOL WaitForThreadExit(LPDWORD lpdwExitCode) {
-        if (m_hThread != NULL) {
+        if (m_hThread != nullptr) {
             WaitForSingleObject(m_hThread, INFINITE);
             return GetExitCodeThread(m_hThread, lpdwExitCode);
         }
@@ -100,7 +100,7 @@ public:
 
 
     void PutThreadMsg(UINT uMsg, DWORD dwMsgFlags,
-                      LPVOID lpMsgParam, CAMEvent *pEvent = NULL) {
+                      LPVOID lpMsgParam, CAMEvent *pEvent = nullptr) {
         CAutoLock lck(&m_Lock);
         CMsg* pMsg = new CMsg(uMsg, dwMsgFlags, lpMsgParam, pEvent);
         m_ThreadQueue.AddTail(pMsg);

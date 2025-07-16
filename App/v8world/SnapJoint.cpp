@@ -38,7 +38,7 @@ SnapJoint* SnapJoint::canBuildJoint(
 		return new SnapJoint(p0, p1, c0, c1);
 	}
 	else {
-		return NULL;
+		return nullptr;
 	}
 }
 

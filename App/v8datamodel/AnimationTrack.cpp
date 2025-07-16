@@ -28,11 +28,11 @@ static Reflection::BoundFuncDesc<AnimationTrack, void(float,float)> desc_AdjustW
 static Reflection::BoundFuncDesc<AnimationTrack, void(float)> desc_AdjustSpeed(&AnimationTrack::adjustSpeed, "AdjustSpeed", "speed", 1.0f, Security::None);
 static Reflection::BoundFuncDesc<AnimationTrack, double(std::string)> desc_GetTimeOfKeyframe(&AnimationTrack::getTimeOfKeyframe, "GetTimeOfKeyframe", "keyframeName", Security::None);
 
-static Reflection::PropDescriptor<AnimationTrack, float> prop_Length("Length", category_Data, &AnimationTrack::getLength, NULL, Reflection::PropertyDescriptor::SCRIPTING);
-static Reflection::PropDescriptor<AnimationTrack, bool> prop_IsPlaying("IsPlaying", category_Data, &AnimationTrack::getIsPlaying, NULL, Reflection::PropertyDescriptor::SCRIPTING);
+static Reflection::PropDescriptor<AnimationTrack, float> prop_Length("Length", category_Data, &AnimationTrack::getLength, nullptr, Reflection::PropertyDescriptor::SCRIPTING);
+static Reflection::PropDescriptor<AnimationTrack, bool> prop_IsPlaying("IsPlaying", category_Data, &AnimationTrack::getIsPlaying, nullptr, Reflection::PropertyDescriptor::SCRIPTING);
 static Reflection::PropDescriptor<AnimationTrack, float> prop_TimePosition("TimePosition", category_Data, &AnimationTrack::getTimePosition, &AnimationTrack::setTimePosition, Reflection::PropertyDescriptor::UI);
 
-static Reflection::RefPropDescriptor<AnimationTrack, Animation> prop_Animation("Animation", category_Data, &AnimationTrack::getAnimation, NULL, Reflection::PropertyDescriptor::SCRIPTING);
+static Reflection::RefPropDescriptor<AnimationTrack, Animation> prop_Animation("Animation", category_Data, &AnimationTrack::getAnimation, nullptr, Reflection::PropertyDescriptor::SCRIPTING);
 
 const Reflection::EnumPropDescriptor<AnimationTrack, KeyframeSequence::Priority> prop_Priority("Priority", category_Data, &AnimationTrack::getPriority, &AnimationTrack::setPriority);
 

@@ -160,7 +160,7 @@ bool TSamplerTraverser::traverseAggregate( bool preVisit, TIntermAggregate *node
                      TIntermSymbol *sym = (*symit)->getAsSymbolNode();
                      TIntermSymbol *funcSym = (*funcIt)->getAsSymbolNode();
                      
-                     if ( sym != NULL && funcSym != NULL)
+                     if ( sym != nullptr && funcSym != nullptr)
                      {
                         // If the parameter is generic, and the sampler to which
                         // it is being passed has been marked, propogate its sampler

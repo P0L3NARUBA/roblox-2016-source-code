@@ -31,7 +31,7 @@ char *
 Curl_strtok_r(char *ptr, const char *sep, char **end)
 {
   if(!ptr)
-    /* we got NULL input so then we get our last position instead */
+    /* we got nullptr input so then we get our last position instead */
     ptr = *end;
 
   /* pass all letters that are including in the separator string */
@@ -60,7 +60,7 @@ Curl_strtok_r(char *ptr, const char *sep, char **end)
   }
 
   /* we ended up on a null byte, there are no more strings to find! */
-  return NULL;
+  return nullptr;
 }
 
 #endif /* this was only compiled if strtok_r wasn't present */

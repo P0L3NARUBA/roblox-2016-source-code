@@ -60,7 +60,7 @@ TCHAR m_ModuleName[iDEBUGINFO];             // Cut down module name
 DWORD m_Levels[iMAXLEVELS];                 // Debug level per category
 CRITICAL_SECTION m_CSDebug;                 // Controls access to list
 DWORD m_dwNextCookie;                       // Next active object ID
-ObjectDesc *pListHead = NULL;               // First active object
+ObjectDesc *pListHead = nullptr;               // First active object
 DWORD m_dwObjectCount;                      // Active object count
 BOOL m_bInit = FALSE;                       // Have we been initialised
 HANDLE m_hOutput = INVALID_HANDLE_VALUE;    // Optional output written here
@@ -129,7 +129,7 @@ void WINAPI DbgInitKeyLevels(HKEY hKey, bool fTakeMax)
         lReturn = RegQueryValueEx(
             hKey,                       // Handle to an open key
             pKeyNames[lKeyPos],         // Subkey name derivation
-            NULL,                       // Reserved field
+            nullptr,                       // Reserved field
             &dwKeyType,                 // Returns the field type
             (LPBYTE) &dwKeyValue,       // Returns the field's value
             &dwKeySize );               // Number of bytes transferred
@@ -171,7 +171,7 @@ void WINAPI DbgInitKeyLevels(HKEY hKey, bool fTakeMax)
     lReturn = RegQueryValueEx(
         hKey,                       // Handle to an open key
         TimeoutName,                // Subkey name derivation
-        NULL,                       // Reserved field
+        nullptr,                       // Reserved field
         &dwKeyType,                 // Returns the field type
         (LPBYTE) &dwWaitTimeout,    // Returns the field's value
         &dwKeySize );               // Number of bytes transferred
@@ -206,9 +206,9 @@ void WINAPI DbgOutString(LPCTSTR psz)
 #ifdef UNICODE
         CHAR szDest[2048];
         WideCharToMultiByte(CP_ACP, 0, psz, -1, szDest, NUMELMS(szDest), 0, 0);
-        WriteFile (m_hOutput, szDest, cb, &dw, NULL);
+        WriteFile (m_hOutput, szDest, cb, &dw, nullptr);
 #else
-        WriteFile (m_hOutput, psz, cb, &dw, NULL);
+        WriteFile (m_hOutput, psz, cb, &dw, nullptr);
 #endif
     } else {
         OutputDebugString (psz);
@@ -231,7 +231,7 @@ void WINAPI DbgInitLogTo (
     lReturn = RegQueryValueEx(
         hKey,                       // Handle to an open key
         cszKey,                     // Subkey name derivation
-        NULL,                       // Reserved field
+        nullptr,                       // Reserved field
         &dwKeyType,                 // Returns the field type
         (LPBYTE) szFile,            // Returns the field's value
         &dwKeySize);                // Number of bytes transferred
@@ -272,13 +272,13 @@ void WINAPI DbgInitLogTo (
           {
             m_hOutput = CreateFile(szFile, GENERIC_WRITE,
                                  FILE_SHARE_READ,
-                                 NULL, OPEN_ALWAYS,
+                                 nullptr, OPEN_ALWAYS,
                                  FILE_ATTRIBUTE_NORMAL,
-                                 NULL);
+                                 nullptr);
           if (INVALID_HANDLE_VALUE != m_hOutput)
               {
               static const TCHAR cszBar[] = TEXT("\r\n\r\n=====DbgInitialize()=====\r\n\r\n");
-              SetFilePointer (m_hOutput, 0, NULL, FILE_END);
+              SetFilePointer (m_hOutput, 0, nullptr, FILE_END);
               DbgOutString (cszBar);
               }
           }
@@ -305,12 +305,12 @@ void WINAPI DbgInitGlobalSettings(bool fTakeMax)
     lReturn = RegCreateKeyEx(HKEY_LOCAL_MACHINE,   // Handle of an open key
                              szInfo,               // Address of subkey name
                              (DWORD) 0,            // Reserved value
-                             NULL,                 // Address of class name
+                             nullptr,                 // Address of class name
                              (DWORD) 0,            // Special options flags
                              KEY_ALL_ACCESS,       // Desired security access
-                             NULL,                 // Key security descriptor
+                             nullptr,                 // Key security descriptor
                              &hGlobalKey,          // Opened handle buffer
-                             NULL);                // What really happened
+                             nullptr);                // What really happened
 
     if (lReturn != ERROR_SUCCESS) {
         DbgLog((LOG_ERROR,0,TEXT("Could not access GLOBAL module key")));
@@ -341,12 +341,12 @@ void WINAPI DbgInitModuleSettings(bool fTakeMax)
     lReturn = RegCreateKeyEx(HKEY_LOCAL_MACHINE,   // Handle of an open key
                              szInfo,               // Address of subkey name
                              (DWORD) 0,            // Reserved value
-                             NULL,                 // Address of class name
+                             nullptr,                 // Address of class name
                              (DWORD) 0,            // Special options flags
                              KEY_ALL_ACCESS,       // Desired security access
-                             NULL,                 // Key security descriptor
+                             nullptr,                 // Key security descriptor
                              &hModuleKey,          // Opened handle buffer
-                             NULL);                // What really happened
+                             nullptr);                // What really happened
 
     if (lReturn != ERROR_SUCCESS) {
         DbgLog((LOG_ERROR,0,TEXT("Could not access module key")));
@@ -368,7 +368,7 @@ void WINAPI DbgInitModuleName()
 
     GetModuleFileName(m_hInst,FullName,iDEBUGINFO);
     pName = _tcsrchr(FullName,'\\');
-    if (pName == NULL) {
+    if (pName == nullptr) {
         pName = FullName;
     } else {
         pName++;
@@ -454,7 +454,7 @@ void WINAPI DbgAssert(const TCHAR *pCondition,const TCHAR *pFileName,INT iLine)
         wsprintf(szInfo, TEXT("%s \nAt line %d of %s\nContinue? (Cancel to debug)"),
                  pCondition, iLine, pFileName);
 
-        INT MsgId = MessageBoxOtherThread(NULL,szInfo,TEXT("ASSERT Failed"),
+        INT MsgId = MessageBoxOtherThread(nullptr,szInfo,TEXT("ASSERT Failed"),
                                           MB_SYSTEMMODAL |
                                           MB_ICONHAND |
                                           MB_YESNOCANCEL |
@@ -492,7 +492,7 @@ void WINAPI DbgBreakPoint(const TCHAR *pCondition,const TCHAR *pFileName,INT iLi
         wsprintf(szInfo, TEXT("%s \nAt line %d of %s\nContinue? (Cancel to debug)"),
                  pCondition, iLine, pFileName);
 
-        INT MsgId = MessageBoxOtherThread(NULL,szInfo,TEXT("Hard coded break point"),
+        INT MsgId = MessageBoxOtherThread(nullptr,szInfo,TEXT("Hard coded break point"),
                                           MB_SYSTEMMODAL |
                                           MB_ICONHAND |
                                           MB_YESNOCANCEL |
@@ -673,7 +673,7 @@ void DbgAssert(const CHAR *pCondition,const CHAR *pFileName,INT iLine)
         wsprintf(szInfo, TEXT("%hs \nAt line %d of %hs\nContinue? (Cancel to debug)"),
                  pCondition, iLine, pFileName);
 
-        INT MsgId = MessageBoxOtherThread(NULL,szInfo,TEXT("ASSERT Failed"),
+        INT MsgId = MessageBoxOtherThread(nullptr,szInfo,TEXT("ASSERT Failed"),
                                           MB_SYSTEMMODAL |
                                           MB_ICONHAND |
                                           MB_YESNOCANCEL |
@@ -711,7 +711,7 @@ void WINAPI DbgBreakPoint(const CHAR *pCondition,const CHAR *pFileName,INT iLine
         wsprintf(szInfo, TEXT("%hs \nAt line %d of %hs\nContinue? (Cancel to debug)"),
                  pCondition, iLine, pFileName);
 
-        INT MsgId = MessageBoxOtherThread(NULL,szInfo,TEXT("Hard coded break point"),
+        INT MsgId = MessageBoxOtherThread(nullptr,szInfo,TEXT("Hard coded break point"),
                                           MB_SYSTEMMODAL |
                                           MB_ICONHAND |
                                           MB_YESNOCANCEL |
@@ -813,8 +813,8 @@ DWORD WINAPI DbgRegisterObjectCreation(const CHAR *szObjectName,
     ObjectDesc *pObject = new ObjectDesc;
     ASSERT(pObject);
 
-    /* It is valid to pass a NULL object name */
-    if (pObject == NULL) {
+    /* It is valid to pass a nullptr object name */
+    if (pObject == nullptr) {
         return FALSE;
     }
 
@@ -823,7 +823,7 @@ DWORD WINAPI DbgRegisterObjectCreation(const CHAR *szObjectName,
        as they are created by the C++ run time before WinMain is called */
 
     if (m_bInit == FALSE) {
-        DbgInitialise(GetModuleHandle(NULL));
+        DbgInitialise(GetModuleHandle(nullptr));
     }
 
     /* Grab the list critical section */
@@ -871,7 +871,7 @@ BOOL WINAPI DbgRegisterObjectDestruction(DWORD dwCookie)
     EnterCriticalSection(&m_CSDebug);
 
     ObjectDesc *pObject = pListHead;
-    ObjectDesc *pPrevious = NULL;
+    ObjectDesc *pPrevious = nullptr;
 
     /* Scan the object list looking for a cookie match */
 
@@ -883,7 +883,7 @@ BOOL WINAPI DbgRegisterObjectDestruction(DWORD dwCookie)
         pObject = pObject->m_pNext;
     }
 
-    if (pObject == NULL) {
+    if (pObject == nullptr) {
         DbgBreak("Apparently destroying a bogus object");
         LeaveCriticalSection(&m_CSDebug);
         return FALSE;
@@ -891,7 +891,7 @@ BOOL WINAPI DbgRegisterObjectDestruction(DWORD dwCookie)
 
     /* Is the object at the head of the list */
 
-    if (pPrevious == NULL) {
+    if (pPrevious == nullptr) {
         pListHead = pObject->m_pNext;
     } else {
         pPrevious->m_pNext = pObject->m_pNext;
@@ -1098,12 +1098,12 @@ CDisp::CDisp(IPin *pPin)
        QueryPinInfoReleaseFilter(pi);
       #ifndef UNICODE
        WideCharToMultiByte(GetACP(), 0, pi.achName, lstrlenW(pi.achName) + 1,
-                           str, MAX_PIN_NAME, NULL, NULL);
+                           str, MAX_PIN_NAME, nullptr, nullptr);
       #else
        lstrcpy(str, pi.achName);
       #endif
     } else {
-       lstrcpy(str, TEXT("NULL IPin"));
+       lstrcpy(str, TEXT("nullptr IPin"));
     }
 
     m_pString = (PTCHAR) new TCHAR[lstrlen(str)+64];
@@ -1316,7 +1316,7 @@ void WINAPI DumpGraph(IFilterGraph *pGraph, DWORD dwLevel)
 		    } else {
 			QueryPinInfoReleaseFilter(info);
 
-			IPin *pPinConnected = NULL;
+			IPin *pPinConnected = nullptr;
 
 			HRESULT hr = pPin->ConnectedTo(&pPinConnected);
 

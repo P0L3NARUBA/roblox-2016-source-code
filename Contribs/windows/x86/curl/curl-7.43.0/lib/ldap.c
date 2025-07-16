@@ -188,28 +188,28 @@ static CURLcode Curl_ldap(struct connectdata *conn, bool *done)
 {
   CURLcode result = CURLE_OK;
   int rc = 0;
-  LDAP *server = NULL;
-  LDAPURLDesc *ludp = NULL;
-  LDAPMessage *ldapmsg = NULL;
+  LDAP *server = nullptr;
+  LDAPURLDesc *ludp = nullptr;
+  LDAPMessage *ldapmsg = nullptr;
   LDAPMessage *entryIterator;
   int num = 0;
   struct SessionHandle *data=conn->data;
   int ldap_proto = LDAP_VERSION3;
   int ldap_ssl = 0;
-  char *val_b64 = NULL;
+  char *val_b64 = nullptr;
   size_t val_b64_sz = 0;
   curl_off_t dlsize = 0;
 #ifdef LDAP_OPT_NETWORK_TIMEOUT
   struct timeval ldap_timeout = {10, 0}; /* 10 sec connection/search timeout */
 #endif
 #if defined(USE_WIN32_LDAP)
-  TCHAR *host = NULL;
-  TCHAR *user = NULL;
-  TCHAR *passwd = NULL;
+  TCHAR *host = nullptr;
+  TCHAR *user = nullptr;
+  TCHAR *passwd = nullptr;
 #else
-  char *host = NULL;
-  char *user = NULL;
-  char *passwd = NULL;
+  char *host = nullptr;
+  char *user = nullptr;
+  char *passwd = nullptr;
 #endif
 
   *done = TRUE; /* unconditionally */
@@ -261,9 +261,9 @@ static CURLcode Curl_ldap(struct connectdata *conn, bool *done)
 #endif
 
 #ifdef LDAP_OPT_NETWORK_TIMEOUT
-  ldap_set_option(NULL, LDAP_OPT_NETWORK_TIMEOUT, &ldap_timeout);
+  ldap_set_option(nullptr, LDAP_OPT_NETWORK_TIMEOUT, &ldap_timeout);
 #endif
-  ldap_set_option(NULL, LDAP_OPT_PROTOCOL_VERSION, &ldap_proto);
+  ldap_set_option(nullptr, LDAP_OPT_PROTOCOL_VERSION, &ldap_proto);
 
   if(ldap_ssl) {
 #ifdef HAVE_LDAP_SSL
@@ -275,7 +275,7 @@ static CURLcode Curl_ldap(struct connectdata *conn, bool *done)
     int ldap_option;
     char* ldap_ca = data->set.str[STRING_SSL_CAFILE];
 #if defined(CURL_HAS_NOVELL_LDAPSDK)
-    rc = ldapssl_client_init(NULL, NULL);
+    rc = ldapssl_client_init(nullptr, nullptr);
     if(rc != LDAP_SUCCESS) {
       failf(data, "LDAP local: ldapssl_client_init %s", ldap_err2string(rc));
       result = CURLE_SSL_CERTPROBLEM;
@@ -316,7 +316,7 @@ static CURLcode Curl_ldap(struct connectdata *conn, bool *done)
       goto quit;
     }
     server = ldapssl_init(host, (int)conn->port, 1);
-    if(server == NULL) {
+    if(server == nullptr) {
       failf(data, "LDAP local: Cannot connect to %s:%ld",
             conn->host.dispname, conn->port);
       result = CURLE_COULDNT_CONNECT;
@@ -337,7 +337,7 @@ static CURLcode Curl_ldap(struct connectdata *conn, bool *done)
         goto quit;
       }
       infof(data, "LDAP local: using PEM CA cert: %s\n", ldap_ca);
-      rc = ldap_set_option(NULL, LDAP_OPT_X_TLS_CACERTFILE, ldap_ca);
+      rc = ldap_set_option(nullptr, LDAP_OPT_X_TLS_CACERTFILE, ldap_ca);
       if(rc != LDAP_SUCCESS) {
         failf(data, "LDAP local: ERROR setting PEM CA cert: %s",
                 ldap_err2string(rc));
@@ -349,7 +349,7 @@ static CURLcode Curl_ldap(struct connectdata *conn, bool *done)
     else
       ldap_option = LDAP_OPT_X_TLS_NEVER;
 
-    rc = ldap_set_option(NULL, LDAP_OPT_X_TLS_REQUIRE_CERT, &ldap_option);
+    rc = ldap_set_option(nullptr, LDAP_OPT_X_TLS_REQUIRE_CERT, &ldap_option);
     if(rc != LDAP_SUCCESS) {
       failf(data, "LDAP local: ERROR setting cert verify mode: %s",
               ldap_err2string(rc));
@@ -357,7 +357,7 @@ static CURLcode Curl_ldap(struct connectdata *conn, bool *done)
       goto quit;
     }
     server = ldap_init(host, (int)conn->port);
-    if(server == NULL) {
+    if(server == nullptr) {
       failf(data, "LDAP local: Cannot connect to %s:%ld",
             conn->host.dispname, conn->port);
       result = CURLE_COULDNT_CONNECT;
@@ -372,7 +372,7 @@ static CURLcode Curl_ldap(struct connectdata *conn, bool *done)
       goto quit;
     }
 /*
-    rc = ldap_start_tls_s(server, NULL, NULL);
+    rc = ldap_start_tls_s(server, nullptr, nullptr);
     if(rc != LDAP_SUCCESS) {
       failf(data, "LDAP local: ERROR starting SSL/TLS mode: %s",
               ldap_err2string(rc));
@@ -393,7 +393,7 @@ static CURLcode Curl_ldap(struct connectdata *conn, bool *done)
   }
   else {
     server = ldap_init(host, (int)conn->port);
-    if(server == NULL) {
+    if(server == nullptr) {
       failf(data, "LDAP local: Cannot connect to %s:%ld",
             conn->host.dispname, conn->port);
       result = CURLE_COULDNT_CONNECT;
@@ -428,7 +428,7 @@ static CURLcode Curl_ldap(struct connectdata *conn, bool *done)
   for(num = 0, entryIterator = ldap_first_entry(server, ldapmsg);
       entryIterator;
       entryIterator = ldap_next_entry(server, entryIterator), num++) {
-    BerElement *ber = NULL;
+    BerElement *ber = nullptr;
 #if defined(USE_WIN32_LDAP)
     TCHAR *attribute;
 #else
@@ -516,8 +516,8 @@ static CURLcode Curl_ldap(struct connectdata *conn, bool *done)
       attr_len = strlen(attr);
 
       vals = ldap_get_values_len(server, entryIterator, attribute);
-      if(vals != NULL) {
-        for(i = 0; (vals[i] != NULL); i++) {
+      if(vals != nullptr) {
+        for(i = 0; (vals[i] != nullptr); i++) {
           result = Curl_client_write(conn, CLIENTWRITE_BODY, (char *)"\t", 1);
           if(result) {
             ldap_value_free_len(vals);
@@ -677,7 +677,7 @@ quit:
 #endif
 
   /* no data to transfer */
-  Curl_setup_transfer(conn, -1, -1, FALSE, NULL, -1, NULL);
+  Curl_setup_transfer(conn, -1, -1, FALSE, nullptr, -1, nullptr);
   connclose(conn, "LDAP connection always disable re-use");
 
   return result;
@@ -691,7 +691,7 @@ static void _ldap_trace (const char *fmt, ...)
 
   if(do_trace == -1) {
     const char *env = getenv("CURL_TRACE");
-    do_trace = (env && strtol(env, NULL, 10) > 0);
+    do_trace = (env && strtol(env, nullptr, 10) > 0);
   }
   if(!do_trace)
     return;
@@ -745,7 +745,7 @@ static bool split_str(char *str, char ***out, size_t *count)
     return FALSE;
 
   for(i = 0, s = strtok_r(str, ",", &lasts); s && i < items;
-      s = strtok_r(NULL, ",", &lasts), i++)
+      s = strtok_r(nullptr, ",", &lasts), i++)
     res[i] = s;
 
   *out = res;
@@ -803,7 +803,7 @@ static int _ldap_url_parse2 (const struct connectdata *conn, LDAPURLDesc *ludp)
     LDAP_TRACE (("DN '%s'\n", dn));
 
     /* Unescape the DN */
-    unescaped = curl_easy_unescape(conn->data, dn, 0, NULL);
+    unescaped = curl_easy_unescape(conn->data, dn, 0, nullptr);
     if(!unescaped) {
       rc = LDAP_NO_MEMORY;
 
@@ -847,7 +847,7 @@ static int _ldap_url_parse2 (const struct connectdata *conn, LDAPURLDesc *ludp)
       goto quit;
     }
 
-    /* Allocate our array (+1 for the NULL entry) */
+    /* Allocate our array (+1 for the nullptr entry) */
 #if defined(USE_WIN32_LDAP)
     ludp->lud_attrs = calloc(count + 1, sizeof(TCHAR *));
 #else
@@ -867,7 +867,7 @@ static int _ldap_url_parse2 (const struct connectdata *conn, LDAPURLDesc *ludp)
       LDAP_TRACE (("attr[%d] '%s'\n", i, attributes[i]));
 
       /* Unescape the attribute */
-      unescaped = curl_easy_unescape(conn->data, attributes[i], 0, NULL);
+      unescaped = curl_easy_unescape(conn->data, attributes[i], 0, nullptr);
       if(!unescaped) {
         free(attributes);
 
@@ -935,7 +935,7 @@ static int _ldap_url_parse2 (const struct connectdata *conn, LDAPURLDesc *ludp)
     LDAP_TRACE (("filter '%s'\n", filter));
 
     /* Unescape the filter */
-    unescaped = curl_easy_unescape(conn->data, filter, 0, NULL);
+    unescaped = curl_easy_unescape(conn->data, filter, 0, nullptr);
     if(!unescaped) {
       rc = LDAP_NO_MEMORY;
 
@@ -978,14 +978,14 @@ static int _ldap_url_parse (const struct connectdata *conn,
   LDAPURLDesc *ludp = calloc(1, sizeof(*ludp));
   int rc;
 
-  *ludpp = NULL;
+  *ludpp = nullptr;
   if(!ludp)
      return LDAP_NO_MEMORY;
 
   rc = _ldap_url_parse2 (conn, ludp);
   if(rc != LDAP_SUCCESS) {
     _ldap_free_urldesc(ludp);
-    ludp = NULL;
+    ludp = nullptr;
   }
   *ludpp = ludp;
   return (rc);

@@ -347,7 +347,7 @@ ScriptAnalysisTreeWidget::ScriptAnalysisTreeWidget(QWidget* parent)
 
 void ScriptAnalysisTreeWidget::setDataModel(boost::shared_ptr<RBX::DataModel> dataModel)
 {
-	RBXASSERT(m_dataModel == NULL);
+	RBXASSERT(m_dataModel == nullptr);
 	m_dataModel = dataModel;
 }
 
@@ -365,7 +365,7 @@ void ScriptAnalysisTreeWidget::updateResults(const LuaSourceBuffer& script, cons
 	else
 	{
 		int currentChild = 0;
-		ScriptMessageItem* messageItem = NULL;
+		ScriptMessageItem* messageItem = nullptr;
 		ScriptCategoryItem* categoryItem = static_cast<ScriptCategoryItem*>(getOrCreateCategoryItem(script));
 
 		if (result.error)
@@ -472,7 +472,7 @@ QTreeWidgetItem* ScriptAnalysisTreeWidget::getCategoryItem(const LuaSourceBuffer
 	InstanceMap::iterator iter = m_InstanceMap.find(script);
 	if (iter != m_InstanceMap.end())
 		return iter->second;
-	return NULL;
+	return nullptr;
 }
 
 bool ScriptAnalysisTreeWidget::hasHyperLinkText(const QPoint& pos)
@@ -488,7 +488,7 @@ void ScriptAnalysisTreeWidget::setFilter(const LuaSourceBuffer& script, bool sho
 {
 	int currentChild = 0;
 	int numChild = topLevelItemCount();
-	QTreeWidgetItem* pCategoryItemToSearch = getCategoryItem(script), *pCurrentCategoryItem = NULL;
+	QTreeWidgetItem* pCategoryItemToSearch = getCategoryItem(script), *pCurrentCategoryItem = nullptr;
 	while (currentChild < numChild)
 	{
 		pCurrentCategoryItem = topLevelItem(currentChild++);
@@ -520,7 +520,7 @@ void ScriptAnalysisTreeWidget::showAll(bool showErrors, bool showWarnings)
 void ScriptAnalysisTreeWidget::mousePressEvent(QMouseEvent *evt)
 {
 	if (!itemAt(evt->pos()))
-		setCurrentItem(NULL);
+		setCurrentItem(nullptr);
 	else
 		QTreeWidget::mousePressEvent(evt);
 }
@@ -542,7 +542,7 @@ QTreeWidgetItem* ScriptAnalysisTreeWidget::getOrCreateCategoryItem(const LuaSour
 
 	int indexToInsert = 0;
 	int numChild = topLevelItemCount();
-	QTreeWidgetItem *pCurrentItem = NULL;
+	QTreeWidgetItem *pCurrentItem = nullptr;
 
 	while (indexToInsert < numChild)
 	{		
@@ -808,7 +808,7 @@ void ScriptAnalysisWidget::onResultsUpdated()
 {
 	int numChild = m_pTreeWidget->topLevelItemCount(), currentItem = 0;
 	int currentErrors = 0, totalErrors = 0, currentWarnings = 0, totalWarnings = 0;
-	ScriptCategoryItem *pCategoryItem = NULL;
+	ScriptCategoryItem *pCategoryItem = nullptr;
 	while (currentItem < numChild)
 	{
 		pCategoryItem = dynamic_cast<ScriptCategoryItem*>(m_pTreeWidget->topLevelItem(currentItem++));
@@ -884,7 +884,7 @@ template <typename T> static const T* findFirstAncestorByType(const RBX::Instanc
 		instance = instance->getParent();
 	}
 
-    return NULL;
+    return nullptr;
 }
 
 void ScriptAnalysisWidget::updateResultsInstance(const shared_ptr<RBX::Instance>& instance)

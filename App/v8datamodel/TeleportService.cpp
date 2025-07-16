@@ -56,7 +56,7 @@ static Reflection::BoundProp<bool> prop_CustomizedTeleportUI("CustomizedTeleport
 Reflection::EventDesc<TeleportService, void(shared_ptr<Instance>, Reflection::Variant)> event_playerArrivedFromTeleport(&TeleportService::playerArrivedFromTeleportSignal, "LocalPlayerArrivedFromTeleport","loadingGui", "dataTable");
 REFLECTION_END();
 
-TeleportCallback *TeleportService::_callback = NULL;
+TeleportCallback *TeleportService::_callback = nullptr;
 std::string TeleportService::_spawnName;
 std::string TeleportService::_baseUrl;
 std::string TeleportService::_browserTrackerId;
@@ -174,7 +174,7 @@ void TeleportService::TeleportImpl(shared_ptr<const Reflection::ValueTable> tele
 	if (customTeleportLoadingGui)
 	{
 		customTeleportLoadingGui->destroyDescendantsOfType<LuaSourceContainer>();
-		customTeleportLoadingGui->setParent(NULL);
+		customTeleportLoadingGui->setParent(nullptr);
 	}
 
     if (requestingTeleport)
@@ -392,7 +392,7 @@ void TeleportService::TeleportThreadImpl(shared_ptr<const Reflection::ValueTable
                         script = ReadStringValue(jsonResult, "joinScriptUrl");
                     }
 
-                    if (_callback != NULL)
+                    if (_callback != nullptr)
                     {
                         // fire teleport signal
 						try
@@ -469,7 +469,7 @@ void TeleportService::TeleportThreadImpl(shared_ptr<const Reflection::ValueTable
 void TeleportService::ServerTeleport(shared_ptr<Instance> characterOrPlayerInstance, shared_ptr<Reflection::ValueTable> teleportInfo, shared_ptr<Instance> customLoadingGUI)
 {
     RBXASSERT(Workspace::serverIsPresent(this));
-    if (characterOrPlayerInstance == NULL)
+    if (characterOrPlayerInstance == nullptr)
     {
         StandardOut::singleton()->printf(MESSAGE_WARNING, "Invalid player to teleport.");
         return;
@@ -512,7 +512,7 @@ void TeleportService::ServerTeleport(shared_ptr<Instance> characterOrPlayerInsta
 		player->onTeleportInternal(TeleportState_RequestedFromServer, teleportInfo, customLoadingGUI);
 		if (customLoadingGUI)
 		{
-			customLoadingGUI->setParent(NULL);
+			customLoadingGUI->setParent(nullptr);
 		}
     }
     else

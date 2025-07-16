@@ -44,7 +44,7 @@ CURLcode Curl_input_negotiate(struct connectdata *conn, bool proxy,
                               const char *header)
 {
   struct SessionHandle *data = conn->data;
-  BYTE              *input_token = NULL;
+  BYTE              *input_token = nullptr;
   SecBufferDesc     out_buff_desc;
   SecBuffer         out_sec_buff;
   SecBufferDesc     in_buff_desc;
@@ -149,14 +149,14 @@ CURLcode Curl_input_negotiate(struct connectdata *conn, bool proxy,
     }
     else
       /* Use the current Windows user */
-      neg_ctx->p_identity = NULL;
+      neg_ctx->p_identity = nullptr;
 
     /* Acquire our credientials handle */
     neg_ctx->status =
-      s_pSecFn->AcquireCredentialsHandle(NULL,
+      s_pSecFn->AcquireCredentialsHandle(nullptr,
                                          (TCHAR *) TEXT(SP_NAME_NEGOTIATE),
-                                         SECPKG_CRED_OUTBOUND, NULL,
-                                         neg_ctx->p_identity, NULL, NULL,
+                                         SECPKG_CRED_OUTBOUND, nullptr,
+                                         neg_ctx->p_identity, nullptr, nullptr,
                                          neg_ctx->credentials, &expiry);
     if(neg_ctx->status != SEC_E_OK)
       return CURLE_LOGIN_DENIED;
@@ -197,12 +197,12 @@ CURLcode Curl_input_negotiate(struct connectdata *conn, bool proxy,
   /* Generate our message */
   neg_ctx->status = s_pSecFn->InitializeSecurityContext(
     neg_ctx->credentials,
-    input_token ? neg_ctx->context : NULL,
+    input_token ? neg_ctx->context : nullptr,
     neg_ctx->server_name,
     ISC_REQ_CONFIDENTIALITY,
     0,
     SECURITY_NATIVE_DREP,
-    input_token ? &in_buff_desc : NULL,
+    input_token ? &in_buff_desc : nullptr,
     0,
     neg_ctx->context,
     &out_buff_desc,
@@ -231,7 +231,7 @@ CURLcode Curl_output_negotiate(struct connectdata *conn, bool proxy)
 {
   struct negotiatedata *neg_ctx = proxy?&conn->data->state.proxyneg:
     &conn->data->state.negotiate;
-  char *encoded = NULL;
+  char *encoded = nullptr;
   size_t len = 0;
   char *userp;
   CURLcode error;
@@ -258,7 +258,7 @@ CURLcode Curl_output_negotiate(struct connectdata *conn, bool proxy)
     conn->allocptr.userpwd = userp;
   }
   free(encoded);
-  return (userp == NULL) ? CURLE_OUT_OF_MEMORY : CURLE_OK;
+  return (userp == nullptr) ? CURLE_OUT_OF_MEMORY : CURLE_OK;
 }
 
 static void cleanup(struct negotiatedata *neg_ctx)
@@ -267,19 +267,19 @@ static void cleanup(struct negotiatedata *neg_ctx)
   if(neg_ctx->context) {
     s_pSecFn->DeleteSecurityContext(neg_ctx->context);
     free(neg_ctx->context);
-    neg_ctx->context = NULL;
+    neg_ctx->context = nullptr;
   }
 
   /* Free our credentials handle */
   if(neg_ctx->credentials) {
     s_pSecFn->FreeCredentialsHandle(neg_ctx->credentials);
     free(neg_ctx->credentials);
-    neg_ctx->credentials = NULL;
+    neg_ctx->credentials = nullptr;
   }
 
   /* Free our identity */
   Curl_sspi_free_identity(neg_ctx->p_identity);
-  neg_ctx->p_identity = NULL;
+  neg_ctx->p_identity = nullptr;
 
   /* Free the SPN and output token */
   Curl_safefree(neg_ctx->server_name);

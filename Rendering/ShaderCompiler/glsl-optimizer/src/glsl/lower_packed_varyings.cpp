@@ -198,7 +198,7 @@ private:
 
    /**
     * Array of pointers to the packed varyings that have been created for each
-    * generic varying slot.  NULL entries in this array indicate varying slots
+    * generic varying slot.  nullptr entries in this array indicate varying slots
     * for which a packed varying has not been created yet.
     */
    ir_variable **packed_varyings;
@@ -244,7 +244,7 @@ lower_packed_varyings_visitor::run(exec_list *instructions)
 {
    foreach_in_list(ir_instruction, node, instructions) {
       ir_variable *var = node->as_variable();
-      if (var == NULL)
+      if (var == nullptr)
          continue;
 
       if (var->data.mode != this->mode ||
@@ -380,7 +380,7 @@ lower_packed_varyings_visitor::lower_rvalue(ir_rvalue *rvalue,
    if (rvalue->type->is_record()) {
       for (unsigned i = 0; i < rvalue->type->length; i++) {
          if (i != 0)
-            rvalue = rvalue->clone(this->mem_ctx, NULL);
+            rvalue = rvalue->clone(this->mem_ctx, nullptr);
          const char *field_name = rvalue->type->fields.structure[i].name;
          ir_dereference_record *dereference_record = new(this->mem_ctx)
             ir_dereference_record(rvalue, field_name);
@@ -427,7 +427,7 @@ lower_packed_varyings_visitor::lower_rvalue(ir_rvalue *rvalue,
       ir_swizzle *left_swizzle = new(this->mem_ctx)
          ir_swizzle(rvalue, left_swizzle_values, left_components);
       ir_swizzle *right_swizzle = new(this->mem_ctx)
-         ir_swizzle(rvalue->clone(this->mem_ctx, NULL), right_swizzle_values,
+         ir_swizzle(rvalue->clone(this->mem_ctx, nullptr), right_swizzle_values,
                     right_components);
       char *left_name
          = ralloc_asprintf(this->mem_ctx, "%s.%s", name, left_swizzle_name);
@@ -492,7 +492,7 @@ lower_packed_varyings_visitor::lower_arraylike(ir_rvalue *rvalue,
 {
    for (unsigned i = 0; i < array_size; i++) {
       if (i != 0)
-         rvalue = rvalue->clone(this->mem_ctx, NULL);
+         rvalue = rvalue->clone(this->mem_ctx, nullptr);
       ir_constant *constant = new(this->mem_ctx) ir_constant(i);
       ir_dereference_array *dereference_array = new(this->mem_ctx)
          ir_dereference_array(rvalue, constant);
@@ -534,7 +534,7 @@ lower_packed_varyings_visitor::get_packed_varying_deref(
 {
    unsigned slot = location - VARYING_SLOT_VAR0;
    assert(slot < locations_used);
-   if (this->packed_varyings[slot] == NULL) {
+   if (this->packed_varyings[slot] == nullptr) {
       char *packed_name = ralloc_asprintf(this->mem_ctx, "packed:%s", name);
       const glsl_type *packed_type;
       if (unpacked_var->data.interpolation == INTERP_QUALIFIER_FLAT)
@@ -641,7 +641,7 @@ ir_visitor_status
 lower_packed_varyings_gs_splicer::visit_leave(ir_emit_vertex *ev)
 {
    foreach_in_list(ir_instruction, ir, this->instructions) {
-      ev->insert_before(ir->clone(this->mem_ctx, NULL));
+      ev->insert_before(ir->clone(this->mem_ctx, nullptr));
    }
    return visit_continue;
 }
@@ -656,7 +656,7 @@ lower_packed_varyings(void *mem_ctx, unsigned locations_used,
    ir_function *main_func = shader->symbols->get_function("main");
    exec_list void_parameters;
    ir_function_signature *main_func_sig
-      = main_func->matching_signature(NULL, &void_parameters, false);
+      = main_func->matching_signature(nullptr, &void_parameters, false);
    exec_list new_instructions;
    lower_packed_varyings_visitor visitor(mem_ctx, locations_used, mode,
                                          gs_input_vertices, &new_instructions);

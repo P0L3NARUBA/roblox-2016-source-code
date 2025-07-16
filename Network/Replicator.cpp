@@ -188,8 +188,8 @@ static Reflection::BoundFuncDesc<Replicator, void()> func_DisableProcessPackets(
 static Reflection::BoundFuncDesc<Replicator, void()> func_EnableProcessPackets(&Replicator::enableProcessPackets, "EnableProcessPackets", Security::LocalUser);
 static Reflection::BoundFuncDesc<Replicator, void(double)> func_SetPropSyncExpiration(&Replicator::setPropSyncExpiration, "SetPropSyncExpiration", "seconds", Security::LocalUser);
 
-static Reflection::PropDescriptor<Replicator, int> prop_port("Port", category_Data, &Replicator::getPort, NULL, Reflection::PropertyDescriptor::UI, Security::LocalUser);
-static Reflection::PropDescriptor<Replicator, std::string> prop_ip("MachineAddress", category_Data, &Replicator::getIpAddress, NULL, Reflection::PropertyDescriptor::UI, Security::LocalUser);
+static Reflection::PropDescriptor<Replicator, int> prop_port("Port", category_Data, &Replicator::getPort, nullptr, Reflection::PropertyDescriptor::UI, Security::LocalUser);
+static Reflection::PropDescriptor<Replicator, std::string> prop_ip("MachineAddress", category_Data, &Replicator::getIpAddress, nullptr, Reflection::PropertyDescriptor::UI, Security::LocalUser);
 REFLECTION_END();
 
 RBX::Time Replicator::remoteRaknetTimeToLocalRbxTime(const RemoteTime& time)
@@ -234,7 +234,7 @@ bool Replicator::isPropertyCacheable(const Reflection::Type& type)
 
 bool Replicator::isPropertyCacheable(const Reflection::Type* type, bool isEnum)
 {
-    // Enum types have to be cacheable so that we can handle unknown enums (type == NULL)
+    // Enum types have to be cacheable so that we can handle unknown enums (type == nullptr)
     if (isEnum)
         return true;
     
@@ -365,12 +365,12 @@ Replicator::Replicator(
 	:rakPeer(rakPeer)
 	,remotePlayerId(remotePlayerId)
 	,clusterDebounceEnabled(clusterDebounceEnabled)
-	,removingInstance(NULL)
-	,players(NULL)
-	,deserializingProperty(NULL)
-	,deserializingEventInvocation(NULL)
-	,serializingInstance(NULL)
-	,megaClusterInstance(NULL)
+	,removingInstance(nullptr)
+	,players(nullptr)
+	,deserializingProperty(nullptr)
+	,deserializingEventInvocation(nullptr)
+	,serializingInstance(nullptr)
+	,megaClusterInstance(nullptr)
 	,isOkToSendClusters(false)
 	,isClusterSpotted(false)
 	,approximateSizeOfPendingClusterDeltas(0)
@@ -482,7 +482,7 @@ bool Replicator::isTopContainer(const Instance* instance)
 	if(!parent)
 		return false;
 
-	return parent->getParent() == NULL;
+	return parent->getParent() == nullptr;
 }
 
 void Replicator::addTopReplicationContainer(Instance* instance, bool replicateProperties, bool replicateChildren,
@@ -541,7 +541,7 @@ void Replicator::disconnectClusterReplicationData()
 			megaClusterInstance->getVoxelGrid()->disconnectListener(this);
 	}
 
-	megaClusterInstance = NULL;
+	megaClusterInstance = nullptr;
 	approximateSizeOfPendingClusterDeltas = 0;
 
 	clusterReplicationData.parentConnection.disconnect();
@@ -553,7 +553,7 @@ void Replicator::closeReplicationItem(ReplicationData& item)
 {
 	item.connection.disconnect();
 	if (item.deleteOnDisconnect)
-		item.instance->setParent(NULL);
+		item.instance->setParent(nullptr);
 }
 
 std::string Replicator::getRakStatsString(int verbosityLevel)
@@ -901,7 +901,7 @@ void Replicator::onServiceProvider(ServiceProvider* oldProvider, ServiceProvider
 
 	if(oldProvider) {
 		RBX::DataModel* oldDM = static_cast<RBX::DataModel*>(oldProvider);
-		oldDM->setNetworkMetric(NULL);
+		oldDM->setNetworkMetric(nullptr);
 	}
 
 	if (newProvider)
@@ -1059,13 +1059,13 @@ size_t Replicator::incomingPacketsCount() const
 
 void Replicator::updateStatsItem(RBX::Stats::StatsService* stats)
 {
-	if (statsItem!=NULL)
+	if (statsItem!=nullptr)
 	{
-		statsItem->setParent(NULL);
+		statsItem->setParent(nullptr);
 		statsItem.reset();
 	}
 	
-	if (stats!=NULL)
+	if (stats!=nullptr)
 	{
 		shared_ptr<Stats::Item> network = shared_from_polymorphic_downcast<Stats::Item>(stats->findFirstChildByName("Network"));
 		if (network)
@@ -1858,7 +1858,7 @@ void Replicator::deserializePropertyValue(RakNet::BitStream& inBitStream, Reflec
 	ScopedAssign<const Reflection::Property*> assign;
 	if (preventBounceBack)
 	{
-		RBXASSERT(deserializingProperty==NULL);
+		RBXASSERT(deserializingProperty==nullptr);
 		assign.assign(deserializingProperty, &property);
 	}
 
@@ -2305,7 +2305,7 @@ Replicator::ReplicationData& Replicator::addReplicationData(shared_ptr<Instance>
 	MegaClusterInstance* cluster = Instance::fastDynamicCast<MegaClusterInstance>(instance.get());
 	if (cluster)
     {
-		RBXASSERT(megaClusterInstance == NULL);
+		RBXASSERT(megaClusterInstance == nullptr);
 
 		FASTLOG2(FLog::MegaClusterNetworkInit, "Adding MegaCluster replication data :%p, listenToChanges: %u", instance.get(), listenToChanges);
 
@@ -2448,7 +2448,7 @@ void Replicator::onParentChanged(shared_ptr<Instance> instance)
 		if (serializingInstance == instance.get())
 		{
 			// only do this once, because subsequent parent changes could come from other place, such as script
-			serializingInstance = NULL;
+			serializingInstance = nullptr;
 		}
 		else
 		{
@@ -2457,7 +2457,7 @@ void Replicator::onParentChanged(shared_ptr<Instance> instance)
 	}
 	else
 	{
-		FASTLOG1(FLog::ReplicationDataLifetime, "Parent changed to NULL on instance %p", instance.get());
+		FASTLOG1(FLog::ReplicationDataLifetime, "Parent changed to nullptr on instance %p", instance.get());
 		// Deletion is much more complicated...
 		bool removedIt = disconnectReplicationData(instance);
 		RBXASSERT(removedIt);
@@ -2527,7 +2527,7 @@ void Replicator::onEventInvocation(Instance* instance, const Reflection::EventDe
     if (target && *target != RakNetToRbxAddress(remotePlayerId))
         return;
 
-	if (deserializingEventInvocation!=NULL && Reflection::EventInvocation(Reflection::Event(*descriptor, shared_from(instance)), *args)==*deserializingEventInvocation)	
+	if (deserializingEventInvocation!=nullptr && Reflection::EventInvocation(Reflection::Event(*descriptor, shared_from(instance)), *args)==*deserializingEventInvocation)	
 		return;
 
 	pendingItems.push_back(new (eventInvocationPool.get()) EventInvocationItem(this, shared_from(instance), *descriptor, *args));
@@ -2541,11 +2541,11 @@ FilterResult Replicator::filterChangedProperty(Instance* instance, const Reflect
 	Reflection::Property prop(desc, instance);
 
 	// avoid circular replication
-	if (deserializingProperty!=NULL && prop==*deserializingProperty)
+	if (deserializingProperty!=nullptr && prop==*deserializingProperty)
 	{
 		// Only debounce this once. Afterwards a property change might come from a Lua script or something else.
 		// See the "PropertyBounceBack" test in App.UnitTest
-		deserializingProperty = NULL;
+		deserializingProperty = nullptr;
 		return Reject;
 	}
 
@@ -2727,7 +2727,7 @@ bool Replicator::processNextIncomingPacket()
 	{
 		try
 		{
-			if(physicsReceiver!=NULL)
+			if(physicsReceiver!=nullptr)
 			{
 				physicsReceiver->setTime(Time::nowFast());
 			}
@@ -2886,7 +2886,7 @@ void Replicator::sendClusterChunk(const StreamRegion::Id &regionId)
 {
 	ClusterReplicationData& clusterData = clusterReplicationData;
 
-	if (megaClusterInstance == NULL || !clusterData.readyToSendChunks)
+	if (megaClusterInstance == nullptr || !clusterData.readyToSendChunks)
 		return;
 
 	if (megaClusterInstance->isSmooth())
@@ -2977,7 +2977,7 @@ bool Replicator::sendClusterPacket()
 		return false;
 
 	ClusterReplicationData& clusterData = clusterReplicationData;
-	if(megaClusterInstance == NULL || !clusterData.readyToSendChunks || !clusterData.hasDataToSend())
+	if(megaClusterInstance == nullptr || !clusterData.readyToSendChunks || !clusterData.hasDataToSend())
 		return false;
 
 	int maxBytesSend = getAdjustedMtuSize();
@@ -3296,7 +3296,7 @@ void Replicator::readProperties(RakNet::BitStream& inBitstream, Instance* instan
 					valueArray->push_back(PropValuePair(property.getDescriptor(), value));
 			}
 			else
-				readPropertiesInternal(property, inBitstream, useDictionary, preventBounceBack, NULL);
+				readPropertiesInternal(property, inBitstream, useDictionary, preventBounceBack, nullptr);
 		}
 		++iter;
 	}
@@ -3442,7 +3442,7 @@ void Replicator::readInstanceNew(RakNet::BitStream& inBitstream, bool isJoinData
 	}
 	else
 	{
-		data = NULL;
+		data = nullptr;
 		
 		// Dummy read ownership flag
 		bool deleteOnDisconnect;
@@ -3467,7 +3467,7 @@ void Replicator::readInstanceNew(RakNet::BitStream& inBitstream, bool isJoinData
 	shared_ptr<Instance> parent;
 	guidRegistry->lookupByGuid(parentId, parent);
 
-	const bool isService = dynamic_cast<Service*>(instance.get()) != NULL;
+	const bool isService = dynamic_cast<Service*>(instance.get()) != nullptr;
 
     if (!isService)
 	{
@@ -3476,7 +3476,7 @@ void Replicator::readInstanceNew(RakNet::BitStream& inBitstream, bool isJoinData
 		// logic until the parent reference is resolved.
 		LEGACY_ASSERT(parent);
 		LEGACY_ASSERT(parent != instance);
-		LEGACY_ASSERT(instance->getParent() == NULL);
+		LEGACY_ASSERT(instance->getParent() == nullptr);
 	}
 
 	bool reject = !isLegalReceiveInstance(instance.get(), parent.get());
@@ -3547,7 +3547,7 @@ void Replicator::readInstanceNewItem(DeserializedNewInstanceItem* item, bool isJ
 	}
 	
 	const shared_ptr<Instance>& instance = item->instance;
-	const bool isService = dynamic_cast<Service*>(instance.get()) != NULL;
+	const bool isService = dynamic_cast<Service*>(instance.get()) != nullptr;
 
 	ReplicationData* data;
 	if (!isService)
@@ -3557,7 +3557,7 @@ void Replicator::readInstanceNewItem(DeserializedNewInstanceItem* item, bool isJ
 		data->deleteOnDisconnect = item->deleteOnDisconnect;
 	}
 	else
-		data = NULL;
+		data = nullptr;
 
 	// load all prop values into instance
 	if (!item->propValueList.empty())
@@ -3575,7 +3575,7 @@ void Replicator::readInstanceNewItem(DeserializedNewInstanceItem* item, bool isJ
 		// logic until the parent reference is resolved.
 		LEGACY_ASSERT(parent);
 		LEGACY_ASSERT(parent != instance);
-		LEGACY_ASSERT(instance->getParent() == NULL);
+		LEGACY_ASSERT(instance->getParent() == nullptr);
 	}
 
 	bool reject = !isLegalReceiveInstance(instance.get(), parent.get());
@@ -3631,7 +3631,7 @@ struct CellUpdateFilter {
 
 void Replicator::receiveCluster(RakNet::BitStream& inBitstream, Instance* instance, bool usingOneQuarterIterator)
 {
-	if(instance == NULL)
+	if(instance == nullptr)
 		return;
 	RBXASSERT(instance == megaClusterInstance);
 	if (instance != megaClusterInstance) {
@@ -3836,7 +3836,7 @@ void Replicator::readItem(RakNet::BitStream& inBitstream, Item::ItemType itemTyp
 	if (DFFlag::ReadDeSerializeProcessFlow)
 	{	
 		shared_ptr<DeserializedItem> item = deserializeItem(inBitstream, itemType);
-		if (item) item->process(*this);  // make sure it is not NULL
+		if (item) item->process(*this);  // make sure it is not nullptr
 	}
 	else
 	{
@@ -4021,11 +4021,11 @@ void Replicator::readChangedPropertyItem(DeserializedChangePropertyItem* item)
 	{
 		if (filterReceivedChangedProperty(instance, *item->propertyDescriptor) == Reject)
 		{
-			instance = NULL;
+			instance = nullptr;
 		}
 		else if (!isLegalReceiveProperty(instance, *item->propertyDescriptor))
 		{
-			instance = NULL;
+			instance = nullptr;
 		}
 	}
 
@@ -4049,7 +4049,7 @@ void Replicator::readChangedProperty(RakNet::BitStream& inBitstream)
     }
 
 	if (!propertyDescriptor)
-		throw RBX::runtime_error("Replicator readChangedProperty NULL descriptor");
+		throw RBX::runtime_error("Replicator readChangedProperty nullptr descriptor");
 
 	if (instance)
     {
@@ -4180,7 +4180,7 @@ void Replicator::readChangedProperty(RakNet::BitStream& bitStream, Reflection::P
 		processChangedParentProperty(parentId, prop);
 	}
 	else
-		deserializePropertyValue(bitStream, prop, true/*useDictionary*/, true, NULL);
+		deserializePropertyValue(bitStream, prop, true/*useDictionary*/, true, nullptr);
 }
 
 void Replicator::readEventInvocationItem(DeserializedEventInvocationItem* item)
@@ -4188,7 +4188,7 @@ void Replicator::readEventInvocationItem(DeserializedEventInvocationItem* item)
 	Instance* instance = item->instance.get();
 	if (!isLegalReceiveEvent(instance, *item->eventDescriptor))
 	{
-		instance = NULL;
+		instance = nullptr;
 	}
 
 	if (instance)
@@ -4217,7 +4217,7 @@ void Replicator::readEventInvocationItem(DeserializedEventInvocationItem* item)
 			//If we're a ServerReplicator, then this will handle the rebounce
 			rebroadcastEvent(*item->eventInvocation);
 
-			deserializingEventInvocation = NULL;
+			deserializingEventInvocation = nullptr;
 		}
 	}
 }
@@ -4271,7 +4271,7 @@ void Replicator::readEventInvocation(RakNet::BitStream& inBitstream)
 			//If we're a ServerReplicator, then this will handle the rebounce
 			rebroadcastEvent(eventInvocation);
 
-			deserializingEventInvocation = NULL;
+			deserializingEventInvocation = nullptr;
 		}
 	}
 }
@@ -4320,7 +4320,7 @@ void Replicator::closeConnection()
 		rakPeer->rawPeer()->CloseConnection(remotePlayerId, true);
 	// Remove myself from the chain
 	unlockParent();
-	setParent(NULL);
+	setParent(nullptr);
 }
 
 void Replicator::deleteInstanceById(Guid::Data id)
@@ -4335,7 +4335,7 @@ void Replicator::deleteInstanceById(Guid::Data id)
 		if (settings().printInstances) {
 			RBX::StandardOut::singleton()->printf(RBX::MESSAGE_SENSITIVE, 
 				"Replication: ~%s:%s << %s", 
-				instance ? instance->getClassName().c_str() : "NULL", 
+				instance ? instance->getClassName().c_str() : "nullptr", 
 				id.readableString().c_str(),
 				RakNetAddressToString(remotePlayerId).c_str() 
 				);
@@ -4347,9 +4347,9 @@ void Replicator::deleteInstanceById(Guid::Data id)
 				removeFromPendingNewInstances(instance.get());
 
 				FASTLOG1(FLog::NetworkInstances, "Replicating unparenting instance %p", instance.get());
-				RBXASSERT(removingInstance==NULL);
+				RBXASSERT(removingInstance==nullptr);
 				RBX::ScopedAssign<Instance*> assign(removingInstance, instance.get());
-				instance->setParent(NULL);
+				instance->setParent(nullptr);
 
 			}
 	}
@@ -4362,8 +4362,8 @@ void Replicator::deleteInstanceById(Guid::Data id)
 		}
 	}
 
-	// Resolve the binding to NULL, since the object is being deleted
-	resolvePendingReferences(NULL, id);
+	// Resolve the binding to nullptr, since the object is being deleted
+	resolvePendingReferences(nullptr, id);
 }
 
 void Replicator::readInstanceDeleteItem(DeserializedDeleteInstanceItem* item)
@@ -4444,7 +4444,7 @@ void Replicator::processPacket(Packet *packet)
 				try
 				{
 					NETPROFILE_START("receivePacket", &inBitstream);
-					ReplicatorStats::PhysicsReceiverStats* stats = NULL;
+					ReplicatorStats::PhysicsReceiverStats* stats = nullptr;
 					if (settings().trackPhysicsDetails)
 					{
 						stats = &replicatorStats.physicsReceiverStats;
@@ -4714,7 +4714,7 @@ PluginReceiveResult Replicator::OnReceive(Packet *packet)
 				sendDisconnectionSignal(RakNetAddressToString(packet->systemAddress), true);
 
 				{
-				// We can't set parent to NULL in here because we're in the middle of a Raknet Update
+				// We can't set parent to nullptr in here because we're in the middle of a Raknet Update
 				DataModel::get(this)->submitTask(boost::bind(&scheduledRemove, shared_from(this)), DataModelJob::Write);
 				}
 				return RR_CONTINUE_PROCESSING;
@@ -4735,7 +4735,7 @@ PluginReceiveResult Replicator::OnReceive(Packet *packet)
                 if (postDisconnect)
                 {
 				    sendDisconnectionSignal(RakNetAddressToString(packet->systemAddress), false);
-    				// We can't set parent to NULL in here because we're in the middle of a Raknet Update
+    				// We can't set parent to nullptr in here because we're in the middle of a Raknet Update
 	    			DataModel::get(this)->submitTask(boost::bind(&scheduledRemove, shared_from(this)), DataModelJob::Write);
                 }
                 }
@@ -4870,7 +4870,7 @@ void Replicator::requestDisconnect(DisconnectReason reason)
 		RobloxGoogleAnalytics::trackEvent(GA_CATEGORY_GAME, isServerReplicator() ? "ServerDisconnectReason" : "ClientDisconnectReason", r.c_str());
 	}
 
-	// We can't set parent to NULL in this context because we're in the middle of a Raknet Update
+	// We can't set parent to nullptr in this context because we're in the middle of a Raknet Update
 	DataModel::get(this)->submitTask(boost::bind(&scheduledRemove, shared_from(this)), DataModelJob::Write);
 }
 
@@ -4993,7 +4993,7 @@ void Replicator::assignRef(Reflection::Property& property, RBX::Guid::Data id)
 		addPendingRef(desc, referencer, id);
 		if (streamingEnabled)
 		{
-			desc->setRefValue(referencer.get(), NULL);
+			desc->setRefValue(referencer.get(), nullptr);
 		}
 	}
 }
@@ -5003,7 +5003,7 @@ void Replicator::assignParent(Instance* instance, Instance* parent)
 	// since we decode items on a separate thread, the instance may already be destroyed by the time we reparent it
 	if (instance->getIsParentLocked())
 	{
-		RBXASSERT(instance->getParent() == NULL);
+		RBXASSERT(instance->getParent() == nullptr);
 		return;
 	}
 
@@ -5017,14 +5017,14 @@ void Replicator::assignDefaultPropertyValue(Reflection::Property& property, bool
 	ScopedAssign<const Reflection::Property*> assign;
 	if (preventBounceBack)
 	{
-		RBXASSERT(deserializingProperty == NULL);
+		RBXASSERT(deserializingProperty == nullptr);
 		assign.assign(deserializingProperty, &property);
 	}
 
 	const Reflection::PropertyDescriptor& descriptor = property.getDescriptor();
 
 	Instance* instance = rbx_static_cast<Instance*>(property.getInstance());
-	const Instance* defaultInstance = instance ? getDefault(instance->getClassName()) : NULL;
+	const Instance* defaultInstance = instance ? getDefault(instance->getClassName()) : nullptr;
 	if (instance && defaultInstance)
 	{
 		try

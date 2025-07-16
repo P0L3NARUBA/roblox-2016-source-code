@@ -168,7 +168,7 @@ namespace RBX
 			throw RBX::runtime_error("'%s' is missing a hostName", theUrl.c_str());
 
 		// Initialize the User Agent
-		WININETHINTERNET session = InternetOpen("Roblox/WinInet", PRE_CONFIG_INTERNET_ACCESS, NULL, NULL, 0);
+		WININETHINTERNET session = InternetOpen("Roblox/WinInet", PRE_CONFIG_INTERNET_ACCESS, nullptr, nullptr, 0);
 		if (!session)
 			throw RBX::runtime_error("InternetOpen failed for %s", theUrl.c_str());
 
@@ -197,7 +197,7 @@ namespace RBX
 		}
 
 		WININETHINTERNET request = ::HttpOpenRequest(
-			connection, isPost ? "POST" : "GET", requestUrl, HTTP_VERSION, "", NULL, 
+			connection, isPost ? "POST" : "GET", requestUrl, HTTP_VERSION, "", nullptr, 
 			flags, 
 			0); 
 		if (!request)
@@ -272,7 +272,7 @@ namespace RBX
 				ThrowIfFailure(FALSE != InternetSetOption(request, INTERNET_OPTION_CONTEXT_VALUE, &buff, sizeof(void*)), "InternetSetOption");
 				ThrowIfFailure(INTERNET_INVALID_STATUS_CALLBACK != InternetSetStatusCallback(request, &callback), "InternetSetStatusCallback");
 
-				DWORD httpSendResult = ::HttpSendRequest(request, NULL, 0, 0, 0);
+				DWORD httpSendResult = ::HttpSendRequest(request, nullptr, 0, 0, 0);
 
 				if(httpSendResult != TRUE)
 				{
@@ -281,13 +281,13 @@ namespace RBX
 				}
 
 				// make sure we unbind our callback.
-				InternetSetStatusCallback(request, NULL);
+				InternetSetStatusCallback(request, nullptr);
 				context.http = 0;
 			}
 			catch(...)
 			{
 				// make sure we unbind our callback.
-				InternetSetStatusCallback(request, NULL);
+				InternetSetStatusCallback(request, nullptr);
 				context.http = 0;
 				throw;
 			}
@@ -339,7 +339,7 @@ namespace RBX
 				memset(&buffer, 0, sizeof(buffer));
 				buffer.dwStructSize = sizeof(buffer);
 				buffer.dwBufferTotal = uploadSize;
-				if (!HttpSendRequestEx(request, &buffer, NULL, 0, 0))
+				if (!HttpSendRequestEx(request, &buffer, nullptr, 0, 0))
                 {
                     throw RBX::runtime_error("HttpSendRequestEx failed: %d", GetLastError());
                 }
@@ -356,12 +356,12 @@ namespace RBX
 					}
 					catch (RBX::base_exception&)
 					{
-						::HttpEndRequest(request, NULL, 0, 0);
+						::HttpEndRequest(request, nullptr, 0, 0);
 						throw;
 					}
 				}
 				
-				ThrowIfFailure(TRUE==::HttpEndRequest(request, NULL, 0, 0), "HttpEndRequest failed");
+				ThrowIfFailure(TRUE==::HttpEndRequest(request, nullptr, 0, 0), "HttpEndRequest failed");
 			}
 		}
 
@@ -369,7 +369,7 @@ namespace RBX
 		DWORD statusCode;
 		{
 			DWORD dwLen = sizeof(DWORD);
-			ThrowIfFailure(TRUE==::HttpQueryInfo(request, HTTP_QUERY_STATUS_CODE | HTTP_QUERY_FLAG_NUMBER, &statusCode, &dwLen, NULL), "HttpQueryInfo failed");
+			ThrowIfFailure(TRUE==::HttpQueryInfo(request, HTTP_QUERY_STATUS_CODE | HTTP_QUERY_FLAG_NUMBER, &statusCode, &dwLen, nullptr), "HttpQueryInfo failed");
 		}
 		
 		if (externalRequest)
@@ -444,7 +444,7 @@ namespace RBX
 				::StringCchPrintfA((LPSTR)headersOut, headersOutLength, "X-CSRF-TOKEN");
 
 				// HttpQueryInfo will return false if it cannot find the requested header
-				if (::HttpQueryInfo(request, HTTP_QUERY_CUSTOM, (LPVOID)headersOut, &headersOutLength, NULL))
+				if (::HttpQueryInfo(request, HTTP_QUERY_CUSTOM, (LPVOID)headersOut, &headersOutLength, nullptr))
 				{
 					std::string newToken(headersOut);
 					if (newToken != csrfTokenForRequest)

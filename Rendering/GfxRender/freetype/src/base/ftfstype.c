@@ -33,7 +33,7 @@
     /* first, try to get the fs_type directly from the font */
     if ( face )
     {
-      FT_Service_PsInfo  service = NULL;
+      FT_Service_PsInfo  service = nullptr;
 
 
       FT_FACE_FIND_SERVICE( face, service, POSTSCRIPT_INFO );
@@ -51,7 +51,7 @@
 
     /* look at FSType before fsType for Type42 */
 
-    if ( ( os2 = (TT_OS2*)FT_Get_Sfnt_Table( face, FT_SFNT_OS2 ) ) != NULL &&
+    if ( ( os2 = (TT_OS2*)FT_Get_Sfnt_Table( face, FT_SFNT_OS2 ) ) != nullptr &&
          os2->version != 0xFFFFU                                           )
       return os2->fsType;
 

@@ -28,7 +28,7 @@ OSCAN_COD		regen;
 	while (hobj) {
 		get_next_item_z(OBJ_LIST, hobj, &hnext);
 		obj = (lpOBJ)hobj;
-		obj->hhold = NULL;
+		obj->hhold = nullptr;
 		if (type == OPATH) {
 			obj->status &= (~ST_DIRECT);
 			obj->status &= ~(ST_CONSTR1 | ST_CONSTR2);

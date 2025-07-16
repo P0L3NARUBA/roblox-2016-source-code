@@ -179,7 +179,7 @@ namespace RBX
                     
                     RBXPROFILER_SCOPE("Sound", "createStream");
 
-					SoundService::checkResult(system->createStream(fileName.c_str(), mode, NULL, &fmod_sound), "createStream", this, system.get());
+					SoundService::checkResult(system->createStream(fileName.c_str(), mode, nullptr, &fmod_sound), "createStream", this, system.get());
 				}
 				else
 				{
@@ -187,7 +187,7 @@ namespace RBX
 
 					if (!data)
 					{
-						return NULL;
+						return nullptr;
 					}
 
 					if (isMemModel(data.get()))

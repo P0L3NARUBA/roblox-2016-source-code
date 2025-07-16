@@ -111,11 +111,11 @@ private:
         debugAssert(n >= 0);
         this->num = 0;
         this->numAllocated = 0;
-        data = NULL;
+        data = nullptr;
         if (n > 0) {
             resize(n);
         } else {
-            data = NULL;
+            data = nullptr;
         }
     }
 
@@ -155,7 +155,7 @@ private:
          // will be constructed in the resize() method.
 
          data = (T*)m_memoryManager->alloc(sizeof(T) * numAllocated);
-         alwaysAssertM(data, "Memory manager returned NULL: out of memory?");
+         alwaysAssertM(data, "Memory manager returned nullptr: out of memory?");
 
          // Call the copy constructors
          {const int N = G3D::min(oldNum, numAllocated);
@@ -313,7 +313,7 @@ public:
        
        m_memoryManager->free(data);
        // Set to 0 in case this Array is global and gets referenced during app exit
-       data = NULL;
+       data = nullptr;
 	   num = 0;
        numAllocated = 0;
    }
@@ -329,7 +329,7 @@ public:
 
    void clearAndSetMemoryManager(const MemoryManager::Ref& m) {
        clear();
-       debugAssert(data == NULL);
+       debugAssert(data == nullptr);
        m_memoryManager = m;
    }
 
@@ -428,7 +428,7 @@ public:
             // Deallocate the array completely
             numAllocated = 0;
             m_memoryManager->free(data);
-            data = NULL;
+            data = nullptr;
             return;
         }
         
@@ -728,7 +728,7 @@ public:
     */
    inline T& operator[](int n) {
         debugAssertM((n >= 0) && (n < num), format("Array index out of bounds. n = %d, size() = %d", n, num));
-        debugAssert(data!=NULL);
+        debugAssert(data!=nullptr);
         return data[n];
    }
 
@@ -742,25 +742,25 @@ public:
     */
     inline const T& operator[](int n) const {
         debugAssert((n >= 0) && (n < num));
-        debugAssert(data!=NULL);
+        debugAssert(data!=nullptr);
         return data[n];
     }
 
     inline const T& operator[](unsigned int n) const {
         debugAssert((n < (unsigned int)num));
-        debugAssert(data!=NULL);
+        debugAssert(data!=nullptr);
         return data[n];
     }
 
     inline T& randomElement() {
         debugAssert(num > 0);
-        debugAssert(data!=NULL);
+        debugAssert(data!=nullptr);
         return data[iRandom(0, num - 1)];
     }
 
     inline const T& randomElement() const {
         debugAssert(num > 0);
-        debugAssert(data!=NULL);
+        debugAssert(data!=nullptr);
         return data[iRandom(0, num - 1)];
     }
 
@@ -770,14 +770,14 @@ public:
     */
     inline const T& last() const {
         debugAssert(num > 0);
-        debugAssert(data!=NULL);
+        debugAssert(data!=nullptr);
         return data[num - 1];
     }
 
     /** Returns element lastIndex() */
     inline T& last() {
         debugAssert(num > 0);
-        debugAssert(data!=NULL);
+        debugAssert(data!=nullptr);
         return data[num - 1];
     }
 
@@ -1155,7 +1155,7 @@ return( lhs < rhs? true : false );
         } else {
             lowerHalfSize = upperHalfSize = (size() + 1) / 2;
         }
-        const T* xPtr = NULL;
+        const T* xPtr = nullptr;
 
         // Maintain pointers to the arrays; we'll switch these around during sorting
         // to avoid copies.
@@ -1220,7 +1220,7 @@ return( lhs < rhs? true : false );
         // Now that we know the median, make a copy of it (since we're about to destroy the array that it
         // points into).
         T median = *xPtr;
-        xPtr = NULL;
+        xPtr = nullptr;
 
         // Partition the original array (note that this fast clears for us)
         partition(median, ltMedian, eqMedian, gtMedian, comparator);

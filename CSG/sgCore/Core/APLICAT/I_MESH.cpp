@@ -7,7 +7,7 @@ short ImportMesh(lpBUFFER_DAT bd, lpLISTH listh)
   hOBJ  hobj;
   short   count=0;
 
-  while ( (hobj=load_mesh(bd)) != NULL ) {
+  while ( (hobj=load_mesh(bd)) != nullptr ) {
     attach_item_tail(listh,hobj);
     count++;
   }
@@ -25,7 +25,7 @@ static  hOBJ load_mesh(lpBUFFER_DAT bd)
 
 	init_vdim(&g.vdim,sizeof(MNODE));
 once:
-	if ( !(i=load_str( bd, 80,string)) ) return NULL;
+	if ( !(i=load_str( bd, 80,string)) ) return nullptr;
 	if ( i == 1 ) goto once;
 	num = 3;
 	
@@ -58,5 +58,5 @@ err:
 	a_handler_err(AE_BAD_STRING,bd->cur_line);
 err1:
 	free_vdim(&g.vdim);
-	return NULL;
+	return nullptr;
 }

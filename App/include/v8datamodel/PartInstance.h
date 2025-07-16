@@ -274,16 +274,16 @@ public:
 	void reportTouch(const shared_ptr<PartInstance>& other);
 	void reportUntouch(const shared_ptr<PartInstance>& other);
 
-	TouchedSignal* getOrCreateTouchedSignal(bool create = true) { return (onDemandRead() || create) ? &onDemandWrite()->touchedSignal : NULL; }
-	TouchedSignal* getOrCreateTouchedEndedSignal(bool create = true) { return (onDemandRead() || create) ? &onDemandWrite()->touchEndedSignal : NULL; }
-	rbx::signal<void(shared_ptr<Instance>)>* getOrCreateDeprecatedStoppedTouchingSignal(bool create = true) { return (onDemandRead() || create) ? &onDemandWrite()->deprecatedStoppedTouchingSignal : NULL; }
-	rbx::signal<void(shared_ptr<Instance>)>* getOrCreateLocalSimulationTouchedSignal(bool create = true) { return (onDemandRead() || create) ? &onDemandWrite()->localSimulationTouchedSignal : NULL; }
-	rbx::signal<void()>* getOrCreateOutfitChangedSignal(bool create = true) { return (onDemandRead() || create) ? &onDemandWrite()->outfitChangedSignal : NULL; }
+	TouchedSignal* getOrCreateTouchedSignal(bool create = true) { return (onDemandRead() || create) ? &onDemandWrite()->touchedSignal : nullptr; }
+	TouchedSignal* getOrCreateTouchedEndedSignal(bool create = true) { return (onDemandRead() || create) ? &onDemandWrite()->touchEndedSignal : nullptr; }
+	rbx::signal<void(shared_ptr<Instance>)>* getOrCreateDeprecatedStoppedTouchingSignal(bool create = true) { return (onDemandRead() || create) ? &onDemandWrite()->deprecatedStoppedTouchingSignal : nullptr; }
+	rbx::signal<void(shared_ptr<Instance>)>* getOrCreateLocalSimulationTouchedSignal(bool create = true) { return (onDemandRead() || create) ? &onDemandWrite()->localSimulationTouchedSignal : nullptr; }
+	rbx::signal<void()>* getOrCreateOutfitChangedSignal(bool create = true) { return (onDemandRead() || create) ? &onDemandWrite()->outfitChangedSignal : nullptr; }
 
 	static bool nonNullInWorkspace(const shared_ptr<PartInstance>& part);
 
 	//PartInstance();								
-	PartInstance(const Vector3& initialSize = Vector3(4.0f, 1.0f, 2.0f));
+	PartInstance(const Vector3& initialSize = Vector3(2.0f, 2.0f, 2.0f));
 	virtual ~PartInstance();
 
 	virtual bool hasThreeDimensionalSize()          {return true;}
@@ -310,8 +310,8 @@ public:
 	const std::vector< weak_ptr<SurfaceGui> >* getSurfaceGuiCookiesRead() const  { return onDemandRead()? &onDemandRead()->surfaceGuiCookies : 0; }
 	std::vector< weak_ptr<SurfaceGui> >* getSurfaceGuiCookiesWrite()             { return &onDemandWrite()->surfaceGuiCookies; }
 
-	static Primitive* getPrimitive(PartInstance* p)						{return p ? p->getPartPrimitive() : NULL;}
-	static const Primitive* getConstPrimitive(const PartInstance* p)	{return p ? p->getConstPartPrimitive() : NULL;}
+	static Primitive* getPrimitive(PartInstance* p)						{return p ? p->getPartPrimitive() : nullptr;}
+	static const Primitive* getConstPrimitive(const PartInstance* p)	{return p ? p->getConstPartPrimitive() : nullptr;}
 
 	static PartInstance* fromPrimitive(Primitive* p);
 	static const PartInstance* fromConstPrimitive(const Primitive* p);

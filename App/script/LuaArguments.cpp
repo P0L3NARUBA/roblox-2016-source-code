@@ -181,7 +181,7 @@ bool LuaArguments::getEnum(int index, const Reflection::EnumDescriptor& desc, in
 // Gets a value from the Lua stack. Returns false if no value is found
 bool LuaArguments::get(lua_State *L, int luaIndex, Reflection::Variant& value, bool treatNilAsMissing)
 {
-	TablesCollection localTables(NULL);
+	TablesCollection localTables(nullptr);
 	return getRec(L, luaIndex, value, treatNilAsMissing, &localTables);
 }
 bool LuaArguments::getRec(lua_State *L, int luaIndex, Reflection::Variant& value, bool treatNilAsMissing, TablesCollection* visitedTables)

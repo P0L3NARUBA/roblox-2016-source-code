@@ -228,7 +228,7 @@ const Assembly* HumanoidState::getAssemblyConst() const
 			return torsoPrim->getConstAssembly();
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 Assembly* HumanoidState::getAssembly()
@@ -238,7 +238,7 @@ Assembly* HumanoidState::getAssembly()
 			return torsoPrim->getAssembly();
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 void HumanoidState::stateToAssembly()
@@ -424,7 +424,7 @@ Primitive* HumanoidState::getFloorPrimitive()
 			}
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 const Primitive* HumanoidState::getFloorPrimitiveConst() const
@@ -443,7 +443,7 @@ const Primitive* HumanoidState::getFloorPrimitiveConst() const
 			}
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 
@@ -477,7 +477,7 @@ void HumanoidState::preStepSimulatorSide(float dt)
 			RbxRay caster(foundHead->getCoordinateFrame().translation, headUp);
 			Vector3 hitLocation;
 			std::vector<const Primitive*> dummy;
-			Primitive* hitPrim = NULL;
+			Primitive* hitPrim = nullptr;
 
 			hitPrim = humanoid->getWorld()->getContactManager()->getHit(
 				caster, 
@@ -488,7 +488,7 @@ void HumanoidState::preStepSimulatorSide(float dt)
 			if (mergedFilter)
 				delete mergedFilter;
 
-			if (hitPrim != NULL) 
+			if (hitPrim != nullptr) 
 				headClear = false;
 		}
 	}
@@ -497,7 +497,7 @@ void HumanoidState::preStepSimulatorSide(float dt)
 	facingLadder = false;
 	if (usesLadder()) {
 		if (ladderCheck <= 0) {
-			facingLadder = findLadder(NULL);
+			facingLadder = findLadder(nullptr);
 			ladderCheck = ladderCheckRate();
 		} 
 		else {
@@ -616,7 +616,7 @@ bool checkFloorSubscribable(Primitive* floorPrim, Humanoid* humanoid)
 void HumanoidState::updateHumanoidFloorStatus(shared_ptr<HumanoidState>& state)
 {
 	shared_ptr<PartInstance> lastFloor = state->humanoid->getLastFloor();
-	Primitive* lastFloorPrim = NULL;
+	Primitive* lastFloorPrim = nullptr;
 	if (lastFloor)
 	{
 		lastFloorPrim = lastFloor->getPartPrimitive();
@@ -640,17 +640,17 @@ void HumanoidState::updateHumanoidFloorStatus(shared_ptr<HumanoidState>& state)
 		}
 		else if (lastFloor)
 		{
-			state->humanoid->setLastFloor(NULL);
-			state->humanoid->setRootFloorPart(NULL);
-			lastFloorPrim = NULL;
+			state->humanoid->setLastFloor(nullptr);
+			state->humanoid->setRootFloorPart(nullptr);
+			lastFloorPrim = nullptr;
 		}
 	}
 
 	// check Floor update
-	if ((floorChanged || lastFloorPrim == NULL) && checkFloorSubscribable(floorPrim, state->humanoid))
+	if ((floorChanged || lastFloorPrim == nullptr) && checkFloorSubscribable(floorPrim, state->humanoid))
 	{
-		Assembly* floorAssembly = NULL;
-		Primitive* floorRootPrim = NULL;
+		Assembly* floorAssembly = nullptr;
+		Primitive* floorRootPrim = nullptr;
 		floorAssembly = floorPrim->getAssembly();
 		if (floorAssembly)
 		{
@@ -668,14 +668,14 @@ void HumanoidState::updateHumanoidFloorStatus(shared_ptr<HumanoidState>& state)
 	// We always subscribe to LastFloor because it is guaranteed to be correct, while getFloorPrimitive is not
 	if (isValidSubscriptionHumanoidState(state) && lastFloorPrim)
 	{
-		Assembly* floorAssembly = NULL;
-		Primitive* floorRootPrim = NULL;
+		Assembly* floorAssembly = nullptr;
+		Primitive* floorRootPrim = nullptr;
 		floorAssembly = lastFloorPrim->getAssembly();
 		if (floorAssembly)
 		{
 			floorRootPrim = floorAssembly->getAssemblyPrimitive();
 			// Need to see RootFloor assembly for checking FilterPhase
-			// It's okay for floorAssembly to be NULL
+			// It's okay for floorAssembly to be nullptr
 			PartInstance* floorRootPart = PartInstance::fromPrimitive(RBX::Mechanism::getRootMovingPrimitive(lastFloorPrim));
 			state->humanoid->setRootFloorPart(floorRootPart);
 		}
@@ -693,10 +693,10 @@ bool HumanoidState::hasFloorChanged(shared_ptr<HumanoidState>& state, Primitive*
 {
 	Primitive* currentFloor = state->getFloorPrimitive();
 	// Handles the part if it was deleted.
-	if (lastFloorPrim && lastFloorPrim->getWorld() == NULL)
+	if (lastFloorPrim && lastFloorPrim->getWorld() == nullptr)
 	{
-		state->humanoid->setLastFloor(NULL);
-		state->humanoid->setRootFloorPart(NULL);
+		state->humanoid->setLastFloor(nullptr);
+		state->humanoid->setRootFloorPart(nullptr);
 		return true;
 	}
 	
@@ -751,7 +751,7 @@ void HumanoidState::changeState(shared_ptr<HumanoidState>& state, StateType newT
 
 void HumanoidState::doSimulatorStateTable(shared_ptr<HumanoidState>& state, float dt)
 {
-    VMProtectBeginMutation(NULL);
+    VMProtectBeginMutation(nullptr);
     bool isBadNvReg = false;
     bool isBadType = false;
 
@@ -793,7 +793,7 @@ void HumanoidState::doSimulatorStateTable(shared_ptr<HumanoidState>& state, floa
             || (newType != getStateFast(oldType, e));   // exploit: invalid table jump
 	}
     VMProtectEnd();
-    VMProtectBeginVirtualization(NULL);
+    VMProtectBeginVirtualization(nullptr);
     if (oldType != oldTypeSecurityBackup)
     {
         Tokens::sendStatsToken.addFlagFast(HATE_HSCE_EBX);
@@ -862,8 +862,8 @@ bool HumanoidState::computeEvent(EventType eventType)
 	case AWAY_LDR:				RBX_JUNK; returnValue = !facingLadder; break;
 	case STRAFE_CMD:			RBX_JUNK; returnValue = false; break;
 	case NO_STRAFE_CMD:			RBX_JUNK; returnValue = !humanoid->getStrafe(); break;
-	case ON_FLOOR:				RBX_JUNK; returnValue = (floorPart != NULL) && (!DFFlag::FixJumpGracePeriod || getRelativeMovementVelocity().y <= 0.0f); break;
-	case OFF_FLOOR:				RBX_JUNK; returnValue = (floorPart == NULL); break;
+	case ON_FLOOR:				RBX_JUNK; returnValue = (floorPart != nullptr) && (!DFFlag::FixJumpGracePeriod || getRelativeMovementVelocity().y <= 0.0f); break;
+	case OFF_FLOOR:				RBX_JUNK; returnValue = (floorPart == nullptr); break;
 	case OFF_FLOOR_GRACE:		RBX_JUNK; returnValue = (noFloorTimer > fallDelay()); break;
 	case TOUCHED:				RBX_JUNK; returnValue = computeTouched(); break;
 	case NEARLY_TOUCHED:		RBX_JUNK; returnValue = computeNearlyTouched(); break;
@@ -1010,7 +1010,7 @@ const char *HumanoidState::getStateNameByType(StateType state)
 			RBXASSERT(0);
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 float HumanoidState::computeTilt() const
@@ -1089,7 +1089,7 @@ bool HumanoidState::computeHasGyro() const
 	const ModelInstance* character = Humanoid::getConstCharacterFromHumanoid(humanoid);
 	RBXASSERT(character);
 	const BodyMover* bodyMover = character->findConstFirstDescendantOfType<BodyMover>();
-	return (bodyMover != NULL);
+	return (bodyMover != nullptr);
 }
 
 bool HumanoidState::computeHasBuoyancy()
@@ -1197,7 +1197,7 @@ bool HumanoidState::computeHitByHighImpactObject()
 	Velocity rootVelocity = root->getVelocity();
 
 	PartInstance* part = humanoid->getTorsoSlow();
-	Primitive* humanPrim = part ? part->getPartPrimitive() : NULL;
+	Primitive* humanPrim = part ? part->getPartPrimitive() : nullptr;
 	if ( humanPrim ) 
 	{
 		for (int i = 0; i < humanPrim->getNumContacts(); ++i )
@@ -1251,7 +1251,7 @@ void HumanoidState::findFloor(shared_ptr<PartInstance>& oldFloor)
 		float maxDistance = 1.0;
 
 		// checking if I had a floor last check
-		float hysteresis = (oldFloor != NULL) ? 1.5f : 1.1f;
+		float hysteresis = (oldFloor != nullptr) ? 1.5f : 1.1f;
 
 		// Increase the hysteresis based on our vertical velocity
 		float verticalVelocity = fabs(torsoPrim->getBody()->getVelocity().linear.y);
@@ -1285,7 +1285,7 @@ void HumanoidState::findFloor(shared_ptr<PartInstance>& oldFloor)
 								offset, maxDistance, humanoidAssembly, torsoC);
 		}
 			
-		if (floorPart == NULL)
+		if (floorPart == nullptr)
 		{
 			// if nothing on the center line, check for shoulders
 			for (int x = -1; x <= 1; x+=2) {
@@ -1298,7 +1298,7 @@ void HumanoidState::findFloor(shared_ptr<PartInstance>& oldFloor)
 			}
 		}
 
-		if (floorPart != NULL)
+		if (floorPart != nullptr)
 		{
 			floorHumanoidLocationInWorld = floorHitLocationAccumulate / (float) floorHitCount;
 			noFloorTimer = 0.0f;
@@ -1339,7 +1339,7 @@ void HumanoidState::AverageFloorRayCast(shared_ptr<PartInstance> &floorPart, Vec
 	{
 		hitLocationAccumulator += floorHitLocation;
 		hitLocationCount++;
-		if (UpdateFloorPart && floorPart == NULL)
+		if (UpdateFloorPart && floorPart == nullptr)
 		{
 			floorPartHitMaterial = floorHitMaterial;
 			floorPartHitLocation = floorHitLocation;
@@ -1356,14 +1356,14 @@ shared_ptr<PartInstance> HumanoidState::tryFloor(const RbxRay& ray, Vector3& hit
 
 	RBXASSERT(humanoidAssembly);
 	filteringAssembly = humanoidAssembly;
-	Primitive* floorPrim = NULL;
+	Primitive* floorPrim = nullptr;
 
 	RBXASSERT(ray.direction().isUnit());
 	RbxRay worldRay = RbxRay::fromOriginAndDirection(ray.origin(), ray.direction());
 	worldRay.direction() *= maxDistance;
 
 	floorPrim =  humanoid->getWorld()->getContactManager()->getHit(worldRay,
-							NULL,
+							nullptr,
 							this,
 							hitLocation,
 							false,
@@ -1544,7 +1544,7 @@ bool HumanoidState::findPrimitiveInLadderZone(Adorn* adorn)
 	Extents extents(center + min, center + max);
 
 	foundParts.fastClear();
-	geom->getPartsTouchingExtents(extents, NULL, 0, foundParts);
+	geom->getPartsTouchingExtents(extents, nullptr, 0, foundParts);
 	
 	Instance* character = getHumanoid()->getParent();
 	for (int i = 0; i < foundParts.size(); ++i) {
@@ -1676,7 +1676,7 @@ bool HumanoidState::findLadder(Adorn* adorn)
 		Vector3 originOnTorso(0, -lowLadderSearch(this) + distanceFromBottom, 0);
 		RbxRay caster(torsoCoord.translation + originOnTorso, torsoLook * ladderSearchDistance(humanoid) );
 
-		Primitive* hitPrim = NULL;
+		Primitive* hitPrim = nullptr;
 		Vector3 hitLoc;
 		doLadderRaycast(geom, caster, humanoid, &hitPrim, &hitLoc);
 
@@ -1811,7 +1811,7 @@ void HumanoidState::setNearlyTouched()
 // prevent inlining of computeEvent
 unsigned int HumanoidState::checkComputeEvent()
 {
-    VMProtectBeginMutation(NULL);
+    VMProtectBeginMutation(nullptr);
     // these all return true:
     torsoHasBuoyancy = true;
     facingLadder = true;

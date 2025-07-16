@@ -13,19 +13,19 @@ sgC2DObject::sgC2DObject(SG_OBJ_HANDLE objH):sgCObject(objH)
 
 sgCContour*    sgC2DObject::GetEquidistantContour(sgFloat h1, sgFloat h2, bool toRound)
 {
-  if (IsLinear() || !IsPlane(NULL,NULL))
-    return NULL;
+  if (IsLinear() || !IsPlane(nullptr,nullptr))
+    return nullptr;
 
-  hOBJ eq_obj=NULL;
-  if (!create_equ_path2(GetObjectHandle(this), NULL, h1, h2, false, &eq_obj))
-    return NULL;
-  if (eq_obj==NULL)
-    return NULL;
+  hOBJ eq_obj=nullptr;
+  if (!create_equ_path2(GetObjectHandle(this), nullptr, h1, h2, false, &eq_obj))
+    return nullptr;
+  if (eq_obj==nullptr)
+    return nullptr;
   sgCObject* retO = ObjectFromHandle(eq_obj);
   if (retO->GetType()!=SG_OT_CONTOUR)
   {
     assert(0);
-    return NULL;
+    return nullptr;
   }
 
   char* typeID = "{0000000000000-0000-0000-000000000007}";
@@ -90,7 +90,7 @@ SG_POINT  sgC2DObject::GetPointFromCoefficient(sgFloat coeff) const
     memcpy(&resP,&tmpP,sizeof(SG_POINT));
     return resP;
   }
-  if (!init_get_point_on_path(GetObjectHandle(this), NULL))
+  if (!init_get_point_on_path(GetObjectHandle(this), nullptr))
   {
     assert(0);
     return resP;

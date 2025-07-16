@@ -569,7 +569,7 @@ void visitDescendentsSetPhysics(shared_ptr<Instance> descendant, PartOperation* 
 		/// StudioCSGAssets flag introduces some new conditions that we cannot meet with the old check. If these are enabled we must have a new condition that checks.
 		if (FFlag::StudioCSGAssets)
 		{
-			haveSameGeometry = (sourceOperation->getMesh().get() != NULL && iteratedPartOp->getMesh().get() != NULL &&  sourceOperation->getMesh().get() == iteratedPartOp->getMesh().get());
+			haveSameGeometry = (sourceOperation->getMesh().get() != nullptr && iteratedPartOp->getMesh().get() != nullptr &&  sourceOperation->getMesh().get() == iteratedPartOp->getMesh().get());
 		}
 		else
 		{

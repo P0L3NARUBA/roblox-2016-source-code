@@ -235,7 +235,7 @@ void CharacterAppearance::onAncestorChanged(const AncestorChanged& event)
 
 bool CharacterAppearance::askSetParent(const Instance* instance) const
 {
-	return Instance::fastDynamicCast<ModelInstance>(instance)!=NULL;
+	return Instance::fastDynamicCast<ModelInstance>(instance)!=nullptr;
 }
 
 }	// namespace

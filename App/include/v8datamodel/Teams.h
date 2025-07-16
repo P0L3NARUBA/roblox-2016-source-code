@@ -39,7 +39,7 @@ namespace RBX {
 	protected:
 		/*override*/ void onChildAdded(Instance* child);
 		/*override*/ void onChildRemoving(Instance* child);
-		/* override */ bool askAddChild(const Instance* child) const {return Instance::fastDynamicCast<Team>(child)!=NULL;}
+		/* override */ bool askAddChild(const Instance* child) const {return Instance::fastDynamicCast<Team>(child)!=nullptr;}
 
 	};
 

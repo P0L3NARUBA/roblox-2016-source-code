@@ -70,7 +70,7 @@ windows_file_open(SDL_RWops * context, const char *filename, const char *mode)
         return -1;              /* failed (invalid call) */
 
     context->hidden.windowsio.h = INVALID_HANDLE_VALUE;   /* mark this as unusable */
-    context->hidden.windowsio.buffer.data = NULL;
+    context->hidden.windowsio.buffer.data = nullptr;
     context->hidden.windowsio.buffer.size = 0;
     context->hidden.windowsio.buffer.left = 0;
 
@@ -81,11 +81,11 @@ windows_file_open(SDL_RWops * context, const char *filename, const char *mode)
     /* "a+"= append + read, file may not exist              */
     /* "w+" = read, write, truncate. file may not exist    */
 
-    must_exist = (SDL_strchr(mode, 'r') != NULL) ? OPEN_EXISTING : 0;
-    truncate = (SDL_strchr(mode, 'w') != NULL) ? CREATE_ALWAYS : 0;
-    r_right = (SDL_strchr(mode, '+') != NULL
+    must_exist = (SDL_strchr(mode, 'r') != nullptr) ? OPEN_EXISTING : 0;
+    truncate = (SDL_strchr(mode, 'w') != nullptr) ? CREATE_ALWAYS : 0;
+    r_right = (SDL_strchr(mode, '+') != nullptr
                || must_exist) ? GENERIC_READ : 0;
-    a_mode = (SDL_strchr(mode, 'a') != NULL) ? OPEN_ALWAYS : 0;
+    a_mode = (SDL_strchr(mode, 'a') != nullptr) ? OPEN_ALWAYS : 0;
     w_right = (a_mode || SDL_strchr(mode, '+')
                || truncate) ? GENERIC_WRITE : 0;
 
@@ -104,9 +104,9 @@ windows_file_open(SDL_RWops * context, const char *filename, const char *mode)
     {
         LPTSTR tstr = WIN_UTF8ToString(filename);
         h = CreateFile(tstr, (w_right | r_right),
-                       (w_right) ? 0 : FILE_SHARE_READ, NULL,
+                       (w_right) ? 0 : FILE_SHARE_READ, nullptr,
                        (must_exist | truncate | a_mode),
-                       FILE_ATTRIBUTE_NORMAL, NULL);
+                       FILE_ATTRIBUTE_NORMAL, nullptr);
         SDL_free(tstr);
     }
 
@@ -115,7 +115,7 @@ windows_file_open(SDL_RWops * context, const char *filename, const char *mode)
 
     if (h == INVALID_HANDLE_VALUE) {
         SDL_free(context->hidden.windowsio.buffer.data);
-        context->hidden.windowsio.buffer.data = NULL;
+        context->hidden.windowsio.buffer.data = nullptr;
         SDL_SetError("Couldn't open %s", filename);
         return -2;              /* failed (CreateFile) */
     }
@@ -212,7 +212,7 @@ windows_file_read(SDL_RWops * context, void *ptr, size_t size, size_t maxnum)
     if (total_need < READAHEAD_BUFFER_SIZE) {
         if (!ReadFile
             (context->hidden.windowsio.h, context->hidden.windowsio.buffer.data,
-             READAHEAD_BUFFER_SIZE, &byte_read, NULL)) {
+             READAHEAD_BUFFER_SIZE, &byte_read, nullptr)) {
             SDL_Error(SDL_EFREAD);
             return 0;
         }
@@ -223,7 +223,7 @@ windows_file_read(SDL_RWops * context, void *ptr, size_t size, size_t maxnum)
         total_read += read_ahead;
     } else {
         if (!ReadFile
-            (context->hidden.windowsio.h, ptr, (DWORD)total_need, &byte_read, NULL)) {
+            (context->hidden.windowsio.h, ptr, (DWORD)total_need, &byte_read, nullptr)) {
             SDL_Error(SDL_EFREAD);
             return 0;
         }
@@ -249,14 +249,14 @@ windows_file_write(SDL_RWops * context, const void *ptr, size_t size,
 
     if (context->hidden.windowsio.buffer.left) {
         SetFilePointer(context->hidden.windowsio.h,
-                       -(LONG)context->hidden.windowsio.buffer.left, NULL,
+                       -(LONG)context->hidden.windowsio.buffer.left, nullptr,
                        FILE_CURRENT);
         context->hidden.windowsio.buffer.left = 0;
     }
 
     /* if in append mode, we must go to the EOF before write */
     if (context->hidden.windowsio.append) {
-        if (SetFilePointer(context->hidden.windowsio.h, 0L, NULL, FILE_END) ==
+        if (SetFilePointer(context->hidden.windowsio.h, 0L, nullptr, FILE_END) ==
             INVALID_SET_FILE_POINTER) {
             SDL_Error(SDL_EFWRITE);
             return 0;
@@ -264,7 +264,7 @@ windows_file_write(SDL_RWops * context, const void *ptr, size_t size,
     }
 
     if (!WriteFile
-        (context->hidden.windowsio.h, ptr, (DWORD)total_bytes, &byte_written, NULL)) {
+        (context->hidden.windowsio.h, ptr, (DWORD)total_bytes, &byte_written, nullptr)) {
         SDL_Error(SDL_EFWRITE);
         return 0;
     }
@@ -283,7 +283,7 @@ windows_file_close(SDL_RWops * context)
             context->hidden.windowsio.h = INVALID_HANDLE_VALUE;   /* to be sure */
         }
         SDL_free(context->hidden.windowsio.buffer.data);
-        context->hidden.windowsio.buffer.data = NULL;
+        context->hidden.windowsio.buffer.data = nullptr;
         SDL_FreeRW(context);
     }
     return 0;
@@ -465,10 +465,10 @@ mem_close(SDL_RWops * context)
 SDL_RWops *
 SDL_RWFromFile(const char *file, const char *mode)
 {
-    SDL_RWops *rwops = NULL;
+    SDL_RWops *rwops = nullptr;
     if (!file || !*file || !mode || !*mode) {
         SDL_SetError("SDL_RWFromFile(): No file or no mode specified");
-        return NULL;
+        return nullptr;
     }
 #if defined(__ANDROID__)
 #ifdef HAVE_STDIO_H
@@ -499,10 +499,10 @@ SDL_RWFromFile(const char *file, const char *mode)
     /* Try to open the file from the asset system */
     rwops = SDL_AllocRW();
     if (!rwops)
-        return NULL;            /* SDL_SetError already setup by SDL_AllocRW() */
+        return nullptr;            /* SDL_SetError already setup by SDL_AllocRW() */
     if (Android_JNI_FileOpen(rwops, file, mode) < 0) {
         SDL_FreeRW(rwops);
-        return NULL;
+        return nullptr;
     }
     rwops->size = Android_JNI_FileSize;
     rwops->seek = Android_JNI_FileSeek;
@@ -514,10 +514,10 @@ SDL_RWFromFile(const char *file, const char *mode)
 #elif defined(__WIN32__)
     rwops = SDL_AllocRW();
     if (!rwops)
-        return NULL;            /* SDL_SetError already setup by SDL_AllocRW() */
+        return nullptr;            /* SDL_SetError already setup by SDL_AllocRW() */
     if (windows_file_open(rwops, file, mode) < 0) {
         SDL_FreeRW(rwops);
-        return NULL;
+        return nullptr;
     }
     rwops->size = windows_file_size;
     rwops->seek = windows_file_seek;
@@ -531,12 +531,12 @@ SDL_RWFromFile(const char *file, const char *mode)
         #ifdef __APPLE__
         FILE *fp = SDL_OpenFPFromBundleOrFallback(file, mode);
         #elif __WINRT__
-        FILE *fp = NULL;
+        FILE *fp = nullptr;
         fopen_s(&fp, file, mode);
         #else
         FILE *fp = fopen(file, mode);
         #endif
-        if (fp == NULL) {
+        if (fp == nullptr) {
             SDL_SetError("Couldn't open %s", file);
         } else {
             rwops = SDL_RWFromFP(fp, 1);
@@ -553,10 +553,10 @@ SDL_RWFromFile(const char *file, const char *mode)
 SDL_RWops *
 SDL_RWFromFP(FILE * fp, SDL_bool autoclose)
 {
-    SDL_RWops *rwops = NULL;
+    SDL_RWops *rwops = nullptr;
 
     rwops = SDL_AllocRW();
-    if (rwops != NULL) {
+    if (rwops != nullptr) {
         rwops->size = stdio_size;
         rwops->seek = stdio_seek;
         rwops->read = stdio_read;
@@ -573,14 +573,14 @@ SDL_RWops *
 SDL_RWFromFP(void * fp, SDL_bool autoclose)
 {
     SDL_SetError("SDL not compiled with stdio support");
-    return NULL;
+    return nullptr;
 }
 #endif /* HAVE_STDIO_H */
 
 SDL_RWops *
 SDL_RWFromMem(void *mem, int size)
 {
-    SDL_RWops *rwops = NULL;
+    SDL_RWops *rwops = nullptr;
     if (!mem) {
       SDL_InvalidParamError("mem");
       return rwops;
@@ -591,7 +591,7 @@ SDL_RWFromMem(void *mem, int size)
     }
 
     rwops = SDL_AllocRW();
-    if (rwops != NULL) {
+    if (rwops != nullptr) {
         rwops->size = mem_size;
         rwops->seek = mem_seek;
         rwops->read = mem_read;
@@ -608,7 +608,7 @@ SDL_RWFromMem(void *mem, int size)
 SDL_RWops *
 SDL_RWFromConstMem(const void *mem, int size)
 {
-    SDL_RWops *rwops = NULL;
+    SDL_RWops *rwops = nullptr;
     if (!mem) {
       SDL_InvalidParamError("mem");
       return rwops;
@@ -619,7 +619,7 @@ SDL_RWFromConstMem(const void *mem, int size)
     }
 
     rwops = SDL_AllocRW();
-    if (rwops != NULL) {
+    if (rwops != nullptr) {
         rwops->size = mem_size;
         rwops->seek = mem_seek;
         rwops->read = mem_read;
@@ -639,7 +639,7 @@ SDL_AllocRW(void)
     SDL_RWops *area;
 
     area = (SDL_RWops *) SDL_malloc(sizeof *area);
-    if (area == NULL) {
+    if (area == nullptr) {
         SDL_OutOfMemory();
     } else {
         area->type = SDL_RWOPS_UNKNOWN;

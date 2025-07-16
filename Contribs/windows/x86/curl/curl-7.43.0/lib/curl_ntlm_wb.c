@@ -83,7 +83,7 @@ void Curl_ntlm_wb_cleanup(struct connectdata *conn)
   if(conn->ntlm_auth_hlpr_pid) {
     int i;
     for(i = 0; i < 4; i++) {
-      pid_t ret = waitpid(conn->ntlm_auth_hlpr_pid, NULL, WNOHANG);
+      pid_t ret = waitpid(conn->ntlm_auth_hlpr_pid, nullptr, WNOHANG);
       if(ret == conn->ntlm_auth_hlpr_pid || errno == ECHILD)
         break;
       switch(i) {
@@ -106,9 +106,9 @@ void Curl_ntlm_wb_cleanup(struct connectdata *conn)
   }
 
   free(conn->challenge_header);
-  conn->challenge_header = NULL;
+  conn->challenge_header = nullptr;
   free(conn->response_header);
-  conn->response_header = NULL;
+  conn->response_header = nullptr;
 }
 
 static CURLcode ntlm_wb_init(struct connectdata *conn, const char *userp)
@@ -116,9 +116,9 @@ static CURLcode ntlm_wb_init(struct connectdata *conn, const char *userp)
   curl_socket_t sockfds[2];
   pid_t child_pid;
   const char *username;
-  char *slash, *domain = NULL;
-  const char *ntlm_auth = NULL;
-  char *ntlm_auth_alloc = NULL;
+  char *slash, *domain = nullptr;
+  const char *ntlm_auth = nullptr;
+  char *ntlm_auth_alloc = nullptr;
 #if defined(HAVE_GETPWUID_R) && defined(HAVE_GETEUID)
   struct passwd pw, *pw_res;
   char pwbuf[1024];
@@ -157,7 +157,7 @@ static CURLcode ntlm_wb_init(struct connectdata *conn, const char *userp)
   }
   slash = strpbrk(username, "\\/");
   if(slash) {
-    if((domain = strdup(username)) == NULL)
+    if((domain = strdup(username)) == nullptr)
       return CURLE_OUT_OF_MEMORY;
     slash = domain + (slash - username);
     *slash = '\0';
@@ -226,13 +226,13 @@ static CURLcode ntlm_wb_init(struct connectdata *conn, const char *userp)
             "--use-cached-creds",
             "--username", username,
             "--domain", domain,
-            NULL);
+            nullptr);
     else
       execl(ntlm_auth, ntlm_auth,
             "--helper-protocol", "ntlmssp-client-1",
             "--use-cached-creds",
             "--username", username,
-            NULL);
+            nullptr);
 
     error = ERRNO;
     sclose_nolog(sockfds[1]);
@@ -395,7 +395,7 @@ CURLcode Curl_output_ntlm_wb(struct connectdata *conn,
                             conn->response_header);
     DEBUG_OUT(fprintf(stderr, "**** Header %s\n ", *allocuserpwd));
     free(conn->response_header);
-    conn->response_header = NULL;
+    conn->response_header = nullptr;
     break;
   case NTLMSTATE_TYPE2:
     input = aprintf("TT %s\n", conn->challenge_header);
@@ -403,7 +403,7 @@ CURLcode Curl_output_ntlm_wb(struct connectdata *conn,
       return CURLE_OUT_OF_MEMORY;
     res = ntlm_wb_response(conn, input, ntlm->state);
     free(input);
-    input = NULL;
+    input = nullptr;
     if(res)
       return res;
 
@@ -420,7 +420,7 @@ CURLcode Curl_output_ntlm_wb(struct connectdata *conn,
     /* connection is already authenticated,
      * don't send a header in future requests */
     free(*allocuserpwd);
-    *allocuserpwd=NULL;
+    *allocuserpwd=nullptr;
     authp->done = TRUE;
     break;
   }

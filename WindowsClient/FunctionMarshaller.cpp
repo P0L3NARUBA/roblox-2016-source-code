@@ -14,8 +14,8 @@ FunctionMarshaller::FunctionMarshaller(DWORD threadID)
 	, postedAsyncMessage(0)
 {
 	this->threadID = threadID;
-	HWND hWnd = this->Create(NULL, 0, 0, WS_POPUP);
-	ATLASSERT(hWnd!=NULL);
+	HWND hWnd = this->Create(nullptr, 0, 0, WS_POPUP);
+	ATLASSERT(hWnd!=nullptr);
 }
 
 FunctionMarshaller::~FunctionMarshaller()

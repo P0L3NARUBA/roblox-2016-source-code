@@ -243,7 +243,7 @@ OSCAN_COD  scan_brep(hOBJ hobj, lpSCAN_CONTROL lpsc)
 			break;
 		}
 		memset(&lpsc->viloc,0,sizeof(lpsc->viloc));
-		lpsc->m    = NULL;
+		lpsc->m    = nullptr;
 	}
 	return cod;
 }

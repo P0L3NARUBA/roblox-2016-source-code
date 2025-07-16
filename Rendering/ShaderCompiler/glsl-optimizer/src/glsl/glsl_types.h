@@ -129,15 +129,15 @@ struct glsl_type {
     * easier to just ralloc_free 'mem_ctx' (or any of its ancestors). */
    static void* operator new(size_t size)
    {
-      if (glsl_type::mem_ctx == NULL) {
-	 glsl_type::mem_ctx = ralloc_context(NULL);
-	 assert(glsl_type::mem_ctx != NULL);
+      if (glsl_type::mem_ctx == nullptr) {
+	 glsl_type::mem_ctx = ralloc_context(nullptr);
+	 assert(glsl_type::mem_ctx != nullptr);
       }
 
       void *type;
 
       type = ralloc_size(glsl_type::mem_ctx, size);
-      assert(type != NULL);
+      assert(type != nullptr);
 
       return type;
    }
@@ -163,7 +163,7 @@ struct glsl_type {
    /**
     * Name of the data type
     *
-    * Will never be \c NULL.
+    * Will never be \c nullptr.
     */
    const char *name;
 
@@ -232,12 +232,12 @@ struct glsl_type {
     * Query the type of elements in an array
     *
     * \return
-    * Pointer to the type of elements in the array for array types, or \c NULL
+    * Pointer to the type of elements in the array for array types, or \c nullptr
     * for non-array types.
     */
    const glsl_type *element_type() const
    {
-      return is_array() ? fields.array : NULL;
+      return is_array() ? fields.array : nullptr;
    }
 
    /**

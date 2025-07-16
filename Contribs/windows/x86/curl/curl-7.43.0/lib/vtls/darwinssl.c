@@ -787,20 +787,20 @@ CF_INLINE void GetDarwinVersionNumber(int *major, int *minor)
   /* Get the Darwin kernel version from the kernel using sysctl(): */
   mib[0] = CTL_KERN;
   mib[1] = KERN_OSRELEASE;
-  if(sysctl(mib, 2, NULL, &os_version_len, NULL, 0) == -1)
+  if(sysctl(mib, 2, nullptr, &os_version_len, nullptr, 0) == -1)
     return;
   os_version = malloc(os_version_len*sizeof(char));
   if(!os_version)
     return;
-  if(sysctl(mib, 2, os_version, &os_version_len, NULL, 0) == -1) {
+  if(sysctl(mib, 2, os_version, &os_version_len, nullptr, 0) == -1) {
     free(os_version);
     return;
   }
 
   /* Parse the version: */
   os_version_major = strtok_r(os_version, ".", &tok_buf);
-  os_version_minor = strtok_r(NULL, ".", &tok_buf);
-  /*os_version_point = strtok_r(NULL, ".", &tok_buf);*/
+  os_version_minor = strtok_r(nullptr, ".", &tok_buf);
+  /*os_version_point = strtok_r(nullptr, ".", &tok_buf);*/
   *major = atoi(os_version_major);
   *minor = atoi(os_version_minor);
   free(os_version);
@@ -821,14 +821,14 @@ CF_INLINE CFStringRef CopyCertSubject(SecCertificateRef cert)
 #else
 #if CURL_BUILD_MAC_10_7
   /* Lion & later: Get the long description if we can. */
-  if(SecCertificateCopyLongDescription != NULL)
+  if(SecCertificateCopyLongDescription != nullptr)
     server_cert_summary =
-      SecCertificateCopyLongDescription(NULL, cert, NULL);
+      SecCertificateCopyLongDescription(nullptr, cert, nullptr);
   else
 #endif /* CURL_BUILD_MAC_10_7 */
 #if CURL_BUILD_MAC_10_6
   /* Snow Leopard: Get the certificate summary. */
-  if(SecCertificateCopySubjectSummary != NULL)
+  if(SecCertificateCopySubjectSummary != nullptr)
     server_cert_summary = SecCertificateCopySubjectSummary(cert);
   else
 #endif /* CURL_BUILD_MAC_10_6 */
@@ -847,8 +847,8 @@ static OSStatus CopyIdentityWithLabelOldSchool(char *label,
   OSStatus status = errSecItemNotFound;
   SecKeychainAttributeList attr_list;
   SecKeychainAttribute attr;
-  SecKeychainSearchRef search = NULL;
-  SecCertificateRef cert = NULL;
+  SecKeychainSearchRef search = nullptr;
+  SecCertificateRef cert = nullptr;
 
   /* Set up the attribute list: */
   attr_list.count = 1L;
@@ -860,7 +860,7 @@ static OSStatus CopyIdentityWithLabelOldSchool(char *label,
   attr.length = (UInt32)strlen(label);
 
   /* Start searching: */
-  status = SecKeychainSearchCreateFromAttributes(NULL,
+  status = SecKeychainSearchCreateFromAttributes(nullptr,
                                                  kSecCertificateItemClass,
                                                  &attr_list,
                                                  &search);
@@ -869,7 +869,7 @@ static OSStatus CopyIdentityWithLabelOldSchool(char *label,
                                        (SecKeychainItemRef *)&cert);
     if(status == noErr && cert) {
       /* If we found a certificate, does it have a private key? */
-      status = SecIdentityCreateWithCertificate(NULL, cert, out_c_a_k);
+      status = SecIdentityCreateWithCertificate(nullptr, cert, out_c_a_k);
       CFRelease(cert);
     }
   }
@@ -889,11 +889,11 @@ static OSStatus CopyIdentityWithLabel(char *label,
   /* SecItemCopyMatching() was introduced in iOS and Snow Leopard.
      kSecClassIdentity was introduced in Lion. If both exist, let's use them
      to find the certificate. */
-  if(SecItemCopyMatching != NULL && kSecClassIdentity != NULL) {
+  if(SecItemCopyMatching != nullptr && kSecClassIdentity != nullptr) {
     CFTypeRef keys[4];
     CFTypeRef values[4];
     CFDictionaryRef query_dict;
-    CFStringRef label_cf = CFStringCreateWithCString(NULL, label,
+    CFStringRef label_cf = CFStringCreateWithCString(nullptr, label,
       kCFStringEncodingUTF8);
 
     /* Set up our search criteria and expected results: */
@@ -906,7 +906,7 @@ static OSStatus CopyIdentityWithLabel(char *label,
     /* identity searches need a SecPolicyRef in order to work */
     values[3] = SecPolicyCreateSSL(false, label_cf);
     keys[3] = kSecMatchPolicy;
-    query_dict = CFDictionaryCreate(NULL, (const void **)keys,
+    query_dict = CFDictionaryCreate(nullptr, (const void **)keys,
                                    (const void **)values, 4L,
                                    &kCFCopyStringDictionaryKeyCallBacks,
                                    &kCFTypeDictionaryValueCallBacks);
@@ -936,23 +936,23 @@ static OSStatus CopyIdentityFromPKCS12File(const char *cPath,
                                            SecIdentityRef *out_cert_and_key)
 {
   OSStatus status = errSecItemNotFound;
-  CFURLRef pkcs_url = CFURLCreateFromFileSystemRepresentation(NULL,
+  CFURLRef pkcs_url = CFURLCreateFromFileSystemRepresentation(nullptr,
     (const UInt8 *)cPath, strlen(cPath), false);
-  CFStringRef password = cPassword ? CFStringCreateWithCString(NULL,
-    cPassword, kCFStringEncodingUTF8) : NULL;
-  CFDataRef pkcs_data = NULL;
+  CFStringRef password = cPassword ? CFStringCreateWithCString(nullptr,
+    cPassword, kCFStringEncodingUTF8) : nullptr;
+  CFDataRef pkcs_data = nullptr;
 
   /* We can import P12 files on iOS or OS X 10.7 or later: */
   /* These constants are documented as having first appeared in 10.6 but they
      raise linker errors when used on that cat for some reason. */
 #if CURL_BUILD_MAC_10_7 || CURL_BUILD_IOS
-  if(CFURLCreateDataAndPropertiesFromResource(NULL, pkcs_url, &pkcs_data,
-    NULL, NULL, &status)) {
+  if(CFURLCreateDataAndPropertiesFromResource(nullptr, pkcs_url, &pkcs_data,
+    nullptr, nullptr, &status)) {
     const void *cKeys[] = {kSecImportExportPassphrase};
     const void *cValues[] = {password};
-    CFDictionaryRef options = CFDictionaryCreate(NULL, cKeys, cValues,
-      password ? 1L : 0L, NULL, NULL);
-    CFArrayRef items = NULL;
+    CFDictionaryRef options = CFDictionaryCreate(nullptr, cKeys, cValues,
+      password ? 1L : 0L, nullptr, nullptr);
+    CFArrayRef items = nullptr;
 
     /* Here we go: */
     status = SecPKCS12Import(pkcs_data, options, &items);
@@ -989,7 +989,7 @@ CF_INLINE bool is_file(const char *filename)
 {
   struct_stat st;
 
-  if(filename == NULL)
+  if(filename == nullptr)
     return false;
 
   if(stat(filename, &st) == 0)
@@ -1009,7 +1009,7 @@ static CURLcode darwinssl_connect_step1(struct connectdata *conn,
   struct in_addr addr;
 #endif /* ENABLE_IPV6 */
   size_t all_ciphers_count = 0UL, allowed_ciphers_count = 0UL, i;
-  SSLCipherSuite *all_ciphers = NULL, *allowed_ciphers = NULL;
+  SSLCipherSuite *all_ciphers = nullptr, *allowed_ciphers = nullptr;
   char *ssl_sessionid;
   size_t ssl_sessionid_len;
   OSStatus err = noErr;
@@ -1020,10 +1020,10 @@ static CURLcode darwinssl_connect_step1(struct connectdata *conn,
 #endif /* CURL_BUILD_MAC */
 
 #if CURL_BUILD_MAC_10_8 || CURL_BUILD_IOS
-  if(SSLCreateContext != NULL) {  /* use the newer API if avaialble */
+  if(SSLCreateContext != nullptr) {  /* use the newer API if avaialble */
     if(connssl->ssl_ctx)
       CFRelease(connssl->ssl_ctx);
-    connssl->ssl_ctx = SSLCreateContext(NULL, kSSLClientSide, kSSLStreamType);
+    connssl->ssl_ctx = SSLCreateContext(nullptr, kSSLClientSide, kSSLStreamType);
     if(!connssl->ssl_ctx) {
       failf(data, "SSL: couldn't create a context!");
       return CURLE_OUT_OF_MEMORY;
@@ -1054,7 +1054,7 @@ static CURLcode darwinssl_connect_step1(struct connectdata *conn,
 
   /* check to see if we've been told to use an explicit SSL/TLS version */
 #if CURL_BUILD_MAC_10_8 || CURL_BUILD_IOS
-  if(SSLSetProtocolVersionMax != NULL) {
+  if(SSLSetProtocolVersionMax != nullptr) {
     switch(data->set.ssl.version) {
       default:
       case CURL_SSLVERSION_DEFAULT:
@@ -1190,7 +1190,7 @@ static CURLcode darwinssl_connect_step1(struct connectdata *conn,
   }
 
   if(data->set.str[STRING_CERT]) {
-    SecIdentityRef cert_and_key = NULL;
+    SecIdentityRef cert_and_key = nullptr;
     bool is_cert_file = is_file(data->set.str[STRING_CERT]);
 
     /* User wants to authenticate with a client cert. Look for it:
@@ -1213,7 +1213,7 @@ static CURLcode darwinssl_connect_step1(struct connectdata *conn,
       err = CopyIdentityWithLabel(data->set.str[STRING_CERT], &cert_and_key);
 
     if(err == noErr) {
-      SecCertificateRef cert = NULL;
+      SecCertificateRef cert = nullptr;
       CFTypeRef certs_c[1];
       CFArrayRef certs;
 
@@ -1236,7 +1236,7 @@ static CURLcode darwinssl_connect_step1(struct connectdata *conn,
         }
       }
       certs_c[0] = cert_and_key;
-      certs = CFArrayCreate(NULL, (const void **)certs_c, 1L,
+      certs = CFArrayCreate(nullptr, (const void **)certs_c, 1L,
                             &kCFTypeArrayCallBacks);
       err = SSLSetCertificate(connssl->ssl_ctx, certs);
       if(certs)
@@ -1289,9 +1289,9 @@ static CURLcode darwinssl_connect_step1(struct connectdata *conn,
      default.) */
   /* (Note: Darwin 12.x.x is Mountain Lion.) */
 #if CURL_BUILD_MAC
-  if(SSLSetSessionOption != NULL && darwinver_maj >= 12) {
+  if(SSLSetSessionOption != nullptr && darwinver_maj >= 12) {
 #else
-  if(SSLSetSessionOption != NULL) {
+  if(SSLSetSessionOption != nullptr) {
 #endif /* CURL_BUILD_MAC */
     bool break_on_auth = !data->set.ssl.verifypeer ||
       data->set.str[STRING_SSL_CAFILE];
@@ -1382,7 +1382,7 @@ static CURLcode darwinssl_connect_step1(struct connectdata *conn,
       }
 #endif /* CURL_BUILD_MAC */
       switch(all_ciphers[i]) {
-        /* Disable NULL ciphersuites: */
+        /* Disable nullptr ciphersuites: */
         case SSL_NULL_WITH_NULL_NULL:
         case SSL_RSA_WITH_NULL_MD5:
         case SSL_RSA_WITH_NULL_SHA:
@@ -1459,7 +1459,7 @@ static CURLcode darwinssl_connect_step1(struct connectdata *conn,
 #if CURL_BUILD_MAC_10_9 || CURL_BUILD_IOS_7
   /* We want to enable 1/n-1 when using a CBC cipher unless the user
      specifically doesn't want us doing that: */
-  if(SSLSetSessionOption != NULL) {
+  if(SSLSetSessionOption != nullptr) {
     SSLSetSessionOption(connssl->ssl_ctx, kSSLSessionOptionSendOneByteRecord,
                       !data->set.ssl_enable_beast);
     SSLSetSessionOption(connssl->ssl_ctx, kSSLSessionOptionFalseStart,
@@ -1532,21 +1532,21 @@ static long pem_to_der(const char *in, unsigned char **out, size_t *outlen)
 
   /* Jump through the separators at the beginning of the certificate. */
   sep_start = strstr(in, "-----");
-  if(sep_start == NULL)
+  if(sep_start == nullptr)
     return 0;
   cert_start = strstr(sep_start + 1, "-----");
-  if(cert_start == NULL)
+  if(cert_start == nullptr)
     return -1;
 
   cert_start += 5;
 
   /* Find separator after the end of the certificate. */
   cert_end = strstr(cert_start, "-----");
-  if(cert_end == NULL)
+  if(cert_end == nullptr)
     return -1;
 
   sep_end = strstr(cert_end + 1, "-----");
-  if(sep_end == NULL)
+  if(sep_end == nullptr)
     return -1;
   sep_end += 5;
 
@@ -1718,7 +1718,7 @@ static int verify_cert(const char *cafile, struct SessionHandle *data,
    */
   CFMutableArrayRef array = CFArrayCreateMutable(kCFAllocatorDefault, 0,
                                                  &kCFTypeArrayCallBacks);
-  if(array == NULL) {
+  if(array == nullptr) {
     free(certbuf);
     failf(data, "SSL: out of memory creating CA certificate array");
     return CURLE_OUT_OF_MEMORY;
@@ -1768,7 +1768,7 @@ static int verify_cert(const char *cafile, struct SessionHandle *data,
 
   SecTrustRef trust;
   OSStatus ret = SSLCopyPeerTrust(ctx, &trust);
-  if(trust == NULL) {
+  if(trust == nullptr) {
     failf(data, "SSL: error getting certificate chain");
     CFRelease(array);
     return CURLE_OUT_OF_MEMORY;
@@ -1958,11 +1958,11 @@ darwinssl_connect_step3(struct connectdata *conn,
   struct ssl_connect_data *connssl = &conn->ssl[sockindex];
   CFStringRef server_cert_summary;
   char server_cert_summary_c[128];
-  CFArrayRef server_certs = NULL;
+  CFArrayRef server_certs = nullptr;
   SecCertificateRef server_cert;
   OSStatus err;
   CFIndex i, count;
-  SecTrustRef trust = NULL;
+  SecTrustRef trust = nullptr;
 
   /* There is no step 3!
    * Well, okay, if verbose mode is on, let's print the details of the
@@ -1996,7 +1996,7 @@ darwinssl_connect_step3(struct connectdata *conn,
      private API and doesn't work as expected. So we have to look for
      a different symbol to make sure this code is only executed under
      Lion or later. */
-  if(SecTrustEvaluateAsync != NULL) {
+  if(SecTrustEvaluateAsync != nullptr) {
 #pragma unused(server_certs)
     err = SSLCopyPeerTrust(connssl->ssl_ctx, &trust);
     /* For some reason, SSLCopyPeerTrust() can return noErr and yet return
@@ -2092,7 +2092,7 @@ darwinssl_connect_common(struct connectdata *conn,
 
   if(ssl_connect_1==connssl->connecting_state) {
     /* Find out how much more time we're allowed */
-    timeout_ms = Curl_timeleft(data, NULL, TRUE);
+    timeout_ms = Curl_timeleft(data, nullptr, TRUE);
 
     if(timeout_ms < 0) {
       /* no need to continue if time already is up */
@@ -2110,7 +2110,7 @@ darwinssl_connect_common(struct connectdata *conn,
         ssl_connect_2_writing == connssl->connecting_state) {
 
     /* check allowed time left */
-    timeout_ms = Curl_timeleft(data, NULL, TRUE);
+    timeout_ms = Curl_timeleft(data, nullptr, TRUE);
 
     if(timeout_ms < 0) {
       /* no need to continue if time already is up */
@@ -2216,7 +2216,7 @@ void Curl_darwinssl_close(struct connectdata *conn, int sockindex)
   if(connssl->ssl_ctx) {
     (void)SSLClose(connssl->ssl_ctx);
 #if CURL_BUILD_MAC_10_8 || CURL_BUILD_IOS
-    if(SSLCreateContext != NULL)
+    if(SSLCreateContext != nullptr)
       CFRelease(connssl->ssl_ctx);
 #if CURL_SUPPORT_MAC_10_8
     else
@@ -2225,7 +2225,7 @@ void Curl_darwinssl_close(struct connectdata *conn, int sockindex)
 #else
     (void)SSLDisposeContext(connssl->ssl_ctx);
 #endif /* CURL_BUILD_MAC_10_8 || CURL_BUILD_IOS */
-    connssl->ssl_ctx = NULL;
+    connssl->ssl_ctx = nullptr;
   }
   connssl->ssl_sockfd = 0;
 }
@@ -2369,7 +2369,7 @@ void Curl_darwinssl_md5sum(unsigned char *tmp, /* input */
 
 bool Curl_darwinssl_false_start(void) {
 #if CURL_BUILD_MAC_10_9 || CURL_BUILD_IOS_7
-  if(SSLSetSessionOption != NULL)
+  if(SSLSetSessionOption != nullptr)
     return TRUE;
 #endif
   return FALSE;
@@ -2403,7 +2403,7 @@ static ssize_t darwinssl_send(struct connectdata *conn,
   /* Do we have buffered data to write from the last time we were called? */
   if(connssl->ssl_write_buffered_length) {
     /* Write the buffered data: */
-    err = SSLWrite(connssl->ssl_ctx, NULL, 0UL, &processed);
+    err = SSLWrite(connssl->ssl_ctx, nullptr, 0UL, &processed);
     switch (err) {
       case noErr:
         /* processed is always going to be 0 because we didn't write to

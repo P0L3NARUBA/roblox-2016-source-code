@@ -155,7 +155,7 @@ CURLcode Curl_http_setup_conn(struct connectdata *conn)
   /* allocate the HTTP-specific struct for the SessionHandle, only to survive
      during this request */
   struct HTTP *http;
-  DEBUGASSERT(conn->data->req.protop == NULL);
+  DEBUGASSERT(conn->data->req.protop == nullptr);
 
   http = calloc(1, sizeof(struct HTTP));
   if(!http)
@@ -174,7 +174,7 @@ static CURLcode http_disconnect(struct connectdata *conn, bool dead_connection)
   struct HTTP *http = conn->data->req.protop;
   if(http) {
     Curl_add_buffer_free(http->header_recvbuf);
-    http->header_recvbuf = NULL; /* clear the pointer */
+    http->header_recvbuf = nullptr; /* clear the pointer */
   }
 #else
   (void)conn;
@@ -187,7 +187,7 @@ static CURLcode http_disconnect(struct connectdata *conn, bool dead_connection)
  * checkheaders() checks the linked list of custom HTTP headers for a
  * particular header (prefix).
  *
- * Returns a pointer to the first matching header or NULL if none matched.
+ * Returns a pointer to the first matching header or nullptr if none matched.
  */
 char *Curl_checkheaders(const struct connectdata *conn,
                         const char *thisheader)
@@ -200,7 +200,7 @@ char *Curl_checkheaders(const struct connectdata *conn,
     if(Curl_raw_nequal(head->data, thisheader, thislen))
       return head->data;
   }
-  return NULL;
+  return nullptr;
 }
 
 /*
@@ -226,12 +226,12 @@ char *Curl_checkProxyheaders(const struct connectdata *conn,
     if(Curl_raw_nequal(head->data, thisheader, thislen))
       return head->data;
   }
-  return NULL;
+  return nullptr;
 }
 
 /*
  * Strip off leading and trailing whitespace from the value in the
- * given HTTP header line and return a strdupped copy. Returns NULL in
+ * given HTTP header line and return a strdupped copy. Returns nullptr in
  * case of allocation failure. Returns an empty string if the header value
  * consists entirely of whitespace.
  */
@@ -265,7 +265,7 @@ char *Curl_copy_header_value(const char *header)
   if(!end)
     end = strchr(start, '\0');
   if(!end)
-    return NULL;
+    return nullptr;
 
   /* skip all trailing space letters */
   while((end > start) && ISSPACE(*end))
@@ -276,7 +276,7 @@ char *Curl_copy_header_value(const char *header)
 
   value = malloc(len + 1);
   if(!value)
-    return NULL;
+    return nullptr;
 
   memcpy(value, start, len);
   value[len] = 0; /* zero terminate */
@@ -293,7 +293,7 @@ char *Curl_copy_header_value(const char *header)
 static CURLcode http_output_basic(struct connectdata *conn, bool proxy)
 {
   size_t size = 0;
-  char *authorization = NULL;
+  char *authorization = nullptr;
   struct SessionHandle *data = conn->data;
   char **userp;
   const char *user;
@@ -397,7 +397,7 @@ static CURLcode http_perhapsrewind(struct connectdata *conn)
   curl_off_t expectsend = -1; /* default is unknown */
 
   if(!http)
-    /* If this is still NULL, we have not reach very far and we can safely
+    /* If this is still nullptr, we have not reach very far and we can safely
        skip this rewinding stuff */
     return CURLE_OK;
 
@@ -580,7 +580,7 @@ output_auth_headers(struct connectdata *conn,
                     const char *path,
                     bool proxy)
 {
-  const char *auth = NULL;
+  const char *auth = nullptr;
   CURLcode result = CURLE_OK;
 #if defined(USE_SPNEGO) || !defined(CURL_DISABLE_VERBOSE_STRINGS)
   struct SessionHandle *data = conn->data;
@@ -850,7 +850,7 @@ CURLcode Curl_http_input_auth(struct connectdata *conn, bool proxy,
                 while(*auth && ISSPACE(*auth))
                   auth++;
                 if(*auth)
-                  if((conn->challenge_header = strdup(auth)) == NULL)
+                  if((conn->challenge_header = strdup(auth)) == nullptr)
                     return CURLE_OUT_OF_MEMORY;
               }
             }
@@ -1052,7 +1052,7 @@ Curl_send_buffer *Curl_add_buffer_init(void)
  */
 void Curl_add_buffer_free(Curl_send_buffer *buff)
 {
-  if(buff) /* deal with NULL input */
+  if(buff) /* deal with nullptr input */
     free(buff->buffer);
   free(buff);
 }
@@ -1478,19 +1478,19 @@ CURLcode Curl_http_done(struct connectdata *conn,
   conn->seek_func = data->set.seek_func; /* restore */
   conn->seek_client = data->set.seek_client; /* restore */
 
-  if(http == NULL)
+  if(http == nullptr)
     return CURLE_OK;
 
   if(http->send_buffer) {
     Curl_add_buffer_free(http->send_buffer);
-    http->send_buffer = NULL; /* clear the pointer */
+    http->send_buffer = nullptr; /* clear the pointer */
   }
 
 #ifdef USE_NGHTTP2
   if(http->header_recvbuf) {
     DEBUGF(infof(data, "free header_recvbuf!!\n"));
     Curl_add_buffer_free(http->header_recvbuf);
-    http->header_recvbuf = NULL; /* clear the pointer */
+    http->header_recvbuf = nullptr; /* clear the pointer */
   }
 #endif
 
@@ -1501,7 +1501,7 @@ CURLcode Curl_http_done(struct connectdata *conn,
     if(http->form.fp) {
       /* a file being uploaded was left opened, close it! */
       fclose(http->form.fp);
-      http->form.fp = NULL;
+      http->form.fp = nullptr;
     }
   }
   else if(HTTPREQ_PUT == data->set.httpreq)
@@ -1763,7 +1763,7 @@ CURLcode Curl_http(struct connectdata *conn, bool *done)
   const char *request;
   Curl_HttpReq httpreq = data->set.httpreq;
 #if !defined(CURL_DISABLE_COOKIES)
-  char *addcookies = NULL;
+  char *addcookies = nullptr;
 #endif
   curl_off_t included_body = 0;
   const char *httpstring;
@@ -1789,7 +1789,7 @@ CURLcode Curl_http(struct connectdata *conn, bool *done)
       if(result)
         return result;
 
-      result = Curl_http2_switched(conn, NULL, 0);
+      result = Curl_http2_switched(conn, nullptr, 0);
       if(result)
         return result;
       break;
@@ -1858,7 +1858,7 @@ CURLcode Curl_http(struct connectdata *conn, bool *done)
      here. */
   if(Curl_checkheaders(conn, "User-Agent:")) {
     free(conn->allocptr.uagent);
-    conn->allocptr.uagent=NULL;
+    conn->allocptr.uagent=nullptr;
   }
 
   /* setup the authentication headers */
@@ -1883,7 +1883,7 @@ CURLcode Curl_http(struct connectdata *conn, bool *done)
       return CURLE_OUT_OF_MEMORY;
   }
   else
-    conn->allocptr.ref = NULL;
+    conn->allocptr.ref = nullptr;
 
 #if !defined(CURL_DISABLE_COOKIES)
   if(data->set.str[STRING_COOKIE] && !Curl_checkheaders(conn, "Cookie:"))
@@ -1925,7 +1925,7 @@ CURLcode Curl_http(struct connectdata *conn, bool *done)
 
   if(conn->httpversion == 20)
     /* In HTTP2 forbids Transfer-Encoding: chunked */
-    ptr = NULL;
+    ptr = nullptr;
   else {
     ptr = Curl_checkheaders(conn, "Transfer-Encoding:");
     if(ptr) {
@@ -2006,7 +2006,7 @@ CURLcode Curl_http(struct connectdata *conn, bool *done)
     }
     else
       /* when clearing the header */
-      conn->allocptr.host = NULL;
+      conn->allocptr.host = nullptr;
   }
   else {
     /* When building Host: headers, we must put the host name within
@@ -2089,7 +2089,7 @@ CURLcode Curl_http(struct connectdata *conn, bool *done)
           case 'I':
             break;
           default:
-            type = NULL;
+            type = nullptr;
           }
         }
         if(!type) {
@@ -2119,7 +2119,7 @@ CURLcode Curl_http(struct connectdata *conn, bool *done)
       return result;
   }
 
-  http->p_accept = Curl_checkheaders(conn, "Accept:")?NULL:"Accept: */*\r\n";
+  http->p_accept = Curl_checkheaders(conn, "Accept:")?nullptr:"Accept: */*\r\n";
 
   if(( (HTTPREQ_POST == httpreq) ||
        (HTTPREQ_POST_FORM == httpreq) ||
@@ -2342,7 +2342,7 @@ CURLcode Curl_http(struct connectdata *conn, bool *done)
 
 #if !defined(CURL_DISABLE_COOKIES)
   if(data->cookies || addcookies) {
-    struct Cookie *co=NULL; /* no cookies from start */
+    struct Cookie *co=nullptr; /* no cookies from start */
     int count=0;
 
     if(data->cookies) {
@@ -2403,7 +2403,7 @@ CURLcode Curl_http(struct connectdata *conn, bool *done)
   if(result)
     return result;
 
-  http->postdata = NULL;  /* nothing to post at this point */
+  http->postdata = nullptr;  /* nothing to post at this point */
   Curl_pgrsSetUploadSize(data, -1); /* upload size is unknown atm */
 
   /* If 'authdone' is FALSE, we must not set the write socket index to the
@@ -2426,7 +2426,7 @@ CURLcode Curl_http(struct connectdata *conn, bool *done)
       else
         /* setup variables for the upcoming transfer */
         Curl_setup_transfer(conn, FIRSTSOCKET, -1, TRUE, &http->readbytecount,
-                            -1, NULL);
+                            -1, nullptr);
       break;
     }
 
@@ -2552,7 +2552,7 @@ CURLcode Curl_http(struct connectdata *conn, bool *done)
       /* prepare for transfer */
       Curl_setup_transfer(conn, FIRSTSOCKET, -1, TRUE,
                           &http->readbytecount, postsize?FIRSTSOCKET:-1,
-                          postsize?&http->writebytecount:NULL);
+                          postsize?&http->writebytecount:nullptr);
     if(result)
       return result;
     break;
@@ -2710,7 +2710,7 @@ CURLcode Curl_http(struct connectdata *conn, bool *done)
     else
       Curl_setup_transfer(conn, FIRSTSOCKET, -1, TRUE,
                           &http->readbytecount, http->postdata?FIRSTSOCKET:-1,
-                          http->postdata?&http->writebytecount:NULL);
+                          http->postdata?&http->writebytecount:nullptr);
     break;
 
   default:
@@ -2728,7 +2728,7 @@ CURLcode Curl_http(struct connectdata *conn, bool *done)
       /* HTTP GET/HEAD download: */
       Curl_setup_transfer(conn, FIRSTSOCKET, -1, TRUE, &http->readbytecount,
                           http->postdata?FIRSTSOCKET:-1,
-                          http->postdata?&http->writebytecount:NULL);
+                          http->postdata?&http->writebytecount:nullptr);
   }
   if(result)
     return result;
@@ -2769,7 +2769,7 @@ checkhttpprefix(struct SessionHandle *data,
 #ifdef CURL_DOES_CONVERSIONS
   /* convert from the network encoding using a scratch area */
   char *scratch = strdup(s);
-  if(NULL == scratch) {
+  if(nullptr == scratch) {
     failf (data, "Failed to allocate memory for conversion!");
     return FALSE; /* can't return CURLE_OUT_OF_MEMORY so return FALSE */
   }
@@ -2807,7 +2807,7 @@ checkrtspprefix(struct SessionHandle *data,
 #ifdef CURL_DOES_CONVERSIONS
   /* convert from the network encoding using a scratch area */
   char *scratch = strdup(s);
-  if(NULL == scratch) {
+  if(nullptr == scratch) {
     failf (data, "Failed to allocate memory for conversion!");
     return FALSE; /* can't return CURLE_OUT_OF_MEMORY so return FALSE */
   }
@@ -3427,7 +3427,7 @@ CURLcode Curl_http_readwrite_headers(struct SessionHandle *data,
     /* Check for Content-Length: header lines to get size */
     if(!k->ignorecl && !data->set.ignorecl &&
        checkprefix("Content-Length:", k->p)) {
-      curl_off_t contentlength = curlx_strtoofft(k->p+15, NULL, 10);
+      curl_off_t contentlength = curlx_strtoofft(k->p+15, nullptr, 10);
       if(data->set.max_filesize &&
          contentlength > data->set.max_filesize) {
         failf(data, "Maximum file size exceeded");
@@ -3635,7 +3635,7 @@ CURLcode Curl_http_readwrite_headers(struct SessionHandle *data,
 
       /* if it truly stopped on a digit */
       if(ISDIGIT(*ptr)) {
-        k->offset = curlx_strtoofft(ptr, NULL, 10);
+        k->offset = curlx_strtoofft(ptr, nullptr, 10);
 
         if(data->state.resume_from == k->offset)
           /* we asked for a resume and we got it */
@@ -3661,7 +3661,7 @@ CURLcode Curl_http_readwrite_headers(struct SessionHandle *data,
 #endif
     else if(checkprefix("Last-Modified:", k->p) &&
             (data->set.timecondition || data->set.get_filetime) ) {
-      time_t secs=time(NULL);
+      time_t secs=time(nullptr);
       k->timeofdoc = curl_getdate(k->p+strlen("Last-Modified:"),
                                   &secs);
       if(data->set.get_filetime)

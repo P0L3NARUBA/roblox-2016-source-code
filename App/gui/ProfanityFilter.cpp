@@ -93,12 +93,12 @@ bool ProfanityFilter::ContainsProfanityWorker(std::string str)
 		TODO - doesn't currently handle bigrams, so bigrams in word list effectively ignored
 	*/
 
-	// You might be thinking "wtf". We don't want to lock if we have a wordlist. We need a check after we get the lock that the wordlist is still NULL.
-	if (wordlist == NULL) 
+	// You might be thinking "wtf". We don't want to lock if we have a wordlist. We need a check after we get the lock that the wordlist is still nullptr.
+	if (wordlist == nullptr) 
 	{
 		boost::mutex sync;
 		boost::mutex::scoped_lock lock(sync);
-		if (wordlist == NULL)
+		if (wordlist == nullptr)
 			wordlist = new WordList();
 	}
 

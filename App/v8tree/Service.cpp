@@ -77,14 +77,14 @@ namespace RBX
 
 	void ServiceProvider::onDescendantRemoving(const shared_ptr<Instance>& instance)
 	{
-		instance->onServiceProvider(this, NULL);
+		instance->onServiceProvider(this, nullptr);
 		Super::onDescendantRemoving(instance);
 	}
 
 	void ServiceProvider::onDescendantAdded(Instance* instance)
 	{
 		Super::onDescendantAdded(instance);
-		instance->onServiceProvider(NULL, this);
+		instance->onServiceProvider(nullptr, this);
 	}
 
 	void ServiceProvider::onChildRemoving(Instance* instance)
@@ -105,17 +105,17 @@ namespace RBX
 	void ServiceProvider::onChildAdded(Instance* instance)
 	{
 		// There should be only one ServiceProvider, I think
-		RBXASSERT(Instance::fastDynamicCast<ServiceProvider>(instance)==NULL);
+		RBXASSERT(Instance::fastDynamicCast<ServiceProvider>(instance)==nullptr);
 
 		Super::onChildAdded(instance);
 
 		Service* service = dynamic_cast<Service*>(instance);
-		if (service!=NULL)
+		if (service!=nullptr)
 		{
 			shared_ptr<Instance> i = shared_from(instance);
 			if (instance->getClassName()!=RBX::Name::getNullName())
 			{
-				RBXASSERT_SLOW(findServiceByClassName(instance->getClassName())==NULL);
+				RBXASSERT_SLOW(findServiceByClassName(instance->getClassName())==nullptr);
 				instance->lockParent();
 				serviceMap[&instance->getClassName()] = i;
 			}
@@ -136,10 +136,10 @@ namespace RBX
 
 	shared_ptr<Instance> ServiceProvider::create(Instance* context, const RBX::Name& name)
 	{
-		while (context!=NULL)
+		while (context!=nullptr)
 		{
 			ServiceProvider* serviceProvider = context->fastDynamicCast<ServiceProvider>();
-			if (serviceProvider!=NULL)
+			if (serviceProvider!=nullptr)
 			{
 				shared_ptr<Instance> child = serviceProvider->createChild(name, EngineCreator);
 				if(dynamic_cast<Service*>(child.get())){

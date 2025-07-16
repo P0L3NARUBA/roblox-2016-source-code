@@ -3,7 +3,7 @@
 #pragma argsused
 BOOL surf_parameter(lpSURF_DAT surf_dat, short conditon, BOOL p ){
 short 		 	i;
-sgFloat 		 *U=NULL, *V=NULL, w;
+sgFloat 		 *U=nullptr, *V=nullptr, w;
 W_NODE			node;
 lpDA_POINT  Q;
 
@@ -13,7 +13,7 @@ lpDA_POINT  Q;
 	}
 	if( surf_dat->sdtype & SURF_APPR ){//
 //U-direction
-		if( (Q=(lpDA_POINT)SGMalloc( surf_dat->P.n*sizeof(DA_POINT) )) == NULL) return FALSE;
+		if( (Q=(lpDA_POINT)SGMalloc( surf_dat->P.n*sizeof(DA_POINT) )) == nullptr) return FALSE;
 		for(i=0; i<surf_dat->P.n; i++) {
 			read_elem( &surf_dat->P.vdim, i, &node );
 	    Create_3D_From_4D( &node, (sgFloat *)&Q[i], &w );
@@ -30,7 +30,7 @@ lpDA_POINT  Q;
 		SGFree( Q );
 
 //V-direction
-		if( (Q=(lpDA_POINT)SGMalloc( surf_dat->P.m*sizeof(DA_POINT) )) == NULL) return FALSE;
+		if( (Q=(lpDA_POINT)SGMalloc( surf_dat->P.m*sizeof(DA_POINT) )) == nullptr) return FALSE;
 		for(i=0; i<surf_dat->P.m; i++){
 			read_elem( &surf_dat->P.vdim, surf_dat->P.n*i, &node );
 	    Create_3D_From_4D( &node, (sgFloat *)&Q[i], &w );

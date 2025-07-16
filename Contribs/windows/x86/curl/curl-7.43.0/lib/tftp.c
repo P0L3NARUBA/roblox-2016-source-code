@@ -204,7 +204,7 @@ static CURLcode tftp_set_timeouts(tftp_state_data_t *state)
   time(&state->start_time);
 
   /* Compute drop-dead time */
-  timeout_ms = Curl_timeleft(state->conn->data, NULL, start);
+  timeout_ms = Curl_timeleft(state->conn->data, nullptr, start);
 
   if(timeout_ms < 0) {
     /* time-out, bail out, go home */
@@ -313,17 +313,17 @@ static const char *tftp_option_get(const char *buf, size_t len,
   size_t loc;
 
   loc = Curl_strnlen( buf, len );
-  loc++; /* NULL term */
+  loc++; /* nullptr term */
 
   if(loc >= len)
-    return NULL;
+    return nullptr;
   *option = buf;
 
   loc += Curl_strnlen( buf+loc, len-loc );
-  loc++; /* NULL term */
+  loc++; /* nullptr term */
 
   if(loc > len)
-    return NULL;
+    return nullptr;
   *value = &buf[strlen(*option) + 1];
 
   return &buf[loc];
@@ -342,7 +342,7 @@ static CURLcode tftp_parse_option_ack(tftp_state_data_t *state,
     const char *option, *value;
 
     tmp = tftp_option_get(tmp, ptr + len - tmp, &option, &value);
-    if(tmp == NULL) {
+    if(tmp == nullptr) {
       failf(data, "Malformed ACK packet, rejecting");
       return CURLE_TFTP_ILLEGAL;
     }
@@ -352,7 +352,7 @@ static CURLcode tftp_parse_option_ack(tftp_state_data_t *state,
     if(checkprefix(option, TFTP_OPTION_BLKSIZE)) {
       long blksize;
 
-      blksize = strtol( value, NULL, 10 );
+      blksize = strtol( value, nullptr, 10 );
 
       if(!blksize) {
         failf(data, "invalid blocksize value in OACK packet");
@@ -384,7 +384,7 @@ static CURLcode tftp_parse_option_ack(tftp_state_data_t *state,
     else if(checkprefix(option, TFTP_OPTION_TSIZE)) {
       long tsize = 0;
 
-      tsize = strtol( value, NULL, 10 );
+      tsize = strtol( value, nullptr, 10 );
       infof(data, "%s (%ld)\n", "tsize parsed from OACK", tsize);
 
       /* tsize should be ignored on upload: Who cares about the size of the
@@ -485,7 +485,7 @@ static CURLcode tftp_send_first(tftp_state_data_t *state, tftp_event_t event)
        file name so we skip the always-present first letter of the path
        string. */
     filename = curl_easy_unescape(data, &state->conn->data->state.path[1], 0,
-                                  NULL);
+                                  nullptr);
     if(!filename)
       return CURLE_OUT_OF_MEMORY;
 
@@ -1214,7 +1214,7 @@ static CURLcode tftp_multi_statemach(struct connectdata *conn, bool *done)
     *done = (state->state == TFTP_STATE_FIN) ? TRUE : FALSE;
     if(*done)
       /* Tell curl we're done */
-      Curl_setup_transfer(conn, -1, -1, FALSE, NULL, -1, NULL);
+      Curl_setup_transfer(conn, -1, -1, FALSE, nullptr, -1, nullptr);
   }
   else {
     /* no timeouts to handle, check our socket */
@@ -1236,7 +1236,7 @@ static CURLcode tftp_multi_statemach(struct connectdata *conn, bool *done)
       *done = (state->state == TFTP_STATE_FIN) ? TRUE : FALSE;
       if(*done)
         /* Tell curl we're done */
-        Curl_setup_transfer(conn, -1, -1, FALSE, NULL, -1, NULL);
+        Curl_setup_transfer(conn, -1, -1, FALSE, nullptr, -1, nullptr);
     }
     /* if rc == 0, then select() timed out */
   }

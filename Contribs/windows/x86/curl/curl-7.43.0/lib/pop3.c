@@ -283,7 +283,7 @@ static bool pop3_endofresp(struct connectdata *conn, char *line, size_t len,
 static void pop3_get_message(char *buffer, char** outptr)
 {
   size_t len = 0;
-  char* message = NULL;
+  char* message = nullptr;
 
   /* Find the start of the message */
   for(message = buffer + 2; *message == ' ' || *message == '\t'; message++)
@@ -587,7 +587,7 @@ static CURLcode pop3_perform_command(struct connectdata *conn)
   CURLcode result = CURLE_OK;
   struct SessionHandle *data = conn->data;
   struct POP3 *pop3 = data->req.protop;
-  const char *command = NULL;
+  const char *command = nullptr;
 
   /* Calculate the default command */
   if(pop3->id[0] == '\0' || conn->data->set.ftp_list_only) {
@@ -936,7 +936,7 @@ static CURLcode pop3_state_command_resp(struct connectdata *conn,
 
   if(pop3->transfer == FTPTRANSFER_BODY) {
     /* POP3 download */
-    Curl_setup_transfer(conn, FIRSTSOCKET, -1, FALSE, NULL, -1, NULL);
+    Curl_setup_transfer(conn, FIRSTSOCKET, -1, FALSE, nullptr, -1, nullptr);
 
     if(pp->cache) {
       /* The header "cache" contains a bunch of data that is actually body
@@ -1447,7 +1447,7 @@ static CURLcode pop3_parse_url_path(struct connectdata *conn)
   const char *path = data->state.path;
 
   /* URL decode the path for the message ID */
-  return Curl_urldecode(data, path, 0, &pop3->id, NULL, TRUE);
+  return Curl_urldecode(data, path, 0, &pop3->id, nullptr, TRUE);
 }
 
 /***********************************************************************
@@ -1465,7 +1465,7 @@ static CURLcode pop3_parse_custom_request(struct connectdata *conn)
 
   /* URL decode the custom request */
   if(custom)
-    result = Curl_urldecode(data, custom, 0, &pop3->custom, NULL, TRUE);
+    result = Curl_urldecode(data, custom, 0, &pop3->custom, nullptr, TRUE);
 
   return result;
 }

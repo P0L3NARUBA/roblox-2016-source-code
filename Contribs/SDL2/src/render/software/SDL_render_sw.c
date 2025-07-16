@@ -129,21 +129,21 @@ SW_CreateRendererForSurface(SDL_Surface * surface)
     SW_RenderData *data;
 
     if (!surface) {
-        SDL_SetError("Can't create renderer for NULL surface");
-        return NULL;
+        SDL_SetError("Can't create renderer for nullptr surface");
+        return nullptr;
     }
 
     renderer = (SDL_Renderer *) SDL_calloc(1, sizeof(*renderer));
     if (!renderer) {
         SDL_OutOfMemory();
-        return NULL;
+        return nullptr;
     }
 
     data = (SW_RenderData *) SDL_calloc(1, sizeof(*data));
     if (!data) {
         SW_DestroyRenderer(renderer);
         SDL_OutOfMemory();
-        return NULL;
+        return nullptr;
     }
     data->surface = surface;
     data->window = surface;
@@ -185,7 +185,7 @@ SW_CreateRenderer(SDL_Window * window, Uint32 flags)
 
     surface = SDL_GetWindowSurface(window);
     if (!surface) {
-        return NULL;
+        return nullptr;
     }
     return SW_CreateRendererForSurface(surface);
 }
@@ -196,8 +196,8 @@ SW_WindowEvent(SDL_Renderer * renderer, const SDL_WindowEvent *event)
     SW_RenderData *data = (SW_RenderData *) renderer->driverdata;
 
     if (event->event == SDL_WINDOWEVENT_SIZE_CHANGED) {
-        data->surface = NULL;
-        data->window = NULL;
+        data->surface = nullptr;
+        data->window = nullptr;
     }
 }
 
@@ -370,7 +370,7 @@ SW_UpdateClipRect(SDL_Renderer * renderer)
         if (renderer->clipping_enabled) {
             SDL_SetClipRect(surface, &renderer->clip_rect);
         } else {
-            SDL_SetClipRect(surface, NULL);
+            SDL_SetClipRect(surface, nullptr);
         }
     }
     return 0;
@@ -392,8 +392,8 @@ SW_RenderClear(SDL_Renderer * renderer)
 
     /* By definition the clear ignores the clip rect */
     clip_rect = surface->clip_rect;
-    SDL_SetClipRect(surface, NULL);
-    SDL_FillRect(surface, NULL, color);
+    SDL_SetClipRect(surface, nullptr);
+    SDL_FillRect(surface, nullptr, color);
     SDL_SetClipRect(surface, &clip_rect);
     return 0;
 }
@@ -715,7 +715,7 @@ SW_RenderCopyEx(SDL_Renderer * renderer, SDL_Texture * texture,
             tmp_rect.w = dstwidth;
             tmp_rect.h = dstheight;
 
-            retval = SDL_BlitSurface(surface_rotated, NULL, surface, &tmp_rect);
+            retval = SDL_BlitSurface(surface_rotated, nullptr, surface, &tmp_rect);
             SDL_FreeSurface(surface_rotated);
         }
     }

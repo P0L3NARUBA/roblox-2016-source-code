@@ -53,7 +53,7 @@ namespace RBX
 			shared_ptr<const Reflection::ValueTable> table;
 			std::string errorMessage;
 
-			if (LuaWebService::parseWebJSONResponseHelper(&response, NULL, table, errorMessage))
+			if (LuaWebService::parseWebJSONResponseHelper(&response, nullptr, table, errorMessage))
 				resumeFunction(table);
 			else
 				errorFunction(format("GroupService:GetGroupInfoAsync() failed because %s", errorMessage.c_str()));

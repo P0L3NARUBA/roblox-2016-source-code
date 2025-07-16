@@ -97,7 +97,7 @@ BOOL dxf_insert(lpLISTH listh, int last_block)
 			}
 
 			if ( !cr_add_obj(OINSERT, CTRANSP, (lpGEO_SIMPLE)&geo, listh,
-											 NULL, FALSE)) return FALSE;
+											 nullptr, FALSE)) return FALSE;
 		}
 	}
 	return TRUE;

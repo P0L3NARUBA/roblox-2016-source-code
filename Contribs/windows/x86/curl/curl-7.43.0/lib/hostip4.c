@@ -93,7 +93,7 @@ Curl_addrinfo *Curl_getaddrinfo(struct connectdata *conn,
                                 int port,
                                 int *waitp)
 {
-  Curl_addrinfo *ai = NULL;
+  Curl_addrinfo *ai = nullptr;
 
 #ifdef CURL_DISABLE_VERBOSE_STRINGS
   (void)conn;
@@ -125,10 +125,10 @@ Curl_addrinfo *Curl_ipv4_resolve_r(const char *hostname,
 #if !defined(HAVE_GETADDRINFO_THREADSAFE) && defined(HAVE_GETHOSTBYNAME_R_3)
   int res;
 #endif
-  Curl_addrinfo *ai = NULL;
-  struct hostent *h = NULL;
+  Curl_addrinfo *ai = nullptr;
+  struct hostent *h = nullptr;
   struct in_addr in;
-  struct hostent *buf = NULL;
+  struct hostent *buf = nullptr;
 
   if(Curl_inet_pton(AF_INET, hostname, &in) > 0)
     /* This is a dotted IP address 123.123.123.123-style */
@@ -138,7 +138,7 @@ Curl_addrinfo *Curl_ipv4_resolve_r(const char *hostname,
   else {
     struct addrinfo hints;
     char sbuf[12];
-    char *sbufptr = NULL;
+    char *sbufptr = nullptr;
 
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = PF_INET;
@@ -161,7 +161,7 @@ Curl_addrinfo *Curl_ipv4_resolve_r(const char *hostname,
 
     buf = calloc(1, CURL_HOSTENT_SIZE);
     if(!buf)
-      return NULL; /* major failure */
+      return nullptr; /* major failure */
     /*
      * The clearing of the buffer is a workaround for a gethostbyname_r bug in
      * qnx nto and it is also _required_ for some of these functions on some
@@ -176,7 +176,7 @@ Curl_addrinfo *Curl_ipv4_resolve_r(const char *hostname,
                         CURL_HOSTENT_SIZE - sizeof(struct hostent),
                         &h_errnop);
 
-    /* If the buffer is too small, it returns NULL and sets errno to
+    /* If the buffer is too small, it returns nullptr and sets errno to
      * ERANGE. The errno is thread safe if this is compiled with
      * -D_REENTRANT as then the 'errno' variable is a macro defined to get
      * used properly for threads.
@@ -281,7 +281,7 @@ Curl_addrinfo *Curl_ipv4_resolve_r(const char *hostname,
     else
 #endif /* HAVE_...BYNAME_R_5 || HAVE_...BYNAME_R_6 || HAVE_...BYNAME_R_3 */
     {
-      h = NULL; /* set return code to NULL */
+      h = nullptr; /* set return code to nullptr */
       free(buf);
     }
 #else /* HAVE_GETADDRINFO_THREADSAFE || HAVE_GETHOSTBYNAME_R */

@@ -231,7 +231,7 @@ voidpf ZLIB_INTERNAL zcalloc (voidpf opaque, unsigned items, unsigned size)
     } else {
         buf = farmalloc(bsize + 16L);
     }
-    if (buf == NULL || next_ptr >= MAX_PTR) return NULL;
+    if (buf == nullptr || next_ptr >= MAX_PTR) return nullptr;
     table[next_ptr].org_ptr = buf;
 
     /* Normalize the pointer to seg:0 */

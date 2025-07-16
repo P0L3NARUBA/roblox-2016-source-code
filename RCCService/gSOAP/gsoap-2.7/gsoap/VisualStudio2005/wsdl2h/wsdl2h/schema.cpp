@@ -50,18 +50,18 @@ extern int is_builtin_qname(const char*);
 xs__schema::xs__schema()
 { soap = soap_new1(SOAP_XML_TREE | SOAP_C_UTFSTRING);
 #ifdef WITH_OPENSSL
-  soap_ssl_client_context(soap, SOAP_SSL_NO_AUTHENTICATION, NULL, NULL, NULL, NULL, NULL);
+  soap_ssl_client_context(soap, SOAP_SSL_NO_AUTHENTICATION, nullptr, nullptr, nullptr, nullptr, nullptr);
 #endif
   soap_set_namespaces(soap, namespaces);
   soap_default(soap);
   soap->fignore = warn_ignore;
-  soap->encodingStyle = NULL;
+  soap->encodingStyle = nullptr;
   soap->proxy_host = proxy_host;
   soap->proxy_port = proxy_port;
-  targetNamespace = NULL;
-  version = NULL;
+  targetNamespace = nullptr;
+  version = nullptr;
   updated = false;
-  location = NULL;
+  location = nullptr;
   redirs = 0;
 }
 
@@ -69,11 +69,11 @@ xs__schema::xs__schema(struct soap *copy)
 { soap = soap_copy(copy);
   soap_default(soap);
   soap->fignore = warn_ignore;
-  soap->encodingStyle = NULL;
-  targetNamespace = NULL;
-  version = NULL;
+  soap->encodingStyle = nullptr;
+  targetNamespace = nullptr;
+  version = nullptr;
   updated = false;
-  location = NULL;
+  location = nullptr;
   redirs = 0;
 }
 
@@ -87,11 +87,11 @@ xs__schema::xs__schema(struct soap *copy, const char *cwd, const char *loc)
   */
   soap_default(soap);
   soap->fignore = warn_ignore;
-  soap->encodingStyle = NULL;
-  targetNamespace = NULL;
-  version = NULL;
+  soap->encodingStyle = nullptr;
+  targetNamespace = nullptr;
+  version = nullptr;
   updated = false;
-  location = NULL;
+  location = nullptr;
   redirs = 0;
   read(cwd, loc);
 }
@@ -311,7 +311,7 @@ int xs__schema::read(const char *cwd, const char *loc)
 #endif
     { fprintf(stderr, "Connecting to '%s' to retrieve schema... ", loc);
       location = soap_strdup(soap, loc);
-      if (soap_connect_command(soap, SOAP_GET, location, NULL))
+      if (soap_connect_command(soap, SOAP_GET, location, nullptr))
       { fprintf(stderr, "connection failed\n");
         exit(1);
       }
@@ -327,7 +327,7 @@ int xs__schema::read(const char *cwd, const char *loc)
       strcat(location, "/");
       strcat(location, loc);
       fprintf(stderr, "Connecting to '%s' to retrieve relative '%s' schema... ", location, loc);
-      if (soap_connect_command(soap, SOAP_GET, location, NULL))
+      if (soap_connect_command(soap, SOAP_GET, location, nullptr))
       { fprintf(stderr, "connection failed\n");
         exit(1);
       }
@@ -375,7 +375,7 @@ int xs__schema::read(const char *cwd, const char *loc)
   cwd_temp = cwd_path;
   cwd_path = location;
   if (!soap_begin_recv(soap))
-    this->soap_in(soap, "xs:schema", NULL);
+    this->soap_in(soap, "xs:schema", nullptr);
   if ((soap->error >= 301 && soap->error <= 303) || soap->error == 307) // HTTP redirect, socket was closed
   { int r = SOAP_ERR;
     fprintf(stderr, "Redirected to '%s'\n", soap->endpoint);
@@ -445,8 +445,8 @@ const SetOfString& xs__schema::builtinAttributes() const
 }
 
 xs__include::xs__include()
-{ schemaLocation = NULL;
-  schemaRef = NULL;
+{ schemaLocation = nullptr;
+  schemaRef = nullptr;
 }
 
 int xs__include::preprocess(xs__schema &schema)
@@ -471,8 +471,8 @@ xs__schema *xs__include::schemaPtr() const
 }
 
 xs__redefine::xs__redefine()
-{ schemaLocation = NULL;
-  schemaRef = NULL;
+{ schemaLocation = nullptr;
+  schemaRef = nullptr;
 }
 
 int xs__redefine::preprocess(xs__schema &schema)
@@ -539,9 +539,9 @@ xs__schema *xs__redefine::schemaPtr() const
 }
 
 xs__import::xs__import()
-{ namespace_ = NULL;
-  schemaLocation = NULL;
-  schemaRef = NULL;
+{ namespace_ = nullptr;
+  schemaLocation = nullptr;
+  schemaRef = nullptr;
 }
 
 int xs__import::traverse(xs__schema &schema)
@@ -587,9 +587,9 @@ xs__schema *xs__import::schemaPtr() const
 }
 
 xs__attribute::xs__attribute()
-{ schemaRef = NULL;
-  attributeRef = NULL;
-  simpleTypeRef = NULL;
+{ schemaRef = nullptr;
+  attributeRef = nullptr;
+  simpleTypeRef = nullptr;
 }
 
 int xs__attribute::traverse(xs__schema &schema)
@@ -597,7 +597,7 @@ int xs__attribute::traverse(xs__schema &schema)
     cerr << "Analyzing schema attribute " << (name?name:"") << endl;
   schemaRef = &schema;
   const char *token = qname_token(ref, schema.targetNamespace);
-  attributeRef = NULL;
+  attributeRef = nullptr;
   if (token)
   { for (vector<xs__attribute>::iterator i = schema.attribute.begin(); i != schema.attribute.end(); ++i)
       if (!strcmp((*i).name, token))
@@ -633,7 +633,7 @@ int xs__attribute::traverse(xs__schema &schema)
   }
   else
   { token = qname_token(type, schema.targetNamespace);
-    simpleTypeRef = NULL;
+    simpleTypeRef = nullptr;
     if (token)
     { for (vector<xs__simpleType>::iterator i = schema.simpleType.begin(); i != schema.simpleType.end(); ++i)
         if (!strcmp((*i).name, token))
@@ -706,10 +706,10 @@ xs__simpleType *xs__attribute::simpleTypePtr() const
 }
 
 xs__element::xs__element()
-{ schemaRef = NULL;
-  elementRef = NULL;
-  simpleTypeRef = NULL;
-  complexTypeRef = NULL;
+{ schemaRef = nullptr;
+  elementRef = nullptr;
+  simpleTypeRef = nullptr;
+  complexTypeRef = nullptr;
 }
 
 int xs__element::traverse(xs__schema &schema)
@@ -717,7 +717,7 @@ int xs__element::traverse(xs__schema &schema)
     cerr << "Analyzing schema element " << (name?name:"") << endl;
   schemaRef = &schema;
   const char *token = qname_token(ref, schema.targetNamespace);
-  elementRef = NULL;
+  elementRef = nullptr;
   if (token)
   { for (vector<xs__element>::iterator i = schema.element.begin(); i != schema.element.end(); ++i)
       if (!strcmp((*i).name, token))
@@ -753,7 +753,7 @@ int xs__element::traverse(xs__schema &schema)
   }
   else
   { token = qname_token(type, schema.targetNamespace);
-    simpleTypeRef = NULL;
+    simpleTypeRef = nullptr;
     if (token)
     { for (vector<xs__simpleType>::iterator i = schema.simpleType.begin(); i != schema.simpleType.end(); ++i)
         if (!strcmp((*i).name, token))
@@ -790,7 +790,7 @@ int xs__element::traverse(xs__schema &schema)
   }
   else
   { token = qname_token(type, schema.targetNamespace);
-    complexTypeRef = NULL;
+    complexTypeRef = nullptr;
     if (token)
     { for (vector<xs__complexType>::iterator i = schema.complexType.begin(); i != schema.complexType.end(); ++i)
         if (!strcmp((*i).name, token))
@@ -901,7 +901,7 @@ xs__complexType *xs__element::complexTypePtr() const
 }
 
 xs__simpleType::xs__simpleType()
-{ schemaRef = NULL;
+{ schemaRef = nullptr;
   level = 0;
 }
 
@@ -952,7 +952,7 @@ int xs__simpleType::baseLevel()
 }
 
 xs__complexType::xs__complexType()
-{ schemaRef = NULL;
+{ schemaRef = nullptr;
   level = 0;
 }
 
@@ -1059,8 +1059,8 @@ int xs__complexContent::traverse(xs__schema &schema)
 }
 
 xs__extension::xs__extension()
-{ simpleTypeRef = NULL;
-  complexTypeRef = NULL;
+{ simpleTypeRef = nullptr;
+  complexTypeRef = nullptr;
 }
 
 int xs__extension::traverse(xs__schema &schema)
@@ -1079,7 +1079,7 @@ int xs__extension::traverse(xs__schema &schema)
   for (vector<xs__attributeGroup>::iterator ag = attributeGroup.begin(); ag != attributeGroup.end(); ++ag)
     (*ag).traverse(schema);
   const char *token = qname_token(base, schema.targetNamespace);
-  simpleTypeRef = NULL;
+  simpleTypeRef = nullptr;
   if (token)
   { for (vector<xs__simpleType>::iterator i = schema.simpleType.begin(); i != schema.simpleType.end(); ++i)
       if (!strcmp((*i).name, token))
@@ -1110,7 +1110,7 @@ int xs__extension::traverse(xs__schema &schema)
     }
   }
   token = qname_token(base, schema.targetNamespace);
-  complexTypeRef = NULL;
+  complexTypeRef = nullptr;
   if (token)
   { for (vector<xs__complexType>::iterator i = schema.complexType.begin(); i != schema.complexType.end(); ++i)
       if (!strcmp((*i).name, token))
@@ -1170,8 +1170,8 @@ xs__complexType *xs__extension::complexTypePtr() const
 }
 
 xs__restriction::xs__restriction()
-{ simpleTypeRef = NULL;
-  complexTypeRef = NULL;
+{ simpleTypeRef = nullptr;
+  complexTypeRef = nullptr;
 }
 
 int xs__restriction::traverse(xs__schema &schema)
@@ -1194,7 +1194,7 @@ int xs__restriction::traverse(xs__schema &schema)
   for (vector<xs__attribute>::iterator at = attribute.begin(); at != attribute.end(); ++at)
     (*at).traverse(schema);
   const char *token = qname_token(base, schema.targetNamespace);
-  simpleTypeRef = NULL;
+  simpleTypeRef = nullptr;
   if (token)
   { for (vector<xs__simpleType>::iterator i = schema.simpleType.begin(); i != schema.simpleType.end(); ++i)
       if (!strcmp((*i).name, token))
@@ -1225,7 +1225,7 @@ int xs__restriction::traverse(xs__schema &schema)
     }
   }
   token = qname_token(base, schema.targetNamespace);
-  complexTypeRef = NULL;
+  complexTypeRef = nullptr;
   if (token)
   { for (vector<xs__complexType>::iterator i = schema.complexType.begin(); i != schema.complexType.end(); ++i)
       if (!strcmp((*i).name, token))
@@ -1285,7 +1285,7 @@ xs__complexType *xs__restriction::complexTypePtr() const
 }
 
 xs__list::xs__list()
-{ itemTypeRef = NULL;
+{ itemTypeRef = nullptr;
 }
 
 int xs__list::traverse(xs__schema &schema)
@@ -1295,7 +1295,7 @@ int xs__list::traverse(xs__schema &schema)
     restriction->traverse(schema);
   for (vector<xs__simpleType>::iterator i = simpleType.begin(); i != simpleType.end(); ++i)
     (*i).traverse(schema);
-  itemTypeRef = NULL;
+  itemTypeRef = nullptr;
   const char *token = qname_token(itemType, schema.targetNamespace);
   if (token)
   { for (vector<xs__simpleType>::iterator i = schema.simpleType.begin(); i != schema.simpleType.end(); ++i)
@@ -1360,7 +1360,7 @@ int xs__all::traverse(xs__schema &schema)
 }
 
 xs__choice::xs__choice()
-{ schemaRef = NULL;
+{ schemaRef = nullptr;
 }
 
 int xs__choice::traverse(xs__schema &schema)
@@ -1405,8 +1405,8 @@ int xs__sequence::traverse(xs__schema &schema)
 }
 
 xs__attributeGroup::xs__attributeGroup()
-{ schemaRef = NULL;
-  attributeGroupRef = NULL;
+{ schemaRef = nullptr;
+  attributeGroupRef = nullptr;
 }
 
 int xs__attributeGroup::traverse(xs__schema& schema)
@@ -1417,7 +1417,7 @@ int xs__attributeGroup::traverse(xs__schema& schema)
     (*at).traverse(schema);
   for (vector<xs__attributeGroup>::iterator ag = attributeGroup.begin(); ag != attributeGroup.end(); ++ag)
     (*ag).traverse(schema);
-  attributeGroupRef = NULL;
+  attributeGroupRef = nullptr;
   if (ref)
   { const char *token = qname_token(ref, schema.targetNamespace);
     if (token)
@@ -1480,8 +1480,8 @@ int xs__any::traverse(xs__schema &schema)
 }
 
 xs__group::xs__group()
-{ schemaRef = NULL;
-  groupRef = NULL;
+{ schemaRef = nullptr;
+  groupRef = nullptr;
 }
 
 int xs__group::traverse(xs__schema &schema)
@@ -1494,7 +1494,7 @@ int xs__group::traverse(xs__schema &schema)
     choice->traverse(schema);
   else if (sequence)
     sequence->traverse(schema);
-  groupRef = NULL;
+  groupRef = nullptr;
   if (ref)
   { const char *token = qname_token(ref, schema.targetNamespace);
     if (token)
@@ -1573,7 +1573,7 @@ ostream &operator<<(ostream &o, const xs__schema &e)
     soap_set_namespaces(&soap, namespaces);
     e.soap_serialize(&soap);
     soap_begin_send(&soap);
-    e.soap_out(&soap, "xs:schema", 0, NULL);
+    e.soap_out(&soap, "xs:schema", 0, nullptr);
     soap_end_send(&soap);
     soap_end(&soap);
     soap_done(&soap);
@@ -1583,7 +1583,7 @@ ostream &operator<<(ostream &o, const xs__schema &e)
     e.soap->os = &o;
     e.soap_serialize(e.soap);
     soap_begin_send(e.soap);
-    e.soap_out(e.soap, "xs:schema", 0, NULL);
+    e.soap_out(e.soap, "xs:schema", 0, nullptr);
     soap_end_send(e.soap);
     e.soap->os = os;
   }
@@ -1598,7 +1598,7 @@ istream &operator>>(istream &i, xs__schema &e)
   istream *is = e.soap->is;
   e.soap->is = &i;
   if (soap_begin_recv(e.soap)
-   || !e.soap_in(e.soap, "xs:schema", NULL)
+   || !e.soap_in(e.soap, "xs:schema", nullptr)
    || soap_end_recv(e.soap))
   { // handle error? Note: e.soap->error is set and app should check
   }

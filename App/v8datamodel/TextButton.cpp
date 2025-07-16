@@ -24,7 +24,7 @@ IMPLEMENT_GUI_TEXT_MIXIN(GuiTextButton)
 
 void GuiTextButton::render2d(Adorn* adorn)
 {
-	render2dContext(adorn, NULL);
+	render2dContext(adorn, nullptr);
 }
 
 void GuiTextButton::render2dContext(Adorn* adorn, const Instance* context)

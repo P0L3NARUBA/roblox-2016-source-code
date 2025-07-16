@@ -120,10 +120,10 @@ static Reflection::BoundYieldFuncDesc<Player, std::string()>	func_getWebPersonal
 static Reflection::BoundYieldFuncDesc<Player, bool(int)>		func_setPersonalServerRank(&Player::setWebPersonalServerRank, "SetWebPersonalServerRank","rank", Security::WritePlayer);
 
 
-static Reflection::PropDescriptor<Player, int>		prop_dataComplexity("DataComplexity", category_Data, &Player::getDataComplexity, NULL, Reflection::PropertyDescriptor::UI);
+static Reflection::PropDescriptor<Player, int>		prop_dataComplexity("DataComplexity", category_Data, &Player::getDataComplexity, nullptr, Reflection::PropertyDescriptor::UI);
 static Reflection::PropDescriptor<Player, int>		prop_dataComplexityLimit("DataComplexityLimit", category_Data, &Player::getDataComplexityLimit, &Player::setDataComplexityLimit, Reflection::PropertyDescriptor::UI, Security::LocalUser);
 
-static Reflection::PropDescriptor<Player, bool> prop_dataReady("DataReady", category_Data, &Player::getDataReady, NULL, Reflection::PropertyDescriptor::UI);
+static Reflection::PropDescriptor<Player, bool> prop_dataReady("DataReady", category_Data, &Player::getDataReady, nullptr, Reflection::PropertyDescriptor::UI);
 static Reflection::BoundYieldFuncDesc<Player, bool()> func_waitForDataReady(&Player::waitForDataReady, "WaitForDataReady", Security::None);
 static Reflection::BoundYieldFuncDesc<Player, bool()> func_dep_waitForDataReady(&Player::waitForDataReady, "waitForDataReady", Security::None, Reflection::Descriptor::Attributes::deprecated(func_waitForDataReady));
 
@@ -213,18 +213,18 @@ Reflection::PropDescriptor<Player, float> Player::prop_DeprecatedMaxSimulationRa
 Reflection::BoundProp<float> Player::prop_MaxSimulationRadius("MaximumSimulationRadius", category_Data, &Player::maxSimulationRadius, Reflection::PropertyDescriptor::UI, Security::TestLocalUser);
 Reflection::BoundProp<float> Player::prop_SimulationRadius("SimulationRadius", category_Data, &Player::simulationRadius, Reflection::PropertyDescriptor::SCRIPTING, Security::TestLocalUser);
 
-Reflection::EnumPropDescriptor<Player, Player::ChatMode> prop_ChatMode("ChatMode", category_Data, &Player::getChatMode, NULL, Reflection::PropertyDescriptor::UI, Security::RobloxScript);
+Reflection::EnumPropDescriptor<Player, Player::ChatMode> prop_ChatMode("ChatMode", category_Data, &Player::getChatMode, nullptr, Reflection::PropertyDescriptor::UI, Security::RobloxScript);
 
 static Reflection::PropDescriptor<Player, BrickColor/**/> prop_teamColor ("TeamColor", category_Team, &Player::getTeamColor, &Player::setTeamColor);
 static Reflection::PropDescriptor<Player, bool/**/> prop_neutral("Neutral", category_Team, &Player::getNeutral, &Player::setNeutral);
 
 static Reflection::PropDescriptor<Player, bool> prop_autoJumpEnabled("AutoJumpEnabled", category_Data, &Player::getAutoJumpEnabled, &Player::setAutoJumpEnabled);
 
-static Reflection::PropDescriptor<Player, bool> prop_Guest("Guest", category_Data, &Player::isGuest, NULL, Reflection::PropertyDescriptor::UI, Security::RobloxScript);
-static Reflection::EnumPropDescriptor<Player, Player::MembershipType> prop_membershipType("MembershipType", category_Data, &Player::getMembershipType, NULL, Reflection::PropertyDescriptor::UI);
+static Reflection::PropDescriptor<Player, bool> prop_Guest("Guest", category_Data, &Player::isGuest, nullptr, Reflection::PropertyDescriptor::UI, Security::RobloxScript);
+static Reflection::EnumPropDescriptor<Player, Player::MembershipType> prop_membershipType("MembershipType", category_Data, &Player::getMembershipType, nullptr, Reflection::PropertyDescriptor::UI);
 static Reflection::EnumPropDescriptor<Player, Player::MembershipType/**/> prop_membershipTypeReplicate("MembershipTypeReplicate", category_Data, &Player::getMembershipType, &Player::setMembershipType, Reflection::PropertyDescriptor::REPLICATE_ONLY);
 
-static Reflection::PropDescriptor<Player, int> prop_accountAge("AccountAge", category_Data, &Player::getAccountAge, NULL, Reflection::PropertyDescriptor::UI);
+static Reflection::PropDescriptor<Player, int> prop_accountAge("AccountAge", category_Data, &Player::getAccountAge, nullptr, Reflection::PropertyDescriptor::UI);
 static Reflection::PropDescriptor<Player, int/**/> prop_accountAgeReplicate("AccountAgeReplicate", category_Data, &Player::getAccountAge, &Player::setAccountAge, Reflection::PropertyDescriptor::REPLICATE_ONLY);
 
 static Reflection::EventDesc<Player, void(std::string, shared_ptr<Instance>)> event_Chatted(&Player::chattedSignal, "Chatted", "message", "recipient");
@@ -241,7 +241,7 @@ static Reflection::RemoteEventDesc<Player, void(std::string, Vector3)> desc_remo
 
 static Reflection::RemoteEventDesc<Player, void(std::string)> desc_statsSignal(&Player::statsSignal, "StatsAvailable", "info", Security::LocalUser, Reflection::RemoteEventCommon::REPLICATE_ONLY, Reflection::RemoteEventCommon::CLIENT_SERVER);
 
-static Reflection::PropDescriptor<Player, bool> prop_appearanceDidLoad("AppearanceDidLoad", category_Data, &Player::getAppearanceDidLoad, NULL, Reflection::PropertyDescriptor::Attributes::deprecated(Reflection::PropertyDescriptor::UI), Security::RobloxScript);
+static Reflection::PropDescriptor<Player, bool> prop_appearanceDidLoad("AppearanceDidLoad", category_Data, &Player::getAppearanceDidLoad, nullptr, Reflection::PropertyDescriptor::Attributes::deprecated(Reflection::PropertyDescriptor::UI), Security::RobloxScript);
 static Reflection::BoundFuncDesc<Player, bool()> func_AppearanceDidLoad(&Player::getAppearanceDidLoadNonConst, "HasAppearanceLoaded", Security::None);
 
 static Reflection::EnumPropDescriptor<Player, Camera::CameraMode> prop_cameraMode("CameraMode", "Camera", &Player::getCameraMode, &Player::setCameraMode);
@@ -262,7 +262,7 @@ static Reflection::PropDescriptor<Player, float> prop_healthDisplayDistance("Hea
 static Reflection::RemoteEventDesc<Player, void()>	event_connectDiedSignal(&Player::connectDiedSignalBackend, "ConnectDiedSignalBackend", Security::Roblox, Reflection::RemoteEventCommon::REPLICATE_ONLY, Reflection::RemoteEventCommon::CLIENT_SERVER);
 
 static Reflection::PropDescriptor<Player, int> prop_getFollowUserIdReplicated("FollowUserIdReplicated", category_Data, &Player::getFollowUserId, &Player::setFollowUserId, Reflection::PropertyDescriptor::REPLICATE_ONLY, Security::None);
-static Reflection::PropDescriptor<Player, int> prop_getFollowUserId("FollowUserId", category_Data, &Player::getFollowUserId, NULL);
+static Reflection::PropDescriptor<Player, int> prop_getFollowUserId("FollowUserId", category_Data, &Player::getFollowUserId, nullptr);
 
 static Reflection::PropDescriptor<Player, CoordinateFrame> prop_CloudEditCameraCoordinateFrame("CloudEditCameraCoordinateFrame", category_Data, &Player::getCloudEditCameraCoordinateFrame, &Player::setCloudEditCameraCoordinateFrame, Reflection::PropertyDescriptor::REPLICATE_ONLY, Security::None);
 Reflection::RemoteEventDesc<Player, void(shared_ptr<const Reflection::ValueArray>)> Player::event_cloudEditSelectionChanged(&Player::cloudEditSelectionChanged, "CloudEditSelectionChanged", "newSelection", Security::Roblox, Reflection::RemoteEventCommon::REPLICATE_ONLY, Reflection::RemoteEventCommon::BROADCAST);
@@ -270,7 +270,7 @@ Reflection::RemoteEventDesc<Player, void(shared_ptr<const Reflection::ValueArray
 // Teleport related
 static Reflection::RemoteEventDesc<Player, void(TeleportService::TeleportState, int, std::string)> event_OnTeleport(&Player::onTeleportSignal, "OnTeleport", "teleportState", "placeId", "spawnName", Security::None, Reflection::RemoteEventCommon::SCRIPTING, Reflection::RemoteEventCommon::CLIENT_SERVER);
 static Reflection::RemoteEventDesc<Player, void(TeleportService::TeleportState, shared_ptr<const Reflection::ValueTable>, shared_ptr<Instance>)> event_OnTeleportInternal(&Player::onTeleportInternalSignal, "OnTeleportInternal", "teleportState", "teleportInfo", "customLoadingScreen", Security::Roblox, Reflection::RemoteEventCommon::REPLICATE_ONLY, Reflection::RemoteEventCommon::CLIENT_SERVER);
-static Reflection::PropDescriptor<Player, bool> prop_teleported("Teleported", category_Data, &Player::getTeleported, NULL, Reflection::PropertyDescriptor::HIDDEN_SCRIPTING, Security::RobloxScript);
+static Reflection::PropDescriptor<Player, bool> prop_teleported("Teleported", category_Data, &Player::getTeleported, nullptr, Reflection::PropertyDescriptor::HIDDEN_SCRIPTING, Security::RobloxScript);
 static Reflection::PropDescriptor<Player, bool> prop_teleportedIn("TeleportedIn", category_Data, &Player::getTeleportedIn, &Player::setTeleportedIn, Reflection::PropertyDescriptor::STANDARD, Security::RobloxScript);
 REFLECTION_END();
 
@@ -336,7 +336,7 @@ void Player::killPlayer()
 
 Player::~Player(void)
 {
-	setCharacter(NULL);
+	setCharacter(nullptr);
 }
 
 bool Player::getSuperSafeChat() const {
@@ -818,7 +818,7 @@ const Primitive* Player::getConstCharacterRoot() const
 			}
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 const PartInstance* Player::hasCharacterHead(CoordinateFrame& pos) const
@@ -829,7 +829,7 @@ const PartInstance* Player::hasCharacterHead(CoordinateFrame& pos) const
 			return head;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 
@@ -849,7 +849,7 @@ void Player::setCharacter(ModelInstance* value)
 			characterDiedConnection.disconnect();
 			characterRemovingSignal(character);
 			if (Players::backendProcessing(this, false)) {
-				character->setParent(NULL);		// we delete the old character here, server side only to prevent confusion
+				character->setParent(nullptr);		// we delete the old character here, server side only to prevent confusion
 			}
 			character.reset();
 
@@ -915,7 +915,7 @@ void Player::onCharacterDied()
 
 	// we don't auto respawn if we are stopping auto character load
 	Players* players = ServiceProvider::find<Players>(this);
-	if (players == NULL || players->getCharacterAutoSpawnProperty())
+	if (players == nullptr || players->getCharacterAutoSpawnProperty())
 	{
 		calculateNextSpawnLocation(ServiceProvider::findServiceProvider(this));
 		if (TimerService* timer = ServiceProvider::create<TimerService>(this)) {
@@ -1069,7 +1069,7 @@ void Player::onServiceProvider(ServiceProvider* oldProvider, ServiceProvider* ne
 {
 	if (oldProvider && Players::backendProcessing(oldProvider))
 	{
-		setCharacter(NULL);
+		setCharacter(nullptr);
 		backendDiedSignalConnection.disconnect();
 	}
 	
@@ -1088,7 +1088,7 @@ void Player::onServiceProvider(ServiceProvider* oldProvider, ServiceProvider* ne
 		if (Players::backendProcessing(newProvider))
 			backendDiedSignalConnection = connectDiedSignalBackend.connect(boost::bind(&Player::onCharacterDied, this));
 
-		if (Players::backendProcessing(newProvider) && oldProvider == NULL) {
+		if (Players::backendProcessing(newProvider) && oldProvider == nullptr) {
 			if(StarterPlayerService* starterPlayerService = ServiceProvider::create<StarterPlayerService>(this)) {
 				setCameraMode(starterPlayerService->getCameraMode());
 				setCameraMaxZoomDistance(starterPlayerService->getCameraMaxZoomDistance());
@@ -1114,7 +1114,7 @@ void Player::onServiceProvider(ServiceProvider* oldProvider, ServiceProvider* ne
 	}
 
 	// Player idle-check is only made client-side in multiplayer visit mode!
-	if (oldProvider == NULL && Players::frontendProcessing(newProvider))
+	if (oldProvider == nullptr && Players::frontendProcessing(newProvider))
 	{
 		// player object is entering datamodel
 		registerLocalPlayerNotIdle();
@@ -1156,7 +1156,7 @@ static void addChildToInstance(const weak_ptr<Instance>& parent, const shared_pt
 static void deleteAppearance(Instance* instance)
 {
 	if (Instance::fastDynamicCast<CharacterAppearance>(instance))
-		instance->setParent(NULL);
+		instance->setParent(nullptr);
 }
 
 
@@ -1424,7 +1424,7 @@ static void doLoadAppearance(weak_ptr<Player> player, AsyncHttpQueue::RequestRes
 static void setAppearanceParentNull(shared_ptr<Instance> instance)
 {
 	if (Instance::fastDynamicCast<CharacterAppearance>(instance.get()))
-		instance->setParent(NULL);
+		instance->setParent(nullptr);
 }
 
 void Player::removeCharacterAppearance()
@@ -1441,11 +1441,11 @@ void Player::removeCharacterAppearance()
 static void setAppearanceParentNullScript(shared_ptr<Instance> instance)
 {
 	if (Instance::fastDynamicCast<CharacterAppearance>(instance.get()))
-		instance->setParent(NULL);
+		instance->setParent(nullptr);
 	else if (dynamic_cast<IEquipable*>(instance.get()))
 		// hats
 		if (!instance->fastDynamicCast<Tool>())
-			instance->setParent(NULL);
+			instance->setParent(nullptr);
 }
 
 void Player::removeCharacterAppearanceScript()
@@ -1701,13 +1701,13 @@ void Player::removeCharacter()
 
 	FASTLOG(FLog::Network, "Player:removeCharacter");
 
-	setCharacter(NULL);		// old character will be deleted here
+	setCharacter(nullptr);		// old character will be deleted here
 }
 
 void Player::doFirstSpawnLocationCalculation(
 		const ServiceProvider* serviceProvider, const std::string& preferedSpawnName) {
 
-	RBXASSERT(nextSpawnLocation == NULL);
+	RBXASSERT(nextSpawnLocation == nullptr);
 	RBXASSERT(!hasSpawnedAtLeastOnce);
 
 	teleportSpawnName = preferedSpawnName;
@@ -1923,7 +1923,7 @@ void Player::loadCharacter(bool inGame, std::string preferedSpawnName)
 	checkContextReadyToSpawnCharacter();
 
 	shared_ptr<ModelInstance> model;
-	ModelInstance *pModel = NULL;
+	ModelInstance *pModel = nullptr;
 	StarterPlayerService* starterPlayerService = ServiceProvider::create<StarterPlayerService>(this) ;
 	bool doLoadCharacterAppearance = true;
 
@@ -1936,10 +1936,10 @@ void Player::loadCharacter(bool inGame, std::string preferedSpawnName)
         }
     }
 
-	if (DFFlag::UseStarterPlayerCharacter && starterPlayerService != NULL) 
+	if (DFFlag::UseStarterPlayerCharacter && starterPlayerService != nullptr) 
 	{
 		Instance *pStarterCharacter = starterPlayerService->findFirstChildByName("StarterCharacter");
-		if (pStarterCharacter && RBX::Instance::fastDynamicCast<ModelInstance>(pStarterCharacter) != NULL)
+		if (pStarterCharacter && RBX::Instance::fastDynamicCast<ModelInstance>(pStarterCharacter) != nullptr)
 		{
 			if (shared_ptr<Instance> copy = pStarterCharacter->clone(EngineCreator)) 
 			{
@@ -1950,7 +1950,7 @@ void Player::loadCharacter(bool inGame, std::string preferedSpawnName)
 		doLoadCharacterAppearance = starterPlayerService->getLoadCharacterAppearance();
 	}
 
-	if (model == NULL)
+	if (model == nullptr)
 	{
 		Instances instances;
 
@@ -2005,7 +2005,7 @@ void Player::loadCharacter(bool inGame, std::string preferedSpawnName)
 		bool overrideHealthScript = false;
 		bool overrideAnimateScript = false;
 
-		if (starterPlayerService != NULL) 
+		if (starterPlayerService != nullptr) 
 		{
 			RBX::StarterPlayerScripts* pStarterCharacterScripts = starterPlayerService->findFirstChildOfType<RBX::StarterCharacterScripts>();
 			if (pStarterCharacterScripts)
@@ -2144,7 +2144,7 @@ void Player::setupHumanoid(shared_ptr<Humanoid> humanoid)
 	Workspace* workspace = ServiceProvider::find<Workspace>(this);
 	RBXASSERT(workspace);
 
-	if (workspace && workspace->getCamera() && workspace->getCamera()->getCameraSubject() == NULL)
+	if (workspace && workspace->getCamera() && workspace->getCamera()->getCameraSubject() == nullptr)
 	{
 		workspace->getCamera()->setCameraSubject(humanoid.get());
 		workspace->getCamera()->setCameraType(Camera::CUSTOM_CAMERA);
@@ -2173,7 +2173,7 @@ void Player::onCharacterChangedFrontend()
 		Workspace* workspace = ServiceProvider::find<Workspace>(this);
 		RBXASSERT(workspace);
 
-		if (character == NULL)
+		if (character == nullptr)
 		{
 			workspace->getCamera()->setCameraType(Camera::FIXED_CAMERA);
 			workspace->getCamera()->setDistanceFromTarget(0.0);
@@ -2253,7 +2253,7 @@ void Player::rebuildBackpack()
 		throw std::runtime_error("rebuildBackpack can only be called by the backend server");
 
 	while (Backpack* oldBackpack = this->findFirstChildOfType<Backpack>()) {
-		oldBackpack->setParent(NULL);
+		oldBackpack->setParent(nullptr);
 	}
 
 	// make a backpack under this player
@@ -2575,7 +2575,7 @@ Backpack* Player::getPlayerBackpack()
 
 void Player::verifySetParent(const Instance* instance) const
 {
-	if((instance !=NULL) && (instance->fastDynamicCast<Players>() == NULL)){
+	if((instance !=nullptr) && (instance->fastDynamicCast<Players>() == nullptr)){
 		throw RBX::runtime_error("Parent of Player can not be changed");
 	}
 	Super::verifySetParent(instance);
@@ -2910,7 +2910,7 @@ void Player::loadChatInfo() {
 void Player::loadChatInfoInternal(weak_ptr<Player> weakPlayer) {
 	unsigned userIdBackoffExponent = 0;
 	shared_ptr<Player> player = weakPlayer.lock();
-	bool trying = NULL != player;
+	bool trying = nullptr != player;
 	while (trying) {
 		try {
 			std::string response;

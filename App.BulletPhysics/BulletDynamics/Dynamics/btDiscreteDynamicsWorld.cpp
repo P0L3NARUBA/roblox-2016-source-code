@@ -98,11 +98,11 @@ struct InplaceSolverIslandCallback : public btSimulationIslandManager::IslandCal
 		btConstraintSolver*	solver,
 		btStackAlloc* stackAlloc,
 		btDispatcher* dispatcher)
-		:m_solverInfo(NULL),
+		:m_solverInfo(nullptr),
 		m_solver(solver),
-		m_sortedConstraints(NULL),
+		m_sortedConstraints(nullptr),
 		m_numConstraints(0),
-		m_debugDrawer(NULL),
+		m_debugDrawer(nullptr),
 		m_dispatcher(dispatcher)
 	{
 
@@ -202,7 +202,7 @@ struct InplaceSolverIslandCallback : public btSimulationIslandManager::IslandCal
 btDiscreteDynamicsWorld::btDiscreteDynamicsWorld(btDispatcher* dispatcher,btBroadphaseInterface* pairCache,btConstraintSolver* constraintSolver, btCollisionConfiguration* collisionConfiguration)
 :btDynamicsWorld(dispatcher,pairCache,collisionConfiguration),
 m_sortedConstraints	(),
-m_solverIslandCallback ( NULL ),
+m_solverIslandCallback ( nullptr ),
 m_constraintSolver(constraintSolver),
 m_gravity(0,-10,0),
 m_localTime(0),

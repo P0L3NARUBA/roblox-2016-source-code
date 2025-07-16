@@ -9,7 +9,7 @@ lpD_POINT quadrant_of_hobj(hOBJ hobj, OBJTYPE type,
 GEO_OBJ   geo;
 
   if(!true_geo_info(hobj, &type, &geo))
-		return NULL;
+		return nullptr;
 
   return quadrant_of_geo_obj(type, &geo, vp, p);
 }
@@ -24,7 +24,7 @@ BOOL      flag_arc;
   set_flag_el(&type, &flag_arc);
 
   if(!qu_3d_pa((lpGEO_ARC)geo, FALSE, pp))
-		return NULL;
+		return nullptr;
 
   return test_cont(pp, 4, vp, type, geo, flag_arc, p);
 }

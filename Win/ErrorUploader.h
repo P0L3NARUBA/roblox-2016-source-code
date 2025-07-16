@@ -31,7 +31,7 @@ protected:
 		int dmpFileCount;
 		HANDLE hInterprocessMutex;
 
-		data():dmpFileCount(0), hInterprocessMutex(NULL) {}
+		data():dmpFileCount(0), hInterprocessMutex(nullptr) {}
 	};
 	shared_ptr<data> _data;
 	boost::scoped_ptr<RBX::worker_thread> thread;

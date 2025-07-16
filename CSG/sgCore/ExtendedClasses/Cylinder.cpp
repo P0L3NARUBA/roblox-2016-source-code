@@ -22,7 +22,7 @@ sgCCylinder* sgCCylinder::Create(sgFloat rad, sgFloat heig, short merid)
 	if (rad<eps_d ||
 		heig<eps_d ||
 		merid<2)
-		return NULL;
+		return nullptr;
 
 	sgFloat par[3];
 	par[0] = rad;

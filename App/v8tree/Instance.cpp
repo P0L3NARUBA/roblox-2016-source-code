@@ -44,9 +44,9 @@ static Reflection::BoundFuncDesc<Instance, bool(shared_ptr<Instance>)> func_isDe
 static Reflection::BoundFuncDesc<Instance, bool(shared_ptr<Instance>)> dep_isDescendantOf(&Instance::isDescendantOf2, "isDescendantOf", "ancestor", Security::None, Reflection::PropertyDescriptor::Attributes::deprecated(func_isDescendantOf));
 static Reflection::BoundFuncDesc<Instance, bool(shared_ptr<Instance>)> func_isAncestorOf(&Instance::isAncestorOf2, "IsAncestorOf", "descendant", Security::None);
 static Reflection::BoundFuncDesc<Instance, std::string(int)> func_GetReadableId(&Instance::getReadableDebugId, "GetDebugId", "scopeLength", 4, Security::Plugin);
-static Reflection::PropDescriptor<Instance, std::string> prop_className("ClassName", category_Data, &Instance::getClassNameStr, NULL, Reflection::PropertyDescriptor::UI);
-static Reflection::PropDescriptor<Instance, std::string> prop_classNameDeprecated("className", category_Data, &Instance::getClassNameStr, NULL, Reflection::PropertyDescriptor::Attributes::deprecated(prop_className));
-static Reflection::PropDescriptor<Instance, int> prop_dataCost("DataCost", category_Data, &Instance::getPersistentDataCost, NULL, Reflection::PropertyDescriptor::UI, Security::RobloxPlace);
+static Reflection::PropDescriptor<Instance, std::string> prop_className("ClassName", category_Data, &Instance::getClassNameStr, nullptr, Reflection::PropertyDescriptor::UI);
+static Reflection::PropDescriptor<Instance, std::string> prop_classNameDeprecated("className", category_Data, &Instance::getClassNameStr, nullptr, Reflection::PropertyDescriptor::Attributes::deprecated(prop_className));
+static Reflection::PropDescriptor<Instance, int> prop_dataCost("DataCost", category_Data, &Instance::getPersistentDataCost, nullptr, Reflection::PropertyDescriptor::UI, Security::RobloxPlace);
 
 static Reflection::BoundYieldFuncDesc<Instance, shared_ptr<Instance>(std::string)> func_WaitForChild(&Instance::waitForChild, "WaitForChild", "childName", Security::None);
 
@@ -100,17 +100,17 @@ shared_ptr<Instance> Instance::createChild(const RBX::Name& className, RBX::Crea
 
 void Instance::readChild(const XmlElement* childElement, IReferenceBinder& binder, CreatorRole creatorRole)
 {
-	const RBX::Name* className = NULL;
+	const RBX::Name* className = nullptr;
 	if (!childElement->findAttributeValue(tag_class, className))
 		return;
 
 	shared_ptr<Instance> childInstance = createChild(*className, creatorRole);
 
-	if (childInstance!=NULL) {
+	if (childInstance!=nullptr) {
 		// First read the data before setting parent. This is more efficient and makes programming easier,
 		// because an Instance's data is set *before* being added
 		childInstance->read(childElement, binder, creatorRole);
-		if (childInstance!=NULL)
+		if (childInstance!=nullptr)
 			childInstance->setParent(this);
 	} else {
 #ifdef _DEBUG
@@ -123,10 +123,10 @@ void Instance::readChild(const XmlElement* childElement, IReferenceBinder& binde
 		RBX::StandardOut::singleton()->print(RBX::MESSAGE_WARNING, message.c_str());
 #endif
 		// Read the referent attribute, if it exists
-		// We do this here because instance is NULL and therefore can't read it!
+		// We do this here because instance is nullptr and therefore can't read it!
 		const XmlAttribute* referentAttribute = childElement->findAttribute(name_referent);
-		if (referentAttribute!=NULL)
-			binder.announceID(referentAttribute, NULL);
+		if (referentAttribute!=nullptr)
+			binder.announceID(referentAttribute, nullptr);
 	}
 
 }
@@ -168,7 +168,7 @@ void Instance::read(const XmlElement* element, IReferenceBinder& binder, RBX::Cr
 {
 	// Read the referent attribute, if it exists
 	const XmlAttribute* referentAttribute = element->findAttribute(name_referent);
-	if (referentAttribute!=NULL)
+	if (referentAttribute!=nullptr)
 	{
 		binder.announceID(referentAttribute, this);
 	}
@@ -177,7 +177,7 @@ void Instance::read(const XmlElement* element, IReferenceBinder& binder, RBX::Cr
 	{
 		// Read the Properties and Attributes
 		const XmlElement* propertiesElement = element->findFirstChildByTag(tag_Properties);
-		if (propertiesElement!=NULL)
+		if (propertiesElement!=nullptr)
 			readProperties(propertiesElement, binder);
 
 		// Read the child Instances
@@ -223,7 +223,7 @@ void Instance::writeProperties(XmlElement* container) const
 		const Reflection::PropertyDescriptor& descriptor = (*iter).getDescriptor();
 		
 		XmlElement* element = descriptor.write(this);
-		if (element!=NULL)
+		if (element!=nullptr)
 			container->addChild(element);
 
 		++iter;
@@ -235,7 +235,7 @@ XmlElement* Instance::writeXml(const boost::function<bool(Instance*)>& isInScope
 	// TODO: archivable==false messes up functions like clone()
 	//       find a better way to do this
 	if (!getIsArchivable() || (getClassName()==RBX::Name::getNullName()))
-		return NULL;
+		return nullptr;
 
 	switch(creatorRole)
 	{
@@ -244,11 +244,11 @@ XmlElement* Instance::writeXml(const boost::function<bool(Instance*)>& isInScope
 		break;
 	case SerializationCreator:
 		if(!getDescriptor().isSerializable()) 
-			return NULL;
+			return nullptr;
 		break;
 	case ScriptingCreator:
 		if(!getDescriptor().isScriptCreatable()) 
-			return NULL;
+			return nullptr;
 		break;
 	case EngineCreator:
 		break;
@@ -283,7 +283,7 @@ int Instance::getPersistentDataCost() const
 
 void Instance::onChildChanged(Instance* instance, const PropertyChanged& event)
 {
-	if (getParent()!=NULL)
+	if (getParent()!=nullptr)
 		getParent()->onChildChanged(instance, event);
 }
 
@@ -305,7 +305,7 @@ void Instance::waitForChild(std::string childName, boost::function<void(shared_p
 		errorFunction("WaitForChild called with an empty child name.");
 		return;
 	}
-	if (findFirstChildByName(childName) != NULL)
+	if (findFirstChildByName(childName) != nullptr)
 	{
 		resumeFunction(shared_from(findFirstChildByName(childName)));
 		return;
@@ -345,34 +345,34 @@ Instance* Instance::findFirstChildByNameRecursive(const std::string& findName)
 {
 	// breadth-first search
 	Instance* child = findFirstChildByName(findName);
-	if (child!=NULL)
+	if (child!=nullptr)
 		return child;
 
 	if (!children)
-		return NULL;
+		return nullptr;
 
 	const Instances& c(*children);
 	for (size_t i = 0; i < c.size(); ++i) {
 		child = c[i]->findFirstChildByNameRecursive(findName);
-		if (child!=NULL)
+		if (child!=nullptr)
 			return child;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 
 const Instance* Instance::findConstFirstChildByName(const std::string& findName) const
 {
 	if (!children)
-		return NULL;
+		return nullptr;
 	const Instances& c(*children);
 	for (size_t i = 0; i < c.size(); ++i) {
 		if (c[i]->getName() == findName) {
 			return c[i].get();
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 shared_ptr<Instance> Instance::findFirstAncestorOf(const Instance* descendant) const
@@ -425,7 +425,7 @@ void Instance::verifyAddDescendant(const Instance* newParent, const Instance* in
 	// recur with this = this.parent
 	const Instance* parent = getParent();
 	const Instance* oldParent = instanceGettingNewParent->getParent();
-	if (parent!=NULL && (parent!=oldParent) && !parent->isAncestorOf(oldParent))
+	if (parent!=nullptr && (parent!=oldParent) && !parent->isAncestorOf(oldParent))
 	{
 		parent->verifyAddDescendant(parent, instanceGettingNewParent);
 	}
@@ -466,8 +466,8 @@ bool Instance::setParentInternal(Instance* newParent, bool ignoreLock)
 	//  Server Replicators
 	if (!ignoreLock && getIsParentLocked()) {
 		std::string message = RBX::format("The Parent property of %s is locked, current parent: %s, new parent %s", getFullName().c_str(), 
-			parent ? parent->getName().c_str() : "NULL", 
-			newParent ? newParent->getName().c_str() : "NULL");
+			parent ? parent->getName().c_str() : "nullptr", 
+			newParent ? newParent->getName().c_str() : "nullptr");
 		throw std::runtime_error(message);
 	}
 
@@ -491,8 +491,8 @@ bool Instance::setParentInternal(Instance* newParent, bool ignoreLock)
 			return true;
 		}
 
-		std::string parentName = parent ? parent->getName() : "NULL";
-		std::string newParentName = newParent ? newParent->getName() : "NULL";
+		std::string parentName = parent ? parent->getName() : "nullptr";
+		std::string newParentName = newParent ? newParent->getName() : "nullptr";
 		std::string message = RBX::format("Something unexpectedly tried to set the parent of %s to %s while trying to set the parent of %s. Current parent is %s.", 
 			getName().c_str(), newParentName.c_str(), getName().c_str(), parentName.c_str());
 		RBX::StandardOut::singleton()->print(RBX::MESSAGE_WARNING, message.c_str());
@@ -551,12 +551,12 @@ bool Instance::setParentInternal(Instance* newParent, bool ignoreLock)
 				}
 			}
 		}
-		this->parent = NULL;
+		this->parent = nullptr;
 
 		
 	}
 
-	if (newParent!=NULL)
+	if (newParent!=nullptr)
 	{
 		newParent->children.write()->push_back(self);
 	}
@@ -564,7 +564,7 @@ bool Instance::setParentInternal(Instance* newParent, bool ignoreLock)
 	this->parent = newParent;
 
 	// signals for the child being removed
-	if (oldParent != NULL)
+	if (oldParent != nullptr)
 	{
 		ChildRemovedSignalData data(self);
 		oldParent->combinedSignal(CHILD_REMOVED, &data);
@@ -580,7 +580,7 @@ bool Instance::setParentInternal(Instance* newParent, bool ignoreLock)
 #if !defined(RBX_RCC_SECURITY) && !defined(RBX_STUDIO_BUILD) && !defined(_NOOPT) && !defined(_DEBUG) && defined(_WIN32) && !defined(RBX_PLATFORM_DURANGO)
     bool detectedExploit = false;
 #endif
-	if (newParent != NULL)
+	if (newParent != nullptr)
 	{
 		newParent->onChildAdded(this);
 		if (!newParent->contains(oldParent.get()))
@@ -608,7 +608,7 @@ bool Instance::setParentInternal(Instance* newParent, bool ignoreLock)
 #if !defined(RBX_RCC_SECURITY) && !defined(RBX_STUDIO_BUILD) && !defined(_NOOPT) && !defined(_DEBUG) && defined(_WIN32) && !defined(RBX_PLATFORM_DURANGO)
     if (detectedExploit)
     {
-        VMProtectBeginVirtualization(NULL);
+        VMProtectBeginVirtualization(nullptr);
         RBX::Security::setHackFlagVs<0>(RBX::Security::hackFlag3, HATE_SEH_CHECK);
         VMProtectEnd();
     }
@@ -641,7 +641,7 @@ void Instance::signalDescendantAdded(Instance* instance, Instance* beginParent, 
 {
 	//Notify parents
 	Instance* parent = beginParent;
-	while (parent!=NULL && (parent!=oldParent) && !parent->isAncestorOf(oldParent))
+	while (parent!=nullptr && (parent!=oldParent) && !parent->isAncestorOf(oldParent))
 	{
 		parent->onDescendantAdded(instance);
 		parent = parent->getParent();
@@ -664,7 +664,7 @@ void Instance::signalDescendantRemoving(const shared_ptr<Instance>& instance, In
 {
 	//Notify parents
 	Instance* parent = beginParent;
-	while (parent!=NULL && (parent!=newParent) && !parent->isAncestorOf(newParent))
+	while (parent!=nullptr && (parent!=newParent) && !parent->isAncestorOf(newParent))
 	{
 		parent->onDescendantRemoving(instance);
 		parent = parent->getParent();
@@ -842,7 +842,7 @@ static const RBX::Name& nameName = RBX::Name::declare("Name");
 static const RBX::Name& nameParent = RBX::Name::declare("Parent");
 
 Instance::Instance()
-	:parent(NULL)
+	:parent(nullptr)
 	,name("Instance")
 	,archivable(true)
 	,isParentLocked(false)
@@ -852,7 +852,7 @@ Instance::Instance()
 }
 
 Instance::Instance(const char* name)
-	:parent(NULL)
+	:parent(nullptr)
 	,name(name)
 	,archivable(true)
 	,isParentLocked(false)
@@ -863,13 +863,13 @@ Instance::Instance(const char* name)
 
 Instance::~Instance() 
 {
-	RBXASSERT(parent==NULL);
+	RBXASSERT(parent==nullptr);
 }
 
 void Instance::remove()
 {
 		boost::shared_ptr<const Instances> c(children.read());
-		setParent(NULL);
+		setParent(nullptr);
 		if (c)
 			// To expedite garbage collection, we recursively call remove on the children
 			std::for_each(c->begin(), c->end(), boost::bind(&Instance::remove, _1));
@@ -887,7 +887,7 @@ void Instance::destroy()
 	boost::shared_ptr<Instance> self = shared_from(this);
 
 	// Set the parent
-	setAndLockParent(NULL);
+	setAndLockParent(nullptr);
 
 	if (c)
 		// To expedite garbage collection, we recursively call remove on the children
@@ -980,7 +980,7 @@ void Instance::predelete(Instance* instance)
 
 void Instance::predelete()
 {	
-	RBXASSERT(parent==NULL);
+	RBXASSERT(parent==nullptr);
 
 	while (children)
 	{
@@ -991,11 +991,11 @@ void Instance::predelete()
 			child = c->back();
 			
 			// TODO: Can we nuke this:
-			child->signalDescendantRemoving(child, this, NULL);
+			child->signalDescendantRemoving(child, this, nullptr);
 			// TODO: Can we nuke this:
 			onChildRemoving(child.get());
 
-			child->parent = NULL;
+			child->parent = nullptr;
 			
 			c->pop_back();
 
@@ -1012,7 +1012,7 @@ void Instance::predelete()
 		childRemovedSignal(child);
 
 		// TODO: Can we nuke this:
-		child->onAncestorChanged(AncestorChanged(child.get(), this, NULL));
+		child->onAncestorChanged(AncestorChanged(child.get(), this, nullptr));
 		// TODO: Can we nuke this:
 		child->raiseChanged(propParent);
 	}
@@ -1023,7 +1023,7 @@ void Instance::predelete()
 
 bool Instance::contains(const Instance* child) const
 {
-	while (child!=NULL)
+	while (child!=nullptr)
 	{
 		if (child==this)
 			return true;
@@ -1099,7 +1099,7 @@ const OnDemandInstance* Instance::onDemandRead() const
 OnDemandInstance* Instance::onDemandWrite()
 {
 	OnDemandInstance* onDemand = onDemandPtr.get();
-	if(onDemand == NULL)
+	if(onDemand == nullptr)
 	{
 		onDemandPtr.reset(initOnDemand());
 		onDemand = onDemandPtr.get();
@@ -1134,7 +1134,7 @@ void Instance::raisePropertyChanged(const RBX::Reflection::PropertyDescriptor& d
     const PropertyChangedSignalData data(&descriptor);
     combinedSignal(PROPERTY_CHANGED, &data);
     propertyChangedSignal(&descriptor);
-    if (getParent()!=NULL)
+    if (getParent()!=nullptr)
         getParent()->onChildChanged(this, event);
 }
 
@@ -1168,7 +1168,7 @@ const void* Instance::getSetParentAddr()
     const void* thisCodeStruct = (const void*&)(thisPmfn);
     return thisCodeStruct;
 #else
-    return NULL;
+    return nullptr;
 #endif
 }
 

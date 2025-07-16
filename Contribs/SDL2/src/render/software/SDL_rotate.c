@@ -351,8 +351,8 @@ SDLgfx_rotateSurface(SDL_Surface * src, double angle, int centerx, int centery, 
     /*
     * Sanity check
     */
-    if (src == NULL)
-        return (NULL);
+    if (src == nullptr)
+        return (nullptr);
 
     if (src->flags & SDL_TRUE/* SDL_SRCCOLORKEY */)
     {
@@ -394,7 +394,7 @@ SDLgfx_rotateSurface(SDL_Surface * src, double angle, int centerx, int centery, 
     /*
     * Alloc space to completely contain the rotated surface
     */
-    rz_dst = NULL;
+    rz_dst = nullptr;
     if (is32bit) {
         /*
         * Target surface is 32bit with source RGBA/ABGR ordering
@@ -411,8 +411,8 @@ SDLgfx_rotateSurface(SDL_Surface * src, double angle, int centerx, int centery, 
     }
 
     /* Check target */
-    if (rz_dst == NULL)
-        return NULL;
+    if (rz_dst == nullptr)
+        return nullptr;
 
     /* Adjust for guard rows */
     rz_dst->h = dstheight;
@@ -420,7 +420,7 @@ SDLgfx_rotateSurface(SDL_Surface * src, double angle, int centerx, int centery, 
     if (colorKeyAvailable == 1){
         colorkey = SDL_MapRGB(rz_dst->format, r, g, b);
 
-        SDL_FillRect(rz_dst, NULL, colorkey );
+        SDL_FillRect(rz_dst, nullptr, colorkey );
     }
 
     /*

@@ -136,7 +136,7 @@ typedef struct {
 
 static void MD5_Init(MD5_CTX *ctx)
 {
-  if(CryptAcquireContext(&ctx->hCryptProv, NULL, NULL,
+  if(CryptAcquireContext(&ctx->hCryptProv, nullptr, nullptr,
                          PROV_RSA_FULL, CRYPT_VERIFYCONTEXT)) {
     CryptCreateHash(ctx->hCryptProv, CALG_MD5, 0, 0, &ctx->hHash);
   }
@@ -152,7 +152,7 @@ static void MD5_Update(MD5_CTX *ctx,
 static void MD5_Final(unsigned char digest[16], MD5_CTX *ctx)
 {
   unsigned long length = 0;
-  CryptGetHashParam(ctx->hHash, HP_HASHVAL, NULL, &length, 0);
+  CryptGetHashParam(ctx->hHash, HP_HASHVAL, nullptr, &length, 0);
   if(length == 16)
     CryptGetHashParam(ctx->hHash, HP_HASHVAL, digest, &length, 0);
   if(ctx->hHash)
@@ -528,7 +528,7 @@ MD5_context *Curl_MD5_init(const MD5_params *md5params)
 
   if(!ctxt->md5_hashctx) {
     free(ctxt);
-    return NULL;
+    return nullptr;
   }
 
   ctxt->md5_hash = md5params;

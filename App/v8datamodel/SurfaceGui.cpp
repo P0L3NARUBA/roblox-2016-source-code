@@ -57,7 +57,7 @@ namespace RBX {
 
 	bool SurfaceGui::askSetParent(const Instance* instance) const
 	{
-		return (Instance::fastDynamicCast<GuiBase2d>(instance) == NULL);
+		return (Instance::fastDynamicCast<GuiBase2d>(instance) == nullptr);
 	}
 
 	bool SurfaceGui::shouldRender3dSortedAdorn() const
@@ -174,7 +174,7 @@ namespace RBX {
 	GuiResponse SurfaceGui::process3d(const shared_ptr<InputObject>& event, Vector3 point3d, bool ignoreMaxDistance)
 	{
 		CoordinateFrame part, proj;
-		if (!buildGuiMatrix(NULL, &part, &proj))
+		if (!buildGuiMatrix(nullptr, &part, &proj))
 			return GuiResponse::notSunk();
 
 		Vector3 newpoint = unproject( part, proj, point3d );

@@ -49,14 +49,14 @@ mous";
 // server-side source code
 int soap_ns__method(struct soap *soap, ...)
 { if (!soap->header)
-    return soap_sender_fault(soap, "No SOAP header, must send one", NULL);
+    return soap_sender_fault(soap, "No SOAP header, must send one", nullptr);
   if (!soap->header->wsa__MessageID)
-    return soap_sender_fault(soap, "No WS-Addressing MessageID", NULL);
+    return soap_sender_fault(soap, "No WS-Addressing MessageID", nullptr);
   soap->header->wsa__RelatesTo = (struct wsa__Relationship*)soap_malloc(soap, sizeof(struct wsa__Relationship));
   soap_default_wsa__Relationship(soap, soap->header->wsa__RelatesTo);
   soap->header->wsa__RelatesTo->__item = soap->header->wsa__MessageID;
   if (!soap->header->wsa__ReplyTo || !soap->header->wsa__ReplyTo->Address)
-    return soap_sender_fault(soap, "No WS-Addressing ReplyTo address", NULL);
+    return soap_sender_fault(soap, "No WS-Addressing ReplyTo address", nullptr);
   soap->header->wsa__To = soap->header->wsa__ReplyTo->Address;
   soap->header->wsa__MessageID = "...";
   soap->header->wsa__Action = "...";

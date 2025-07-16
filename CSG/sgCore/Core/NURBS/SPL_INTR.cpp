@@ -83,7 +83,7 @@ lpINTER_DAT    data = (lpINTER_DAT)(lpsc->data);
 	obj		= (lpOBJ)hobj;
 	gline = (lpGEO_LINE)obj->geo_data;
 
-	if((t_intersec=(sgFloat*)SGMalloc(100*sizeof(sgFloat))) == NULL ) return OSFALSE;
+	if((t_intersec=(sgFloat*)SGMalloc(100*sizeof(sgFloat))) == nullptr ) return OSFALSE;
 	l=0;
 
 //found beginning point for intersection
@@ -204,7 +204,7 @@ static BOOL Intersect_Spline_By_Spline( lpOBJ obj, hOBJ hspl, short type,
 BOOL           rt=OSFALSE;
 short          span1, span2, span_base=5;
 short          j, jj, i, ii, n_p, l, k;
-sgFloat         *intersect, *intersect1=NULL;
+sgFloat         *intersect, *intersect1=nullptr;
 sgFloat         t1, t2, t_beg1, t_beg2, dist;
 sgFloat				 t_sply1, t_sply2, bound1[2], bound2[2], bound1_tmp, bound2_tmp;
 //------------------------>>
@@ -220,8 +220,8 @@ D_POINT        p, p1, p2, v1, v2; //, pp2, vv2;
 	gspline1 = (lpGEO_SPLINE)(obj1->geo_data);
 	gspline2 = (lpGEO_SPLINE)(obj->geo_data);
 
-	if((intersect =(sgFloat*)SGMalloc(100*sizeof(sgFloat))) == NULL ) return OSFALSE;
-	if( type != 0 ) if((intersect1=(sgFloat*)SGMalloc(100*sizeof(sgFloat))) == NULL ) goto err0;
+	if((intersect =(sgFloat*)SGMalloc(100*sizeof(sgFloat))) == nullptr ) return OSFALSE;
+	if( type != 0 ) if((intersect1=(sgFloat*)SGMalloc(100*sizeof(sgFloat))) == nullptr ) goto err0;
 	l=0;
 
 //begin
@@ -323,7 +323,7 @@ err3:
 err2:
 	end_use_sply(gspline2, &sply_dat1);
 err1:
-	if( intersect1 != NULL ) SGFree(intersect1);
+	if( intersect1 != nullptr ) SGFree(intersect1);
 err0:
 	SGFree(intersect);
 	return rt;
@@ -345,7 +345,7 @@ err0:
 static  OSCAN_COD inter_arc(hOBJ hobj, lpSCAN_CONTROL lpsc){
 BOOL           rt;
 //------------------------>>
-hOBJ           hspl_arc=NULL;
+hOBJ           hspl_arc=nullptr;
 lpOBJ					 obj;
 //------------------------>>
 lpINTER_DAT    data = (lpINTER_DAT)(lpsc->data);
@@ -357,7 +357,7 @@ lpINTER_DAT    data = (lpINTER_DAT)(lpsc->data);
 //detect intersection of two splines
 	rt=Intersect_Spline_By_Spline( obj, data->hspl, data->type,
 																	 data->data, data->data1, 0  );
-	o_free(hspl_arc, NULL);
+	o_free(hspl_arc, nullptr);
 	return (OSCAN_COD)rt;
 }
 
@@ -373,7 +373,7 @@ lpINTER_DAT    data = (lpINTER_DAT)(lpsc->data);
 static  OSCAN_COD inter_circle(hOBJ hobj, lpSCAN_CONTROL lpsc){
 BOOL           rt;
 //------------------------>>
-hOBJ           hspl_circ=NULL;
+hOBJ           hspl_circ=nullptr;
 lpOBJ					 obj;
 //------------------------>>
 lpINTER_DAT    data = (lpINTER_DAT)(lpsc->data);
@@ -385,7 +385,7 @@ lpINTER_DAT    data = (lpINTER_DAT)(lpsc->data);
 //detect intersection of two splines
 	rt=Intersect_Spline_By_Spline( obj, data->hspl, data->type,
 																	 data->data, data->data1, 0  );
-	o_free(hspl_circ, NULL);
+	o_free(hspl_circ, nullptr);
 	return (OSCAN_COD)rt;
 }
 
@@ -417,7 +417,7 @@ lpGEO_SPLINE spline;
 
 //split spline into two parts
 //first part
-	if((hspl_l = o_alloc(OSPLINE)) == NULL) goto err1;
+	if((hspl_l = o_alloc(OSPLINE)) == nullptr) goto err1;
 
 	obj1 = (lpOBJ)hspl_l;
 	obj1->color = obj->color;    					// 
@@ -425,13 +425,13 @@ lpGEO_SPLINE spline;
 	obj1->lthickness = obj->lthickness;   // 
 	spline = (lpGEO_SPLINE)(obj1->geo_data);
 	if( !Get_Part_Spline_Geo(&sply_dat, 0, t, spline )){
-		 o_free(hspl_l,NULL);
+		 o_free(hspl_l,nullptr);
 		 goto err1;
 	}
 	copy_obj_attrib(hspl, hspl_l);
 
 //second part
-	if((hspl_r = o_alloc(OSPLINE)) == NULL)	goto err1;
+	if((hspl_r = o_alloc(OSPLINE)) == nullptr)	goto err1;
 
 	obj1 = (lpOBJ)hspl_r;
 	obj1->color = obj->color;    					// 
@@ -439,7 +439,7 @@ lpGEO_SPLINE spline;
 	obj1->lthickness = obj->lthickness;   // 
 	spline = (lpGEO_SPLINE)(obj1->geo_data);
 	if( !Get_Part_Spline_Geo(&sply_dat, t, 0, spline )){
-		 o_free(hspl_r,NULL);
+		 o_free(hspl_r,nullptr);
 		 goto err1;
 	}
 	copy_obj_attrib(hspl, hspl_r);
@@ -463,8 +463,8 @@ BOOL  rt;
 hOBJ  hobj_n;
 
 	if ( !o_copy_obj(hspl, &hobj_n,"") ) return FALSE;
-	rt=Intersect_Spline_By_Spline((OBJ*)hspl, hobj_n, type, data, NULL, 1);
-	o_free(hobj_n, NULL);
+	rt=Intersect_Spline_By_Spline((OBJ*)hspl, hobj_n, type, data, nullptr, 1);
+	o_free(hobj_n, nullptr);
 	return rt;
 }
 //----------------------------------------------------->>>>

@@ -25,11 +25,11 @@ namespace RBX
 		{
 		public:
 			static const bool hasGetFirstContact = false; // simulate __if_exists
-			static RBX::Contact* getContact(CullableSceneNode* p0, CullableSceneNode* p1) { RBXASSERT(0); return NULL; }  // shouldn't be called if hasGetFirstContact is false
-			static RBX::Contact* getFirstContact() { RBXASSERT(NULL); return NULL; }
-			static RBX::Contact* getNextContact(RBX::Contact* prev) { RBXASSERT(NULL); return NULL; }
-			static int getNumContacts() { RBXASSERT(NULL); return 0; }
-			static CullableSceneNode* getContactOther(int id) { RBXASSERT(NULL); return NULL; }
+			static RBX::Contact* getContact(CullableSceneNode* p0, CullableSceneNode* p1) { RBXASSERT(0); return nullptr; }  // shouldn't be called if hasGetFirstContact is false
+			static RBX::Contact* getFirstContact() { RBXASSERT(nullptr); return nullptr; }
+			static RBX::Contact* getNextContact(RBX::Contact* prev) { RBXASSERT(nullptr); return nullptr; }
+			static int getNumContacts() { RBXASSERT(nullptr); return 0; }
+			static CullableSceneNode* getContactOther(int id) { RBXASSERT(nullptr); return nullptr; }
 
 			bool requestFixed() const { return false; }
 			const Extents& getFastFuzzyExtents() { return worldBounds; }

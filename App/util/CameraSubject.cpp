@@ -18,7 +18,7 @@ ContactManager* CameraSubject::getContactManager()
 			return world->getContactManager();
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 } // namespace

@@ -1,6 +1,6 @@
 #include "Core/sg.h"
 
-ICoreAppInterface*    application_interface = NULL;
+ICoreAppInterface*    application_interface = nullptr;
 
 LPSTR    ids;
 
@@ -47,7 +47,7 @@ bool  sgInitKernel()
 void  sgFreeKernel(bool show_memleaks/*=true*/)
 {
 	show_memory_leaks = show_memleaks; 
-	sgPrivateAccess(1982,NULL,NULL);// was sgDestroyScene();
+	sgPrivateAccess(1982,nullptr,nullptr);// was sgDestroyScene();
 	free_all_sg_mem();
 	SGFree(ids);
 	vReport();
@@ -68,10 +68,10 @@ void*    sgPrivateAccess(int Ftype, void* fVoid, void* sVoid)
 	case 1980:  // SG_OBJ_HANDLE   GetObjectHandle(const sgCObject* obj)
 		// fVoid - obj, return SG_OBJ_HANDLE
 		{
-			if (fVoid==NULL)
+			if (fVoid==nullptr)
 			{
 				global_sg_error = SG_ER_INTERNAL;
-				return NULL;
+				return nullptr;
 			}
 			sgCObject* obj = reinterpret_cast<sgCObject*>(fVoid);
 			return obj->m_object_handle;
@@ -79,32 +79,32 @@ void*    sgPrivateAccess(int Ftype, void* fVoid, void* sVoid)
 		break;
 	case 1981: // void  SetObjectHandle(sgCObject* ob,SG_OBJ_HANDLE hndl)
 		{
-			if (fVoid==NULL || sVoid==NULL)
+			if (fVoid==nullptr || sVoid==nullptr)
 			{
 				global_sg_error = SG_ER_INTERNAL;
-				return NULL;
+				return nullptr;
 			}
 			sgCObject* obj = reinterpret_cast<sgCObject*>(fVoid);
 			obj->m_object_handle = sVoid;
-			return NULL;
+			return nullptr;
 		}
 		break;
 	case 1982: // sgDestroyScene()
 		{
-			if (scene!=NULL)
+			if (scene!=nullptr)
 			{
 				delete scene;
-				scene = NULL;
+				scene = nullptr;
 			}
-			return NULL;
+			return nullptr;
 		}
 		break;
 	case 1983: //sgCObject*   ObjectFromHandle(SG_OBJ_HANDLE objH)
 		{
-			if (fVoid==NULL)
+			if (fVoid==nullptr)
 			{
 				global_sg_error = SG_ER_INTERNAL;
-				return NULL;
+				return nullptr;
 			}
 
 			lpOBJ pobj = reinterpret_cast<lpOBJ>(fVoid);
@@ -183,64 +183,64 @@ void*    sgPrivateAccess(int Ftype, void* fVoid, void* sVoid)
 			case OGROUP:
 				return new sgCGroup(objH);
 			default:
-				return NULL;
+				return nullptr;
 			}
-			return NULL;
+			return nullptr;
 		}
 		break;
 	case 1984: // void  DeleteExtendedClass(SG_OBJ_HANDLE objH)
 		{
-			if (fVoid==NULL)
+			if (fVoid==nullptr)
 			{
 				global_sg_error = SG_ER_INTERNAL;
-				return NULL;
+				return nullptr;
 			}
 			lpOBJ obj = (lpOBJ)fVoid;
 			if (obj->extendedClass)
 			{
 				delete  obj->extendedClass;
-				obj->extendedClass = NULL;
+				obj->extendedClass = nullptr;
 			}
-			return NULL;
+			return nullptr;
 		}
 		break;
 	case 1985: // void  AllocMemoryForBRepPiecesInBRep
 		{
-			if (fVoid==NULL || sVoid==NULL)
+			if (fVoid==nullptr || sVoid==nullptr)
 			{
 				global_sg_error = SG_ER_INTERNAL;
-				return NULL;
+				return nullptr;
 			}
 			sgCBRep* brep = (sgCBRep*)fVoid;
 			int      number_of_pieces = *((int*)(sVoid));
-			if (brep->m_pieces!=NULL || brep->m_pieces_count>0 || number_of_pieces<=0)
+			if (brep->m_pieces!=nullptr || brep->m_pieces_count>0 || number_of_pieces<=0)
 			{
 				assert(0);
-				return NULL;
+				return nullptr;
 			}
 			brep->m_pieces = (sgCBRepPiece**)SGMalloc(number_of_pieces*sizeof(sgCBRepPiece*));
 			brep->m_pieces_count = (unsigned int)(number_of_pieces);
-			memset(brep->m_pieces,NULL,number_of_pieces*sizeof(sgCBRepPiece*));
+			memset(brep->m_pieces,nullptr,number_of_pieces*sizeof(sgCBRepPiece*));
 			for (int ii=0;ii<number_of_pieces;ii++)
 			{
 				brep->m_pieces[ii] = new sgCBRepPiece;
 			}
-			return NULL;
+			return nullptr;
 		}
 		break;
 	case 1986: // void  Set_i_BRepPiece
 		{
-			if (fVoid==NULL || sVoid==NULL)
+			if (fVoid==nullptr || sVoid==nullptr)
 			{
 				global_sg_error = SG_ER_INTERNAL;
-				return NULL;
+				return nullptr;
 			}
 			TMP_STRUCT_FOR_BREP_PIECES_SETTING* i_brep_piece = (TMP_STRUCT_FOR_BREP_PIECES_SETTING*)fVoid;
 			lpNPW tmpNPW = (lpNPW)(sVoid);
-			if (i_brep_piece->br->m_pieces[i_brep_piece->ii]==NULL)
+			if (i_brep_piece->br->m_pieces[i_brep_piece->ii]==nullptr)
 			{
 				assert(0);
-				return NULL;
+				return nullptr;
 			}
 			memcpy(&(i_brep_piece->br->m_pieces[i_brep_piece->ii]->m_min),&(tmpNPW->gab.min),sizeof(SG_POINT));
 			memcpy(&(i_brep_piece->br->m_pieces[i_brep_piece->ii]->m_max),&(tmpNPW->gab.max),sizeof(SG_POINT));
@@ -257,15 +257,15 @@ void*    sgPrivateAccess(int Ftype, void* fVoid, void* sVoid)
 				i_brep_piece->br->m_pieces[i_brep_piece->ii]->m_edges[i].begin_vertex_index = tmpNPW->efr[i+1].bv-1;
 				i_brep_piece->br->m_pieces[i_brep_piece->ii]->m_edges[i].end_vertex_index = tmpNPW->efr[i+1].ev-1;
 			}
-			return NULL;
+			return nullptr;
 		}
 		break;
 	case 1987:  // for GetNPWFromBRepPiece
 		{
-			if (fVoid==NULL || sVoid!=NULL)
+			if (fVoid==nullptr || sVoid!=nullptr)
 			{
 				global_sg_error = SG_ER_INTERNAL;
-				return NULL;
+				return nullptr;
 			}
 			sgCBRepPiece* brP = (sgCBRepPiece*)fVoid;
 			return brP->m_brep_piece_handle;
@@ -273,53 +273,53 @@ void*    sgPrivateAccess(int Ftype, void* fVoid, void* sVoid)
 		break;
 	case 1988:  // for Set3DObjectType
 		{
-			if (fVoid==NULL || sVoid==NULL)
+			if (fVoid==nullptr || sVoid==nullptr)
 			{
 				global_sg_error = SG_ER_INTERNAL;
-				return NULL;
+				return nullptr;
 			}
 			sgC3DObject* obP = (sgC3DObject*)fVoid;
 			SG_3DOBJECT_TYPE obT = *((SG_3DOBJECT_TYPE*)sVoid);
 			obP->m_objectType = obT;
-			return NULL;
+			return nullptr;
 		}
 		break;
 	case 1989:  // for SetBRepPieceMinTriangleNumber
 		{
-			if (fVoid==NULL || sVoid==NULL)
+			if (fVoid==nullptr || sVoid==nullptr)
 			{
 				global_sg_error = SG_ER_INTERNAL;
-				return NULL;
+				return nullptr;
 			}
 			sgCBRepPiece* br_p = (sgCBRepPiece*)fVoid;
 			int           min_n = *((int*)sVoid);
 			br_p->m_min_triangle_number = min_n;
-			return NULL;
+			return nullptr;
 		}
 		break;
 	case 1990:  // for SetBRepPieceMaxTriangleNumber
 		{
-			if (fVoid==NULL || sVoid==NULL)
+			if (fVoid==nullptr || sVoid==nullptr)
 			{
 				global_sg_error = SG_ER_INTERNAL;
-				return NULL;
+				return nullptr;
 			}
 			sgCBRepPiece* br_p = (sgCBRepPiece*)fVoid;
 			int           max_n = *((int*)sVoid);
 			br_p->m_max_triangle_number = max_n;
-			return NULL;
+			return nullptr;
 		}
 		break;
 	default:
 		assert(0);
 	}
 	global_sg_error = SG_ER_INTERNAL;
-	return NULL;
+	return nullptr;
 }
 
 SG_OBJ_HANDLE   GetObjectHandle(const sgCObject* obj)
 {
-	return sgPrivateAccess(1980,const_cast<sgCObject*>(obj),NULL);
+	return sgPrivateAccess(1980,const_cast<sgCObject*>(obj),nullptr);
 }
 
 void         SetObjectHandle(sgCObject* ob,SG_OBJ_HANDLE hndl)
@@ -329,12 +329,12 @@ void         SetObjectHandle(sgCObject* ob,SG_OBJ_HANDLE hndl)
 
 sgCObject*   ObjectFromHandle(SG_OBJ_HANDLE objH)
 {
-	return reinterpret_cast<sgCObject*>(sgPrivateAccess(1983,objH,NULL));
+	return reinterpret_cast<sgCObject*>(sgPrivateAccess(1983,objH,nullptr));
 }
 
 void  DeleteExtendedClass(void* obj)
 {
-	sgPrivateAccess(1984,obj,NULL);
+	sgPrivateAccess(1984,obj,nullptr);
 }
 
 void  AllocMemoryForBRepPiecesInBRep(sgCBRep* br,int number_all)
@@ -347,7 +347,7 @@ void  AllocMemoryForBRepPiecesInBRep(sgCBRep* br,int number_all)
 
 void  Set_i_BRepPiece(TMP_STRUCT_FOR_BREP_PIECES_SETTING* tmpSFBPS,lpNPW tmpNPW)
 {
-	if (tmpSFBPS==NULL || tmpSFBPS->br==NULL || tmpNPW==NULL)
+	if (tmpSFBPS==nullptr || tmpSFBPS->br==nullptr || tmpNPW==nullptr)
 	{
 		assert(0);
 		return;
@@ -357,17 +357,17 @@ void  Set_i_BRepPiece(TMP_STRUCT_FOR_BREP_PIECES_SETTING* tmpSFBPS,lpNPW tmpNPW)
 
 lpNPW        GetNPWFromBRepPiece(sgCBRepPiece* brP)
 {
-	if (brP==NULL)
+	if (brP==nullptr)
 	{
 		assert(0);
-		return NULL;
+		return nullptr;
 	}
-	return (lpNPW)(sgPrivateAccess(1987, brP, NULL));
+	return (lpNPW)(sgPrivateAccess(1987, brP, nullptr));
 }
 
 void         Set3DObjectType(sgC3DObject* obj_3D, SG_3DOBJECT_TYPE obj_type)
 {
-	if (obj_3D==NULL)
+	if (obj_3D==nullptr)
 	{
 		assert(0);
 		return;
@@ -377,7 +377,7 @@ void         Set3DObjectType(sgC3DObject* obj_3D, SG_3DOBJECT_TYPE obj_type)
 
 void         SetBRepPieceMinTriangleNumber(sgCBRepPiece* br_p, int min_num)
 {
-	if (br_p==NULL || min_num<0)
+	if (br_p==nullptr || min_num<0)
 	{
 		assert(0);
 		return;
@@ -387,7 +387,7 @@ void         SetBRepPieceMinTriangleNumber(sgCBRepPiece* br_p, int min_num)
 
 void         SetBRepPieceMaxTriangleNumber(sgCBRepPiece* br_p, int max_num)
 {
-	if (br_p==NULL || max_num<0)
+	if (br_p==nullptr || max_num<0)
 	{
 		assert(0);
 		return;
@@ -398,7 +398,7 @@ void         SetBRepPieceMaxTriangleNumber(sgCBRepPiece* br_p, int max_num)
 
 bool		 sgSetApplicationInterface(ICoreAppInterface* app_int)
 {
-	if (application_interface==NULL)
+	if (application_interface==nullptr)
 	{
 		application_interface = app_int;
 		return true;

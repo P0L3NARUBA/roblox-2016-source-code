@@ -45,7 +45,7 @@
 #define NUMT                    2
 
 /* This array will store all of the mutexes available to PolarSSL. */
-static POLARSSL_MUTEX_T *mutex_buf = NULL;
+static POLARSSL_MUTEX_T *mutex_buf = nullptr;
 
 int polarsslthreadlock_thread_setup(void)
 {
@@ -58,7 +58,7 @@ int polarsslthreadlock_thread_setup(void)
 
 #ifdef HAVE_PTHREAD_H
   for(i = 0;  i < NUMT;  i++) {
-    ret = pthread_mutex_init(&mutex_buf[i], NULL);
+    ret = pthread_mutex_init(&mutex_buf[i], nullptr);
     if(ret)
       return 0; /* pthread_mutex_init failed */
   }
@@ -95,7 +95,7 @@ int polarsslthreadlock_thread_cleanup(void)
   }
 #endif /* HAVE_PTHREAD_H */
   free(mutex_buf);
-  mutex_buf = NULL;
+  mutex_buf = nullptr;
 
   return 1; /* OK */
 }

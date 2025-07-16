@@ -61,7 +61,7 @@ int Curl_blockread_all(struct connectdata *conn, /* connection data */
   long timeleft;
   *n = 0;
   for(;;) {
-    timeleft = Curl_timeleft(conn->data, NULL, TRUE);
+    timeleft = Curl_timeleft(conn->data, nullptr, TRUE);
     if(timeleft < 0) {
       /* we already got the timeout */
       result = CURLE_OPERATION_TIMEDOUT;
@@ -121,7 +121,7 @@ CURLcode Curl_SOCKS4(const char *proxy_name,
   curl_socket_t sock = conn->sock[sockindex];
   struct SessionHandle *data = conn->data;
 
-  if(Curl_timeleft(data, NULL, TRUE) < 0) {
+  if(Curl_timeleft(data, nullptr, TRUE) < 0) {
     /* time-out, bail out, go home */
     failf(data, "Connection time-out");
     return CURLE_OPERATION_TIMEDOUT;
@@ -137,7 +137,7 @@ CURLcode Curl_SOCKS4(const char *proxy_name,
    * Request format
    *
    *     +----+----+----+----+----+----+----+----+----+----+....+----+
-   *     | VN | CD | DSTPORT |      DSTIP        | USERID       |NULL|
+   *     | VN | CD | DSTPORT |      DSTIP        | USERID       |nullptr|
    *     +----+----+----+----+----+----+----+----+----+----+....+----+
    * # of bytes:  1    1      2              4           variable       1
    */
@@ -150,7 +150,7 @@ CURLcode Curl_SOCKS4(const char *proxy_name,
   /* DNS resolve only for SOCKS4, not SOCKS4a */
   if(!protocol4a) {
     struct Curl_dns_entry *dns;
-    Curl_addrinfo *hp=NULL;
+    Curl_addrinfo *hp=nullptr;
     int rc;
 
     rc = Curl_resolv(conn, hostname, remote_port, &dns);
@@ -159,7 +159,7 @@ CURLcode Curl_SOCKS4(const char *proxy_name,
       return CURLE_COULDNT_RESOLVE_PROXY;
 
     if(rc == CURLRESOLV_PENDING)
-      /* ignores the return code, but 'dns' remains NULL on failure */
+      /* ignores the return code, but 'dns' remains nullptr on failure */
       (void)Curl_resolver_wait_resolv(conn, &dns);
 
     /*
@@ -182,7 +182,7 @@ CURLcode Curl_SOCKS4(const char *proxy_name,
         socksreq[7] = (unsigned char)ip[3];
       }
       else
-        hp = NULL; /* fail! */
+        hp = nullptr; /* fail! */
 
       infof(data, "SOCKS4 connect to %s (locally resolved)\n", buf);
 
@@ -388,7 +388,7 @@ CURLcode Curl_SOCKS5(const char *proxy_name,
   }
 
   /* get timeout */
-  timeout = Curl_timeleft(data, NULL, TRUE);
+  timeout = Curl_timeleft(data, nullptr, TRUE);
 
   if(timeout < 0) {
     /* time-out, bail out, go home */
@@ -569,12 +569,12 @@ CURLcode Curl_SOCKS5(const char *proxy_name,
   if(!socks5_resolve_local) {
     socksreq[len++] = 3; /* ATYP: domain name = 3 */
     socksreq[len++] = (char) hostname_len; /* address length */
-    memcpy(&socksreq[len], hostname, hostname_len); /* address str w/o NULL */
+    memcpy(&socksreq[len], hostname, hostname_len); /* address str w/o nullptr */
     len += hostname_len;
   }
   else {
     struct Curl_dns_entry *dns;
-    Curl_addrinfo *hp = NULL;
+    Curl_addrinfo *hp = nullptr;
     int rc = Curl_resolv(conn, hostname, remote_port, &dns);
 
     if(rc == CURLRESOLV_ERROR)
@@ -620,7 +620,7 @@ CURLcode Curl_SOCKS5(const char *proxy_name,
       }
 #endif
       else
-        hp = NULL; /* fail! */
+        hp = nullptr; /* fail! */
 
       Curl_resolv_unlock(data, dns); /* not used anymore from now on */
     }

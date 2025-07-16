@@ -91,7 +91,7 @@ extern DECLSPEC int SDLCALL SDL_NumJoysticks(void);
 /**
  *  Get the implementation dependent name of a joystick.
  *  This can be called before any joysticks are opened.
- *  If no name can be found, this function returns NULL.
+ *  If no name can be found, this function returns nullptr.
  */
 extern DECLSPEC const char *SDLCALL SDL_JoystickNameForIndex(int device_index);
 
@@ -102,7 +102,7 @@ extern DECLSPEC const char *SDLCALL SDL_JoystickNameForIndex(int device_index);
  *  joystick events.  The joystick's instance id (::SDL_JoystickID) will be used
  *  there instead.
  *
- *  \return A joystick identifier, or NULL if an error occurred.
+ *  \return A joystick identifier, or nullptr if an error occurred.
  */
 extern DECLSPEC SDL_Joystick *SDLCALL SDL_JoystickOpen(int device_index);
 
@@ -113,7 +113,7 @@ extern DECLSPEC SDL_Joystick *SDLCALL SDL_JoystickFromInstanceID(SDL_JoystickID 
 
 /**
  *  Return the name for this currently opened joystick.
- *  If no name can be found, this function returns NULL.
+ *  If no name can be found, this function returns nullptr.
  */
 extern DECLSPEC const char *SDLCALL SDL_JoystickName(SDL_Joystick * joystick);
 
@@ -129,7 +129,7 @@ extern DECLSPEC SDL_JoystickGUID SDLCALL SDL_JoystickGetGUID(SDL_Joystick * joys
 
 /**
  *  Return a string representation for this guid. pszGUID must point to at least 33 bytes
- *  (32 for the string plus a NULL terminator).
+ *  (32 for the string plus a nullptr terminator).
  */
 extern DECLSPEC void SDLCALL SDL_JoystickGetGUIDString(SDL_JoystickGUID guid, char *pszGUID, int cbGUID);
 

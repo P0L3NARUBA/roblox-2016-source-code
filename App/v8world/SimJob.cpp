@@ -20,7 +20,7 @@ const SimJob* SimJob::getConstSimJobFromPrimitive(const Primitive* primitive)
 			}
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 SimJob* SimJob::getSimJobFromPrimitive(Primitive* primitive)
@@ -44,7 +44,7 @@ void SimJobTracker::stopTracking()
 
 		RBXASSERT(!this->containedBy(simJob));
 
-		simJob = NULL;
+		simJob = nullptr;
 	}
 }
 
@@ -98,14 +98,14 @@ void SimJobTracker::transferTrackers(SimJob* from, SimJob* to)
 
 SimJob::SimJob(Assembly* _assembly) : assembly(_assembly), useCount(0)
 {
-	RBXASSERT(assembly->getConstSimJob() == NULL);
+	RBXASSERT(assembly->getConstSimJob() == nullptr);
 }
 
 
 SimJob::~SimJob()
 {
 	RBXASSERT(useCount == 0);
-	RBXASSERT(assembly->getConstSimJob() == NULL);
+	RBXASSERT(assembly->getConstSimJob() == nullptr);
 }
 
 }	// namespace

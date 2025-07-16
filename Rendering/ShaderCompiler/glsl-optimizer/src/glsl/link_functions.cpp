@@ -71,7 +71,7 @@ public:
        * shader from being linkable in other programs.
        */
       const ir_function_signature *const callee = ir->callee;
-      assert(callee != NULL);
+      assert(callee != nullptr);
       const char *const name = callee->function_name();
 
       /* Determine if the requested function signature already exists in the
@@ -80,7 +80,7 @@ public:
       ir_function_signature *sig =
 	 find_matching_signature(name, &callee->parameters, &linked, 1,
 				 ir->use_builtin);
-      if (sig != NULL) {
+      if (sig != nullptr) {
 	 ir->callee = sig;
 	 return visit_continue;
       }
@@ -90,7 +90,7 @@ public:
        */
       sig = find_matching_signature(name, &ir->actual_parameters, shader_list,
 				    num_shaders, ir->use_builtin);
-      if (sig == NULL) {
+      if (sig == nullptr) {
 	 /* FINISHME: Log the full signature of unresolved function.
 	  */
 	 linker_error(this->prog, "unresolved reference to function `%s'\n",
@@ -103,7 +103,7 @@ public:
        * details that may be missing.
        */
       ir_function *f = linked->symbols->get_function(name);
-      if (f == NULL) {
+      if (f == nullptr) {
 	 f = new(linked) ir_function(name);
 
 	 /* Add the new function to the linked IR.  Put it at the end
@@ -115,9 +115,9 @@ public:
       }
 
       ir_function_signature *linked_sig =
-	 f->exact_matching_signature(NULL, &callee->parameters);
-      if ((linked_sig == NULL)
-	  || ((linked_sig != NULL)
+	 f->exact_matching_signature(nullptr, &callee->parameters);
+      if ((linked_sig == nullptr)
+	  || ((linked_sig != nullptr)
 	      && (linked_sig->is_builtin() != ir->use_builtin))) {
 	 linked_sig = new(linked) ir_function_signature(callee->return_type, callee->precision);
 	 f->add_signature(linked_sig);
@@ -212,18 +212,18 @@ public:
 
    virtual ir_visitor_status visit(ir_dereference_variable *ir)
    {
-      if (hash_table_find(locals, ir->var) == NULL) {
+      if (hash_table_find(locals, ir->var) == nullptr) {
 	 /* The non-function variable must be a global, so try to find the
 	  * variable in the shader's symbol table.  If the variable is not
 	  * found, then it's a global that *MUST* be defined in the original
 	  * shader.
 	  */
 	 ir_variable *var = linked->symbols->get_variable(ir->var->name);
-	 if (var == NULL) {
+	 if (var == nullptr) {
 	    /* Clone the ir_variable that the dereference already has and add
 	     * it to the linked shader.
 	     */
-	    var = ir->var->clone(linked, NULL);
+	    var = ir->var->clone(linked, nullptr);
 	    linked->symbols->add_variable(var);
 	    linked->ir->push_head(var);
 	 } else {
@@ -250,8 +250,8 @@ public:
                unsigned *const ir_max_ifc_array_access =
                   ir->var->get_max_ifc_array_access();
 
-               assert(linked_max_ifc_array_access != NULL);
-               assert(ir_max_ifc_array_access != NULL);
+               assert(linked_max_ifc_array_access != nullptr);
+               assert(ir_max_ifc_array_access != nullptr);
 
                for (unsigned i = 0; i < var->get_interface_type()->length;
                     i++) {
@@ -313,13 +313,13 @@ find_matching_signature(const char *name, const exec_list *actual_parameters,
    for (unsigned i = 0; i < num_shaders; i++) {
       ir_function *const f = shader_list[i]->symbols->get_function(name);
 
-      if (f == NULL)
+      if (f == nullptr)
 	 continue;
 
       ir_function_signature *sig =
-         f->matching_signature(NULL, actual_parameters, use_builtin);
+         f->matching_signature(nullptr, actual_parameters, use_builtin);
 
-      if ((sig == NULL) ||
+      if ((sig == nullptr) ||
           (!sig->is_defined && !sig->is_intrinsic))
 	 continue;
 
@@ -333,7 +333,7 @@ find_matching_signature(const char *name, const exec_list *actual_parameters,
       return sig;
    }
 
-   return NULL;
+   return nullptr;
 }
 
 

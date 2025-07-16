@@ -24,7 +24,7 @@ BOOL equid(hOBJ hobj, sgFloat h, BOOL type_body, hOBJ *hrez)
 
 	init_listh(&listho);
 	init_scan(&sc);
-	*hrez	= NULL;
+	*hrez	= nullptr;
 
 	sc.user_geo_scan = equid_scan;
 	sc.data = &list_str;
@@ -70,8 +70,8 @@ BOOL equid(hOBJ hobj, sgFloat h, BOOL type_body, hOBJ *hrez)
 		if ( !np_cplane(npwg) ) goto end;
 		if ( !np_put(npwg,&trb.list_str) ) goto end;    //  
 	}
-	SGFree(vnew);  vnew = NULL;
-	np_end_of_put(&list_str, NP_CANCEL, 0, NULL);
+	SGFree(vnew);  vnew = nullptr;
+	np_end_of_put(&list_str, NP_CANCEL, 0, nullptr);
 
 	if ( type_body ) {
 		cod = end_tri_biand(&trb, &listho);
@@ -84,8 +84,8 @@ BOOL equid(hOBJ hobj, sgFloat h, BOOL type_body, hOBJ *hrez)
 end:
 //	if (num_proc != -1 )  end_grad  (num_proc ,i);
 	if ( vnew ) SGFree(vnew);
-	if ( list_str.number_all > 0 ) np_end_of_put(&list_str, NP_CANCEL, 0, NULL);
-	if ( trb.list_str.number_all > 0 ) np_end_of_put(&trb.list_str, NP_CANCEL, 0, NULL);
+	if ( list_str.number_all > 0 ) np_end_of_put(&list_str, NP_CANCEL, 0, nullptr);
+	if ( trb.list_str.number_all > 0 ) np_end_of_put(&trb.list_str, NP_CANCEL, 0, nullptr);
 	return cod;
 }
 #pragma argsused
@@ -93,7 +93,7 @@ static OSCAN_COD equid_scan(hOBJ hobj,lpSCAN_CONTROL lpsc)
 {
 
 	if (ctrl_c_press) { 												//   Ctrl/C
-		put_message(CTRL_C_PRESS, NULL, 0);
+		put_message(CTRL_C_PRESS, nullptr, 0);
 		return OSFALSE;
 	}
 

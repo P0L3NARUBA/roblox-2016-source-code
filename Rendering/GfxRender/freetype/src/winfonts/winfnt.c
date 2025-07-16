@@ -201,7 +201,7 @@
     FT_FREE( font->family_name );
 
     FT_FREE( font );
-    face->font = NULL;
+    face->font = nullptr;
   }
 
 
@@ -278,7 +278,7 @@
     FT_Long          face_index;
 
 
-    face->font = NULL;
+    face->font = nullptr;
 
     face_index = FT_ABS( face_instance_index ) & 0xFFFF;
 
@@ -676,11 +676,11 @@
     sizeof ( FNT_CMapRec ),
 
     (FT_CMap_InitFunc)     fnt_cmap_init,
-    (FT_CMap_DoneFunc)     NULL,
+    (FT_CMap_DoneFunc)     nullptr,
     (FT_CMap_CharIndexFunc)fnt_cmap_char_index,
     (FT_CMap_CharNextFunc) fnt_cmap_char_next,
 
-    NULL, NULL, NULL, NULL, NULL
+    nullptr, nullptr, nullptr, nullptr, nullptr
   };
 
   static FT_CMap_Class const  fnt_cmap_class = &fnt_cmap_class_rec;
@@ -846,9 +846,9 @@
         }
 
         error = FT_CMap_New( fnt_cmap_class,
-                             NULL,
+                             nullptr,
                              &charmap,
-                             NULL );
+                             nullptr );
         if ( error )
           goto Fail;
 
@@ -878,7 +878,7 @@
       }
       family_size = font->header.file_size - font->header.face_name_offset;
       /* Some broken fonts don't delimit the face name with a final */
-      /* NULL byte -- the frame is erroneously one byte too small.  */
+      /* nullptr byte -- the frame is erroneously one byte too small.  */
       /* We thus allocate one more byte, setting it explicitly to   */
       /* zero.                                                      */
       if ( FT_ALLOC( font->family_name, family_size + 1 ) )
@@ -1133,7 +1133,7 @@
   {
     { FT_SERVICE_ID_FONT_FORMAT, FT_FONT_FORMAT_WINFNT },
     { FT_SERVICE_ID_WINFNT,      &winfnt_service_rec },
-    { NULL, NULL }
+    { nullptr, nullptr }
   };
 
 

@@ -634,7 +634,7 @@ static CURLcode smb_connection_state(struct connectdata *conn, bool *done)
   struct smb_negotiate_response *nrsp;
   struct smb_header *h;
   CURLcode result;
-  void *msg = NULL;
+  void *msg = nullptr;
 
   if(smbc->state == SMB_CONNECTING) {
 #ifdef USE_SSL
@@ -714,7 +714,7 @@ static CURLcode smb_request_state(struct connectdata *conn, bool *done)
   unsigned short len;
   unsigned short off;
   CURLcode result;
-  void *msg = NULL;
+  void *msg = nullptr;
 
   /* Start the request */
   if(req->state == SMB_REQUESTING) {
@@ -934,7 +934,7 @@ static CURLcode smb_parse_url_path(struct connectdata *conn)
   char *slash;
 
   /* URL decode the path */
-  result = Curl_urldecode(data, data->state.path, 0, &path, NULL, TRUE);
+  result = Curl_urldecode(data, data->state.path, 0, &path, nullptr, TRUE);
   if(result)
     return result;
 

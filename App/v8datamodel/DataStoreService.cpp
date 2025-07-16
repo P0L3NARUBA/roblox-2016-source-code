@@ -356,7 +356,7 @@ namespace RBX {
 	int DataStoreService::getPlayerNum()
 	{
 		const ServiceProvider* serviceProvider = ServiceProvider::findServiceProvider(this);
-		if (serviceProvider == NULL) {
+		if (serviceProvider == nullptr) {
 			RBXASSERT(false);
 			return 0;
 		}
@@ -406,9 +406,9 @@ namespace RBX {
 	void handlerExecuteWithAnalytics(DataStoreService::HttpRequest request, std::string* response, std::exception* error)
 	{
 		DataStoreService *dataStoreService = request.owner->getParentDataStoreService();
-		if (dataStoreService != NULL)
+		if (dataStoreService != nullptr)
 		{
-			dataStoreService->onRequestFinishReport(&request, error != NULL, error == NULL ? "" : error->what());
+			dataStoreService->onRequestFinishReport(&request, error != nullptr, error == nullptr ? "" : error->what());
 		}
 		request.handler(response, error);
 	}
@@ -448,7 +448,7 @@ namespace RBX {
 
 	bool DataStoreService::HttpRequest::isKeyThrottled(Time timestamp)
 	{
-		if (owner == NULL)
+		if (owner == nullptr)
 			return false;
 
 		return owner->isKeyThrottled(key, timestamp);

@@ -105,7 +105,7 @@ void * get_elem(lpVDIM dim, int num)
 	char  *p;
 	VADR  hpage;
 
-	if ( num >= dim->num_elem ) return NULL;
+	if ( num >= dim->num_elem ) return nullptr;
 	num_page = (short)(num / dim->num_elem_page);
 	num     %= dim->num_elem_page;
 	hpage = get_hpage(dim,num_page);
@@ -115,7 +115,7 @@ void * get_elem(lpVDIM dim, int num)
 
 BOOL begin_rw(lpVDIM dim, int num)
 {
-	dim->elem       = NULL;
+	dim->elem       = nullptr;
 	dim->cur_elem   = num;
 	return TRUE;
 }
@@ -140,11 +140,11 @@ m:
 	return dim->elem;
 err:
   end_rw(dim);
-  return NULL;
+  return nullptr;
 }
 void end_rw(lpVDIM dim)
 {
-	dim->elem = NULL;
+	dim->elem = nullptr;
 }
 BOOL read_elem(lpVDIM dim, int num, void * buf)
 {
@@ -172,13 +172,13 @@ static  BOOL add_dim_page(lpVDIM dim)
 	short num_page;
 
 	num_page = (short)(dim->num_elem / dim->num_elem_page);
-	if ( (hpage = alloc_page()) == NULL ) return FALSE;
+	if ( (hpage = alloc_page()) == nullptr ) return FALSE;
 	if ( num_page < NUM_VDIM_PAGE ) {
 		dim->page[num_page] = hpage;
 		return TRUE;
 	}
 	if ( !dim->hpage_a )  {  //   
-		if ( (dim->hpage_a = alloc_page()) == NULL ) goto err;
+		if ( (dim->hpage_a = alloc_page()) == nullptr ) goto err;
 	}
 	num_page -= NUM_VDIM_PAGE;
 	if ( num_page >= SIZE_VPAGE/sizeof(VADR) ) {
@@ -197,7 +197,7 @@ static  VADR alloc_page(void)
 	void * p;
 	VADR			hpage;
 
-	if ( (hpage = SGMalloc(SIZE_VPAGE)) == NULL ) return NULL;
+	if ( (hpage = SGMalloc(SIZE_VPAGE)) == nullptr ) return nullptr;
 	p = (void*)hpage;
 	memset(p, 0, SIZE_VPAGE);
 	return hpage;
@@ -219,7 +219,7 @@ BOOL find_elem(lpVDIM dim,int *num_first,
 {
   void * elem;
   if ( !begin_rw( dim, *num_first) ) return FALSE;
-	while ( (elem=get_next_elem(dim)) != NULL ) {
+	while ( (elem=get_next_elem(dim)) != nullptr ) {
     if ( !func(elem, user_data) ) continue;
     *num_first = dim->cur_elem - 1;
     end_rw(dim);
@@ -241,7 +241,7 @@ void delete_elem_list(lpVDIM dim,int number)
 	for ( i=num_page; i<NUM_VDIM_PAGE; i++) {
 		if ( !dim->page[i] ) break;
 		SGFree(dim->page[i]);
-		dim->page[i] = NULL;
+		dim->page[i] = nullptr;
 	}
 	if ( dim->hpage_a ) {
 		VADR * pa;
@@ -251,10 +251,10 @@ void delete_elem_list(lpVDIM dim,int number)
 		for ( i=0; i<num_page; i++) {
 			if ( !pa[i] ) continue;
 			SGFree(pa[i]);
-			pa[i] = NULL;
+			pa[i] = nullptr;
 		}
 		SGFree(dim->hpage_a);
-    dim->hpage_a = NULL;
+    dim->hpage_a = nullptr;
 	}
 	dim->num_elem = number;
 }

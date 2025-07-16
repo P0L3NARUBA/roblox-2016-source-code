@@ -75,7 +75,7 @@ public:
 
    flatten_named_interface_blocks_declarations(void *mem_ctx)
       : mem_ctx(mem_ctx),
-        interface_namespace(NULL)
+        interface_namespace(nullptr)
    {
    }
 
@@ -112,7 +112,7 @@ flatten_named_interface_blocks_declarations::run(exec_list *instructions)
          continue;
 
       const glsl_type * iface_t = var->type;
-      const glsl_type * array_t = NULL;
+      const glsl_type * array_t = nullptr;
       exec_node *insert_pos = var;
 
       if (iface_t->is_array()) {
@@ -135,7 +135,7 @@ flatten_named_interface_blocks_declarations::run(exec_list *instructions)
             ir_variable *new_var;
             char *var_name =
                ralloc_strdup(mem_ctx, iface_t->fields.structure[i].name);
-            if (array_t == NULL) {
+            if (array_t == nullptr) {
                new_var =
                   new(mem_ctx) ir_variable(iface_t->fields.structure[i].type,
                                            var_name,
@@ -176,7 +176,7 @@ flatten_named_interface_blocks_declarations::run(exec_list *instructions)
     */
    visit_list_elements(this, instructions);
    hash_table_dtor(interface_namespace);
-   interface_namespace = NULL;
+   interface_namespace = nullptr;
 }
 
 ir_visitor_status
@@ -196,15 +196,15 @@ flatten_named_interface_blocks_declarations::visit_leave(ir_assignment *ir)
 void
 flatten_named_interface_blocks_declarations::handle_rvalue(ir_rvalue **rvalue)
 {
-   if (*rvalue == NULL)
+   if (*rvalue == nullptr)
       return;
 
    ir_dereference_record *ir = (*rvalue)->as_dereference_record();
-   if (ir == NULL)
+   if (ir == nullptr)
       return;
 
    ir_variable *var = ir->variable_referenced();
-   if (var == NULL)
+   if (var == nullptr)
       return;
 
    if (!var->is_interface_instance())
@@ -217,7 +217,7 @@ flatten_named_interface_blocks_declarations::handle_rvalue(ir_rvalue **rvalue)
    if (var->data.mode == ir_var_uniform)
       return;
 
-   if (var->get_interface_type() != NULL) {
+   if (var->get_interface_type() != nullptr) {
       char *iface_field_name =
          ralloc_asprintf(mem_ctx, "%s.%s.%s", var->get_interface_type()->name,
                          var->name, ir->field);
@@ -232,7 +232,7 @@ flatten_named_interface_blocks_declarations::handle_rvalue(ir_rvalue **rvalue)
 
       ir_dereference_array *deref_array =
          ir->record->as_dereference_array();
-      if (deref_array != NULL) {
+      if (deref_array != nullptr) {
          *rvalue =
             new(mem_ctx) ir_dereference_array(deref_var,
                                               deref_array->array_index);

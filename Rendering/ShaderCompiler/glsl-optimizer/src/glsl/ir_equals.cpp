@@ -24,7 +24,7 @@
 #include "ir.h"
 
 /**
- * Helper for checking equality when one instruction might be NULL, since you
+ * Helper for checking equality when one instruction might be nullptr, since you
  * can't access a's vtable in that case.
  */
 static bool

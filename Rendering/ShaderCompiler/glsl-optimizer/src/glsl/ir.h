@@ -116,7 +116,7 @@ public:
     * \name IR instruction downcast functions
     *
     * These functions either cast the object to a derived class or return
-    * \c NULL if the object's type does not match the specified derived class.
+    * \c nullptr if the object's type does not match the specified derived class.
     * Additional downcast functions will be added as needed.
     */
    /*@{*/
@@ -130,7 +130,7 @@ public:
           ir_type == ir_type_swizzle ||
           ir_type == ir_type_texture)
          return (class ir_rvalue *) this;
-      return NULL;
+      return nullptr;
    }
 
    class ir_dereference *as_dereference()
@@ -139,7 +139,7 @@ public:
           ir_type == ir_type_dereference_record ||
           ir_type == ir_type_dereference_variable)
          return (class ir_dereference *) this;
-      return NULL;
+      return nullptr;
    }
 
    class ir_jump *as_jump()
@@ -148,13 +148,13 @@ public:
           ir_type == ir_type_return ||
           ir_type == ir_type_discard)
          return (class ir_jump *) this;
-      return NULL;
+      return nullptr;
    }
 
    #define AS_CHILD(TYPE) \
    class ir_##TYPE * as_##TYPE() \
    { \
-      return ir_type == ir_type_##TYPE ? (ir_##TYPE *) this : NULL; \
+      return ir_type == ir_type_##TYPE ? (ir_##TYPE *) this : nullptr; \
    }
    AS_CHILD(variable)
    AS_CHILD(function)
@@ -214,7 +214,7 @@ public:
 
    virtual ir_visitor_status accept(ir_hierarchical_visitor *);
 
-   virtual ir_constant *constant_expression_value(struct hash_table *variable_context = NULL);
+   virtual ir_constant *constant_expression_value(struct hash_table *variable_context = nullptr);
 
    ir_rvalue *as_rvalue_to_saturate();
 
@@ -228,7 +228,7 @@ public:
     */
    virtual ir_variable *variable_referenced() const
    {
-      return NULL;
+      return nullptr;
    }
 
 
@@ -238,12 +238,12 @@ public:
     * \return
     * Pointer to a variable that is completely dereferenced by the r-value.  If
     * the r-value is not a dereference or the dereference does not access the
-    * entire variable (i.e., it's just one array element, struct field), \c NULL
+    * entire variable (i.e., it's just one array element, struct field), \c nullptr
     * is returned.
     */
    virtual ir_variable *whole_variable_referenced()
    {
-      return NULL;
+      return nullptr;
    }
 
    glsl_precision get_precision() const { return precision; }
@@ -446,7 +446,7 @@ public:
     */
    inline bool is_in_uniform_block() const
    {
-      return this->data.mode == ir_var_uniform && this->interface_type != NULL;
+      return this->data.mode == ir_var_uniform && this->interface_type != nullptr;
    }
 
    /**
@@ -481,7 +481,7 @@ public:
     */
    void init_interface_type(const struct glsl_type *type)
    {
-      assert(this->interface_type == NULL);
+      assert(this->interface_type == nullptr);
       this->interface_type = type;
       if (this->is_interface_instance()) {
          this->u.max_ifc_array_access =
@@ -496,7 +496,7 @@ public:
     */
    void change_interface_type(const struct glsl_type *type)
    {
-      if (this->u.max_ifc_array_access != NULL) {
+      if (this->u.max_ifc_array_access != nullptr) {
          /* max_ifc_array_access has already been allocated, so make sure the
           * new interface has the same number of fields as the old one.
           */
@@ -513,7 +513,7 @@ public:
     */
    void reinit_interface_type(const struct glsl_type *type)
    {
-      if (this->u.max_ifc_array_access != NULL) {
+      if (this->u.max_ifc_array_access != nullptr) {
 #ifndef NDEBUG
          /* Redeclaring gl_PerVertex is only allowed if none of the built-ins
           * it defines have been accessed yet; so it's safe to throw away the
@@ -524,9 +524,9 @@ public:
             assert(this->u.max_ifc_array_access[i] == 0);
 #endif
          ralloc_free(this->u.max_ifc_array_access);
-         this->u.max_ifc_array_access = NULL;
+         this->u.max_ifc_array_access = nullptr;
       }
-      this->interface_type = NULL;
+      this->interface_type = nullptr;
       init_interface_type(type);
    }
 
@@ -563,12 +563,12 @@ public:
 
    inline ir_state_slot *get_state_slots()
    {
-      return this->is_interface_instance() ? NULL : this->u.state_slots;
+      return this->is_interface_instance() ? nullptr : this->u.state_slots;
    }
 
    inline const ir_state_slot *get_state_slots() const
    {
-      return this->is_interface_instance() ? NULL : this->u.state_slots;
+      return this->is_interface_instance() ? nullptr : this->u.state_slots;
    }
 
    inline ir_state_slot *allocate_state_slots(unsigned n)
@@ -578,7 +578,7 @@ public:
       this->u.state_slots = ralloc_array(this, ir_state_slot, n);
       this->data._num_state_slots = 0;
 
-      if (this->u.state_slots != NULL)
+      if (this->u.state_slots != nullptr)
          this->data._num_state_slots = n;
 
       return this->u.state_slots;
@@ -597,7 +597,7 @@ public:
    /**
     * Get the extension warning string for this variable
     *
-    * If warnings are not enabled, \c NULL is returned.
+    * If warnings are not enabled, \c nullptr is returned.
     */
    const char *get_extension_warning() const;
 
@@ -880,7 +880,7 @@ private:
        * max_ifc_array_access[i] is unused.
        *
        * For variables whose type is not an interface block, this pointer is
-       * NULL.
+       * nullptr.
        */
       unsigned *max_ifc_array_access;
 
@@ -890,7 +890,7 @@ private:
        * Once set at variable creation, \c state_slots must remain invariant.
        *
        * If the variable is not a uniform, \c _num_state_slots will be zero
-       * and \c state_slots will be \c NULL.
+       * and \c state_slots will be \c nullptr.
        */
       ir_state_slot *state_slots;
    } u;
@@ -945,7 +945,7 @@ class ir_function_signature : public ir_instruction {
     */
 public:
    ir_function_signature(const glsl_type *return_type, glsl_precision precision,
-                         builtin_available_predicate builtin_avail = NULL);
+                         builtin_available_predicate builtin_avail = nullptr);
 
    virtual ir_function_signature *clone(void *mem_ctx,
 					struct hash_table *ht) const;
@@ -962,7 +962,7 @@ public:
    /**
     * Attempt to evaluate this function as a constant expression,
     * given a list of the actual parameters and the variable context.
-    * Returns NULL for non-built-ins.
+    * Returns nullptr for non-built-ins.
     */
    ir_constant *constant_expression_value(exec_list *actual_parameters, struct hash_table *variable_context);
 
@@ -1038,7 +1038,7 @@ public:
 private:
    /**
     * A function pointer to a predicate that answers whether a built-in
-    * function is available in the current shader.  NULL if not a built-in.
+    * function is available in the current shader.  nullptr if not a built-in.
     */
    builtin_available_predicate builtin_avail;
 
@@ -1059,7 +1059,7 @@ private:
     * ir_variable pointers, not variable names.
     *
     * Returns false if the expression is not constant, true otherwise,
-    * and the value in *result if result is non-NULL.
+    * and the value in *result if result is non-nullptr.
     */
    bool constant_expression_evaluate_expression_list(const struct exec_list &body,
 						     struct hash_table *variable_context,
@@ -1186,7 +1186,7 @@ public:
 
 class ir_assignment : public ir_instruction {
 public:
-   ir_assignment(ir_rvalue *lhs, ir_rvalue *rhs, ir_rvalue *condition = NULL);
+   ir_assignment(ir_rvalue *lhs, ir_rvalue *rhs, ir_rvalue *condition = nullptr);
 
    /**
     * Construct an assignment with an explicit write mask
@@ -1200,7 +1200,7 @@ public:
 
    virtual ir_assignment *clone(void *mem_ctx, struct hash_table *ht) const;
 
-   virtual ir_constant *constant_expression_value(struct hash_table *variable_context = NULL);
+   virtual ir_constant *constant_expression_value(struct hash_table *variable_context = nullptr);
 
    virtual void accept(ir_visitor *v)
    {
@@ -1213,7 +1213,7 @@ public:
     * Get a whole variable written by an assignment
     *
     * If the LHS of the assignment writes a whole variable, the variable is
-    * returned.  Otherwise \c NULL is returned.  Examples of whole-variable
+    * returned.  Otherwise \c nullptr is returned.  Examples of whole-variable
     * assignment are:
     *
     *  - Assigning to a scalar
@@ -1584,8 +1584,8 @@ enum ir_expression_operation {
 class ir_expression : public ir_rvalue {
 public:
    ir_expression(int op, const struct glsl_type *type,
-                 ir_rvalue *op0, ir_rvalue *op1 = NULL,
-                 ir_rvalue *op2 = NULL, ir_rvalue *op3 = NULL);
+                 ir_rvalue *op0, ir_rvalue *op1 = nullptr,
+                 ir_rvalue *op2 = nullptr, ir_rvalue *op3 = nullptr);
 
    /**
     * Constructor for unary operation expressions
@@ -1610,13 +1610,13 @@ public:
     * Attempt to constant-fold the expression
     *
     * The "variable_context" hash table links ir_variable * to ir_constant *
-    * that represent the variables' values.  \c NULL represents an empty
+    * that represent the variables' values.  \c nullptr represents an empty
     * context.
     *
     * If the expression cannot be constant folded, this method will return
-    * \c NULL.
+    * \c nullptr.
     */
-   virtual ir_constant *constant_expression_value(struct hash_table *variable_context = NULL);
+   virtual ir_constant *constant_expression_value(struct hash_table *variable_context = nullptr);
 
    /**
     * Determine the number of operands used by an expression
@@ -1683,14 +1683,14 @@ public:
 	   exec_list *actual_parameters)
       : ir_instruction(ir_type_call), return_deref(return_deref), callee(callee)
    {
-      assert(callee->return_type != NULL);
+      assert(callee->return_type != nullptr);
       actual_parameters->move_nodes_to(& this->actual_parameters);
       this->use_builtin = callee->is_builtin();
    }
 
    virtual ir_call *clone(void *mem_ctx, struct hash_table *ht) const;
 
-   virtual ir_constant *constant_expression_value(struct hash_table *variable_context = NULL);
+   virtual ir_constant *constant_expression_value(struct hash_table *variable_context = nullptr);
 
    virtual void accept(ir_visitor *v)
    {
@@ -1715,7 +1715,7 @@ public:
 
    /**
     * Storage for the function's return value.
-    * This must be NULL if the return type is void.
+    * This must be nullptr if the return type is void.
     */
    ir_dereference_variable *return_deref;
 
@@ -1749,7 +1749,7 @@ protected:
 class ir_return : public ir_jump {
 public:
    ir_return()
-      : ir_jump(ir_type_return), value(NULL)
+      : ir_jump(ir_type_return), value(nullptr)
    {
    }
 
@@ -1828,7 +1828,7 @@ public:
    ir_discard()
       : ir_jump(ir_type_discard)
    {
-      this->condition = NULL;
+      this->condition = nullptr;
    }
 
    ir_discard(ir_rvalue *cond)
@@ -1894,15 +1894,15 @@ class ir_texture : public ir_rvalue {
 public:
    ir_texture(enum ir_texture_opcode op)
       : ir_rvalue(ir_type_texture, glsl_precision_low),
-        op(op), sampler(NULL), coordinate(NULL),
-        offset(NULL)
+        op(op), sampler(nullptr), coordinate(nullptr),
+        offset(nullptr)
    {
       memset(&lod_info, 0, sizeof(lod_info));
    }
 
    virtual ir_texture *clone(void *mem_ctx, struct hash_table *) const;
 
-   virtual ir_constant *constant_expression_value(struct hash_table *variable_context = NULL);
+   virtual ir_constant *constant_expression_value(struct hash_table *variable_context = nullptr);
 
    virtual void accept(ir_visitor *v)
    {
@@ -1983,7 +1983,7 @@ public:
 
    virtual ir_swizzle *clone(void *mem_ctx, struct hash_table *) const;
 
-   virtual ir_constant *constant_expression_value(struct hash_table *variable_context = NULL);
+   virtual ir_constant *constant_expression_value(struct hash_table *variable_context = nullptr);
 
    /**
     * Construct an ir_swizzle from the textual representation.  Can fail.
@@ -2045,7 +2045,7 @@ public:
    virtual ir_dereference_variable *clone(void *mem_ctx,
 					  struct hash_table *) const;
 
-   virtual ir_constant *constant_expression_value(struct hash_table *variable_context = NULL);
+   virtual ir_constant *constant_expression_value(struct hash_table *variable_context = nullptr);
 
    virtual bool equals(ir_instruction *ir, enum ir_node_type ignore = ir_type_unset);
 
@@ -2091,7 +2091,7 @@ public:
    virtual ir_dereference_array *clone(void *mem_ctx,
 				       struct hash_table *) const;
 
-   virtual ir_constant *constant_expression_value(struct hash_table *variable_context = NULL);
+   virtual ir_constant *constant_expression_value(struct hash_table *variable_context = nullptr);
 
    virtual bool equals(ir_instruction *ir, enum ir_node_type ignore = ir_type_unset);
 
@@ -2127,7 +2127,7 @@ public:
    virtual ir_dereference_record *clone(void *mem_ctx,
 					struct hash_table *) const;
 
-   virtual ir_constant *constant_expression_value(struct hash_table *variable_context = NULL);
+   virtual ir_constant *constant_expression_value(struct hash_table *variable_context = nullptr);
 
    /**
     * Get the variable that is ultimately referenced by an r-value
@@ -2192,7 +2192,7 @@ public:
 
    virtual ir_constant *clone(void *mem_ctx, struct hash_table *) const;
 
-   virtual ir_constant *constant_expression_value(struct hash_table *variable_context = NULL);
+   virtual ir_constant *constant_expression_value(struct hash_table *variable_context = nullptr);
 
    virtual void accept(ir_visitor *v)
    {

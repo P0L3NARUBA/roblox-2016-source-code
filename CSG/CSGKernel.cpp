@@ -957,7 +957,7 @@ bool CSGMeshSgCore::sgCoreUnion(const CSGMeshSgCore& a, const CSGMeshSgCore& b)
     
     for (size_t i = 0; i < objects.size(); i++)
     {
-        if (objects[i] == NULL)
+        if (objects[i] == nullptr)
             continue;
 
         for (size_t o = 0; o < objects.size(); o++)
@@ -965,10 +965,10 @@ bool CSGMeshSgCore::sgCoreUnion(const CSGMeshSgCore& a, const CSGMeshSgCore& b)
             if (i == o)
                 continue;
 
-            if (objects[o] == NULL)
+            if (objects[o] == nullptr)
                 continue;
 
-            if (objects[i] == NULL)
+            if (objects[i] == nullptr)
                 break;
 
             int errcode = 0;
@@ -997,8 +997,8 @@ bool CSGMeshSgCore::sgCoreUnion(const CSGMeshSgCore& a, const CSGMeshSgCore& b)
 
                 sgDeleteObject(objects[i]);
                 sgDeleteObject(objects[o]);
-                objects[i] = NULL;
-                objects[o] = NULL;
+                objects[i] = nullptr;
+                objects[o] = nullptr;
             }
         }
     }
@@ -1006,7 +1006,7 @@ bool CSGMeshSgCore::sgCoreUnion(const CSGMeshSgCore& a, const CSGMeshSgCore& b)
     size_t shrinkSize = 0;
     for (size_t i = 0; i < objects.size(); i++)
     {
-        if (objects[i] == NULL)
+        if (objects[i] == nullptr)
             continue;
 
         objects[shrinkSize] = objects[i];
@@ -1033,14 +1033,14 @@ bool CSGMeshSgCore::sgCoreSubtract(const CSGMeshSgCore& a, const CSGMeshSgCore& 
     
     for (size_t i = 0; i < objectsA.size(); i++)
     {
-        if (objectsA[i] == NULL)
+        if (objectsA[i] == nullptr)
             continue;
 
         bool matchFound = false;
 
         for (size_t o = 0; o < objectsB.size(); o++)
         {
-            if (objectsA[i] == NULL || objectsB[o] == NULL)
+            if (objectsA[i] == nullptr || objectsB[o] == nullptr)
                 continue;
 
             int errcode = 0;
@@ -1090,7 +1090,7 @@ bool CSGMeshSgCore::sgCoreSubtract(const CSGMeshSgCore& a, const CSGMeshSgCore& 
     size_t shrinkSize = 0;
     for (size_t i = 0; i < objectsA.size(); i++)
     {
-        if (objectsA[i] == NULL)
+        if (objectsA[i] == nullptr)
             continue;
 
         objectsA[shrinkSize] = objectsA[i];
@@ -1250,7 +1250,7 @@ std::string CSGMeshSgCore::getBRepBinaryString() const
 sgCObject* CSGMeshSgCore::brepFromBinaryString(const std::string& str) const
 {
     if (str.empty())
-        return NULL;
+        return nullptr;
 
     int brepVersion;
     std::stringstream stream(str);
@@ -1285,7 +1285,7 @@ void CSGMeshSgCore::setBRepFromBinaryString(const std::string& str)
 
 bool CSGMeshSgCore::isValid() const
 {
-    return editData.getShape() != NULL;
+    return editData.getShape() != nullptr;
 }
 
 CSGMesh* CSGMeshSgCore::clone() const

@@ -147,7 +147,7 @@ namespace RBX {
 	// only children - check at each level - go top down (back to front)
 	void GuiLayerCollector::render2d(Adorn* adorn)
 	{
-		render2dContext(adorn,NULL);
+		render2dContext(adorn,nullptr);
 	}
 
 	// only children - check at each level - go top down (back to front)
@@ -282,7 +282,7 @@ namespace RBX {
 				if (!myAncestorScrollingFrame->isCurrentlyVisible())
 				{
 					// if the scrollingFrame is not visible then throw it away
-					myAncestorScrollingFrame = NULL;
+					myAncestorScrollingFrame = nullptr;
 				}
 			}
 		}
@@ -363,7 +363,7 @@ namespace RBX {
 						if (object->isDescendantOf(this))
 						{
 							object->setGuiState(Gui::NOTHING);
-							GuiObject* none = NULL;
+							GuiObject* none = nullptr;
 							inputService->setLastDownGuiObject(weak_from(none), InputObject::TYPE_MOUSEBUTTON1);
 						}
 					}
@@ -375,7 +375,7 @@ namespace RBX {
 						if (object->isDescendantOf(this))
 						{
 							object->setGuiState(Gui::NOTHING);
-							GuiObject* none = NULL;
+							GuiObject* none = nullptr;
 							inputService->setLastDownGuiObject(weak_from(none), InputObject::TYPE_MOUSEBUTTON2);
 						}
 					}
@@ -393,7 +393,7 @@ namespace RBX {
         
         // do in reverse order - top, last first
         bool mouseWasOver = false;
-		Instance* mouseOverGuiBase = NULL;
+		Instance* mouseOverGuiBase = nullptr;
 		int maxZIndex = -1;
         
         RBXASSERT(isAllGuiQueuesHaveCorrectNumberOfLayers(mGuiVectors));

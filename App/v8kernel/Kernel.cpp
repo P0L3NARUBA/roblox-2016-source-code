@@ -20,7 +20,7 @@ namespace RBX {
 int Kernel::numKernels = 0;
 
 Kernel::Kernel(IStage* upstream) 
-	: IStage(upstream, NULL) 
+	: IStage(upstream, nullptr) 
 	, inStepCode(false)
 	, profilingKernelBodies(new Profiling::CodeProfiler("Kernel Bodies"))
 	, profilingKernelConnectors(new Profiling::CodeProfiler("Kernel Connectors"))

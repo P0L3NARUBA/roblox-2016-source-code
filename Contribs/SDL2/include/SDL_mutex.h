@@ -107,7 +107,7 @@ struct SDL_semaphore;
 typedef struct SDL_semaphore SDL_sem;
 
 /**
- *  Create a semaphore, initialized with value, returns NULL on failure.
+ *  Create a semaphore, initialized with value, returns nullptr on failure.
  */
 extern DECLSPEC SDL_sem *SDLCALL SDL_CreateSemaphore(Uint32 initial_value);
 

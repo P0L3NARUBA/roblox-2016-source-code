@@ -24,7 +24,7 @@ namespace RBX
 		class VisualEngine;
 	}
 }
-	
+
 namespace RBX
 {
 namespace Graphics
@@ -92,7 +92,7 @@ namespace Graphics
 		void	resetBounds();
 		void	resetBounds(const Vector3& min, const Vector3& max);
 		
-		void	addInstance(PartInstance* part, Decal* decal, const Options& options, const Resources& resources, const HumanoidIdentifier* humanoidIdentifier = NULL);
+		void	addInstance(PartInstance* part, Decal* decal, const Options& options, const Resources& resources, const HumanoidIdentifier* humanoidIdentifier = nullptr);
         void    addCSGPrimitive(PartInstance* part);
 
 		unsigned int	getVertexCount()	const { return mVertexCount; }
@@ -100,13 +100,13 @@ namespace Graphics
 
 		bool areBoundsValid() const
 		{
-			RBXASSERT(mVertices); // geometry is not generated if mVertices is NULL
+			RBXASSERT(mVertices); // geometry is not generated if mVertices is nullptr
 			return mBboxMin.x <= mBboxMax.x;
 		}
 		
 		const AABox getBounds() const
 		{
-			RBXASSERT(mVertices); // geometry is not generated if mVertices is NULL
+			RBXASSERT(mVertices); // geometry is not generated if mVertices is nullptr
 			return AABox(mBboxMin, mBboxMax);
 		}
 		

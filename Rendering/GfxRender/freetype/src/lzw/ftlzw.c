@@ -140,9 +140,9 @@
     /* clear the rest */
     ft_lzwstate_done( &zip->lzw );
 
-    zip->memory = NULL;
-    zip->source = NULL;
-    zip->stream = NULL;
+    zip->memory = nullptr;
+    zip->source = nullptr;
+    zip->stream = nullptr;
   }
 
 
@@ -219,7 +219,7 @@
       if ( delta > count )
         delta = count;
 
-      numread = ft_lzwstate_io( &zip->lzw, NULL, delta );
+      numread = ft_lzwstate_io( &zip->lzw, nullptr, delta );
       if ( numread < delta )
       {
         /* not enough bytes */
@@ -325,7 +325,7 @@
 
       FT_FREE( zip );
 
-      stream->descriptor.pointer = NULL;
+      stream->descriptor.pointer = nullptr;
     }
   }
 
@@ -349,7 +349,7 @@
   {
     FT_Error    error;
     FT_Memory   memory;
-    FT_LZWFile  zip = NULL;
+    FT_LZWFile  zip = nullptr;
 
 
     if ( !stream || !source )

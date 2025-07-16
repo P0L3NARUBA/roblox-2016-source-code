@@ -70,7 +70,7 @@ void ManageEmulationDeviceDialog::rePopulateListWidget()
 
 void ManageEmulationDeviceDialog::onPlusButtonPressed()
 {
-	AddEmulationDeviceDialog dialog(NULL);
+	AddEmulationDeviceDialog dialog(nullptr);
 	dialog.exec();
 	rePopulateListWidget();
 }

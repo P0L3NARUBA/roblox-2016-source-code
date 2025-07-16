@@ -116,24 +116,24 @@ StarterPlayerService::StarterPlayerService()
  
 bool StarterPlayerService::askForbidChild(const Instance* instance) const {
 
-	if (Instance::fastDynamicCast<StarterPlayerScripts>(instance) != NULL)
+	if (Instance::fastDynamicCast<StarterPlayerScripts>(instance) != nullptr)
 		return false;
 
 	if (DFFlag::UseStarterPlayerHumanoid) {
-		bool isHumanoid = Instance::fastDynamicCast<Humanoid>(instance) != NULL;
+		bool isHumanoid = Instance::fastDynamicCast<Humanoid>(instance) != nullptr;
 		if (isHumanoid)
 			return false;
 	}
 
 	if (DFFlag::UseStarterPlayerCharacterScripts) {
-		bool isCharacterScripts = (Instance::fastDynamicCast<StarterCharacterScripts>(instance) != NULL);
+		bool isCharacterScripts = (Instance::fastDynamicCast<StarterCharacterScripts>(instance) != nullptr);
 		if (isCharacterScripts)
 			return false;
 	}
 
 	if (DFFlag::UseStarterPlayerCharacter)
 	{
-		bool isModel = Instance::fastDynamicCast<ModelInstance>(instance) != NULL;
+		bool isModel = Instance::fastDynamicCast<ModelInstance>(instance) != nullptr;
 		if (isModel)
 			return false;
 	}
@@ -142,24 +142,24 @@ bool StarterPlayerService::askForbidChild(const Instance* instance) const {
 }
 
 bool StarterPlayerService::askAddChild(const Instance* instance) const {
-	if (Instance::fastDynamicCast<StarterPlayerScripts>(instance) != NULL)
+	if (Instance::fastDynamicCast<StarterPlayerScripts>(instance) != nullptr)
 		return true;
 
 	if (DFFlag::UseStarterPlayerHumanoid) {
-		bool isHumanoid = Instance::fastDynamicCast<Humanoid>(instance) != NULL;
+		bool isHumanoid = Instance::fastDynamicCast<Humanoid>(instance) != nullptr;
 		if (isHumanoid)
 			return true;
 	} 
 	
 	if (DFFlag::UseStarterPlayerCharacterScripts) {
-		bool isCharacterScripts = (Instance::fastDynamicCast<StarterCharacterScripts>(instance) != NULL);
+		bool isCharacterScripts = (Instance::fastDynamicCast<StarterCharacterScripts>(instance) != nullptr);
 		if (isCharacterScripts)
 			return true;
 	} 
 
 	if (DFFlag::UseStarterPlayerCharacter)
 	{
-		bool isModel = Instance::fastDynamicCast<ModelInstance>(instance) != NULL;
+		bool isModel = Instance::fastDynamicCast<ModelInstance>(instance) != nullptr;
 		if (isModel)
 			return true;
 	}
@@ -352,9 +352,9 @@ void StarterPlayerService::setupPlayerScripts()
 
 void StarterPlayerService::recordSettingsInGA() const
 {
-	const char *CameraMovement = NULL;
-	const char *CameraOcclusion = NULL;
-	const char *CharacterMovement = NULL;
+	const char *CameraMovement = nullptr;
+	const char *CameraOcclusion = nullptr;
+	const char *CharacterMovement = nullptr;
 
 	switch (touchCameraMovementMode) {
 		case DEV_TOUCH_CAMERA_MOVEMENT_MODE_CLASSIC:

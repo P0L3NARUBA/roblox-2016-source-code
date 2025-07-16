@@ -24,7 +24,7 @@
 
   <pre>
     static const char* toString(int i, Value& v) {
-        static const char* str[] = {"FUEL", "FOOD", "WATER", NULL}; // Whatever your enum values are
+        static const char* str[] = {"FUEL", "FOOD", "WATER", nullptr}; // Whatever your enum values are
         static const Value val[] = {FUEL, FOOD, WATER};             // Whatever your enum values are
         const char* s = str[i];
         if (s) {
@@ -62,12 +62,12 @@ public:\
         Value v = (Value)0;\
         while (true) {\
             s = toString(i, v);\
-            if ((s == NULL) || (v == value)) {\
+            if ((s == nullptr) || (v == value)) {\
                 return s;\
             }\
             ++i;\
         }\
-        return NULL;\
+        return nullptr;\
     }\
 \
     explicit Classname(const std::string& x) : value((Value)0) {\

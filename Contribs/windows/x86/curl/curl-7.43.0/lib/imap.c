@@ -390,7 +390,7 @@ static bool imap_endofresp(struct connectdata *conn, char *line, size_t len,
 static void imap_get_message(char *buffer, char** outptr)
 {
   size_t len = 0;
-  char* message = NULL;
+  char* message = nullptr;
 
   /* Find the start of the message */
   for(message = buffer + 2; *message == ' ' || *message == '\t'; message++)
@@ -1164,11 +1164,11 @@ static CURLcode imap_state_fetch_resp(struct connectdata *conn, int imapcode,
 
     if(data->req.bytecount == size)
       /* The entire data is already transferred! */
-      Curl_setup_transfer(conn, -1, -1, FALSE, NULL, -1, NULL);
+      Curl_setup_transfer(conn, -1, -1, FALSE, nullptr, -1, nullptr);
     else {
       /* IMAP download */
       data->req.maxdownload = size;
-      Curl_setup_transfer(conn, FIRSTSOCKET, size, FALSE, NULL, -1, NULL);
+      Curl_setup_transfer(conn, FIRSTSOCKET, size, FALSE, nullptr, -1, nullptr);
     }
   }
   else {
@@ -1218,7 +1218,7 @@ static CURLcode imap_state_append_resp(struct connectdata *conn, int imapcode,
     Curl_pgrsSetUploadSize(data, data->state.infilesize);
 
     /* IMAP upload */
-    Curl_setup_transfer(conn, -1, -1, FALSE, NULL, FIRSTSOCKET, NULL);
+    Curl_setup_transfer(conn, -1, -1, FALSE, nullptr, FIRSTSOCKET, nullptr);
 
     /* End of DO phase */
     state(conn, IMAP_STOP);
@@ -1673,7 +1673,7 @@ static CURLcode imap_dophase_done(struct connectdata *conn, bool connected)
 
   if(imap->transfer != FTPTRANSFER_BODY)
     /* no data to transfer */
-    Curl_setup_transfer(conn, -1, -1, FALSE, NULL, -1, NULL);
+    Curl_setup_transfer(conn, -1, -1, FALSE, nullptr, -1, nullptr);
 
   return CURLE_OK;
 }
@@ -1823,10 +1823,10 @@ static char *imap_atom(const char *str)
   size_t quote_count = 0;
   bool space_exists = FALSE;
   size_t newlen = 0;
-  char *newstr = NULL;
+  char *newstr = nullptr;
 
   if(!str)
-    return NULL;
+    return nullptr;
 
   /* Count any unescaped characters */
   p1 = str;
@@ -1851,7 +1851,7 @@ static char *imap_atom(const char *str)
   /* Allocate the new string */
   newstr = (char *) malloc((newlen + 1) * sizeof(char));
   if(!newstr)
-    return NULL;
+    return nullptr;
 
   /* Surround the string in quotes if necessary */
   p2 = newstr;
@@ -1996,13 +1996,13 @@ static CURLcode imap_parse_url_path(struct connectdata *conn)
     if(end > begin && end[-1] == '/')
       end--;
 
-    result = Curl_urldecode(data, begin, end - begin, &imap->mailbox, NULL,
+    result = Curl_urldecode(data, begin, end - begin, &imap->mailbox, nullptr,
                             TRUE);
     if(result)
       return result;
   }
   else
-    imap->mailbox = NULL;
+    imap->mailbox = nullptr;
 
   /* There can be any number of parameters in the form ";NAME=VALUE" */
   while(*ptr == ';') {
@@ -2019,7 +2019,7 @@ static CURLcode imap_parse_url_path(struct connectdata *conn)
       return CURLE_URL_MALFORMAT;
 
     /* Decode the name parameter */
-    result = Curl_urldecode(data, begin, ptr - begin, &name, NULL, TRUE);
+    result = Curl_urldecode(data, begin, ptr - begin, &name, nullptr, TRUE);
     if(result)
       return result;
 
@@ -2046,28 +2046,28 @@ static CURLcode imap_parse_url_path(struct connectdata *conn)
         value[valuelen - 1] = '\0';
 
       imap->uidvalidity = value;
-      value = NULL;
+      value = nullptr;
     }
     else if(Curl_raw_equal(name, "UID") && !imap->uid) {
       if(valuelen > 0 && value[valuelen - 1] == '/')
         value[valuelen - 1] = '\0';
 
       imap->uid = value;
-      value = NULL;
+      value = nullptr;
     }
     else if(Curl_raw_equal(name, "SECTION") && !imap->section) {
       if(valuelen > 0 && value[valuelen - 1] == '/')
         value[valuelen - 1] = '\0';
 
       imap->section = value;
-      value = NULL;
+      value = nullptr;
     }
     else if(Curl_raw_equal(name, "PARTIAL") && !imap->partial) {
       if(valuelen > 0 && value[valuelen - 1] == '/')
         value[valuelen - 1] = '\0';
 
       imap->partial = value;
-      value = NULL;
+      value = nullptr;
     }
     else {
       free(name);
@@ -2089,7 +2089,7 @@ static CURLcode imap_parse_url_path(struct connectdata *conn)
       ptr++;
 
     /* Decode the query parameter */
-    result = Curl_urldecode(data, begin, ptr - begin, &imap->query, NULL,
+    result = Curl_urldecode(data, begin, ptr - begin, &imap->query, nullptr,
                             TRUE);
     if(result)
       return result;
@@ -2117,7 +2117,7 @@ static CURLcode imap_parse_custom_request(struct connectdata *conn)
 
   if(custom) {
     /* URL decode the custom request */
-    result = Curl_urldecode(data, custom, 0, &imap->custom, NULL, TRUE);
+    result = Curl_urldecode(data, custom, 0, &imap->custom, nullptr, TRUE);
 
     /* Extract the parameters if specified */
     if(!result) {

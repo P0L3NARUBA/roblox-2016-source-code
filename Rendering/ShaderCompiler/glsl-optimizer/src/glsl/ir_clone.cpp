@@ -86,7 +86,7 @@ ir_swizzle::clone(void *mem_ctx, struct hash_table *ht) const
 ir_return *
 ir_return::clone(void *mem_ctx, struct hash_table *ht) const
 {
-   ir_rvalue *new_value = NULL;
+   ir_rvalue *new_value = nullptr;
 
    if (this->value)
       new_value = this->value->clone(mem_ctx, ht);
@@ -97,9 +97,9 @@ ir_return::clone(void *mem_ctx, struct hash_table *ht) const
 ir_discard *
 ir_discard::clone(void *mem_ctx, struct hash_table *ht) const
 {
-   ir_rvalue *new_condition = NULL;
+   ir_rvalue *new_condition = nullptr;
 
-   if (this->condition != NULL)
+   if (this->condition != nullptr)
       new_condition = this->condition->clone(mem_ctx, ht);
 
    return new(mem_ctx) ir_discard(new_condition);
@@ -144,8 +144,8 @@ ir_loop::clone(void *mem_ctx, struct hash_table *ht) const
 ir_call *
 ir_call::clone(void *mem_ctx, struct hash_table *ht) const
 {
-   ir_dereference_variable *new_return_ref = NULL;
-   if (this->return_deref != NULL)
+   ir_dereference_variable *new_return_ref = nullptr;
+   if (this->return_deref != nullptr)
       new_return_ref = this->return_deref->clone(mem_ctx, ht);
 
    exec_list new_parameters;
@@ -161,7 +161,7 @@ ir_call::clone(void *mem_ctx, struct hash_table *ht) const
 ir_expression *
 ir_expression::clone(void *mem_ctx, struct hash_table *ht) const
 {
-   ir_rvalue *op[Elements(this->operands)] = { NULL, };
+   ir_rvalue *op[Elements(this->operands)] = { nullptr, };
    unsigned int i;
 
    for (i = 0; i < get_num_operands(); i++) {
@@ -217,7 +217,7 @@ ir_texture::clone(void *mem_ctx, struct hash_table *ht) const
    if (this->coordinate)
       new_tex->coordinate = this->coordinate->clone(mem_ctx, ht);
 
-   if (this->offset != NULL)
+   if (this->offset != nullptr)
       new_tex->offset = this->offset->clone(mem_ctx, ht);
 
    switch (this->op) {
@@ -251,7 +251,7 @@ ir_texture::clone(void *mem_ctx, struct hash_table *ht) const
 ir_assignment *
 ir_assignment::clone(void *mem_ctx, struct hash_table *ht) const
 {
-   ir_rvalue *new_condition = NULL;
+   ir_rvalue *new_condition = nullptr;
 
    if (this->condition)
       new_condition = this->condition->clone(mem_ctx, ht);
@@ -273,7 +273,7 @@ ir_function::clone(void *mem_ctx, struct hash_table *ht) const
       ir_function_signature *sig_copy = sig->clone(mem_ctx, ht);
       copy->add_signature(sig_copy);
 
-      if (ht != NULL)
+      if (ht != nullptr)
 	 hash_table_insert(ht, sig_copy,
 			   (void *)const_cast<ir_function_signature *>(sig));
    }
@@ -311,7 +311,7 @@ ir_function_signature::clone_prototype(void *mem_ctx, struct hash_table *ht) con
    /* Clone the parameter list, but NOT the body.
     */
    foreach_in_list(const ir_variable, param, &this->parameters) {
-      assert(const_cast<ir_variable *>(param)->as_variable() != NULL);
+      assert(const_cast<ir_variable *>(param)->as_variable() != nullptr);
 
       ir_variable *const param_copy = param->clone(mem_ctx, ht);
       copy->parameters.push_tail(param_copy);
@@ -341,7 +341,7 @@ ir_constant::clone(void *mem_ctx, struct hash_table *ht) const
 	      ; node = node->next) {
 	 ir_constant *const orig = (ir_constant *) node;
 
-	 c->components.push_tail(orig->clone(mem_ctx, NULL));
+	 c->components.push_tail(orig->clone(mem_ctx, nullptr));
       }
 
       return c;
@@ -354,7 +354,7 @@ ir_constant::clone(void *mem_ctx, struct hash_table *ht) const
       c->set_precision(this->get_precision());
       c->array_elements = ralloc_array(c, ir_constant *, this->type->length);
       for (unsigned i = 0; i < this->type->length; i++) {
-	 c->array_elements[i] = this->array_elements[i]->clone(mem_ctx, NULL);
+	 c->array_elements[i] = this->array_elements[i]->clone(mem_ctx, nullptr);
       }
       return c;
    }
@@ -369,7 +369,7 @@ ir_constant::clone(void *mem_ctx, struct hash_table *ht) const
       break;
    }
 
-   return NULL;
+   return nullptr;
 }
 
 
@@ -401,7 +401,7 @@ public:
        */
       ir_function_signature *sig =
 	 (ir_function_signature *) hash_table_find(this->ht, ir->callee);
-      if (sig != NULL)
+      if (sig != nullptr)
 	 ir->callee = sig;
 
       /* Since this may be used before function call parameters are flattened,

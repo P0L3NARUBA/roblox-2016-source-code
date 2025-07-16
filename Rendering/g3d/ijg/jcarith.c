@@ -858,7 +858,7 @@ start_pass (j_compress_ptr cinfo, boolean gather_statistics)
       tbl = compptr->dc_tbl_no;
       if (tbl < 0 || tbl >= NUM_ARITH_TBLS)
 	ERREXIT1(cinfo, JERR_NO_ARITH_TABLE, tbl);
-      if (entropy->dc_stats[tbl] == NULL)
+      if (entropy->dc_stats[tbl] == nullptr)
 	entropy->dc_stats[tbl] = (unsigned char *) (*cinfo->mem->alloc_small)
 	  ((j_common_ptr) cinfo, JPOOL_IMAGE, DC_STAT_BINS);
       MEMZERO(entropy->dc_stats[tbl], DC_STAT_BINS);
@@ -870,7 +870,7 @@ start_pass (j_compress_ptr cinfo, boolean gather_statistics)
       tbl = compptr->ac_tbl_no;
       if (tbl < 0 || tbl >= NUM_ARITH_TBLS)
 	ERREXIT1(cinfo, JERR_NO_ARITH_TABLE, tbl);
-      if (entropy->ac_stats[tbl] == NULL)
+      if (entropy->ac_stats[tbl] == nullptr)
 	entropy->ac_stats[tbl] = (unsigned char *) (*cinfo->mem->alloc_small)
 	  ((j_common_ptr) cinfo, JPOOL_IMAGE, AC_STAT_BINS);
       MEMZERO(entropy->ac_stats[tbl], AC_STAT_BINS);
@@ -915,7 +915,7 @@ jinit_arith_encoder (j_compress_ptr cinfo)
 
   /* Mark tables unallocated */
   for (i = 0; i < NUM_ARITH_TBLS; i++) {
-    entropy->dc_stats[i] = NULL;
-    entropy->ac_stats[i] = NULL;
+    entropy->dc_stats[i] = nullptr;
+    entropy->ac_stats[i] = nullptr;
   }
 }

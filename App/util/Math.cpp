@@ -1688,7 +1688,7 @@ std::vector<Vector2> Math::planarPolygonIntersection(const std::vector<Vector2>&
 
 	gpc_polygon gpcPoly1;
 	gpcPoly1.num_contours = 1;
-	gpcPoly1.hole = NULL;
+	gpcPoly1.hole = nullptr;
 	gpcPoly1.contour = &gpcVertList1;
 
 	gpc_vertex *vertList2 = new gpc_vertex[poly2.size()];
@@ -1703,7 +1703,7 @@ std::vector<Vector2> Math::planarPolygonIntersection(const std::vector<Vector2>&
 
 	gpc_polygon gpcPoly2;
 	gpcPoly2.num_contours = 1;
-	gpcPoly2.hole = NULL;
+	gpcPoly2.hole = nullptr;
 	gpcPoly2.contour = &gpcVertList2;
 
 	gpc_polygon gpcResult;

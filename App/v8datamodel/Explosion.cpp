@@ -125,7 +125,7 @@ void Explosion::doBlast(MegaClusterInstance* terrain, const std::vector<shared_p
 			Extents blastExtents = Extents::fromCenterRadius(position, unlinkRadius);
 
 			G3D::Array<Primitive*> primitives;
-			world->getContactManager()->getPrimitivesTouchingExtents(blastExtents, NULL, 0, primitives);
+			world->getContactManager()->getPrimitivesTouchingExtents(blastExtents, nullptr, 0, primitives);
 			PartInstance::primitivesToParts(primitives, ujParts);
 			unjoinParts = &ujParts;
 		}
@@ -239,7 +239,7 @@ void Explosion::doKill()
 			G3D::Array<Primitive*> primitives;
 			world->getContactManager()->getPrimitivesTouchingExtents(
 											Extents::fromCenterRadius(position, killRadius()),
-											NULL, 0,
+											nullptr, 0,
 											primitives);
 
 			for (int i = 0; i < primitives.size(); ++i) {
@@ -248,7 +248,7 @@ void Explosion::doKill()
 					PartInstance* part = PartInstance::fromPrimitive(p);
 
 					if (!ForceField::partInForceField(part)) {
-						part->setParent(NULL);
+						part->setParent(nullptr);
 					}
 				}
 			}
@@ -276,7 +276,7 @@ void Explosion::onStepped(const Stepped& event)
 			Extents blastExtents = Extents::fromCenterRadius(position, blastRadius);
 
 			G3D::Array<Primitive*> primitives;
-			world->getContactManager()->getPrimitivesTouchingExtents(blastExtents, NULL, 0, primitives);
+			world->getContactManager()->getPrimitivesTouchingExtents(blastExtents, nullptr, 0, primitives);
 			std::vector<shared_ptr<PartInstance> > parts;
 			PartInstance::primitivesToParts(primitives, parts);
 
@@ -302,9 +302,9 @@ void Explosion::onStepped(const Stepped& event)
 
 	TimerService* ts = ServiceProvider::create<TimerService>(this);
 	if (ts)
-		ts->delay(boost::bind(&Instance::setParent, shared_from(this), (Instance*)NULL), lifeTime);	
+		ts->delay(boost::bind(&Instance::setParent, shared_from(this), (Instance*)nullptr), lifeTime);	
 	else
-		setParent(NULL);
+		setParent(nullptr);
 }
 
 void Explosion::render3dAdorn(Adorn* adorn) 

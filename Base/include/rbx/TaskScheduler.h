@@ -90,9 +90,9 @@ namespace RBX
 		void add(boost::shared_ptr<TaskScheduler::Job> job);
 		void reschedule(boost::shared_ptr<TaskScheduler::Job> job);
 
-		void remove(boost::shared_ptr<TaskScheduler::Job> job) { remove(job, false, NULL); }
+		void remove(boost::shared_ptr<TaskScheduler::Job> job) { remove(job, false, nullptr); }
 		// This version of remove might lead to deadlocks in some cases, so try not to use it
-		void removeBlocking(boost::shared_ptr<TaskScheduler::Job> job) { remove(job, true, NULL); }
+		void removeBlocking(boost::shared_ptr<TaskScheduler::Job> job) { remove(job, true, nullptr); }
 		// This version of remove calls back several times a second while waiting.
 		// You might use this to process events in order to avoid deadlocks.
 		void removeBlocking(boost::shared_ptr<TaskScheduler::Job> job, boost::function<void()> callbackPing) { remove(job, true, callbackPing); }

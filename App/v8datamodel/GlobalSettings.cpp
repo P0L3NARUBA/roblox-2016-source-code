@@ -19,7 +19,7 @@ FASTFLAGVARIABLE(DisableGlobalSettingsParentChange, true)
 const char* const RBX::sGlobalAdvancedSettings		= "GlobalSettings";
 const char* const RBX::sGlobalBasicSettings			= "UserSettings";
 const char* const RBX::sSettings					= "GenericSettings";
-const char* const RBX::sSettingsItem				= NULL;
+const char* const RBX::sSettingsItem				= nullptr;
 
 using namespace RBX;
 
@@ -111,7 +111,7 @@ void Settings::removeInvalidChildren()
 	visitDescendants(invalidCollector);
 
 	for (unsigned int i = 0; i < invalidCollector.invalidInstances.size(); i++)
-		invalidCollector.invalidInstances[i]->setLockedParent(NULL);
+		invalidCollector.invalidInstances[i]->setLockedParent(nullptr);
 }
 
 void Settings::verifyAddDescendant(const Instance* newParent, const Instance* instanceGettingNewParent) const {

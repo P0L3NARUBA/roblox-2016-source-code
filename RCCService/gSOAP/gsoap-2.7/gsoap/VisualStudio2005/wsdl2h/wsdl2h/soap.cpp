@@ -46,8 +46,8 @@ extern const char *qname_token(const char*, const char*);
 int soap__header::traverse(wsdl__definitions& definitions)
 { if (vflag)
     cerr << "Analyzing soap header " << endl;
-  messageRef = NULL;
-  partRef = NULL;
+  messageRef = nullptr;
+  partRef = nullptr;
   const char *token = qname_token(message, definitions.targetNamespace);
   if (token)
   { for (vector<wsdl__message>::iterator message = definitions.message.begin(); message != definitions.message.end(); ++message)
@@ -120,8 +120,8 @@ wsdl__part *soap__header::partPtr() const
 int soap__headerfault::traverse(wsdl__definitions& definitions)
 { if (vflag)
     cerr << "Analyzing soap headerfault " << endl;
-  messageRef = NULL;
-  partRef = NULL;
+  messageRef = nullptr;
+  partRef = nullptr;
   const char *token = qname_token(message, definitions.targetNamespace);
   if (token)
   { for (vector<wsdl__message>::iterator message = definitions.message.begin(); message != definitions.message.end(); ++message)

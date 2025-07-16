@@ -53,7 +53,7 @@ PartMaterial ContactManager::dummySurfaceMaterial;
     
 ContactManager::ContactManager(World* world)
 	: world(world),
-      myMegaClusterPrim(NULL)
+      myMegaClusterPrim(nullptr)
 #pragma warning(push)
 #pragma warning(disable: 4355) // 'this' : used in base member initializer list
 	, spatialHash(new ContactManagerSpatialHash(world, this))
@@ -117,7 +117,7 @@ bool ContactManager::intersectingOthers(Primitive* check, const std::set<Primiti
 	}
 
 	// This is to support US15509 Deferred Contact for memory saving 
-	DenseHashSet<Primitive*> primsFound(NULL);
+	DenseHashSet<Primitive*> primsFound(nullptr);
 	getSpatialHash()->getPrimitivesOverlapping(check->getFastFuzzyExtents(), primsFound);
 
 	if (primsFound.size() == 0)
@@ -185,7 +185,7 @@ shared_ptr<const Instances> ContactManager::getPartCollisions(Primitive* check)
 		c = check->getNextContact(c);
 	}	
 
-	DenseHashSet<Primitive*> primsFound(NULL);
+	DenseHashSet<Primitive*> primsFound(nullptr);
 	getSpatialHash()->getPrimitivesOverlapping(check->getFastFuzzyExtents(), primsFound);
 	
 	for (DenseHashSet<Primitive*>::const_iterator it = primsFound.begin(); primsFound.end() != it; ++it) 
@@ -263,7 +263,7 @@ Primitive* ContactManager::getSlowHit(	const G3D::Array<Primitive*>& primitives,
 {
 	RBXASSERT(unitRay.direction().isUnit());
 
-	Primitive* bestPrimitive = NULL;
+	Primitive* bestPrimitive = nullptr;
 	float bestOffset = maxDistance;
 	float stopOffset = maxDistance;
 	stopped = false;
@@ -366,7 +366,7 @@ Primitive* ContactManager::getHit(	const RbxRay& worldRay,
                                     surfaceNormal,
                                     surfaceMaterial);
 
-	return stopped ? NULL : answer;
+	return stopped ? nullptr : answer;
 }
 
 
@@ -390,7 +390,7 @@ Primitive* ContactManager::getFastHit(	const RbxRay& worldRay,
 				!boost::math::isfinite(worldRay.direction()[index])) {
 			hitPointWorld = worldRay.direction() + worldRay.origin();
 			stopped = false; // filter didn't stop
-			return NULL;
+			return nullptr;
 		}
 	}
 
@@ -469,7 +469,7 @@ Primitive* ContactManager::getFastHit(	const RbxRay& worldRay,
 	}
 	while (spatialHash->getNextGrid(grid, unitRay, maxDistance));
 
-	return NULL;
+	return nullptr;
 }
 
 bool ContactManager::terrainCellsInRegion3(Region3 region) const
@@ -515,7 +515,7 @@ Vector3 ContactManager::findUpNearestLocationWithSpaceNeeded(const float maxSear
 			searchCenter + Vector3(0.0f, spaceNeededToCorner.y / 2.0f, 0.0f),
 			spaceNeededToCorner * Vector3(1.0f, 2.0f, 1.0f));
 
-		DenseHashSet<Primitive*> primsFound(NULL);
+		DenseHashSet<Primitive*> primsFound(nullptr);
 		getSpatialHash()->getPrimitivesOverlapping(searchExtents, primsFound);
 
 		if (primsFound.size()) {
@@ -587,16 +587,16 @@ Contact* ContactManager::createContact(	Primitive* p0, Primitive* p1)
 	if ((p0->getPreventCollide() || p1->getPreventCollide()) && 
 		(!p0->getOwner()->reportTouches() && !p1->getOwner()->reportTouches()) &&
 		(!p0->getDragging() && !p1->getDragging()))
-		return NULL;
+		return nullptr;
 
 	// Handle the case where one or other is a CSG part that will collide using Bullet Narrow Phase
 	if (p0->getCollideType() == Geometry::COLLIDE_BULLET ||
 		p1->getCollideType() == Geometry::COLLIDE_BULLET)
     {
         if (world->getUsingPGSSolver())
-            return setUpbulletCollisionShapes(p0, p1) ? new BulletContact(world, p0, p1) : NULL;
+            return setUpbulletCollisionShapes(p0, p1) ? new BulletContact(world, p0, p1) : nullptr;
         else
-            return setUpbulletCollisionShapes(p0, p1) ? new BulletShapeContact(p0, p1, world) : NULL;
+            return setUpbulletCollisionShapes(p0, p1) ? new BulletShapeContact(p0, p1, world) : nullptr;
     }
     
 	if (p0->getCollideType() > p1->getCollideType()) {
@@ -621,7 +621,7 @@ Contact* ContactManager::createContact(	Primitive* p0, Primitive* p1)
 					return new BallPolyContact(p0, p1);
 
 				default:
-					RBXASSERT(0); return NULL;
+					RBXASSERT(0); return nullptr;
 				}
 			}
 		case (Geometry::COLLIDE_BLOCK):					// ball, block, poly
@@ -635,7 +635,7 @@ Contact* ContactManager::createContact(	Primitive* p0, Primitive* p1)
 					return new PolyPolyContact(p0, p1);
 
 				default:
-					RBXASSERT(0); return NULL;
+					RBXASSERT(0); return nullptr;
 				}
 			}
 		case (Geometry::COLLIDE_POLY):
@@ -646,12 +646,12 @@ Contact* ContactManager::createContact(	Primitive* p0, Primitive* p1)
             RBXASSERT(0);
 	}
 	RBXCRASH("ContactManager::createContact"); 
-	return NULL;
+	return nullptr;
 }
 
 void ContactManager::onNewPair(Primitive* p0, Primitive* p1)
 {
-	RBXASSERT_VERY_FAST(Primitive::getContact(p0, p1) == NULL);
+	RBXASSERT_VERY_FAST(Primitive::getContact(p0, p1) == nullptr);
 	const Assembly* a0 = Assembly::getConstPrimitiveAssembly(p0);
 	const Assembly* a1 = Assembly::getConstPrimitiveAssembly(p1);
 	if (a0 == a1)
@@ -669,7 +669,7 @@ void ContactManager::onNewPair(Primitive* p0, Primitive* p1)
 	if (c)
 	{
 		world->insertContact(c);
-		RBXASSERT_VERY_FAST(Primitive::getContact(p0, p1) != NULL);
+		RBXASSERT_VERY_FAST(Primitive::getContact(p0, p1) != nullptr);
 	}
 }
 
@@ -702,7 +702,7 @@ void ContactManager::releasePair(Primitive* p0, Primitive* p1)
 		        RBXASSERT(0);			// this should never happen - something amiss in adding/removing contacts from Spatial Hash stage
 	        }
         }
-        RBXASSERT_VERY_FAST(Primitive::getContact(p0, p1) == NULL);		// should be clear now
+        RBXASSERT_VERY_FAST(Primitive::getContact(p0, p1) == nullptr);		// should be clear now
     }
 }
 
@@ -748,7 +748,7 @@ void ContactManager::onPrimitiveRemoved(Primitive* p)
 		}
 
         RBXASSERT(myMegaClusterPrim);
-		myMegaClusterPrim = NULL;
+		myMegaClusterPrim = nullptr;
 	}
 
 	WriteValidator writeValidator(concurrencyValidator);
@@ -822,8 +822,8 @@ void ContactManager::onAssemblyMovedFromStep(Assembly& a)
 }
 
 Primitive* ContactManager::getHitLegacy(const RbxRay& originDirection, 
-										const Primitive* ignorePrim,		// set to NULL to not use	
-										const HitTestFilter* filter,				// set to NULL to not use
+										const Primitive* ignorePrim,		// set to nullptr to not use	
+										const HitTestFilter* filter,				// set to nullptr to not use
 										Vector3& hitPointWorld,
 										float& distanceToHit,
 										const float& maxSearchDepth,
@@ -1118,7 +1118,7 @@ static TerrainPartitionSmooth::ChunkResult* findChunk(std::vector<TerrainPartiti
         if (chunks[i].id == id)
             return &chunks[i];
 
-    return NULL;
+    return nullptr;
 }
 
 static bool isAnyChunkTouchingWater(const std::vector<TerrainPartitionSmooth::ChunkResult>& chunks)
@@ -1257,7 +1257,7 @@ void ContactManager::applyDeferredMegaClusterChanges()
 
 		FASTLOG3(DFLog::DeferredVoxelUpdates, "Deferred voxel region update: starting region (%d,%d,%d)",
 			regionId.value().x, regionId.value().y, regionId.value().z);
-		DenseHashSet<Primitive*> primitives(NULL);
+		DenseHashSet<Primitive*> primitives(nullptr);
 		getPrimitivesOverlapping(extents, primitives);
 		size_t count = 0;
 		for (DenseHashSet<Primitive*>::const_iterator pitr = primitives.begin(); pitr!=primitives.end(); ++pitr) {
@@ -1277,7 +1277,7 @@ void ContactManager::applyDeferredMegaClusterChanges()
 
 void ContactManager::applyDeferredSmoothClusterChanges()
 {
-	DenseHashSet<Primitive*> primitives(NULL);
+	DenseHashSet<Primitive*> primitives(nullptr);
 
 	// Gather primitives from all chunks
 	for (auto& id: updatedTerrainChunks)

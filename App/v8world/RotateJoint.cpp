@@ -21,8 +21,8 @@ namespace RBX {
 
 RotateJoint::RotateJoint()
 	: MultiJoint(2)
-    , align2Axes( NULL )
-    , ballInSocket( NULL )
+    , align2Axes( nullptr )
+    , ballInSocket( nullptr )
 {}
 
 RotateJoint::RotateJoint(
@@ -31,19 +31,19 @@ RotateJoint::RotateJoint(
 	const CoordinateFrame& c0,
 	const CoordinateFrame& c1)
 		: MultiJoint(axlePrim, holePrim, c0, c1, 2)
-        , align2Axes( NULL )
-        , ballInSocket( NULL )
+        , align2Axes( nullptr )
+        , ballInSocket( nullptr )
 {
 }
 
 RotateJoint::~RotateJoint()
 {
-    if( ballInSocket != NULL )
+    if( ballInSocket != nullptr )
     {
         delete ballInSocket;
     }
 
-    if( align2Axes != NULL )
+    if( align2Axes != nullptr )
     {
         delete align2Axes;
     }
@@ -51,7 +51,7 @@ RotateJoint::~RotateJoint()
 
 void RotateJoint::update()
 {
-    if( align2Axes == NULL )
+    if( align2Axes == nullptr )
     {
         Body* b0 = getAxlePrim()->getBody();
         Body* b1 = getHolePrim()->getBody();
@@ -115,7 +115,7 @@ RotateJoint* RotateJoint::surfaceTypeToJoint(
 		else
 		{
 			RBXASSERT(0);
-			return NULL;
+			return nullptr;
 		}
 	}
 }
@@ -151,7 +151,7 @@ RotateJoint* RotateJoint::canBuildJoint(
 
 	// 1. Joint Types
 	if (!(IsRotate(t0) || IsRotate(t1))) {
-		return NULL;
+		return nullptr;
 	}
 
 	const CoordinateFrame& coord0 = p0->getCoordinateFrame();
@@ -162,7 +162,7 @@ RotateJoint* RotateJoint::canBuildJoint(
 
 	// 2. Normals must be aligned within tolerance
 	if (Math::angle(n0, -n1) > Tolerance::rotateAngleMax()) {
-		return NULL;
+		return nullptr;
 	}
 
 	Face f0 = p0->getFaceInWorld(nId0);
@@ -170,12 +170,12 @@ RotateJoint* RotateJoint::canBuildJoint(
 
 	// 3. Overlap
 	if (!Face::hasOverlap(f0, f1, Tolerance::jointOverlapMin())) {
-		return NULL;
+		return nullptr;
 	}
 
 	// 4. Coplanar
 	if (!Face::overlapWithinPlanes(f0, f1, Tolerance::rotatePlanarMax())) {
-		return NULL;
+		return nullptr;
 	}
 
 	Vector3 center0 = f0.center();
@@ -188,7 +188,7 @@ RotateJoint* RotateJoint::canBuildJoint(
 	bool constraint1 = (IsRotate(t1) && touchCenter1);
 
 	if (!(constraint0 || constraint1)) {
-		return NULL;
+		return nullptr;
 	}
 
 	if (	!constraint0 
@@ -221,7 +221,7 @@ RotateJoint* RotateJoint::canBuildJoint(
 		holeInP1 = CoordinateFrame( normalIdToMatrix3(intoP1), axlePtInP1 );
 		holePtWorld = p1->getCoordinateFrame().pointToWorldSpace(holeInP1.translation);
 		if (! axleOverlapsHole( axlePtWorld, holePtWorld, n0, n1 ) )
-			return NULL;
+			return nullptr;
 	}
 	
 	return surfaceTypeToJoint(t0, p0, p1, axleInP0, holeInP1);
@@ -234,7 +234,7 @@ void RotateJoint::removeFromKernel()
 
 	if( getKernel()->getUsingPGSSolver() )
     {
-        if( align2Axes != NULL )
+        if( align2Axes != nullptr )
         {
             getKernel()->pgsSolver.removeConstraint( align2Axes );
             getKernel()->pgsSolver.removeConstraint( ballInSocket );
@@ -293,12 +293,12 @@ void RotateJoint::putInKernel(Kernel* _kernel)
 	}
 	else
     {
-        if( ballInSocket != NULL && ( ballInSocket->getBodyA()->getUID() != b0->getUID() || ballInSocket->getBodyB()->getUID() != b1->getUID() ) )
+        if( ballInSocket != nullptr && ( ballInSocket->getBodyA()->getUID() != b0->getUID() || ballInSocket->getBodyB()->getUID() != b1->getUID() ) )
         {
             delete ballInSocket;
             delete align2Axes;
-            ballInSocket = NULL;
-            align2Axes = NULL;
+            ballInSocket = nullptr;
+            align2Axes = nullptr;
         }
         update();
         _kernel->pgsSolver.addConstraint( ballInSocket );
@@ -315,7 +315,7 @@ DynamicRotateJoint::DynamicRotateJoint(
 	: RotateJoint(axlePrim, holePrim, c0, c1)
 	, baseAngle(baseAngle)
 	, uiValue(0.0f)
-	, rotateConnector(NULL)
+	, rotateConnector(nullptr)
 {}
 
 DynamicRotateJoint::~DynamicRotateJoint()
@@ -365,7 +365,7 @@ void DynamicRotateJoint::removeFromKernel()
         RBXASSERT(rotateConnector);
         getKernel()->removeConnector(rotateConnector);
         delete rotateConnector;
-        rotateConnector = NULL;
+        rotateConnector = nullptr;
     }
 
 	Super::removeFromKernel();
@@ -427,7 +427,7 @@ void RotatePJoint::stepWorld()
 	World* world = this->findWorld();
 	if( world &&  world->getUsingPGSSolver() )
     {
-        if( alignmentConstraint != NULL )
+        if( alignmentConstraint != nullptr )
         {
             float deltaRotation = Math::deltaRotationClose(uiValue + baseAngle, currentAngle);
             float increment = std::max( std::min( deltaRotation, 0.01f ), -0.01f );
@@ -452,7 +452,7 @@ void RotateVJoint::stepWorld()
 	World* world = this->findWorld();
     if( world &&  world->getUsingPGSSolver() )
     {
-        if( angularVelocityConstraint != NULL )
+        if( angularVelocityConstraint != nullptr )
 		{
 			float k = getJointK();
 			float l = getTorqueArmLength();
@@ -474,7 +474,7 @@ void RotateVJoint::stepWorld()
 
 RotatePJoint::~RotatePJoint()
 {
-    if( alignmentConstraint != NULL )
+    if( alignmentConstraint != nullptr )
     {
         delete alignmentConstraint;
     }
@@ -488,14 +488,14 @@ void RotatePJoint::putInKernel(Kernel* kernel)
     {
         Body* b0 = getAxlePrim()->getBody();
         Body* b1 = getHolePrim()->getBody();
-        if( alignmentConstraint != NULL && ( alignmentConstraint->getBodyA()->getUID() != b0->getUID() || alignmentConstraint->getBodyB()->getUID() != b1->getUID() ) )
+        if( alignmentConstraint != nullptr && ( alignmentConstraint->getBodyA()->getUID() != b0->getUID() || alignmentConstraint->getBodyB()->getUID() != b1->getUID() ) )
         {
             delete alignmentConstraint;
-            alignmentConstraint = NULL;
+            alignmentConstraint = nullptr;
         }
 
         // For caching we don't destroy this when removing from kernel
-        if( alignmentConstraint == NULL )
+        if( alignmentConstraint == nullptr )
         {
             alignmentConstraint = new ConstraintAlign2Axes( b0, b1 );
         }
@@ -522,7 +522,7 @@ void RotatePJoint::removeFromKernel()
 {
     if( getKernel()->getUsingPGSSolver() )
     {
-		if( alignmentConstraint != NULL )
+		if( alignmentConstraint != nullptr )
 		{
 			getKernel()->pgsSolver.removeConstraint( alignmentConstraint );
 		}
@@ -537,13 +537,13 @@ RotateVJoint::RotateVJoint(
     const CoordinateFrame& c0,
     const CoordinateFrame& c1,
     float baseAngle)
-    : DynamicRotateJoint(axlePrim, holePrim, c0, c1, baseAngle), angularVelocityConstraint( NULL )
+    : DynamicRotateJoint(axlePrim, holePrim, c0, c1, baseAngle), angularVelocityConstraint( nullptr )
 {
 }
 
 RotateVJoint::~RotateVJoint()
 {
-    if( angularVelocityConstraint != NULL )
+    if( angularVelocityConstraint != nullptr )
     {
         delete angularVelocityConstraint;
     }
@@ -558,14 +558,14 @@ void RotateVJoint::putInKernel(Kernel* kernel)
         Body* b0 = getAxlePrim()->getBody();
         Body* b1 = getHolePrim()->getBody();
 
-        if( angularVelocityConstraint != NULL && ( angularVelocityConstraint->getBodyA()->getUID() != b0->getUID() || angularVelocityConstraint->getBodyB()->getUID() != b1->getUID() ) )
+        if( angularVelocityConstraint != nullptr && ( angularVelocityConstraint->getBodyA()->getUID() != b0->getUID() || angularVelocityConstraint->getBodyB()->getUID() != b1->getUID() ) )
         {
             delete angularVelocityConstraint;
-            angularVelocityConstraint = NULL;
+            angularVelocityConstraint = nullptr;
         }
 
         // For caching we don't destroy this when removing from kernel
-        if( angularVelocityConstraint == NULL )
+        if( angularVelocityConstraint == nullptr )
         {
             angularVelocityConstraint = new ConstraintAngularVelocity( b0, b1 );
         }
@@ -581,7 +581,7 @@ void RotateVJoint::removeFromKernel()
 {
     if( getKernel()->getUsingPGSSolver() )
     {
-		if( angularVelocityConstraint != NULL )
+		if( angularVelocityConstraint != nullptr )
 		{
 			getKernel()->pgsSolver.removeConstraint( angularVelocityConstraint );
 		}

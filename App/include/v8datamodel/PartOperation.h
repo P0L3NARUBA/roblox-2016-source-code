@@ -58,9 +58,9 @@ public:
 	static const Reflection::PropDescriptor<PartOperation, BinaryString> desc_PhysicsData;
 	static const Reflection::EnumPropDescriptor<PartOperation, CollisionFidelity> prop_CollisionFidelity;
     
-    const BinaryString peekChildData(RBX::Instance* context = NULL);
+    const BinaryString peekChildData(RBX::Instance* context = nullptr);
     const BinaryString& getChildData() const;
-  const BinaryString& getChildDataBlocking(RBX::Instance* context = NULL) const;
+  const BinaryString& getChildDataBlocking(RBX::Instance* context = nullptr) const;
 	void setChildData(const BinaryString& cData);
 
 	const BinaryString& getMeshData() const { return meshData; }

@@ -69,9 +69,9 @@ EliminateSubKey( HKEY hkey, LPTSTR strSubKey )
                             , 0
                             , Buffer
                             , &dw
-                            , NULL
-                            , NULL
-                            , NULL
+                            , nullptr
+                            , nullptr
+                            , nullptr
                             , &ft);
 
       ASSERT(    lreturn == ERROR_SUCCESS
@@ -143,7 +143,7 @@ AMovieSetupRegisterServer( CLSID   clsServer
 
   wsprintf( achTemp, TEXT("%ls"), szDescription );
   lreturn = RegSetValue( hkey
-                       , (LPCTSTR)NULL
+                       , (LPCTSTR)nullptr
                        , REG_SZ
                        , achTemp
                        , sizeof(achTemp) );
@@ -173,7 +173,7 @@ AMovieSetupRegisterServer( CLSID   clsServer
   //
   wsprintf( achTemp, TEXT("%ls"), szFileName );
   lreturn = RegSetValue( hsubkey
-                       , (LPCTSTR)NULL
+                       , (LPCTSTR)nullptr
                        , REG_SZ
                        , (LPCTSTR)achTemp
                        , sizeof(TCHAR) * (lstrlen(achTemp)+1) );
@@ -256,7 +256,7 @@ AMovieSetupRegisterFilter2( const AMOVIESETUP_FILTER * const psetupdata
 
   // check we've got data
   //
-  if( NULL == psetupdata ) return S_FALSE;
+  if( nullptr == psetupdata ) return S_FALSE;
 
 
   // unregister filter
@@ -285,7 +285,7 @@ AMovieSetupRegisterFilter2( const AMOVIESETUP_FILTER * const psetupdata
                              , psetupdata->strName
                              , 0 // moniker
                              , 0 // category
-                             , NULL // instance
+                             , nullptr // instance
                              , &rf2);
   }
 
@@ -422,7 +422,7 @@ AMovieDllRegisterServer2( BOOL bRegister )
     // we're being called cold.
     //
     DbgLog((LOG_TRACE, 2, TEXT("- CoInitialize")));
-    hr = CoInitialize( (LPVOID)NULL );
+    hr = CoInitialize( (LPVOID)nullptr );
     ASSERT( SUCCEEDED(hr) );
 
     // get hold of IFilterMapper2
@@ -431,7 +431,7 @@ AMovieDllRegisterServer2( BOOL bRegister )
     IFilterMapper2 *pIFM2 = 0;
     IFilterMapper *pIFM = 0;
     hr = CoCreateInstance( CLSID_FilterMapper2
-                         , NULL
+                         , nullptr
                          , CLSCTX_INPROC_SERVER
                          , IID_IFilterMapper2
                          , (void **)&pIFM2       );
@@ -441,7 +441,7 @@ AMovieDllRegisterServer2( BOOL bRegister )
 
         hr = CoCreateInstance(
             CLSID_FilterMapper,
-            NULL,
+            nullptr,
             CLSCTX_INPROC_SERVER,
             IID_IFilterMapper,
             (void **)&pIFM);
@@ -458,7 +458,7 @@ AMovieDllRegisterServer2( BOOL bRegister )
         //
         const CFactoryTemplate *pT = &g_Templates[i];
 
-        if( NULL != pT->m_pAMovieSetup_Filter )
+        if( nullptr != pT->m_pAMovieSetup_Filter )
         {
           DbgLog((LOG_TRACE, 2, TEXT("- - register %ls"), (LPCWSTR)pT->m_Name ));
 
@@ -578,7 +578,7 @@ AMovieDllRegisterServer( void )
     // IAMovieSetup, if implemented, and call
     // IAMovieSetup.Register() method
     //
-    if( SUCCEEDED(hr) && (NULL != pT->m_lpfnNew) )
+    if( SUCCEEDED(hr) && (nullptr != pT->m_lpfnNew) )
     {
       // instantiate object
       //
@@ -651,7 +651,7 @@ AMovieDllUnregisterServer()
 
     // check method exists
     //
-    if( NULL != pT->m_lpfnNew )
+    if( nullptr != pT->m_lpfnNew )
     {
       // instantiate object
       //

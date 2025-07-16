@@ -54,15 +54,15 @@ enum compare_components_result {
 
 class minmax_range {
 public:
-   minmax_range(ir_constant *low = NULL, ir_constant *high = NULL)
+   minmax_range(ir_constant *low = nullptr, ir_constant *high = nullptr)
    {
       this->low = low;
       this->high = high;
    }
 
-   /* low is the lower limit of the range, high is the higher limit. NULL on
+   /* low is the lower limit of the range, high is the higher limit. nullptr on
     * low means negative infinity (unlimited) and on high positive infinity
-    * (unlimited). Because of the two interpretations of the value NULL,
+    * (unlimited). Because of the two interpretations of the value nullptr,
     * arbitrary comparison between ir_constants is impossible.
     */
    ir_constant *low;
@@ -92,8 +92,8 @@ public:
 static enum compare_components_result
 compare_components(ir_constant *a, ir_constant *b)
 {
-   assert(a != NULL);
-   assert(b != NULL);
+   assert(a != nullptr);
+   assert(b != nullptr);
 
    assert(a->type->base_type == b->type->base_type);
 
@@ -160,7 +160,7 @@ static ir_constant *
 combine_constant(bool ismin, ir_constant *a, ir_constant *b)
 {
    void *mem_ctx = ralloc_parent(a);
-   ir_constant *c = a->clone(mem_ctx, NULL);
+   ir_constant *c = a->clone(mem_ctx, nullptr);
    for (unsigned i = 0; i < c->type->components(); i++) {
       switch (c->type->base_type) {
       case GLSL_TYPE_UINT:
@@ -188,8 +188,8 @@ combine_constant(bool ismin, ir_constant *a, ir_constant *b)
 static ir_constant *
 smaller_constant(ir_constant *a, ir_constant *b)
 {
-   assert(a != NULL);
-   assert(b != NULL);
+   assert(a != nullptr);
+   assert(b != nullptr);
 
    enum compare_components_result ret = compare_components(a, b);
    if (ret == MIXED)
@@ -203,8 +203,8 @@ smaller_constant(ir_constant *a, ir_constant *b)
 static ir_constant *
 larger_constant(ir_constant *a, ir_constant *b)
 {
-   assert(a != NULL);
-   assert(b != NULL);
+   assert(a != nullptr);
+   assert(b != nullptr);
 
    enum compare_components_result ret = compare_components(a, b);
    if (ret == MIXED)
@@ -407,9 +407,9 @@ ir_minmax_visitor::prune_expression(ir_expression *expr, minmax_range baserange)
           * to compute a valid range for the other operand.
           */
          if (ismin)
-            limits[1 - i].low = NULL;
+            limits[1 - i].low = nullptr;
          else
-            limits[1 - i].high = NULL;
+            limits[1 - i].high = nullptr;
          minmax_range base = range_intersection(limits[1 - i], baserange);
          expr->operands[i] = prune_expression(op_expr, base);
       }

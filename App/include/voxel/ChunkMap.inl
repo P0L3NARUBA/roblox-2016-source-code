@@ -17,14 +17,14 @@ template <class ValueType> const ValueType* ChunkMap<ValueType>::find(const Spat
 {
 	typename ValueMap::const_iterator it = values.find(id);
 
-    return (it == values.end()) ? NULL : &it->second;
+    return (it == values.end()) ? nullptr : &it->second;
 }
 
 template <class ValueType> ValueType* ChunkMap<ValueType>::find(const SpatialRegion::Id& id)
 {
 	typename ValueMap::iterator it = values.find(id);
 
-    return (it == values.end()) ? NULL : &it->second;
+    return (it == values.end()) ? nullptr : &it->second;
 }
 
 template <class ValueType> void ChunkMap<ValueType>::erase(const SpatialRegion::Id& id)

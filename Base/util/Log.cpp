@@ -15,7 +15,7 @@ using namespace RBX;
 
 #include "rbx/rbxTime.h"
 
-ILogProvider* Log::provider = NULL;
+ILogProvider* Log::provider = nullptr;
 
 Log::Severity Log::aggregateWorstSeverity = Log::Information;
 

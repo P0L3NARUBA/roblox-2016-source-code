@@ -27,7 +27,7 @@ namespace RBX {
 		/*implement*/ virtual void buildMesh() = 0;
 
 	public:
-		Poly() : mesh(NULL)	{}
+		Poly() : mesh(nullptr)	{}
 		~Poly() {}
 
 		// Geometry Overrides

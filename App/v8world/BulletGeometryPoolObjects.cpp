@@ -35,7 +35,7 @@ BulletDecompWrapper::~BulletDecompWrapper()
 	if (decomp)
 		delete decomp;
 
-	decomp = NULL;
+	decomp = nullptr;
 }
 
 BulletBoxShapeWrapper::BulletBoxShapeWrapper(const Vector3& key)

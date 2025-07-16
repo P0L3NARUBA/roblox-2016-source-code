@@ -163,7 +163,7 @@ public:
 static bool
 process_assignment(void *ctx, ir_assignment *ir, exec_list *assignments)
 {
-   ir_variable *var = NULL;
+   ir_variable *var = nullptr;
    bool progress = false;
    kill_for_derefs_visitor v(assignments);
 
@@ -247,7 +247,7 @@ process_assignment(void *ctx, ir_assignment *ir, exec_list *assignments)
 	       }
 	    }
 	 }
-      } else if (ir->whole_variable_written() != NULL) {
+      } else if (ir->whole_variable_written() != nullptr) {
 	 /* We did a whole-variable assignment.  So, any instruction in
 	  * the assignment list with the same LHS is dead.
 	  */
@@ -292,7 +292,7 @@ dead_code_local_basic_block(ir_instruction *first,
    bool *out_progress = (bool *)data;
    bool progress = false;
 
-   void *ctx = ralloc_context(NULL);
+   void *ctx = ralloc_context(nullptr);
    /* Safe looping, since process_assignment */
    for (ir = first, ir_next = (ir_instruction *)first->next;;
 	ir = ir_next, ir_next = (ir_instruction *)ir->next) {

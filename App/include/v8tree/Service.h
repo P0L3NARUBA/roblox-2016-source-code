@@ -63,22 +63,22 @@ namespace RBX
 			{
 				// serviceArray has an empty entry for this service now
 				serviceArray.resize(index+1, shared_ptr<Instance>());
-				service = NULL;
+				service = nullptr;
 			}
 			else
 			{
 				service = static_cast<ServiceClass*>(serviceArray[index].get());
-				if (service!=NULL)
+				if (service!=nullptr)
 					return service;
 			}
 
 			if (ServiceClass::isNullClassName())
-				return NULL;
+				return nullptr;
 
 			// See if the service is in the className map
 			shared_ptr<Instance> i = findServiceByClassName(ServiceClass::className());
 			if (!i)
-				return NULL;
+				return nullptr;
 			service = boost::polymorphic_downcast<ServiceClass*>(i.get());
 			serviceArray[index] = i;
 			return service;
@@ -91,7 +91,7 @@ namespace RBX
 			//RBX::reentrant_concurrency_catcher::scoped_lock lock(threadGuard);
 
 			ServiceClass* service = this->find<ServiceClass>();
-			if (service==NULL)
+			if (service==nullptr)
 			{
 				// If all else fails, create the service and put it in the table and map
 				shared_ptr<ServiceClass> s = Creatable<Instance>::create<ServiceClass>();
@@ -118,7 +118,7 @@ namespace RBX
 					return serviceProvider;
 				}
 			}
-			return NULL;
+			return nullptr;
 		}
 
 		template<class ServiceClass>
@@ -126,15 +126,15 @@ namespace RBX
 		{
 			if (const ServiceProvider* serviceProvider = findServiceProvider(context))
 				return serviceProvider->find<ServiceClass>();
-			return NULL;
+			return nullptr;
 		}
 
 		template<class ServiceClass>
 		static ServiceClass* find(const ServiceProvider* serviceProvider)
 		{
-			if (serviceProvider!=NULL)
+			if (serviceProvider!=nullptr)
 				return serviceProvider->find<ServiceClass>();
-			return NULL;
+			return nullptr;
 		}
 
 		template<class ServiceClass>
@@ -142,15 +142,15 @@ namespace RBX
 		{
 			if (const ServiceProvider* serviceProvider = findServiceProvider(context))
 				return serviceProvider->create<ServiceClass>();
-			return NULL;
+			return nullptr;
 		}
 
 			template<class ServiceClass>
 		static ServiceClass* create(const ServiceProvider* serviceProvider)
 		{
-			if (serviceProvider!=NULL)
+			if (serviceProvider!=nullptr)
 				return serviceProvider->create<ServiceClass>();
-			return NULL;
+			return nullptr;
 		}
 		
 		// Less efficient factory functions that use classNames. Use only if
@@ -167,7 +167,7 @@ namespace RBX
 
 		/* override */ bool askAddChild(const Instance* instance) const
 		{
-			return dynamic_cast<const Service*>(instance) != NULL;
+			return dynamic_cast<const Service*>(instance) != nullptr;
 		}
 
 		void clearServices();
@@ -205,7 +205,7 @@ namespace RBX
 
 	
 	// A convenience class. Given an Instance* context, it will find the Service. You can treat it
-	// like a Service*. Please note that it might be NULL if the context isn't a child of a ServiceProvider (like DataModel)
+	// like a Service*. Please note that it might be nullptr if the context isn't a child of a ServiceProvider (like DataModel)
 	template<class S>
 	class ServiceClient
 	{
@@ -218,7 +218,7 @@ namespace RBX
 		}
 		bool isNull() const
 		{
-			return findService()==NULL;
+			return findService()==nullptr;
 		}
 		operator S*()
 		{

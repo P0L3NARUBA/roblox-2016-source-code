@@ -112,7 +112,7 @@ class SeatImpl : public ActionStation<Base>
 		{
 			if (Weld* childWeld = isChildSeatWeld(child)) 
 			{
-				setOccupant(NULL);
+				setOccupant(nullptr);
 				humanoidDoneSitting.disconnect();
 				ActionStation<Base>::sleepTime = Time::now<Time::Fast>();
 				onSeatedChanged(false, humanoidFromWeld(childWeld));
@@ -136,7 +136,7 @@ class SeatImpl : public ActionStation<Base>
 		}
 
 		Humanoid* humanoidFromWeld(Weld* weld) {
-			PartInstance* torso = weld ? weld->getPart1() : NULL;
+			PartInstance* torso = weld ? weld->getPart1() : nullptr;
 			return Humanoid::humanoidFromBodyPart(torso);
 		}
 
@@ -146,7 +146,7 @@ class SeatImpl : public ActionStation<Base>
 					return answer;
 				}
 			}
-			return NULL;
+			return nullptr;
 		}
 
 
@@ -156,12 +156,12 @@ class SeatImpl : public ActionStation<Base>
 					return childWeld;
 				}
 			}
-			return NULL;
+			return nullptr;
 		}
 
 		void destroyOtherWeld(shared_ptr<Instance> child, Weld* childWeld) {
 			if ((child.get() != childWeld) && isChildSeatWeld(child.get())) {
-				child->setParent(NULL);
+				child->setParent(nullptr);
 			}
 		}
 
@@ -200,7 +200,7 @@ class SeatImpl : public ActionStation<Base>
 		void findAndDestroySeatWeldInternal()
 		{
 			while (Weld* weld = findSeatWeld()) {
-				weld->setParent(NULL);
+				weld->setParent(nullptr);
 			}
 		}
 
@@ -217,7 +217,7 @@ class SeatImpl : public ActionStation<Base>
 					if (Humanoid* h = humanoidFromWeld(weld)){
 						h->setSit(false);
 					}
-					weld->setParent(NULL);
+					weld->setParent(nullptr);
 				}
 			}
 			disabled = _value;
