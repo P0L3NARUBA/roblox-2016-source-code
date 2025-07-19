@@ -5,13 +5,13 @@
 /* Boundary representation piece                                        */
 /************************************************************************/
 sgCBRepPiece::sgCBRepPiece():
-				m_vertexes(nullptr)
+				m_vertexes(NULL)
                ,m_vertexes_count(0)
-			   ,m_edges(nullptr)
+			   ,m_edges(NULL)
 			   ,m_edges_count(0)
 {
 	m_brep_piece_handle = creat_np_mem(TNPW,MAXNOV,MAXNOE,MAXNOC,MAXNOF,MAXNOE);
-	assert(m_brep_piece_handle!=nullptr);
+	assert(m_brep_piece_handle!=NULL);
 	memset(&m_min,0,sizeof(SG_POINT));
 	memset(&m_max,0,sizeof(SG_POINT));
 	m_min_triangle_number = 0;
@@ -23,20 +23,20 @@ sgCBRepPiece::~sgCBRepPiece()
 	if (m_brep_piece_handle)
 	{
 		free_np_mem((lpNPW*)(&m_brep_piece_handle));
-		m_brep_piece_handle = nullptr;
+		m_brep_piece_handle = NULL;
 	}
 
 	if (m_vertexes)
 	{
 		SGFree(m_vertexes);
-		m_vertexes = nullptr;
+		m_vertexes = NULL;
 	}
 	m_vertexes_count = 0;
 
 	if (m_edges)
 	{
 		SGFree(m_edges);
-		m_edges = nullptr;
+		m_edges = NULL;
 	}
 	m_edges_count = 0;
 }
@@ -63,7 +63,7 @@ unsigned int     sgCBRepPiece::GetEdgesCount() const {return m_edges_count;}
 /* Boundary representation                                              */
 /************************************************************************/
 sgCBRep::sgCBRep():
-				m_pieces(nullptr)
+				m_pieces(NULL)
 				,m_pieces_count(0)
 {
 }
@@ -75,18 +75,18 @@ sgCBRep::~sgCBRep()
 		for (unsigned int i=0;i<m_pieces_count;i++)
 		{
 			delete m_pieces[i];
-			m_pieces[i] = nullptr;
+			m_pieces[i] = NULL;
 		}
 		SGFree(m_pieces);
-		m_pieces = nullptr;
+		m_pieces = NULL;
 	}
 	m_pieces_count = 0;
 }
 
 sgCBRepPiece*    sgCBRep::GetPiece(unsigned int nmbr) const 
 {
-	if (m_pieces==nullptr || nmbr>=m_pieces_count)
-		return nullptr;
+	if (m_pieces==NULL || nmbr>=m_pieces_count)
+		return NULL;
 	return m_pieces[nmbr];
 }
 
@@ -109,10 +109,10 @@ void   sgC3DObject::AutoTriangulate(bool aTr, SG_TRIANGULATION_TYPE trType)
 sgC3DObject::sgC3DObject():sgCObject()
 {
   m_objectType = SG_UNKNOWN_3D;
-  m_brep = nullptr;
-  m_triangles = nullptr;
-  m_world_matrix = nullptr;
-  m_material = nullptr;
+  m_brep = NULL;
+  m_triangles = NULL;
+  m_world_matrix = NULL;
+  m_material = NULL;
 }
 
 sgC3DObject::~sgC3DObject()
@@ -120,19 +120,19 @@ sgC3DObject::~sgC3DObject()
   if (m_brep)
   {
 	  delete m_brep;
-	  m_brep = nullptr;
+	  m_brep = NULL;
   }
-  if (m_triangles!=nullptr)
+  if (m_triangles!=NULL)
   {
-    if (m_triangles->allUV!=nullptr)
+    if (m_triangles->allUV!=NULL)
       free(m_triangles->allUV);
-    if (m_triangles->allNormals!=nullptr)
+    if (m_triangles->allNormals!=NULL)
       free(m_triangles->allNormals);
-    if (m_triangles->allVertex!=nullptr)
+    if (m_triangles->allVertex!=NULL)
       free(m_triangles->allVertex);
     free(m_triangles);
   }
-  if (m_world_matrix!=nullptr)
+  if (m_world_matrix!=NULL)
     delete m_world_matrix;
   if (m_material)
     delete m_material;
@@ -141,9 +141,9 @@ sgC3DObject::~sgC3DObject()
 sgC3DObject::sgC3DObject(SG_OBJ_HANDLE objH):sgCObject(objH)
 {
   m_objectType = SG_UNKNOWN_3D;
-  m_brep = nullptr;
-  m_triangles = nullptr;
-  m_material = nullptr;
+  m_brep = NULL;
+  m_triangles = NULL;
+  m_material = NULL;
 
   //DECLARE_PERFORMANCE_FILE_STREAM(LAST_TR.log, perfFile);
 
@@ -189,7 +189,7 @@ const sgFloat*   sgC3DObject::GetWorldMatrixData() const
   if (!m_world_matrix)
   {
     assert(0);
-    return nullptr;
+    return NULL;
   }
 
   return m_world_matrix->GetData();
@@ -204,7 +204,7 @@ static NP_STR_LIST               list_str;
 
 bool  sgC3DObject::CopyBRepStructure()
 {
-  if (m_brep==nullptr)
+  if (m_brep==NULL)
   {
     assert(0);
     return false;
@@ -228,7 +228,7 @@ static OSCAN_COD soloBr_post_scan(hOBJ hobj, lpSCAN_CONTROL lpsc);  //
 static OSCAN_COD soloBr_geo_scan(hOBJ hobj, lpSCAN_CONTROL lpsc); //   
 static void FillTriangBrep();
 
-static SG_ALL_TRIANGLES*   triangles_of_cur_object = nullptr;
+static SG_ALL_TRIANGLES*   triangles_of_cur_object = NULL;
 
 static hOBJ  localObjForMirrorCheck;
 static BOOL  IsMatrixMirror();
@@ -240,27 +240,27 @@ bool  sgC3DObject::Triangulate(SG_TRIANGULATION_TYPE trTp)
   if (m_brep)
   {
 	  delete m_brep;
-	  m_brep = nullptr;
+	  m_brep = NULL;
   }
-  if (m_triangles!=nullptr)
+  if (m_triangles!=NULL)
   {
-    if (m_triangles->allUV!=nullptr)
+    if (m_triangles->allUV!=NULL)
       free(m_triangles->allUV);
-    if (m_triangles->allNormals!=nullptr)
+    if (m_triangles->allNormals!=NULL)
       free(m_triangles->allNormals);
-    if (m_triangles->allVertex!=nullptr)
+    if (m_triangles->allVertex!=NULL)
       free(m_triangles->allVertex);
     free(m_triangles);
   }
   m_brep = new sgCBRep;
-  m_triangles = nullptr;
+  m_triangles = NULL;
   CopyBRepStructure();
 
   SCAN_CONTROL    sc;
   OSCAN_COD   cod;
 
   m_triangles = (SG_ALL_TRIANGLES*)malloc(sizeof(SG_ALL_TRIANGLES));
-  if (m_triangles==nullptr)
+  if (m_triangles==NULL)
     return false;
   memset(m_triangles,0,sizeof(SG_ALL_TRIANGLES));
 
@@ -418,7 +418,7 @@ end1:
   }
 #ifndef NEW_TRIANGULATION
 end:
-  np_end_of_put(&list_str,NP_CANCEL,0,nullptr);
+  np_end_of_put(&list_str,NP_CANCEL,0,NULL);
 #endif
   return cod;
 }
@@ -509,7 +509,7 @@ static OSCAN_COD setColor_geo_scan(hOBJ hobj, lpSCAN_CONTROL lpsc)
             rezet_np_mem(&niloc, npwg, (NPTYPE)npwg->type);
 		}
 	}
-    lpsc->data = nullptr;
+    lpsc->data = NULL;
 
     return OSFALSE;
 }
@@ -592,7 +592,7 @@ static OSCAN_COD scale_geo_scan(hOBJ hobj, lpSCAN_CONTROL lpsc)
             rezet_np_mem(&niloc, npwg, (NPTYPE)npwg->type);
 		}
 	}
-    lpsc->data = nullptr;
+    lpsc->data = NULL;
 
     return OSFALSE;
 }
@@ -675,7 +675,7 @@ static OSCAN_COD translate_geo_scan(hOBJ hobj, lpSCAN_CONTROL lpsc)
             rezet_np_mem(&niloc, npwg, (NPTYPE)npwg->type);
 		}
 	}
-    lpsc->data = nullptr;
+    lpsc->data = NULL;
     return OSFALSE;
 }
 
@@ -1001,14 +1001,14 @@ static OSCAN_COD edgesBr_geo_scan(hOBJ hobj, lpSCAN_CONTROL lpsc)
   {
     cod = OSFALSE;
    // goto end;
-    np_end_of_put(&list_str,NP_CANCEL,0,nullptr);
+    np_end_of_put(&list_str,NP_CANCEL,0,NULL);
     return cod;
   }
   if ( !(np_put(npwg,&list_str)) )
   {
     cod = OSFALSE;
     //goto end;
-    np_end_of_put(&list_str,NP_CANCEL,0,nullptr);
+    np_end_of_put(&list_str,NP_CANCEL,0,NULL);
     return cod;
   }
 
@@ -1072,7 +1072,7 @@ static OSCAN_COD edgesBr_geo_scan(hOBJ hobj, lpSCAN_CONTROL lpsc)
   fclose(fl);*/
 
 //end:
-  np_end_of_put(&list_str,NP_CANCEL,0,nullptr);
+  np_end_of_put(&list_str,NP_CANCEL,0,NULL);
   return cod;
 }
 
@@ -1164,7 +1164,7 @@ const  SG_MATERIAL* sgC3DObject::GetMaterial()
     get_hobj_attr_value(id_TextureMult, GetObjectHandle(this), &TmpAttr);
     m_material->TextureMult = (TmpAttr>0.001);
 
-    if (m_triangles && m_triangles->allUV==nullptr)
+    if (m_triangles && m_triangles->allUV==NULL)
       CalcUV();
   }
 
@@ -1255,12 +1255,12 @@ void    sgC3DObject::CalcUV()
   assert(m_material);
   assert(m_triangles->allNormals);
   assert(m_triangles->allVertex);
-  if (m_triangles==nullptr || m_material==nullptr ||
-    m_triangles->allNormals==nullptr ||
-    m_triangles->allVertex==nullptr)
+  if (m_triangles==NULL || m_material==NULL ||
+    m_triangles->allNormals==NULL ||
+    m_triangles->allVertex==NULL)
       return;
 
-  if (m_triangles->allUV==nullptr)
+  if (m_triangles->allUV==NULL)
     m_triangles->allUV = (sgFloat*)malloc(2*3*m_triangles->nTr*sizeof(sgFloat));
 
   switch(m_material->TextureUVType)

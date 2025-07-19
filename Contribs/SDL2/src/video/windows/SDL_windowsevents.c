@@ -222,7 +222,7 @@ void
 WIN_CheckWParamMouseButtons(WPARAM wParam, SDL_WindowData *data, SDL_MouseID mouseID)
 {
     if (wParam != data->mouse_button_flags) {
-        Uint32 mouseFlags = SDL_GetMouseState(nullptr, nullptr);
+        Uint32 mouseFlags = SDL_GetMouseState(NULL, NULL);
         WIN_CheckWParamMouseButton((wParam & MK_LBUTTON), (mouseFlags & SDL_BUTTON_LMASK), data, SDL_BUTTON_LEFT, mouseID);
         WIN_CheckWParamMouseButton((wParam & MK_MBUTTON), (mouseFlags & SDL_BUTTON_MMASK), data, SDL_BUTTON_MIDDLE, mouseID);
         WIN_CheckWParamMouseButton((wParam & MK_RBUTTON), (mouseFlags & SDL_BUTTON_RMASK), data, SDL_BUTTON_RIGHT, mouseID);
@@ -237,7 +237,7 @@ void
 WIN_CheckRawMouseButtons(ULONG rawButtons, SDL_WindowData *data)
 {
     if (rawButtons != data->mouse_button_flags) {
-        Uint32 mouseFlags = SDL_GetMouseState(nullptr, nullptr);
+        Uint32 mouseFlags = SDL_GetMouseState(NULL, NULL);
         if ((rawButtons & RI_MOUSE_BUTTON_1_DOWN))
             WIN_CheckWParamMouseButton((rawButtons & RI_MOUSE_BUTTON_1_DOWN), (mouseFlags & SDL_BUTTON_LMASK), data, SDL_BUTTON_LEFT, 0);
         if ((rawButtons & RI_MOUSE_BUTTON_1_UP))
@@ -271,7 +271,7 @@ WIN_CheckAsyncMouseRelease(SDL_WindowData *data)
     /* mouse buttons may have changed state here, we need to resync them,
        but we will get a WM_MOUSEMOVE right away which will fix things up if in non raw mode also
     */
-    mouseFlags = SDL_GetMouseState(nullptr, nullptr);
+    mouseFlags = SDL_GetMouseState(NULL, NULL);
 
     keyState = GetAsyncKeyState(VK_LBUTTON);
     if (!(keyState & 0x8000)) {
@@ -422,10 +422,10 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 data->in_window_deactivation = SDL_TRUE;
 
                 if (SDL_GetKeyboardFocus() == data->window) {
-                    SDL_SetKeyboardFocus(nullptr);
+                    SDL_SetKeyboardFocus(NULL);
                 }
 
-                ClipCursor(nullptr);
+                ClipCursor(NULL);
 
                 data->in_window_deactivation = SDL_FALSE;
             }
@@ -568,7 +568,7 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 ScreenToClient(hwnd, &cursorPos);
                 SDL_SendMouseMotion(data->window, 0, 0, cursorPos.x, cursorPos.y);
             }
-            SDL_SetMouseFocus(nullptr);
+            SDL_SetMouseFocus(NULL);
         }
         returnCode = 0;
         break;
@@ -578,7 +578,7 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     case WM_SYSKEYDOWN:
         {
             SDL_Scancode code = WindowsScanCodeToSDLScanCode(lParam, wParam);
-            const Uint8 *keyboardState = SDL_GetKeyboardState(nullptr);
+            const Uint8 *keyboardState = SDL_GetKeyboardState(NULL);
 
             /* Detect relevant keyboard shortcuts */
             if (keyboardState[SDL_SCANCODE_LALT] == SDL_PRESSED || keyboardState[SDL_SCANCODE_RALT] == SDL_PRESSED) {
@@ -600,7 +600,7 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
     case WM_KEYUP:
         {
             SDL_Scancode code = WindowsScanCodeToSDLScanCode(lParam, wParam);
-            const Uint8 *keyboardState = SDL_GetKeyboardState(nullptr);
+            const Uint8 *keyboardState = SDL_GetKeyboardState(NULL);
 
             if (code != SDL_SCANCODE_UNKNOWN) {
                 if (code == SDL_SCANCODE_PRINTSCREEN &&
@@ -708,7 +708,7 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                Apparently it's too difficult for MS to check
                inside their function, so I have to do it here.
              */
-            menu = (style & WS_CHILDWINDOW) ? FALSE : (GetMenu(hwnd) != nullptr);
+            menu = (style & WS_CHILDWINDOW) ? FALSE : (GetMenu(hwnd) != NULL);
             AdjustWindowRectEx(&size, style, menu, 0);
             w = size.right - size.left;
             h = size.bottom - size.top;
@@ -794,7 +794,7 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 SetCursor(SDL_cursor);
                 returnCode = TRUE;
             } else if (!g_WindowFrameUsableWhileCursorHidden && !SDL_cursor) {
-                SetCursor(nullptr);
+                SetCursor(NULL);
                 returnCode = TRUE;
             }
         }
@@ -805,7 +805,7 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         {
             RECT rect;
             if (GetUpdateRect(hwnd, &rect, FALSE)) {
-                ValidateRect(hwnd, nullptr);
+                ValidateRect(hwnd, NULL);
                 SDL_SendWindowEvent(data->window, SDL_WINDOWEVENT_EXPOSED,
                                     0, 0);
             }
@@ -900,9 +900,9 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         {
             UINT i;
             HDROP drop = (HDROP) wParam;
-            UINT count = DragQueryFile(drop, 0xFFFFFFFF, nullptr, 0);
+            UINT count = DragQueryFile(drop, 0xFFFFFFFF, NULL, 0);
             for (i = 0; i < count; ++i) {
-                UINT size = DragQueryFile(drop, i, nullptr, 0) + 1;
+                UINT size = DragQueryFile(drop, i, NULL, 0) + 1;
                 LPTSTR buffer = SDL_stack_alloc(TCHAR, size);
                 if (buffer) {
                     if (DragQueryFile(drop, i, buffer, size)) {
@@ -957,8 +957,8 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 }
 
 /* A message hook called before TranslateMessage() */
-static SDL_WindowsMessageHook g_WindowsMessageHook = nullptr;
-static void *g_WindowsMessageHookData = nullptr;
+static SDL_WindowsMessageHook g_WindowsMessageHook = NULL;
+static void *g_WindowsMessageHookData = NULL;
 
 void SDL_SetWindowsMessageHook(SDL_WindowsMessageHook callback, void *userdata)
 {
@@ -974,7 +974,7 @@ WIN_PumpEvents(_THIS)
     DWORD start_ticks = GetTickCount();
 
     if (g_WindowsEnableMessageLoop) {
-        while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+        while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
             if (g_WindowsMessageHook) {
                 g_WindowsMessageHook(g_WindowsMessageHookData, msg.hwnd, msg.message, msg.wParam, msg.lParam);
             }
@@ -994,7 +994,7 @@ WIN_PumpEvents(_THIS)
        You won't get a KEYUP until both are released, and that keyup will only be for the second
        key you released. Take heroic measures and check the keystate as of the last handled event,
        and if we think a key is pressed when Windows doesn't, unstick it in SDL's state. */
-    keystate = SDL_GetKeyboardState(nullptr);
+    keystate = SDL_GetKeyboardState(NULL);
     if ((keystate[SDL_SCANCODE_LSHIFT] == SDL_PRESSED) && !(GetKeyState(VK_LSHIFT) & 0x8000)) {
         SDL_SendKeyboardKey(SDL_RELEASED, SDL_SCANCODE_LSHIFT);
     }
@@ -1004,9 +1004,9 @@ WIN_PumpEvents(_THIS)
 }
 
 static int app_registered = 0;
-LPTSTR SDL_Appname = nullptr;
+LPTSTR SDL_Appname = NULL;
 Uint32 SDL_Appstyle = 0;
-HINSTANCE SDL_Instance = nullptr;
+HINSTANCE SDL_Instance = NULL;
 
 /* Register the class for this application */
 int
@@ -1024,23 +1024,23 @@ SDL_RegisterApp(char *name, Uint32 style, void *hInst)
 #if defined(CS_BYTEALIGNCLIENT) || defined(CS_OWNDC)
         SDL_Appstyle = (CS_BYTEALIGNCLIENT | CS_OWNDC);
 #endif
-        SDL_Instance = hInst ? hInst : GetModuleHandle(nullptr);
+        SDL_Instance = hInst ? hInst : GetModuleHandle(NULL);
     }
 
     if (name) {
         SDL_Appname = WIN_UTF8ToString(name);
         SDL_Appstyle = style;
-        SDL_Instance = hInst ? hInst : GetModuleHandle(nullptr);
+        SDL_Instance = hInst ? hInst : GetModuleHandle(NULL);
     }
 
     /* Register the application class */
-    class.hCursor = nullptr;
+    class.hCursor = NULL;
     class.hIcon =
         LoadImage(SDL_Instance, SDL_Appname, IMAGE_ICON, 0, 0,
                   LR_DEFAULTCOLOR);
-    class.lpszMenuName = nullptr;
+    class.lpszMenuName = NULL;
     class.lpszClassName = SDL_Appname;
-    class.hbrBackground = nullptr;
+    class.hbrBackground = NULL;
     class.hInstance = SDL_Instance;
     class.style = SDL_Appstyle;
     class.lpfnWndProc = WIN_WindowProc;
@@ -1071,7 +1071,7 @@ SDL_UnregisterApp()
             UnregisterClass(SDL_Appname, SDL_Instance);
         }
         SDL_free(SDL_Appname);
-        SDL_Appname = nullptr;
+        SDL_Appname = NULL;
     }
 }
 

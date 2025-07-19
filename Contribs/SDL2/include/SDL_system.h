@@ -59,7 +59,7 @@ extern DECLSPEC int SDLCALL SDL_Direct3D9GetAdapterIndex( int displayIndex );
 
 typedef struct IDirect3DDevice9 IDirect3DDevice9;
 /**
-   \brief Returns the D3D device associated with a renderer, or nullptr if it's not a D3D renderer.
+   \brief Returns the D3D device associated with a renderer, or NULL if it's not a D3D renderer.
 
    Once you are done using the device, you should release it to avoid a resource leak.
  */
@@ -177,7 +177,7 @@ typedef enum
  *      http://msdn.microsoft.com/en-us/library/windows/apps/hh464917.aspx
  *
  *  \param pathType The type of path to retrieve.
- *  \return A UCS-2 string (16-bit, wide-char) containing the path, or nullptr
+ *  \return A UCS-2 string (16-bit, wide-char) containing the path, or NULL
  *      if the path is not available for any reason.  Not all paths are
  *      available on all versions of Windows.  This is especially true on
  *      Windows Phone.  Check the documentation for the given
@@ -194,7 +194,7 @@ extern DECLSPEC const wchar_t * SDLCALL SDL_WinRTGetFSPathUNICODE(SDL_WinRT_Path
  *      http://msdn.microsoft.com/en-us/library/windows/apps/hh464917.aspx
  *
  *  \param pathType The type of path to retrieve.
- *  \return A UTF-8 string (8-bit, multi-byte) containing the path, or nullptr
+ *  \return A UTF-8 string (8-bit, multi-byte) containing the path, or NULL
  *      if the path is not available for any reason.  Not all paths are
  *      available on all versions of Windows.  This is especially true on
  *      Windows Phone.  Check the documentation for the given

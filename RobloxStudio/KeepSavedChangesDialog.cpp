@@ -68,7 +68,7 @@ void KeepSavedChangesDialog::onSave()
 
 		// need to save with edit datamodel
 		shared_ptr<RBX::DataModel> dataModel = pIDEDoc->getEditDataModel();
-		PublishToRobloxVerb* pPublishVerb = dataModel ? dynamic_cast<PublishToRobloxVerb*>(dataModel->getVerb("PublishToRobloxVerb")) : nullptr;
+		PublishToRobloxVerb* pPublishVerb = dataModel ? dynamic_cast<PublishToRobloxVerb*>(dataModel->getVerb("PublishToRobloxVerb")) : NULL;
 
 		if (!pPublishVerb)
 		{

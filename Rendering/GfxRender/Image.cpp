@@ -249,9 +249,9 @@ static Texture::Format getFormatDDS(const DDS_HEADER& header)
 	if (f.dwFourCC == 0)
 	{
 		if (f.dwRGBBitCount == 8 && f.dwRBitMask == 0xff && f.dwGBitMask == 0 && f.dwBBitMask == 0 && f.dwABitMask == 0)
-			return Texture::Format_L8;
+			return Texture::Format_R8;
 		else if (f.dwRGBBitCount == 16 && f.dwRBitMask == 0xff && f.dwGBitMask == 0 && f.dwBBitMask == 0 && f.dwABitMask == 0xff00)
-            return Texture::Format_LA8;
+            return Texture::Format_RG8;
 		else if (f.dwRGBBitCount == 32)
 			return Texture::Format_RGBA8;
 		else
@@ -260,7 +260,7 @@ static Texture::Format getFormatDDS(const DDS_HEADER& header)
 	else
 	{
 		if (f.dwFourCC == 113)
-			return Texture::Format_RGBA16F;
+			return Texture::Format_RGBA16f;
 		else if (f.dwFourCC == DDS_FOURCC_DXT1)
 			return Texture::Format_BC1;
 		else if (f.dwFourCC == DDS_FOURCC_DXT3)
@@ -615,7 +615,7 @@ static Texture::Format getFormatPVR(const PVRTCTexHeader2& header)
 {
 	unsigned int format = header.flags & kPVRTextureFlagMask;
 
-	if (format == kPVRTextureFlagTypePVRTC_2)
+	/*if (format == kPVRTextureFlagTypePVRTC_2)
 		return header.bitmaskAlpha ? Texture::Format_PVRTC_RGBA2 : Texture::Format_PVRTC_RGB2;
 	else if (format == kPVRTextureFlagTypePVRTC_4)
 		return header.bitmaskAlpha ? Texture::Format_PVRTC_RGBA4 : Texture::Format_PVRTC_RGB4;
@@ -623,7 +623,7 @@ static Texture::Format getFormatPVR(const PVRTCTexHeader2& header)
         return Texture::Format_ETC1;
     else if (format == kPVRTextureFlagTypeRGBA)
         return Texture::Format_RGBA8;
-    else
+    else*/
 		throw RBX::runtime_error("Unsupported PVR: unknown format %d", format);
 }
 
@@ -731,11 +731,11 @@ static void scaleImage(unsigned char* target, unsigned int targetWidth, unsigned
 {
     switch (format)
 	{
-	case Texture::Format_L8:
+	case Texture::Format_R8:
 		LinearResampler<unsigned char>::scale(target, targetWidth, targetHeight, source, sourceWidth, sourceHeight);
         break;
 
-	case Texture::Format_LA8:
+	case Texture::Format_RG8:
 		LinearResampler<unsigned short>::scale(target, targetWidth, targetHeight, source, sourceWidth, sourceHeight);
         break;
 
@@ -904,13 +904,13 @@ static void setFormatDDS(DDS_PIXELFORMAT& pf, Texture::Format format)
 
     switch (format)
 	{
-	case Texture::Format_L8:
+	case Texture::Format_R8:
 		pf.dwFlags = DDPF_RGB;
 		pf.dwRGBBitCount = 8;
 		pf.dwRBitMask = 0xff;
         break;
 
-	case Texture::Format_LA8:
+	case Texture::Format_RG8:
 		pf.dwFlags = DDPF_RGB | DDPF_ALPHAPIXELS;
 		pf.dwRGBBitCount = 16;
 		pf.dwRBitMask = 0xff;
@@ -926,7 +926,7 @@ static void setFormatDDS(DDS_PIXELFORMAT& pf, Texture::Format format)
 		pf.dwABitMask = 0xff000000;
         break;
 
-	case Texture::Format_RGBA16F:
+	case Texture::Format_RGBA16f:
 		pf.dwFlags = DDPF_FOURCC;
 		pf.dwFourCC = DDS_FOURCC_RGBA16F;
         break;

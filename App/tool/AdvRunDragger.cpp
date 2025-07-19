@@ -49,7 +49,7 @@ void AdvRunDragger::SnapInfo::updateSurfaceFromHit()
 		{
             mySurfaceId = snap->getGeometry()->closestSurfaceToPoint(hitInSnap);
 			if (mySurfaceId == (size_t)-1)
-				snap = nullptr;
+				snap = NULL;
 		}
     }
 }
@@ -105,13 +105,13 @@ float AdvRunDragger::SnapInfo::hitOutsideExtents()
 
 AdvRunDragger::AdvRunDragger()
 	: isAdornable(false)
-	, workspace(nullptr)
-	, drag(nullptr)
+	, workspace(NULL)
+	, drag(NULL)
 	, gridMode(DRAG::ONE_STUD)
 	, jointCreateMode(true)
 	, snapGridOrigin(0.0f, 0.0f, 0.0f)
 	, snapGridOriginNeedsUpdating(true)
-	, primaryPart(nullptr)
+	, primaryPart(NULL)
 	, handleMultipleParts(false)
 {}
 
@@ -142,7 +142,7 @@ void AdvRunDragger::snapInfoFromSnapPart()
 	}
 	else {
 		// snap part deleted while dragging probably multiplayer...
-		snapInfo.snap = nullptr;
+		snapInfo.snap = NULL;
 	}
 }
 
@@ -177,7 +177,7 @@ void AdvRunDragger::initLocal(	Workspace*				_workspace,
 	for( unsigned int i = 0; i < _dragParts.size(); i++ )
 	{
 		weak_ptr<PartInstance> partFromGroup = _dragParts[i];
-		Primitive* dragPrim = nullptr;
+		Primitive* dragPrim = NULL;
 
 		RBXASSERT(!partFromGroup.expired());
 #ifdef _DEBUG
@@ -196,7 +196,7 @@ void AdvRunDragger::initLocal(	Workspace*				_workspace,
 		}
 	}
 
-	primaryPart = nullptr;
+	primaryPart = NULL;
 	if (handleMultipleParts)
 	{
 		Vector3 hitPointWorld(dragPart.lock()->getCoordinateFrame().pointToWorldSpace(_dragPointLocal));
@@ -572,7 +572,7 @@ AdvRunDragger::SnapInfo AdvRunDragger::rayHitsPart(const G3D::Array<Primitive*>&
 	SnapInfo answer;
 
 	PartByLocalCharacter filter(workspace);
-	PartInstance* foundPart = nullptr;
+	PartInstance* foundPart = NULL;
 
 	if (handleMultipleParts)
 	{
@@ -615,7 +615,7 @@ AdvRunDragger::SnapInfo AdvRunDragger::bestProximatePart(
 {
 	SnapInfo answer;
 
-	Primitive* dragPrim = handleMultipleParts ? nullptr : drag;
+	Primitive* dragPrim = handleMultipleParts ? NULL : drag;
 	Contact* c = handleMultipleParts ? getFirstContact(dragPrim) : dragPrim->getFirstContact();
 
 	float bestDistance = FLT_MAX;
@@ -655,7 +655,7 @@ bool AdvRunDragger::fallOffPart(bool& snapped)
 
 	G3D::Array<size_t> triedSurfaces;
 
-	while ((snapInfo.snap != nullptr) && fallOffEdge()) 
+	while ((snapInfo.snap != NULL) && fallOffEdge()) 
 	{
 		triedSurfaces.append(snapInfo.mySurfaceId);
 		snapInfo = createSnapSurface(snapInfo.snap, &triedSurfaces);	// ignore this surface
@@ -664,7 +664,7 @@ bool AdvRunDragger::fallOffPart(bool& snapped)
 			snapped = moveDragPart();
 		}
 	}
-	return (snapInfo.snap == nullptr);
+	return (snapInfo.snap == NULL);
 }
 
 
@@ -1115,7 +1115,7 @@ void AdvRunDragger::savePrimsForMultiDrag()
 	// get primitives
 	DragUtilities::partsToPrimitives(weakDragParts, savedPrimsForMultiDrag);
 	// sort primitives in Y order
-	Primitive* tempPrim = nullptr;
+	Primitive* tempPrim = NULL;
 	for (int ii=0; ii < (int)savedPrimsForMultiDrag.size(); ++ii)
 	{
 		for (int jj=0; jj < ii; ++jj)
@@ -1145,7 +1145,7 @@ Contact* AdvRunDragger::getFirstContact(Primitive*& prim)
 		}
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 Contact* AdvRunDragger::getNextContact(Primitive*& prim, Contact* c)
@@ -1183,7 +1183,7 @@ Contact* AdvRunDragger::getNextContact(Primitive*& prim, Contact* c)
 			++iter;
 		}
 	}
-	return nullptr;
+	return NULL;
 }
 
 #ifdef DEBUG_MULTIPLE_PARTS_DRAG
@@ -1205,7 +1205,7 @@ Contact* AdvRunDragger::getNextContact(Primitive*& prim, Contact* c)
 		Array< tried snap parts this step >
 			append current part if any
 
-		If snap part too far – set to nullptr
+		If snap part too far – set to NULL
 
 		Existing Snap Part?
 			NO - If no snap part, try to find one + snap surface
@@ -1223,7 +1223,7 @@ Contact* AdvRunDragger::getNextContact(Primitive*& prim, Contact* c)
 
 				4.	If not adjacent, shoot a ray (if head – make sure close enough)
 
-				5.	nullptr – no snap part found
+				5.	NULL – no snap part found
 
 				Confirm the part is not too far away if head
 

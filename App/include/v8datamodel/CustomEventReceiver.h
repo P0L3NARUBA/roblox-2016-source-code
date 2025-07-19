@@ -46,7 +46,7 @@ public:
 	static Reflection::EventDesc<CustomEventReceiver, void(shared_ptr<Instance>)> event_EventDisconnected;
 
 	/*override*/ bool askSetParent(const Instance* instance) const {
-		return Instance::fastDynamicCast<PartInstance>(instance) != nullptr;
+		return Instance::fastDynamicCast<PartInstance>(instance) != NULL;
 	}
 
 	/*override*/ bool askForbidChild(const Instance* instance) const {

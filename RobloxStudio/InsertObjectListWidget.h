@@ -36,7 +36,7 @@ Q_SIGNALS:
     void helpTopicChanged(const QString& topic);
     
 public Q_SLOTS:
-	void onItemInsertRequested(QListWidgetItem* item = nullptr);
+	void onItemInsertRequested(QListWidgetItem* item = NULL);
 
 private Q_SLOTS:
     void onSelectionChanged();

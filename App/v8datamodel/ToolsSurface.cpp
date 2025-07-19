@@ -42,8 +42,8 @@ SurfaceTool::~SurfaceTool()
 void SurfaceTool::onMouseHover(const shared_ptr<InputObject>& inputObject)
 {
 	PartInstance* tempPartInstance;
-	surface = getSurface(workspace, inputObject, nullptr, tempPartInstance, surfaceId);
-	partInstance = shared_from(surface.getPartInstance() ? tempPartInstance : nullptr);
+	surface = getSurface(workspace, inputObject, NULL, tempPartInstance, surfaceId);
+	partInstance = shared_from(surface.getPartInstance() ? tempPartInstance : NULL);
 }
 
 shared_ptr<MouseCommand> SurfaceTool::onMouseDown(const shared_ptr<InputObject>& inputObject)
@@ -77,7 +77,7 @@ DecalTool::DecalTool(Workspace* workspace, Decal *decal, RBX::InsertMode insertM
 {
 	this->decal = shared_from(decal);
 	this->insertMode = insertMode;
-	parentIsPart = Instance::fastDynamicCast<RBX::PartInstance>(decal->getParent()) != nullptr;
+	parentIsPart = Instance::fastDynamicCast<RBX::PartInstance>(decal->getParent()) != NULL;
 }
 
 void DecalTool::onMouseHover(const shared_ptr<InputObject>& inputObject)
@@ -93,7 +93,7 @@ void DecalTool::onMouseHover(const shared_ptr<InputObject>& inputObject)
 		}
 		else
 		{
-			decal->setParent(nullptr);
+			decal->setParent(NULL);
 		}
 	}
 	else
@@ -118,7 +118,7 @@ shared_ptr<MouseCommand> DecalTool::onKeyDown(const shared_ptr<InputObject>& inp
 shared_ptr<MouseCommand> DecalTool::onCancelOperation()
 {
 	releaseCapture();
-	if (decal) decal.get()->setParent(nullptr);
+	if (decal) decal.get()->setParent(NULL);
 	return shared_ptr<MouseCommand>();
 }
 
@@ -131,7 +131,7 @@ shared_ptr<MouseCommand> DecalTool::onMouseUp(const shared_ptr<InputObject>& inp
 		return shared_ptr<MouseCommand>();
 	}
 
-	if (Instance::fastDynamicCast<RBX::PartInstance>(decal->getParent()) != nullptr)
+	if (Instance::fastDynamicCast<RBX::PartInstance>(decal->getParent()) != NULL)
 	{
 		parentIsPart = true;
 		insertMode = INSERT_TO_TREE;

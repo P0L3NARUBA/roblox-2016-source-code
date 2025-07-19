@@ -1,7 +1,7 @@
 #include "../sg.h"
 
 
-//static lpNPW 		np_cut = nullptr;
+//static lpNPW 		np_cut = NULL;
 
 static OSCAN_COD cut_geo_scan(hOBJ hobj,lpSCAN_CONTROL lpsc);
 static BOOL  cut_pl(lpNPW np, lpD_PLANE pl, lpNPW np_cut);
@@ -25,8 +25,8 @@ BOOL cut(lpLISTH list, NUM_LIST num_list, lpD_PLANE pl, lpLISTH listh_cut)
 	SCAN_CONTROL  sc;
 	OSCAN_COD     cod;
 	REGION_3D  	  gab_obj = {{1.e35,1.e35,1.e35},{-1.e35,-1.e35,-1.e35}};
-	CUT_DATA      cd={{{0.,0.,-1.},0}/*,{1.e35,1.e35,1.e35},{-1.e35,-1.e35,-1.e35}*/, nullptr};
-	hOBJ   			  hobj, hnext; //, hobj_c = nullptr;
+	CUT_DATA      cd={{{0.,0.,-1.},0}/*,{1.e35,1.e35,1.e35},{-1.e35,-1.e35,-1.e35}*/, NULL};
+	hOBJ   			  hobj, hnext; //, hobj_c = NULL;
 	lpOBJ					obj;
 	ODRAWSTATUS	  dstatus;
 	lpNPW 				np_cut;
@@ -35,7 +35,7 @@ BOOL cut(lpLISTH list, NUM_LIST num_list, lpD_PLANE pl, lpLISTH listh_cut)
 //	VMM_Clear_Ram();
 	init_listh(listh_cut);
 	if ( (cd.np_cut = creat_np_mem(TNPW,MAXNOV*2,MAXNOV*2,10,10,MAXNOV*2))
-			== nullptr ) return FALSE;
+			== NULL ) return FALSE;
 	np_cut = cd.np_cut;
 	cd.pl  = *pl;
 	cd.listh_cut = listh_cut;
@@ -45,7 +45,7 @@ BOOL cut(lpLISTH list, NUM_LIST num_list, lpD_PLANE pl, lpLISTH listh_cut)
 	sc.user_geo_scan = cut_geo_scan;
 
 	hobj = list->hhead;
-	while (hobj != nullptr) {
+	while (hobj != NULL) {
 //		step_grad (num_proc , j++);
 		get_next_item_z(num_list,hobj,&hnext);
 		obj = (lpOBJ)hobj;
@@ -76,7 +76,7 @@ BOOL cut(lpLISTH list, NUM_LIST num_list, lpD_PLANE pl, lpLISTH listh_cut)
 					init_listh(&listh_path);
 					loop = 1;
 					do {
-						if((hobj_path = o_alloc(OPATH)) == nullptr)	goto err;
+						if((hobj_path = o_alloc(OPATH)) == NULL)	goto err;
 						obj_path = (lpOBJ)hobj_path;
 						geo_path = (lpGEO_PATH)obj_path->geo_data;
 						o_hcunit(geo_path->matr);
@@ -91,7 +91,7 @@ BOOL cut(lpLISTH list, NUM_LIST num_list, lpD_PLANE pl, lpLISTH listh_cut)
 							vk = np_cut->v[vertex];
 							modify_limits_by_point(&vk, &min, &max);
 			//			if ( !tb_put_otr(vn,vk) ) goto err;
-							if((hobj_line = o_alloc(OLINE)) == nullptr) goto err;
+							if((hobj_line = o_alloc(OLINE)) == NULL) goto err;
 							obj_line = (lpOBJ)hobj_line;
 							obj_line->hhold = hobj_path;
 							geo_line = (lpGEO_LINE)(obj_line->geo_data);
@@ -106,7 +106,7 @@ BOOL cut(lpLISTH list, NUM_LIST num_list, lpD_PLANE pl, lpLISTH listh_cut)
 						geo_path->max = max;
 						obj_path->status |= ST_FLAT;            
 						if ( edge == first_edge ) obj_path->status |= ST_CLOSE;
-						if ((cod1 = test_self_cross_path(hobj_path,nullptr)) == OSFALSE) goto err;
+						if ((cod1 = test_self_cross_path(hobj_path,NULL)) == OSFALSE) goto err;
 						if (cod1 == OSTRUE) {
 							obj_path = (lpOBJ)hobj_path;
 							obj_path->status |= ST_SIMPLE;
@@ -115,7 +115,7 @@ BOOL cut(lpLISTH list, NUM_LIST num_list, lpD_PLANE pl, lpLISTH listh_cut)
 						loop = np_cut->c[loop].nc;
 					} while (loop != 0);
 					if ( listh_path.num > 0) {  								
-						if ( (hobj_c = make_group(&listh_path)) == nullptr ) goto err;
+						if ( (hobj_c = make_group(&listh_path)) == NULL ) goto err;
 						attach_item_tail(listh_cut, hobj_c);
 					}
 			}
@@ -154,15 +154,15 @@ static OSCAN_COD cut_geo_scan(hOBJ hobj, lpSCAN_CONTROL lpsc)
 	D_POINT				vn, vk, min, max;
 	int						loop, edge, vertex, first_edge;
 	OSCAN_COD     cod;
-	hOBJ   			  hobj_c;//nb  = nullptr;
+	hOBJ   			  hobj_c;//nb  = NULL;
 	hOBJ					hobj_line, hobj_path;
 	lpOBJ					obj, obj_line, obj_path;
 	lpGEO_LINE  	geo_line;
 	lpGEO_PATH  	geo_path;
-	LISTH			 	  listh_path = {nullptr,nullptr,0};	
+	LISTH			 	  listh_path = {NULL,NULL,0};	
 
 	if (ctrl_c_press) { 												
-		put_message(CTRL_C_PRESS, nullptr, 0);
+		put_message(CTRL_C_PRESS, NULL, 0);
 		return OSBREAK;
 	}
 //  step_grad (num_proc , i);
@@ -204,7 +204,7 @@ static OSCAN_COD cut_geo_scan(hOBJ hobj, lpSCAN_CONTROL lpsc)
 			init_listh(&listh_path);
 			loop = 1;
 			do {
-			 if((hobj_path = o_alloc(OPATH)) == nullptr)	return OSFALSE;
+			 if((hobj_path = o_alloc(OPATH)) == NULL)	return OSFALSE;
 			 obj_path = (lpOBJ)hobj_path;
 			 geo_path = (lpGEO_PATH)obj_path->geo_data;
 			 o_hcunit(geo_path->matr);
@@ -220,7 +220,7 @@ static OSCAN_COD cut_geo_scan(hOBJ hobj, lpSCAN_CONTROL lpsc)
 				 if (!dpoint_eq(&vn, &vk, eps_d)) {
 					 modify_limits_by_point(&vk, &min, &max);
 			//			if ( !tb_put_otr(vn,vk) ) goto err;
-					 if((hobj_line = o_alloc(OLINE)) == nullptr) return OSFALSE;
+					 if((hobj_line = o_alloc(OLINE)) == NULL) return OSFALSE;
 					 obj_line = (lpOBJ)hobj_line;
 					 obj_line->hhold = hobj_path;
 					 geo_line = (lpGEO_LINE)(obj_line->geo_data);
@@ -233,13 +233,13 @@ static OSCAN_COD cut_geo_scan(hOBJ hobj, lpSCAN_CONTROL lpsc)
 				 edge = SL(edge, np_cut);
 			 } while ( edge != first_edge && edge != 0);
 			 if (geo_path->listh.num == 0) {
-				 o_free(hobj_path, nullptr);
+				 o_free(hobj_path, NULL);
 			 } else {
 				 geo_path->min = min;
 				 geo_path->max = max;
 				 obj_path->status |= ST_FLAT;            
 				 if ( edge == first_edge ) obj_path->status |= ST_CLOSE; 
-				 if ((cod = test_self_cross_path(hobj_path,nullptr)) == OSFALSE) return OSFALSE;
+				 if ((cod = test_self_cross_path(hobj_path,NULL)) == OSFALSE) return OSFALSE;
 				 if (cod == OSTRUE) {
 					 obj_path = (lpOBJ)hobj_path;
 					 obj_path->status |= ST_SIMPLE;
@@ -249,7 +249,7 @@ static OSCAN_COD cut_geo_scan(hOBJ hobj, lpSCAN_CONTROL lpsc)
 			 loop = np_cut->c[loop].nc;
 			} while (loop != 0);
 			if ( listh_path.num > 0) {  								
-			 if ( (hobj_c = make_group(&listh_path, TRUE)) == nullptr ) return OSFALSE;
+			 if ( (hobj_c = make_group(&listh_path, TRUE)) == NULL ) return OSFALSE;
 			 attach_item_tail(((lpCUT_DATA)(lpsc->data))->listh_cut, hobj_c);
 			}
 			//	tb_clear();
@@ -260,7 +260,7 @@ static OSCAN_COD cut_geo_scan(hOBJ hobj, lpSCAN_CONTROL lpsc)
 static BOOL  cut_pl(lpNPW np, lpD_PLANE pl, lpNPW np_cut)
 {
 	short            face;
-	NP_VERTEX_LIST ver = {0,0,nullptr,nullptr};
+	NP_VERTEX_LIST ver = {0,0,NULL,NULL};
 	BOOL           rt;//nb  = FALSE;
 
 	if ( !(rt = np_ver_alloc(&ver)) ) goto end;

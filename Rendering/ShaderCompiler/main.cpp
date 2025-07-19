@@ -113,8 +113,8 @@ public:
         IncludeHandler handler(folder);
 
         const MOJOSHADER_preprocessData* pp = MOJOSHADER_preprocess(
-            path.c_str(), source.c_str(), source.size(), macros.empty() ? nullptr : &macros[0], macros.size(),
-            IncludeHandler::open, IncludeHandler::close, nullptr, nullptr, &handler);
+            path.c_str(), source.c_str(), source.size(), macros.empty() ? NULL : &macros[0], macros.size(),
+            IncludeHandler::open, IncludeHandler::close, NULL, NULL, &handler);
 
         if (pp->error_count)
         {
@@ -316,7 +316,7 @@ private:
     {
         ShHandleRAII parser = Hlsl2Glsl_ConstructCompiler(shader_type);
 
-        if (Hlsl2Glsl_Parse(parser.handle, source.c_str(), version, nullptr, 0))
+        if (Hlsl2Glsl_Parse(parser.handle, source.c_str(), version, NULL, 0))
         {
             setupVertexAttributeInputs(parser.handle);
 
@@ -432,7 +432,7 @@ public:
     ShaderCompilerD3D(ShaderProfile shaderProfile)
         : shaderProfile(shaderProfile)
     {
-        HMODULE d3dCompiler = nullptr;
+        HMODULE d3dCompiler = NULL;
 
         if (shaderProfile == shaderProfile_DX_11_DURANGO)
             d3dCompiler = loadShaderCompilerDurangoDLL();
@@ -482,8 +482,8 @@ public:
         // preprocess shader
         IncludeCallback callback(folder);
 
-        ID3DBlob* text = nullptr;
-        ID3DBlob* messages = nullptr;
+        ID3DBlob* text = NULL;
+        ID3DBlob* messages = NULL;
         HRESULT hr = preprocessShader(source.c_str(), source.size(), path.c_str(), &macros[0], &callback, &text, &messages);
 
         std::vector<char> resultBuffer = consumeData<char>(hr, text, messages);
@@ -540,10 +540,10 @@ public:
         if (needsBackwardCompatibility(realTarget))
             flags |= D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY;
 
-        ID3DBlob* bytecode = nullptr;
-        ID3DBlob* messages = nullptr;
-        //HRESULT hr = compileShader(source.c_str(), source.length(), nullptr, nullptr, entry.c_str(), target.c_str(), flags, &bytecode, &messages, nullptr);
-        HRESULT hr = compileShader(source.c_str(), source.length(), entry.c_str(), nullptr, nullptr, entry.c_str(), realTarget.c_str(), flags, 0, &bytecode, &messages);
+        ID3DBlob* bytecode = NULL;
+        ID3DBlob* messages = NULL;
+        //HRESULT hr = compileShader(source.c_str(), source.length(), NULL, NULL, entry.c_str(), target.c_str(), flags, &bytecode, &messages, NULL);
+        HRESULT hr = compileShader(source.c_str(), source.length(), entry.c_str(), NULL, NULL, entry.c_str(), realTarget.c_str(), flags, 0, &bytecode, &messages);
 
         return consumeData<char>(hr, bytecode, messages);
     }

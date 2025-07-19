@@ -249,7 +249,7 @@ CURLcode Curl_sasl_decode_ntlm_type2_message(struct SessionHandle *data,
   */
 
   CURLcode result = CURLE_OK;
-  unsigned char *type2 = nullptr;
+  unsigned char *type2 = NULL;
   size_t type2_len = 0;
 
 #if defined(USE_NSS)
@@ -438,7 +438,7 @@ CURLcode Curl_sasl_create_ntlm_type1_message(const char *userp,
   });
 
   /* Return with binary blob encoded into base64 */
-  return Curl_base64_encode(nullptr, (char *)ntlmbuf, size, outptr, outlen);
+  return Curl_base64_encode(NULL, (char *)ntlmbuf, size, outptr, outlen);
 }
 
 /*
@@ -494,7 +494,7 @@ CURLcode Curl_sasl_create_ntlm_type3_message(struct SessionHandle *data,
   unsigned int ntresplen = 24;
   unsigned char ntresp[24]; /* fixed-size */
   unsigned char *ptr_ntresp = &ntresp[0];
-  unsigned char *ntlmv2resp = nullptr;
+  unsigned char *ntlmv2resp = NULL;
 #endif
   bool unicode = (ntlm->flags & NTLMFLAG_NEGOTIATE_UNICODE) ? TRUE : FALSE;
   char host[HOSTNAME_MAX + 1] = "";
@@ -807,7 +807,7 @@ CURLcode Curl_sasl_create_ntlm_type3_message(struct SessionHandle *data,
     return CURLE_CONV_FAILED;
 
   /* Return with binary blob encoded into base64 */
-  result = Curl_base64_encode(nullptr, (char *)ntlmbuf, size, outptr, outlen);
+  result = Curl_base64_encode(NULL, (char *)ntlmbuf, size, outptr, outlen);
 
   Curl_sasl_ntlm_cleanup(ntlm);
 

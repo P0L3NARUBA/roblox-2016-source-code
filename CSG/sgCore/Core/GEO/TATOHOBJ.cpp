@@ -10,7 +10,7 @@ lpD_POINT tangent_to_hobj(hOBJ hobj, OBJTYPE type,
 GEO_OBJ   geo;
 
   if(!true_geo_info(hobj, &type, &geo))
-		return nullptr;
+		return NULL;
   return tangent_to_geo_obj(type, &geo, vp, p);
 }
 
@@ -25,7 +25,7 @@ BOOL      flag_arc;
   set_flag_el(&type, &flag_arc);
 
   if(!tang_3d_pa((lpGEO_ARC)geo, FALSE, &curr_point, pp, &kp))
-		return nullptr;
+		return NULL;
 
   return test_cont(pp, kp, vp, type, geo, flag_arc, p);
 }

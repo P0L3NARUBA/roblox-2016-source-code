@@ -124,7 +124,7 @@ namespace RBX {
             args[1] = shared_from(player);
             args[2] = arguments;
 
-            raiseEventInvocation(event_RemoteOnInvokeServer, args, nullptr);
+            raiseEventInvocation(event_RemoteOnInvokeServer, args, NULL);
         }
         else
         {
@@ -401,7 +401,7 @@ namespace RBX {
             args[0] = shared_from(player);
             args[1] = arguments;
 
-            raiseEventInvocation(event_OnServerEvent, args, nullptr);
+            raiseEventInvocation(event_OnServerEvent, args, NULL);
         }
         else
         {
@@ -457,7 +457,7 @@ namespace RBX {
             Reflection::EventArguments args(1);
             args[0] = arguments;
 
-            raiseEventInvocation(event_OnClientEvent, args, nullptr);
+            raiseEventInvocation(event_OnClientEvent, args, NULL);
 
 			{
 				static boost::once_flag flag = BOOST_ONCE_INIT;

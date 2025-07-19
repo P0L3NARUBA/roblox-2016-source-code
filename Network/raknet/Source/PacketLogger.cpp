@@ -42,7 +42,7 @@ char* into, const char* dir, const char* type, unsigned int reliableMessageNumbe
 unsigned int splitPacketId, unsigned int splitPacketIndex, unsigned int splitPacketCount, unsigned int orderingIndex)
 {
 	char numericID[16];
-	const char* idToPrint = nullptr;
+	const char* idToPrint = NULL;
 	if(printId)
 	{
 		if (splitPacketCount>0 && splitPacketCount!=(unsigned int)-1)
@@ -50,10 +50,10 @@ unsigned int splitPacketId, unsigned int splitPacketIndex, unsigned int splitPac
 		else
 			idToPrint =	IDTOString(id);
 	}
-	// If printId is false, idToPrint will be nullptr, as it will
+	// If printId is false, idToPrint will be NULL, as it will
 	// in the case of an unrecognized id. Testing printId for false
 	// would just be redundant.
-	if(idToPrint == nullptr)
+	if(idToPrint == NULL)
 	{
 		sprintf(numericID, "%5u", id);
 		idToPrint = numericID;

@@ -3,7 +3,7 @@
 
 void SetLineNumber(TSourceLoc line, TSourceLoc& outLine)
 {
-	outLine.file = nullptr;
+	outLine.file = NULL;
 	outLine.line = line.line;
 	
 	if (line.file && line.file[0])

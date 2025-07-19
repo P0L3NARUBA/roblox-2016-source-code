@@ -93,7 +93,7 @@ static size_t decodeQuantum(unsigned char *dest, const char *src)
  * Returns CURLE_OK on success, otherwise specific error code. Function
  * output shall not be considered valid unless CURLE_OK is returned.
  *
- * When decoded data length is 0, returns nullptr in *outptr.
+ * When decoded data length is 0, returns NULL in *outptr.
  *
  * @unittest: 1302
  */
@@ -109,7 +109,7 @@ CURLcode Curl_base64_decode(const char *src,
   unsigned char *pos;
   unsigned char *newstr;
 
-  *outptr = nullptr;
+  *outptr = NULL;
   *outlen = 0;
   srclen = strlen(src);
 
@@ -180,18 +180,18 @@ static CURLcode base64_encode(const char *table64,
   int inputparts;
   char *output;
   char *base64data;
-  char *convbuf = nullptr;
+  char *convbuf = NULL;
 
   const char *indata = inputbuff;
 
-  *outptr = nullptr;
+  *outptr = NULL;
   *outlen = 0;
 
   if(0 == insize)
     insize = strlen(indata);
 
   base64data = output = malloc(insize*4/3+4);
-  if(nullptr == output)
+  if(NULL == output)
     return CURLE_OUT_OF_MEMORY;
 
   /*
@@ -272,7 +272,7 @@ static CURLcode base64_encode(const char *table64,
  * Returns CURLE_OK on success, otherwise specific error code. Function
  * output shall not be considered valid unless CURLE_OK is returned.
  *
- * When encoded data length is 0, returns nullptr in *outptr.
+ * When encoded data length is 0, returns NULL in *outptr.
  *
  * @unittest: 1302
  */
@@ -296,7 +296,7 @@ CURLcode Curl_base64_encode(struct SessionHandle *data,
  * Returns CURLE_OK on success, otherwise specific error code. Function
  * output shall not be considered valid unless CURLE_OK is returned.
  *
- * When encoded data length is 0, returns nullptr in *outptr.
+ * When encoded data length is 0, returns NULL in *outptr.
  *
  * @unittest: 1302
  */

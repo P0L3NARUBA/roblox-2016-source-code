@@ -276,7 +276,7 @@ void startMMTimer()
         timerRes, // delay
         timerRes, // resolution (global variable)
 		ticksPerCorrection>=2 ? interpolatedCallback : directCallback,               // callback function
-        nullptr, // user data
+        NULL, // user data
         TIME_PERIODIC );  // single timer event
 
 	if (!result)

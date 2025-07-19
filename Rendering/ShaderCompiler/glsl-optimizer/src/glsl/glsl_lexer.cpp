@@ -267,14 +267,14 @@ struct yy_buffer_state
  * future we want to put the buffer states in a more general
  * "scanner state".
  *
- * Returns the top of the stack, or nullptr.
+ * Returns the top of the stack, or NULL.
  */
 #define YY_CURRENT_BUFFER ( yyg->yy_buffer_stack \
                           ? yyg->yy_buffer_stack[yyg->yy_buffer_stack_top] \
-                          : nullptr)
+                          : NULL)
 
 /* Same as previous macro, but useful when we know that the buffer stack is not
- * nullptr or when we need an lvalue. For internal use only.
+ * NULL or when we need an lvalue. For internal use only.
  */
 #define YY_CURRENT_BUFFER_LVALUE yyg->yy_buffer_stack[yyg->yy_buffer_stack_top]
 
@@ -1208,9 +1208,9 @@ literal_integer(char *text, int len, struct _mesa_glsl_parse_state *state,
       digits += 2;
 
 #ifdef _MSC_VER
-   unsigned __int64 value = _strtoui64(digits, nullptr, base);
+   unsigned __int64 value = _strtoui64(digits, NULL, base);
 #else
-   unsigned long long value = strtoull(digits, nullptr, base);
+   unsigned long long value = strtoull(digits, NULL, base);
 #endif
 
    lval->n = (int)value;
@@ -1607,7 +1607,7 @@ YY_RULE_SETUP
 				    * one-based.
 				    */
 				   yylineno = strtol(ptr, &ptr, 0) - 1;
-				   yylloc->source = strtol(ptr, nullptr, 0);
+				   yylloc->source = strtol(ptr, NULL, 0);
 				}
 	YY_BREAK
 case 6:
@@ -1715,7 +1715,7 @@ case 19:
 YY_RULE_SETUP
 #line 246 "src/glsl/glsl_lexer.ll"
 {
-				    yylval->n = strtol(yytext, nullptr, 10);
+				    yylval->n = strtol(yytext, NULL, 10);
 				    return INTCONSTANT;
 				}
 	YY_BREAK
@@ -2543,7 +2543,7 @@ case 177:
 YY_RULE_SETUP
 #line 459 "src/glsl/glsl_lexer.ll"
 {
-			    yylval->real = glsl_strtof(yytext, nullptr);
+			    yylval->real = glsl_strtof(yytext, NULL);
 			    return FLOATCONSTANT;
 			}
 	YY_BREAK
@@ -2551,7 +2551,7 @@ case 178:
 YY_RULE_SETUP
 #line 463 "src/glsl/glsl_lexer.ll"
 {
-			    yylval->real = glsl_strtof(yytext, nullptr);
+			    yylval->real = glsl_strtof(yytext, NULL);
 			    return FLOATCONSTANT;
 			}
 	YY_BREAK
@@ -2559,7 +2559,7 @@ case 179:
 YY_RULE_SETUP
 #line 467 "src/glsl/glsl_lexer.ll"
 {
-			    yylval->real = glsl_strtof(yytext, nullptr);
+			    yylval->real = glsl_strtof(yytext, NULL);
 			    return FLOATCONSTANT;
 			}
 	YY_BREAK
@@ -2567,7 +2567,7 @@ case 180:
 YY_RULE_SETUP
 #line 471 "src/glsl/glsl_lexer.ll"
 {
-			    yylval->real = glsl_strtof(yytext, nullptr);
+			    yylval->real = glsl_strtof(yytext, NULL);
 			    return FLOATCONSTANT;
 			}
 	YY_BREAK
@@ -2575,7 +2575,7 @@ case 181:
 YY_RULE_SETUP
 #line 475 "src/glsl/glsl_lexer.ll"
 {
-			    yylval->real = glsl_strtof(yytext, nullptr);
+			    yylval->real = glsl_strtof(yytext, NULL);
 			    return FLOATCONSTANT;
 			}
 	YY_BREAK
@@ -3523,7 +3523,7 @@ static void _mesa_glsl_lexer__load_buffer_state  (yyscan_t yyscanner)
 void _mesa_glsl_lexer_push_buffer_state (YY_BUFFER_STATE new_buffer , yyscan_t yyscanner)
 {
     struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-	if (new_buffer == nullptr)
+	if (new_buffer == NULL)
 		return;
 
 	_mesa_glsl_lexer_ensure_buffer_stack(yyscanner);
@@ -3558,7 +3558,7 @@ void _mesa_glsl_lexer_pop_buffer_state (yyscan_t yyscanner)
 		return;
 
 	_mesa_glsl_lexer__delete_buffer(YY_CURRENT_BUFFER ,yyscanner);
-	YY_CURRENT_BUFFER_LVALUE = nullptr;
+	YY_CURRENT_BUFFER_LVALUE = NULL;
 	if (yyg->yy_buffer_stack_top > 0)
 		--yyg->yy_buffer_stack_top;
 
@@ -3907,14 +3907,14 @@ void _mesa_glsl_lexer_set_lloc (YYLTYPE *  yylloc_param , yyscan_t yyscanner)
 int _mesa_glsl_lexer_lex_init(yyscan_t* ptr_yy_globals)
 
 {
-    if (ptr_yy_globals == nullptr){
+    if (ptr_yy_globals == NULL){
         errno = EINVAL;
         return 1;
     }
 
-    *ptr_yy_globals = (yyscan_t) _mesa_glsl_lexer_alloc ( sizeof( struct yyguts_t ), nullptr );
+    *ptr_yy_globals = (yyscan_t) _mesa_glsl_lexer_alloc ( sizeof( struct yyguts_t ), NULL );
 
-    if (*ptr_yy_globals == nullptr){
+    if (*ptr_yy_globals == NULL){
         errno = ENOMEM;
         return 1;
     }
@@ -3940,14 +3940,14 @@ int _mesa_glsl_lexer_lex_init_extra(YY_EXTRA_TYPE yy_user_defined,yyscan_t* ptr_
 
     _mesa_glsl_lexer_set_extra (yy_user_defined, &dummy_yyguts);
 
-    if (ptr_yy_globals == nullptr){
+    if (ptr_yy_globals == NULL){
         errno = EINVAL;
         return 1;
     }
 	
     *ptr_yy_globals = (yyscan_t) _mesa_glsl_lexer_alloc ( sizeof( struct yyguts_t ), &dummy_yyguts );
 	
-    if (*ptr_yy_globals == nullptr){
+    if (*ptr_yy_globals == NULL){
         errno = ENOMEM;
         return 1;
     }
@@ -3977,7 +3977,7 @@ static int yy_init_globals (yyscan_t yyscanner)
 
     yyg->yy_start_stack_ptr = 0;
     yyg->yy_start_stack_depth = 0;
-    yyg->yy_start_stack =  nullptr;
+    yyg->yy_start_stack =  NULL;
 
 /* Defined in main.c */
 #ifdef YY_STDINIT
@@ -4002,17 +4002,17 @@ int _mesa_glsl_lexer_lex_destroy  (yyscan_t yyscanner)
     /* Pop the buffer stack, destroying each element. */
 	while(YY_CURRENT_BUFFER){
 		_mesa_glsl_lexer__delete_buffer(YY_CURRENT_BUFFER ,yyscanner );
-		YY_CURRENT_BUFFER_LVALUE = nullptr;
+		YY_CURRENT_BUFFER_LVALUE = NULL;
 		_mesa_glsl_lexer_pop_buffer_state(yyscanner);
 	}
 
 	/* Destroy the stack itself. */
 	_mesa_glsl_lexer_free(yyg->yy_buffer_stack ,yyscanner);
-	yyg->yy_buffer_stack = nullptr;
+	yyg->yy_buffer_stack = NULL;
 
     /* Destroy the start condition stack. */
         _mesa_glsl_lexer_free(yyg->yy_start_stack ,yyscanner );
-        yyg->yy_start_stack = nullptr;
+        yyg->yy_start_stack = NULL;
 
     /* Reset the globals. This is important in a non-reentrant scanner so the next time
      * _mesa_glsl_lexer_lex() is called, initialization will occur. */
@@ -4020,7 +4020,7 @@ int _mesa_glsl_lexer_lex_destroy  (yyscan_t yyscanner)
 
     /* Destroy the main struct (reentrant only). */
     _mesa_glsl_lexer_free ( yyscanner , yyscanner );
-    yyscanner = nullptr;
+    yyscanner = NULL;
     return 0;
 }
 

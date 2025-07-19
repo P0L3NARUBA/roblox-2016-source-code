@@ -15,18 +15,18 @@ BOOL sew(lpLISTH list, hOBJ *hrez, sgFloat precision)
 	LISTH				 listh;
 
 	ident_np = -32767;
-	*hrez		 = nullptr;
+	*hrez		 = NULL;
 
 	init_scan(&sc);
 	sc.data = &list_str;
 	sc.user_pre_scan = sew_pre_scan;
 	sc.user_geo_scan = sew_scan;
 
-	if ( !np_init_list(&list_str) ) return FALSE; //nullptr;
+	if ( !np_init_list(&list_str) ) return FALSE; //NULL;
 	hobj = list->hhead;
-	while (hobj != nullptr) {
+	while (hobj != NULL) {
 		get_next_item_z(SEL_LIST,hobj,&hnext);
-		if ( (o_scan(hobj,&sc)) == OSFALSE ) return FALSE; //nullptr;
+		if ( (o_scan(hobj,&sc)) == OSFALSE ) return FALSE; //NULL;
 		hobj = hnext;
 	}
 
@@ -49,7 +49,7 @@ static OSCAN_COD sew_pre_scan(hOBJ hobj, lpSCAN_CONTROL lpsc)
 	app_ident1 = lpgeobrep->ident_np + 32767;  
 	app_ident = 32767 - ident_np;             
 	if (app_ident < app_ident1) {
-		put_message(IDENT_OVER,nullptr,0);         
+		put_message(IDENT_OVER,NULL,0);         
 		return OSFALSE;
 	}
 	app_ident = ident_np + 32767; 						 
@@ -63,7 +63,7 @@ static OSCAN_COD sew_scan(hOBJ hobj,lpSCAN_CONTROL lpsc)
 	short 		i;
 
 	if (ctrl_c_press) { 												//   Ctrl/C
-		put_message(CTRL_C_PRESS, nullptr, 0);
+		put_message(CTRL_C_PRESS, NULL, 0);
 		return OSFALSE;
 	}
 	if (lpsc->type != OBREP) return OSTRUE; //   

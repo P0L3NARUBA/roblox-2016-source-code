@@ -189,13 +189,13 @@ getlocale(char *buffer, size_t bufsize)
 
     /* We need to trim down strings like "en_US.UTF-8@blah" to "UTF-8" */
     ptr = SDL_strchr(lang, '.');
-    if (ptr != nullptr) {
+    if (ptr != NULL) {
         lang = ptr + 1;
     }
 
     SDL_strlcpy(buffer, lang, bufsize);
     ptr = SDL_strchr(buffer, '@');
-    if (ptr != nullptr) {
+    if (ptr != NULL) {
         *ptr = '\0';            /* chop end of string. */
     }
 
@@ -880,14 +880,14 @@ SDL_iconv_string(const char *tocode, const char *fromcode, const char *inbuf,
         cd = SDL_iconv_open(tocode, fromcode);
     }
     if (cd == (SDL_iconv_t) - 1) {
-        return nullptr;
+        return NULL;
     }
 
     stringsize = inbytesleft > 4 ? inbytesleft : 4;
     string = SDL_malloc(stringsize);
     if (!string) {
         SDL_iconv_close(cd);
-        return nullptr;
+        return NULL;
     }
     outbuf = string;
     outbytesleft = stringsize;
@@ -903,7 +903,7 @@ SDL_iconv_string(const char *tocode, const char *fromcode, const char *inbuf,
                 string = SDL_realloc(string, stringsize);
                 if (!string) {
                     SDL_iconv_close(cd);
-                    return nullptr;
+                    return NULL;
                 }
                 outbuf = string + (outbuf - oldstring);
                 outbytesleft = stringsize - (outbuf - string);

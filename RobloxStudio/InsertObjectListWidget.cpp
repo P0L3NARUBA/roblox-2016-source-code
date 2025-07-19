@@ -33,7 +33,7 @@ InsertObjectListWidget::InsertObjectListWidget(QWidget *pParent)
     // listen for changes to the editor settings
     m_PropertyChangedConnection = AuthoringSettings::singleton().propertyChangedSignal.connect(
         boost::bind(&InsertObjectListWidget::onPropertyChanged,this,_1));
-    onPropertyChanged(nullptr);
+    onPropertyChanged(NULL);
 
 	connect(this, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(onItemInsertRequested(QListWidgetItem*)));
 	connect(this, SIGNAL(enterKeyPressed(QListWidgetItem*)), this, SLOT(onItemInsertRequested(QListWidgetItem*)));

@@ -15,7 +15,7 @@ const char* const columnNames = "tag, offset, bitSize, layer1, layer2, layer3, l
 NetworkProfiler::NetworkProfiler(void)
 : deepestLayer(0)
 , networkSettings(&NetworkSettings::singleton())
-, loggerPlugin(nullptr)
+, loggerPlugin(NULL)
 {
 }
 

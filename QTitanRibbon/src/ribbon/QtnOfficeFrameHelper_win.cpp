@@ -487,7 +487,7 @@ void OfficeFrameHelperWin::restoreMargins()
                 ::SetWindowPos(m_hwndFrame, Q_NULL, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, SWP_NOZORDER | SWP_NOACTIVATE);
             }
 //            ::SendMessage(m_hwndFrame, WM_SETREDRAW, TRUE, 0);
-//            ::RedrawWindow( m_hwndFrame, nullptr, nullptr, RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN );
+//            ::RedrawWindow( m_hwndFrame, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN );
         }
     }
 }
@@ -558,11 +558,11 @@ static DWORD comCtlVersion()
 
     QTN_DLLGETVERSIONPROC pfn;
     pfn = (QTN_DLLGETVERSIONPROC)ctlLib.resolve("DllGetVersion");
-    Q_ASSERT(pfn != nullptr);
+    Q_ASSERT(pfn != NULL);
 
     DWORD dwVersion = QTN_VERSION_WIN4;
 
-    if (pfn != nullptr)
+    if (pfn != NULL)
     {
         QTN_DLLVERSIONINFO dvi;
         memset(&dvi, 0, sizeof(dvi));
@@ -2124,7 +2124,7 @@ void OfficeFrameHelperWin::enableWindowShadow(HWND hwnd, bool enable)
 
         ::ShowWindow(hwnd, SW_HIDE);
         ::ShowWindow(hwnd, isZoomed ? SW_SHOWMAXIMIZED : isIconic ? SW_SHOWMINIMIZED : SW_SHOW);
-        ::SetWindowPos(hwnd, nullptr, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+        ::SetWindowPos(hwnd, NULL, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
 
         ::BringWindowToTop(hwnd);
     }

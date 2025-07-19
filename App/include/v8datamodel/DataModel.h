@@ -497,7 +497,7 @@ public:
 	void setServerSaveUrl(std::string url);
 	void serverSave();
 
-	bool serverSavePlace(const SaveFilter saveFilter, boost::function<void(bool)> resumeFunction = nullptr, boost::function<void(std::string)> errorFunction = nullptr);
+	bool serverSavePlace(const SaveFilter saveFilter, boost::function<void(bool)> resumeFunction = NULL, boost::function<void(std::string)> errorFunction = NULL);
 	shared_ptr<std::stringstream> serializeDataModel(const Instance::SaveFilter saveFilter = Instance::SAVE_ALL);
 
 	virtual void savePlaceAsync(const SaveFilter saveFilter, boost::function<void(bool)> resumeFunction, boost::function<void(std::string)> errorFunction);

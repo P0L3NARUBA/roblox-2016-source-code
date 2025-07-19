@@ -311,9 +311,9 @@ namespace QtUtilities
 	    : QDialog(pParent, Qt::WindowTitleHint)
 	    , m_lastFocusWidget(lastFocusWidget)
 	    , m_bExecutionComplete(false)
-        , m_eventLoop(nullptr)
+        , m_eventLoop(NULL)
 	{
-		if(m_lastFocusWidget == nullptr)
+		if(m_lastFocusWidget == NULL)
 		{
 			m_lastFocusWidget = QApplication::focusWidget();
 			if(m_lastFocusWidget && m_lastFocusWidget->focusProxy())

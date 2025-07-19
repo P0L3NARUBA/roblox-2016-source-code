@@ -227,7 +227,7 @@ static void showtime(struct SessionHandle *data,
 static gnutls_datum_t load_file (const char *file)
 {
   FILE *f;
-  gnutls_datum_t loaded_file = { nullptr, 0 };
+  gnutls_datum_t loaded_file = { NULL, 0 };
   long filelen;
   void *ptr;
 
@@ -271,7 +271,7 @@ static CURLcode handshake(struct connectdata *conn,
 
   for(;;) {
     /* check allowed time left */
-    timeout_ms = Curl_timeleft(data, nullptr, duringconnect);
+    timeout_ms = Curl_timeleft(data, NULL, duringconnect);
 
     if(timeout_ms < 0) {
       /* no need to continue if time already is up */
@@ -317,28 +317,28 @@ static CURLcode handshake(struct connectdata *conn,
       continue;
     }
     else if((rc < 0) && !gnutls_error_is_fatal(rc)) {
-      const char *strerr = nullptr;
+      const char *strerr = NULL;
 
       if(rc == GNUTLS_E_WARNING_ALERT_RECEIVED) {
         int alert = gnutls_alert_get(session);
         strerr = gnutls_alert_get_name(alert);
       }
 
-      if(strerr == nullptr)
+      if(strerr == NULL)
         strerr = gnutls_strerror(rc);
 
       infof(data, "gnutls_handshake() warning: %s\n", strerr);
       continue;
     }
     else if(rc < 0) {
-      const char *strerr = nullptr;
+      const char *strerr = NULL;
 
       if(rc == GNUTLS_E_FATAL_ALERT_RECEIVED) {
         int alert = gnutls_alert_get(session);
         strerr = gnutls_alert_get_name(alert);
       }
 
-      if(strerr == nullptr)
+      if(strerr == NULL)
         strerr = gnutls_strerror(rc);
 
       failf(data, "gnutls_handshake() failed: %s", strerr);
@@ -399,7 +399,7 @@ gtls_connect_step1(struct connectdata *conn,
  */
 #define GNUTLS_SRP "+SRP"
   const char* prioritylist;
-  const char *err = nullptr;
+  const char *err = NULL;
 #endif
 
   if(conn->ssl[sockindex].state == ssl_connection_complete)
@@ -538,7 +538,7 @@ gtls_connect_step1(struct connectdata *conn,
   if(rc != GNUTLS_E_SUCCESS)
     return CURLE_SSL_CONNECT_ERROR;
 
-  if(data->set.ssl.cipher_list != nullptr) {
+  if(data->set.ssl.cipher_list != NULL) {
     failf(data, "can't pass a custom cipher list to older GnuTLS"
           " versions");
     return CURLE_SSL_CONNECT_ERROR;
@@ -701,7 +701,7 @@ gtls_connect_step1(struct connectdata *conn,
 
 #ifdef HAS_OCSP
   if(data->set.ssl.verifystatus) {
-    rc = gnutls_ocsp_status_request_enable_client(session, nullptr, 0, nullptr);
+    rc = gnutls_ocsp_status_request_enable_client(session, NULL, 0, NULL);
     if(rc != GNUTLS_E_SUCCESS) {
       failf(data, "gnutls_ocsp_status_request_enable_client() failed: %d", rc);
       return CURLE_SSL_CONNECT_ERROR;
@@ -728,19 +728,19 @@ static CURLcode pkp_pin_peer_pubkey(gnutls_x509_crt_t cert,
 {
   /* Scratch */
   size_t len1 = 0, len2 = 0;
-  unsigned char *buff1 = nullptr;
+  unsigned char *buff1 = NULL;
 
-  gnutls_pubkey_t key = nullptr;
+  gnutls_pubkey_t key = NULL;
 
   /* Result is returned to caller */
   int ret = 0;
   CURLcode result = CURLE_SSL_PINNEDPUBKEYNOTMATCH;
 
   /* if a path wasn't specified, don't pin */
-  if(nullptr == pinnedpubkey)
+  if(NULL == pinnedpubkey)
     return CURLE_OK;
 
-  if(nullptr == cert)
+  if(NULL == cert)
     return result;
 
   do {
@@ -751,12 +751,12 @@ static CURLcode pkp_pin_peer_pubkey(gnutls_x509_crt_t cert,
     if(ret < 0)
       break; /* failed */
 
-    ret = gnutls_pubkey_export(key, GNUTLS_X509_FMT_DER, nullptr, &len1);
+    ret = gnutls_pubkey_export(key, GNUTLS_X509_FMT_DER, NULL, &len1);
     if(ret != GNUTLS_E_SHORT_MEMORY_BUFFER || len1 == 0)
       break; /* failed */
 
     buff1 = malloc(len1);
-    if(nullptr == buff1)
+    if(NULL == buff1)
       break; /* failed */
 
     len2 = len1;
@@ -771,7 +771,7 @@ static CURLcode pkp_pin_peer_pubkey(gnutls_x509_crt_t cert,
     result = Curl_pin_peer_pubkey(pinnedpubkey, buff1, len1);
   } while(0);
 
-  if(nullptr != key)
+  if(NULL != key)
     gnutls_pubkey_deinit(key);
 
   Curl_safefree(buff1);
@@ -830,7 +830,7 @@ gtls_connect_step3(struct connectdata *conn,
        data->set.ssl.issuercert) {
 #ifdef USE_TLS_SRP
       if(data->set.ssl.authtype == CURL_TLSAUTH_SRP
-         && data->set.ssl.username != nullptr
+         && data->set.ssl.username != NULL
          && !data->set.ssl.verifypeer
          && gnutls_cipher_get(session)) {
         /* no peer cert, but auth is ok if we have SRP user and cipher and no
@@ -926,8 +926,8 @@ gtls_connect_step3(struct connectdata *conn,
         return CURLE_SSL_INVALIDCERTSTATUS;
       }
 
-      rc = gnutls_ocsp_resp_get_single(ocsp_resp, 0, nullptr, nullptr, nullptr, nullptr,
-                                       &status, nullptr, nullptr, nullptr, &reason);
+      rc = gnutls_ocsp_resp_get_single(ocsp_resp, 0, NULL, NULL, NULL, NULL,
+                                       &status, NULL, NULL, NULL, &reason);
 
       switch(status) {
       case GNUTLS_OCSP_CERT_GOOD:
@@ -1068,7 +1068,7 @@ gtls_connect_step3(struct connectdata *conn,
       for(i=0; ; i++) {
         certaddrlen = sizeof(certaddr);
         ret = gnutls_x509_crt_get_subject_alt_name(x509_cert, i, certaddr,
-                                                   &certaddrlen, nullptr);
+                                                   &certaddrlen, NULL);
         /* If this happens, it wasn't an IP address. */
         if(ret == GNUTLS_E_SHORT_MEMORY_BUFFER)
           continue;
@@ -1111,7 +1111,7 @@ gtls_connect_step3(struct connectdata *conn,
       infof(data, "\t server certificate expiration date verify FAILED\n");
   }
   else {
-    if(certclock < time(nullptr)) {
+    if(certclock < time(NULL)) {
       if(data->set.ssl.verifypeer) {
         failf(data, "server certificate expiration date has passed.");
         gnutls_x509_crt_deinit(x509_cert);
@@ -1136,7 +1136,7 @@ gtls_connect_step3(struct connectdata *conn,
       infof(data, "\t server certificate activation date verify FAILED\n");
   }
   else {
-    if(certclock > time(nullptr)) {
+    if(certclock > time(NULL)) {
       if(data->set.ssl.verifypeer) {
         failf(data, "server certificate not activated yet.");
         gnutls_x509_crt_deinit(x509_cert);
@@ -1197,7 +1197,7 @@ gtls_connect_step3(struct connectdata *conn,
 
   /* compression algorithm (if any) */
   ptr = gnutls_compression_get_name(gnutls_compression_get(session));
-  /* the *_get_name() says "nullptr" if GNUTLS_COMP_NULL is returned */
+  /* the *_get_name() says "NULL" if GNUTLS_COMP_NULL is returned */
   infof(data, "\t compression: %s\n", ptr);
 
 #ifdef HAS_ALPN
@@ -1238,14 +1238,14 @@ gtls_connect_step3(struct connectdata *conn,
     size_t connect_idsize = 0;
 
     /* get the session ID data size */
-    gnutls_session_get_data(session, nullptr, &connect_idsize);
+    gnutls_session_get_data(session, NULL, &connect_idsize);
     connect_sessionid = malloc(connect_idsize); /* get a buffer for it */
 
     if(connect_sessionid) {
       /* extract session ID to the allocated buffer */
       gnutls_session_get_data(session, connect_sessionid, &connect_idsize);
 
-      incache = !(Curl_ssl_getsessionid(conn, &ssl_sessionid, nullptr));
+      incache = !(Curl_ssl_getsessionid(conn, &ssl_sessionid, NULL));
       if(incache) {
         /* there was one before in the cache, so instead of risking that the
            previous one was rejected, we just kill that and store the new */
@@ -1359,16 +1359,16 @@ static void close_one(struct connectdata *conn,
   if(conn->ssl[idx].session) {
     gnutls_bye(conn->ssl[idx].session, GNUTLS_SHUT_RDWR);
     gnutls_deinit(conn->ssl[idx].session);
-    conn->ssl[idx].session = nullptr;
+    conn->ssl[idx].session = NULL;
   }
   if(conn->ssl[idx].cred) {
     gnutls_certificate_free_credentials(conn->ssl[idx].cred);
-    conn->ssl[idx].cred = nullptr;
+    conn->ssl[idx].cred = NULL;
   }
 #ifdef USE_TLS_SRP
   if(conn->ssl[idx].srp_client_cred) {
     gnutls_srp_free_client_credentials(conn->ssl[idx].srp_client_cred);
-    conn->ssl[idx].srp_client_cred = nullptr;
+    conn->ssl[idx].srp_client_cred = NULL;
   }
 #endif
 }
@@ -1442,12 +1442,12 @@ int Curl_gtls_shutdown(struct connectdata *conn, int sockindex)
 
 #ifdef USE_TLS_SRP
   if(data->set.ssl.authtype == CURL_TLSAUTH_SRP
-     && data->set.ssl.username != nullptr)
+     && data->set.ssl.username != NULL)
     gnutls_srp_free_client_credentials(conn->ssl[sockindex].srp_client_cred);
 #endif
 
-  conn->ssl[sockindex].cred = nullptr;
-  conn->ssl[sockindex].session = nullptr;
+  conn->ssl[sockindex].cred = NULL;
+  conn->ssl[sockindex].session = NULL;
 
   return retval;
 }
@@ -1495,7 +1495,7 @@ void Curl_gtls_session_free(void *ptr)
 
 size_t Curl_gtls_version(char *buffer, size_t size)
 {
-  return snprintf(buffer, size, "GnuTLS/%s", gnutls_check_version(nullptr));
+  return snprintf(buffer, size, "GnuTLS/%s", gnutls_check_version(NULL));
 }
 
 #ifndef USE_GNUTLS_NETTLE
@@ -1522,7 +1522,7 @@ static int Curl_gtls_seed(struct SessionHandle *data)
 }
 #endif
 
-/* data might be nullptr! */
+/* data might be NULL! */
 int Curl_gtls_random(struct SessionHandle *data,
                      unsigned char *entropy,
                      size_t length)

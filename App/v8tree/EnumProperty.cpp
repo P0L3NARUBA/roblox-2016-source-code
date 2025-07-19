@@ -878,7 +878,7 @@ std::string& RBX::Reflection::Variant::convert<std::string>(void)
 	else if (const Reflection::EnumDescriptor* desc = Reflection::EnumDescriptor::lookupDescriptor(type()))
 	{
 		const Reflection::EnumDescriptor::Item* item = desc->lookup(*this);
-		if (item!=nullptr)
+		if (item!=NULL)
 		{
 			std::string stringValue;
 			if(item->convertToString(stringValue)){
@@ -889,7 +889,7 @@ std::string& RBX::Reflection::Variant::convert<std::string>(void)
 	}
 
 	std::string* id = tryCast<std::string>();
-	if (id==nullptr)
+	if (id==NULL)
 		throw std::runtime_error("Unable to cast value to std::string");
 	return *id;
 }
@@ -913,7 +913,7 @@ shared_ptr<Instance>& Reflection::Variant::convert<shared_ptr<Instance> >(void)
 	}
 
 	shared_ptr<Instance>* v = tryCast<shared_ptr<Instance> >();
-	if (v==nullptr)
+	if (v==NULL)
 		throw std::runtime_error("Unable to cast value to Object");
 	return *v;
 }
@@ -932,14 +932,14 @@ shared_ptr<const Instances>& Reflection::Variant::convert<shared_ptr<const Insta
 {
 	{
 		shared_ptr<const Instances>* v = tryCast<shared_ptr<const Instances> >();
-		if (v!=nullptr){
+		if (v!=NULL){
 			return *v;
 		}
 	}
 
 	{
 		shared_ptr<const ValueArray>* v = tryCast<shared_ptr<const ValueArray> >();
-		if(v != nullptr){
+		if(v != NULL){
 			shared_ptr<Instances> newInstances(new Instances());
 			std::for_each((*v)->begin(), (*v)->end(), boost::bind(&CastInstance, _1, newInstances));
 			
@@ -970,7 +970,7 @@ shared_ptr<Reflection::DescribedBase>& Reflection::Variant::convert<shared_ptr<R
 	}
 
 	shared_ptr<Reflection::DescribedBase>* v = tryCast<shared_ptr<Reflection::DescribedBase> >();
-	if (v==nullptr)
+	if (v==NULL)
 		throw std::runtime_error("Unable to cast value to Object");
 	return *v;
 }
@@ -979,7 +979,7 @@ template<>
 shared_ptr<const Tuple>& Variant::convert<shared_ptr<const Tuple> >(void)
 {
 	shared_ptr<const Tuple>* v = tryCast<shared_ptr<const Tuple> >();
-	if (v != nullptr)
+	if (v != NULL)
 		return *v;
 
 	if (isVoid())

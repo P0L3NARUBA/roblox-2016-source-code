@@ -12,8 +12,8 @@ typedef struct {
 typedef DATA_P * lpDATA_P;
 
 static 	int 			SG_PROMPT_num = 0;			
-				void *	SG_PROMPT_code = nullptr;	
-				char *	SG_PROMPT_char = nullptr;	
+				void *	SG_PROMPT_code = NULL;	
+				char *	SG_PROMPT_char = NULL;	
 
 
 lpSG_PROMPT get_prompt(CODE_PROMPT code)
@@ -28,7 +28,7 @@ lpSG_PROMPT get_prompt(CODE_PROMPT code)
 		prompt.str = empty;
 	}
 	data = (lpDATA_P)bsearch(&code, SG_PROMPT_code, SG_PROMPT_num,
-												 sizeof(DATA_P), nullptr);
+												 sizeof(DATA_P), NULL);
 	if (!data) {
 		
 		prompt.code = code;

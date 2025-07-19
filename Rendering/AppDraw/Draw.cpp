@@ -132,7 +132,7 @@ void Draw::selectionBox(
 	const G3D::Color4&			selectColor,
 	float						lineThickness)
 {
-    if ( adorn->getCamera() != nullptr )
+    if ( adorn->getCamera() != NULL )
     {
         // determine distance from camera to object
         const Vector3 camera_pos        = adorn->getCamera()->getCameraCoordinateFrame().translation;

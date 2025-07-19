@@ -866,7 +866,7 @@ bool btQuantizedBvh::serialize(void *o_alignedDataBuffer, unsigned /*i_dataBuffe
 	btAssert(m_subtreeHeaderCount == m_SubtreeHeaders.size());
 	m_subtreeHeaderCount = m_SubtreeHeaders.size();
 
-/*	if (i_dataBufferSize < calculateSerializeBufferSize() || o_alignedDataBuffer == nullptr || (((unsigned)o_alignedDataBuffer & BVH_ALIGNMENT_MASK) != 0))
+/*	if (i_dataBufferSize < calculateSerializeBufferSize() || o_alignedDataBuffer == NULL || (((unsigned)o_alignedDataBuffer & BVH_ALIGNMENT_MASK) != 0))
 	{
 		///check alignedment for buffer?
 		btAssert(0);
@@ -954,7 +954,7 @@ bool btQuantizedBvh::serialize(void *o_alignedDataBuffer, unsigned /*i_dataBuffe
 		// this clears the pointer in the member variable it doesn't really do anything to the data
 		// it does call the destructor on the contained objects, but they are all classes with no destructor defined
 		// so the memory (which is not freed) is left alone
-		targetBvh->m_quantizedContiguousNodes.initializeFromBuffer(nullptr, 0, 0);
+		targetBvh->m_quantizedContiguousNodes.initializeFromBuffer(NULL, 0, 0);
 	}
 	else
 	{
@@ -989,7 +989,7 @@ bool btQuantizedBvh::serialize(void *o_alignedDataBuffer, unsigned /*i_dataBuffe
 		// this clears the pointer in the member variable it doesn't really do anything to the data
 		// it does call the destructor on the contained objects, but they are all classes with no destructor defined
 		// so the memory (which is not freed) is left alone
-		targetBvh->m_contiguousNodes.initializeFromBuffer(nullptr, 0, 0);
+		targetBvh->m_contiguousNodes.initializeFromBuffer(NULL, 0, 0);
 	}
 
 	sizeToAdd = 0;//(BVH_ALIGNMENT-((unsigned)nodeData & BVH_ALIGNMENT_MASK))&BVH_ALIGNMENT_MASK;
@@ -1039,10 +1039,10 @@ bool btQuantizedBvh::serialize(void *o_alignedDataBuffer, unsigned /*i_dataBuffe
 	// this clears the pointer in the member variable it doesn't really do anything to the data
 	// it does call the destructor on the contained objects, but they are all classes with no destructor defined
 	// so the memory (which is not freed) is left alone
-	targetBvh->m_SubtreeHeaders.initializeFromBuffer(nullptr, 0, 0);
+	targetBvh->m_SubtreeHeaders.initializeFromBuffer(NULL, 0, 0);
 
 	// this wipes the virtual function table pointer at the start of the buffer for the class
-	*((void**)o_alignedDataBuffer) = nullptr;
+	*((void**)o_alignedDataBuffer) = NULL;
 
 	return true;
 }
@@ -1050,9 +1050,9 @@ bool btQuantizedBvh::serialize(void *o_alignedDataBuffer, unsigned /*i_dataBuffe
 btQuantizedBvh *btQuantizedBvh::deSerializeInPlace(void *i_alignedDataBuffer, unsigned int i_dataBufferSize, bool i_swapEndian)
 {
 
-	if (i_alignedDataBuffer == nullptr)// || (((unsigned)i_alignedDataBuffer & BVH_ALIGNMENT_MASK) != 0))
+	if (i_alignedDataBuffer == NULL)// || (((unsigned)i_alignedDataBuffer & BVH_ALIGNMENT_MASK) != 0))
 	{
-		return nullptr;
+		return NULL;
 	}
 	btQuantizedBvh *bvh = (btQuantizedBvh *)i_alignedDataBuffer;
 
@@ -1073,7 +1073,7 @@ btQuantizedBvh *btQuantizedBvh::deSerializeInPlace(void *i_alignedDataBuffer, un
 
 	if (calculatedBufSize > i_dataBufferSize)
 	{
-		return nullptr;
+		return NULL;
 	}
 
 	unsigned char *nodeData = (unsigned char *)bvh;

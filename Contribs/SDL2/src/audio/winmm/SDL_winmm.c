@@ -45,7 +45,7 @@ static void DetectWave##typ##Devs(void) { \
     for (i = 0; i < devcount; i++) { \
         if (wave##typ##GetDevCaps(i,&caps,sizeof(caps))==MMSYSERR_NOERROR) { \
             char *name = WIN_StringToUTF8(caps.szPname); \
-            if (name != nullptr) { \
+            if (name != NULL) { \
                 SDL_AddAudioDevice((int) iscapture, name, (void *) ((size_t) i+1)); \
                 SDL_free(name); \
             } \
@@ -74,7 +74,7 @@ CaptureSound(HWAVEIN hwi, UINT uMsg, DWORD_PTR dwInstance,
         return;
 
     /* Signal that we have a new buffer of data */
-    ReleaseSemaphore(this->hidden->audio_sem, 1, nullptr);
+    ReleaseSemaphore(this->hidden->audio_sem, 1, NULL);
 }
 
 
@@ -90,7 +90,7 @@ FillSound(HWAVEOUT hwo, UINT uMsg, DWORD_PTR dwInstance,
         return;
 
     /* Signal that we are done playing a buffer */
-    ReleaseSemaphore(this->hidden->audio_sem, 1, nullptr);
+    ReleaseSemaphore(this->hidden->audio_sem, 1, NULL);
 }
 
 static int
@@ -105,7 +105,7 @@ SetMMerror(char *function, MMRESULT code)
 
     waveOutGetErrorText(code, werrbuf, MAXERRORLENGTH - len);
     WideCharToMultiByte(CP_ACP, 0, werrbuf, -1, errbuf + len,
-                        MAXERRORLENGTH - len, nullptr, nullptr);
+                        MAXERRORLENGTH - len, NULL, NULL);
 
     return SDL_SetError("%s", errbuf);
 }
@@ -156,7 +156,7 @@ static void
 WINMM_CloseDevice(_THIS)
 {
     /* Close up audio */
-    if (this->hidden != nullptr) {
+    if (this->hidden != NULL) {
         int i;
 
         if (this->hidden->audio_sem) {
@@ -176,7 +176,7 @@ WINMM_CloseDevice(_THIS)
 
         /* Free raw mixing buffer */
         SDL_free(this->hidden->mixbuf);
-        this->hidden->mixbuf = nullptr;
+        this->hidden->mixbuf = NULL;
 
         if (this->hidden->hin) {
             waveInClose(this->hidden->hin);
@@ -189,7 +189,7 @@ WINMM_CloseDevice(_THIS)
         }
 
         SDL_free(this->hidden);
-        this->hidden = nullptr;
+        this->hidden = NULL;
     }
 }
 
@@ -227,8 +227,8 @@ WINMM_OpenDevice(_THIS, void *handle, const char *devname, int iscapture)
     UINT devId = WAVE_MAPPER;  /* WAVE_MAPPER == choose system's default */
     UINT i;
 
-    if (handle != nullptr) {  /* specific device requested? */
-        /* -1 because we increment the original value to avoid nullptr. */
+    if (handle != NULL) {  /* specific device requested? */
+        /* -1 because we increment the original value to avoid NULL. */
         const size_t val = ((size_t) handle) - 1;
         devId = (UINT) val;
     }
@@ -236,7 +236,7 @@ WINMM_OpenDevice(_THIS, void *handle, const char *devname, int iscapture)
     /* Initialize all variables that we clean on shutdown */
     this->hidden = (struct SDL_PrivateAudioData *)
         SDL_malloc((sizeof *this->hidden));
-    if (this->hidden == nullptr) {
+    if (this->hidden == NULL) {
         return SDL_OutOfMemory();
     }
     SDL_memset(this->hidden, 0, (sizeof *this->hidden));
@@ -308,8 +308,8 @@ WINMM_OpenDevice(_THIS, void *handle, const char *devname, int iscapture)
 
     /* Create the audio buffer semaphore */
     this->hidden->audio_sem =
-        CreateSemaphore(nullptr, NUM_BUFFERS - 1, NUM_BUFFERS, nullptr);
-    if (this->hidden->audio_sem == nullptr) {
+        CreateSemaphore(NULL, NUM_BUFFERS - 1, NUM_BUFFERS, NULL);
+    if (this->hidden->audio_sem == NULL) {
         WINMM_CloseDevice(this);
         return SDL_SetError("Couldn't create semaphore");
     }
@@ -317,7 +317,7 @@ WINMM_OpenDevice(_THIS, void *handle, const char *devname, int iscapture)
     /* Create the sound buffers */
     this->hidden->mixbuf =
         (Uint8 *) SDL_malloc(NUM_BUFFERS * this->spec.size);
-    if (this->hidden->mixbuf == nullptr) {
+    if (this->hidden->mixbuf == NULL) {
         WINMM_CloseDevice(this);
         return SDL_OutOfMemory();
     }

@@ -99,7 +99,7 @@ static Keyword keywords[] =
 	{ "mutable",		NONE },
 	{ "namespace",		NAMESPACE },
 	{ "new",		NONE },
-	{ "nullptr",		null },
+	{ "NULL",		null },
 	{ "operator",		OPERATOR },
 	{ "private",		PRIVATE },
 	{ "protected",		PROTECTED },

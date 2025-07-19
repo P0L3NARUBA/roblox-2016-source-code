@@ -28,8 +28,8 @@ short        srf_flags[8];
 	type_s = (geo_surf->type & NSURF_APPR) ? SURF_APPR : SURF_INT;
 
   if( !init_surf_dat( SURF_NEW, geo_surf->degreeu, geo_surf->degreev, type_s, &surf_dat )){
-		put_message(NOT_ENOUGH_HEAP, nullptr, 0);
-		return nullptr;
+		put_message(NOT_ENOUGH_HEAP, NULL, 0);
+		return NULL;
   }
 
 //    SPLY_DAT
@@ -50,7 +50,7 @@ short        srf_flags[8];
 	init_vdim(&mdd.vdim,sizeof(MNODE));
 	if( !Bild_Mesh_On_Surf(&surf_dat, &mdd, 3, 3)) goto err2;
 //------------------------------------------------------------------------------
-  if( (hrez=create_BREP_surface(geo_surf, &mdd )) == nullptr ) goto err3;
+  if( (hrez=create_BREP_surface(geo_surf, &mdd )) == NULL ) goto err3;
 //------------------------------------------------------------------------------
 	free_geo_surf( geo_surf );
 	free_vdim(&mdd.vdim);
@@ -62,10 +62,10 @@ err3:
 err2:
 	free_geo_surf( geo_surf );
 err1:
-  np_end_of_put(&c_list_str,NP_CANCEL,0,nullptr);
+  np_end_of_put(&c_list_str,NP_CANCEL,0,NULL);
 err:
 	free_surf_data(&surf_dat);
-	return nullptr;
+	return NULL;
 }
 
 //==============================================================================
@@ -84,10 +84,10 @@ VLD         vld;
 //  init_listh( &listho );
 	if (clear_c_num_np)
 		c_num_np	= -32767;
-	if( !(np_mesh3p(&c_list_str, &c_num_np, mdd, 0.)) ) return nullptr;
-  if( !cinema_end(&c_list_str, &hrez) ) return nullptr;
+	if( !(np_mesh3p(&c_list_str, &c_num_np, mdd, 0.)) ) return NULL;
+  if( !cinema_end(&c_list_str, &hrez) ) return NULL;
 //  ret=Create_MESHDD( mdd, &listho );
-//  if( ret==FALSE ) return nullptr;
+//  if( ret==FALSE ) return NULL;
 //  else             hrez=listho.hhead;
 //-----------------------------------------------------------------------------
 //create new object
@@ -97,7 +97,7 @@ VLD         vld;
   init_listh(&lnp.surf);
   init_vld(&vld);
 
-  if( !surface_end( &vld, &lnp, geo_surf ))  	return nullptr;
+  if( !surface_end( &vld, &lnp, geo_surf ))  	return NULL;
   write_elem( &vd_brep, brp->num, &lnp);
 
   return hrez;

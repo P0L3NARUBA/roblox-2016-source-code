@@ -67,7 +67,7 @@ assign(deref lhs, operand rhs)
 ir_assignment *
 assign(deref lhs, operand rhs, int writemask)
 {
-   return assign(lhs, rhs, (ir_rvalue *) nullptr, writemask);
+   return assign(lhs, rhs, (ir_rvalue *) NULL, writemask);
 }
 
 ir_assignment *
@@ -544,7 +544,7 @@ ir_if*
 if_tree(operand condition,
         ir_instruction *then_branch)
 {
-   assert(then_branch != nullptr);
+   assert(then_branch != NULL);
 
    void *mem_ctx = ralloc_parent(condition.val);
 
@@ -558,8 +558,8 @@ if_tree(operand condition,
         ir_instruction *then_branch,
         ir_instruction *else_branch)
 {
-   assert(then_branch != nullptr);
-   assert(else_branch != nullptr);
+   assert(then_branch != NULL);
+   assert(else_branch != NULL);
 
    void *mem_ctx = ralloc_parent(condition.val);
 

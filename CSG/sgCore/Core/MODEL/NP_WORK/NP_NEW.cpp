@@ -81,7 +81,7 @@ short np_new_edge(lpNPW np, short v1, short v2)
   np->efc[edge].em = 0;
   np->efc[edge].fm = 0;
   np->efc[edge].fp = 0;
-	if (np->gru != nullptr)                           //  
+	if (np->gru != NULL)                           //  
 		np->gru[edge] = 0;
   return edge;
 }
@@ -102,7 +102,7 @@ short np_new_face(lpNPW np, short cnt)
 	nf = ++np->nof;
 met:
 	np->f[nf].fc = cnt;
-	if ( &(np->p[nf]) != nullptr) {
+	if ( &(np->p[nf]) != NULL) {
 		p = &(np->p[nf]);
 		p->v.x = 0.;
 		p->v.y = 0.;

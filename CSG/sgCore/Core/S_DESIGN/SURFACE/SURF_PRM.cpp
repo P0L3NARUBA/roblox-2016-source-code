@@ -11,7 +11,7 @@ hOBJ 				hrez;
 MESHDD      mdd;
 int tmp_int;
 
-	if( !init_sply_dat( SPL_NEW, 2, SPL_APPR, &sply_dat ) ) return nullptr;
+	if( !init_sply_dat( SPL_NEW, 2, SPL_APPR, &sply_dat ) ) return NULL;
 
   point.x=point.y=point.z=0;
   if( r1_OX>eps_d ){
@@ -82,7 +82,7 @@ int tmp_int;
 	init_vdim(&mdd.vdim,sizeof(MNODE));
   if( !Bild_Mesh_On_Surf(&surf_dat, &mdd, 3, 3) ) goto err3;
 //------------------------------------------------------------------------------
-  if( (hrez=create_BREP_surface(&geo_surf, &mdd )) == nullptr ) goto err4;
+  if( (hrez=create_BREP_surface(&geo_surf, &mdd )) == NULL ) goto err4;
 //------------------------------------------------------------------------------
 	free_geo_surf( &geo_surf );
 	free_vdim(&mdd.vdim);
@@ -95,12 +95,12 @@ err4:
 err3:
 	free_geo_surf( &geo_surf );
 err2:
-	np_end_of_put(&c_list_str,NP_CANCEL,0,nullptr);
+	np_end_of_put(&c_list_str,NP_CANCEL,0,NULL);
 err1:
   free_surf_data(&surf_dat);
 err:
   free_sply_dat(&sply_dat);
-  return nullptr;
+  return NULL;
 }
 
 hOBJ Create_Sphere_Surf( sgFloat r_OX, sgFloat r_OY, sgFloat r_OZ ){
@@ -113,7 +113,7 @@ MESHDD      mdd;
 int     tmp_int;
 
 
-	if( !init_sply_dat( SPL_NEW, 2, SPL_APPR, &sply_dat ) ) return nullptr;
+	if( !init_sply_dat( SPL_NEW, 2, SPL_APPR, &sply_dat ) ) return NULL;
 
   point.x=point.y=0;  point.z=-r_OZ;
   if( !add_sply_point( &sply_dat, &point, sply_dat.nump)) goto err;
@@ -163,7 +163,7 @@ int     tmp_int;
 	init_vdim(&mdd.vdim,sizeof(MNODE));
   if( !Bild_Mesh_On_Surf(&surf_dat, &mdd, 3, 3)) goto err3;
 //------------------------------------------------------------------------------
-  if( (hrez=create_BREP_surface(&geo_surf, &mdd )) == nullptr ) goto err4;
+  if( (hrez=create_BREP_surface(&geo_surf, &mdd )) == NULL ) goto err4;
 //------------------------------------------------------------------------------
 	free_geo_surf( &geo_surf );
 	free_vdim(&mdd.vdim);
@@ -176,12 +176,12 @@ err4:
 err3:
 	free_vdim(&mdd.vdim);
 err2:
-  np_end_of_put(&c_list_str,NP_CANCEL,0,nullptr);
+  np_end_of_put(&c_list_str,NP_CANCEL,0,NULL);
 err1:
   free_surf_data(&surf_dat);
 err:
   free_sply_dat(&sply_dat);
-  return nullptr;
+  return NULL;
 }
 
 hOBJ Create_Spheric_Band_Surf( sgFloat r, sgFloat min_c, sgFloat max_c ){
@@ -199,7 +199,7 @@ lpOBJ       	obj, obj_path, obj_line, obj_arc;
 MESHDD      	mdd;
 int tmp_int;
 
-	if ( (hobj_path = o_alloc(OPATH)) == nullptr)	return nullptr;
+	if ( (hobj_path = o_alloc(OPATH)) == NULL)	return NULL;
 	obj_path = (lpOBJ)hobj_path;
 	geo_path = (lpGEO_PATH)(obj_path->geo_data);
 	o_hcunit(geo_path->matr);
@@ -215,7 +215,7 @@ int tmp_int;
 
 //----------------------------- ----------------------------------
 	if( min_c != -1. ){
-		if((hobj_line = o_alloc(OLINE)) == nullptr) goto err_path1;
+		if((hobj_line = o_alloc(OLINE)) == NULL) goto err_path1;
 		obj_line = (lpOBJ)hobj_line;
 		obj_line->hhold = hobj_path;
 		geo_line = (lpGEO_LINE)(obj_line->geo_data);
@@ -231,7 +231,7 @@ int tmp_int;
 		attach_item_tail(&geo_path->listh, hobj_line);
 	}
 //----------------------------- -------------------------------------
-	if((hobj_arc = o_alloc(OARC)) == nullptr) goto err_path1;
+	if((hobj_arc = o_alloc(OARC)) == NULL) goto err_path1;
 	obj_arc = (lpOBJ)hobj_arc;
 	obj_arc->hhold = hobj_path;
 	geo_arc = (lpGEO_ARC)(obj_arc->geo_data);
@@ -262,7 +262,7 @@ int tmp_int;
 
 //----------------------------- ----------------------------------
 	if( max_c != 1 ){
-		if((hobj_line = o_alloc(OLINE)) == nullptr) goto err_path1;
+		if((hobj_line = o_alloc(OLINE)) == NULL) goto err_path1;
 		obj_line = (lpOBJ)hobj_line;
 		obj_line->hhold = hobj_path;
 		geo_line = (lpGEO_LINE)(obj_line->geo_data);
@@ -316,14 +316,14 @@ int tmp_int;
 	init_vdim(&mdd.vdim,sizeof(MNODE));
   if( !Bild_Mesh_On_Surf(&surf_dat, &mdd, 3, 3)) goto err3;
 //------------------------------------------------------------------------------
-  if( (hrez=create_BREP_surface(&geo_surf, &mdd )) == nullptr ) goto err4;
+  if( (hrez=create_BREP_surface(&geo_surf, &mdd )) == NULL ) goto err4;
 //------------------------------------------------------------------------------
 	free_geo_surf( &geo_surf );
 	free_vdim(&mdd.vdim);
   free_surf_data(&surf_dat);
   free_sply_dat (&sply_dat);
-	o_free(hobj_new, nullptr);
-	o_free(hobj_path, nullptr);
+	o_free(hobj_new, NULL);
+	o_free(hobj_path, NULL);
   return hrez;
 
 err4:
@@ -331,16 +331,16 @@ err4:
 err3:
 	free_geo_surf( &geo_surf );
 err2:
-  np_end_of_put(&c_list_str,NP_CANCEL,0,nullptr);
+  np_end_of_put(&c_list_str,NP_CANCEL,0,NULL);
 err1:
   free_surf_data(&surf_dat);
 err:
   free_sply_dat(&sply_dat);
 err_path2:
-	o_free(hobj_new, nullptr);
+	o_free(hobj_new, NULL);
 err_path1:
-	o_free(hobj_path, nullptr);
-  return nullptr;
+	o_free(hobj_path, NULL);
+  return NULL;
 }
 
 hOBJ Create_Torus_Surf( sgFloat rn_OX, sgFloat rn_OY, sgFloat ro_OX, sgFloat ro_OY ){
@@ -358,14 +358,14 @@ lpOBJ       	obj, obj_path, obj_circle;
 MESHDD      	mdd;
 int tmp_int;
 
-	if ( (hobj_path = o_alloc(OPATH)) == nullptr)	return nullptr;
+	if ( (hobj_path = o_alloc(OPATH)) == NULL)	return NULL;
 	obj_path = (lpOBJ)hobj_path;
 	geo_path = (lpGEO_PATH)(obj_path->geo_data);
 	o_hcunit(geo_path->matr);
 	init_listh(&geo_path->listh);
 
 //----------------------------- -------------------------------
-	if((hobj_circle = o_alloc(OCIRCLE)) == nullptr) goto err_path1;
+	if((hobj_circle = o_alloc(OCIRCLE)) == NULL) goto err_path1;
 	obj_circle = (lpOBJ)hobj_circle;
 	obj_circle->hhold = hobj_path;
 	geo_circle = (lpGEO_CIRCLE)(obj_circle->geo_data);
@@ -418,14 +418,14 @@ int tmp_int;
 	init_vdim(&mdd.vdim,sizeof(MNODE));
   if( !Bild_Mesh_On_Surf(&surf_dat, &mdd, 3, 3)) goto err3;
 //------------------------------------------------------------------------------
-  if( (hrez=create_BREP_surface(&geo_surf, &mdd )) == nullptr ) goto err4;
+  if( (hrez=create_BREP_surface(&geo_surf, &mdd )) == NULL ) goto err4;
 //------------------------------------------------------------------------------
 	free_geo_surf( &geo_surf );
 	free_vdim(&mdd.vdim);
   free_surf_data(&surf_dat);
   free_sply_dat (&sply_dat);
-	o_free(hobj_new, nullptr);
-	o_free(hobj_path, nullptr);
+	o_free(hobj_new, NULL);
+	o_free(hobj_path, NULL);
   return hrez;
 
 err4:
@@ -433,16 +433,16 @@ err4:
 err3:
 	free_geo_surf( &geo_surf );
 err2:
-  np_end_of_put(&c_list_str,NP_CANCEL,0,nullptr);
+  np_end_of_put(&c_list_str,NP_CANCEL,0,NULL);
 err1:
   free_surf_data(&surf_dat);
 err:
   free_sply_dat(&sply_dat);
 err_path2:
-	o_free(hobj_new, nullptr);
+	o_free(hobj_new, NULL);
 err_path1:
-	o_free(hobj_path, nullptr);
-  return nullptr;
+	o_free(hobj_path, NULL);
+  return NULL;
 }
 
 
@@ -543,13 +543,13 @@ MESHDD      	mdd;
 int tmp_int;
 //	coeff=R_OX/R_OY;
 //------------------------------------------------------------------------------
-	if( (hobj_path = o_alloc(OPATH)) == nullptr )	return nullptr;
+	if( (hobj_path = o_alloc(OPATH)) == NULL )	return NULL;
 	obj_path = (lpOBJ)hobj_path;
 	geo_path = (lpGEO_PATH)(obj_path->geo_data);
 	o_hcunit(geo_path->matr);
 	init_listh(&geo_path->listh);
 //----------------------------- -------------------------------------
-	if((hobj_arc = o_alloc(OARC)) == nullptr) goto err_path1;
+	if((hobj_arc = o_alloc(OARC)) == NULL) goto err_path1;
 	obj_arc = (lpOBJ)hobj_arc;
 	obj_arc->hhold = hobj_path;
 	geo_arc = (lpGEO_ARC)(obj_arc->geo_data);
@@ -652,14 +652,14 @@ int tmp_int;
 	init_vdim(&mdd.vdim,sizeof(MNODE));
   if( !Bild_Mesh_On_Surf(&surf_dat, &mdd, 3, 3)) goto err3;
 //------------------------------------------------------------------------------
-  if( (hrez=create_BREP_surface(&geo_surf, &mdd )) == nullptr ) goto err4;
+  if( (hrez=create_BREP_surface(&geo_surf, &mdd )) == NULL ) goto err4;
 //------------------------------------------------------------------------------
 	free_geo_surf( &geo_surf );
 	free_vdim(&mdd.vdim);
   free_surf_data(&surf_dat);
   free_sply_dat (&sply_dat);
-	o_free(hobj_new, nullptr);
-	o_free(hobj_path, nullptr);
+	o_free(hobj_new, NULL);
+	o_free(hobj_path, NULL);
   return hrez;
 
 err4:
@@ -667,16 +667,16 @@ err4:
 err3:
 	free_geo_surf( &geo_surf );
 err2:
-  np_end_of_put(&c_list_str,NP_CANCEL,0,nullptr);
+  np_end_of_put(&c_list_str,NP_CANCEL,0,NULL);
 err1:
   free_surf_data(&surf_dat);
 err:
   free_sply_dat(&sply_dat);
 err_path2:
-	o_free(hobj_new, nullptr);
+	o_free(hobj_new, NULL);
 err_path1:
-	o_free(hobj_path, nullptr);
-  return nullptr;
+	o_free(hobj_path, NULL);
+  return NULL;
 }
 
 hOBJ Create_Extruded_Surface( lpSPLY_DAT spline, lpMATR matr, BOOL closed ){
@@ -690,7 +690,7 @@ hOBJ Create_Extruded_Surface( lpSPLY_DAT spline, lpMATR matr, BOOL closed ){
   MESHDD      mdd;
 
 //  
-  if( !init_surf_dat( SURF_NEW, 1, 2, SURF_APPR, &surf_dat ) ) return nullptr;
+  if( !init_surf_dat( SURF_NEW, 1, 2, SURF_APPR, &surf_dat ) ) return NULL;
 
 // V - 
   for( i=0; i<spline->nump; i++ ) surf_dat.v[i]=spline->u[i];
@@ -743,7 +743,7 @@ hOBJ Create_Extruded_Surface( lpSPLY_DAT spline, lpMATR matr, BOOL closed ){
 	init_vdim(&mdd.vdim,sizeof(MNODE));
   if( !Bild_Mesh_On_Surf(&surf_dat, &mdd, 3, 3)) goto err3;
 //------------------------------------------------------------------------------
-  if( (hrez=create_BREP_surface(&geo_surf, &mdd )) == nullptr ) goto err4;
+  if( (hrez=create_BREP_surface(&geo_surf, &mdd )) == NULL ) goto err4;
 //------------------------------------------------------------------------------
 	free_geo_surf( &geo_surf );
 	free_vdim(&mdd.vdim);
@@ -755,10 +755,10 @@ err4:
 err3:
 	free_geo_surf( &geo_surf );
 err2:
-  np_end_of_put(&c_list_str,NP_CANCEL,0,nullptr);
+  np_end_of_put(&c_list_str,NP_CANCEL,0,NULL);
 err1:
   free_surf_data(&surf_dat);
-  return nullptr;
+  return NULL;
 }
 
 

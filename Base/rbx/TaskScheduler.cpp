@@ -246,7 +246,7 @@ void TaskScheduler::remove(boost::shared_ptr<TaskScheduler::Job> task, bool join
 	// there should be no concurrency risk to not join
 	joinTask &= task.get() != currentJob.get();
 
-	shared_ptr<CEvent> joinEvent(joinTask ? new CEvent(true) : nullptr);
+	shared_ptr<CEvent> joinEvent(joinTask ? new CEvent(true) : NULL);
 
 	remove(task, joinEvent);
 

@@ -41,7 +41,7 @@
     FT_Error  error;
 
 
-    *aservice = nullptr;
+    *aservice = NULL;
 
     if ( !face )
       return FT_THROW( Invalid_Face_Handle );

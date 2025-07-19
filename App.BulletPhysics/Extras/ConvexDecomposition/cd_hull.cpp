@@ -86,7 +86,7 @@ using namespace ConvexDecomposition;
 #define DEG2RAD (PI / 180.0f)
 #define RAD2DEG (180.0f / PI)
 #define SQRT_OF_2 (1.4142135f)
-#define OFFSET(Class,Member)  (((char*) (&(((Class*)nullptr)-> Member )))- ((char*)nullptr))
+#define OFFSET(Class,Member)  (((char*) (&(((Class*)NULL)-> Member )))- ((char*)NULL))
 
 namespace ConvexDecomposition
 {
@@ -345,10 +345,10 @@ float3  PlaneProject(const Plane &plane, const float3 &point);
 float3  LineProject(const float3 &p0, const float3 &p1, const float3 &a);  // projects a onto infinite line p0p1
 float   LineProjectTime(const float3 &p0, const float3 &p1, const float3 &a);
 float3  ThreePlaneIntersection(const Plane &p0,const Plane &p1, const Plane &p2);
-int     PolyHit(const float3 *vert,const int n,const float3 &v0, const float3 &v1, float3 *impact=nullptr, float3 *normal=nullptr);
+int     PolyHit(const float3 *vert,const int n,const float3 &v0, const float3 &v1, float3 *impact=NULL, float3 *normal=NULL);
 int     BoxInside(const float3 &p,const float3 &bmin, const float3 &bmax) ;
 int     BoxIntersect(const float3 &v0, const float3 &v1, const float3 &bmin, const float3 &bmax, float3 *impact);
-float   DistanceBetweenLines(const float3 &ustart, const float3 &udir, const float3 &vstart, const float3 &vdir, float3 *upoint=nullptr, float3 *vpoint=nullptr);
+float   DistanceBetweenLines(const float3 &ustart, const float3 &udir, const float3 &vstart, const float3 &vdir, float3 *upoint=NULL, float3 *vpoint=NULL);
 float3  TriNormal(const float3 &v0, const float3 &v1, const float3 &v2);
 float3  NormalOf(const float3 *vert, const int n);
 Quaternion VirtualTrackBall(const float3 &cop, const float3 &cor, const float3 &dir0, const float3 &dir1);
@@ -1413,7 +1413,7 @@ template <class Type> Array<Type>::Array(int s)
 {
 	count=0;
 	array_size = 0;
-	element = nullptr;
+	element = NULL;
 	if(s) 
 	{
 		allocate(s);
@@ -1425,7 +1425,7 @@ template <class Type> Array<Type>::Array(Array<Type> &array)
 {
 	count=0;
 	array_size = 0;
-	element = nullptr;
+	element = NULL;
 	for(int i=0;i<array.count;i++)
 	{
 		Add(array[i]);
@@ -1442,7 +1442,7 @@ template <class Type> Array<Type> &Array<Type>::operator=(ArrayRet<Type> &array)
 	count=array.count;
 	array_size = array.array_size;
 	element = array.element;
-	array.element=nullptr;
+	array.element=NULL;
 	array.count=0;
 	array.array_size=0;
 	return *this;
@@ -1461,11 +1461,11 @@ template <class Type> Array<Type> &Array<Type>::operator=(Array<Type> &array)
 
 template <class Type> Array<Type>::~Array()
 {
-	if (element != nullptr)
+	if (element != NULL)
 	{
 	  free(element);
 	}
-	count=0;array_size=0;element=nullptr;
+	count=0;array_size=0;element=NULL;
 }
 
 template <class Type> void Array<Type>::allocate(int s)
@@ -1493,7 +1493,7 @@ template <class Type> void Array<Type>::SetSize(int s)
 		if(element)
 		{
 			free(element);
-			element = nullptr;
+			element = NULL;
 		}
  	  array_size = s;
 	}
@@ -2120,7 +2120,7 @@ ConvexH *ConvexHCrop(ConvexH &convex,const Plane &slice)
 			if(j>=coplanaredges_num)
 			{
 				assert(j<coplanaredges_num);
-				return nullptr;
+				return NULL;
 			}
 		}
 	}
@@ -2356,7 +2356,7 @@ public:
 	~btHullTriangle()
 	{
 		assert((*tris)[id]==this);
-		(*tris)[id]=nullptr;
+		(*tris)[id]=NULL;
 	}
 	int &neib(int a,int b);
 };
@@ -2439,7 +2439,7 @@ void extrude(btHullTriangle *t0,int v, Array<btHullTriangle*>& tris)
 btHullTriangle *extrudable(float epsilon, Array<btHullTriangle*>& tris)
 {
 	int i;
-	btHullTriangle *t=nullptr;
+	btHullTriangle *t=NULL;
 	for(i=0;i<tris.count;i++)
 	{
 		if(!t || (tris[i] && t->rise<tris[i]->rise))
@@ -2447,7 +2447,7 @@ btHullTriangle *extrudable(float epsilon, Array<btHullTriangle*>& tris)
 			t = tris[i];
 		}
 	}
-	return (t->rise >epsilon)?t:nullptr ;
+	return (t->rise >epsilon)?t:NULL ;
 }
 
 class int4
@@ -2599,7 +2599,7 @@ int calchull(float3 *verts,int verts_count, int *&tris_out, int &tris_count,int 
 	}
 	tris_count = ts.count/3;
 	tris_out   = ts.element;
-	ts.element=nullptr; ts.count=ts.array_size=0;
+	ts.element=NULL; ts.count=ts.array_size=0;
 	tris.count=0;
 	return 1;
 }
@@ -2668,7 +2668,7 @@ int overhull(Plane *planes,int planes_count,float3 *verts, int verts_count,int m
 	{
 		ConvexH *tmp = c;
 		c = ConvexHCrop(*tmp,planes[k]);
-		if(c==nullptr) {c=tmp; break;} // might want to debug this case better!!!
+		if(c==NULL) {c=tmp; break;} // might want to debug this case better!!!
 		if(!AssertIntact(*c)) {c=tmp; break;} // might want to debug this case better too!!!
 		delete tmp;
 	}
@@ -2701,7 +2701,7 @@ int overhull(Plane *planes,int planes_count,float3 *verts, int verts_count,int m
 	{
 		verts_out[i] = float3(c->vertices[i]);
 	}
-	c->vertices.count=c->vertices.array_size=0;	c->vertices.element=nullptr;
+	c->vertices.count=c->vertices.array_size=0;	c->vertices.element=NULL;
 	delete c;
 	return 1;
 }
@@ -2759,7 +2759,7 @@ bool ComputeHull(unsigned int vcount,const float *vertices,PHullResult &result,u
 	result.mVertices   = (float*) verts_out;
 	result.mVcount     = (unsigned int) verts_count_out;
 	result.mIndices    = (unsigned int *) tris.element;
-	tris.element=nullptr; tris.count = tris.array_size=0;
+	tris.element=NULL; tris.count = tris.array_size=0;
 
 	return true;
 }

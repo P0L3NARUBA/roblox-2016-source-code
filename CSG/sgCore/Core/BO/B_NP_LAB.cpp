@@ -9,7 +9,7 @@ BOOL b_np_lab(lpNP_STR_LIST list_str, lpNP_STR str, lpNPW np)
 	BOOL     		rt = TRUE;
 	short * 	mem_ident;
 
-	if ( (mem_ident = (short*)SGMalloc(sizeof(np->ident)*(np->noe))) == nullptr )	return FALSE;
+	if ( (mem_ident = (short*)SGMalloc(sizeof(np->ident)*(np->noe))) == NULL )	return FALSE;
 
 	for (i=1 ; i <= np->noe ; i++) {
 		if (np->efc[i].fp >= 0 && np->efc[i].fm >= 0) continue;

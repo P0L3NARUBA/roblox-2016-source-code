@@ -25,7 +25,7 @@ RobloxBasicDoc::~RobloxBasicDoc()
 
 void RobloxBasicDoc::addExternalHandler(IExternalHandler* extHandler)
 {
-	if(extHandler == nullptr) 
+	if(extHandler == NULL) 
 		return;
 
 	if(extHandler->handlerId().isEmpty())

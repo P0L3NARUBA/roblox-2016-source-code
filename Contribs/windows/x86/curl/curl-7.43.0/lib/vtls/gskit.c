@@ -144,7 +144,7 @@ static const gskit_cipher  ciphertable[] = {
   { "exp-rc2-md5",      "4",    CURL_GSKPROTO_SSLV2_MASK },
   { "des-cbc-md5",      "6",    CURL_GSKPROTO_SSLV2_MASK },
   { "des-cbc3-md5",     "7",    CURL_GSKPROTO_SSLV2_MASK },
-  { (const char *) nullptr, (const char *) nullptr, 0       }
+  { (const char *) NULL, (const char *) NULL, 0       }
 };
 
 
@@ -490,7 +490,7 @@ static void cancel_async_handshake(struct connectdata *conn, int sockindex)
   Qso_OverlappedIO_t cstat;
 
   if(QsoCancelOperation(conn->sock[sockindex], 0) > 0)
-    QsoWaitForIOCompletion(connssl->iocport, &cstat, (struct timeval *) nullptr);
+    QsoWaitForIOCompletion(connssl->iocport, &cstat, (struct timeval *) NULL);
 }
 
 
@@ -507,7 +507,7 @@ static void close_one(struct ssl_connect_data *conn,
   if(conn->handle) {
     gskit_status(data, gsk_secure_soc_close(&conn->handle),
               "gsk_secure_soc_close()", 0);
-    conn->handle = (gsk_handle) nullptr;
+    conn->handle = (gsk_handle) NULL;
   }
   if(conn->iocport >= 0)
     close_async_handshake(conn);
@@ -570,7 +570,7 @@ static CURLcode gskit_connect_step1(struct connectdata *conn, int sockindex)
 
   /* Create SSL environment, start (preferably asynchronous) handshake. */
 
-  connssl->handle = (gsk_handle) nullptr;
+  connssl->handle = (gsk_handle) NULL;
   connssl->iocport = -1;
 
   /* GSKit supports two ways of specifying an SSL context: either by
@@ -589,18 +589,18 @@ static CURLcode gskit_connect_step1(struct connectdata *conn, int sockindex)
   keyringfile = data->set.str[STRING_SSL_CAFILE];
   keyringpwd = data->set.str[STRING_KEY_PASSWD];
   keyringlabel = data->set.str[STRING_CERT];
-  envir = (gsk_handle) nullptr;
+  envir = (gsk_handle) NULL;
 
   if(keyringlabel && *keyringlabel && !keyringpwd &&
       !strcmp(keyringfile, CURL_CA_BUNDLE)) {
     /* Try application identifier mode. */
-    init_environment(data, &envir, keyringlabel, (const char *) nullptr,
-                     (const char *) nullptr, (const char *) nullptr);
+    init_environment(data, &envir, keyringlabel, (const char *) NULL,
+                     (const char *) NULL, (const char *) NULL);
   }
 
   if(!envir) {
     /* Use keyring mode. */
-    result = init_environment(data, &envir, (const char *) nullptr,
+    result = init_environment(data, &envir, (const char *) NULL,
                               keyringfile, keyringlabel, keyringpwd);
     if(result)
       return result;
@@ -620,11 +620,11 @@ static CURLcode gskit_connect_step1(struct connectdata *conn, int sockindex)
   switch (data->set.ssl.version) {
   case CURL_SSLVERSION_SSLv2:
     protoflags = CURL_GSKPROTO_SSLV2_MASK;
-    sni = (char *) nullptr;
+    sni = (char *) NULL;
     break;
   case CURL_SSLVERSION_SSLv3:
     protoflags = CURL_GSKPROTO_SSLV3_MASK;
-    sni = (char *) nullptr;
+    sni = (char *) NULL;
     break;
   case CURL_SSLVERSION_TLSv1:
     protoflags = CURL_GSKPROTO_TLSV10_MASK |
@@ -653,7 +653,7 @@ static CURLcode gskit_connect_step1(struct connectdata *conn, int sockindex)
   if(!result) {
     /* Compute the handshake timeout. Since GSKit granularity is 1 second,
        we round up the required value. */
-    timeout = Curl_timeleft(data, nullptr, TRUE);
+    timeout = Curl_timeleft(data, NULL, TRUE);
     if(timeout < 0)
       result = CURLE_OPERATION_TIMEDOUT;
     else
@@ -760,7 +760,7 @@ static CURLcode gskit_connect_step2(struct connectdata *conn, int sockindex,
   /* Poll or wait for end of SSL asynchronous handshake. */
 
   for(;;) {
-    timeout_ms = nonblocking? 0: Curl_timeleft(data, nullptr, TRUE);
+    timeout_ms = nonblocking? 0: Curl_timeleft(data, NULL, TRUE);
     if(timeout_ms < 0)
       timeout_ms = 0;
     stmv.tv_sec = timeout_ms / 1000;
@@ -806,7 +806,7 @@ static CURLcode gskit_connect_step3(struct connectdata *conn, int sockindex)
   const gsk_cert_data_elem *cdev;
   int cdec;
   const gsk_cert_data_elem *p;
-  const char *cert = (const char *) nullptr;
+  const char *cert = (const char *) NULL;
   const char *certend;
   const char *ptr;
   int i;
@@ -902,7 +902,7 @@ static CURLcode gskit_connect_common(struct connectdata *conn, int sockindex,
   /* Step 1: create session, start handshake. */
   if(connssl->connecting_state == ssl_connect_1) {
     /* check allowed time left */
-    timeout_ms = Curl_timeleft(data, nullptr, TRUE);
+    timeout_ms = Curl_timeleft(data, NULL, TRUE);
 
     if(timeout_ms < 0) {
       /* no need to continue if time already is up */
@@ -916,7 +916,7 @@ static CURLcode gskit_connect_common(struct connectdata *conn, int sockindex,
   /* Step 2: check if handshake is over. */
   if(!result && connssl->connecting_state == ssl_connect_2) {
     /* check allowed time left */
-    timeout_ms = Curl_timeleft(data, nullptr, TRUE);
+    timeout_ms = Curl_timeleft(data, NULL, TRUE);
 
     if(timeout_ms < 0) {
       /* no need to continue if time already is up */

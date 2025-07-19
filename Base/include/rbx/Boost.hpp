@@ -35,7 +35,7 @@ using boost::weak_ptr;
 #define GetCurrentThreadId() (static_cast<unsigned>(reinterpret_cast<long>(pthread_self())))
 #define SwitchToThread() {sched_yield();}
 // We may decide to use the following instead on Mac, but we would prefer the above.
-//#define SwitchToThread() {struct timespec req = {0, 1}; nanosleep(&req, nullptr);}
+//#define SwitchToThread() {struct timespec req = {0, 1}; nanosleep(&req, NULL);}
 #endif
 
 namespace RBX
@@ -201,12 +201,12 @@ namespace rbx
 
         const char* getData() const
         {
-			return holder ? data : nullptr;
+			return holder ? data : NULL;
         }
 
         char* getData()
         {
-			return holder ? data : nullptr;
+			return holder ? data : NULL;
         }
 
     private: // representation

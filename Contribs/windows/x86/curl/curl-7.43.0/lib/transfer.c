@@ -1313,7 +1313,7 @@ CURLcode Curl_pretransfer(struct SessionHandle *data)
   data->state.authhost.want = data->set.httpauth;
   data->state.authproxy.want = data->set.proxyauth;
   Curl_safefree(data->info.wouldredirect);
-  data->info.wouldredirect = nullptr;
+  data->info.wouldredirect = NULL;
 
   /* If there is a list of cookie files to read, do it now! */
   if(data->change.cookielist)
@@ -1451,8 +1451,8 @@ static bool is_absolute_url(const char *url)
 /*
  * Concatenate a relative URL to a base URL making it absolute.
  * URL-encodes any spaces.
- * The returned pointer must be freed by the caller unless nullptr
- * (returns nullptr on out of memory).
+ * The returned pointer must be freed by the caller unless NULL
+ * (returns NULL on out of memory).
  */
 static char *concat_url(const char *base, const char *relurl)
 {
@@ -1474,7 +1474,7 @@ static char *concat_url(const char *base, const char *relurl)
   char *url_clone=strdup(base);
 
   if(!url_clone)
-    return nullptr; /* skip out of this NOW */
+    return NULL; /* skip out of this NOW */
 
   /* protsep points to the start of the host name */
   protsep=strstr(url_clone, "//");
@@ -1508,7 +1508,7 @@ static char *concat_url(const char *base, const char *relurl)
     if(pathsep)
       protsep = pathsep+1;
     else
-      protsep = nullptr;
+      protsep = NULL;
 
     /* now deal with one "./" or any amount of "../" in the newurl
        and act accordingly */
@@ -1585,7 +1585,7 @@ static char *concat_url(const char *base, const char *relurl)
 
   if(!newest) {
     free(url_clone); /* don't leak this */
-    return nullptr;
+    return NULL;
   }
 
   /* copy over the root url part */
@@ -1705,7 +1705,7 @@ CURLcode Curl_follow(struct SessionHandle *data,
 
   data->change.url = newurl;
   data->change.url_alloc = TRUE;
-  newurl = nullptr; /* don't free! */
+  newurl = NULL; /* don't free! */
 
   infof(data, "Issue another request to this URL: '%s'\n", data->change.url);
 
@@ -1830,7 +1830,7 @@ Curl_reconnect_request(struct connectdata **connp)
 
   /* conn may no longer be a good pointer, clear it to avoid mistakes by
      parent functions */
-  *connp = nullptr;
+  *connp = NULL;
 
   /*
    * According to bug report #1330310. We need to check for CURLE_SEND_ERROR
@@ -1852,7 +1852,7 @@ Curl_reconnect_request(struct connectdata **connp)
       if(async) {
         /* Now, if async is TRUE here, we need to wait for the name
            to resolve */
-        result = Curl_resolver_wait_resolv(conn, nullptr);
+        result = Curl_resolver_wait_resolv(conn, NULL);
         if(result)
           return result;
 
@@ -1875,7 +1875,7 @@ CURLcode Curl_retry_request(struct connectdata *conn,
 {
   struct SessionHandle *data = conn->data;
 
-  *url = nullptr;
+  *url = NULL;
 
   /* if we're talking upload, we can't do the checks below, unless the protocol
      is HTTP as when uploading over HTTP we will still get a response */
@@ -1923,16 +1923,16 @@ Curl_setup_transfer(
   int sockindex,            /* socket index to read from or -1 */
   curl_off_t size,          /* -1 if unknown at this point */
   bool getheader,           /* TRUE if header parsing is wanted */
-  curl_off_t *bytecountp,   /* return number of bytes read or nullptr */
+  curl_off_t *bytecountp,   /* return number of bytes read or NULL */
   int writesockindex,       /* socket index to write to, it may very well be
                                the same we read from. -1 disables */
-  curl_off_t *writecountp   /* return number of bytes written or nullptr */
+  curl_off_t *writecountp   /* return number of bytes written or NULL */
   )
 {
   struct SessionHandle *data;
   struct SingleRequest *k;
 
-  DEBUGASSERT(conn != nullptr);
+  DEBUGASSERT(conn != NULL);
 
   data = conn->data;
   k = &data->req;

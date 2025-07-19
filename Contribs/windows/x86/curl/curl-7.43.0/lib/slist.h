@@ -24,8 +24,8 @@
 
 /*
  * Curl_slist_duplicate() duplicates a linked list. It always returns the
- * address of the first record of the cloned list or nullptr in case of an
- * error (or if the input list was nullptr).
+ * address of the first record of the cloned list or NULL in case of an
+ * error (or if the input list was NULL).
  */
 struct curl_slist *Curl_slist_duplicate(struct curl_slist *inlist);
 

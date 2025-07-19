@@ -54,9 +54,9 @@ extern "C" {
  *
  * Some platforms can't determine the application's path, and on other
  *  platforms, this might be meaningless. In such cases, this function will
- *  return nullptr.
+ *  return NULL.
  *
- *  \return String of base dir in UTF-8 encoding, or nullptr on error.
+ *  \return String of base dir in UTF-8 encoding, or NULL on error.
  *
  * \sa SDL_GetPrefPath
  */
@@ -114,11 +114,11 @@ extern DECLSPEC char *SDLCALL SDL_GetBasePath(void);
  *
  * Some platforms can't determine the pref path, and on other
  *  platforms, this might be meaningless. In such cases, this function will
- *  return nullptr.
+ *  return NULL.
  *
  *   \param org The name of your organization.
  *   \param app The name of your application.
- *  \return UTF-8 string of user dir in platform-dependent notation. nullptr
+ *  \return UTF-8 string of user dir in platform-dependent notation. NULL
  *          if there's a problem (creating directory failed, etc).
  *
  * \sa SDL_GetBasePath

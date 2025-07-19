@@ -241,7 +241,7 @@ static const luaL_Reg mathlib[] = {
   {"sqrt",  math_sqrt},
   {"tanh",   math_tanh},
   {"tan",   math_tan},
-  {nullptr, nullptr}
+  {NULL, NULL}
 };
 
 

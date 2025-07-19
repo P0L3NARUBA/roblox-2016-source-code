@@ -168,7 +168,7 @@ OVR_PUBLIC_FUNCTION(void) ovr_GetEyePoses(ovrSession session, long long frameInd
     ovrTrackingState trackingState = ovr_GetTrackingState(session, frameTime, latencyMarker);
     ovr_CalcEyePoses(trackingState.HeadPose.ThePose, hmdToEyeViewOffset, outEyePoses);
 
-    if ( outHmdTrackingState != nullptr )
+    if ( outHmdTrackingState != NULL )
     {
         *outHmdTrackingState = trackingState;
     }
@@ -187,7 +187,7 @@ OVR_PUBLIC_FUNCTION(ovrDetectResult) ovr_Detect(int timeoutMsec)
     HANDLE hServiceEvent = ::OpenEventW(SYNCHRONIZE, FALSE, OVR_HMD_CONNECTED_EVENT_NAME);
 
     // If event exists,
-    if (hServiceEvent != nullptr)
+    if (hServiceEvent != NULL)
     {
         // This indicates that the Oculus Runtime is installed and running.
         result.IsOculusServiceRunning = ovrTrue;

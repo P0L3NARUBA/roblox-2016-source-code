@@ -96,7 +96,7 @@ static const PropertyDescriptor* getScriptSourceDescriptorIfScript(shared_ptr<In
 	}
 	else
 	{
-		return nullptr;
+		return NULL;
 	}
 }
 
@@ -490,7 +490,7 @@ public:
 		{
 			case Delete:
 				//RBX::StandardOut::singleton()->printf(RBX::MESSAGE_INFO, "ChangeHistoryService Delete %s 0x%X\n", instance->getName().c_str(), instance.get());
-				instance->setParent(nullptr);
+				instance->setParent(NULL);
 				break;
 			case Change:
 			{
@@ -526,7 +526,7 @@ public:
 				break;
 			case Create:
 				//RBX::StandardOut::singleton()->printf(RBX::MESSAGE_INFO, "ChangeHistoryService Un-Create %s 0x%X\n", instance->getName().c_str(), instance.get());
-				instance->setParent(nullptr);
+				instance->setParent(NULL);
 				break;
             default:
                 break;
@@ -648,7 +648,7 @@ public:
 	{
 		Items::iterator iter = items.find(instance);
 		if (iter==items.end())
-			return nullptr;
+			return NULL;
 		else
             return &iter->second;
 	}
@@ -1151,7 +1151,7 @@ void ChangeHistoryService::dettach()
 
 void ChangeHistoryService::attach()
 {
-	RBXASSERT(recording==nullptr);
+	RBXASSERT(recording==NULL);
 	RBXASSERT(waypoints.size()==0);
 	recording = new Waypoint(this);
 	playWaypoint = waypoints.end();
@@ -1173,11 +1173,11 @@ void ChangeHistoryService::onServiceProvider(ServiceProvider* oldProvider, Servi
 		runService.reset();
 		runTransitionConnection.disconnect();
 		dettach();
-		dataModel = nullptr;
+		dataModel = NULL;
 
         if ( statsItem ) 
         {
-			statsItem->setParent(nullptr);
+			statsItem->setParent(NULL);
 			statsItem.reset();
 		}
 	}
@@ -1240,8 +1240,8 @@ void ChangeHistoryService::onItemAdded(shared_ptr<Instance> instance)
 	shared_ptr<RBX::MegaClusterInstance> cluster = Instance::fastSharedDynamicCast<RBX::MegaClusterInstance>(instance);
 	if(cluster)
 	{
-		RBXASSERT(megaClusterInstance == nullptr);
-		if (megaClusterInstance == nullptr) {
+		RBXASSERT(megaClusterInstance == NULL);
+		if (megaClusterInstance == NULL) {
 			megaClusterInstance = cluster;
 
 			if (megaClusterInstance->isSmooth())
@@ -1427,7 +1427,7 @@ void ChangeHistoryService::onItemRemoved(shared_ptr<Instance> instance)
 	shared_ptr<RBX::MegaClusterInstance> cluster = Instance::fastSharedDynamicCast<RBX::MegaClusterInstance>(instance);
 	if(cluster)
 	{
-		RBXASSERT(megaClusterInstance != nullptr);
+		RBXASSERT(megaClusterInstance != NULL);
 		RBXASSERT(megaClusterInstance == cluster);
 
 		if (megaClusterInstance->isSmooth())

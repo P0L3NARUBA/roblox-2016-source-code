@@ -88,11 +88,11 @@ const Primitive* Mechanism::getConstRootMovingPrimitive(const Primitive* p)
 	const Assembly* a = p->getConstAssembly();
 	RBXASSERT(a);
 	if (!a) {
-		return nullptr;
+		return NULL;
 	}
 
 	if (a->computeIsGrounded()) {
-		return nullptr;
+		return NULL;
 	}
 	const Assembly* movingRoot = getConstMovingAssemblyRoot(a);
 	return movingRoot->getConstAssemblyPrimitive();
@@ -109,7 +109,7 @@ Mechanism* Mechanism::getPrimitiveMechanism(Primitive* p)
 	if (Assembly* assembly = Assembly::getPrimitiveAssembly(p)) {
 		return rbx_static_cast<Mechanism*>(assembly->getComputedUpper());
 	}
-	return nullptr;
+	return NULL;
 }
 
 const Mechanism* Mechanism::getConstPrimitiveMechanism(const Primitive* p)
@@ -117,7 +117,7 @@ const Mechanism* Mechanism::getConstPrimitiveMechanism(const Primitive* p)
 	if (const Assembly* assembly = Assembly::getConstPrimitiveAssembly(p)) {
 		return rbx_static_cast<const Mechanism*>(assembly->getConstComputedUpper());
 	}
-	return nullptr;
+	return NULL;
 }
 
 

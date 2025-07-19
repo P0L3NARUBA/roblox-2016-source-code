@@ -334,7 +334,7 @@ static const char* get_builtin_variable_from_semantic(EAttribSemantic sem, ETarg
 		if (targetVersion != ETargetGLSL_ES_100)
 			return "gl_VertexID";
 	}
-	return nullptr;
+	return NULL;
 }
 
 
@@ -1106,7 +1106,7 @@ void HlslLinker::emitInputNonStructParam(GlslSymbol* sym, EShLanguage lang, bool
 	else
 	{
 		preamble << "    ";
-		writeType (preamble, sym->getType(), nullptr, usePrecision?sym->getPrecision():EbpUndefined);
+		writeType (preamble, sym->getType(), NULL, usePrecision?sym->getPrecision():EbpUndefined);
 		preamble << " xlt_" << sym->getName() << " = ";
 		emitSymbolWithPad (preamble, ctor, name, pad);
 		preamble << ";\n";
@@ -1252,7 +1252,7 @@ void HlslLinker::emitOutputNonStructParam(GlslSymbol* sym, EShLanguage lang, boo
                 prec = EbpHigh;
         }
 
-        writeType (preamble, sym->getType(), nullptr,prec);
+        writeType (preamble, sym->getType(), NULL,prec);
 		preamble << " xlt_" << sym->getName() << ";\n";                     
 	}
 	
@@ -1355,7 +1355,7 @@ void HlslLinker::emitMainStart(const HlslCrossCompiler* compiler, const EGlslSym
 	else if (retType != EgstVoid)
 	{
 		preamble << "    ";
-		writeType (preamble, retType, nullptr, usePrecision?funcMain->getPrecision():EbpUndefined);
+		writeType (preamble, retType, NULL, usePrecision?funcMain->getPrecision():EbpUndefined);
 		preamble << " xl_retval;\n";
 	}
 }
@@ -1551,10 +1551,10 @@ bool HlslLinker::link(HlslCrossCompiler* compiler, const char* entryFunc, ETarge
 	
 	
 	// figure out all relevant functions
-	GlslFunction* globalFunction = nullptr;
+	GlslFunction* globalFunction = NULL;
 	std::vector<GlslFunction*> functionList;
 	FunctionSet calledFunctions;
-	GlslFunction* funcMain = nullptr;
+	GlslFunction* funcMain = NULL;
 	if (!buildFunctionLists(compiler, lang, entryPoint, globalFunction, functionList, calledFunctions, funcMain))
 		return false;
 	assert(globalFunction);
@@ -1651,7 +1651,7 @@ bool HlslLinker::link(HlslCrossCompiler* compiler, const char* entryFunc, ETarge
 
 		case EqtUniform:
 			uniform << "uniform ";
-			writeType (uniform, sym->getType(), nullptr, usePrecision?sym->getPrecision():EbpUndefined);
+			writeType (uniform, sym->getType(), NULL, usePrecision?sym->getPrecision():EbpUndefined);
 			uniform << " xlu_" << sym->getName();
 			if(sym->getArraySize())
 				uniform << "[" << sym->getArraySize() << "]";

@@ -10,7 +10,7 @@ static OSCAN_COD  (**limits_type_g)(void * geo, lpSCAN_CONTROL lpsc );
 //---     
 BOOL get_object_limits(hOBJ hobj, lpD_POINT min, lpD_POINT max)
 {
-	return get_object_limits_lsk(hobj, min, max, nullptr);
+	return get_object_limits_lsk(hobj, min, max, NULL);
 }
 //---     
 BOOL get_object_limits_lsk(hOBJ hobj, lpD_POINT min, lpD_POINT max, lpMATR m)

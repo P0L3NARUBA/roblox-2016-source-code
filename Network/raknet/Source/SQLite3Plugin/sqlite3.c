@@ -731,7 +731,7 @@ typedef sqlite_uint64 sqlite3_uint64;
 ** If [sqlite3_close()] is invoked while a transaction is open,
 ** the transaction is automatically rolled back.
 **
-** The C parameter to [sqlite3_close(C)] must be either a nullptr
+** The C parameter to [sqlite3_close(C)] must be either a NULL
 ** pointer or an [sqlite3] object pointer obtained
 ** from [sqlite3_open()], [sqlite3_open16()], or
 ** [sqlite3_open_v2()], and not previously closed.
@@ -766,7 +766,7 @@ typedef int (*sqlite3_callback)(void*,int,char**, char**);
 ** message returned through the 5th parameter when it has finished using
 ** the error message.
 **
-** If the SQL statement in the 2nd parameter is nullptr or an empty string
+** If the SQL statement in the 2nd parameter is NULL or an empty string
 ** or a string containing only whitespace and comments, then no SQL
 ** statements are evaluated and the database is not changed.
 **
@@ -1153,15 +1153,15 @@ typedef struct sqlite3_mutex sqlite3_mutex;
 ** be unique across all VFS modules.
 **
 ** SQLite will guarantee that the zFilename parameter to xOpen
-** is either a nullptr pointer or string obtained
+** is either a NULL pointer or string obtained
 ** from xFullPathname().  SQLite further guarantees that
 ** the string will be valid and unchanged until xClose() is
 ** called. Because of the previous sentense,
 ** the [sqlite3_file] can safely store a pointer to the
 ** filename if it needs to remember the filename for some reason.
-** If the zFilename parameter is xOpen is a nullptr pointer then xOpen
+** If the zFilename parameter is xOpen is a NULL pointer then xOpen
 ** must invite its own temporary name for the file.  Whenever the 
-** xFilename parameter is nullptr it will also be the case that the
+** xFilename parameter is NULL it will also be the case that the
 ** flags parameter will include [SQLITE_OPEN_DELETEONCLOSE].
 **
 ** The flags argument to xOpen() includes all bits set in
@@ -1564,10 +1564,10 @@ struct sqlite3_mem_methods {
 ** for by [SQLITE_CONFIG_SCRATCH] and [SQLITE_CONFIG_PAGECACHE].
 ** There are three arguments: A pointer to the memory, the number of
 ** bytes in the memory buffer, and the minimum allocation size.  If
-** the first pointer (the memory pointer) is nullptr, then SQLite reverts
+** the first pointer (the memory pointer) is NULL, then SQLite reverts
 ** to using its default memory allocator (the system malloc() implementation),
 ** undoing any prior invocation of [SQLITE_CONFIG_MALLOC].  If the
-** memory pointer is not nullptr and either [SQLITE_ENABLE_MEMSYS3] or
+** memory pointer is not NULL and either [SQLITE_ENABLE_MEMSYS3] or
 ** [SQLITE_ENABLE_MEMSYS5] are defined, then the alternative memory
 ** allocator is engaged to handle all of SQLites memory allocation needs.</dd>
 **
@@ -1641,7 +1641,7 @@ struct sqlite3_mem_methods {
 ** [lookaside memory allocator] configuration for the [database connection].
 ** The first argument (the third parameter to [sqlite3_db_config()] is a
 ** pointer to a memory buffer to use for lookaside memory.  The first
-** argument may be nullptr in which case SQLite will allocate the lookaside
+** argument may be NULL in which case SQLite will allocate the lookaside
 ** buffer itself using [sqlite3_malloc()].  The second argument is the
 ** size of each lookaside buffer slot and the third argument is the number of
 ** slots.  The size of the buffer in the first argument must be greater than
@@ -1872,9 +1872,9 @@ SQLITE_API int sqlite3_complete16(const void *sql);
 ** an attempt is made to open a database table that another thread
 ** or process has locked.
 **
-** If the busy callback is nullptr, then [SQLITE_BUSY] or [SQLITE_IOERR_BLOCKED]
+** If the busy callback is NULL, then [SQLITE_BUSY] or [SQLITE_IOERR_BLOCKED]
 ** is returned immediately upon encountering the lock. If the busy callback
-** is not nullptr, then the callback will be invoked with two arguments.
+** is not NULL, then the callback will be invoked with two arguments.
 **
 ** The first argument to the handler is a copy of the void* pointer which
 ** is the third argument to sqlite3_busy_handler().  The second argument to
@@ -1900,7 +1900,7 @@ SQLITE_API int sqlite3_complete16(const void *sql);
 ** will induce the first process to release its read lock and allow
 ** the second process to proceed.
 **
-** The default busy callback is nullptr.
+** The default busy callback is NULL.
 **
 ** The [SQLITE_BUSY] error is converted to [SQLITE_IOERR_BLOCKED]
 ** when SQLite is in the middle of a large transaction where all the
@@ -1972,8 +1972,8 @@ SQLITE_API int sqlite3_busy_timeout(sqlite3*, int ms);
 ** A result table is an array of pointers to zero-terminated UTF-8 strings.
 ** There are (N+1)*M elements in the array.  The first M pointers point
 ** to zero-terminated strings that  contain the names of the columns.
-** The remaining entries all point to query results.  nullptr values result
-** in nullptr pointers.  All other values are in their UTF-8 zero-terminated
+** The remaining entries all point to query results.  NULL values result
+** in NULL pointers.  All other values are in their UTF-8 zero-terminated
 ** string representation as returned by [sqlite3_column_text()].
 **
 ** A result table might consist of one or more memory allocations.
@@ -2048,7 +2048,7 @@ SQLITE_API void sqlite3_free_table(char **result);
 ** results into memory obtained from [sqlite3_malloc()].
 ** The strings returned by these two routines should be
 ** released by [sqlite3_free()].  Both routines return a
-** nullptr pointer if [sqlite3_malloc()] is unable to allocate enough
+** NULL pointer if [sqlite3_malloc()] is unable to allocate enough
 ** memory to hold the resulting string.
 **
 ** In sqlite3_snprintf() routine is similar to "snprintf()" from
@@ -2114,7 +2114,7 @@ SQLITE_API void sqlite3_free_table(char **result);
 **
 ** The %Q option works like %q except it also adds single quotes around
 ** the outside of the total string.  Additionally, if the parameter in the
-** argument list is a nullptr pointer, %Q substitutes the text "nullptr" (without
+** argument list is a NULL pointer, %Q substitutes the text "NULL" (without
 ** single quotes) in place of the %Q option.  So, for example, one could say:
 **
 ** <blockquote><pre>
@@ -2124,7 +2124,7 @@ SQLITE_API void sqlite3_free_table(char **result);
 ** </pre></blockquote>
 **
 ** The code above will render a correct SQL statement in the zSQL
-** variable even if the zText variable is a nullptr pointer.
+** variable even if the zText variable is a NULL pointer.
 **
 ** The "%z" formatting option works exactly like "%s" with the
 ** addition that after the string has been read and copied into
@@ -2148,36 +2148,36 @@ SQLITE_API char *sqlite3_snprintf(int,char*,const char*, ...);
 ** The sqlite3_malloc() routine returns a pointer to a block
 ** of memory at least N bytes in length, where N is the parameter.
 ** If sqlite3_malloc() is unable to obtain sufficient free
-** memory, it returns a nullptr pointer.  If the parameter N to
+** memory, it returns a NULL pointer.  If the parameter N to
 ** sqlite3_malloc() is zero or negative then sqlite3_malloc() returns
-** a nullptr pointer.
+** a NULL pointer.
 **
 ** Calling sqlite3_free() with a pointer previously returned
 ** by sqlite3_malloc() or sqlite3_realloc() releases that memory so
 ** that it might be reused.  The sqlite3_free() routine is
-** a no-op if is called with a nullptr pointer.  Passing a nullptr pointer
+** a no-op if is called with a NULL pointer.  Passing a NULL pointer
 ** to sqlite3_free() is harmless.  After being freed, memory
 ** should neither be read nor written.  Even reading previously freed
 ** memory might result in a segmentation fault or other severe error.
 ** Memory corruption, a segmentation fault, or other severe error
-** might result if sqlite3_free() is called with a non-nullptr pointer that
+** might result if sqlite3_free() is called with a non-NULL pointer that
 ** was not obtained from sqlite3_malloc() or sqlite3_realloc().
 **
 ** The sqlite3_realloc() interface attempts to resize a
 ** prior memory allocation to be at least N bytes, where N is the
 ** second parameter.  The memory allocation to be resized is the first
 ** parameter.  If the first parameter to sqlite3_realloc()
-** is a nullptr pointer then its behavior is identical to calling
+** is a NULL pointer then its behavior is identical to calling
 ** sqlite3_malloc(N) where N is the second parameter to sqlite3_realloc().
 ** If the second parameter to sqlite3_realloc() is zero or
 ** negative then the behavior is exactly the same as calling
 ** sqlite3_free(P) where P is the first parameter to sqlite3_realloc().
 ** sqlite3_realloc() returns a pointer to a memory allocation
-** of at least N bytes in size or nullptr if sufficient memory is unavailable.
+** of at least N bytes in size or NULL if sufficient memory is unavailable.
 ** If M is the size of the prior allocation, then min(N,M) bytes
 ** of the prior allocation are copied into the beginning of buffer returned
 ** by sqlite3_realloc() and the prior allocation is freed.
-** If sqlite3_realloc() returns nullptr, then the prior allocation
+** If sqlite3_realloc() returns NULL, then the prior allocation
 ** is not freed.
 **
 ** The memory returned by sqlite3_malloc() and sqlite3_realloc()
@@ -2210,7 +2210,7 @@ SQLITE_API char *sqlite3_snprintf(int,char*,const char*, ...);
 ** [H17321] [H17322] [H17323]
 **
 ** The pointer arguments to [sqlite3_free()] and [sqlite3_realloc()]
-** must be either nullptr or else pointers obtained from a prior
+** must be either NULL or else pointers obtained from a prior
 ** invocation of [sqlite3_malloc()] or [sqlite3_realloc()] that have
 ** not yet been released.
 **
@@ -2284,7 +2284,7 @@ SQLITE_API void sqlite3_randomness(int N, void *P);
 ** access is denied.  If the authorizer code is [SQLITE_READ]
 ** and the callback returns [SQLITE_IGNORE] then the
 ** [prepared statement] statement is constructed to substitute
-** a nullptr value in place of the table column that would have
+** a NULL value in place of the table column that would have
 ** been read if [SQLITE_OK] had been returned.  The [SQLITE_IGNORE]
 ** return can be used to deny an untrusted user access to individual
 ** columns of a table.
@@ -2314,7 +2314,7 @@ SQLITE_API void sqlite3_randomness(int N, void *P);
 **
 ** Only a single authorizer can be in place on a database connection
 ** at a time.  Each call to sqlite3_set_authorizer overrides the
-** previous call.  Disable the authorizer by installing a nullptr callback.
+** previous call.  Disable the authorizer by installing a NULL callback.
 ** The authorizer is disabled by default.
 **
 ** The authorizer callback must not do anything that will modify
@@ -2364,12 +2364,12 @@ SQLITE_API int sqlite3_set_authorizer(
 **
 ** These action code values signify what kind of operation is to be
 ** authorized.  The 3rd and 4th parameters to the authorization
-** callback function will be parameters or nullptr depending on which of these
+** callback function will be parameters or NULL depending on which of these
 ** codes is used as the second parameter.  The 5th parameter to the
 ** authorizer callback is the name of the database ("main", "temp",
 ** etc.) if applicable.  The 6th parameter to the authorizer callback
 ** is the name of the inner-most trigger or view that is responsible for
-** the access attempt or nullptr if this access attempt is directly from
+** the access attempt or NULL if this access attempt is directly from
 ** top-level SQL code.
 **
 ** Requirements:
@@ -2377,36 +2377,36 @@ SQLITE_API int sqlite3_set_authorizer(
 */
 /******************************************* 3rd ************ 4th ***********/
 #define SQLITE_CREATE_INDEX          1   /* Index Name      Table Name      */
-#define SQLITE_CREATE_TABLE          2   /* Table Name      nullptr            */
+#define SQLITE_CREATE_TABLE          2   /* Table Name      NULL            */
 #define SQLITE_CREATE_TEMP_INDEX     3   /* Index Name      Table Name      */
-#define SQLITE_CREATE_TEMP_TABLE     4   /* Table Name      nullptr            */
+#define SQLITE_CREATE_TEMP_TABLE     4   /* Table Name      NULL            */
 #define SQLITE_CREATE_TEMP_TRIGGER   5   /* Trigger Name    Table Name      */
-#define SQLITE_CREATE_TEMP_VIEW      6   /* View Name       nullptr            */
+#define SQLITE_CREATE_TEMP_VIEW      6   /* View Name       NULL            */
 #define SQLITE_CREATE_TRIGGER        7   /* Trigger Name    Table Name      */
-#define SQLITE_CREATE_VIEW           8   /* View Name       nullptr            */
-#define SQLITE_DELETE                9   /* Table Name      nullptr            */
+#define SQLITE_CREATE_VIEW           8   /* View Name       NULL            */
+#define SQLITE_DELETE                9   /* Table Name      NULL            */
 #define SQLITE_DROP_INDEX           10   /* Index Name      Table Name      */
-#define SQLITE_DROP_TABLE           11   /* Table Name      nullptr            */
+#define SQLITE_DROP_TABLE           11   /* Table Name      NULL            */
 #define SQLITE_DROP_TEMP_INDEX      12   /* Index Name      Table Name      */
-#define SQLITE_DROP_TEMP_TABLE      13   /* Table Name      nullptr            */
+#define SQLITE_DROP_TEMP_TABLE      13   /* Table Name      NULL            */
 #define SQLITE_DROP_TEMP_TRIGGER    14   /* Trigger Name    Table Name      */
-#define SQLITE_DROP_TEMP_VIEW       15   /* View Name       nullptr            */
+#define SQLITE_DROP_TEMP_VIEW       15   /* View Name       NULL            */
 #define SQLITE_DROP_TRIGGER         16   /* Trigger Name    Table Name      */
-#define SQLITE_DROP_VIEW            17   /* View Name       nullptr            */
-#define SQLITE_INSERT               18   /* Table Name      nullptr            */
-#define SQLITE_PRAGMA               19   /* Pragma Name     1st arg or nullptr */
+#define SQLITE_DROP_VIEW            17   /* View Name       NULL            */
+#define SQLITE_INSERT               18   /* Table Name      NULL            */
+#define SQLITE_PRAGMA               19   /* Pragma Name     1st arg or NULL */
 #define SQLITE_READ                 20   /* Table Name      Column Name     */
-#define SQLITE_SELECT               21   /* nullptr            nullptr            */
-#define SQLITE_TRANSACTION          22   /* Operation       nullptr            */
+#define SQLITE_SELECT               21   /* NULL            NULL            */
+#define SQLITE_TRANSACTION          22   /* Operation       NULL            */
 #define SQLITE_UPDATE               23   /* Table Name      Column Name     */
-#define SQLITE_ATTACH               24   /* Filename        nullptr            */
-#define SQLITE_DETACH               25   /* Database Name   nullptr            */
+#define SQLITE_ATTACH               24   /* Filename        NULL            */
+#define SQLITE_DETACH               25   /* Database Name   NULL            */
 #define SQLITE_ALTER_TABLE          26   /* Database Name   Table Name      */
-#define SQLITE_REINDEX              27   /* Index Name      nullptr            */
-#define SQLITE_ANALYZE              28   /* Table Name      nullptr            */
+#define SQLITE_REINDEX              27   /* Index Name      NULL            */
+#define SQLITE_ANALYZE              28   /* Table Name      NULL            */
 #define SQLITE_CREATE_VTABLE        29   /* Table Name      Module Name     */
 #define SQLITE_DROP_VTABLE          30   /* Table Name      Module Name     */
-#define SQLITE_FUNCTION             31   /* nullptr            Function Name   */
+#define SQLITE_FUNCTION             31   /* NULL            Function Name   */
 #define SQLITE_SAVEPOINT            32   /* Operation       Savepoint Name  */
 #define SQLITE_COPY                  0   /* No longer used */
 
@@ -2470,7 +2470,7 @@ SQLITE_API void sqlite3_progress_handler(sqlite3*, int, int(*)(void*), void*);
 ** order for sqlite3_open16(). A [database connection] handle is usually
 ** returned in *ppDb, even if an error occurs.  The only exception is that
 ** if SQLite is unable to allocate memory to hold the [sqlite3] object,
-** a nullptr will be written into *ppDb instead of a pointer to the [sqlite3]
+** a NULL will be written into *ppDb instead of a pointer to the [sqlite3]
 ** object. If the database is opened (and/or created) successfully, then
 ** [SQLITE_OK] is returned.  Otherwise an [error code] is returned.  The
 ** [sqlite3_errmsg()] or [sqlite3_errmsg16()] routines can be used to obtain
@@ -2533,7 +2533,7 @@ SQLITE_API void sqlite3_progress_handler(sqlite3*, int, int(*)(void*), void*);
 ** The fourth parameter to sqlite3_open_v2() is the name of the
 ** [sqlite3_vfs] object that defines the operating system interface that
 ** the new database connection should use.  If the fourth parameter is
-** a nullptr pointer then the default [sqlite3_vfs] object is used.
+** a NULL pointer then the default [sqlite3_vfs] object is used.
 **
 ** <b>Note to Windows users:</b>  The encoding used for the filename argument
 ** of sqlite3_open() and sqlite3_open_v2() must be UTF-8, not whatever
@@ -2749,18 +2749,18 @@ SQLITE_API int sqlite3_limit(sqlite3*, int id, int newVal);
 ** is equal to the number of bytes in the input string <i>including</i>
 ** the nul-terminator bytes.
 **
-** If pzTail is not nullptr then *pzTail is made to point to the first byte
+** If pzTail is not NULL then *pzTail is made to point to the first byte
 ** past the end of the first SQL statement in zSql.  These routines only
 ** compile the first statement in zSql, so *pzTail is left pointing to
 ** what remains uncompiled.
 **
 ** *ppStmt is left pointing to a compiled [prepared statement] that can be
 ** executed using [sqlite3_step()].  If there is an error, *ppStmt is set
-** to nullptr.  If the input text contains no SQL (if the input is an empty
-** string or a comment) then *ppStmt is set to nullptr.
+** to NULL.  If the input text contains no SQL (if the input is an empty
+** string or a comment) then *ppStmt is set to NULL.
 ** The calling procedure is responsible for deleting the compiled
 ** SQL statement using [sqlite3_finalize()] after it has finished with it.
-** ppStmt may not be nullptr.
+** ppStmt may not be NULL.
 **
 ** On success, [SQLITE_OK] is returned, otherwise an [error code] is returned.
 **
@@ -2846,7 +2846,7 @@ SQLITE_API const char *sqlite3_sql(sqlite3_stmt *pStmt);
 ** SQLite uses the sqlite3_value object to represent all values
 ** that can be stored in a database table. SQLite uses dynamic typing
 ** for the values it stores. Values stored in sqlite3_value objects
-** can be integers, floating point values, strings, BLOBs, or nullptr.
+** can be integers, floating point values, strings, BLOBs, or NULL.
 **
 ** An sqlite3_value object may be either "protected" or "unprotected".
 ** Some interfaces require a protected sqlite3_value.  Other interfaces
@@ -2956,7 +2956,7 @@ typedef struct sqlite3_context sqlite3_context;
 ** [sqlite3_prepare_v2()] (and its variants) or [sqlite3_reset()] and
 ** before [sqlite3_step()].
 ** Bindings are not cleared by the [sqlite3_reset()] routine.
-** Unbound parameters are interpreted as nullptr.
+** Unbound parameters are interpreted as NULL.
 **
 ** These routines return [SQLITE_OK] on success or an error code if
 ** anything goes wrong.  [SQLITE_RANGE] is returned if the parameter
@@ -3025,7 +3025,7 @@ SQLITE_API int sqlite3_bind_parameter_count(sqlite3_stmt*);
 ** The first host parameter has an index of 1, not 0.
 **
 ** If the value n is out of range or if the n-th parameter is
-** nameless, then nullptr is returned.  The returned string is
+** nameless, then NULL is returned.  The returned string is
 ** always in UTF-8 encoding even if the named parameter was
 ** originally specified as UTF-16 in [sqlite3_prepare16()] or
 ** [sqlite3_prepare16_v2()].
@@ -3063,7 +3063,7 @@ SQLITE_API int sqlite3_bind_parameter_index(sqlite3_stmt*, const char *zName);
 **
 ** Contrary to the intuition of many, [sqlite3_reset()] does not reset
 ** the [sqlite3_bind_blob | bindings] on a [prepared statement].
-** Use this routine to reset all host parameters to nullptr.
+** Use this routine to reset all host parameters to NULL.
 **
 ** Requirements:
 ** [H13661]
@@ -3099,7 +3099,7 @@ SQLITE_API int sqlite3_column_count(sqlite3_stmt *pStmt);
 **
 ** If sqlite3_malloc() fails during the processing of either routine
 ** (for example during a conversion from UTF-8 to UTF-16) then a
-** nullptr pointer is returned.
+** NULL pointer is returned.
 **
 ** The name of a result column is the value of the "AS" clause for
 ** that column, if there is an AS clause.  If there is no AS clause
@@ -3134,7 +3134,7 @@ SQLITE_API const void *sqlite3_column_name16(sqlite3_stmt*, int N);
 **
 ** If the Nth column returned by the statement is an expression or
 ** subquery and is not a column value, then all of these functions return
-** nullptr.  These routine might also return nullptr if a memory allocation error
+** NULL.  These routine might also return NULL if a memory allocation error
 ** occurs.  Otherwise, they return the name of the attached database, table
 ** and column that query result column was extracted from.
 **
@@ -3172,7 +3172,7 @@ SQLITE_API const void *sqlite3_column_origin_name16(sqlite3_stmt*,int);
 ** returned result set of that [SELECT] is a table column (not an
 ** expression or subquery) then the declared type of the table
 ** column is returned.  If the Nth column of the result set is an
-** expression or subquery, then a nullptr pointer is returned.
+** expression or subquery, then a NULL pointer is returned.
 ** The returned string is always UTF-8 encoded. {END}
 **
 ** For example, given the database schema:
@@ -3184,7 +3184,7 @@ SQLITE_API const void *sqlite3_column_origin_name16(sqlite3_stmt*,int);
 ** SELECT c1 + 1, c1 FROM t1;
 **
 ** this routine would return the string "VARIANT" for the second result
-** column (i==1), and a nullptr pointer for the first result column (i==0).
+** column (i==1), and a NULL pointer for the first result column (i==0).
 **
 ** SQLite uses dynamic run-time typing.  So just because a column
 ** is declared to contain a particular type does not mean that the
@@ -3290,7 +3290,7 @@ SQLITE_API int sqlite3_data_count(sqlite3_stmt *pStmt);
 ** <li> 64-bit IEEE floating point number
 ** <li> string
 ** <li> BLOB
-** <li> nullptr
+** <li> NULL
 ** </ul> {END}
 **
 ** These constants are codes for each of those types.
@@ -3360,7 +3360,7 @@ SQLITE_API int sqlite3_data_count(sqlite3_stmt *pStmt);
 ** Strings returned by sqlite3_column_text() and sqlite3_column_text16(),
 ** even empty strings, are always zero terminated.  The return
 ** value from sqlite3_column_blob() for a zero-length BLOB is an arbitrary
-** pointer, possibly even a nullptr pointer.
+** pointer, possibly even a NULL pointer.
 **
 ** The sqlite3_column_bytes16() routine is similar to sqlite3_column_bytes()
 ** but leaves the result in UTF-16 in native byte order instead of UTF-8.
@@ -3384,10 +3384,10 @@ SQLITE_API int sqlite3_data_count(sqlite3_stmt *pStmt);
 ** <table border="1">
 ** <tr><th> Internal<br>Type <th> Requested<br>Type <th>  Conversion
 **
-** <tr><td>  nullptr    <td> INTEGER   <td> Result is 0
-** <tr><td>  nullptr    <td>  FLOAT    <td> Result is 0.0
-** <tr><td>  nullptr    <td>   TEXT    <td> Result is nullptr pointer
-** <tr><td>  nullptr    <td>   BLOB    <td> Result is nullptr pointer
+** <tr><td>  NULL    <td> INTEGER   <td> Result is 0
+** <tr><td>  NULL    <td>  FLOAT    <td> Result is 0.0
+** <tr><td>  NULL    <td>   TEXT    <td> Result is NULL pointer
+** <tr><td>  NULL    <td>   BLOB    <td> Result is NULL pointer
 ** <tr><td> INTEGER  <td>  FLOAT    <td> Convert from integer to float
 ** <tr><td> INTEGER  <td>   TEXT    <td> ASCII rendering of the integer
 ** <tr><td> INTEGER  <td>   BLOB    <td> Same as INTEGER->TEXT
@@ -3459,7 +3459,7 @@ SQLITE_API int sqlite3_data_count(sqlite3_stmt *pStmt);
 **
 ** If a memory allocation error occurs during the evaluation of any
 ** of these routines, a default value is returned.  The default value
-** is either the integer 0, the floating point number 0.0, or a nullptr
+** is either the integer 0, the floating point number 0.0, or a NULL
 ** pointer.  Subsequent calls to [sqlite3_errcode()] will return
 ** [SQLITE_NOMEM].
 **
@@ -3572,10 +3572,10 @@ SQLITE_API int sqlite3_reset(sqlite3_stmt *pStmt);
 ** The seventh, eighth and ninth parameters, xFunc, xStep and xFinal, are
 ** pointers to C-language functions that implement the SQL function or
 ** aggregate. A scalar SQL function requires an implementation of the xFunc
-** callback only, nullptr pointers should be passed as the xStep and xFinal
+** callback only, NULL pointers should be passed as the xStep and xFinal
 ** parameters. An aggregate SQL function requires an implementation of xStep
-** and xFinal and nullptr should be passed for xFunc. To delete an existing
-** SQL function or aggregate, pass nullptr for all three function callbacks.
+** and xFinal and NULL should be passed for xFunc. To delete an existing
+** SQL function or aggregate, pass NULL for all three function callbacks.
 **
 ** It is permitted to register multiple implementations of the same
 ** functions with the same name but with either differing numbers of
@@ -3799,14 +3799,14 @@ SQLITE_API sqlite3 *sqlite3_context_db_handle(sqlite3_context*);
 ** value to the application-defined function. If no metadata has been ever
 ** been set for the Nth argument of the function, or if the corresponding
 ** function parameter has changed since the meta-data was set,
-** then sqlite3_get_auxdata() returns a nullptr pointer.
+** then sqlite3_get_auxdata() returns a NULL pointer.
 **
 ** The sqlite3_set_auxdata() interface saves the metadata
 ** pointed to by its 3rd parameter as the metadata for the N-th
 ** argument of the application-defined function.  Subsequent
 ** calls to sqlite3_get_auxdata() might return this data, if it has
 ** not been destroyed.
-** If it is not nullptr, SQLite will invoke the destructor
+** If it is not NULL, SQLite will invoke the destructor
 ** function given by the 4th parameter to sqlite3_set_auxdata() on
 ** the metadata when the corresponding function parameter changes
 ** or when the SQL statement completes, whichever comes first.
@@ -3908,7 +3908,7 @@ typedef void (*sqlite3_destructor_type)(void*);
 ** value given in the 2nd argument.
 **
 ** The sqlite3_result_null() interface sets the return value
-** of the application-defined function to be nullptr.
+** of the application-defined function to be NULL.
 **
 ** The sqlite3_result_text(), sqlite3_result_text16(),
 ** sqlite3_result_text16le(), and sqlite3_result_text16be() interfaces
@@ -3925,7 +3925,7 @@ typedef void (*sqlite3_destructor_type)(void*);
 ** pointed to by the 2nd parameter are taken as the application-defined
 ** function result.
 ** If the 4th parameter to the sqlite3_result_text* interfaces
-** or sqlite3_result_blob is a non-nullptr pointer, then SQLite calls that
+** or sqlite3_result_blob is a non-NULL pointer, then SQLite calls that
 ** function as the destructor on the text or BLOB result when it has
 ** finished using that result.
 ** If the 4th parameter to the sqlite3_result_text* interfaces or
@@ -3993,7 +3993,7 @@ SQLITE_API void sqlite3_result_zeroblob(sqlite3_context*, int n);
 ** of UTF-16 in the native byte order of the host computer.
 **
 ** A pointer to the user supplied routine must be passed as the fifth
-** argument.  If it is nullptr, this is the same as deleting the collation
+** argument.  If it is NULL, this is the same as deleting the collation
 ** sequence (so that SQLite cannot call it anymore).
 ** Each time the application supplied function is invoked, it is passed
 ** as its first parameter a copy of the void* passed as the fourth argument
@@ -4131,7 +4131,7 @@ SQLITE_API int sqlite3_sleep(int);
 ** If this global variable is made to point to a string which is
 ** the name of a folder (a.k.a. directory), then all temporary files
 ** created by SQLite will be placed in that directory.  If this variable
-** is a nullptr pointer, then SQLite performs a search for an appropriate
+** is a NULL pointer, then SQLite performs a search for an appropriate
 ** temporary file directory.
 **
 ** It is not safe to read or modify this variable in more than one
@@ -4150,7 +4150,7 @@ SQLITE_API int sqlite3_sleep(int);
 ** [sqlite3_malloc] and the pragma may attempt to free that memory
 ** using [sqlite3_free].
 ** Hence, if this variable is modified directly, either it should be
-** made nullptr or made to point to memory obtained from [sqlite3_malloc]
+** made NULL or made to point to memory obtained from [sqlite3_malloc]
 ** or else the use of the [temp_store_directory pragma] should be avoided.
 */
 SQLITE_API char *sqlite3_temp_directory;
@@ -4197,14 +4197,14 @@ SQLITE_API sqlite3 *sqlite3_db_handle(sqlite3_stmt*);
 ** CAPI3REF: Find the next prepared statement {H13140} <S60600>
 **
 ** This interface returns a pointer to the next [prepared statement] after
-** pStmt associated with the [database connection] pDb.  If pStmt is nullptr
+** pStmt associated with the [database connection] pDb.  If pStmt is NULL
 ** then this interface returns a pointer to the first prepared statement
 ** associated with the database connection pDb.  If no prepared statement
-** satisfies the conditions of this routine, it returns nullptr.
+** satisfies the conditions of this routine, it returns NULL.
 **
 ** The [database connection] pointer D in a call to
 ** [sqlite3_next_stmt(D,S)] must refer to an open database
-** connection and in particular must not be a nullptr pointer.
+** connection and in particular must not be a NULL pointer.
 **
 ** Requirements: [H13143] [H13146] [H13149] [H13152]
 */
@@ -4226,7 +4226,7 @@ SQLITE_API sqlite3_stmt *sqlite3_next_stmt(sqlite3 *pDb, sqlite3_stmt *pStmt);
 ** then the commit is converted into a rollback.
 **
 ** If another function was previously registered, its
-** pArg value is returned.  Otherwise nullptr is returned.
+** pArg value is returned.  Otherwise NULL is returned.
 **
 ** The callback implementation must not do anything that will modify
 ** the database connection that invoked the callback.  Any actions
@@ -4236,7 +4236,7 @@ SQLITE_API sqlite3_stmt *sqlite3_next_stmt(sqlite3 *pDb, sqlite3_stmt *pStmt);
 ** Note that [sqlite3_prepare_v2()] and [sqlite3_step()] both modify their
 ** database connections for the meaning of "modify" in this paragraph.
 **
-** Registering a nullptr function disables the callback.
+** Registering a NULL function disables the callback.
 **
 ** For the purposes of this API, a transaction is said to have been
 ** rolled back if an explicit "ROLLBACK" statement is executed, or
@@ -4286,7 +4286,7 @@ SQLITE_API void *sqlite3_rollback_hook(sqlite3*, void(*)(void *), void*);
 ** database connections for the meaning of "modify" in this paragraph.
 **
 ** If another function was previously registered, its pArg value
-** is returned.  Otherwise nullptr is returned.
+** is returned.  Otherwise NULL is returned.
 **
 ** Requirements:
 ** [H12971] [H12973] [H12975] [H12977] [H12979] [H12981] [H12983] [H12986]
@@ -4391,17 +4391,17 @@ SQLITE_API void sqlite3_soft_heap_limit(int);
 ** The column is identified by the second, third and fourth parameters to
 ** this function. The second parameter is either the name of the database
 ** (i.e. "main", "temp" or an attached database) containing the specified
-** table or nullptr. If it is nullptr, then all attached databases are searched
+** table or NULL. If it is NULL, then all attached databases are searched
 ** for the table using the same algorithm used by the database engine to
 ** resolve unqualified table references.
 **
 ** The third and fourth parameters to this function are the table and column
 ** name of the desired column, respectively. Neither of these parameters
-** may be nullptr.
+** may be NULL.
 **
 ** Metadata is returned by writing to the memory locations passed as the 5th
 ** and subsequent parameters to this function. Any of these arguments may be
-** nullptr, in which case the corresponding element of metadata is omitted.
+** NULL, in which case the corresponding element of metadata is omitted.
 **
 ** <blockquote>
 ** <table border="1">
@@ -4409,7 +4409,7 @@ SQLITE_API void sqlite3_soft_heap_limit(int);
 **
 ** <tr><td> 5th <td> const char* <td> Data type
 ** <tr><td> 6th <td> const char* <td> Name of default collation sequence
-** <tr><td> 7th <td> int         <td> True if column has a NOT nullptr constraint
+** <tr><td> 7th <td> int         <td> True if column has a NOT NULL constraint
 ** <tr><td> 8th <td> int         <td> True if column is part of the PRIMARY KEY
 ** <tr><td> 9th <td> int         <td> True if column is [AUTOINCREMENT]
 ** </table>
@@ -4445,12 +4445,12 @@ SQLITE_API void sqlite3_soft_heap_limit(int);
 */
 SQLITE_API int sqlite3_table_column_metadata(
   sqlite3 *db,                /* Connection handle */
-  const char *zDbName,        /* Database name or nullptr */
+  const char *zDbName,        /* Database name or NULL */
   const char *zTableName,     /* Table name */
   const char *zColumnName,    /* Column name */
   char const **pzDataType,    /* OUTPUT: Declared data type */
   char const **pzCollSeq,     /* OUTPUT: Collation sequence name */
-  int *pNotNull,              /* OUTPUT: True if NOT nullptr constraint exists */
+  int *pNotNull,              /* OUTPUT: True if NOT NULL constraint exists */
   int *pPrimaryKey,           /* OUTPUT: True if column part of PK */
   int *pAutoinc               /* OUTPUT: True if column is auto-increment */
 );
@@ -4993,8 +4993,8 @@ SQLITE_API int sqlite3_blob_write(sqlite3_blob *, const void *z, int n, int iOff
 ** The sqlite3_vfs_find() interface returns a pointer to a VFS given its name.
 ** Names are case sensitive.
 ** Names are zero-terminated UTF-8 strings.
-** If there is no match, a nullptr pointer is returned.
-** If zVfsName is nullptr then the default VFS is returned.
+** If there is no match, a NULL pointer is returned.
+** If zVfsName is NULL then the default VFS is returned.
 **
 ** New VFSes are registered with sqlite3_vfs_register().
 ** Each new VFS becomes the default VFS if the makeDflt flag is set.
@@ -5002,7 +5002,7 @@ SQLITE_API int sqlite3_blob_write(sqlite3_blob *, const void *z, int n, int iOff
 ** To make an existing VFS into the default VFS, register it again
 ** with the makeDflt flag set.  If two different VFSes with the
 ** same name are registered, the behavior is undefined.  If a
-** VFS is registered with a name that is nullptr or an empty string,
+** VFS is registered with a name that is NULL or an empty string,
 ** then the behavior is undefined.
 **
 ** Unregister a VFS with the sqlite3_vfs_unregister() interface.
@@ -5051,7 +5051,7 @@ SQLITE_API int sqlite3_vfs_unregister(sqlite3_vfs*);
 ** function that calls sqlite3_initialize().
 **
 ** {H17011} The sqlite3_mutex_alloc() routine allocates a new
-** mutex and returns a pointer to it. {H17012} If it returns nullptr
+** mutex and returns a pointer to it. {H17012} If it returns NULL
 ** that means that a mutex could not be allocated. {H17013} SQLite
 ** will unwind its stack and return an error. {H17014} The argument
 ** to sqlite3_mutex_alloc() is one of these integer constants:
@@ -5123,7 +5123,7 @@ SQLITE_API int sqlite3_vfs_unregister(sqlite3_vfs*);
 ** never do either. {END}
 **
 ** If the argument to sqlite3_mutex_enter(), sqlite3_mutex_try(), or
-** sqlite3_mutex_leave() is a nullptr pointer, then all three routines
+** sqlite3_mutex_leave() is a NULL pointer, then all three routines
 ** behave as no-ops.
 **
 ** See also: [sqlite3_mutex_held()] and [sqlite3_mutex_notheld()].
@@ -5178,12 +5178,12 @@ SQLITE_API void sqlite3_mutex_leave(sqlite3_mutex*);
 ** </ul>
 **
 ** The only difference is that the public sqlite3_XXX functions enumerated
-** above silently ignore any invocations that pass a nullptr pointer instead
+** above silently ignore any invocations that pass a NULL pointer instead
 ** of a valid mutex handle. The implementations of the methods defined
 ** by this structure are not required to handle this case, the results
-** of passing a nullptr pointer instead of a valid mutex handle are undefined
+** of passing a NULL pointer instead of a valid mutex handle are undefined
 ** (i.e. it is acceptable to provide an implementation that segfaults if
-** it is passed a nullptr pointer).
+** it is passed a NULL pointer).
 */
 typedef struct sqlite3_mutex_methods sqlite3_mutex_methods;
 struct sqlite3_mutex_methods {
@@ -5218,14 +5218,14 @@ struct sqlite3_mutex_methods {
 ** versions of these routines, it should at least provide stubs that always
 ** return true so that one does not get spurious assertion failures.
 **
-** {H17085} If the argument to sqlite3_mutex_held() is a nullptr pointer then
+** {H17085} If the argument to sqlite3_mutex_held() is a NULL pointer then
 ** the routine should return 1.  {END} This seems counter-intuitive since
 ** clearly the mutex cannot be held if it does not exist.  But the
 ** the reason the mutex does not exist is because the build is not
 ** using mutexes.  And we do not want the assert() containing the
 ** call to sqlite3_mutex_held() to fail, so a non-zero return is
 ** the appropriate thing to do.  {H17086} The sqlite3_mutex_notheld()
-** interface should also return 1 when given a nullptr pointer.
+** interface should also return 1 when given a NULL pointer.
 */
 SQLITE_API int sqlite3_mutex_held(sqlite3_mutex*);
 SQLITE_API int sqlite3_mutex_notheld(sqlite3_mutex*);
@@ -5257,7 +5257,7 @@ SQLITE_API int sqlite3_mutex_notheld(sqlite3_mutex*);
 ** serializes access to the [database connection] given in the argument
 ** when the [threading mode] is Serialized.
 ** If the [threading mode] is Single-thread or Multi-thread then this
-** routine returns a nullptr pointer.
+** routine returns a NULL pointer.
 */
 SQLITE_API sqlite3_mutex *sqlite3_db_mutex(sqlite3*);
 
@@ -5270,7 +5270,7 @@ SQLITE_API sqlite3_mutex *sqlite3_db_mutex(sqlite3*);
 ** name of the database is the name assigned to the database by the
 ** <a href="lang_attach.html">ATTACH</a> SQL command that opened the
 ** database. {H11303} To control the main database file, use the name "main"
-** or a nullptr pointer. {H11304} The third and fourth parameters to this routine
+** or a NULL pointer. {H11304} The third and fourth parameters to this routine
 ** are passed directly through to the second and third parameters of
 ** the xFileControl method.  {H11305} The return value of the xFileControl
 ** method becomes the return value of this routine.
@@ -5604,12 +5604,12 @@ typedef struct sqlite3_pcache sqlite3_pcache;
 **
 ** <table border=1 width=85% align=center>
 **   <tr><th>createFlag<th>Expected Behaviour
-**   <tr><td>0<td>nullptr should be returned. No new cache entry is created.
+**   <tr><td>0<td>NULL should be returned. No new cache entry is created.
 **   <tr><td>1<td>If createFlag is set to 1, this indicates that 
 **                SQLite is holding pinned pages that can be unpinned
 **                by writing their contents to the database file (a
 **                relatively expensive operation). In this situation the
-**                cache implementation has two choices: it can return nullptr,
+**                cache implementation has two choices: it can return NULL,
 **                in which case SQLite will attempt to unpin one or more 
 **                pages before re-requesting the same page, or it can
 **                allocate a new page and return a pointer to it. If a new
@@ -5621,7 +5621,7 @@ typedef struct sqlite3_pcache sqlite3_pcache;
 **                cache implementation should attempt to allocate a new
 **                cache entry and return a pointer to it. Again, the first
 **                sizeof(void*) bytes of the page should be zeroed before 
-**                it is returned. If the xFetch() method returns nullptr when 
+**                it is returned. If the xFetch() method returns NULL when 
 **                createFlag==2, SQLite assumes that a memory allocation 
 **                failed and returns SQLITE_NOMEM to the user.
 ** </table>
@@ -5729,7 +5729,7 @@ typedef struct sqlite3_backup sqlite3_backup;
 ** to access the source database. The values passed for the source and 
 ** destination [database connection] parameters must not be the same.
 **
-** If an error occurs within sqlite3_backup_init(), then nullptr is returned
+** If an error occurs within sqlite3_backup_init(), then NULL is returned
 ** and an error code and error message written into the [database connection] 
 ** passed as the first argument. They may be retrieved using the
 ** [sqlite3_errcode()], [sqlite3_errmsg()], and [sqlite3_errmsg16()] functions.
@@ -5914,7 +5914,7 @@ SQLITE_API int sqlite3_backup_pagecount(sqlite3_backup *p);
 ** blocked connection. If sqlite3_unlock_notify() is called when the
 ** blocked connection already has a registered unlock-notify callback,
 ** then the new callback replaces the old. If sqlite3_unlock_notify() is
-** called with a nullptr pointer as its second argument, then any existing
+** called with a NULL pointer as its second argument, then any existing
 ** unlock-notify callback is cancelled. The blocked connections 
 ** unlock-notify callback may also be canceled by closing the blocked
 ** connection using [sqlite3_close()].
@@ -6063,7 +6063,7 @@ struct HashElem {
 };
 
 /*
-** Access routines.  To delete, insert a nullptr pointer.
+** Access routines.  To delete, insert a NULL pointer.
 */
 SQLITE_PRIVATE void sqlite3HashInit(Hash*, int copyKey);
 SQLITE_PRIVATE void *sqlite3HashInsert(Hash*, const void *pKey, int nKey, void *pData);
@@ -6293,14 +6293,14 @@ SQLITE_PRIVATE void sqlite3HashClear(Hash*);
 #endif
 
 /*
-** If the following macro is set to 1, then nullptr values are considered
+** If the following macro is set to 1, then NULL values are considered
 ** distinct when determining whether or not two entries are the same
 ** in a UNIQUE index.  This is the way PostgreSQL, Oracle, DB2, MySQL,
 ** OCELOT, and Firebird all work.  The SQL92 spec explicitly says this
 ** is the way things are suppose to work.
 **
 ** If the following macro is set to 0, the NULLs are indistinct for
-** a UNIQUE index.  In this mode, you can only have a single nullptr entry
+** a UNIQUE index.  In this mode, you can only have a single NULL entry
 ** for a column declared UNIQUE.  This is the way Informix and SQL Server
 ** work.
 */
@@ -7898,7 +7898,7 @@ struct Db {
   Btree *pBt;          /* The B*Tree structure for this database file */
   u8 inTrans;          /* 0: not writable.  1: Transaction.  2: Checkpoint */
   u8 safety_level;     /* How aggressive at syncing data to disk */
-  void *pAux;               /* Auxiliary data.  Usually nullptr */
+  void *pAux;               /* Auxiliary data.  Usually NULL */
   void (*xFreeAux)(void*);  /* Routine to free pAux */
   Schema *pSchema;     /* Pointer to database schema (possibly shared) */
 };
@@ -7907,7 +7907,7 @@ struct Db {
 ** An instance of the following structure stores a database schema.
 **
 ** If there are no virtual tables configured in this schema, the
-** Schema.db variable is set to nullptr. After the first virtual table
+** Schema.db variable is set to NULL. After the first virtual table
 ** has been added, it is set to point to the database connection 
 ** used to create the connection. Once a virtual table has been
 ** added to the Schema structure and the Schema.db variable populated, 
@@ -8284,8 +8284,8 @@ struct Column {
   char *zName;     /* Name of this column */
   Expr *pDflt;     /* Default value of this column */
   char *zType;     /* Data type for this column */
-  char *zColl;     /* Collating sequence.  If nullptr, use the default */
-  u8 notNull;      /* True if there is a NOT nullptr constraint */
+  char *zColl;     /* Collating sequence.  If NULL, use the default */
+  u8 notNull;      /* True if there is a NOT NULL constraint */
   u8 isPrimKey;    /* True if this column is part of the PRIMARY KEY */
   char affinity;   /* One of the SQLITE_AFF_... values */
 #ifndef SQLITE_OMIT_VIRTUALTABLE
@@ -8310,7 +8310,7 @@ struct Column {
 ** CollSeq.pUser16 is the equivalent for the UTF-16 comparison function,
 ** xCmp16.
 **
-** If both CollSeq.xCmp and CollSeq.xCmp16 are nullptr, it means that the
+** If both CollSeq.xCmp and CollSeq.xCmp16 are NULL, it means that the
 ** collating sequence is undefined.  Indices built on an undefined
 ** collating sequence may not be read or written.
 */
@@ -8369,7 +8369,7 @@ struct CollSeq {
 ** Additional bit values that can be ORed with an affinity without
 ** changing the affinity.
 */
-#define SQLITE_JUMPIFNULL   0x08  /* jumps if either operand is nullptr */
+#define SQLITE_JUMPIFNULL   0x08  /* jumps if either operand is NULL */
 #define SQLITE_STOREP2      0x10  /* Store result in reg[P2] rather than jump */
 
 /*
@@ -8410,7 +8410,7 @@ struct Table {
   Column *aCol;        /* Information about each column */
   Index *pIndex;       /* List of SQL indexes on this table. */
   int tnum;            /* Root BTree node for this table (see note above) */
-  Select *pSelect;     /* nullptr for tables.  Points to definition if a view. */
+  Select *pSelect;     /* NULL for tables.  Points to definition if a view. */
   u16 nRef;            /* Number of pointers to this Table */
   u8 tabFlags;         /* Mask of TF_* values */
   u8 keyConf;          /* What to do in case of uniqueness conflict on iPKey */
@@ -8517,7 +8517,7 @@ struct FKey {
 ** RESTRICT, SETNULL, and CASCADE actions apply only to foreign keys.
 ** RESTRICT is the same as ABORT for IMMEDIATE foreign keys and the
 ** same as ROLLBACK for DEFERRED keys.  SETNULL means that the foreign
-** key is set to nullptr.  CASCADE means that a DELETE or UPDATE of the
+** key is set to NULL.  CASCADE means that a DELETE or UPDATE of the
 ** referenced table row is propagated into the row that holds the
 ** foreign key.
 ** 
@@ -8532,7 +8532,7 @@ struct FKey {
 #define OE_Replace  5   /* Delete existing record, then do INSERT or UPDATE */
 
 #define OE_Restrict 6   /* OE_Abort for IMMEDIATE, OE_Rollback for DEFERRED */
-#define OE_SetNull  7   /* Set the foreign key value to nullptr */
+#define OE_SetNull  7   /* Set the foreign key value to NULL */
 #define OE_SetDflt  8   /* Set the foreign key value to its default */
 #define OE_Cascade  9   /* Cascade the changes */
 
@@ -8633,7 +8633,7 @@ struct Index {
 ** and Token.n when Token.z==0.
 */
 struct Token {
-  const unsigned char *z; /* Text of the token.  Not nullptr-terminated! */
+  const unsigned char *z; /* Text of the token.  Not NULL-terminated! */
   unsigned dyn  : 1;      /* True for malloced memory, false for static */
   unsigned n    : 31;     /* Number of characters in this token */
 };
@@ -8699,7 +8699,7 @@ struct AggInfo {
 ** then Expr.token contains the name of the function.
 **
 ** Expr.pRight and Expr.pLeft are the left and right subexpressions of a
-** binary operator. Either or both may be nullptr.
+** binary operator. Either or both may be NULL.
 **
 ** Expr.x.pList is a list of arguments if the expression is an SQL function,
 ** a CASE expression or an IN expression of the form "<lhs> IN (<y>, <z>...)".
@@ -9057,9 +9057,9 @@ struct WhereInfo {
 ** A NameContext defines a context in which to resolve table and column
 ** names.  The context consists of a list of tables (the pSrcList) field and
 ** a list of named expression (pEList).  The named expression list may
-** be nullptr.  The pSrc corresponds to the FROM clause of a SELECT or
+** be NULL.  The pSrc corresponds to the FROM clause of a SELECT or
 ** to the table being operated on by INSERT, UPDATE, or DELETE.  The
-** pEList corresponds to the result set of a SELECT and is nullptr for
+** pEList corresponds to the result set of a SELECT and is NULL for
 ** other statements.
 **
 ** NameContexts can be nested.  When resolving names, the inner-most 
@@ -9085,7 +9085,7 @@ struct NameContext {
   u8 isCheck;          /* True if resolving names in a CHECK constraint */
   int nDepth;          /* Depth of subquery recursion. 1 for no recursion */
   AggInfo *pAggInfo;   /* Information about aggregates at this level */
-  NameContext *pNext;  /* Next outer name context.  nullptr for outermost */
+  NameContext *pNext;  /* Next outer name context.  NULL for outermost */
 };
 
 /*
@@ -9121,8 +9121,8 @@ struct Select {
   Select *pPrior;        /* Prior select in a compound select statement */
   Select *pNext;         /* Next select to the left in a compound */
   Select *pRightmost;    /* Right-most select in a compound select statement */
-  Expr *pLimit;          /* LIMIT expression. nullptr means not used. */
-  Expr *pOffset;         /* OFFSET expression. nullptr means not used. */
+  Expr *pLimit;          /* LIMIT expression. NULL means not used. */
+  Expr *pOffset;         /* OFFSET expression. NULL means not used. */
   int iLimit, iOffset;   /* Memory registers holding LIMIT & OFFSET counters */
   int addrOpenEphm[3];   /* OP_OpenEphem opcodes related to this select */
 };
@@ -9300,7 +9300,7 @@ struct Trigger {
   char *table;            /* The table or view to which the trigger applies */
   u8 op;                  /* One of TK_DELETE, TK_UPDATE, TK_INSERT         */
   u8 tr_tm;               /* One of TRIGGER_BEFORE, TRIGGER_AFTER */
-  Expr *pWhen;            /* The WHEN clause of the expression (may be nullptr) */
+  Expr *pWhen;            /* The WHEN clause of the expression (may be NULL) */
   IdList *pColumns;       /* If this is an UPDATE OF <column-list> trigger,
                              the <column-list> is stored here */
   Token nameToken;        /* Token containing zName. Use during parsing only */
@@ -9336,10 +9336,10 @@ struct Trigger {
  * (op == TK_INSERT)
  * orconf    -> stores the ON CONFLICT algorithm
  * pSelect   -> If this is an INSERT INTO ... SELECT ... statement, then
- *              this stores a pointer to the SELECT statement. Otherwise nullptr.
+ *              this stores a pointer to the SELECT statement. Otherwise NULL.
  * target    -> A token holding the name of the table to insert into.
  * pExprList -> If this is an INSERT INTO ... VALUES ... statement, then
- *              this stores values to be inserted. Otherwise nullptr.
+ *              this stores values to be inserted. Otherwise NULL.
  * pIdList   -> If this is an INSERT INTO ... (<column-names>) VALUES ... 
  *              statement, then this stores the column-names to be
  *              inserted into.
@@ -9347,12 +9347,12 @@ struct Trigger {
  * (op == TK_DELETE)
  * target    -> A token holding the name of the table to delete from.
  * pWhere    -> The WHERE clause of the DELETE statement if one is specified.
- *              Otherwise nullptr.
+ *              Otherwise NULL.
  * 
  * (op == TK_UPDATE)
  * target    -> A token holding the name of the table to update rows of.
  * pWhere    -> The WHERE clause of the UPDATE statement if one is specified.
- *              Otherwise nullptr.
+ *              Otherwise NULL.
  * pExprList -> A list of the columns to update and the expressions to update
  *              them to. See sqlite3Update() documentation of "pChanges"
  *              argument.
@@ -9431,7 +9431,7 @@ struct DbFixer {
 ** do not necessarily know how big the string will be in the end.
 */
 struct StrAccum {
-  sqlite3 *db;         /* Optional database for lookaside.  Can be nullptr */
+  sqlite3 *db;         /* Optional database for lookaside.  Can be NULL */
   char *zBase;         /* A base allocation.  Not from malloc. */
   char *zText;         /* The string collected so far */
   int  nChar;          /* Length of the string so far */
@@ -11319,7 +11319,7 @@ static void strftimeFunc(
           n += 50;
           break;
         default:
-          return;  /* ERROR.  return a nullptr */
+          return;  /* ERROR.  return a NULL */
       }
       i++;
     }
@@ -12640,7 +12640,7 @@ SQLITE_PRIVATE int sqlite3MemdebugMallocCount(){
 ** this is done, the chunk index refers to the second block of
 ** the chunk.  In this way, the first chunk has an index of 1.
 ** A chunk index of 0 means "no such chunk" and is the equivalent
-** of a nullptr pointer.
+** of a NULL pointer.
 **
 ** The second block of free chunks is of the form u.list.  The
 ** two fields form a double-linked list of chunks of related sizes.
@@ -12920,7 +12920,7 @@ static void memsys3Merge(u32 *pRoot){
 
 /*
 ** Return a block of memory of at least nBytes in size.
-** Return nullptr if unable.
+** Return NULL if unable.
 **
 ** This function assumes that the necessary mutexes, if any, are
 ** already held by the caller. Hence "Unsafe".
@@ -13460,7 +13460,7 @@ static int memsys5UnlinkFirst(int iLogsize){
 
 /*
 ** Return a block of memory of at least nBytes in size.
-** Return nullptr if unable.
+** Return NULL if unable.
 */
 static void *memsys5MallocUnsafe(int nByte){
   int i;           /* Index of a mem5.aPool[] slot */
@@ -13876,7 +13876,7 @@ SQLITE_API int sqlite3_mutex_try(sqlite3_mutex *p){
 /*
 ** The sqlite3_mutex_leave() routine exits a mutex that was previously
 ** entered by the same thread.  The behavior is undefined if the mutex 
-** is not currently entered. If a nullptr pointer is passed as an argument
+** is not currently entered. If a NULL pointer is passed as an argument
 ** this function is a no-op.
 */
 SQLITE_API void sqlite3_mutex_leave(sqlite3_mutex *p){
@@ -14001,7 +14001,7 @@ static int debugMutexEnd(void){ return SQLITE_OK; }
 
 /*
 ** The sqlite3_mutex_alloc() routine allocates a new
-** mutex and returns a pointer to it.  If it returns nullptr
+** mutex and returns a pointer to it.  If it returns NULL
 ** that means that a mutex could not be allocated. 
 */
 static sqlite3_mutex *debugMutexAlloc(int id){
@@ -14138,7 +14138,7 @@ static int os2MutexEnd(void){ return SQLITE_OK; }
 
 /*
 ** The sqlite3_mutex_alloc() routine allocates a new
-** mutex and returns a pointer to it.  If it returns nullptr
+** mutex and returns a pointer to it.  If it returns NULL
 ** that means that a mutex could not be allocated. 
 ** SQLite will unwind its stack and return an error.  The argument
 ** to sqlite3_mutex_alloc() is one of these integer constants:
@@ -14176,7 +14176,7 @@ static int os2MutexEnd(void){ return SQLITE_OK; }
 ** the same type number.
 */
 static sqlite3_mutex *os2MutexAlloc(int iType){
-  sqlite3_mutex *p = nullptr;
+  sqlite3_mutex *p = NULL;
   switch( iType ){
     case SQLITE_MUTEX_FAST:
     case SQLITE_MUTEX_RECURSIVE: {
@@ -14185,7 +14185,7 @@ static sqlite3_mutex *os2MutexAlloc(int iType){
         p->id = iType;
         if( DosCreateMutexSem( 0, &p->mutex, 0, FALSE ) != NO_ERROR ){
           sqlite3_free( p );
-          p = nullptr;
+          p = NULL;
         }
       }
       break;
@@ -14324,7 +14324,7 @@ static int os2MutexHeld(sqlite3_mutex *p){
   if( p!=0 ) {
     DosQueryMutexSem(p->mutex, &pid, &tid, &ulCount);
   } else {
-    DosGetInfoBlocks(&ptib, nullptr);
+    DosGetInfoBlocks(&ptib, NULL);
     tid = ptib->tib_ptib2->tib2_ultid;
   }
   return p==0 || (p->nRef!=0 && p->owner==tid);
@@ -14337,7 +14337,7 @@ static int os2MutexNotheld(sqlite3_mutex *p){
   if( p!= 0 ) {
     DosQueryMutexSem(p->mutex, &pid, &tid, &ulCount);
   } else {
-    DosGetInfoBlocks(&ptib, nullptr);
+    DosGetInfoBlocks(&ptib, NULL);
     tid = ptib->tib_ptib2->tib2_ultid;
   }
   return p==0 || p->nRef==0 || p->owner!=tid;
@@ -14444,7 +14444,7 @@ static int pthreadMutexEnd(void){ return SQLITE_OK; }
 
 /*
 ** The sqlite3_mutex_alloc() routine allocates a new
-** mutex and returns a pointer to it.  If it returns nullptr
+** mutex and returns a pointer to it.  If it returns NULL
 ** that means that a mutex could not be allocated.  SQLite
 ** will unwind its stack and return an error.  The argument
 ** to sqlite3_mutex_alloc() is one of these integer constants:
@@ -14783,7 +14783,7 @@ static int winMutexEnd(void){ return SQLITE_OK; }
 
 /*
 ** The sqlite3_mutex_alloc() routine allocates a new
-** mutex and returns a pointer to it.  If it returns nullptr
+** mutex and returns a pointer to it.  If it returns NULL
 ** that means that a mutex could not be allocated.  SQLite
 ** will unwind its stack and return an error.  The argument
 ** to sqlite3_mutex_alloc() is one of these integer constants:
@@ -15652,12 +15652,12 @@ SQLITE_PRIVATE void sqlite3SetString(char **pz, sqlite3 *db, const char *zFormat
 ** function. However, if a malloc() failure has occurred since the previous
 ** invocation SQLITE_NOMEM is returned instead. 
 **
-** If the first argument, db, is not nullptr and a malloc() error has occurred,
+** If the first argument, db, is not NULL and a malloc() error has occurred,
 ** then the connection error-code (the value returned by sqlite3_errcode())
 ** is set to SQLITE_NOMEM.
 */
 SQLITE_PRIVATE int sqlite3ApiExit(sqlite3* db, int rc){
-  /* If the db handle is not nullptr, then we must hold the connection handle
+  /* If the db handle is not NULL, then we must hold the connection handle
   ** mutex here. Otherwise the read (and possible write) of db->mallocFailed 
   ** is unsafe, as is the call to sqlite3Error().
   */
@@ -15743,7 +15743,7 @@ SQLITE_PRIVATE int sqlite3ApiExit(sqlite3* db, int rc){
 /* The rest are extensions, not normally found in printf() */
 #define etSQLESCAPE  10 /* Strings with '\'' doubled.  %q */
 #define etSQLESCAPE2 11 /* Strings with '\'' doubled and enclosed in '',
-                          nullptr pointers replaced by SQL nullptr.  %Q */
+                          NULL pointers replaced by SQL NULL.  %Q */
 #define etTOKEN      12 /* a pointer to a Token structure */
 #define etSRCLIST    13 /* a pointer to a SrcList */
 #define etPOINTER    14 /* The %p conversion */
@@ -16315,7 +16315,7 @@ SQLITE_PRIVATE void sqlite3VXPrintf(
         char q = ((xtype==etSQLESCAPE3)?'"':'\'');   /* Quote character */
         char *escarg = va_arg(ap,char*);
         isnull = escarg==0;
-        if( isnull ) escarg = (xtype==etSQLESCAPE2 ? "nullptr" : "(nullptr)");
+        if( isnull ) escarg = (xtype==etSQLESCAPE2 ? "NULL" : "(NULL)");
         for(i=n=0; (ch=escarg[i])!=0; i++){
           if( ch==q )  n++;
         }
@@ -16449,7 +16449,7 @@ SQLITE_PRIVATE void sqlite3StrAccumAppend(StrAccum *p, const char *z, int N){
 
 /*
 ** Finish off a string by making sure it is zero-terminated.
-** Return a pointer to the resulting string.  Return a nullptr
+** Return a pointer to the resulting string.  Return a NULL
 ** pointer if any kind of error was encountered.
 */
 SQLITE_PRIVATE char *sqlite3StrAccumFinish(StrAccum *p){
@@ -16894,7 +16894,7 @@ struct VdbeCursor {
   /* Cached information about the header for the data record that the
   ** cursor is currently pointing to.  Only valid if cacheValid is true.
   ** aRow might point to (ephemeral) data for the current row, or it might
-  ** be nullptr.
+  ** be NULL.
   */
   int cacheStatus;      /* Cache is valid if this matches Vdbe.cacheCtr */
   int payloadSize;      /* Total number of bytes in the record */
@@ -16941,7 +16941,7 @@ struct Mem {
 /* One or more of the following flags are set to indicate the validOK
 ** representations of the value stored in the Mem struct.
 **
-** If the MEM_Null flag is set, then the value is an SQL nullptr value.
+** If the MEM_Null flag is set, then the value is an SQL NULL value.
 ** No other flags may be set in this case.
 **
 ** If the MEM_Str flag is set then Mem.z points at a string representation.
@@ -16953,7 +16953,7 @@ struct Mem {
 ** Multiple of these values can appear in Mem.flags.  But only one
 ** at a time can appear in Mem.type.
 */
-#define MEM_Null      0x0001   /* Value is nullptr */
+#define MEM_Null      0x0001   /* Value is NULL */
 #define MEM_Str       0x0002   /* Value is a string */
 #define MEM_Int       0x0004   /* Value is an integer */
 #define MEM_Real      0x0008   /* Value is a real number */
@@ -17115,7 +17115,7 @@ struct Vdbe {
   char *zSql;           /* Text of the SQL statement that generated this */
   void *pFree;            /* Free this when deleting the vdbe */
 #ifdef SQLITE_DEBUG
-  FILE *trace;          /* Write an execution trace here, if not nullptr */
+  FILE *trace;          /* Write an execution trace here, if not NULL */
 #endif
   int iStatement;         /* Statement number (or 0 if has not opened stmt) */
 #ifdef SQLITE_SSE
@@ -17612,7 +17612,7 @@ SQLITE_PRIVATE int sqlite3Utf8To8(unsigned char *zIn){
 ** Memory to hold the UTF-8 string is obtained from sqlite3_malloc and must
 ** be freed by the calling function.
 **
-** nullptr is returned if there is an allocation error.
+** NULL is returned if there is an allocation error.
 */
 SQLITE_PRIVATE char *sqlite3Utf16to8(sqlite3 *db, const void *z, int nByte){
   Mem m;
@@ -17829,7 +17829,7 @@ SQLITE_PRIVATE int sqlite3Strlen(sqlite3 *db, const char *z){
 ** Set the most recent error code and error string for the sqlite
 ** handle "db". The error code is set to "err_code".
 **
-** If it is not nullptr, string zFormat specifies the format of the
+** If it is not NULL, string zFormat specifies the format of the
 ** error string in the style of the printf functions: The following
 ** format characters are allowed:
 **
@@ -17844,7 +17844,7 @@ SQLITE_PRIVATE int sqlite3Strlen(sqlite3 *db, const char *z){
 **
 ** To clear the most recent error for sqlite handle "db", sqlite3Error
 ** should be called with err_code set to SQLITE_OK and zFormat set
-** to nullptr.
+** to NULL.
 */
 SQLITE_PRIVATE void sqlite3Error(sqlite3 *db, int err_code, const char *zFormat, ...){
   if( db && (db->pErr || (db->pErr = sqlite3ValueNew(db))!=0) ){
@@ -18680,7 +18680,7 @@ SQLITE_PRIVATE int sqlite3SafetyOff(sqlite3 *db){
 ** Check to make sure we have a valid db pointer.  This test is not
 ** foolproof but it does provide some measure of protection against
 ** misuse of the interface such as passing in db pointers that are
-** nullptr or which have been previously closed.  If this routine returns
+** NULL or which have been previously closed.  If this routine returns
 ** 1 it means that the db pointer is valid and 0 if it should not be
 ** dereferenced for any reason.  The calling function should invoke
 ** SQLITE_MISUSE immediately.
@@ -18913,7 +18913,7 @@ static void removeElementGivenHash(
 
 /* Attempt to locate an element of the hash table pH with a key
 ** that matches pKey,nKey.  Return a pointer to the corresponding 
-** HashElem structure for this element if it is found, or nullptr
+** HashElem structure for this element if it is found, or NULL
 ** otherwise.
 */
 SQLITE_PRIVATE HashElem *sqlite3HashFindElem(const Hash *pH, const void *pKey, int nKey){
@@ -18928,7 +18928,7 @@ SQLITE_PRIVATE HashElem *sqlite3HashFindElem(const Hash *pH, const void *pKey, i
 
 /* Attempt to locate an element of the hash table pH with a key
 ** that matches pKey,nKey.  Return the data for this element if it is
-** found, or nullptr if there is no match.
+** found, or NULL if there is no match.
 */
 SQLITE_PRIVATE void *sqlite3HashFind(const Hash *pH, const void *pKey, int nKey){
   HashElem *elem;    /* The element that matches key */
@@ -18941,14 +18941,14 @@ SQLITE_PRIVATE void *sqlite3HashFind(const Hash *pH, const void *pKey, int nKey)
 **
 ** If no element exists with a matching key, then a new
 ** element is created.  A copy of the key is made if the copyKey
-** flag is set.  nullptr is returned.
+** flag is set.  NULL is returned.
 **
 ** If another element already exists with the same key, then the
 ** new data replaces the old data and the old data is returned.
 ** The key is not copied in this instance.  If a malloc fails, then
 ** the new data is returned and the hash table is unchanged.
 **
-** If the "data" parameter to this function is nullptr, then the
+** If the "data" parameter to this function is NULL, then the
 ** element corresponding to "key" is removed from the hash table.
 */
 SQLITE_PRIVATE void *sqlite3HashInsert(Hash *pH, const void *pKey, int nKey, void *data){
@@ -19460,7 +19460,7 @@ typedef struct os2File os2File;
 struct os2File {
   const sqlite3_io_methods *pMethod;  /* Always the first entry */
   HFILE h;                  /* Handle for accessing the file */
-  char* pathToDel;          /* Name of file to delete on close, nullptr if not */
+  char* pathToDel;          /* Name of file to delete on close, NULL if not */
   unsigned char locktype;   /* Type of lock currently held on this file */
 };
 
@@ -19481,10 +19481,10 @@ static int os2Close( sqlite3_file *id ){
     OSTRACE2( "CLOSE %d\n", pFile->h );
     rc = DosClose( pFile->h );
     pFile->locktype = NO_LOCK;
-    if( pFile->pathToDel != nullptr ){
+    if( pFile->pathToDel != NULL ){
       rc = DosForceDelete( (PSZ)pFile->pathToDel );
       free( pFile->pathToDel );
-      pFile->pathToDel = nullptr;
+      pFile->pathToDel = NULL;
     }
     id = 0;
     OpenCounter( -1 );
@@ -19955,17 +19955,17 @@ static int os2DeviceCharacteristics(sqlite3_file *id){
 /*
 ** Character set conversion objects used by conversion routines.
 */
-static UconvObject ucUtf8 = nullptr; /* convert between UTF-8 and UCS-2 */
-static UconvObject uclCp = nullptr;  /* convert between local codepage and UCS-2 */
+static UconvObject ucUtf8 = NULL; /* convert between UTF-8 and UCS-2 */
+static UconvObject uclCp = NULL;  /* convert between local codepage and UCS-2 */
 
 /*
 ** Helper function to initialize the conversion objects from and to UTF-8.
 */
 static void initUconvObjects( void ){
   if( UniCreateUconvObject( UTF_8, &ucUtf8 ) != ULS_SUCCESS )
-    ucUtf8 = nullptr;
+    ucUtf8 = NULL;
   if ( UniCreateUconvObject( (UniChar *)L"@path=yes", &uclCp ) != ULS_SUCCESS )
-    uclCp = nullptr;
+    uclCp = NULL;
 }
 
 /*
@@ -19976,8 +19976,8 @@ static void freeUconvObjects( void ){
     UniFreeUconvObject( ucUtf8 );
   if ( uclCp )
     UniFreeUconvObject( uclCp );
-  ucUtf8 = nullptr;
-  uclCp = nullptr;
+  ucUtf8 = NULL;
+  uclCp = NULL;
 }
 
 /*
@@ -19991,7 +19991,7 @@ static char *convertUtf8PathToCp( const char *in ){
   char *out = (char *)calloc( CCHMAXPATH, 1 );
 
   if( !out )
-    return nullptr;
+    return NULL;
 
   if( !ucUtf8 || !uclCp )
     initUconvObjects();
@@ -20020,7 +20020,7 @@ char *convertCpPathToUtf8( const char *in ){
   char *out = (char *)calloc( CCHMAXPATH, 1 );
 
   if( !out )
-    return nullptr;
+    return NULL;
 
   if( !ucUtf8 || !uclCp )
     initUconvObjects();
@@ -20159,7 +20159,7 @@ static int os2Open(
   char *zNameCp;
   char zTmpname[CCHMAXPATH+1];    /* Buffer to hold name of temp file */
 
-  /* If the second argument to this function is nullptr, generate a 
+  /* If the second argument to this function is NULL, generate a 
   ** temporary file name to use 
   */
   if( !zName ){
@@ -20208,7 +20208,7 @@ static int os2Open(
     pFile->pathToDel = convertUtf8PathToCp( pathUtf8 );
     OSTRACE1( "OPEN hidden/delete on close file attributes\n" );
   }else{
-    pFile->pathToDel = nullptr;
+    pFile->pathToDel = NULL;
     OSTRACE1( "OPEN normal file attribute\n" );
   }
 
@@ -20225,14 +20225,14 @@ static int os2Open(
                 ulFileAttribute,
                 ulOpenFlags,
                 ulOpenMode,
-                (PEAOP2)nullptr );
+                (PEAOP2)NULL );
   free( zNameCp );
   if( rc != NO_ERROR ){
     OSTRACE7( "OPEN Invalid handle rc=%d: zName=%s, ulAction=%#lx, ulAttr=%#lx, ulFlags=%#lx, ulMode=%#lx\n",
               rc, zName, ulAction, ulFileAttribute, ulOpenFlags, ulOpenMode );
     if( pFile->pathToDel )
       free( pFile->pathToDel );
-    pFile->pathToDel = nullptr;
+    pFile->pathToDel = NULL;
     if( flags & SQLITE_OPEN_READWRITE ){
       OSTRACE2( "OPEN %d Invalid handle\n", ((flags | SQLITE_OPEN_READONLY) & ~SQLITE_OPEN_READWRITE) );
       return os2Open( pVfs, zName, id,
@@ -20377,14 +20377,14 @@ static int os2Randomness(sqlite3_vfs *pVfs, int nBuf, char *zBuf ){
 
   if( sizeofULong <= nBuf - n ){
     PPIB ppib;
-    DosGetInfoBlocks(nullptr, &ppib);
+    DosGetInfoBlocks(NULL, &ppib);
     memcpy(&zBuf[n], &ppib->pib_ulpid, sizeofULong);
     n += sizeofULong;
   }
 
   if( sizeofULong <= nBuf - n ){
     PTIB ptib;
-    DosGetInfoBlocks(&ptib, nullptr);
+    DosGetInfoBlocks(&ptib, NULL);
     memcpy(&zBuf[n], &ptib->tib_ptib2->tib2_ultid, sizeofULong);
     n += sizeofULong;
   }
@@ -21239,7 +21239,7 @@ static int vxworksSimplifyName(char *z, int n){
 ** the object is returned.  A new vxworksFileId object is created
 ** and added to the global list if necessary.
 **
-** If a memory allocation error occurs, return nullptr.
+** If a memory allocation error occurs, return NULL.
 */
 static struct vxworksFileId *vxworksFindFileId(const char *zAbsoluteName){
   struct vxworksFileId *pNew;         /* search key and new file ID */
@@ -21756,7 +21756,7 @@ static int findLockInfo(
       if( openList ) openList->pPrev = pOpen;
       openList = pOpen;
 #if OS_VXWORKS
-      pOpen->pSem = nullptr;
+      pOpen->pSem = NULL;
       pOpen->aSemName[0] = '\0';
 #endif
     }else{
@@ -21801,7 +21801,7 @@ static int transferOwnership(unixFile *pFile){
   OSTRACE4("Transfer ownership of %d from %d to %d\n",
             pFile->h, pFile->tid, hSelf);
   pFile->tid = hSelf;
-  if (pFile->pLock != nullptr) {
+  if (pFile->pLock != NULL) {
     releaseLockInfo(pFile->pLock);
     rc = findLockInfo(pFile, &pFile->pLock, 0);
     OSTRACE5("LOCK    %d is now %s(%s,%d)\n", pFile->h,
@@ -22496,7 +22496,7 @@ static int dotlockLock(sqlite3_file *id, int locktype) {
     pFile->locktype = locktype;
 #if !OS_VXWORKS
     /* Always update the timestamp on the old file */
-    utimes(zLockFile, nullptr);
+    utimes(zLockFile, NULL);
 #endif
     return SQLITE_OK;
   }
@@ -24042,7 +24042,7 @@ static const sqlite3_io_methods *autolockIoFinderImpl(
   struct flock lockInfo;
 
   if( !filePath ){
-    /* If filePath==nullptr that means we are dealing with a transient file
+    /* If filePath==NULL that means we are dealing with a transient file
     ** that does not need to be locked. */
     return &nolockIoMethods;
   }
@@ -24091,7 +24091,7 @@ static const sqlite3_io_methods *autolockIoFinderImpl(
   struct flock lockInfo;
 
   if( !filePath ){
-    /* If filePath==nullptr that means we are dealing with a transient file
+    /* If filePath==NULL that means we are dealing with a transient file
     ** that does not need to be locked. */
     return &nolockIoMethods;
   }
@@ -24143,8 +24143,8 @@ static int fillInUnixFile(
   unixFile *pNew = (unixFile *)pId;
   int rc = SQLITE_OK;
 
-  assert( pNew->pLock==nullptr );
-  assert( pNew->pOpen==nullptr );
+  assert( pNew->pLock==NULL );
+  assert( pNew->pOpen==NULL );
 
   /* Parameter isDelete is only used on vxworks.
   ** Express this explicitly here to prevent compiler warnings
@@ -24201,7 +24201,7 @@ static int fillInUnixFile(
       pCtx->dbPath = zFilename;
       srandomdev();
       unixEnterMutex();
-      rc = findLockInfo(pNew, nullptr, &pNew->pOpen);
+      rc = findLockInfo(pNew, NULL, &pNew->pOpen);
       unixLeaveMutex();        
     }
   }
@@ -24230,7 +24230,7 @@ static int fillInUnixFile(
     */
     unixEnterMutex();
     rc = findLockInfo(pNew, &pNew->pLock, &pNew->pOpen);
-    if( (rc==SQLITE_OK) && (pNew->pOpen->pSem==nullptr) ){
+    if( (rc==SQLITE_OK) && (pNew->pOpen->pSem==NULL) ){
       char *zSemName = pNew->pOpen->aSemName;
       int n;
       sqlite3_snprintf(MAX_PATHNAME, zSemName, "%s.sem",
@@ -24325,7 +24325,7 @@ static int getTempname(int nBuf, char *zBuf){
   SimulateIOError( return SQLITE_IOERR );
 
   azDirs[0] = sqlite3_temp_directory;
-  if (nullptr == azDirs[1]) {
+  if (NULL == azDirs[1]) {
     azDirs[1] = getenv("TMPDIR");
   }
   
@@ -24417,7 +24417,7 @@ static int unixOpen(
       (eType==SQLITE_OPEN_MASTER_JOURNAL || eType==SQLITE_OPEN_MAIN_JOURNAL)
   );
 
-  /* If argument zPath is a nullptr pointer, this function is required to open
+  /* If argument zPath is a NULL pointer, this function is required to open
   ** a temporary file. Use this buffer to store the file name in.
   */
   char zTmpname[MAX_PATHNAME+1];
@@ -24515,14 +24515,14 @@ static int unixOpen(
   noLock = eType!=SQLITE_OPEN_MAIN_DB;
 
 #if SQLITE_PREFER_PROXY_LOCKING
-  if( zPath!=nullptr && !noLock ){
+  if( zPath!=NULL && !noLock ){
     char *envforce = getenv("SQLITE_FORCE_PROXY_LOCKING");
     int useProxy = 0;
 
     /* SQLITE_FORCE_PROXY_LOCKING==1 means force always use proxy, 
-    ** 0 means never use proxy, nullptr means use proxy for non-local files only
+    ** 0 means never use proxy, NULL means use proxy for non-local files only
     */
-    if( envforce!=nullptr ){
+    if( envforce!=NULL ){
       useProxy = atoi(envforce)>0;
     }else{
       struct statfs fsInfo;
@@ -24780,7 +24780,7 @@ static int unixSleep(sqlite3_vfs *NotUsed, int microseconds){
 
   sp.tv_sec = microseconds / 1000000;
   sp.tv_nsec = (microseconds % 1000000) * 1000;
-  nanosleep(&sp, nullptr);
+  nanosleep(&sp, NULL);
   UNUSED_PARAMETER(NotUsed);
   return microseconds;
 #elif defined(HAVE_USLEEP) && HAVE_USLEEP
@@ -25224,7 +25224,7 @@ static int proxyCreateUnixFile(const char *path, unixFile **ppFile) {
   }
   
   pNew = (unixFile *)sqlite3_malloc(sizeof(unixFile));
-  if( pNew==nullptr ){
+  if( pNew==NULL ){
     rc = SQLITE_NOMEM;
     goto end_create_proxy;
   }
@@ -25243,7 +25243,7 @@ end_create_proxy:
 }
 
 /* takes the conch by taking a shared lock and read the contents conch, if 
-** lockPath is non-nullptr, the host ID and lock file path must match.  A nullptr 
+** lockPath is non-NULL, the host ID and lock file path must match.  A NULL 
 ** lockPath means that the lockPath in the conch file will be used if the 
 ** host IDs match, or a new lock path will be generated automatically 
 ** and written to the conch file.
@@ -25258,7 +25258,7 @@ static int proxyTakeConch(unixFile *pFile){
     char testValue[CONCHLEN];
     char conchValue[CONCHLEN];
     char lockPath[MAXPATHLEN];
-    char *tLockPath = nullptr;
+    char *tLockPath = NULL;
     int rc = SQLITE_OK;
     int readRc = SQLITE_OK;
     int syncPerms = 0;
@@ -25426,7 +25426,7 @@ static int proxyReleaseConch(unixFile *pFile){
 ** The caller is responsible for ensuring that the allocated memory
 ** space is eventually freed.
 **
-** *pConchPath is set to nullptr if a memory allocation error occurs.
+** *pConchPath is set to NULL if a memory allocation error occurs.
 */
 static int proxyCreateConchPathname(char *dbPath, char **pConchPath){
   int i;                        /* Loop counter */
@@ -25474,15 +25474,15 @@ static int switchLockProxyPath(unixFile *pFile, const char *path) {
     return SQLITE_BUSY;
   }  
 
-  /* nothing to do if the path is nullptr, :auto: or matches the existing path */
+  /* nothing to do if the path is NULL, :auto: or matches the existing path */
   if( !path || path[0]=='\0' || !strcmp(path, ":auto:") ||
     (oldPath && !strncmp(oldPath, path, MAXPATHLEN)) ){
     return SQLITE_OK;
   }else{
     unixFile *lockProxy = pCtx->lockProxy;
-    pCtx->lockProxy=nullptr;
+    pCtx->lockProxy=NULL;
     pCtx->conchHeld = 0;
-    if( lockProxy!=nullptr ){
+    if( lockProxy!=NULL ){
       rc=lockProxy->pMethod->xClose((sqlite3_file *)lockProxy);
       if( rc ) return rc;
       sqlite3_free(lockProxy);
@@ -25534,7 +25534,7 @@ static int proxyGetDbPathForUnixFile(unixFile *pFile, char *dbPath){
 static int proxyTransformUnixFile(unixFile *pFile, const char *path) {
   proxyLockingContext *pCtx;
   char dbPath[MAXPATHLEN+1];       /* Name of the database file */
-  char *lockPath=nullptr;
+  char *lockPath=NULL;
   int rc = SQLITE_OK;
   
   if( pFile->locktype!=NO_LOCK ){
@@ -25542,7 +25542,7 @@ static int proxyTransformUnixFile(unixFile *pFile, const char *path) {
   }
   proxyGetDbPathForUnixFile(pFile, dbPath);
   if( !path || path[0]=='\0' || !strcmp(path, ":auto:") ){
-    lockPath=nullptr;
+    lockPath=NULL;
   }else{
     lockPath=(char *)path;
   }
@@ -25605,7 +25605,7 @@ static int proxyFileControl(sqlite3_file *id, int op, void *pArg){
           *(const char **)pArg = ":auto: (not held)";
         }
       } else {
-        *(const char **)pArg = nullptr;
+        *(const char **)pArg = NULL;
       }
       return SQLITE_OK;
     }
@@ -25613,7 +25613,7 @@ static int proxyFileControl(sqlite3_file *id, int op, void *pArg){
       unixFile *pFile = (unixFile*)id;
       int rc = SQLITE_OK;
       int isProxyStyle = (pFile->pMethod == &proxyIoMethods);
-      if( pArg==nullptr || (const char *)pArg==0 ){
+      if( pArg==NULL || (const char *)pArg==0 ){
         if( isProxyStyle ){
           /* turn off proxy locking - not supported */
           rc = SQLITE_ERROR /*SQLITE_PROTOCOL? SQLITE_MISUSE?*/;
@@ -26285,7 +26285,7 @@ static WCHAR *utf8ToUnicode(const char *zFilename){
   int nChar;
   WCHAR *zWideFilename;
 
-  nChar = MultiByteToWideChar(CP_UTF8, 0, zFilename, -1, nullptr, 0);
+  nChar = MultiByteToWideChar(CP_UTF8, 0, zFilename, -1, NULL, 0);
   zWideFilename = malloc( nChar*sizeof(zWideFilename[0]) );
   if( zWideFilename==0 ){
     return 0;
@@ -26332,7 +26332,7 @@ static WCHAR *mbcsToUnicode(const char *zFilename){
   WCHAR *zMbcsFilename;
   int codepage = AreFileApisANSI() ? CP_ACP : CP_OEMCP;
 
-  nByte = MultiByteToWideChar(codepage, 0, zFilename, -1, nullptr,0)*sizeof(WCHAR);
+  nByte = MultiByteToWideChar(codepage, 0, zFilename, -1, NULL,0)*sizeof(WCHAR);
   zMbcsFilename = malloc( nByte*sizeof(zMbcsFilename[0]) );
   if( zMbcsFilename==0 ){
     return 0;
@@ -26478,7 +26478,7 @@ static BOOL winceCreateLock(const char *zFilename, winFile *pFile){
   }
 
   /* Create/open the named mutex */
-  pFile->hMutex = CreateMutexW(nullptr, FALSE, zName);
+  pFile->hMutex = CreateMutexW(NULL, FALSE, zName);
   if (!pFile->hMutex){
     pFile->lastErrno = GetLastError();
     free(zName);
@@ -26493,7 +26493,7 @@ static BOOL winceCreateLock(const char *zFilename, winFile *pFile){
   ** and using that as the shared filemapping name.
   */
   CharUpperW(zName);
-  pFile->hShared = CreateFileMappingW(INVALID_HANDLE_VALUE, nullptr,
+  pFile->hShared = CreateFileMappingW(INVALID_HANDLE_VALUE, NULL,
                                        PAGE_READWRITE, 0, sizeof(winceLock),
                                        zName);  
 
@@ -26513,15 +26513,15 @@ static BOOL winceCreateLock(const char *zFilename, winFile *pFile){
     if (!pFile->shared){
       pFile->lastErrno = GetLastError();
       CloseHandle(pFile->hShared);
-      pFile->hShared = nullptr;
+      pFile->hShared = NULL;
     }
   }
 
   /* If shared memory could not be created, then close the mutex and fail */
-  if (pFile->hShared == nullptr){
+  if (pFile->hShared == NULL){
     winceMutexRelease(pFile->hMutex);
     CloseHandle(pFile->hMutex);
-    pFile->hMutex = nullptr;
+    pFile->hMutex = NULL;
     return FALSE;
   }
   
@@ -26564,7 +26564,7 @@ static void winceDestroyLock(winFile *pFile){
     /* Done with the mutex */
     winceMutexRelease(pFile->hMutex);    
     CloseHandle(pFile->hMutex);
-    pFile->hMutex = nullptr;
+    pFile->hMutex = NULL;
   }
 }
 
@@ -27362,7 +27362,7 @@ static int getLastErrorMsg(int nBuf, char *zBuf){
   ** buffer, excluding the terminating null char.
   */
   if (!FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM,
-                      nullptr,
+                      NULL,
                       error,
                       0,
                       zBuf,
@@ -27402,7 +27402,7 @@ static int winOpen(
   assert( id!=0 );
   UNUSED_PARAMETER(pVfs);
 
-  /* If the second argument to this function is nullptr, generate a 
+  /* If the second argument to this function is NULL, generate a 
   ** temporary file name to use 
   */
   if( !zUtf8Name ){
@@ -27455,10 +27455,10 @@ static int winOpen(
     h = CreateFileW((WCHAR*)zConverted,
        dwDesiredAccess,
        dwShareMode,
-       nullptr,
+       NULL,
        dwCreationDisposition,
        dwFlagsAndAttributes,
-       nullptr
+       NULL
     );
 /* isNT() is 1 if SQLITE_OS_WINCE==1, so this else is never executed. 
 ** Since the ASCII version of these Windows API do not exist for WINCE,
@@ -27469,10 +27469,10 @@ static int winOpen(
     h = CreateFileA((char*)zConverted,
        dwDesiredAccess,
        dwShareMode,
-       nullptr,
+       NULL,
        dwCreationDisposition,
        dwFlagsAndAttributes,
-       nullptr
+       NULL
     );
 #endif
   }
@@ -28100,7 +28100,7 @@ struct Bitvec {
 
 /*
 ** Create a new bitmap object able to handle bits between 0 and iSize,
-** inclusive.  Return a pointer to the new object.  Return nullptr if 
+** inclusive.  Return a pointer to the new object.  Return NULL if 
 ** malloc fails.
 */
 SQLITE_PRIVATE Bitvec *sqlite3BitvecCreate(u32 iSize){
@@ -28115,7 +28115,7 @@ SQLITE_PRIVATE Bitvec *sqlite3BitvecCreate(u32 iSize){
 
 /*
 ** Check to see if the i-th bit is set.  Return true or false.
-** If p is nullptr (if the bitmap has not been created) or if
+** If p is NULL (if the bitmap has not been created) or if
 ** i is out of range, then return false.
 */
 SQLITE_PRIVATE int sqlite3BitvecTest(Bitvec *p, u32 i){
@@ -29436,12 +29436,12 @@ static int pcache1Pagecount(sqlite3_pcache *p){
 **   1. Regardless of the value of createFlag, the cache is searched for a 
 **      copy of the requested page. If one is found, it is returned.
 **
-**   2. If createFlag==0 and the page is not already in the cache, nullptr is
+**   2. If createFlag==0 and the page is not already in the cache, NULL is
 **      returned.
 **
 **   3. If createFlag is 1, the cache is marked as purgeable and the page is 
 **      not already in the cache, and if either of the following are true, 
-**      return nullptr:
+**      return NULL:
 **
 **       (a) the number of pages pinned by the cache is greater than
 **           PCache1.nMax, or
@@ -30917,7 +30917,7 @@ static int readJournalHdr(
 ** The master journal page checksum is the sum of the bytes in the master
 ** journal name, where each byte is interpreted as a signed 8-bit integer.
 **
-** If zMaster is a nullptr pointer (occurs for a single database transaction), 
+** If zMaster is a NULL pointer (occurs for a single database transaction), 
 ** this call is a no-op.
 */
 static int writeMasterJournal(Pager *pPager, const char *zMaster){
@@ -30984,7 +30984,7 @@ static int writeMasterJournal(Pager *pPager, const char *zMaster){
 
 /*
 ** Find a page in the hash table given its page number. Return
-** a pointer to the page or nullptr if the requested page is not 
+** a pointer to the page or NULL if the requested page is not 
 ** already in memory.
 */
 static PgHdr *pager_lookup(Pager *pPager, Pgno pgno){
@@ -31349,7 +31349,7 @@ static u32 pager_cksum(Pager *pPager, const u8 *aData){
 ** is greater than the current value of Pager.dbSize, then playback is
 ** skipped and SQLITE_OK is returned.
 **
-** If pDone is not nullptr, then it is a record of pages that have already
+** If pDone is not NULL, then it is a record of pages that have already
 ** been played back.  If the page at *pOffset has already been played back
 ** (if the corresponding pDone bit is set) then skip the playback.
 ** Make sure the pDone bit corresponding to the *pOffset page is set
@@ -32051,12 +32051,12 @@ end_playback:
 }
 
 /*
-** Playback savepoint pSavepoint. Or, if pSavepoint==nullptr, then playback
-** the entire master journal file. The case pSavepoint==nullptr occurs when 
+** Playback savepoint pSavepoint. Or, if pSavepoint==NULL, then playback
+** the entire master journal file. The case pSavepoint==NULL occurs when 
 ** a ROLLBACK TO command is invoked on a SAVEPOINT that is a transaction 
 ** savepoint.
 **
-** When pSavepoint is not nullptr (meaning a non-transaction savepoint is 
+** When pSavepoint is not NULL (meaning a non-transaction savepoint is 
 ** being rolled back), then the rollback consists of up to three stages,
 ** performed in the order specified:
 **
@@ -32078,7 +32078,7 @@ end_playback:
 ** implementation below). This is used to ensure that a page is only
 ** rolled back the first time it is encountered in either journal.
 **
-** If pSavepoint is nullptr, then pages are only played back from the main
+** If pSavepoint is NULL, then pages are only played back from the main
 ** journal file. There is no need for a bitvec in this case.
 **
 ** In either case, before playback commences the Pager.dbSize variable
@@ -32302,7 +32302,7 @@ SQLITE_PRIVATE void sqlite3PagerSetBusyhandler(
 }
 
 /*
-** Set the reinitializer for this pager. If not nullptr, the reinitializer
+** Set the reinitializer for this pager. If not NULL, the reinitializer
 ** is called when the content of a page in cache is modified (restored)
 ** as part of a transaction or savepoint rollback. The callback gives 
 ** higher-level code an opportunity to restore the EXTRA section to 
@@ -32766,7 +32766,7 @@ static int syncJournal(Pager *pPager){
 ** The argument is the first in a linked list of dirty pages connected
 ** by the PgHdr.pDirty pointer. This function writes each one of the
 ** in-memory pages in the list to the database file. The argument may
-** be nullptr, representing an empty list. In this case this function is
+** be NULL, representing an empty list. In this case this function is
 ** a no-op.
 **
 ** The pager must hold at least a RESERVED lock when this function
@@ -33025,7 +33025,7 @@ static int pagerStress(void *p, PgHdr *pPg){
 ** to sqlite3PagerClose().
 **
 ** The zFilename argument is the path to the database file to open.
-** If zFilename is nullptr then a randomly-named temporary file is created
+** If zFilename is NULL then a randomly-named temporary file is created
 ** and used as the file to be cached. Temporary files are be deleted
 ** automatically when they are closed. If zFilename is ":memory:" then 
 ** all information is held in cache. It is never written to disk. 
@@ -33044,7 +33044,7 @@ static int pagerStress(void *p, PgHdr *pPg){
 **
 ** If the pager object is allocated and the specified file opened 
 ** successfully, SQLITE_OK is returned and *ppPager set to point to
-** the new pager object. If an error occurs, *ppPager is set to nullptr
+** the new pager object. If an error occurs, *ppPager is set to NULL
 ** and error code returned. This function may return SQLITE_NOMEM
 ** (sqlite3Malloc() is used to allocate memory), SQLITE_CANTOPEN or 
 ** various SQLITE_IO_XXX errors.
@@ -33085,7 +33085,7 @@ SQLITE_PRIVATE int sqlite3PagerOpen(
     journalFileSize = ROUND8(sqlite3MemJournalSize());
   }
 
-  /* Set the output variable to nullptr in case an error occurs. */
+  /* Set the output variable to NULL in case an error occurs. */
   *ppPager = 0;
 
   /* Compute and store the full pathname in an allocated buffer pointed
@@ -33694,7 +33694,7 @@ static void pagerDropPage(DbPage *pPg){
 ** will not be journaled. This saves IO.
 **
 ** The acquisition might fail for several reasons.  In all cases,
-** an appropriate error code is returned and *ppPage is set to nullptr.
+** an appropriate error code is returned and *ppPage is set to NULL.
 **
 ** See also sqlite3PagerLookup().  Both this routine and Lookup() attempt
 ** to find a page in the in-memory cache first.  If the page is not already
@@ -33815,7 +33815,7 @@ SQLITE_PRIVATE int sqlite3PagerAcquire(
 ** See also sqlite3PagerGet().  The difference between this routine
 ** and sqlite3PagerGet() is that _get() will go to the disk and read
 ** in the page if the page is not already in cache.  This routine
-** returns nullptr if the page is not in cache or if a disk I/O error 
+** returns NULL if the page is not in cache or if a disk I/O error 
 ** has ever happened.
 */
 SQLITE_PRIVATE DbPage *sqlite3PagerLookup(Pager *pPager, Pgno pgno){
@@ -34409,7 +34409,7 @@ SQLITE_PRIVATE int sqlite3PagerSync(Pager *pPager){
 /*
 ** Sync the database file for the pager pPager. zMaster points to the name
 ** of a master journal file that should be written into the individual
-** journal file. zMaster may be nullptr, which is interpreted as no master
+** journal file. zMaster may be NULL, which is interpreted as no master
 ** journal (a single database transaction).
 **
 ** This routine ensures that:
@@ -34424,7 +34424,7 @@ SQLITE_PRIVATE int sqlite3PagerSync(Pager *pPager){
 ** (delete, truncate or zero the first part of) the journal file (or 
 ** delete the master journal file if specified).
 **
-** Note that if zMaster==nullptr, this does not overwrite a previous value
+** Note that if zMaster==NULL, this does not overwrite a previous value
 ** passed to an sqlite3PagerCommitPhaseOne() call.
 **
 ** If the final parameter - noSync - is true, then the database file itself
@@ -34434,7 +34434,7 @@ SQLITE_PRIVATE int sqlite3PagerSync(Pager *pPager){
 */
 SQLITE_PRIVATE int sqlite3PagerCommitPhaseOne(
   Pager *pPager,                  /* Pager object */
-  const char *zMaster,            /* If not nullptr, the master journal name */
+  const char *zMaster,            /* If not NULL, the master journal name */
   int noSync                      /* True to omit the xSync on the db file */
 ){
   int rc = SQLITE_OK;             /* Return code */
@@ -34536,7 +34536,7 @@ SQLITE_PRIVATE int sqlite3PagerCommitPhaseOne(
 
     /* Write the master journal name into the journal file. If a master 
     ** journal file name has already been written to the journal file, 
-    ** or if zMaster is nullptr (no master journal), then this call is a no-op.
+    ** or if zMaster is NULL (no master journal), then this call is a no-op.
     */
     rc = writeMasterJournal(pPager, zMaster);
     if( rc!=SQLITE_OK ) goto commit_phase_one_exit;
@@ -34919,7 +34919,7 @@ SQLITE_PRIVATE const sqlite3_vfs *sqlite3PagerVfs(Pager *pPager){
 
 /*
 ** Return the file handle for the database file associated
-** with the pager.  This might return nullptr if the file has
+** with the pager.  This might return NULL if the file has
 ** not yet been opened.
 */
 SQLITE_PRIVATE sqlite3_file *sqlite3PagerFile(Pager *pPager){
@@ -37429,7 +37429,7 @@ SQLITE_PRIVATE int sqlite3BtreeGetPage(
 
 /*
 ** Retrieve a page from the pager cache. If the requested page is not
-** already in the pager cache return nullptr. Initialize the MemPage.pBt and
+** already in the pager cache return NULL. Initialize the MemPage.pBt and
 ** MemPage.aData elements if needed.
 */
 static MemPage *btreePageLookup(BtShared *pBt, Pgno pgno){
@@ -37557,7 +37557,7 @@ static int btreeInvokeBusyHandler(void *pArg){
 /*
 ** Open a database file.
 ** 
-** zFilename is the name of the database file.  If zFilename is nullptr
+** zFilename is the name of the database file.  If zFilename is NULL
 ** a new database with a random name is created.  This randomly named
 ** database file will be deleted when sqlite3BtreeClose() is called.
 ** If zFilename is ":memory:" then an in-memory database is created
@@ -38838,7 +38838,7 @@ static int autoVacuumCommit(BtShared *pBt){
 **
 ** Otherwise, sync the database file for the btree pBt. zMaster points to
 ** the name of a master journal file that should be written into the
-** individual journal file, or is nullptr, indicating no master journal file 
+** individual journal file, or is NULL, indicating no master journal file 
 ** (single database transaction).
 **
 ** When this is called, the master journal should already have been
@@ -39457,7 +39457,7 @@ SQLITE_PRIVATE int sqlite3BtreeDataSize(BtCursor *pCur, u32 *pSize){
 ** written to *pPgnoNext. If page ovfl is the last page in its linked 
 ** list, *pPgnoNext is set to zero. 
 **
-** If ppPage is not nullptr, and a reference to the MemPage object corresponding
+** If ppPage is not NULL, and a reference to the MemPage object corresponding
 ** to page number pOvfl was obtained, then *ppPage is set to point to that
 ** reference. It is the responsibility of the caller to call releasePage()
 ** on *ppPage to free the reference. In no reference was obtained (because
@@ -39467,7 +39467,7 @@ SQLITE_PRIVATE int sqlite3BtreeDataSize(BtCursor *pCur, u32 *pSize){
 static int getOverflowPage(
   BtShared *pBt, 
   Pgno ovfl,                   /* Overflow page */
-  MemPage **ppPage,            /* OUT: MemPage handle (may be nullptr) */
+  MemPage **ppPage,            /* OUT: MemPage handle (may be NULL) */
   Pgno *pPgnoNext              /* OUT: Next overflow page number */
 ){
   Pgno next = 0;
@@ -40091,7 +40091,7 @@ SQLITE_PRIVATE int sqlite3BtreeLast(BtCursor *pCur, int *pRes){
 ** specified by pIdxKey or intKey.   Return a success code.
 **
 ** For INTKEY tables, the intKey parameter is used.  pIdxKey 
-** must be nullptr.  For index tables, pIdxKey is used and intKey
+** must be NULL.  For index tables, pIdxKey is used and intKey
 ** is ignored.
 **
 ** If an exact match is not found, then the cursor is always
@@ -40720,7 +40720,7 @@ end_allocate_page:
 ** The value passed as the second argument to this function is optional.
 ** If the caller happens to have a pointer to the MemPage object 
 ** corresponding to page iPage handy, it may pass it as the second value. 
-** Otherwise, it may pass nullptr.
+** Otherwise, it may pass NULL.
 **
 ** If a pointer to a MemPage object is passed as the second argument,
 ** its reference count is not altered by this function.
@@ -40729,7 +40729,7 @@ static int freePage2(BtShared *pBt, MemPage *pMemPage, Pgno iPage){
   MemPage *pTrunk = 0;                /* Free-list trunk page */
   Pgno iTrunk = 0;                    /* Page number of free-list trunk page */ 
   MemPage *pPage1 = pBt->pPage1;      /* Local reference to page 1 */
-  MemPage *pPage;                     /* Page being freed. May be nullptr. */
+  MemPage *pPage;                     /* Page being freed. May be NULL. */
   int rc;                             /* Return Code */
   int nFree;                          /* Initial number of pages on free-list */
 
@@ -42776,7 +42776,7 @@ cleardatabasepage_out:
 ** read cursors on the table.  Open write cursors are moved to the
 ** root of the table.
 **
-** If pnChange is not nullptr, then table iTable must be an intkey table. The
+** If pnChange is not NULL, then table iTable must be an intkey table. The
 ** integer value pointed to by pnChange is incremented by the number of
 ** entries in the table.
 */
@@ -43474,8 +43474,8 @@ check_page_abort:
 **
 ** Write the number of error seen in *pnErr.  Except for some memory
 ** allocation errors,  an error message held in memory obtained from
-** malloc is returned if *pnErr is non-zero.  If *pnErr==0 then nullptr is
-** returned.  If a memory allocation error occurs, nullptr is returned.
+** malloc is returned if *pnErr is non-zero.  If *pnErr==0 then NULL is
+** returned.  If a memory allocation error occurs, NULL is returned.
 */
 SQLITE_PRIVATE char *sqlite3BtreeIntegrityCheck(
   Btree *p,     /* The btree to be checked */
@@ -43851,7 +43851,7 @@ struct sqlite3_backup {
 /*
 ** Return a pointer corresponding to database zDb (i.e. "main", "temp")
 ** in connection handle pDb. If such a database cannot be found, return
-** a nullptr pointer and write an error message to pErrorDb.
+** a NULL pointer and write an error message to pErrorDb.
 **
 ** If the "temp" database is requested, it may need to be opened by this 
 ** function. If an error occurs while doing so, return 0 and write an 
@@ -43885,7 +43885,7 @@ static Btree *findBtree(sqlite3 *pErrorDb, sqlite3 *pDb, const char *zDb){
 ** connection handle pSrcDb to zDestDb in pDestDb. If successful, return
 ** a pointer to the new sqlite3_backup object.
 **
-** If an error occurs, nullptr is returned and an error code and error message
+** If an error occurs, NULL is returned and an error code and error message
 ** stored in database handle pDestDb.
 */
 SQLITE_API sqlite3_backup *sqlite3_backup_init(
@@ -44579,7 +44579,7 @@ SQLITE_PRIVATE int sqlite3VdbeMemNulTerminate(Mem *pMem){
 ** A MEM_Null value will never be passed to this function. This function is
 ** used for converting values to text for returning to the user (i.e. via
 ** sqlite3_value_text()), or for ensuring that values to be used as btree
-** keys are strings. In the former case a nullptr pointer is returned the
+** keys are strings. In the former case a NULL pointer is returned the
 ** user and the later is an internal programming error.
 */
 SQLITE_PRIVATE int sqlite3VdbeMemStringify(Mem *pMem, int enc){
@@ -44722,7 +44722,7 @@ static i64 doubleToInt64(double r){
 ** a floating-point then the value returned is the integer part.
 ** If pMem is a string or blob, then we make an attempt to convert
 ** it into a integer and return that.  If pMem represents an
-** an SQL-nullptr value, return 0.
+** an SQL-NULL value, return 0.
 **
 ** If pMem represents a string value, its encoding might be changed.
 */
@@ -44754,7 +44754,7 @@ SQLITE_PRIVATE i64 sqlite3VdbeIntValue(Mem *pMem){
 ** Return the best representation of pMem that we can get into a
 ** double.  If pMem is already a double or an integer, return its
 ** value.  If it is a string or blob, try to convert it to a double.
-** If it is a nullptr, return 0.0.
+** If it is a NULL, return 0.0.
 */
 SQLITE_PRIVATE double sqlite3VdbeRealValue(Mem *pMem){
   assert( pMem->db==0 || sqlite3_mutex_held(pMem->db->mutex) );
@@ -44846,7 +44846,7 @@ SQLITE_PRIVATE int sqlite3VdbeMemNumerify(Mem *pMem){
 }
 
 /*
-** Delete any previous value and set the value stored in *pMem to nullptr.
+** Delete any previous value and set the value stored in *pMem to NULL.
 */
 SQLITE_PRIVATE void sqlite3VdbeMemSetNull(Mem *pMem){
   if( pMem->flags & MEM_RowSet ){
@@ -44985,7 +44985,7 @@ SQLITE_PRIVATE int sqlite3VdbeMemCopy(Mem *pTo, const Mem *pFrom){
 ** Transfer the contents of pFrom to pTo. Any existing value in pTo is
 ** freed. If pFrom contains ephemeral data, a copy is made.
 **
-** pFrom contains an SQL nullptr when this routine returns.
+** pFrom contains an SQL NULL when this routine returns.
 */
 SQLITE_PRIVATE void sqlite3VdbeMemMove(Mem *pTo, Mem *pFrom){
   assert( pFrom->db==0 || sqlite3_mutex_held(pFrom->db->mutex) );
@@ -45022,7 +45022,7 @@ SQLITE_PRIVATE int sqlite3VdbeMemSetStr(
   assert( pMem->db==0 || sqlite3_mutex_held(pMem->db->mutex) );
   assert( (pMem->flags & MEM_RowSet)==0 );
 
-  /* If z is a nullptr pointer, set pMem to contain an SQL nullptr. */
+  /* If z is a NULL pointer, set pMem to contain an SQL NULL. */
   if( !z ){
     sqlite3VdbeMemSetNull(pMem);
     return SQLITE_OK;
@@ -45091,11 +45091,11 @@ SQLITE_PRIVATE int sqlite3VdbeMemSetStr(
 /*
 ** Compare the values contained by the two memory cells, returning
 ** negative, zero or positive if pMem1 is less than, equal to, or greater
-** than pMem2. Sorting order is nullptr's first, followed by numbers (integers
+** than pMem2. Sorting order is NULL's first, followed by numbers (integers
 ** and reals) sorted numerically, followed by text ordered by the collating
 ** sequence pColl and finally blob's ordered by memcmp().
 **
-** Two nullptr values are considered equal by this function.
+** Two NULL values are considered equal by this function.
 */
 SQLITE_PRIVATE int sqlite3MemCompare(const Mem *pMem1, const Mem *pMem2, const CollSeq *pColl){
   int rc;
@@ -45110,8 +45110,8 @@ SQLITE_PRIVATE int sqlite3MemCompare(const Mem *pMem1, const Mem *pMem2, const C
   combined_flags = f1|f2;
   assert( (combined_flags & MEM_RowSet)==0 );
  
-  /* If one value is nullptr, it is less than the other. If both values
-  ** are nullptr, return 0.
+  /* If one value is NULL, it is less than the other. If both values
+  ** are NULL, return 0.
   */
   if( combined_flags&MEM_Null ){
     return (f2&MEM_Null) - (f1&MEM_Null);
@@ -45197,7 +45197,7 @@ SQLITE_PRIVATE int sqlite3MemCompare(const Mem *pMem1, const Mem *pMem2, const C
         return rc;
       }
     }
-    /* If a nullptr pointer was passed as the collate function, fall through
+    /* If a NULL pointer was passed as the collate function, fall through
     ** to the blob case and use memcmp().  */
   }
  
@@ -45219,7 +45219,7 @@ SQLITE_PRIVATE int sqlite3MemCompare(const Mem *pMem1, const Mem *pMem2, const C
 ** The pMem structure is assumed to be uninitialized.  Any prior content
 ** is overwritten without being freed.
 **
-** If this routine fails for any reason (malloc returns nullptr or unable
+** If this routine fails for any reason (malloc returns NULL or unable
 ** to read from the disk) then the pMem is left in an inconsistent state.
 */
 SQLITE_PRIVATE int sqlite3VdbeMemFromBtree(
@@ -45335,7 +45335,7 @@ SQLITE_PRIVATE sqlite3_value *sqlite3ValueNew(sqlite3 *db){
 ** be converted directly into a value, then the value is allocated and
 ** a pointer written to *ppVal. The caller is responsible for deallocating
 ** the value by passing it to sqlite3ValueFree() later on. If the expression
-** cannot be converted to a value, then *ppVal is set to nullptr.
+** cannot be converted to a value, then *ppVal is set to NULL.
 */
 SQLITE_PRIVATE int sqlite3ValueFromExpr(
   sqlite3 *db,              /* The database connection */
@@ -46214,7 +46214,7 @@ static void releaseMemArray(Mem *p, int N){
 
       /* This block is really an inlined version of sqlite3VdbeMemRelease()
       ** that takes advantage of the fact that the memory cell value is 
-      ** being set to nullptr after releasing any dynamic resources.
+      ** being set to NULL after releasing any dynamic resources.
       **
       ** The justification for duplicating code is that according to 
       ** callgrind, this causes a certain test case to hit the CPU 4.7 
@@ -47487,7 +47487,7 @@ SQLITE_PRIVATE int sqlite3VdbeCursorMoveto(VdbeCursor *p){
 **
 **   serial type        bytes of data      type
 **   --------------     ---------------    ---------------
-**      0                     0            nullptr
+**      0                     0            NULL
 **      1                     1            signed integer
 **      2                     2            signed integer
 **      3                     3            signed integer
@@ -47667,7 +47667,7 @@ SQLITE_PRIVATE int sqlite3VdbeSerialPut(u8 *buf, int nBuf, Mem *pMem, int file_f
     return len;
   }
 
-  /* nullptr or constants 0 or 1 */
+  /* NULL or constants 0 or 1 */
   return 0;
 }
 
@@ -47683,7 +47683,7 @@ SQLITE_PRIVATE int sqlite3VdbeSerialGet(
   switch( serial_type ){
     case 10:   /* Reserved for future use */
     case 11:   /* Reserved for future use */
-    case 0: {  /* nullptr */
+    case 0: {  /* NULL */
       pMem->flags = MEM_Null;
       break;
     }
@@ -48363,7 +48363,7 @@ SQLITE_API int sqlite3_reset(sqlite3_stmt *pStmt){
 }
 
 /*
-** Set all the parameters in the compiled SQL statement to nullptr.
+** Set all the parameters in the compiled SQL statement to NULL.
 */
 SQLITE_API int sqlite3_clear_bindings(sqlite3_stmt *pStmt){
   int i;
@@ -48869,7 +48869,7 @@ SQLITE_API int sqlite3_data_count(sqlite3_stmt *pStmt){
 ** Check to see if column iCol of the given statement is valid.  If
 ** it is, return a pointer to the Mem for the value of that column.
 ** If iCol is not valid, return a pointer to a Mem which has a value
-** of nullptr.
+** of NULL.
 */
 static Mem *columnMem(sqlite3_stmt *pStmt, int i){
   Vdbe *pVm;
@@ -49013,7 +49013,7 @@ SQLITE_API int sqlite3_column_type(sqlite3_stmt *pStmt, int i){
 **    4      The name of the table column that the result column derives from
 **
 ** If the result is not a simple column reference (if it is an expression
-** or a constant) then useTypes 2, 3, and 4 return nullptr.
+** or a constant) then useTypes 2, 3, and 4 return NULL.
 */
 static const void *columnName(
   sqlite3_stmt *pStmt,
@@ -49034,7 +49034,7 @@ static const void *columnName(
     assert( db->mallocFailed==0 );
     ret = xFunc(&p->aColName[N]);
      /* A malloc may have failed inside of the xFunc() call. If this
-    ** is the case, clear the mallocFailed flag and return nullptr.
+    ** is the case, clear the mallocFailed flag and return NULL.
     */
     if( db->mallocFailed ){
       db->mallocFailed = 0;
@@ -49089,7 +49089,7 @@ SQLITE_API const void *sqlite3_column_decltype16(sqlite3_stmt *pStmt, int N){
 #ifdef SQLITE_ENABLE_COLUMN_METADATA
 /*
 ** Return the name of the database from which a result column derives.
-** nullptr is returned if the result column is an expression or constant or
+** NULL is returned if the result column is an expression or constant or
 ** anything else which is not an unabiguous reference to a database column.
 */
 SQLITE_API const char *sqlite3_column_database_name(sqlite3_stmt *pStmt, int N){
@@ -49105,7 +49105,7 @@ SQLITE_API const void *sqlite3_column_database_name16(sqlite3_stmt *pStmt, int N
 
 /*
 ** Return the name of the table from which a result column derives.
-** nullptr is returned if the result column is an expression or constant or
+** NULL is returned if the result column is an expression or constant or
 ** anything else which is not an unabiguous reference to a database column.
 */
 SQLITE_API const char *sqlite3_column_table_name(sqlite3_stmt *pStmt, int N){
@@ -49121,7 +49121,7 @@ SQLITE_API const void *sqlite3_column_table_name16(sqlite3_stmt *pStmt, int N){
 
 /*
 ** Return the name of the table column from which a result column derives.
-** nullptr is returned if the result column is an expression or constant or
+** NULL is returned if the result column is an expression or constant or
 ** anything else which is not an unabiguous reference to a database column.
 */
 SQLITE_API const char *sqlite3_column_origin_name(sqlite3_stmt *pStmt, int N){
@@ -49143,7 +49143,7 @@ SQLITE_API const void *sqlite3_column_origin_name16(sqlite3_stmt *pStmt, int N){
 */
 /*
 ** Unbind the value bound to variable i in virtual machine p. This is the 
-** the same as binding a nullptr value to the column. If the "i" parameter is
+** the same as binding a NULL value to the column. If the "i" parameter is
 ** out of range, then SQLITE_RANGE is returned. Othewise SQLITE_OK.
 **
 ** A successful evaluation of this routine acquires the mutex on p.
@@ -49331,7 +49331,7 @@ static void createVarMap(Vdbe *p){
 }
 
 /*
-** Return the name of a wildcard parameter.  Return nullptr if the index
+** Return the name of a wildcard parameter.  Return NULL if the index
 ** is out of range or if the wildcard is unnamed.
 **
 ** The result is always UTF-8.
@@ -49420,8 +49420,8 @@ SQLITE_API sqlite3 *sqlite3_db_handle(sqlite3_stmt *pStmt){
 
 /*
 ** Return a pointer to the next prepared statement after pStmt associated
-** with database connection pDb.  If pStmt is nullptr, return the first
-** prepared statement for the database connection.  Return nullptr if there
+** with database connection pDb.  If pStmt is NULL, return the first
+** prepared statement for the database connection.  Return NULL if there
 ** are no more.
 */
 SQLITE_API sqlite3_stmt *sqlite3_next_stmt(sqlite3 *pDb, sqlite3_stmt *pStmt){
@@ -49479,7 +49479,7 @@ SQLITE_API int sqlite3_stmt_status(sqlite3_stmt *pStmt, int op, int resetFlag){
 ** Computation results are stored on a set of registers numbered beginning
 ** with 1 and going up to Vdbe.nMem.  Each register can store
 ** either an integer, a null-terminated string, a floating point
-** number, or the SQL "nullptr" value.  An implicit conversion from one
+** number, or the SQL "NULL" value.  An implicit conversion from one
 ** type to the other occurs as necessary.
 ** 
 ** Most of the code in this file is taken up by the sqlite3VdbeExec()
@@ -49629,7 +49629,7 @@ SQLITE_PRIVATE int sqlite3VdbeOpcodeHasProperty(int opcode, int mask){
 }
 
 /*
-** Allocate VdbeCursor number iCur.  Return a pointer to it.  Return nullptr
+** Allocate VdbeCursor number iCur.  Return a pointer to it.  Return NULL
 ** if we run out of memory.
 */
 static VdbeCursor *allocateCursor(
@@ -49736,7 +49736,7 @@ static void applyAffinity(
 ){
   if( affinity==SQLITE_AFF_TEXT ){
     /* Only attempt the conversion to TEXT if there is an integer or real
-    ** representation (blob and nullptr do not get converted) but no string
+    ** representation (blob and NULL do not get converted) but no string
     ** representation.
     */
     if( 0==(pRec->flags&MEM_Str) && (pRec->flags&(MEM_Real|MEM_Int)) ){
@@ -49869,7 +49869,7 @@ SQLITE_PRIVATE void sqlite3VdbeMemPrettyPrint(Mem *pMem, char *zBuf){
 */
 static void memTracePrint(FILE *out, Mem *p){
   if( p->flags & MEM_Null ){
-    fprintf(out, " nullptr");
+    fprintf(out, " NULL");
   }else if( (p->flags & (MEM_Int|MEM_Str))==(MEM_Int|MEM_Str) ){
     fprintf(out, " si:%lld", p->u.i);
   }else if( p->flags & MEM_Int ){
@@ -50204,7 +50204,7 @@ SQLITE_PRIVATE int sqlite3VdbeExec(
     /* Do common setup processing for any opcode that is marked
     ** with the "out2-prerelease" tag.  Such opcodes have a single
     ** output which is specified by the P2 parameter.  The P2 register
-    ** is initialized to a nullptr.
+    ** is initialized to a NULL.
     */
     opProperty = opcodeProperty[pOp->opcode];
     if( (opProperty & OPFLG_OUT2_PRERELEASE)!=0 ){
@@ -50353,9 +50353,9 @@ case OP_Yield: {            /* in1 */
 
 /* Opcode:  HaltIfNull  P1 P2 P3 P4 *
 **
-** Check the value in register P3.  If is is nullptr then Halt using
+** Check the value in register P3.  If is is NULL then Halt using
 ** parameter P1, P2, and P4 as if this were a Halt instruction.  If the
-** value in register P3 is not nullptr, then this routine is a no-op.
+** value in register P3 is not NULL, then this routine is a no-op.
 */
 case OP_HaltIfNull: {      /* in3 */
   if( (pIn3->flags & MEM_Null)==0 ) break;
@@ -50485,7 +50485,7 @@ case OP_String: {          /* out2-prerelease */
 
 /* Opcode: Null * P2 * * *
 **
-** Write a nullptr into register P2.
+** Write a NULL into register P2.
 */
 case OP_Null: {           /* out2-prerelease */
   break;
@@ -50544,7 +50544,7 @@ case OP_Variable: {
 **
 ** Move the values in register P1..P1+P3-1 over into
 ** registers P2..P2+P3-1.  Registers P1..P1+P1-1 are
-** left holding a nullptr.  It is an error for register ranges
+** left holding a NULL.  It is an error for register ranges
 ** P1..P1+P3-1 and P2..P2+P3-1 to overlap.
 */
 case OP_Move: {
@@ -50670,7 +50670,7 @@ case OP_ResultRow: {
 **
 ** Add the text in register P1 onto the end of the text in
 ** register P2 and store the result in register P3.
-** If either the P1 or P2 text are nullptr then store nullptr in P3.
+** If either the P1 or P2 text are NULL then store NULL in P3.
 **
 **   P3 = P2 || P1
 **
@@ -50715,34 +50715,34 @@ case OP_Concat: {           /* same as TK_CONCAT, in1, in2, out3 */
 **
 ** Add the value in register P1 to the value in register P2
 ** and store the result in register P3.
-** If either input is nullptr, the result is nullptr.
+** If either input is NULL, the result is NULL.
 */
 /* Opcode: Multiply P1 P2 P3 * *
 **
 **
 ** Multiply the value in register P1 by the value in register P2
 ** and store the result in register P3.
-** If either input is nullptr, the result is nullptr.
+** If either input is NULL, the result is NULL.
 */
 /* Opcode: Subtract P1 P2 P3 * *
 **
 ** Subtract the value in register P1 from the value in register P2
 ** and store the result in register P3.
-** If either input is nullptr, the result is nullptr.
+** If either input is NULL, the result is NULL.
 */
 /* Opcode: Divide P1 P2 P3 * *
 **
 ** Divide the value in register P1 by the value in register P2
 ** and store the result in register P3.  If the value in register P2
-** is zero, then the result is nullptr.
-** If either input is nullptr, the result is nullptr.
+** is zero, then the result is NULL.
+** If either input is NULL, the result is NULL.
 */
 /* Opcode: Remainder P1 P2 P3 * *
 **
 ** Compute the remainder after integer division of the value in
 ** register P1 by the value in register P2 and store the result in P3. 
-** If the value in register P2 is zero the result is nullptr.
-** If either operand is nullptr, the result is nullptr.
+** If the value in register P2 is zero the result is NULL.
+** If either operand is NULL, the result is NULL.
 */
 case OP_Add:                   /* same as TK_PLUS, in1, in2, out3 */
 case OP_Subtract:              /* same as TK_MINUS, in1, in2, out3 */
@@ -50954,27 +50954,27 @@ case OP_Function: {
 **
 ** Take the bit-wise AND of the values in register P1 and P2 and
 ** store the result in register P3.
-** If either input is nullptr, the result is nullptr.
+** If either input is NULL, the result is NULL.
 */
 /* Opcode: BitOr P1 P2 P3 * *
 **
 ** Take the bit-wise OR of the values in register P1 and P2 and
 ** store the result in register P3.
-** If either input is nullptr, the result is nullptr.
+** If either input is NULL, the result is NULL.
 */
 /* Opcode: ShiftLeft P1 P2 P3 * *
 **
 ** Shift the integer value in register P2 to the left by the
 ** number of bits specified by the integer in regiser P1.
 ** Store the result in register P3.
-** If either input is nullptr, the result is nullptr.
+** If either input is NULL, the result is NULL.
 */
 /* Opcode: ShiftRight P1 P2 P3 * *
 **
 ** Shift the integer value in register P2 to the right by the
 ** number of bits specified by the integer in register P1.
 ** Store the result in register P3.
-** If either input is nullptr, the result is nullptr.
+** If either input is NULL, the result is NULL.
 */
 case OP_BitAnd:                 /* same as TK_BITAND, in1, in2, out3 */
 case OP_BitOr:                  /* same as TK_BITOR, in1, in2, out3 */
@@ -51059,7 +51059,7 @@ case OP_RealAffinity: {                  /* in1 */
 ** equivalent of printf().  Blob values are unchanged and
 ** are afterwards simply interpreted as text.
 **
-** A nullptr value is not changed by this routine.  It remains nullptr.
+** A NULL value is not changed by this routine.  It remains NULL.
 */
 case OP_ToText: {                  /* same as TK_TO_TEXT, in1 */
   if( pIn1->flags & MEM_Null ) break;
@@ -51080,7 +51080,7 @@ case OP_ToText: {                  /* same as TK_TO_TEXT, in1 */
 ** Strings are simply reinterpreted as blobs with no change
 ** to the underlying data.
 **
-** A nullptr value is not changed by this routine.  It remains nullptr.
+** A NULL value is not changed by this routine.  It remains NULL.
 */
 case OP_ToBlob: {                  /* same as TK_TO_BLOB, in1 */
   if( pIn1->flags & MEM_Null ) break;
@@ -51103,7 +51103,7 @@ case OP_ToBlob: {                  /* same as TK_TO_BLOB, in1 */
 ** equivalent of atoi() or atof() and store 0 if no such conversion 
 ** is possible.
 **
-** A nullptr value is not changed by this routine.  It remains nullptr.
+** A NULL value is not changed by this routine.  It remains NULL.
 */
 case OP_ToNumeric: {                  /* same as TK_TO_NUMERIC, in1 */
   if( (pIn1->flags & (MEM_Null|MEM_Int|MEM_Real))==0 ){
@@ -51120,7 +51120,7 @@ case OP_ToNumeric: {                  /* same as TK_TO_NUMERIC, in1 */
 ** If the value is text or blob, try to convert it to an integer using the
 ** equivalent of atoi() and store 0 if no such conversion is possible.
 **
-** A nullptr value is not changed by this routine.  It remains nullptr.
+** A NULL value is not changed by this routine.  It remains NULL.
 */
 case OP_ToInt: {                  /* same as TK_TO_INT, in1 */
   if( (pIn1->flags & MEM_Null)==0 ){
@@ -51137,7 +51137,7 @@ case OP_ToInt: {                  /* same as TK_TO_INT, in1 */
 ** If the value is text or blob, try to convert it to an integer using the
 ** equivalent of atoi() and store 0.0 if no such conversion is possible.
 **
-** A nullptr value is not changed by this routine.  It remains nullptr.
+** A NULL value is not changed by this routine.  It remains NULL.
 */
 case OP_ToReal: {                  /* same as TK_TO_REAL, in1 */
   if( (pIn1->flags & MEM_Null)==0 ){
@@ -51153,8 +51153,8 @@ case OP_ToReal: {                  /* same as TK_TO_REAL, in1 */
 ** jump to address P2.  
 **
 ** If the SQLITE_JUMPIFNULL bit of P5 is set and either reg(P1) or
-** reg(P3) is nullptr then take the jump.  If the SQLITE_JUMPIFNULL 
-** bit is clear then fall thru if either operand is nullptr.
+** reg(P3) is NULL then take the jump.  If the SQLITE_JUMPIFNULL 
+** bit is clear then fall thru if either operand is NULL.
 **
 ** The SQLITE_AFF_MASK portion of P5 must be an affinity character -
 ** SQLITE_AFF_TEXT, SQLITE_AFF_INTEGER, and so forth. An attempt is made 
@@ -51164,7 +51164,7 @@ case OP_ToReal: {                  /* same as TK_TO_REAL, in1 */
 ** back into the input registers P1 and P3.  So this opcode can cause
 ** persistent changes to registers P1 and P3.
 **
-** Once any conversions have taken place, and neither value is nullptr, 
+** Once any conversions have taken place, and neither value is NULL, 
 ** the values are compared. If both values are blobs then memcmp() is
 ** used to determine the results of the comparison.  If both values
 ** are text, then the appropriate collating function specified in
@@ -51175,7 +51175,7 @@ case OP_ToReal: {                  /* same as TK_TO_REAL, in1 */
 ** strings and strings are considered less than blobs.
 **
 ** If the SQLITE_STOREP2 bit of P5 is set, then do not jump.  Instead,
-** store a boolean result (either 0, or 1, or nullptr) in register P2.
+** store a boolean result (either 0, or 1, or NULL) in register P2.
 */
 /* Opcode: Ne P1 P2 P3 P4 P5
 **
@@ -51220,7 +51220,7 @@ case OP_Ge: {             /* same as TK_GE, jump, in1, in3 */
   flags = pIn1->flags|pIn3->flags;
 
   if( flags&MEM_Null ){
-    /* If either operand is nullptr then the result is always nullptr.
+    /* If either operand is NULL then the result is always NULL.
     ** The jump is taken if the SQLITE_JUMPIFNULL bit is set.
     */
     if( pOp->p5 & SQLITE_STOREP2 ){
@@ -51346,8 +51346,8 @@ case OP_Jump: {             /* jump */
 ** write the result into register P3.
 **
 ** If either P1 or P2 is 0 (false) then the result is 0 even if
-** the other input is nullptr.  A nullptr and true or two NULLs give
-** a nullptr output.
+** the other input is NULL.  A NULL and true or two NULLs give
+** a NULL output.
 */
 /* Opcode: Or P1 P2 P3 * *
 **
@@ -51355,12 +51355,12 @@ case OP_Jump: {             /* jump */
 ** store the answer in register P3.
 **
 ** If either P1 or P2 is nonzero (true) then the result is 1 (true)
-** even if the other input is nullptr.  A nullptr and false or two NULLs
-** give a nullptr output.
+** even if the other input is NULL.  A NULL and false or two NULLs
+** give a NULL output.
 */
 case OP_And:              /* same as TK_AND, in1, in2, out3 */
 case OP_Or: {             /* same as TK_OR, in1, in2, out3 */
-  int v1, v2;    /* 0==FALSE, 1==TRUE, 2==UNKNOWN or nullptr */
+  int v1, v2;    /* 0==FALSE, 1==TRUE, 2==UNKNOWN or NULL */
 
   if( pIn1->flags & MEM_Null ){
     v1 = 2;
@@ -51392,7 +51392,7 @@ case OP_Or: {             /* same as TK_OR, in1, in2, out3 */
 **
 ** Interpret the value in register P1 as a boolean value.  Store the
 ** boolean complement in register P2.  If the value in register P1 is 
-** nullptr, then a nullptr is stored in P2.
+** NULL, then a NULL is stored in P2.
 */
 case OP_Not: {                /* same as TK_NOT, in1 */
   pOut = &p->aMem[pOp->p2];
@@ -51408,7 +51408,7 @@ case OP_Not: {                /* same as TK_NOT, in1 */
 **
 ** Interpret the content of register P1 as an integer.  Store the
 ** ones-complement of the P1 value into register P2.  If P1 holds
-** a nullptr then store a nullptr in P2.
+** a NULL then store a NULL in P2.
 */
 case OP_BitNot: {             /* same as TK_BITNOT, in1 */
   pOut = &p->aMem[pOp->p2];
@@ -51424,13 +51424,13 @@ case OP_BitNot: {             /* same as TK_BITNOT, in1 */
 **
 ** Jump to P2 if the value in register P1 is true.  The value is
 ** is considered true if it is numeric and non-zero.  If the value
-** in P1 is nullptr then take the jump if P3 is true.
+** in P1 is NULL then take the jump if P3 is true.
 */
 /* Opcode: IfNot P1 P2 P3 * *
 **
 ** Jump to P2 if the value in register P1 is False.  The value is
 ** is considered true if it has a numeric value of zero.  If the value
-** in P1 is nullptr then take the jump if P3 is true.
+** in P1 is NULL then take the jump if P3 is true.
 */
 case OP_If:                 /* jump, in1 */
 case OP_IfNot: {            /* jump, in1 */
@@ -51453,7 +51453,7 @@ case OP_IfNot: {            /* jump, in1 */
 
 /* Opcode: IsNull P1 P2 P3 * *
 **
-** Jump to P2 if the value in register P1 is nullptr.  If P3 is greater
+** Jump to P2 if the value in register P1 is NULL.  If P3 is greater
 ** than zero, then check all values reg(P1), reg(P1+1), 
 ** reg(P1+2), ..., reg(P1+P3-1).
 */
@@ -51472,7 +51472,7 @@ case OP_IsNull: {            /* same as TK_ISNULL, jump, in1 */
 
 /* Opcode: NotNull P1 P2 * * *
 **
-** Jump to P2 if the value in register P1 is not nullptr.  
+** Jump to P2 if the value in register P1 is not NULL.  
 */
 case OP_NotNull: {            /* same as TK_NOTNULL, jump, in1 */
   if( (pIn1->flags & MEM_Null)==0 ){
@@ -51509,11 +51509,11 @@ case OP_SetNumColumns: {
 ** the MakeRecord instruction.  (See the MakeRecord opcode for additional
 ** information about the format of the data.)  Extract the P2-th column
 ** from this record.  If there are less that (P2+1) 
-** values in the record, extract a nullptr.
+** values in the record, extract a NULL.
 **
 ** The value extracted is stored in register P3.
 **
-** If the column contains fewer than P2 fields, then extract a nullptr.  Or,
+** If the column contains fewer than P2 fields, then extract a NULL.  Or,
 ** if the P4 argument is a P4_MEM use the value of the P4 argument as
 ** the result.
 */
@@ -51546,7 +51546,7 @@ case OP_Column: {
   ** The complete record text is always available for pseudo-tables
   ** If the record is stored in a cursor, the complete record text
   ** might be available in the  pC->aRow cache.  Or it might not be.
-  ** If the data is unavailable,  zRec is set to nullptr.
+  ** If the data is unavailable,  zRec is set to NULL.
   **
   ** We also compute the number of columns in the record.  For cursors,
   ** the number of columns is stored in the VdbeCursor.nField element.
@@ -51586,7 +51586,7 @@ case OP_Column: {
     pCrsr = 0;
   }
 
-  /* If payloadSize is 0, then just store a nullptr */
+  /* If payloadSize is 0, then just store a NULL */
   if( payloadSize==0 ){
     assert( pDest->flags&MEM_Null );
     goto op_column_out;
@@ -51673,7 +51673,7 @@ case OP_Column: {
         /* If i is less that nField, then there are less fields in this
         ** record than SetNumColumns indicated there are columns in the
         ** table. Set the offset for any extra columns not present in
-        ** the record to 0. This tells code below to store a nullptr
+        ** the record to 0. This tells code below to store a NULL
         ** instead of deserializing a value from the record.
         */
         aOffset[i] = 0;
@@ -51698,7 +51698,7 @@ case OP_Column: {
   /* Get the column information. If aOffset[p2] is non-zero, then 
   ** deserialize the value from the record. If aOffset[p2] is zero,
   ** then there are not enough fields in the record to satisfy the
-  ** request.  In this case, set the value nullptr or to P4 if P4 is
+  ** request.  In this case, set the value NULL or to P4 if P4 is
   ** a pointer to a Mem object.
   */
   if( aOffset[p2] ){
@@ -51785,7 +51785,7 @@ case OP_Affinity: {
 ** The mapping from character to affinity is given by the SQLITE_AFF_
 ** macros defined in sqliteInt.h.
 **
-** If P4 is nullptr then all index fields have the affinity NONE.
+** If P4 is NULL then all index fields have the affinity NONE.
 */
 case OP_MakeRecord: {
   /* Assuming the record contains N fields, the record format looks
@@ -52488,7 +52488,7 @@ case OP_OpenWrite: {
 **
 ** P2 is the number of columns in the virtual table.
 ** The cursor points to a BTree table if P4==0 and to a BTree index
-** if P4 is not 0.  If P4 is not nullptr, it points to a KeyInfo structure
+** if P4 is not 0.  If P4 is not NULL, it points to a KeyInfo structure
 ** that defines the format of keys in the index.
 **
 ** This opcode was once called OpenTemp.  But that created
@@ -52664,7 +52664,7 @@ case OP_SeekGt: {       /* jump, in3 */
       i64 iKey;      /* The rowid we are to seek to */
 
       /* The input value in P3 might be of any type: integer, real, string,
-      ** blob, or nullptr.  But it needs to be an integer before we can do
+      ** blob, or NULL.  But it needs to be an integer before we can do
       ** the seek, so covert it. */
       applyNumericAffinity(pIn3);
       iKey = sqlite3VdbeIntValue(pIn3);
@@ -53200,7 +53200,7 @@ case OP_NewRowid: {           /* out2-prerelease */
 ** sqlite3_last_insert_rowid() function (otherwise it is unmodified).
 **
 ** Parameter P4 may point to a string containing the table-name, or
-** may be nullptr. If it is not nullptr, then the update-hook 
+** may be NULL. If it is not NULL, then the update-hook 
 ** (sqlite3.xUpdateCallback) is invoked following a successful insert.
 **
 ** (WARNING/TODO: If P1 is a pseudo-cursor and P2 is dynamically
@@ -53302,9 +53302,9 @@ case OP_Insert: {
 ** P1 must not be pseudo-table.  It has to be a real table with
 ** multiple rows.
 **
-** If P4 is not nullptr, then it is the name of the table that P1 is
+** If P4 is not NULL, then it is the name of the table that P1 is
 ** pointing to.  The update hook will be invoked, if it exists.
-** If P4 is not nullptr then the P1 cursor must have been positioned
+** If P4 is not NULL then the P1 cursor must have been positioned
 ** using OP_NotFound prior to invoking this opcode.
 */
 case OP_Delete: {
@@ -53365,7 +53365,7 @@ case OP_ResetCount: {
 ** It is just copied onto the P2 register exactly as 
 ** it is found in the database file.
 **
-** If the P1 cursor must be pointing to a valid row (not a nullptr row)
+** If the P1 cursor must be pointing to a valid row (not a NULL row)
 ** of a real table, not a pseudo-table.
 */
 /* Opcode: RowKey P1 P2 * * *
@@ -53375,7 +53375,7 @@ case OP_ResetCount: {
 ** The key is copied onto the P3 register exactly as 
 ** it is found in the database file.
 **
-** If the P1 cursor must be pointing to a valid row (not a nullptr row)
+** If the P1 cursor must be pointing to a valid row (not a NULL row)
 ** of a real table, not a pseudo-table.
 */
 case OP_RowKey:
@@ -53448,7 +53448,7 @@ case OP_Rowid: {                 /* out2-prerelease */
   }else if( pC->pseudoTable ){
     v = keyToInt(pC->iKey);
   }else if( pC->nullRow ){
-    /* Leave the rowid set to a nullptr */
+    /* Leave the rowid set to a NULL */
     break;
   }else{
     assert( pC->pCursor!=0 );
@@ -53464,7 +53464,7 @@ case OP_Rowid: {                 /* out2-prerelease */
 **
 ** Move the cursor P1 to a null row.  Any OP_Column operations
 ** that occur while the cursor is on the null row will always
-** write a nullptr.
+** write a NULL.
 */
 case OP_NullRow: {
   int i = pOp->p1;
@@ -54033,7 +54033,7 @@ case OP_DropTrigger: {
 **
 ** Do an analysis of the currently open database.  Store in
 ** register P1 the text of an error message describing any problems.
-** If no problems are found, store a nullptr in register P1.
+** If no problems are found, store a NULL in register P1.
 **
 ** The register P3 contains the maximum number of allowed errors.
 ** At most reg(P3) errors will be reported.
@@ -54504,7 +54504,7 @@ case OP_VOpen: {
 ** P1 is a cursor opened using VOpen.  P2 is an address to jump to if
 ** the filtered result set is empty.
 **
-** P4 is either nullptr or a string that was generated by the xBestIndex
+** P4 is either NULL or a string that was generated by the xBestIndex
 ** method of the module.  The interpretation of the P4 string is left
 ** to the module implementation.
 **
@@ -54751,9 +54751,9 @@ case OP_VRename: {
 **
 ** The xUpdate method will do a DELETE or an INSERT or both.
 ** The argv[0] element (which corresponds to memory cell P3)
-** is the rowid of a row to delete.  If argv[0] is nullptr then no 
+** is the rowid of a row to delete.  If argv[0] is NULL then no 
 ** deletion occurs.  The argv[1] element is the rowid of the new 
-** row.  This can be nullptr to have the virtual table select the new 
+** row.  This can be NULL to have the virtual table select the new 
 ** rowid for itself.  The subsequent elements in the array are 
 ** the values of columns in the new row.
 **
@@ -55145,7 +55145,7 @@ SQLITE_API int sqlite3_blob_open(
       /* Configure the number of columns. Configure the cursor to
       ** think that the table has one more column than it really
       ** does. An OP_Column to retrieve this imaginary column will
-      ** always return an SQL nullptr. This is useful because it means
+      ** always return an SQL NULL. This is useful because it means
       ** we can invoke OP_Column to fill in the vdbe cursors type 
       ** and offset cache without causing any IO.
       */
@@ -56055,9 +56055,9 @@ static void resolveAlias(
 **    pExpr->pRight        Any expression this points to is deleted.
 **
 ** The pDbToken is the name of the database (the "X").  This value may be
-** nullptr meaning that name is of the form Y.Z or Z.  Any available database
+** NULL meaning that name is of the form Y.Z or Z.  Any available database
 ** can be used.  The pTableToken is the name of the table (the "Y").  This
-** value can be nullptr if pDbToken is also nullptr.  If pTableToken is nullptr it
+** value can be NULL if pDbToken is also NULL.  If pTableToken is NULL it
 ** means that the form of the name is Z and that columns from any table
 ** can be used.
 **
@@ -56066,8 +56066,8 @@ static void resolveAlias(
 */
 static int lookupName(
   Parse *pParse,       /* The parsing context */
-  Token *pDbToken,     /* Name of the database containing table, or nullptr */
-  Token *pTableToken,  /* Name of table containing column, or nullptr */
+  Token *pDbToken,     /* Name of the database containing table, or NULL */
+  Token *pTableToken,  /* Name of table containing column, or NULL */
   Token *pColumnToken, /* Name of the column. */
   NameContext *pNC,    /* The name context used to resolve the name */
   Expr *pExpr          /* Make this EXPR node point to the selected column */
@@ -56084,8 +56084,8 @@ static int lookupName(
   NameContext *pTopNC = pNC;        /* First namecontext in the list */
   Schema *pSchema = 0;              /* Schema of the expression */
 
-  assert( pNC ); /* the name context cannot be nullptr. */
-  assert( pColumnToken && pColumnToken->z ); /* The Z in X.Y.Z cannot be nullptr */
+  assert( pNC ); /* the name context cannot be NULL. */
+  assert( pColumnToken && pColumnToken->z ); /* The Z in X.Y.Z cannot be NULL */
 
   /* Dequote and zero-terminate the names */
   zDb = sqlite3NameFromToken(db, pDbToken);
@@ -56264,7 +56264,7 @@ static int lookupName(
   }
 
   /*
-  ** If X and Y are nullptr (in other words if only the column name Z is
+  ** If X and Y are NULL (in other words if only the column name Z is
   ** supplied) and the value of Z is enclosed in double-quotes, then
   ** Z is a string literal if it doesn't match any column names.  In that
   ** case, we need to return right away and not make any changes to
@@ -57388,7 +57388,7 @@ static int codeCompare(
   int opcode,       /* The comparison opcode */
   int in1, int in2, /* Register holding operands */
   int dest,         /* Jump here if true.  */
-  int jumpIfNull    /* If true, jump if either operand is nullptr */
+  int jumpIfNull    /* If true, jump if either operand is NULL */
 ){
   int p5;
   int addr;
@@ -57616,7 +57616,7 @@ SQLITE_PRIVATE Expr *sqlite3RegisterExpr(Parse *pParse, Token *pToken){
 
 /*
 ** Join two expressions using an AND operator.  If either expression is
-** nullptr, then just return the other expression.
+** NULL, then just return the other expression.
 */
 SQLITE_PRIVATE Expr *sqlite3ExprAnd(sqlite3 *db, Expr *pLeft, Expr *pRight){
   if( pLeft==0 ){
@@ -57876,7 +57876,7 @@ static int dupedExprSize(Expr *p, int flags){
 
 /*
 ** This function is similar to sqlite3ExprDup(), except that if pzBuffer 
-** is not nullptr then *pzBuffer is assumed to point to a buffer large enough 
+** is not NULL then *pzBuffer is assumed to point to a buffer large enough 
 ** to store the copy of expression p, the copies of p->token and p->span 
 ** (if applicable), and the copies of the p->pLeft and p->pRight expressions,
 ** if any. Before returning, *pzBuffer is set to the first byte passed the
@@ -58045,7 +58045,7 @@ SQLITE_PRIVATE ExprList *sqlite3ExprListDup(sqlite3 *db, ExprList *p, int flags)
 ** If cursors, triggers, views and subqueries are all omitted from
 ** the build, then none of the following routines, except for 
 ** sqlite3SelectDup(), can be called. sqlite3SelectDup() is sometimes
-** called with a nullptr argument.
+** called with a NULL argument.
 */
 #if !defined(SQLITE_OMIT_VIEW) || !defined(SQLITE_OMIT_TRIGGER) \
  || !defined(SQLITE_OMIT_SUBQUERY)
@@ -58139,11 +58139,11 @@ SQLITE_PRIVATE Select *sqlite3SelectDup(sqlite3 *db, Select *p, int flags){
 
 /*
 ** Add a new element to the end of an expression list.  If pList is
-** initially nullptr, then create a new expression list.
+** initially NULL, then create a new expression list.
 */
 SQLITE_PRIVATE ExprList *sqlite3ExprListAppend(
   Parse *pParse,          /* Parsing context */
-  ExprList *pList,        /* List to which to append. Might be nullptr */
+  ExprList *pList,        /* List to which to append. Might be NULL */
   Expr *pExpr,            /* Expression to be appended */
   Token *pName            /* AS keyword for the expression */
 ){
@@ -58434,21 +58434,21 @@ static int isCandidateForInOpt(Select *p){
 ** be found with <column> as its left-most column.
 **
 ** When the structure is being used for set membership tests, the user
-** needs to know whether or not the structure contains an SQL nullptr 
+** needs to know whether or not the structure contains an SQL NULL 
 ** value in order to correctly evaluate expressions like "X IN (Y, Z)".
-** If there is a chance that the structure may contain a nullptr value at
+** If there is a chance that the structure may contain a NULL value at
 ** runtime, then a register is allocated and the register number written
 ** to *prNotFound. If there is no chance that the structure contains a
-** nullptr value, then *prNotFound is left unchanged.
+** NULL value, then *prNotFound is left unchanged.
 **
 ** If a register is allocated and its location stored in *prNotFound, then
-** its initial value is nullptr. If the structure does not remain constant
+** its initial value is NULL. If the structure does not remain constant
 ** for the duration of the query (i.e. the set is a correlated sub-select), 
-** the value of the allocated register is reset to nullptr each time the 
+** the value of the allocated register is reset to NULL each time the 
 ** structure is repopulated. This allows the caller to use vdbe code 
 ** equivalent to the following:
 **
-**   if( register==nullptr ){
+**   if( register==NULL ){
 **     has_null = <test if data structure contains null>
 **     register = 1
 **   }
@@ -59460,24 +59460,24 @@ SQLITE_PRIVATE int sqlite3ExprCodeTarget(Parse *pParse, Expr *pExpr, int target)
         j5 = sqlite3VdbeAddOp3(v, OP_Found, pExpr->iTable, 0, r2);
 
         /* If the set membership test fails, then the result of the 
-        ** "x IN (...)" expression must be either 0 or nullptr. If the set
-        ** contains no nullptr values, then the result is 0. If the set 
-        ** contains one or more nullptr values, then the result of the
-        ** expression is also nullptr.
+        ** "x IN (...)" expression must be either 0 or NULL. If the set
+        ** contains no NULL values, then the result is 0. If the set 
+        ** contains one or more NULL values, then the result of the
+        ** expression is also NULL.
         */
         if( rNotFound==0 ){
           /* This branch runs if it is known at compile time (now) that 
-          ** the set contains no nullptr values. This happens as the result
-          ** of a "NOT nullptr" constraint in the database schema. No need
+          ** the set contains no NULL values. This happens as the result
+          ** of a "NOT NULL" constraint in the database schema. No need
           ** to test the data structure at runtime in this case.
           */
           sqlite3VdbeAddOp2(v, OP_Integer, 0, target);
         }else{
-          /* This block populates the rNotFound register with either nullptr
+          /* This block populates the rNotFound register with either NULL
           ** or 0 (an integer value). If the data structure contains one
-          ** or more NULLs, then set rNotFound to nullptr. Otherwise, set it
+          ** or more NULLs, then set rNotFound to NULL. Otherwise, set it
           ** to 0. If register rMayHaveNull is already set to some value
-          ** other than nullptr, then the test has already been run and 
+          ** other than NULL, then the test has already been run and 
           ** rNotFound is already populated.
           */
           static const char nullRecord[] = { 0x02, 0x00 };
@@ -59490,7 +59490,7 @@ SQLITE_PRIVATE int sqlite3ExprCodeTarget(Parse *pParse, Expr *pExpr, int target)
           sqlite3VdbeJumpHere(v, j4);
           sqlite3VdbeJumpHere(v, j3);
 
-          /* Copy the value of register rNotFound (which is either nullptr or 0)
+          /* Copy the value of register rNotFound (which is either NULL or 0)
           ** into the target register. This will be the result of the
           ** expression.
           */
@@ -59557,12 +59557,12 @@ SQLITE_PRIVATE int sqlite3ExprCodeTarget(Parse *pParse, Expr *pExpr, int target)
     ** X (if it exists) is in pExpr->pLeft.
     ** Y is in pExpr->pRight.  The Y is also optional.  If there is no
     ** ELSE clause and no other term matches, then the result of the
-    ** exprssion is nullptr.
+    ** exprssion is NULL.
     ** Ei is in pExpr->pList->a[i*2] and Ri is pExpr->pList->a[i*2+1].
     **
     ** The result of the expression is the Ri for the first matching Ei,
     ** or if there is no matching Ei, the ELSE term Y, or if there is
-    ** no ELSE term, nullptr.
+    ** no ELSE term, NULL.
     */
     case TK_CASE: {
       int endLabel;                     /* GOTO label for end of CASE stmt */
@@ -59869,7 +59869,7 @@ SQLITE_PRIVATE int sqlite3ExprCodeExprList(
 ** to the label "dest" if the expression is true but execution
 ** continues straight thru if the expression is false.
 **
-** If the expression evaluates to nullptr (neither true nor false), then
+** If the expression evaluates to NULL (neither true nor false), then
 ** take the jump if the jumpIfNull flag is SQLITE_JUMPIFNULL.
 **
 ** This code depends on the fact that certain token values (ex: TK_EQ)
@@ -60004,7 +60004,7 @@ SQLITE_PRIVATE void sqlite3ExprIfTrue(Parse *pParse, Expr *pExpr, int dest, int 
 ** to the label "dest" if the expression is false but execution
 ** continues straight thru if the expression is true.
 **
-** If the expression evaluates to nullptr (neither true nor false) then
+** If the expression evaluates to NULL (neither true nor false) then
 ** jump if jumpIfNull is SQLITE_JUMPIFNULL or fall through if jumpIfNull
 ** is 0.
 */
@@ -60507,7 +60507,7 @@ static void renameTableFunc(
   if( zSql ){
     do {
       if( !*zCsr ){
-        /* Ran out of input before finding an opening bracket. Return nullptr. */
+        /* Ran out of input before finding an opening bracket. Return NULL. */
         return;
       }
 
@@ -60566,7 +60566,7 @@ static void renameTriggerFunc(
     do {
 
       if( !*zCsr ){
-        /* Ran out of input before finding the table name. Return nullptr. */
+        /* Ran out of input before finding the table name. Return NULL. */
         return;
       }
 
@@ -60624,7 +60624,7 @@ SQLITE_PRIVATE void sqlite3AlterFunctions(sqlite3 *db){
 ** Generate the text of a WHERE expression which can be used to select all
 ** temporary triggers on table pTab from the sqlite_temp_master table. If
 ** table pTab has no temporary triggers, or is itself stored in the 
-** temporary database, nullptr is returned.
+** temporary database, NULL is returned.
 */
 static char *whereTempTriggers(Parse *pParse, Table *pTab){
   Trigger *pTrig;
@@ -60632,7 +60632,7 @@ static char *whereTempTriggers(Parse *pParse, Table *pTab){
   char *tmp = 0;
   const Schema *pTempSchema = pParse->db->aDb[1].pSchema; /* Temp db schema */
 
-  /* If the table is not located in the temp-db (in which case nullptr is 
+  /* If the table is not located in the temp-db (in which case NULL is 
   ** returned, loop through the tables list of triggers. For each trigger
   ** that is not part of the temp-db schema, add a clause to the WHERE 
   ** expression being built up in zWhere.
@@ -60715,7 +60715,7 @@ SQLITE_PRIVATE void sqlite3AlterRenameTable(
   int iDb;                  /* Database that contains the table */
   char *zDb;                /* Name of database iDb */
   Table *pTab;              /* Table being renamed */
-  char *zName = 0;          /* nullptr-terminated version of pName */ 
+  char *zName = 0;          /* NULL-terminated version of pName */ 
   sqlite3 *db = pParse->db; /* Database connection */
   int nTabName;             /* Number of UTF-8 characters in zTabName */
   const char *zTabName;     /* Original name of the table */
@@ -60734,7 +60734,7 @@ SQLITE_PRIVATE void sqlite3AlterRenameTable(
   iDb = sqlite3SchemaToIndex(pParse->db, pTab->pSchema);
   zDb = db->aDb[iDb].zName;
 
-  /* Get a nullptr terminated version of the new table name. */
+  /* Get a NULL terminated version of the new table name. */
   zName = sqlite3NameFromToken(db, pName);
   if( !zName ) goto exit_rename_table;
 
@@ -60913,16 +60913,16 @@ SQLITE_PRIVATE void sqlite3AlterFinishAddColumn(Parse *pParse, Token *pColDef){
 #endif
 
   /* If the default value for the new column was specified with a 
-  ** literal nullptr, then set pDflt to 0. This simplifies checking
-  ** for an SQL nullptr default below.
+  ** literal NULL, then set pDflt to 0. This simplifies checking
+  ** for an SQL NULL default below.
   */
   if( pDflt && pDflt->op==TK_NULL ){
     pDflt = 0;
   }
 
   /* Check that the new column is not specified as PRIMARY KEY or UNIQUE.
-  ** If there is a NOT nullptr constraint, then the default value for the
-  ** column must not be nullptr.
+  ** If there is a NOT NULL constraint, then the default value for the
+  ** column must not be NULL.
   */
   if( pCol->isPrimKey ){
     sqlite3ErrorMsg(pParse, "Cannot add a PRIMARY KEY column");
@@ -60934,7 +60934,7 @@ SQLITE_PRIVATE void sqlite3AlterFinishAddColumn(Parse *pParse, Token *pColDef){
   }
   if( pCol->notNull && !pDflt ){
     sqlite3ErrorMsg(pParse, 
-        "Cannot add a NOT nullptr column with default value nullptr");
+        "Cannot add a NOT NULL column with default value NULL");
     return;
   }
 
@@ -60971,8 +60971,8 @@ SQLITE_PRIVATE void sqlite3AlterFinishAddColumn(Parse *pParse, Token *pColDef){
     sqlite3DbFree(db, zCol);
   }
 
-  /* If the default value of the new column is nullptr, then set the file
-  ** format to 2. If the default value of the new column is not nullptr,
+  /* If the default value of the new column is NULL, then set the file
+  ** format to 2. If the default value of the new column is not NULL,
   ** the file format becomes 3.
   */
   sqlite3MinimumFileFormat(pParse, iDb, pDflt ? 3 : 2);
@@ -61229,7 +61229,7 @@ static void analyzeOneTable(
     **    mem[iMem+nCol+nCol]:   Last observed value of column N
     **
     ** Cells iMem through iMem+nCol are initialized to 0.  The others
-    ** are initialized to nullptr.
+    ** are initialized to NULL.
     */
     for(i=0; i<=nCol; i++){
       sqlite3VdbeAddOp2(v, OP_Integer, 0, iMem+i);
@@ -61371,7 +61371,7 @@ SQLITE_PRIVATE void sqlite3Analyze(Parse *pParse, Token *pName1, Token *pName2){
   Token *pTableName;
 
   /* Read the database schema. If an error occurs, leave an error message
-  ** and code in pParse and return nullptr. */
+  ** and code in pParse and return NULL. */
   assert( sqlite3BtreeHoldsAllMutexes(pParse->db) );
   if( SQLITE_OK!=sqlite3ReadSchema(pParse) ){
     return;
@@ -61569,7 +61569,7 @@ static int resolveAttachExpr(NameContext *pName, Expr *pExpr)
 **
 **     SELECT sqlite_attach(x, y, z)
 **
-** If the optional "KEY z" syntax is omitted, an SQL nullptr is passed as the
+** If the optional "KEY z" syntax is omitted, an SQL NULL is passed as the
 ** third argument.
 */
 static void attachFunc(
@@ -62114,11 +62114,11 @@ SQLITE_PRIVATE int sqlite3FixTriggerStep(
 ** SQLITE_OK is returned, it means that access is allowed.  SQLITE_DENY
 ** means that the SQL statement will never-run - the sqlite3_exec() call
 ** will return with an error.  SQLITE_IGNORE means that the SQL statement
-** should run but attempts to read the specified column will return nullptr
+** should run but attempts to read the specified column will return NULL
 ** and attempts to write the column will be ignored.
 **
-** Setting the auth function to nullptr disables this hook.  The default
-** setting of the auth function is nullptr.
+** Setting the auth function to NULL disables this hook.  The default
+** setting of the auth function is NULL.
 */
 SQLITE_API int sqlite3_set_authorizer(
   sqlite3 *db,
@@ -62532,7 +62532,7 @@ SQLITE_PRIVATE void sqlite3NestedParse(Parse *pParse, const char *zFormat, ...){
 /*
 ** Locate the in-memory structure that describes a particular database
 ** table given the name of that table and (optionally) the name of the
-** database containing the table.  Return nullptr if not found.
+** database containing the table.  Return NULL if not found.
 **
 ** If zDatabase is 0, all databases are searched for the table and the
 ** first matching table is returned.  (No checking for duplicate table
@@ -62559,7 +62559,7 @@ SQLITE_PRIVATE Table *sqlite3FindTable(sqlite3 *db, const char *zName, const cha
 /*
 ** Locate the in-memory structure that describes a particular database
 ** table given the name of that table and (optionally) the name of the
-** database containing the table.  Return nullptr if not found.  Also leave an
+** database containing the table.  Return NULL if not found.  Also leave an
 ** error message in pParse->zErrMsg.
 **
 ** The difference between this routine and sqlite3FindTable() is that this
@@ -62570,12 +62570,12 @@ SQLITE_PRIVATE Table *sqlite3LocateTable(
   Parse *pParse,         /* context in which to report errors */
   int isView,            /* True if looking for a VIEW rather than a TABLE */
   const char *zName,     /* Name of the table we are looking for */
-  const char *zDbase     /* Name of the database.  Might be nullptr */
+  const char *zDbase     /* Name of the database.  Might be NULL */
 ){
   Table *p;
 
   /* Read the database schema. If an error occurs, leave an error message
-  ** and code in pParse and return nullptr. */
+  ** and code in pParse and return NULL. */
   if( SQLITE_OK!=sqlite3ReadSchema(pParse) ){
     return 0;
   }
@@ -62597,7 +62597,7 @@ SQLITE_PRIVATE Table *sqlite3LocateTable(
 ** Locate the in-memory structure that describes 
 ** a particular index given the name of that index
 ** and the name of the database that contains the index.
-** Return nullptr if not found.
+** Return NULL if not found.
 **
 ** If zDatabase is 0, all databases are searched for the
 ** table and the first matching index is returned.  (No checking
@@ -63274,7 +63274,7 @@ SQLITE_PRIVATE void sqlite3AddColumn(Parse *pParse, Token *pName){
 
 /*
 ** This routine is called by the parser while in the middle of
-** parsing a CREATE TABLE statement.  A "NOT nullptr" constraint has
+** parsing a CREATE TABLE statement.  A "NOT NULL" constraint has
 ** been seen on a column.  This routine sets the notNull flag on
 ** the column currently under construction.
 */
@@ -63407,7 +63407,7 @@ SQLITE_PRIVATE void sqlite3AddDefaultValue(Parse *pParse, Expr *pExpr){
 
 /*
 ** Designate the PRIMARY KEY for the table.  pList is a list of names 
-** of columns that form the primary key.  If pList is nullptr, then the
+** of columns that form the primary key.  If pList is NULL, then the
 ** most recently added column of the table is the primary key.
 **
 ** A table can have at most one primary key.  If the table already has
@@ -63547,7 +63547,7 @@ SQLITE_PRIVATE void sqlite3AddCollateType(Parse *pParse, Token *pToken){
 ** returned instead.
 **
 ** If no versions of the requested collations sequence are available, or
-** another error occurs, nullptr is returned and an error message written into
+** another error occurs, NULL is returned and an error message written into
 ** pParse.
 **
 ** This routine is a wrapper around sqlite3FindCollSeq().  This routine
@@ -63790,7 +63790,7 @@ static char *createTableStmt(sqlite3 *db, Table *p){
 ** recently changed, so the entry for this table already exists in
 ** the sqlite_master table.  We do not want to create it again.
 **
-** If the pSelect argument is not nullptr, it means that this routine
+** If the pSelect argument is not NULL, it means that this routine
 ** was called to create a table generated from a 
 ** "CREATE TABLE ... AS SELECT ..." statement.  The column names of
 ** the new table will match the result set of the SELECT.
@@ -64698,25 +64698,25 @@ static void sqlite3RefillIndex(Parse *pParse, Index *pIndex, int memRootPage){
 /*
 ** Create a new index for an SQL table.  pName1.pName2 is the name of the index 
 ** and pTblList is the name of the table that is to be indexed.  Both will 
-** be nullptr for a primary key or an index that is created to satisfy a
-** UNIQUE constraint.  If pTable and pIndex are nullptr, use pParse->pNewTable
+** be NULL for a primary key or an index that is created to satisfy a
+** UNIQUE constraint.  If pTable and pIndex are NULL, use pParse->pNewTable
 ** as the table to be indexed.  pParse->pNewTable is a table that is
 ** currently being constructed by a CREATE TABLE statement.
 **
-** pList is a list of columns to be indexed.  pList will be nullptr if this
+** pList is a list of columns to be indexed.  pList will be NULL if this
 ** is a primary key or unique-constraint on the most recent column added
 ** to the table currently under construction.  
 */
 SQLITE_PRIVATE void sqlite3CreateIndex(
   Parse *pParse,     /* All information about this parse */
-  Token *pName1,     /* First part of index name. May be nullptr */
-  Token *pName2,     /* Second part of index name. May be nullptr */
+  Token *pName1,     /* First part of index name. May be NULL */
+  Token *pName2,     /* Second part of index name. May be NULL */
   SrcList *pTblName, /* Table to index. Use pParse->pNewTable if 0 */
   ExprList *pList,   /* A list of columns to be indexed */
   int onError,       /* OE_Abort, OE_Ignore, OE_Replace, or OE_None */
   Token *pStart,     /* The CREATE token that begins this statement */
   Token *pEnd,       /* The ")" that closes the CREATE INDEX statement */
-  int sortOrder,     /* Sort order of primary key when pList==nullptr */
+  int sortOrder,     /* Sort order of primary key when pList==NULL */
   int ifNotExist     /* Omit error if index already exists */
 ){
   Table *pTab = 0;     /* Table to be indexed */
@@ -65316,7 +65316,7 @@ SQLITE_PRIVATE void *sqlite3ArrayAllocate(
 ** Append a new element to the given IdList.  Create a new IdList if
 ** need be.
 **
-** A new IdList is returned, or nullptr if malloc() fails.
+** A new IdList is returned, or NULL if malloc() fails.
 */
 SQLITE_PRIVATE IdList *sqlite3IdListAppend(sqlite3 *db, IdList *pList, Token *pToken){
   int i;
@@ -65439,9 +65439,9 @@ SQLITE_PRIVATE SrcList *sqlite3SrcListEnlarge(
 
 /*
 ** Append a new table name to the given SrcList.  Create a new SrcList if
-** need be.  A new entry is created in the SrcList even if pToken is nullptr.
+** need be.  A new entry is created in the SrcList even if pToken is NULL.
 **
-** A SrcList is returned, or nullptr if there is an OOM error.  The returned
+** A SrcList is returned, or NULL if there is an OOM error.  The returned
 ** SrcList might be the same as the SrcList that was input or it might be
 ** a new one.  If an OOM error does occurs, then the prior value of pList
 ** that is input to this routine is automatically freed.
@@ -65450,9 +65450,9 @@ SQLITE_PRIVATE SrcList *sqlite3SrcListEnlarge(
 ** database name prefix.  Like this:  "database.table".  The pDatabase
 ** points to the table name and the pTable points to the database name.
 ** The SrcList.a[].zName field is filled with the table name which might
-** come from pTable (if pDatabase is nullptr) or from pDatabase.  
+** come from pTable (if pDatabase is NULL) or from pDatabase.  
 ** SrcList.a[].zDatabase is filled with the database name from pTable,
-** or with nullptr if no database is specified.
+** or with NULL if no database is specified.
 **
 ** In other words, if call like this:
 **
@@ -65467,7 +65467,7 @@ SQLITE_PRIVATE SrcList *sqlite3SrcListEnlarge(
 */
 SQLITE_PRIVATE SrcList *sqlite3SrcListAppend(
   sqlite3 *db,        /* Connection to notify of malloc failures */
-  SrcList *pList,     /* Append to this SrcList. nullptr creates a new SrcList */
+  SrcList *pList,     /* Append to this SrcList. NULL creates a new SrcList */
   Token *pTable,      /* Table to append */
   Token *pDatabase    /* Database of the table */
 ){
@@ -65537,14 +65537,14 @@ SQLITE_PRIVATE void sqlite3SrcListDelete(sqlite3 *db, SrcList *pList){
 /*
 ** This routine is called by the parser to add a new term to the
 ** end of a growing FROM clause.  The "p" parameter is the part of
-** the FROM clause that has already been constructed.  "p" is nullptr
+** the FROM clause that has already been constructed.  "p" is NULL
 ** if this is the first term of the FROM clause.  pTable and pDatabase
 ** are the name of the table and database named in the FROM clause term.
-** pDatabase is nullptr if the database name qualifier is missing - the
+** pDatabase is NULL if the database name qualifier is missing - the
 ** usual case.  If the term has a alias, then pAlias points to the
 ** alias token.  If the term is a subquery, then pSubquery is the
 ** SELECT statement that the subquery encodes.  The pTable and
-** pDatabase parameters are nullptr for subqueries.  The pOn and pUsing
+** pDatabase parameters are NULL for subqueries.  The pOn and pUsing
 ** parameters are the content of the ON and USING clauses.
 **
 ** Return a new SrcList which encodes is the FROM with the new
@@ -65874,7 +65874,7 @@ static void reindexDatabases(Parse *pParse, char const *zColl){
 */
 #ifndef SQLITE_OMIT_REINDEX
 SQLITE_PRIVATE void sqlite3Reindex(Parse *pParse, Token *pName1, Token *pName2){
-  CollSeq *pColl;             /* Collating sequence to be reindexed, or nullptr */
+  CollSeq *pColl;             /* Collating sequence to be reindexed, or NULL */
   char *z;                    /* Name of a table or index */
   const char *zDb;            /* Name of the database */
   Table *pTab;                /* A table in the database */
@@ -65884,7 +65884,7 @@ SQLITE_PRIVATE void sqlite3Reindex(Parse *pParse, Token *pName1, Token *pName2){
   Token *pObjName;            /* Name of the table or index to be reindexed */
 
   /* Read the database schema. If an error occurs, leave an error message
-  ** and code in pParse and return nullptr. */
+  ** and code in pParse and return NULL. */
   if( SQLITE_OK!=sqlite3ReadSchema(pParse) ){
     return;
   }
@@ -65936,7 +65936,7 @@ SQLITE_PRIVATE void sqlite3Reindex(Parse *pParse, Token *pName1, Token *pName2){
 ** If successful, a pointer to the new structure is returned. In this case
 ** the caller is responsible for calling sqlite3DbFree(db, ) on the returned 
 ** pointer. If an error occurs (out of memory or missing collation 
-** sequence), nullptr is returned and the state of pParse updated to reflect
+** sequence), NULL is returned and the state of pParse updated to reflect
 ** the error.
 */
 SQLITE_PRIVATE KeyInfo *sqlite3IndexKeyinfo(Parse *pParse, Index *pIdx){
@@ -66045,11 +66045,11 @@ static int synthCollSeq(sqlite3 *db, CollSeq *pColl){
 ** requested collation sequence is not available in the database native
 ** encoding.
 ** 
-** If it is not nullptr, then pColl must point to the database native encoding 
+** If it is not NULL, then pColl must point to the database native encoding 
 ** collation sequence with name zName, length nName.
 **
 ** The return value is either the collation sequence to be used in database
-** db for collation type name zName, length nName, or nullptr, if no collation
+** db for collation type name zName, length nName, or NULL, if no collation
 ** sequence can be found.
 */
 SQLITE_PRIVATE CollSeq *sqlite3GetCollSeq(
@@ -66110,7 +66110,7 @@ SQLITE_PRIVATE int sqlite3CheckCollSeq(Parse *pParse, CollSeq *pColl){
 /*
 ** Locate and return an entry from the db.aCollSeq hash table. If the entry
 ** specified by zName and nName is not found and parameter 'create' is
-** true, then create a new entry. Otherwise return nullptr.
+** true, then create a new entry. Otherwise return NULL.
 **
 ** Each pointer stored in the sqlite3.aCollSeq hash table contains an
 ** array of three CollSeq structures. The first is the collation sequence
@@ -66165,7 +66165,7 @@ static CollSeq *findCollSeqEntry(
 ** for the encoding 'enc' from the database 'db'.
 **
 ** If the entry specified is not found and 'create' is true, then create a
-** new entry.  Otherwise return nullptr.
+** new entry.  Otherwise return NULL.
 **
 ** A separate function sqlite3LocateCollSeq() is a wrapper around
 ** this routine.  sqlite3LocateCollSeq() invokes the collation factory
@@ -66279,7 +66279,7 @@ SQLITE_PRIVATE void sqlite3FuncDefInsert(
 ** Locate a user function given a name, a number of arguments and a flag
 ** indicating whether the function prefers UTF-16 over UTF-8.  Return a
 ** pointer to the FuncDef structure that defines that function, or return
-** nullptr if the function does not exist.
+** NULL if the function does not exist.
 **
 ** If the createFlag argument is true, then a new (blank) FuncDef
 ** structure is created and liked into the "db" structure if a
@@ -66444,7 +66444,7 @@ SQLITE_PRIVATE Schema *sqlite3SchemaGet(sqlite3 *db, Btree *pBt){
 
 /*
 ** Look up every table that is named in pSrc.  If any table is not found,
-** add an error message to pParse->zErrMsg and return nullptr.  If all tables
+** add an error message to pParse->zErrMsg and return NULL.  If all tables
 ** are found, return a pointer to the last table.
 */
 SQLITE_PRIVATE Table *sqlite3SrcListLookup(Parse *pParse, SrcList *pSrc){
@@ -66560,12 +66560,12 @@ SQLITE_PRIVATE Expr *sqlite3LimitWhere(
   Expr *pOffset,               /* The OFFSET clause.  May be null */
   char *zStmtType              /* Either DELETE or UPDATE.  For error messages. */
 ){
-  Expr *pWhereRowid = nullptr;    /* WHERE rowid .. */
-  Expr *pInClause = nullptr;      /* WHERE rowid IN ( select ) */
-  Expr *pSelectRowid = nullptr;   /* SELECT rowid ... */
-  ExprList *pEList = nullptr;     /* Expression list contaning only pSelectRowid */
-  SrcList *pSelectSrc = nullptr;  /* SELECT rowid FROM x ... (dup of pSrc) */
-  Select *pSelect = nullptr;      /* Complete SELECT tree */
+  Expr *pWhereRowid = NULL;    /* WHERE rowid .. */
+  Expr *pInClause = NULL;      /* WHERE rowid IN ( select ) */
+  Expr *pSelectRowid = NULL;   /* SELECT rowid ... */
+  ExprList *pEList = NULL;     /* Expression list contaning only pSelectRowid */
+  SrcList *pSelectSrc = NULL;  /* SELECT rowid FROM x ... (dup of pSrc) */
+  Select *pSelect = NULL;      /* Complete SELECT tree */
 
   /* Check that there isn't an ORDER BY without a LIMIT clause.
   */
@@ -66639,7 +66639,7 @@ limit_where_cleanup_2:
 /*
 ** Generate code for a DELETE FROM statement.
 **
-**     DELETE FROM table_wxyz WHERE a<5 AND b NOT nullptr;
+**     DELETE FROM table_wxyz WHERE a<5 AND b NOT NULL;
 **                 \________/       \________________/
 **                  pTabList              pWhere
 */
@@ -67322,9 +67322,9 @@ static void roundFunc(sqlite3_context *context, int argc, sqlite3_value **argv){
 /*
 ** Allocate nByte bytes of space using sqlite3_malloc(). If the
 ** allocation fails, call sqlite3_result_error_nomem() to notify
-** the database handle that malloc() has failed and return nullptr.
+** the database handle that malloc() has failed and return NULL.
 ** If nByte is larger than the maximum string or blob length, then
-** raise an SQLITE_TOOBIG exception and return nullptr.
+** raise an SQLITE_TOOBIG exception and return NULL.
 */
 static void *contextMalloc(sqlite3_context *context, i64 nByte){
   char *z;
@@ -67390,7 +67390,7 @@ static void lowerFunc(sqlite3_context *context, int argc, sqlite3_value **argv){
 
 /*
 ** Implementation of the IFNULL(), NVL(), and COALESCE() functions.  
-** All three do the same thing.  They return the first non-nullptr
+** All three do the same thing.  They return the first non-NULL
 ** argument.
 */
 static void ifnullFunc(
@@ -67737,7 +67737,7 @@ static void likeFunc(
 
 /*
 ** Implementation of the NULLIF(x,y) function.  The result is the first
-** argument if the arguments are different.  The result is nullptr if the
+** argument if the arguments are different.  The result is NULL if the
 ** arguments are equal to each other.
 */
 static void nullifFunc(
@@ -67779,8 +67779,8 @@ static const char hexdigits[] = {
 **
 ** Implementation of the QUOTE() function.  This function takes a single
 ** argument.  If the argument is numeric, the return value is the same as
-** the argument.  If the argument is nullptr, the return value is the string
-** "nullptr".  Otherwise, the argument is enclosed in single quotes with
+** the argument.  If the argument is NULL, the return value is the string
+** "NULL".  Otherwise, the argument is enclosed in single quotes with
 ** single-quote escapes.
 */
 static void quoteFunc(sqlite3_context *context, int argc, sqlite3_value **argv){
@@ -67838,7 +67838,7 @@ static void quoteFunc(sqlite3_context *context, int argc, sqlite3_value **argv){
     }
     default: {
       assert( sqlite3_value_type(argv[0])==SQLITE_NULL );
-      sqlite3_result_text(context, "nullptr", 4, SQLITE_STATIC);
+      sqlite3_result_text(context, "NULL", 4, SQLITE_STATIC);
       break;
     }
   }
@@ -68119,7 +68119,7 @@ static void soundexFunc(
 
 #ifndef SQLITE_OMIT_LOAD_EXTENSION
 /*
-** A function that loads a shared-library extension then returns nullptr.
+** A function that loads a shared-library extension then returns NULL.
 */
 static void loadExt(sqlite3_context *context, int argc, sqlite3_value **argv){
   const char *zFile = (const char *)sqlite3_value_text(argv[0]);
@@ -68157,7 +68157,7 @@ struct SumCtx {
 ** Routines used to compute the sum, average, and total.
 **
 ** The SUM() function follows the (broken) SQL standard which means
-** that it returns nullptr if it sums over no inputs.  TOTAL returns
+** that it returns NULL if it sums over no inputs.  TOTAL returns
 ** 0.0 in that case.  In addition, TOTAL always returns a float where
 ** SUM might return an integer if it never encounters a floating point
 ** value.  TOTAL never fails, but SUM might through an exception if
@@ -68790,11 +68790,11 @@ static int xferOptimization(
 **
 ** The IDLIST following the table name is always optional.  If omitted,
 ** then a list of all columns for the table is substituted.  The IDLIST
-** appears in the pColumn parameter.  pColumn is nullptr if IDLIST is omitted.
+** appears in the pColumn parameter.  pColumn is NULL if IDLIST is omitted.
 **
 ** The pList parameter holds EXPRLIST in the first form of the INSERT
-** statement above, and pSelect is nullptr.  For the second form, pList is
-** nullptr and pSelect is a pointer to the select statement used to generate
+** statement above, and pSelect is NULL.  For the second form, pList is
+** NULL and pSelect is a pointer to the select statement used to generate
 ** data for the insert.
 **
 ** The code generated follows one of four templates.  For a simple
@@ -69281,7 +69281,7 @@ SQLITE_PRIVATE void sqlite3Insert(
     int regRec;
 
     /* build the NEW.* reference row.  Note that if there is an INTEGER
-    ** PRIMARY KEY into which a nullptr is being inserted, that nullptr will be
+    ** PRIMARY KEY into which a NULL is being inserted, that NULL will be
     ** translated into a unique ID for the row.  But on a BEFORE trigger,
     ** we do not know what the unique ID will be (because the insert has
     ** not happened yet) so we substitute a rowid of -1
@@ -69376,7 +69376,7 @@ SQLITE_PRIVATE void sqlite3Insert(
           pOp->p3 = regAutoinc;
         }
       }
-      /* If the PRIMARY KEY expression is nullptr, then use OP_NewRowid
+      /* If the PRIMARY KEY expression is NULL, then use OP_NewRowid
       ** to generate a unique primary key value.
       */
       if( !appendFlag ){
@@ -69406,9 +69406,9 @@ SQLITE_PRIVATE void sqlite3Insert(
     for(i=0; i<pTab->nCol; i++){
       int iRegStore = regRowid+1+i;
       if( i==pTab->iPKey ){
-        /* The value of the INTEGER PRIMARY KEY column is always a nullptr.
+        /* The value of the INTEGER PRIMARY KEY column is always a NULL.
         ** Whenever this column is read, the record number will be substituted
-        ** in its place.  So will fill this column with a nullptr to avoid
+        ** in its place.  So will fill this column with a NULL to avoid
         ** taking up data space with information that will never be used. */
         sqlite3VdbeAddOp2(v, OP_Null, 0, iRegStore);
         continue;
@@ -69564,7 +69564,7 @@ insert_cleanup:
 ** the same as the order of indices on the linked list of indices
 ** attached to the table.
 **
-** This routine also generates code to check constraints.  NOT nullptr,
+** This routine also generates code to check constraints.  NOT NULL,
 ** CHECK, and UNIQUE constraints are all checked.  If a constraint fails,
 ** then the appropriate action is performed.  There are five possible
 ** actions: ROLLBACK, ABORT, FAIL, REPLACE, and IGNORE.
@@ -69589,9 +69589,9 @@ insert_cleanup:
 **                                the stack and there is an immediate jump
 **                                to label ignoreDest.
 **
-**  NOT nullptr         REPLACE      The nullptr value is replace by the default
+**  NOT NULL         REPLACE      The NULL value is replace by the default
 **                                value for that column.  If the default value
-**                                is nullptr, the action is the same as ABORT.
+**                                is NULL, the action is the same as ABORT.
 **
 **  UNIQUE           REPLACE      The other row that conflicts with the row
 **                                being inserted is removed.
@@ -69639,7 +69639,7 @@ SQLITE_PRIVATE void sqlite3GenerateConstraintChecks(
   regData = regRowid + 1;
 
 
-  /* Test all NOT nullptr constraints.
+  /* Test all NOT NULL constraints.
   */
   for(i=0; i<nCol; i++){
     if( i==pTab->iPKey ){
@@ -69664,7 +69664,7 @@ SQLITE_PRIVATE void sqlite3GenerateConstraintChecks(
         char *zMsg;
         j1 = sqlite3VdbeAddOp3(v, OP_HaltIfNull,
                                   SQLITE_CONSTRAINT, onError, regData+i);
-        zMsg = sqlite3MPrintf(pParse->db, "%s.%s may not be nullptr",
+        zMsg = sqlite3MPrintf(pParse->db, "%s.%s may not be NULL",
                               pTab->zName, pTab->aCol[i].zName);
         sqlite3VdbeChangeP4(v, -1, zMsg, P4_DYNAMIC);
         break;
@@ -70147,7 +70147,7 @@ static int xferOptimization(
       return 0;    /* Collating sequence must be the same on all columns */
     }
     if( pDest->aCol[i].notNull && !pSrc->aCol[i].notNull ){
-      return 0;    /* tab2 must be NOT nullptr if tab1 is */
+      return 0;    /* tab2 must be NOT NULL if tab1 is */
     }
   }
   for(pDestIdx=pDest->pIndex; pDestIdx; pDestIdx=pDestIdx->pNext){
@@ -70296,7 +70296,7 @@ static int xferOptimization(
 **
 ** If the SQL is a query, then for each row in the query result
 ** the xCallback() function is called.  pArg becomes the first
-** argument to xCallback().  If xCallback=nullptr then no callback
+** argument to xCallback().  If xCallback=NULL then no callback
 ** is invoked, even for queries.
 */
 SQLITE_API int sqlite3_exec(
@@ -70825,7 +70825,7 @@ struct sqlite3_api_routines {
 
 /*
 ** Some API routines are omitted when various features are
-** excluded from a build of SQLite.  Substitute a nullptr pointer
+** excluded from a build of SQLite.  Substitute a NULL pointer
 ** for any missing APIs.
 */
 #ifndef SQLITE_ENABLE_COLUMN_METADATA
@@ -70918,7 +70918,7 @@ struct sqlite3_api_routines {
 ** sqlite3_libversion_number() to make sure that the API they
 ** intend to use is supported by the library.  Extensions should
 ** also check to make sure that the pointer to the function is
-** not nullptr before calling it.
+** not NULL before calling it.
 */
 static const sqlite3_api_routines sqlite3Apis = {
   sqlite3_aggregate_context,
@@ -71054,7 +71054,7 @@ static const sqlite3_api_routines sqlite3Apis = {
   sqlite3_vmprintf,
   /*
   ** The original API set ends here.  All extensions can call any
-  ** of the APIs above provided that the pointer is not nullptr.  But
+  ** of the APIs above provided that the pointer is not NULL.  But
   ** before calling APIs that follow, extension should check the
   ** sqlite3_libversion_number() to make sure they are dealing with
   ** a library that is new enough to support that API.
@@ -71634,7 +71634,7 @@ static int flagPragma(Parse *pParse, const char *zLeft, const char *zRight){
 static const char *actionName(u8 action){
   const char *zName;
   switch( action ){
-    case OE_SetNull:  zName = "SET nullptr";            break;
+    case OE_SetNull:  zName = "SET NULL";            break;
     case OE_SetDflt:  zName = "SET DEFAULT";         break;
     case OE_Cascade:  zName = "CASCADE";             break;
     default:          zName = "RESTRICT";  
@@ -71661,12 +71661,12 @@ static const char *actionName(u8 action){
 SQLITE_PRIVATE void sqlite3Pragma(
   Parse *pParse, 
   Token *pId1,        /* First part of [database.]id field */
-  Token *pId2,        /* Second part of [database.]id field, or nullptr */
-  Token *pValue,      /* Token for <value>, or nullptr */
+  Token *pId2,        /* Second part of [database.]id field, or NULL */
+  Token *pValue,      /* Token for <value>, or NULL */
   int minusFlag       /* True if a '-' sign preceded <value> */
 ){
   char *zLeft = 0;       /* Nul-terminated UTF-8 string <id> */
-  char *zRight = 0;      /* Nul-terminated UTF-8 string <value>, or nullptr */
+  char *zRight = 0;      /* Nul-terminated UTF-8 string <value>, or NULL */
   const char *zDb = 0;   /* The database name */
   Token *pId;            /* Pointer to <id> token */
   int iDb;               /* Database index for <database> */
@@ -72142,7 +72142,7 @@ SQLITE_PRIVATE void sqlite3Pragma(
   if( sqlite3StrICmp(zLeft, "lock_proxy_file")==0 ){
     if( !zRight ){
       Pager *pPager = sqlite3BtreePager(pDb->pBt);
-      char *proxy_file_path = nullptr;
+      char *proxy_file_path = NULL;
       sqlite3_file *pFile = sqlite3PagerFile(pPager);
       sqlite3OsFileControl(pFile, SQLITE_GET_LOCKPROXYFILE, 
                            &proxy_file_path);
@@ -72163,7 +72163,7 @@ SQLITE_PRIVATE void sqlite3Pragma(
                                      zRight);
       } else {
         res=sqlite3OsFileControl(pFile, SQLITE_SET_LOCKPROXYFILE, 
-                                     nullptr);
+                                     NULL);
       }
       if( res!=SQLITE_OK ){
         sqlite3ErrorMsg(pParse, "failed to set lock proxy file");
@@ -72214,7 +72214,7 @@ SQLITE_PRIVATE void sqlite3Pragma(
   ** cid:        Column id (numbered from left to right, starting at 0)
   ** name:       Column name
   ** type:       Column declaration type.
-  ** notnull:    True if 'NOT nullptr' is part of column declaration
+  ** notnull:    True if 'NOT NULL' is part of column declaration
   ** dflt_value: The default value for the column, if any.
   */
   if( sqlite3StrICmp(zLeft, "table_info")==0 && zRight ){
@@ -73123,7 +73123,7 @@ static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
   /*
   ** file_format==1    Version 3.0.0.
   ** file_format==2    Version 3.1.3.  // ALTER TABLE ADD COLUMN
-  ** file_format==3    Version 3.1.4.  // ditto but with non-nullptr defaults
+  ** file_format==3    Version 3.1.4.  // ditto but with non-NULL defaults
   ** file_format==4    Version 3.3.0.  // DESC indices.  Boolean constants
   */
   pDb->pSchema->file_format = (u8)meta[1];
@@ -73326,7 +73326,7 @@ static int schemaIsValid(sqlite3 *db){
 SQLITE_PRIVATE int sqlite3SchemaToIndex(sqlite3 *db, Schema *pSchema){
   int i = -1000000;
 
-  /* If pSchema is nullptr, then return -1000000. This happens when code in 
+  /* If pSchema is NULL, then return -1000000. This happens when code in 
   ** expr.c is trying to resolve a reference to a transient table (i.e. one
   ** created by a sub-select). In this case the return value of this 
   ** function should never be used.
@@ -73730,8 +73730,8 @@ SQLITE_PRIVATE Select *sqlite3SelectNew(
   Expr *pHaving,        /* the HAVING clause */
   ExprList *pOrderBy,   /* the ORDER BY clause */
   int isDistinct,       /* true if the DISTINCT keyword is present */
-  Expr *pLimit,         /* LIMIT value.  nullptr means not used */
-  Expr *pOffset         /* OFFSET value.  nullptr means no offset */
+  Expr *pLimit,         /* LIMIT value.  NULL means not used */
+  Expr *pOffset         /* OFFSET value.  NULL means no offset */
 ){
   Select *pNew;
   Select standin;
@@ -73920,9 +73920,9 @@ static void addWhereTerm(
   Parse *pParse,           /* Parsing context */
   const char *zCol,        /* Name of the column */
   const Table *pTab1,      /* First table */
-  const char *zAlias1,     /* Alias for first table.  May be nullptr */
+  const char *zAlias1,     /* Alias for first table.  May be NULL */
   const Table *pTab2,      /* Second table */
-  const char *zAlias2,     /* Alias for second table.  May be nullptr */
+  const char *zAlias2,     /* Alias for second table.  May be NULL */
   int iRightJoinTable,     /* VDBE cursor for the right table */
   Expr **ppExpr,           /* Add the equality term to this expression */
   int isOuterJoin          /* True if dealing with an OUTER join */
@@ -73972,7 +73972,7 @@ static void addWhereTerm(
 **
 ** The where clause needs to defer the handling of the t1.x=5
 ** term until after the t2 loop of the join.  In that way, a
-** nullptr t2 row will be inserted whenever t1.x!=5.  If we do not
+** NULL t2 row will be inserted whenever t1.x!=5.  If we do not
 ** defer the handling of t1.x=5, it will be processed immediately
 ** after the t1 loop and rows with t1.x!=5 will never appear in
 ** the output, which is incorrect.
@@ -74200,7 +74200,7 @@ static void selectInnerLoop(
   ExprList *pEList,       /* List of values being extracted */
   int srcTab,             /* Pull data from this table */
   int nColumn,            /* Number of columns in the source table */
-  ExprList *pOrderBy,     /* If not nullptr, sort results using this key */
+  ExprList *pOrderBy,     /* If not NULL, sort results using this key */
   int distinct,           /* If >=0, make sure results are distinct */
   SelectDest *pDest,      /* How to dispose of the results */
   int iContinue,          /* Jump here to continue with next row */
@@ -74561,7 +74561,7 @@ static void generateSortTail(
 **   SELECT (SELECT col FROM tbl);
 **   SELECT abc FROM (SELECT col AS abc FROM tbl);
 ** 
-** The declaration type for any expression other than a column is nullptr.
+** The declaration type for any expression other than a column is NULL.
 */
 static const char *columnType(
   NameContext *pNC, 
@@ -74622,7 +74622,7 @@ static const char *columnType(
         if( ALWAYS(iCol>=0 && iCol<pS->pEList->nExpr) ){
           /* If iCol is less than zero, then the expression requests the
           ** rowid of the sub-select or view. This expression is legal (see 
-          ** test case misc2.2.2) - it always evaluates to nullptr.
+          ** test case misc2.2.2) - it always evaluates to NULL.
           */
           NameContext sNC;
           Expr *p = pS->pEList->a[iCol].pExpr;
@@ -74814,7 +74814,7 @@ static const char *selectOpName(int id){
 ** and other fields of Column are zeroed.
 **
 ** Return SQLITE_OK on success.  If a memory allocation error occurs,
-** store nullptr in *paCol and 0 in *pnCol and return SQLITE_NOMEM.
+** store NULL in *paCol and 0 in *pnCol and return SQLITE_NOMEM.
 */
 static int selectColumnsFromExprList(
   Parse *pParse,          /* Parsing context */
@@ -74971,7 +74971,7 @@ SQLITE_PRIVATE Table *sqlite3ResultSetOfSelect(Parse *pParse, Select *pSelect){
 
 /*
 ** Get a VDBE for the given parser context.  Create a new one if necessary.
-** If an error occurs, return nullptr and leave a message in pParse.
+** If an error occurs, return NULL and leave a message in pParse.
 */
 SQLITE_PRIVATE Vdbe *sqlite3GetVdbe(Parse *pParse){
   Vdbe *v = pParse->pVdbe;
@@ -74991,7 +74991,7 @@ SQLITE_PRIVATE Vdbe *sqlite3GetVdbe(Parse *pParse){
 ** Compute the iLimit and iOffset fields of the SELECT based on the
 ** pLimit and pOffset expressions.  pLimit and pOffset hold the expressions
 ** that appear in the original SQL statement after the LIMIT and OFFSET
-** keywords.  Or nullptr if those keywords are omitted. iLimit and iOffset 
+** keywords.  Or NULL if those keywords are omitted. iLimit and iOffset 
 ** are the integer memory register numbers for counters used to compute 
 ** the limit and offset.  If there is no limit and/or offset, then 
 ** iLimit and iOffset are negative.
@@ -75053,7 +75053,7 @@ static void computeLimitRegisters(Parse *pParse, Select *p, int iBreak){
 #ifndef SQLITE_OMIT_COMPOUND_SELECT
 /*
 ** Return the appropriate collating sequence for the iCol-th column of
-** the result set for the compound-select statement "p".  Return nullptr if
+** the result set for the compound-select statement "p".  Return NULL if
 ** the column has no default collating sequence.
 **
 ** The collating sequence for the compound select is taken from the
@@ -76325,7 +76325,7 @@ static int flattenSubquery(
   **
   **         (t1 LEFT OUTER JOIN t2) WHERE t2.x>0
   **
-  ** But the t2.x>0 test will always fail on a nullptr row of t2, which
+  ** But the t2.x>0 test will always fail on a NULL row of t2, which
   ** effectively converts the OUTER JOIN into an INNER JOIN.
   **
   ** THIS OVERRIDES OBSOLETE COMMENTS 1 AND 2 ABOVE:
@@ -77239,10 +77239,10 @@ SQLITE_PRIVATE int sqlite3Select(
   int isAgg;             /* True for select lists like "count(*)" */
   ExprList *pEList;      /* List of columns to extract. */
   SrcList *pTabList;     /* List of tables to select from */
-  Expr *pWhere;          /* The WHERE clause.  May be nullptr */
-  ExprList *pOrderBy;    /* The ORDER BY clause.  May be nullptr */
-  ExprList *pGroupBy;    /* The GROUP BY clause.  May be nullptr */
-  Expr *pHaving;         /* The HAVING clause.  May be nullptr */
+  Expr *pWhere;          /* The WHERE clause.  May be NULL */
+  ExprList *pOrderBy;    /* The ORDER BY clause.  May be NULL */
+  ExprList *pGroupBy;    /* The GROUP BY clause.  May be NULL */
+  Expr *pHaving;         /* The HAVING clause.  May be NULL */
   int isDistinct;        /* True if the DISTINCT keyword is present */
   int distinct;          /* Table to use for the distinct set */
   int rc = 1;            /* Value to return from this function */
@@ -77788,7 +77788,7 @@ SQLITE_PRIVATE int sqlite3Select(
         ** modify behaviour as follows:
         **
         **   + If the query is a "SELECT min(x)", then the loop coded by
-        **     where.c should not iterate over any values with a nullptr value
+        **     where.c should not iterate over any values with a NULL value
         **     for x.
         **
         **   + The optimizer code in where.c (the thing that decides which
@@ -78256,7 +78256,7 @@ SQLITE_PRIVATE void sqlite3BeginTrigger(
   DbFixer sFix;
   int iTabDb;
 
-  assert( pName1!=0 );   /* pName1->z might be nullptr, but not pName1 itself */
+  assert( pName1!=0 );   /* pName1->z might be NULL, but not pName1 itself */
   assert( pName2!=0 );
   assert( op==TK_INSERT || op==TK_UPDATE || op==TK_DELETE );
   assert( op>0 && op<0xff );
@@ -78768,8 +78768,8 @@ SQLITE_PRIVATE void sqlite3UnlinkAndDeleteTrigger(sqlite3 *db, int iDb, const ch
 ** pEList is the SET clause of an UPDATE statement.  Each entry
 ** in pEList is of the format <id>=<expr>.  If any of the entries
 ** in pEList have an <id> which matches an identifier in pIdList,
-** then return TRUE.  If pIdList==nullptr, then it is considered a
-** wildcard that matches anything.  Likewise if pEList==nullptr then
+** then return TRUE.  If pIdList==NULL, then it is considered a
+** wildcard that matches anything.  Likewise if pEList==NULL then
 ** it matches anything so always return true.  Return false only
 ** if there is no match.
 */
@@ -78934,7 +78934,7 @@ static int codeTriggerProgram(
 **    a row containing values to be substituted for old.* expressions in the
 **    trigger program(s).
 **
-** If they are not nullptr, the piOldColMask and piNewColMask output variables
+** If they are not NULL, the piOldColMask and piNewColMask output variables
 ** are set to values that describe the columns used by the trigger program
 ** in the OLD.* and NEW.* tables respectively. If column N of the 
 ** pseudo-table is read at least once, the corresponding bit of the output
@@ -79117,7 +79117,7 @@ SQLITE_PRIVATE void sqlite3ColumnDefault(Vdbe *v, Table *pTab, int i){
 /*
 ** Process an UPDATE statement.
 **
-**   UPDATE OR IGNORE table_wxyz SET a=b, c=d WHERE e<5 AND f NOT nullptr;
+**   UPDATE OR IGNORE table_wxyz SET a=b, c=d WHERE e<5 AND f NOT NULL;
 **          \_______/ \________/     \______/       \________________/
 *            onError   pTabList      pChanges             pWhere
 */
@@ -80206,7 +80206,7 @@ static void addModuleArgument(sqlite3 *db, Table *pTable, char *zArg){
 SQLITE_PRIVATE void sqlite3VtabBeginParse(
   Parse *pParse,        /* Parsing context */
   Token *pName1,        /* Name of new table, or database name */
-  Token *pName2,        /* Name of new table or nullptr */
+  Token *pName2,        /* Name of new table or NULL */
   Token *pModuleName    /* Name of the module for the virtual table */
 ){
   int iDb;              /* The database the table is being created in */
@@ -80749,7 +80749,7 @@ SQLITE_PRIVATE int sqlite3VtabBegin(sqlite3 *db, sqlite3_vtab *pVtab){
   int rc = SQLITE_OK;
   const sqlite3_module *pModule;
 
-  /* Special case: If db->aVTrans is nullptr and db->nVTrans is greater
+  /* Special case: If db->aVTrans is NULL and db->nVTrans is greater
   ** than zero, then this function is being called from within a
   ** virtual module xSync() callback. It is illegal to write to 
   ** virtual module tables in this case, so return SQLITE_MISUSE.
@@ -81433,7 +81433,7 @@ static WhereTerm *findTerm(
   int iColumn,          /* Column number of LHS */
   Bitmask notReady,     /* RHS must not overlap with this mask */
   u32 op,               /* Mask of WO_xx values describing operator */
-  Index *pIdx           /* Must be compatible with this index, if not nullptr */
+  Index *pIdx           /* Must be compatible with this index, if not NULL */
 ){
   WhereTerm *pTerm;
   int k;
@@ -81645,7 +81645,7 @@ static void transferJoinMarkings(Expr *pDerived, Expr *pBase){
 **
 ** A subterm is "indexable" if it is of the form
 ** "T.C <op> <expr>" where C is any column of table T and 
-** <op> is one of "=", "<", "<=", ">", ">=", "IS nullptr", or "IN".
+** <op> is one of "=", "<", "<=", ">", ">=", "IS NULL", or "IN".
 ** A subterm is also indexable if it is an AND of two or more
 ** subsubterms at least one of which is indexable.  Indexable AND 
 ** subterms have their eOperator set to WO_AND and they have
@@ -82803,8 +82803,8 @@ static void bestIndex(
 #endif /* SQLITE_OMIT_OR_OPTIMIZATION */
 
   /* If the pSrc table is the right table of a LEFT JOIN then we may not
-  ** use an index to satisfy IS nullptr constraints on that table.  This is
-  ** because columns might end up being nullptr if the table does not match -
+  ** use an index to satisfy IS NULL constraints on that table.  This is
+  ** because columns might end up being NULL if the table does not match -
   ** a circumstance which the index cannot help us discover.  Ticket #2177.
   */
   if( (pSrc->jointype & JT_LEFT)!=0 ){
@@ -83452,7 +83452,7 @@ static Bitmask codeOneLoopStart(
     ** was passed to this function to implement a "SELECT min(x) ..." 
     ** query, then the caller will only allow the loop to run for
     ** a single iteration. This means that the first row returned
-    ** should not have a nullptr value stored in 'x'. If column 'x' is
+    ** should not have a NULL value stored in 'x'. If column 'x' is
     ** the first one after the nEq equality constraints in the index,
     ** this requires some special handling.
     */
@@ -83557,7 +83557,7 @@ static Bitmask codeOneLoopStart(
     }
 
     /* If there are inequality constraints, check that the value
-    ** of the table column that the inequality contrains is not nullptr.
+    ** of the table column that the inequality contrains is not NULL.
     ** If it is, jump to the next iteration of the loop.
     */
     r1 = sqlite3GetTempReg(pParse);
@@ -83788,7 +83788,7 @@ static void whereInfoFree(sqlite3 *db, WhereInfo *pWInfo){
 ** should invoke sqlite3WhereEnd() with the return value of this function
 ** in order to complete the WHERE clause processing.
 **
-** If an error occurs, this routine returns nullptr.
+** If an error occurs, this routine returns NULL.
 **
 ** The basic idea is to do a nested loop, one loop for each table in
 ** the FROM clause of a select.  (INSERT and UPDATE statements are the
@@ -83858,11 +83858,11 @@ static void whereInfoFree(sqlite3 *db, WhereInfo *pWInfo){
 **
 ** *ppOrderBy is a pointer to the ORDER BY clause of a SELECT statement,
 ** if there is one.  If there is no ORDER BY clause or if this routine
-** is called from an UPDATE or DELETE statement, then ppOrderBy is nullptr.
+** is called from an UPDATE or DELETE statement, then ppOrderBy is NULL.
 **
 ** If an index can be used so that the natural output order of the table
 ** scan is correct for the ORDER BY clause, then that index is used and
-** *ppOrderBy is set to nullptr.  This is an optimization that prevents an
+** *ppOrderBy is set to NULL.  This is an optimization that prevents an
 ** unnecessary sort of the result set if an index appropriate for the
 ** ORDER BY clause already exists.
 **
@@ -83873,7 +83873,7 @@ SQLITE_PRIVATE WhereInfo *sqlite3WhereBegin(
   Parse *pParse,        /* The parser context */
   SrcList *pTabList,    /* A list of all tables to be scanned */
   Expr *pWhere,         /* The WHERE clause */
-  ExprList **ppOrderBy, /* An ORDER BY clause, or nullptr */
+  ExprList **ppOrderBy, /* An ORDER BY clause, or NULL */
   u8 wctrlFlags,        /* One of the WHERE_* flags defined in sqliteInt.h */
   int regRowSet         /* Register hold RowSet if WHERE_FILL_ROWSET is set */
 ){
@@ -84392,8 +84392,8 @@ SQLITE_PRIVATE void sqlite3WhereEnd(WhereInfo *pWInfo){
 ** LIMIT clause of a SELECT statement.
 */
 struct LimitVal {
-  Expr *pLimit;    /* The LIMIT expression.  nullptr if there is no limit */
-  Expr *pOffset;   /* The OFFSET expression.  nullptr if there is none */
+  Expr *pLimit;    /* The LIMIT expression.  NULL if there is no limit */
+  Expr *pOffset;   /* The OFFSET expression.  NULL if there is none */
 };
 
 /*
@@ -85116,7 +85116,7 @@ static const YYCODETYPE yyFallback[] = {
     0,  /*    JOIN_KW => nothing */
     0,  /* CONSTRAINT => nothing */
     0,  /*    DEFAULT => nothing */
-    0,  /*       nullptr => nothing */
+    0,  /*       NULL => nothing */
     0,  /*    PRIMARY => nothing */
     0,  /*     UNIQUE => nothing */
     0,  /*      CHECK => nothing */
@@ -85210,14 +85210,14 @@ static char *yyTracePrompt = 0;
 /* 
 ** Turn parser tracing on by giving a stream to which to write the trace
 ** and a prompt to preface each trace message.  Tracing is turned off
-** by making either argument nullptr 
+** by making either argument NULL 
 **
 ** Inputs:
 ** <ul>
 ** <li> A FILE* to which trace output should be written.
-**      If nullptr, then tracing is turned off.
+**      If NULL, then tracing is turned off.
 ** <li> A prefix string written at the beginning of every
-**      line of trace output.  If nullptr, then tracing is
+**      line of trace output.  If NULL, then tracing is
 **      turned off.
 ** </ul>
 **
@@ -85260,7 +85260,7 @@ static const char *const yyTokenName[] = {
   "PLUS",          "MINUS",         "STAR",          "SLASH",       
   "REM",           "CONCAT",        "COLLATE",       "UMINUS",      
   "UPLUS",         "BITNOT",        "STRING",        "JOIN_KW",     
-  "CONSTRAINT",    "DEFAULT",       "nullptr",          "PRIMARY",     
+  "CONSTRAINT",    "DEFAULT",       "NULL",          "PRIMARY",     
   "UNIQUE",        "CHECK",         "REFERENCES",    "AUTOINCR",    
   "ON",            "DELETE",        "UPDATE",        "INSERT",      
   "SET",           "DEFERRABLE",    "FOREIGN",       "DROP",        
@@ -85368,8 +85368,8 @@ static const char *const yyRuleName[] = {
  /*  59 */ "ccons ::= DEFAULT PLUS term",
  /*  60 */ "ccons ::= DEFAULT MINUS term",
  /*  61 */ "ccons ::= DEFAULT id",
- /*  62 */ "ccons ::= nullptr onconf",
- /*  63 */ "ccons ::= NOT nullptr onconf",
+ /*  62 */ "ccons ::= NULL onconf",
+ /*  63 */ "ccons ::= NOT NULL onconf",
  /*  64 */ "ccons ::= PRIMARY KEY sortorder onconf autoinc",
  /*  65 */ "ccons ::= UNIQUE onconf",
  /*  66 */ "ccons ::= CHECK LP expr RP",
@@ -85384,7 +85384,7 @@ static const char *const yyRuleName[] = {
  /*  75 */ "refarg ::= ON DELETE refact",
  /*  76 */ "refarg ::= ON UPDATE refact",
  /*  77 */ "refarg ::= ON INSERT refact",
- /*  78 */ "refact ::= SET nullptr",
+ /*  78 */ "refact ::= SET NULL",
  /*  79 */ "refact ::= SET DEFAULT",
  /*  80 */ "refact ::= CASCADE",
  /*  81 */ "refact ::= RESTRICT",
@@ -85491,7 +85491,7 @@ static const char *const yyRuleName[] = {
  /* 182 */ "inscollist ::= nm",
  /* 183 */ "expr ::= term",
  /* 184 */ "expr ::= LP expr RP",
- /* 185 */ "term ::= nullptr",
+ /* 185 */ "term ::= NULL",
  /* 186 */ "expr ::= id",
  /* 187 */ "expr ::= JOIN_KW",
  /* 188 */ "expr ::= nm DOT nm",
@@ -85521,9 +85521,9 @@ static const char *const yyRuleName[] = {
  /* 212 */ "escape ::=",
  /* 213 */ "expr ::= expr likeop expr escape",
  /* 214 */ "expr ::= expr ISNULL|NOTNULL",
- /* 215 */ "expr ::= expr IS nullptr",
- /* 216 */ "expr ::= expr NOT nullptr",
- /* 217 */ "expr ::= expr IS NOT nullptr",
+ /* 215 */ "expr ::= expr IS NULL",
+ /* 216 */ "expr ::= expr NOT NULL",
+ /* 217 */ "expr ::= expr IS NOT NULL",
  /* 218 */ "expr ::= NOT expr",
  /* 219 */ "expr ::= BITNOT expr",
  /* 220 */ "expr ::= MINUS expr",
@@ -85677,7 +85677,7 @@ SQLITE_PRIVATE void *sqlite3ParserAlloc(void *(*mallocProc)(size_t)){
     pParser->yyidxMax = 0;
 #endif
 #if YYSTACKDEPTH<=0
-    pParser->yystack = nullptr;
+    pParser->yystack = NULL;
     pParser->yystksz = 0;
     yyGrowStack(pParser);
 #endif
@@ -86397,7 +86397,7 @@ static void yy_reduce(
       case 54: /* carglist ::= */
       case 55: /* carg ::= CONSTRAINT nm ccons */
       case 56: /* carg ::= ccons */
-      case 62: /* ccons ::= nullptr onconf */
+      case 62: /* ccons ::= NULL onconf */
       case 89: /* conslist ::= conslist COMMA tcons */
       case 90: /* conslist ::= conslist tcons */
       case 91: /* conslist ::= tcons */
@@ -86582,7 +86582,7 @@ static void yy_reduce(
   sqlite3AddDefaultValue(pParse,p);
 }
         break;
-      case 63: /* ccons ::= NOT nullptr onconf */
+      case 63: /* ccons ::= NOT NULL onconf */
 {sqlite3AddNotNull(pParse, yymsp[0].minor.yy194);}
         break;
       case 64: /* ccons ::= PRIMARY KEY sortorder onconf autoinc */
@@ -86621,7 +86621,7 @@ static void yy_reduce(
       case 77: /* refarg ::= ON INSERT refact */
 { yygotominor.yy497.value = yymsp[0].minor.yy194<<16; yygotominor.yy497.mask = 0xff0000; }
         break;
-      case 78: /* refact ::= SET nullptr */
+      case 78: /* refact ::= SET NULL */
 { yygotominor.yy194 = OE_SetNull; }
         break;
       case 79: /* refact ::= SET DEFAULT */
@@ -86921,7 +86921,7 @@ static void yy_reduce(
       case 184: /* expr ::= LP expr RP */
 {yygotominor.yy72 = yymsp[-1].minor.yy72; sqlite3ExprSpan(yygotominor.yy72,&yymsp[-2].minor.yy0,&yymsp[0].minor.yy0); }
         break;
-      case 185: /* term ::= nullptr */
+      case 185: /* term ::= NULL */
       case 190: /* term ::= INTEGER|FLOAT|BLOB */
       case 191: /* term ::= STRING */
 {yygotominor.yy72 = sqlite3PExpr(pParse, yymsp[0].major, 0, 0, &yymsp[0].minor.yy0);}
@@ -87034,19 +87034,19 @@ static void yy_reduce(
   sqlite3ExprSpan(yygotominor.yy72,&yymsp[-1].minor.yy72->span,&yymsp[0].minor.yy0);
 }
         break;
-      case 215: /* expr ::= expr IS nullptr */
+      case 215: /* expr ::= expr IS NULL */
 {
   yygotominor.yy72 = sqlite3PExpr(pParse, TK_ISNULL, yymsp[-2].minor.yy72, 0, 0);
   sqlite3ExprSpan(yygotominor.yy72,&yymsp[-2].minor.yy72->span,&yymsp[0].minor.yy0);
 }
         break;
-      case 216: /* expr ::= expr NOT nullptr */
+      case 216: /* expr ::= expr NOT NULL */
 {
   yygotominor.yy72 = sqlite3PExpr(pParse, TK_NOTNULL, yymsp[-2].minor.yy72, 0, 0);
   sqlite3ExprSpan(yygotominor.yy72,&yymsp[-2].minor.yy72->span,&yymsp[0].minor.yy0);
 }
         break;
-      case 217: /* expr ::= expr IS NOT nullptr */
+      case 217: /* expr ::= expr IS NOT NULL */
 {
   yygotominor.yy72 = sqlite3PExpr(pParse, TK_NOTNULL, yymsp[-3].minor.yy72, 0, 0);
   sqlite3ExprSpan(yygotominor.yy72,&yymsp[-3].minor.yy72->span,&yymsp[0].minor.yy0);
@@ -88846,7 +88846,7 @@ SQLITE_API int sqlite3_threadsafe(void){ return SQLITE_THREADSAFE; }
 
 #if !defined(SQLITE_OMIT_TRACE) && defined(SQLITE_ENABLE_IOTRACE)
 /*
-** If the following function pointer is not nullptr and if
+** If the following function pointer is not NULL and if
 ** SQLITE_ENABLE_IOTRACE is enabled, then messages describing
 ** I/O active are written using this function.  These messages
 ** are intended for debugging activity only.
@@ -89141,14 +89141,14 @@ SQLITE_API int sqlite3_config(int op, ...){
       sqlite3GlobalConfig.mnReq = va_arg(ap, int);
 
       if( sqlite3GlobalConfig.pHeap==0 ){
-        /* If the heap pointer is nullptr, then restore the malloc implementation
-        ** back to nullptr pointers too.  This will cause the malloc to go
+        /* If the heap pointer is NULL, then restore the malloc implementation
+        ** back to NULL pointers too.  This will cause the malloc to go
         ** back to its default implementation when sqlite3_initialize() is
         ** run.
         */
         memset(&sqlite3GlobalConfig.m, 0, sizeof(sqlite3GlobalConfig.m));
       }else{
-        /* The heap pointer is not nullptr, then install one of the
+        /* The heap pointer is not NULL, then install one of the
         ** mem5.c/mem3.c methods. If neither ENABLE_MEMSYS3 nor
         ** ENABLE_MEMSYS5 is defined, return an error.
         ** the default case and return an error.
@@ -89185,9 +89185,9 @@ SQLITE_API int sqlite3_config(int op, ...){
 ** If lookaside is already active, return SQLITE_BUSY.
 **
 ** The sz parameter is the number of bytes in each lookaside slot.
-** The cnt parameter is the number of slots.  If pStart is nullptr the
+** The cnt parameter is the number of slots.  If pStart is NULL the
 ** space for the lookaside memory is obtained from sqlite3_malloc().
-** If pStart is not nullptr then it is sz*cnt bytes of memory to use for
+** If pStart is not NULL then it is sz*cnt bytes of memory to use for
 ** the lookaside memory.
 */
 static int setupLookaside(sqlite3 *db, void *pBuf, int sz, int cnt){
@@ -89287,7 +89287,7 @@ static int allSpaces(const char *z, int n){
 ** This is the default collating function named "BINARY" which is always
 ** available.
 **
-** If the padFlag argument is not nullptr then space padding at the end
+** If the padFlag argument is not NULL then space padding at the end
 ** of strings is ignored.  This implements the RTRIM collation.
 */
 static int binCollFunc(
@@ -89871,7 +89871,7 @@ SQLITE_API int sqlite3_overload_function(
 ** Register a trace function.  The pArg from the previously registered trace
 ** is returned.  
 **
-** A nullptr trace function means that no tracing is executes.  A non-nullptr
+** A NULL trace function means that no tracing is executes.  A non-NULL
 ** trace is a pointer to a function that is invoked at the start of each
 ** SQL statement.
 */
@@ -89888,7 +89888,7 @@ SQLITE_API void *sqlite3_trace(sqlite3 *db, void (*xTrace)(void*,const char*), v
 ** Register a profile function.  The pArg from the previously registered 
 ** profile function is returned.  
 **
-** A nullptr profile function means that no profiling is executes.  A non-nullptr
+** A NULL profile function means that no profiling is executes.  A non-NULL
 ** profile is a pointer to a function that is invoked at the conclusion of
 ** each SQL statement that is run.
 */
@@ -89968,7 +89968,7 @@ SQLITE_API void *sqlite3_rollback_hook(
 ** driver.  If zFilename is the name of a file, then that file is
 ** opened and used.  If zFilename is the magic name ":memory:" then
 ** the database is stored in memory (and is thus forgotten as soon as
-** the connection is closed.)  If zFilename is nullptr then the database
+** the connection is closed.)  If zFilename is NULL then the database
 ** is a "virtual" database for transient use only and is deleted as
 ** soon as the connection is closed.
 **
@@ -90114,7 +90114,7 @@ SQLITE_API const void *sqlite3_errmsg16(sqlite3 *db){
 #endif /* SQLITE_OMIT_UTF16 */
 
 /*
-** Return the most recent error code generated by an SQLite routine. If nullptr is
+** Return the most recent error code generated by an SQLite routine. If NULL is
 ** passed to this function, we assume a malloc() failed during sqlite3_open().
 */
 SQLITE_API int sqlite3_errcode(sqlite3 *db){
@@ -90724,12 +90724,12 @@ SQLITE_API void sqlite3_thread_cleanup(void){
 #ifdef SQLITE_ENABLE_COLUMN_METADATA
 SQLITE_API int sqlite3_table_column_metadata(
   sqlite3 *db,                /* Connection handle */
-  const char *zDbName,        /* Database name or nullptr */
+  const char *zDbName,        /* Database name or NULL */
   const char *zTableName,     /* Table name */
   const char *zColumnName,    /* Column name */
   char const **pzDataType,    /* OUTPUT: Declared data type */
   char const **pzCollSeq,     /* OUTPUT: Collation sequence name */
-  int *pNotNull,              /* OUTPUT: True if NOT nullptr constraint exists */
+  int *pNotNull,              /* OUTPUT: True if NOT NULL constraint exists */
   int *pPrimaryKey,           /* OUTPUT: True if column part of PK */
   int *pAutoinc               /* OUTPUT: True if column is auto-increment */
 ){
@@ -91023,7 +91023,7 @@ SQLITE_API int sqlite3_test_control(int op, ...){
 /*
 ** Head of a linked list of all sqlite3 objects created by this process
 ** for which either sqlite3.pBlockingConnection or sqlite3.pUnlockConnection
-** is not nullptr. This variable may only accessed while the STATIC_MASTER
+** is not NULL. This variable may only accessed while the STATIC_MASTER
 ** mutex is held.
 */
 static sqlite3 *SQLITE_WSD sqlite3BlockedList = 0;
@@ -91033,13 +91033,13 @@ static sqlite3 *SQLITE_WSD sqlite3BlockedList = 0;
 ** This function is a complex assert() that verifies the following 
 ** properties of the blocked connections list:
 **
-**   1) Each entry in the list has a non-nullptr value for either 
+**   1) Each entry in the list has a non-NULL value for either 
 **      pUnlockConnection or pBlockingConnection, or both.
 **
 **   2) All entries in the list that share a common value for 
 **      xUnlockNotify are grouped together.
 **
-**   3) If the argument db is not nullptr, then none of the entries in the
+**   3) If the argument db is not NULL, then none of the entries in the
 **      blocked connections list have pUnlockConnection or pBlockingConnection
 **      set to db. This is used when closing connection db.
 */
@@ -91926,7 +91926,7 @@ struct fts3HashElem {
 #define FTS3_HASH_BINARY    2
 
 /*
-** Access routines.  To delete, insert a nullptr pointer.
+** Access routines.  To delete, insert a NULL pointer.
 */
 SQLITE_PRIVATE void sqlite3Fts3HashInit(fts3Hash*, int keytype, int copyKey);
 SQLITE_PRIVATE void *sqlite3Fts3HashInsert(fts3Hash*, const void *pKey, int nKey, void *pData);
@@ -92128,13 +92128,13 @@ static void dataBufferInit(DataBuffer *pBuffer, int nCapacity){
   assert( nCapacity>=0 );
   pBuffer->nData = 0;
   pBuffer->nCapacity = nCapacity;
-  pBuffer->pData = nCapacity==0 ? nullptr : sqlite3_malloc(nCapacity);
+  pBuffer->pData = nCapacity==0 ? NULL : sqlite3_malloc(nCapacity);
 }
 static void dataBufferReset(DataBuffer *pBuffer){
   pBuffer->nData = 0;
 }
 static void dataBufferDestroy(DataBuffer *pBuffer){
-  if( pBuffer->pData!=nullptr ) sqlite3_free(pBuffer->pData);
+  if( pBuffer->pData!=NULL ) sqlite3_free(pBuffer->pData);
   SCRAMBLE(pBuffer);
 }
 static void dataBufferSwap(DataBuffer *pBuffer1, DataBuffer *pBuffer2){
@@ -92155,7 +92155,7 @@ static void dataBufferExpand(DataBuffer *pBuffer, int nAddCapacity){
 }
 static void dataBufferAppend(DataBuffer *pBuffer,
                              const char *pSource, int nSource){
-  assert( nSource>0 && pSource!=nullptr );
+  assert( nSource>0 && pSource!=NULL );
   dataBufferExpand(pBuffer, nSource);
   memcpy(pBuffer->pData+pBuffer->nData, pSource, nSource);
   pBuffer->nData += nSource;
@@ -92163,8 +92163,8 @@ static void dataBufferAppend(DataBuffer *pBuffer,
 static void dataBufferAppend2(DataBuffer *pBuffer,
                               const char *pSource1, int nSource1,
                               const char *pSource2, int nSource2){
-  assert( nSource1>0 && pSource1!=nullptr );
-  assert( nSource2>0 && pSource2!=nullptr );
+  assert( nSource1>0 && pSource1!=NULL );
+  assert( nSource2>0 && pSource2!=NULL );
   dataBufferExpand(pBuffer, nSource1+nSource2);
   memcpy(pBuffer->pData+pBuffer->nData, pSource1, nSource1);
   memcpy(pBuffer->pData+pBuffer->nData+nSource1, pSource2, nSource2);
@@ -92341,7 +92341,7 @@ static void dlrStep(DLReader *pReader){
 }
 static void dlrInit(DLReader *pReader, DocListType iType,
                     const char *pData, int nData){
-  assert( pData!=nullptr && nData!=0 );
+  assert( pData!=NULL && nData!=0 );
   pReader->iType = iType;
   pReader->pData = pData;
   pReader->nData = nData;
@@ -92504,7 +92504,7 @@ static void dlwAdd(DLWriter *pWriter, sqlite_int64 iDocid){
 typedef struct PLReader {
   /* These refer to the next position's data.  nData will reach 0 when
   ** reading the last position, so plrStep() signals EOF by setting
-  ** pData to nullptr.
+  ** pData to NULL.
   */
   const char *pData;
   int nData;
@@ -92517,7 +92517,7 @@ typedef struct PLReader {
 } PLReader;
 
 static int plrAtEnd(PLReader *pReader){
-  return pReader->pData==nullptr;
+  return pReader->pData==NULL;
 }
 static int plrColumn(PLReader *pReader){
   assert( !plrAtEnd(pReader) );
@@ -92541,7 +92541,7 @@ static void plrStep(PLReader *pReader){
   assert( !plrAtEnd(pReader) );
 
   if( pReader->nData==0 ){
-    pReader->pData = nullptr;
+    pReader->pData = NULL;
     return;
   }
 
@@ -92557,7 +92557,7 @@ static void plrStep(PLReader *pReader){
 
   if( i==POS_END ){
     pReader->nData = 0;
-    pReader->pData = nullptr;
+    pReader->pData = NULL;
     return;
   }
 
@@ -93443,7 +93443,7 @@ static int sql_exec(sqlite3 *db, const char *zDb, const char *zName,
   char *zCommand = string_format(zFormat, zDb, zName);
   int rc;
   FTSTRACE(("FTS3 sql: %s\n", zCommand));
-  rc = sqlite3_exec(db, zCommand, nullptr, 0, nullptr);
+  rc = sqlite3_exec(db, zCommand, NULL, 0, NULL);
   sqlite3_free(zCommand);
   return rc;
 }
@@ -93453,7 +93453,7 @@ static int sql_prepare(sqlite3 *db, const char *zDb, const char *zName,
   char *zCommand = string_format(zFormat, zDb, zName);
   int rc;
   FTSTRACE(("FTS3 prepare: %s\n", zCommand));
-  rc = sqlite3_prepare_v2(db, zCommand, -1, ppStmt, nullptr);
+  rc = sqlite3_prepare_v2(db, zCommand, -1, ppStmt, NULL);
   sqlite3_free(zCommand);
   return rc;
 }
@@ -93522,9 +93522,9 @@ typedef enum fulltext_statement {
 ** If so perhaps we should move some of these to the cursor object.
 */
 static const char *const fulltext_zStatement[MAX_STMT] = {
-  /* CONTENT_INSERT */ nullptr,  /* generated in contentInsertStatement() */
-  /* CONTENT_SELECT */ nullptr,  /* generated in contentSelectStatement() */
-  /* CONTENT_UPDATE */ nullptr,  /* generated in contentUpdateStatement() */
+  /* CONTENT_INSERT */ NULL,  /* generated in contentInsertStatement() */
+  /* CONTENT_SELECT */ NULL,  /* generated in contentSelectStatement() */
+  /* CONTENT_UPDATE */ NULL,  /* generated in contentUpdateStatement() */
   /* CONTENT_DELETE */ "delete from %_content where docid = ?",
   /* CONTENT_EXISTS */ "select docid from %_content limit 1",
 
@@ -93683,7 +93683,7 @@ static const char *contentUpdateStatement(fulltext_vtab *v){
 static int sql_get_statement(fulltext_vtab *v, fulltext_statement iStmt,
                              sqlite3_stmt **ppStmt){
   assert( iStmt<MAX_STMT );
-  if( v->pFulltextStatements[iStmt]==nullptr ){
+  if( v->pFulltextStatements[iStmt]==NULL ){
     const char *zStmt;
     int rc;
     switch( iStmt ){
@@ -93730,7 +93730,7 @@ static int sql_get_leaf_statement(fulltext_vtab *v, int idx,
   assert( idx>=-1 && idx<MERGE_COUNT );
   if( idx==-1 ){
     return sql_prepare(v->db, v->zDb, v->zName, ppStmt, LEAF_SELECT);
-  }else if( v->pLeafSelectStmts[idx]==nullptr ){
+  }else if( v->pLeafSelectStmts[idx]==NULL ){
     int rc = sql_prepare(v->db, v->zDb, v->zName, &v->pLeafSelectStmts[idx],
                          LEAF_SELECT);
     if( rc!=SQLITE_OK ) return rc;
@@ -93744,7 +93744,7 @@ static int sql_get_leaf_statement(fulltext_vtab *v, int idx,
 }
 
 /* insert into %_content (docid, ...) values ([docid], [pValues])
-** If the docid contains SQL nullptr, then a unique docid will be
+** If the docid contains SQL NULL, then a unique docid will be
 ** generated.
 */
 static int content_insert(fulltext_vtab *v, sqlite3_value *docid,
@@ -93789,14 +93789,14 @@ static void freeStringArray(int nString, const char **pString){
   int i;
 
   for (i=0 ; i < nString ; ++i) {
-    if( pString[i]!=nullptr ) sqlite3_free((void *) pString[i]);
+    if( pString[i]!=NULL ) sqlite3_free((void *) pString[i]);
   }
   sqlite3_free((void *) pString);
 }
 
 /* select * from %_content where docid = [iDocid]
  * The caller must delete the returned array and all strings in it.
- * null fields will be nullptr in the returned array.
+ * null fields will be NULL in the returned array.
  *
  * TODO: Perhaps we should return pointer/length strings here for consistency
  * with other code which uses pointer/length. */
@@ -93807,7 +93807,7 @@ static int content_select(fulltext_vtab *v, sqlite_int64 iDocid,
   int i;
   int rc;
 
-  *pValues = nullptr;
+  *pValues = NULL;
 
   rc = sql_get_statement(v, CONTENT_SELECT_STMT, &s);
   if( rc!=SQLITE_OK ) return rc;
@@ -93821,7 +93821,7 @@ static int content_select(fulltext_vtab *v, sqlite_int64 iDocid,
   values = (const char **) sqlite3_malloc(v->nColumn * sizeof(const char *));
   for(i=0; i<v->nColumn; ++i){
     if( sqlite3_column_type(s, i)==SQLITE_NULL ){
-      values[i] = nullptr;
+      values[i] = NULL;
     }else{
       values[i] = string_dup((char*)sqlite3_column_text(s, i));
     }
@@ -93929,7 +93929,7 @@ static int segdir_max_index(fulltext_vtab *v, int iLevel, int *pidx){
   if( rc==SQLITE_DONE ) return SQLITE_DONE;
   if( rc!=SQLITE_ROW ) return rc;
 
-  /* nullptr means that there were no inputs to max(). */
+  /* NULL means that there were no inputs to max(). */
   if( SQLITE_NULL==sqlite3_column_type(s, 0) ){
     rc = sqlite3_step(s);
     if( rc==SQLITE_ROW ) return SQLITE_ERROR;
@@ -94108,22 +94108,22 @@ static void fulltext_vtab_destroy(fulltext_vtab *v){
 
   FTSTRACE(("FTS3 Destroy %p\n", v));
   for( iStmt=0; iStmt<MAX_STMT; iStmt++ ){
-    if( v->pFulltextStatements[iStmt]!=nullptr ){
+    if( v->pFulltextStatements[iStmt]!=NULL ){
       sqlite3_finalize(v->pFulltextStatements[iStmt]);
-      v->pFulltextStatements[iStmt] = nullptr;
+      v->pFulltextStatements[iStmt] = NULL;
     }
   }
 
   for( i=0; i<MERGE_COUNT; i++ ){
-    if( v->pLeafSelectStmts[i]!=nullptr ){
+    if( v->pLeafSelectStmts[i]!=NULL ){
       sqlite3_finalize(v->pLeafSelectStmts[i]);
-      v->pLeafSelectStmts[i] = nullptr;
+      v->pLeafSelectStmts[i] = NULL;
     }
   }
 
-  if( v->pTokenizer!=nullptr ){
+  if( v->pTokenizer!=NULL ){
     v->pTokenizer->pModule->xDestroy(v->pTokenizer);
-    v->pTokenizer = nullptr;
+    v->pTokenizer = NULL;
   }
 
   clearPendingTerms(v);
@@ -94235,7 +94235,7 @@ typedef struct FtsToken {
 ** Return an array of pointers to '\000' terminated strings, one string
 ** for each non-whitespace token.
 **
-** The returned array is terminated by a single nullptr pointer.
+** The returned array is terminated by a single NULL pointer.
 **
 ** Space to hold the returned array is obtained from a single
 ** malloc and should be freed by passing the return value to free().
@@ -94317,7 +94317,7 @@ static void dequoteString(char *z){
 }
 
 /*
-** The input azIn is a nullptr-terminated list of tokens.  Remove the first
+** The input azIn is a NULL-terminated list of tokens.  Remove the first
 ** token and all punctuation tokens.  Remove the quotes from
 ** around string literal tokens.
 **
@@ -94557,7 +94557,7 @@ static int constructVtab(
   int rc;
   int n;
   fulltext_vtab *v = 0;
-  const sqlite3_tokenizer_module *m = nullptr;
+  const sqlite3_tokenizer_module *m = NULL;
   char *schema;
 
   char const *zTok;         /* Name of tokenizer to use for this fts table */
@@ -95589,7 +95589,7 @@ static int fulltextFilter(
   */
   if( c->pStmt && c->iCursorType!=idxNum ){
     sqlite3_finalize(c->pStmt);
-    c->pStmt = nullptr;
+    c->pStmt = NULL;
   }
 
   /* Get a fresh statement appropriate to idxNum. */
@@ -95723,14 +95723,14 @@ static int buildTerms(fulltext_vtab *v, sqlite_int64 iDocid,
     int nData;                   /* Size of doclist before our update. */
 
     /* Positions can't be negative; we use -1 as a terminator
-     * internally.  Token can't be nullptr or empty. */
-    if( iPosition<0 || pToken == nullptr || nTokenBytes == 0 ){
+     * internally.  Token can't be NULL or empty. */
+    if( iPosition<0 || pToken == NULL || nTokenBytes == 0 ){
       rc = SQLITE_ERROR;
       break;
     }
 
     p = fts3HashFind(&v->pendingTerms, pToken, nTokenBytes);
-    if( p==nullptr ){
+    if( p==NULL ){
       nData = 0;
       p = dlcNew(iDocid, DL_DEFAULT);
       fts3HashInsert(&v->pendingTerms, pToken, nTokenBytes, p);
@@ -96064,14 +96064,14 @@ static void interiorWriterAppend(InteriorWriter *pWriter,
 static int interiorWriterDestroy(InteriorWriter *pWriter){
   InteriorBlock *block = pWriter->first;
 
-  while( block!=nullptr ){
+  while( block!=NULL ){
     InteriorBlock *b = block;
     block = block->next;
     dataBufferDestroy(&b->term);
     dataBufferDestroy(&b->data);
     sqlite3_free(b);
   }
-  if( pWriter->parentWriter!=nullptr ){
+  if( pWriter->parentWriter!=NULL ){
     interiorWriterDestroy(pWriter->parentWriter);
     sqlite3_free(pWriter->parentWriter);
   }
@@ -96115,7 +96115,7 @@ static int interiorWriterRootInfo(fulltext_vtab *v, InteriorWriter *pWriter,
   /* Flush additional blocks and append to the higher interior
   ** node.
   */
-  for(block=block->next; block!=nullptr; block=block->next){
+  for(block=block->next; block!=NULL; block=block->next){
     ASSERT_VALID_INTERIOR_BLOCK(block);
     rc = block_insert(v, block->data.pData, block->data.nData, &iBlockid);
     if( rc!=SQLITE_OK ) return rc;
@@ -96340,7 +96340,7 @@ static void leafNodeValidate(const char *pData, int nData){
   assert( iDummy>0 );
   assert( n+iDummy>0 );
   assert( n+iDummy<=nData );
-  ASSERT_VALID_DOCLIST(DL_DEFAULT, pData+n, iDummy, nullptr);
+  ASSERT_VALID_DOCLIST(DL_DEFAULT, pData+n, iDummy, NULL);
   pData += n+iDummy;
   nData -= n+iDummy;
 
@@ -96365,7 +96365,7 @@ static void leafNodeValidate(const char *pData, int nData){
     assert( iDummy>0 );
     assert( n+iDummy>0 );
     assert( n+iDummy<=nData );
-    ASSERT_VALID_DOCLIST(DL_DEFAULT, pData+n, iDummy, nullptr);
+    ASSERT_VALID_DOCLIST(DL_DEFAULT, pData+n, iDummy, NULL);
     pData += n+iDummy;
     nData -= n+iDummy;
   }
@@ -96598,7 +96598,7 @@ static int leafWriterStepMerge(fulltext_vtab *v, LeafWriter *pWriter,
   docListMerge(&pWriter->data, pReaders, nReaders);
   ASSERT_VALID_DOCLIST(DL_DEFAULT,
                        pWriter->data.pData+iDoclistData+n,
-                       pWriter->data.nData-iDoclistData-n, nullptr);
+                       pWriter->data.nData-iDoclistData-n, NULL);
 
   /* The actual amount of doclist data at this point could be smaller
   ** than the length we encoded.  Additionally, the space required to
@@ -96878,7 +96878,7 @@ static void leavesReaderDestroy(LeavesReader *pReader){
   /* If idx is -1, that means we're using a non-cached statement
   ** handle in the optimize() case, so we need to release it.
   */
-  if( pReader->pStmt!=nullptr && pReader->idx==-1 ){
+  if( pReader->pStmt!=NULL && pReader->idx==-1 ){
     sqlite3_finalize(pReader->pStmt);
   }
   leafReaderDestroy(&pReader->leafReader);
@@ -97186,7 +97186,7 @@ static int loadSegmentLeavesInt(fulltext_vtab *v, LeavesReader *pReader,
   ** results carried into position 1, with further merge-and-carry
   ** until an empty position is found.
   */
-  DataBuffer *pBuffers = nullptr;
+  DataBuffer *pBuffers = NULL;
   int nBuffers = 0, nMaxBuffers = 0, rc;
 
   assert( nTerm>0 );
@@ -97215,15 +97215,15 @@ static int loadSegmentLeavesInt(fulltext_vtab *v, LeavesReader *pReader,
           DataBuffer *p;
           nMaxBuffers += 20;
 
-          /* Manual realloc so we can handle nullptr appropriately. */
+          /* Manual realloc so we can handle NULL appropriately. */
           p = sqlite3_malloc(nMaxBuffers*sizeof(*pBuffers));
-          if( p==nullptr ){
+          if( p==NULL ){
             rc = SQLITE_NOMEM;
             break;
           }
 
           if( nBuffers>0 ){
-            assert(pBuffers!=nullptr);
+            assert(pBuffers!=NULL);
             memcpy(p, pBuffers, nBuffers*sizeof(*pBuffers));
             sqlite3_free(pBuffers);
           }
@@ -97287,7 +97287,7 @@ static int loadSegmentLeavesInt(fulltext_vtab *v, LeavesReader *pReader,
   while( nBuffers-- ){
     dataBufferDestroy(&(pBuffers[nBuffers]));
   }
-  if( pBuffers!=nullptr ) sqlite3_free(pBuffers);
+  if( pBuffers!=NULL ) sqlite3_free(pBuffers);
 
   return rc;
 }
@@ -97322,7 +97322,7 @@ static int loadSegmentLeaves(fulltext_vtab *v,
   LeavesReader reader;
 
   assert( iStartLeaf<=iEndLeaf );
-  rc = leavesReaderInit(v, 0, iStartLeaf, iEndLeaf, nullptr, 0, &reader);
+  rc = leavesReaderInit(v, 0, iStartLeaf, iEndLeaf, NULL, 0, &reader);
   if( rc!=SQLITE_OK ) return rc;
 
   rc = loadSegmentLeavesInt(v, &reader, pTerm, nTerm, isPrefix, out);
@@ -97385,14 +97385,14 @@ static int loadAndGetChildrenContaining(
   const char *pTerm, int nTerm, int isPrefix,
   sqlite_int64 *piStartChild, sqlite_int64 *piEndChild
 ){
-  sqlite3_stmt *s = nullptr;
+  sqlite3_stmt *s = NULL;
   int rc;
 
   assert( iBlockid!=0 );
-  assert( pTerm!=nullptr );
+  assert( pTerm!=NULL );
   assert( nTerm!=0 );        /* TODO(shess) Why not allow this? */
-  assert( piStartChild!=nullptr );
-  assert( piEndChild!=nullptr );
+  assert( piStartChild!=NULL );
+  assert( piEndChild!=NULL );
 
   rc = sql_get_statement(v, BLOCK_SELECT_STMT, &s);
   if( rc!=SQLITE_OK ) return rc;
@@ -98066,7 +98066,7 @@ static void optimizeFunc(sqlite3_context *pContext,
     if( rc!=SQLITE_OK ) goto err;
 
     readers = sqlite3_malloc(nReaders*sizeof(readers[0]));
-    if( readers==nullptr ) goto err;
+    if( readers==NULL ) goto err;
 
     /* Note that there will already be a segment at this position
     ** until we call segdir_delete() on iMaxLevel.
@@ -98133,13 +98133,13 @@ static void optimizeFunc(sqlite3_context *pContext,
 }
 
 #ifdef SQLITE_TEST
-/* Generate an error of the form "<prefix>: <msg>".  If msg is nullptr,
+/* Generate an error of the form "<prefix>: <msg>".  If msg is NULL,
 ** pull the error from the context's db handle.
 */
 static void generateError(sqlite3_context *pContext,
                           const char *prefix, const char *msg){
   char buf[512];
-  if( msg==nullptr ) msg = sqlite3_errmsg(sqlite3_context_db_handle(pContext));
+  if( msg==NULL ) msg = sqlite3_errmsg(sqlite3_context_db_handle(pContext));
   sqlite3_snprintf(sizeof(buf), buf, "%s: %s", prefix, msg);
   sqlite3_result_error(pContext, buf, -1);
 }
@@ -98194,7 +98194,7 @@ static int generateTermsResult(sqlite3_context *pContext, fts3Hash *pTerms){
   nTerms = fts3HashCount(pTerms);
   assert( nTerms>0 );
   pData = sqlite3_malloc(nTerms*sizeof(TermData));
-  if( pData==nullptr ) return SQLITE_NOMEM;
+  if( pData==NULL ) return SQLITE_NOMEM;
 
   nResultBytes = 0;
   for(iTerm = 0, e = fts3HashFirst(pTerms); e; iTerm++, e = fts3HashNext(e)){
@@ -98208,7 +98208,7 @@ static int generateTermsResult(sqlite3_context *pContext, fts3Hash *pTerms){
 
   assert( nResultBytes>0 );   /* nTerms>0, nResultsBytes must be, too. */
   result = sqlite3_malloc(nResultBytes);
-  if( result==nullptr ){
+  if( result==NULL ){
     sqlite3_free(pData);
     return SQLITE_NOMEM;
   }
@@ -98252,7 +98252,7 @@ static void dumpTermsFunc(
   }else{
     fulltext_vtab *v;
     fts3Hash terms;
-    sqlite3_stmt *s = nullptr;
+    sqlite3_stmt *s = NULL;
     int rc;
 
     memcpy(&pCursor, sqlite3_value_blob(argv[0]), sizeof(pCursor));
@@ -98274,7 +98274,7 @@ static void dumpTermsFunc(
     }
 
     if( rc!=SQLITE_OK ){
-      generateError(pContext, "dump_terms", nullptr);
+      generateError(pContext, "dump_terms", NULL);
       return;
     }
 
@@ -98287,7 +98287,7 @@ static void dumpTermsFunc(
 
     if( rc!=SQLITE_DONE ){
       sqlite3_reset(s);
-      generateError(pContext, "dump_terms", nullptr);
+      generateError(pContext, "dump_terms", NULL);
     }else{
       const int nTerms = fts3HashCount(&terms);
       if( nTerms>0 ){
@@ -98321,7 +98321,7 @@ static void createDoclistResult(sqlite3_context *pContext,
   DataBuffer dump;
   DLReader dlReader;
 
-  assert( pData!=nullptr && nData>0 );
+  assert( pData!=NULL && nData>0 );
 
   dataBufferInit(&dump, 0);
   dlrInit(&dlReader, DL_DEFAULT, pData, nData);
@@ -98356,7 +98356,7 @@ static void createDoclistResult(sqlite3_context *pContext,
         }else if( DL_DEFAULT==DL_POSITIONS ){
           sqlite3_snprintf(sizeof(buf), buf, "%d ", plrPosition(&plReader));
         }else{
-          assert( nullptr=="Unhandled DL_DEFAULT value");
+          assert( NULL=="Unhandled DL_DEFAULT value");
         }
         dataBufferAppend(&dump, buf, strlen(buf));
       }
@@ -98378,7 +98378,7 @@ static void createDoclistResult(sqlite3_context *pContext,
 
   /* Passes ownership of dump's buffer to pContext. */
   sqlite3_result_text(pContext, dump.pData, dump.nData, sqlite3_free);
-  dump.pData = nullptr;
+  dump.pData = NULL;
   dump.nData = dump.nCapacity = 0;
 }
 
@@ -98413,7 +98413,7 @@ static void dumpDoclistFunc(
   }else if( sqlite3_value_type(argv[0])!=SQLITE_BLOB ||
             sqlite3_value_bytes(argv[0])!=sizeof(pCursor) ){
     generateError(pContext, "dump_doclist", "illegal first argument");
-  }else if( sqlite3_value_text(argv[1])==nullptr ||
+  }else if( sqlite3_value_text(argv[1])==NULL ||
             sqlite3_value_text(argv[1])[0]=='\0' ){
     generateError(pContext, "dump_doclist", "empty second argument");
   }else{
@@ -98434,7 +98434,7 @@ static void dumpDoclistFunc(
     if( argc==2 ){
       rc = termSelect(v, v->nColumn, pTerm, nTerm, 0, DL_DEFAULT, &doclist);
     }else{
-      sqlite3_stmt *s = nullptr;
+      sqlite3_stmt *s = NULL;
 
       /* Get our specific segment's information. */
       rc = sql_get_statement(v, SEGDIR_SELECT_SEGMENT_STMT, &s);
@@ -98504,7 +98504,7 @@ static void dumpDoclistFunc(
       */
       generateError(pContext, "dump_doclist", "out of memory");
     }else{
-      generateError(pContext, "dump_doclist", nullptr);
+      generateError(pContext, "dump_doclist", NULL);
     }
 
     dataBufferDestroy(&doclist);
@@ -99870,7 +99870,7 @@ static void fts3RemoveElementByHash(
 
 /* Attempt to locate an element of the hash table pH with a key
 ** that matches pKey,nKey.  Return the data for this element if it is
-** found, or nullptr if there is no match.
+** found, or NULL if there is no match.
 */
 SQLITE_PRIVATE void *sqlite3Fts3HashFind(const fts3Hash *pH, const void *pKey, int nKey){
   int h;                 /* A hash on key */
@@ -99891,14 +99891,14 @@ SQLITE_PRIVATE void *sqlite3Fts3HashFind(const fts3Hash *pH, const void *pKey, i
 **
 ** If no element exists with a matching key, then a new
 ** element is created.  A copy of the key is made if the copyKey
-** flag is set.  nullptr is returned.
+** flag is set.  NULL is returned.
 **
 ** If another element already exists with the same key, then the
 ** new data replaces the old data and the old data is returned.
 ** The key is not copied in this instance.  If a malloc fails, then
 ** the new data is returned and the hash table is unchanged.
 **
-** If the "data" parameter to this function is nullptr, then the
+** If the "data" parameter to this function is NULL, then the
 ** element corresponding to "key" is removed from the hash table.
 */
 SQLITE_PRIVATE void *sqlite3Fts3HashInsert(
@@ -100029,7 +100029,7 @@ static int porterCreate(
 ){
   porter_tokenizer *t;
   t = (porter_tokenizer *) sqlite3_malloc(sizeof(*t));
-  if( t==nullptr ) return SQLITE_NOMEM;
+  if( t==NULL ) return SQLITE_NOMEM;
   memset(t, 0, sizeof(*t));
   *ppTokenizer = &t->base;
   return SQLITE_OK;
@@ -100057,7 +100057,7 @@ static int porterOpen(
   porter_tokenizer_cursor *c;
 
   c = (porter_tokenizer_cursor *) sqlite3_malloc(sizeof(*c));
-  if( c==nullptr ) return SQLITE_NOMEM;
+  if( c==NULL ) return SQLITE_NOMEM;
 
   c->zInput = zInput;
   if( zInput==0 ){
@@ -100069,7 +100069,7 @@ static int porterOpen(
   }
   c->iOffset = 0;                 /* start tokenizing at the beginning */
   c->iToken = 0;
-  c->zToken = nullptr;               /* no space allocated, yet. */
+  c->zToken = NULL;               /* no space allocated, yet. */
   c->nAllocated = 0;
 
   *ppCursor = &c->base;
@@ -100566,7 +100566,7 @@ static int porterNext(
       if( n>c->nAllocated ){
         c->nAllocated = n+20;
         c->zToken = sqlite3_realloc(c->zToken, c->nAllocated);
-        if( c->zToken==nullptr ) return SQLITE_NOMEM;
+        if( c->zToken==NULL ) return SQLITE_NOMEM;
       }
       porter_stemmer(&z[iStartOffset], n, c->zToken, pnBytes);
       *pzToken = c->zToken;
@@ -101035,7 +101035,7 @@ static int simpleCreate(
   simple_tokenizer *t;
 
   t = (simple_tokenizer *) sqlite3_malloc(sizeof(*t));
-  if( t==nullptr ) return SQLITE_NOMEM;
+  if( t==NULL ) return SQLITE_NOMEM;
   memset(t, 0, sizeof(*t));
 
   /* TODO(shess) Delimiters need to remain the same from run to run,
@@ -101088,7 +101088,7 @@ static int simpleOpen(
   simple_tokenizer_cursor *c;
 
   c = (simple_tokenizer_cursor *) sqlite3_malloc(sizeof(*c));
-  if( c==nullptr ) return SQLITE_NOMEM;
+  if( c==NULL ) return SQLITE_NOMEM;
 
   c->pInput = pInput;
   if( pInput==0 ){
@@ -101100,7 +101100,7 @@ static int simpleOpen(
   }
   c->iOffset = 0;                 /* start tokenizing at the beginning */
   c->iToken = 0;
-  c->pToken = nullptr;               /* no space allocated, yet. */
+  c->pToken = NULL;               /* no space allocated, yet. */
   c->nTokenAllocated = 0;
 
   *ppCursor = &c->base;
@@ -101153,7 +101153,7 @@ static int simpleNext(
       if( n>c->nTokenAllocated ){
         c->nTokenAllocated = n+20;
         c->pToken = sqlite3_realloc(c->pToken, c->nTokenAllocated);
-        if( c->pToken==nullptr ) return SQLITE_NOMEM;
+        if( c->pToken==NULL ) return SQLITE_NOMEM;
       }
       for(i=0; i<n; i++){
         /* TODO(shess) This needs expansion to handle UTF-8
@@ -101587,7 +101587,7 @@ static int
 nodeAcquire(
   Rtree *pRtree,             /* R-tree structure */
   i64 iNode,                 /* Node number to load */
-  RtreeNode *pParent,        /* Either the parent node or nullptr */
+  RtreeNode *pParent,        /* Either the parent node or NULL */
   RtreeNode **ppNode         /* OUT: Acquired node */
 ){
   int rc;
@@ -103554,7 +103554,7 @@ int rtreeUpdate(
   assert(nData>=1);
   assert(hashIsEmpty(pRtree));
 
-  /* If azData[0] is not an SQL nullptr value, it is the rowid of a
+  /* If azData[0] is not an SQL NULL value, it is the rowid of a
   ** record to delete from the r-tree table. The following block does
   ** just that.
   */
@@ -104283,7 +104283,7 @@ static void icuRegexpDelete(void *p){
 ** Implementation of SQLite REGEXP operator. This scalar function takes
 ** two arguments. The first is a regular expression pattern to compile
 ** the second is a string to match against that pattern. If either 
-** argument is an SQL nullptr, then nullptr Is returned. Otherwise, the result
+** argument is an SQL NULL, then NULL Is returned. Otherwise, the result
 ** is 1 if the string matches the pattern, or 0 otherwise.
 **
 ** SQLite maps the regexp() function to the regexp() operator such
@@ -104304,8 +104304,8 @@ static void icuRegexpFunc(sqlite3_context *p, int nArg, sqlite3_value **apArg){
   UBool res;
   const UChar *zString = sqlite3_value_text16(apArg[1]);
 
-  /* If the left hand side of the regexp operator is nullptr, 
-  ** then the result is also nullptr. 
+  /* If the left hand side of the regexp operator is NULL, 
+  ** then the result is also NULL. 
   */
   if( !zString ){
     return;
@@ -104342,7 +104342,7 @@ static void icuRegexpFunc(sqlite3_context *p, int nArg, sqlite3_value **apArg){
     return;
   }
 
-  /* Set the text that the regular expression operates on to a nullptr
+  /* Set the text that the regular expression operates on to a NULL
   ** pointer. This is not really necessary, but it is tidier than 
   ** leaving the regular expression object configured with an invalid
   ** pointer after this function returns.
@@ -104370,7 +104370,7 @@ static void icuRegexpFunc(sqlite3_context *p, int nArg, sqlite3_value **apArg){
 **
 ** To access ICU "language specific" case mapping, upper() or lower()
 ** should be invoked with two arguments. The second argument is the name
-** of the locale to use. Passing an empty string ("") or SQL nullptr value
+** of the locale to use. Passing an empty string ("") or SQL NULL value
 ** as the second argument is the same as invoking the 1 argument version
 ** of upper() or lower().
 **

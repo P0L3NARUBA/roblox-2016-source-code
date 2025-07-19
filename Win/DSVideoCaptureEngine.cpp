@@ -40,7 +40,7 @@ const char VidCapID[] = "VideoCapture";
 	}\
 
 #ifndef SAFE_RELEASE
-#define SAFE_RELEASE(p)      { if(p) { (p)->Release(); (p)=nullptr; } }
+#define SAFE_RELEASE(p)      { if(p) { (p)->Release(); (p)=NULL; } }
 #endif
 
 using namespace RBX;
@@ -192,7 +192,7 @@ namespace RBX {
 			CAutoLock cAutoLock(&m_cStateLock);
 
 			m_paStreams = (CSourceStream **) new CVideoStream*[1];
-			if(m_paStreams == nullptr)
+			if(m_paStreams == NULL)
 			{
 				if(phr)
 					*phr = E_OUTOFMEMORY;
@@ -201,7 +201,7 @@ namespace RBX {
 			}
 
 			m_paStreams[0] = new CVideoStream(phr, this, RbxVideoId, cx, cy);
-			if(m_paStreams[0] == nullptr)
+			if(m_paStreams[0] == NULL)
 			{
 				if(phr)
 					*phr = E_OUTOFMEMORY;
@@ -301,7 +301,7 @@ namespace RBX {
 
 			pms->GetPointer(&pData);
 			lDataLen = pms->GetSize();
-			BYTE *frame = nullptr;
+			BYTE *frame = NULL;
 			{
 				CAutoLock cAutoLockShared(&m_cSharedState);
 
@@ -372,7 +372,7 @@ namespace RBX {
 			}
 
 			VIDEOINFO *pvi = (VIDEOINFO *) pmt->AllocFormatBuffer(sizeof(VIDEOINFO));
-			if(nullptr == pvi)
+			if(NULL == pvi)
 				return(E_OUTOFMEMORY);
 
 			ZeroMemory(pvi, sizeof(VIDEOINFO));
@@ -421,7 +421,7 @@ namespace RBX {
 
 			// Check for the subtypes we support
 			const GUID *SubType = pMediaType->Subtype();
-			if (SubType == nullptr)
+			if (SubType == NULL)
 				return E_INVALIDARG;
 
 			if(*SubType != MEDIASUBTYPE_RGB32) {
@@ -431,7 +431,7 @@ namespace RBX {
 			// Get the format area of the media type
 			VIDEOINFO *pvi = (VIDEOINFO *) pMediaType->Format();
 
-			if(pvi == nullptr)
+			if(pvi == NULL)
 				return E_INVALIDARG;
 
 			// Check the image size. As my default ball is 10 pixels big
@@ -499,7 +499,7 @@ namespace RBX {
 
 			if(SUCCEEDED(hr)) {
 				VIDEOINFO * pvi = (VIDEOINFO *) m_mt.Format();
-				if (pvi == nullptr)
+				if (pvi == NULL)
 					return E_UNEXPECTED;
 
 				switch(pvi->bmiHeader.biBitCount) {
@@ -538,7 +538,7 @@ namespace RBX {
 			CAutoLock cAutoLock(&m_cStateLock);
 
 			m_paStreams = (CSourceStream **) new CAudioStream*[1];
-			if(m_paStreams == nullptr)
+			if(m_paStreams == NULL)
 			{
 				if(phr)
 					*phr = E_OUTOFMEMORY;
@@ -547,7 +547,7 @@ namespace RBX {
 			}
 
 			m_paStreams[0] = new CAudioStream(phr, this, RbxAudioId, s, t);
-			if(m_paStreams[0] == nullptr)
+			if(m_paStreams[0] == NULL)
 			{
 				if(phr)
 					*phr = E_OUTOFMEMORY;
@@ -629,7 +629,7 @@ namespace RBX {
 			{
 				dsp->setBypass(true);
 				dsp->release();
-				dsp = nullptr;
+				dsp = NULL;
 			}
 			frameReadyEvent.Set();
 		}
@@ -637,7 +637,7 @@ namespace RBX {
 		FMOD_RESULT F_CALLBACK CAudioStream::audioGrabber(FMOD_DSP_STATE *dsp_state, float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int *outchannels)
 		{
 			FMOD::DSP *dsp = (FMOD::DSP *)dsp_state->instance;
-			void *userdata = nullptr;
+			void *userdata = NULL;
 			dsp->getUserData((void **)&userdata);
 			CAudioStream *stream = (CAudioStream*)userdata;
 			const unsigned short videoChannelsCount = 2;
@@ -693,7 +693,7 @@ namespace RBX {
 
 			RBXASSERT(pwfexCurrent->wBitsPerSample == 16 && pwfexCurrent->nChannels == 2);
 
-			short *sound = nullptr;
+			short *sound = NULL;
 			int actualLen = 0;
 			framesQueueLock.Lock();
 
@@ -740,7 +740,7 @@ namespace RBX {
 				return hr;
 			}
 
-			hr = pms->SetMediaType(nullptr);
+			hr = pms->SetMediaType(NULL);
 			if (FAILED(hr)) {
 				return hr;
 			}
@@ -852,7 +852,7 @@ namespace RBX {
 			}
 
 			WAVEFORMATEX *pwfex = (WAVEFORMATEX *)pmt->AllocFormatBuffer(sizeof(WAVEFORMATEX));
-			if(nullptr == pwfex)
+			if(NULL == pwfex)
 				return(E_OUTOFMEMORY);
 
 			ZeroMemory(pwfex, sizeof(WAVEFORMATEX));
@@ -886,10 +886,10 @@ namespace RBX {
 		defNx(16.0),
 		defNy(9.0),
 		MaxRecordTime(14*60*1000), //14 minutes in milliseconds
-        frameData(nullptr),
+        frameData(NULL),
         frameDataSize(0)
 	{
-		HRESULT hr = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
+		HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
 		switch (hr)
 		{
 		case S_OK:
@@ -898,11 +898,11 @@ namespace RBX {
 		default:
 			RBX::StandardOut::singleton()->printf(RBX::MESSAGE_INFO,  "CoInitializeEx result = 0x%x", hr);
 		}
-		graph = nullptr;
-		mediaControl = nullptr;
-		videoSource = nullptr;
-		audioSource = nullptr;
-		soundState = nullptr;
+		graph = NULL;
+		mediaControl = NULL;
+		videoSource = NULL;
+		audioSource = NULL;
+		soundState = NULL;
 		framesPushed = 0;
 	}
 	
@@ -979,7 +979,7 @@ namespace RBX {
         if (frameData)
         {
             delete[] frameData;
-            frameData = nullptr;
+            frameData = NULL;
             frameDataSize = 0;
         }
         
@@ -1059,8 +1059,8 @@ namespace RBX {
 			guiService->notificationCallback("Recording Stopped", "Because game window resolution changed", boost::bind(&doNothingCallbackContinuation), boost::bind(&doNothingCallbackContinuation));
 		}
 
-		// it supposed to be safe to pass nullptr in this case
-		cancelAction->doIt(nullptr);
+		// it supposed to be safe to pass NULL in this case
+		cancelAction->doIt(NULL);
 	}
 
     void DSVideoCaptureEngine::pushNextFrame(void* device, Verb *cancelAction)
@@ -1078,7 +1078,7 @@ namespace RBX {
         {
             FASTLOG(FLog::DeviceLost, "DSVideoCaptureEngine: Cancel by time");
             RBXASSERT(cancelAction);
-            cancelAction->doIt(nullptr);
+            cancelAction->doIt(NULL);
             return;
         }
 
@@ -1089,7 +1089,7 @@ namespace RBX {
         {
             FASTLOG(FLog::DeviceLost, "DSVideoCaptureEngine: Cancel by device lost");
             RBXASSERT(cancelAction);
-            cancelAction->doIt(nullptr);
+            cancelAction->doIt(NULL);
             return;
         }
 
@@ -1156,7 +1156,7 @@ namespace RBX {
 
 	LONG DSVideoCaptureEngine::GetTime()
 	{
-		return audioSource != nullptr ? audioSource->GetAudioTime()->GetTime() : 0;
+		return audioSource != NULL ? audioSource->GetAudioTime()->GetTime() : 0;
 	}
 
 	LONG DSVideoCaptureEngine::GetAbsoluteTime()
@@ -1169,11 +1169,11 @@ namespace RBX {
 
 	HRESULT DSVideoCaptureEngine::BuildCaptureGraph(int cx, int cy, bool forceNoAudio)
 	{
-		IBaseFilter *asfWriterFilter = nullptr;
-		IFileSinkFilter2 *fileSink = nullptr;
-		IWMProfileManager *profileMgr = nullptr;
-		IWMProfile *profile = nullptr;
-		IConfigAsfWriter *asfConfig = nullptr;
+		IBaseFilter *asfWriterFilter = NULL;
+		IFileSinkFilter2 *fileSink = NULL;
+		IWMProfileManager *profileMgr = NULL;
+		IWMProfile *profile = NULL;
+		IConfigAsfWriter *asfConfig = NULL;
 
 		OSVERSIONINFO osvi = {0};
 		osvi.dwOSVersionInfoSize=sizeof(osvi);
@@ -1181,23 +1181,23 @@ namespace RBX {
 
 		HRESULT hr = S_OK;
 
-		ERROR_ON_FAIL(CoCreateInstance(CLSID_FilterGraph, nullptr, CLSCTX_INPROC_SERVER, IID_IGraphBuilder, (void**)&graph));
+		ERROR_ON_FAIL(CoCreateInstance(CLSID_FilterGraph, NULL, CLSCTX_INPROC_SERVER, IID_IGraphBuilder, (void**)&graph));
 
 		ERROR_ON_FAIL(graph->QueryInterface(IID_IMediaControl, (void**)&mediaControl));
 		
-		videoSource = new DS::CVideoStreamFilter(nullptr, &hr, cx, cy);
+		videoSource = new DS::CVideoStreamFilter(NULL, &hr, cx, cy);
 		if (FAILED(hr)) {
 			goto Error;
 		}
 		ERROR_ON_FAIL(graph->AddFilter(videoSource, L"GameVideoSource"));
 		
-		ERROR_ON_FAIL(CoCreateInstance(CLSID_WMAsfWriter, nullptr, CLSCTX_INPROC_SERVER, IID_IBaseFilter, (void**)&asfWriterFilter));
+		ERROR_ON_FAIL(CoCreateInstance(CLSID_WMAsfWriter, NULL, CLSCTX_INPROC_SERVER, IID_IBaseFilter, (void**)&asfWriterFilter));
 
 		ERROR_ON_FAIL(asfWriterFilter->QueryInterface(IID_IFileSinkFilter2, (void**)&fileSink));
 
 		WCHAR path[MAX_PATH];
 		GenerateFileName(path);
-		ERROR_ON_FAIL(fileSink->SetFileName(path, nullptr));
+		ERROR_ON_FAIL(fileSink->SetFileName(path, NULL));
 
 		ERROR_ON_FAIL(graph->AddFilter(asfWriterFilter, L"asfWrite"));
 
@@ -1218,7 +1218,7 @@ namespace RBX {
 
 		if (soundState->enabledFunction() && !forceNoAudio)
 		{
-			audioSource = new DS::CAudioStreamFilter(nullptr, &hr, soundState, this);
+			audioSource = new DS::CAudioStreamFilter(NULL, &hr, soundState, this);
 			if (FAILED(hr)) {
 				goto Error;
 			}
@@ -1246,9 +1246,9 @@ Error:
 	    SAFE_RELEASE(graph);
 	    SAFE_RELEASE(mediaControl);
 
-		graph = nullptr;
-		mediaControl = nullptr;
-		videoSource = nullptr;
+		graph = NULL;
+		mediaControl = NULL;
+		videoSource = NULL;
 	}
 
 	int DSVideoCaptureEngine::GenerateFileName(LPWSTR fileName)

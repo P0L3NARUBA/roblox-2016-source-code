@@ -48,11 +48,11 @@ static void sigpipe_ignore(struct SessionHandle *data,
     struct sigaction action;
     /* first, extract the existing situation */
     memset(&ig->old_pipe_act, 0, sizeof(struct sigaction));
-    sigaction(SIGPIPE, nullptr, &ig->old_pipe_act);
+    sigaction(SIGPIPE, NULL, &ig->old_pipe_act);
     action = ig->old_pipe_act;
     /* ignore this signal */
     action.sa_handler = SIG_IGN;
-    sigaction(SIGPIPE, &action, nullptr);
+    sigaction(SIGPIPE, &action, NULL);
   }
 }
 
@@ -65,7 +65,7 @@ static void sigpipe_restore(struct sigpipe_ignore *ig)
 {
   if(!ig->no_signal)
     /* restore the outside state */
-    sigaction(SIGPIPE, &ig->old_pipe_act, nullptr);
+    sigaction(SIGPIPE, &ig->old_pipe_act, NULL);
 }
 
 #else

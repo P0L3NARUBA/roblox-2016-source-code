@@ -131,7 +131,7 @@ namespace RBX {
 		{
 			typedef std::map<std::string, shared_ptr<Toolbar> >::iterator toolbarsIter;
 
-			StateDataEntry() : active(nullptr), hidden(false) {}
+			StateDataEntry() : active(NULL), hidden(false) {}
 
 			std::map<std::string, shared_ptr<Toolbar> > toolbars;
 			std::list<shared_ptr<Plugin> > plugins;

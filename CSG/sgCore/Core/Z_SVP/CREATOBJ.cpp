@@ -6,8 +6,8 @@ hOBJ  create_simple_obj_loc(OBJTYPE type, void  *geo)
 	hOBJ				hobj;
 	lpOBJ				obj;
 
-	if((hobj = o_alloc(type)) == nullptr)
-		return nullptr;
+	if((hobj = o_alloc(type)) == NULL)
+		return NULL;
 	obj = (lpOBJ)hobj;
 	//set_obj_nongeo_par(obj);
 	memcpy(obj->geo_data, geo, geo_size[type]);
@@ -21,10 +21,10 @@ hOBJ  create_simple_obj(OBJTYPE type, void  *geo) {
 //                    .
 //     
 
-//      nullptr,  
+//      NULL,  
 //      
 
-	return create_simple_obj_to_prot(nullptr, type, geo);
+	return create_simple_obj_to_prot(NULL, type, geo);
 }
 
 hOBJ  create_simple_obj_to_prot(lpOBJ prot, OBJTYPE type, void  *geo) {
@@ -33,8 +33,8 @@ hOBJ  create_simple_obj_to_prot(lpOBJ prot, OBJTYPE type, void  *geo) {
 	hOBJ				hobj;
 	lpOBJ				obj;
 
-	if((hobj = o_alloc(type)) == nullptr)
-		return nullptr;
+	if((hobj = o_alloc(type)) == NULL)
+		return NULL;
 	obj = (lpOBJ)hobj;
 	if(prot)
 		copy_obj_nongeo_par(prot, obj);

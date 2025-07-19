@@ -168,7 +168,7 @@ public:
 
 	bool isItemPendingDeletion() { return m_queuedForDeletion; }
 
-	bool isInTreeWidget() { return treeWidget() != nullptr; }
+	bool isInTreeWidget() { return treeWidget() != NULL; }
 
 	bool removeItemFromTreeWidget();
 
@@ -230,7 +230,7 @@ public:
 	boost::shared_ptr<RBX::DataModel> dataModel();	
 	RBX::Selection*       getSelection();
 	RobloxTreeWidget*     getTreeWidget();
-	RobloxTreeWidgetItem* getItemParent() { return nullptr; }
+	RobloxTreeWidgetItem* getItemParent() { return NULL; }
 	QMutex* treeWidgetMutex() { return &m_treeWidgetMutex; }
 	
 	void addInstance(const RBX::Instance *pInstance, RobloxTreeWidgetItem *pTreeWidgetItem);
@@ -291,7 +291,7 @@ public:
 
 	void eraseLastSelectedItem()
 	{
-		m_lastSelectedItem = nullptr;
+		m_lastSelectedItem = NULL;
 	}
 
 	void addItemToSelection(RBX::Instance* item)

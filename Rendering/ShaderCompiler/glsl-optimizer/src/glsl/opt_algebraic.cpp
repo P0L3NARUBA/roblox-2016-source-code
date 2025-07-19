@@ -50,7 +50,7 @@ public:
       : options(options)
    {
       this->progress = false;
-      this->mem_ctx = nullptr;
+      this->mem_ctx = NULL;
       this->native_integers = native_integers;
    }
 
@@ -83,37 +83,37 @@ public:
 static inline bool
 is_vec_zero(ir_constant *ir)
 {
-   return (ir == nullptr) ? false : ir->is_zero();
+   return (ir == NULL) ? false : ir->is_zero();
 }
 
 static inline bool
 is_vec_one(ir_constant *ir)
 {
-   return (ir == nullptr) ? false : ir->is_one();
+   return (ir == NULL) ? false : ir->is_one();
 }
 
 static inline bool
 is_vec_two(ir_constant *ir)
 {
-   return (ir == nullptr) ? false : ir->is_value(2.0, 2);
+   return (ir == NULL) ? false : ir->is_value(2.0, 2);
 }
 
 static inline bool
 is_vec_negative_one(ir_constant *ir)
 {
-   return (ir == nullptr) ? false : ir->is_negative_one();
+   return (ir == NULL) ? false : ir->is_negative_one();
 }
 
 static inline bool
 is_vec_basis(ir_constant *ir)
 {
-   return (ir == nullptr) ? false : ir->is_basis();
+   return (ir == NULL) ? false : ir->is_basis();
 }
 
 static inline bool
 is_valid_vec_const(ir_constant *ir)
 {
-   if (ir == nullptr)
+   if (ir == NULL)
       return false;
 
    if (!ir->type->is_scalar() && !ir->type->is_vector())
@@ -184,7 +184,7 @@ try_replace_with_dot(ir_expression *expr0, ir_expression *expr1, void *mem_ctx)
           !y || y->mask.num_components != 1 ||
           !z || z->mask.num_components != 1 ||
           !w || w->mask.num_components != 1) {
-         return nullptr;
+         return NULL;
       }
 
       bool swiz_seen[4] = {false, false, false, false};
@@ -195,7 +195,7 @@ try_replace_with_dot(ir_expression *expr0, ir_expression *expr1, void *mem_ctx)
 
       if (!swiz_seen[0] || !swiz_seen[1] ||
           !swiz_seen[2] || !swiz_seen[3]) {
-         return nullptr;
+         return NULL;
       }
 
       if (x->val->equals(y->val) &&
@@ -204,7 +204,7 @@ try_replace_with_dot(ir_expression *expr0, ir_expression *expr1, void *mem_ctx)
          return dot(x->val, new(mem_ctx) ir_constant(1.0f, 4));
       }
    }
-   return nullptr;
+   return NULL;
 }
 
 void
@@ -294,8 +294,8 @@ ir_algebraic_visitor::swizzle_if_required(ir_expression *expr,
 ir_rvalue *
 ir_algebraic_visitor::handle_expression(ir_expression *ir)
 {
-   ir_constant *op_const[4] = {nullptr, nullptr, nullptr, nullptr};
-   ir_expression *op_expr[4] = {nullptr, nullptr, nullptr, nullptr};
+   ir_constant *op_const[4] = {NULL, NULL, NULL, NULL};
+   ir_expression *op_expr[4] = {NULL, NULL, NULL, NULL};
    unsigned int i;
 
    assert(ir->get_num_operands() <= 4);
@@ -307,7 +307,7 @@ ir_algebraic_visitor::handle_expression(ir_expression *ir)
       op_expr[i] = ir->operands[i]->as_expression();
    }
 
-   if (this->mem_ctx == nullptr)
+   if (this->mem_ctx == NULL)
       this->mem_ctx = ralloc_parent(ir);
 
    switch (ir->operation) {
@@ -317,7 +317,7 @@ ir_algebraic_visitor::handle_expression(ir_expression *ir)
       break;
 
    case ir_unop_abs:
-      if (op_expr[0] == nullptr)
+      if (op_expr[0] == NULL)
 	 break;
 
       switch (op_expr[0]->operation) {
@@ -330,7 +330,7 @@ ir_algebraic_visitor::handle_expression(ir_expression *ir)
       break;
 
    case ir_unop_neg:
-      if (op_expr[0] == nullptr)
+      if (op_expr[0] == NULL)
 	 break;
 
       if (op_expr[0]->operation == ir_unop_neg) {
@@ -347,7 +347,7 @@ ir_algebraic_visitor::handle_expression(ir_expression *ir)
       break;
 
    case ir_unop_exp:
-      if (op_expr[0] == nullptr)
+      if (op_expr[0] == NULL)
 	 break;
 
       if (op_expr[0]->operation == ir_unop_log) {
@@ -356,7 +356,7 @@ ir_algebraic_visitor::handle_expression(ir_expression *ir)
       break;
 
    case ir_unop_log:
-      if (op_expr[0] == nullptr)
+      if (op_expr[0] == NULL)
 	 break;
 
       if (op_expr[0]->operation == ir_unop_exp) {
@@ -365,7 +365,7 @@ ir_algebraic_visitor::handle_expression(ir_expression *ir)
       break;
 
    case ir_unop_exp2:
-      if (op_expr[0] == nullptr)
+      if (op_expr[0] == NULL)
 	 break;
 
       if (op_expr[0]->operation == ir_unop_log2) {
@@ -388,7 +388,7 @@ ir_algebraic_visitor::handle_expression(ir_expression *ir)
       break;
 
    case ir_unop_log2:
-      if (op_expr[0] == nullptr)
+      if (op_expr[0] == NULL)
 	 break;
 
       if (op_expr[0]->operation == ir_unop_exp2) {
@@ -399,7 +399,7 @@ ir_algebraic_visitor::handle_expression(ir_expression *ir)
    case ir_unop_logic_not: {
       enum ir_expression_operation new_op = ir_unop_logic_not;
 
-      if (op_expr[0] == nullptr)
+      if (op_expr[0] == NULL)
 	 break;
 
       switch (op_expr[0]->operation) {
@@ -547,7 +547,7 @@ ir_algebraic_visitor::handle_expression(ir_expression *ir)
 	 return new(mem_ctx) ir_expression(ir_unop_rcp,
 					   ir->operands[1]->type,
 					   ir->operands[1],
-					   nullptr);
+					   NULL);
       }
       if (is_vec_one(op_const[1]))
 	 return ir->operands[0];

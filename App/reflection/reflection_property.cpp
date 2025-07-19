@@ -109,10 +109,10 @@ XmlElement* PropertyDescriptor::write(const DescribedBase* instance, bool ignore
 	if (!ignoreWriteProtection)
 	{
 		if (isReadOnly())
-			return nullptr;
+			return NULL;
 
 		if (!canXmlWrite())
-			return nullptr;
+			return NULL;
 	}
 
 	XmlElement* element = new XmlElement(type.tag);

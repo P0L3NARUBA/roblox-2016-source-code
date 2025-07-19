@@ -16,8 +16,8 @@ bool MachineIdUploader::fillMachineId(MachineId* out) {
 	// Query number of addresses will be returned
 	ULONG addressBufferSize = 0;
 	bool success = ERROR_BUFFER_OVERFLOW == GetAdaptersAddresses(
-		AF_UNSPEC, 0 /*don't filter type*/, nullptr /*reserved*/,
-		nullptr, &addressBufferSize);
+		AF_UNSPEC, 0 /*don't filter type*/, NULL /*reserved*/,
+		NULL, &addressBufferSize);
 	
 	if (!success) { return false; }
 
@@ -25,12 +25,12 @@ bool MachineIdUploader::fillMachineId(MachineId* out) {
 	PIP_ADAPTER_ADDRESSES addressBuffer =
 		(PIP_ADAPTER_ADDRESSES)HeapAlloc(GetProcessHeap(), 0, addressBufferSize);
 	success = ERROR_SUCCESS == GetAdaptersAddresses(
-		AF_UNSPEC, 0 /*don't filter type*/, nullptr /*reserved*/,
+		AF_UNSPEC, 0 /*don't filter type*/, NULL /*reserved*/,
 		&addressBuffer[0], &addressBufferSize);
 
 	if (success) {
 		for (PIP_ADAPTER_ADDRESSES currentAdapter = &addressBuffer[0];
-				currentAdapter != nullptr;
+				currentAdapter != NULL;
 				currentAdapter = currentAdapter->Next) {
 			
 			if (currentAdapter->IfType == IF_TYPE_ETHERNET_CSMACD) {

@@ -82,7 +82,7 @@ public:
 
 class ir_factory {
 public:
-   ir_factory(exec_list *instructions = nullptr, void *mem_ctx = nullptr)
+   ir_factory(exec_list *instructions = NULL, void *mem_ctx = NULL)
       : instructions(instructions),
         mem_ctx(mem_ctx)
    {

@@ -421,7 +421,7 @@ static BOOL  check_vr_ee(lpD_POINT * vn,lpD_POINT * vk)
 		else          { fma = np_calc_gru(np1, ir); identa = np1->efc[ir].em; }
 	}
 	if ( fpb == 0 || fmb == 0 ) {
-		put_message(NO_LIMIT_COND,nullptr,0);
+		put_message(NO_LIMIT_COND,NULL,0);
 		return FALSE;
 	}
 	if (fpb < 0 || fmb < 0) {        
@@ -511,7 +511,7 @@ static BOOL  check_vr_ee(lpD_POINT * vn,lpD_POINT * vk)
     return TRUE;
   }
 	if (i1 == 2 && i2 == 2)
-		put_message(TOO_MANY_FACES,nullptr,0);
+		put_message(TOO_MANY_FACES,NULL,0);
 	else
 		put_message(INTERNAL_ERROR,"err_b_vr_ee",0);
 	return FALSE;

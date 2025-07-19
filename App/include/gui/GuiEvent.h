@@ -51,9 +51,9 @@ namespace RBX {
 		}
 
 		static GuiResponse notSunk()							{return GuiResponse(NOT_SUNK);}
-		static GuiResponse notSunkMouseWasOver()				{return GuiResponse(NOT_SUNK, NOT_FINISHED, MOUSE_OVER, nullptr);}
+		static GuiResponse notSunkMouseWasOver()				{return GuiResponse(NOT_SUNK, NOT_FINISHED, MOUSE_OVER, NULL);}
 		static GuiResponse sunk()								{return GuiResponse(SUNK);}
-		static GuiResponse sunkAndFinished()					{return GuiResponse(SUNK, FINISHED, NOT_MOUSE_OVER, nullptr);}
+		static GuiResponse sunkAndFinished()					{return GuiResponse(SUNK, FINISHED, NOT_MOUSE_OVER, NULL);}
 		static GuiResponse sunkWithTarget(Instance* target)	{return GuiResponse(SUNK, NOT_FINISHED, NOT_MOUSE_OVER, target);}
 
 		shared_ptr<Instance> getTarget() { return target.lock(); }

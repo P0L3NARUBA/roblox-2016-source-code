@@ -72,7 +72,7 @@ protected:
 	
 	///m_rootCollisionShape is temporarily used to store the original collision shape
 	///The m_collisionShape might be temporarily replaced by a child collision shape during collision detection purposes
-	///If it is nullptr, the m_collisionShape is not temporarily replaced.
+	///If it is NULL, the m_collisionShape is not temporarily replaced.
 	btCollisionShape*		m_rootCollisionShape;
 
 	int				m_collisionFlags;

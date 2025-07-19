@@ -65,7 +65,7 @@ bool isExePage(const MEMORY_BASIC_INFORMATION& info)
 bool checkG3dConsts()
 {
     volatile bool returnValue = true;
-    VMProtectBeginMutation(nullptr);
+    VMProtectBeginMutation(NULL);
     returnValue = ( (G3D::Matrix3::identity() != G3D::Matrix3(1, 0, 0, 0, 1, 0, 0, 0, 1))
         || (G3D::Vector3::unitX() != G3D::Vector3(1, 0, 0))
         || (G3D::Vector3::unitY() != G3D::Vector3(0, 1, 0))
@@ -210,7 +210,7 @@ namespace RBX
         , ntdllSize(0)
         , ntdllTextBase(0)
     {
-        VMProtectBeginMutation(nullptr);
+        VMProtectBeginMutation(NULL);
         // get information about ntdll.
         thisProcess = GetCurrentProcess();
         HMODULE ntdll = rbxGetNtdll();
@@ -259,7 +259,7 @@ ScanRegion ScanRegion::getScanRegion(const char* moduleName, const char* regionN
 {
     HMODULE module = GetModuleHandle(moduleName);
     ScanRegion result;
-    if (module != nullptr) 
+    if (module != NULL) 
     {
         uintptr_t addr;
         size_t size;
@@ -274,14 +274,14 @@ PmcHashContainer::PmcHashContainer(const PmcHashContainer& init) : nonce(init.no
 
 ProgramMemoryChecker::ProgramMemoryChecker()
     : currentRegion(0)
-    , currentMemory(nullptr)
+    , currentMemory(NULL)
     , scanningRegions()
     , lastCompletedHash(0)
     , lastGoldenHash(0)
     , lastCompletedTime(Time::nowFast())
 {
     #if !defined(RBX_STUDIO_BUILD)
-    VMProtectBeginMutation(nullptr);
+    VMProtectBeginMutation(NULL);
     ScanRegionTest nonceLocation( ScanRegion(((char*) (&pmcHash.nonce)), 4));
     nonceLocation.closeHash = true;
     nonceLocation.useHashValueInStructHash = false;
@@ -366,7 +366,7 @@ bool ProgramMemoryChecker::areMemoryPagePermissionsSetupForHacking()
 {
     #if !defined(RBX_STUDIO_BUILD)
     VMProtectBeginMutation("12");
-    ScanRegion region = ScanRegion::getScanRegion(nullptr, ".text");
+    ScanRegion region = ScanRegion::getScanRegion(NULL, ".text");
 
     MEMORY_BASIC_INFORMATION memInfo;
     if (VirtualQuery(region.startingAddress, &memInfo, sizeof(MEMORY_BASIC_INFORMATION))) {
@@ -395,7 +395,7 @@ unsigned int ProgramMemoryChecker::step()
     unsigned int blocksLeftForThisStep = 1 + bytesPerStep/kBlock;
     while (blocksLeftForThisStep > 0)
     {
-        VMProtectBeginMutation(nullptr);
+        VMProtectBeginMutation(NULL);
         ScanRegionTest& thisRegion = scanningRegions[currentRegion];
         const char* currentRegionEndAddress = thisRegion.startingAddress +
             thisRegion.size;
@@ -461,7 +461,7 @@ unsigned int ProgramMemoryChecker::step()
         {
             lea esp, [esp-PMC_DEADSPACE]; // subtract 12 from esp
         }
-        VMProtectBeginMutation(nullptr);
+        VMProtectBeginMutation(NULL);
         thisHashState->v1 = v1;
         thisHashState->v2 = v2;
         thisHashState->v3 = v3;
@@ -564,7 +564,7 @@ unsigned int ProgramMemoryChecker::step()
 int ProgramMemoryChecker::isLuaLockOk() const
 {
 #if !defined(RBX_STUDIO_BUILD) && defined(_WIN32)
-    VMProtectBeginMutation(nullptr);
+    VMProtectBeginMutation(NULL);
     // This is an added check
     size_t checkStart = RBX::Security::rbxTextBase;
     size_t checkSize = RBX::Security::rbxTextSize;
@@ -650,7 +650,7 @@ unsigned int ProgramMemoryChecker::hashScanningRegions(size_t regions) const
 unsigned int ProgramMemoryChecker::updateHsceHash()
 {
 #if defined(_WIN32) && !defined(RBX_STUDIO_BUILD)
-    VMProtectBeginMutation(nullptr);
+    VMProtectBeginMutation(NULL);
     XXH_state32_t hsceHashState;
     hsceHashState.v1 = hsceHashState.v2 = hsceHashState.v3 = hsceHashState.v4 = 0xCCCCCCCC;
     hsceHashState.seed = 0xCCCCCCCC;
@@ -683,7 +683,7 @@ unsigned int ProgramMemoryChecker::getHsceAndHash() const
 
 unsigned int protectVmpSections()
 {
-    HMODULE thisModule = GetModuleHandle(nullptr);
+    HMODULE thisModule = GetModuleHandle(NULL);
     MODULEINFO thisModuleInfo;
     GetModuleInformation(GetCurrentProcess(), thisModule, &thisModuleInfo, sizeof(thisModuleInfo));
     uintptr_t addr = reinterpret_cast<uintptr_t>(thisModule);

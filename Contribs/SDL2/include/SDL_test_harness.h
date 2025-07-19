@@ -89,11 +89,11 @@ typedef struct SDLTest_TestCaseReference {
 typedef struct SDLTest_TestSuiteReference {
     /* !< "PlatformSuite" */
     char *name;
-    /* !< The function that is run before each test. nullptr skips. */
+    /* !< The function that is run before each test. NULL skips. */
     SDLTest_TestCaseSetUpFp testSetUp;
-    /* !< The test cases that are run as part of the suite. Last item should be nullptr. */
+    /* !< The test cases that are run as part of the suite. Last item should be NULL. */
     const SDLTest_TestCaseReference **testCases;
-    /* !< The function that is run after each test. nullptr skips. */
+    /* !< The function that is run after each test. NULL skips. */
     SDLTest_TestCaseTearDownFp testTearDown;
 } SDLTest_TestSuiteReference;
 
@@ -102,9 +102,9 @@ typedef struct SDLTest_TestSuiteReference {
  * \brief Execute a test suite using the given run seed and execution key.
  *
  * \param testSuites Suites containing the test case.
- * \param userRunSeed Custom run seed provided by user, or nullptr to autogenerate one.
+ * \param userRunSeed Custom run seed provided by user, or NULL to autogenerate one.
  * \param userExecKey Custom execution key provided by user, or 0 to autogenerate one.
- * \param filter Filter specification. nullptr disables. Case sensitive.
+ * \param filter Filter specification. NULL disables. Case sensitive.
  * \param testIterations Number of iterations to run each test case.
  *
  * \returns Test run result; 0 when all tests passed, 1 if any tests failed.

@@ -28,10 +28,10 @@
 #define __WXLIST__
 
    /* A POSITION represents (in some fashion that's opaque) a cursor
-      on the list that can be set to identify any element.  nullptr is
-      a valid value and several operations regard nullptr as the position
+      on the list that can be set to identify any element.  NULL is
+      a valid value and several operations regard NULL as the position
       "one step off the end of the list".  (In an n element list there
-      are n+1 places to insert and nullptr is that "n+1-th" value).
+      are n+1 places to insert and NULL is that "n+1-th" value).
       The POSITION of an element in the list is only invalidated if
       that element is deleted.  Move operations may mean that what
       was a valid POSITION in one list is now a valid POSITION in
@@ -39,11 +39,11 @@
 
       Some operations which at first sight are illegal are allowed as
       harmless no-ops.  For instance RemoveHead is legal on an empty
-      list and it returns nullptr.  This allows an atomic way to test if
+      list and it returns NULL.  This allows an atomic way to test if
       there is an element there, and if so, get it.  The two operations
       AddTail and RemoveHead thus implement a MONITOR (See Hoare's paper).
 
-      Single element operations return POSITIONs, non-nullptr means it worked.
+      Single element operations return POSITIONs, non-NULL means it worked.
       whole list operations return a BOOL.  TRUE means it all worked.
 
       This definition is the same as the POSITION type for MFCs, so we must
@@ -122,7 +122,7 @@ public:
     {
     public:
         CNodeCache(INT iCacheSize) : m_iCacheSize(iCacheSize),
-                                     m_pHead(nullptr),
+                                     m_pHead(NULL),
                                      m_iUsed(0)
                                      {};
         ~CNodeCache() {
@@ -146,7 +146,7 @@ public:
         CNode *RemoveFromCache()
         {
             CNode *pNode = m_pHead;
-            if (pNode != nullptr) {
+            if (pNode != NULL) {
                 m_pHead = pNode->Next();
                 m_iUsed--;
                 ASSERT(m_iUsed >= 0);
@@ -219,7 +219,7 @@ public:
 protected:
     /* Return the pointer to the object at rp,
        Update rp to the next node in *this
-       but make it nullptr if it was at the end of *this.
+       but make it NULL if it was at the end of *this.
        This is a wart retained for backwards compatibility.
        GetPrev is not implemented.
        Use Next, Prev and Get separately.
@@ -228,27 +228,27 @@ protected:
 
 
     /* Return a pointer to the object at p
-       Asking for the object at nullptr will return nullptr harmlessly.
+       Asking for the object at NULL will return NULL harmlessly.
     */
     void *GetI(POSITION p) const;
 
 public:
     /* return the next / prev position in *this
-       return nullptr when going past the end/start.
-       Next(nullptr) is same as GetHeadPosition()
-       Prev(nullptr) is same as GetTailPosition()
+       return NULL when going past the end/start.
+       Next(NULL) is same as GetHeadPosition()
+       Prev(NULL) is same as GetTailPosition()
        An n element list therefore behaves like a n+1 element
-       cycle with nullptr at the start/end.
+       cycle with NULL at the start/end.
 
-       !!WARNING!! - This handling of nullptr is DIFFERENT from GetNext.
+       !!WARNING!! - This handling of NULL is DIFFERENT from GetNext.
 
        Some reasons are:
        1. For a list of n items there are n+1 positions to insert
-          These are conveniently encoded as the n POSITIONs and nullptr.
+          These are conveniently encoded as the n POSITIONs and NULL.
        2. If you are keeping a list sorted (fairly common) and you
           search forward for an element to insert before and don't
-          find it you finish up with nullptr as the element before which
-          to insert.  You then want that nullptr to be a valid POSITION
+          find it you finish up with NULL as the element before which
+          to insert.  You then want that NULL to be a valid POSITION
           so that you can insert before it and you want that insertion
           point to mean the (n+1)-th one that doesn't have a POSITION.
           (symmetrically if you are working backwards through the list).
@@ -259,7 +259,7 @@ public:
     */
     POSITION Next(POSITION pos) const
     {
-        if (pos == nullptr) {
+        if (pos == NULL) {
             return (POSITION) m_pFirst;
         }
         CNode *pn = (CNode *) pos;
@@ -269,7 +269,7 @@ public:
     // See Next
     POSITION Prev(POSITION pos) const
     {
-        if (pos == nullptr) {
+        if (pos == NULL) {
             return (POSITION) m_pLast;
         }
         CNode *pn = (CNode *) pos;
@@ -278,7 +278,7 @@ public:
 
 
     /* Return the first position in *this which holds the given
-       pointer.  Return nullptr if the pointer was not not found.
+       pointer.  Return NULL if the pointer was not not found.
     */
 protected:
     POSITION FindI( void * pObj) const;
@@ -286,7 +286,7 @@ protected:
     /* Remove the first node in *this (deletes the pointer to its
        object from the list, does not free the object itself).
        Return the pointer to its object.
-       If *this was already empty it will harmlessly return nullptr.
+       If *this was already empty it will harmlessly return NULL.
     */
     void *RemoveHeadI();
 
@@ -294,20 +294,20 @@ protected:
     /* Remove the last node in *this (deletes the pointer to its
        object from the list, does not free the object itself).
        Return the pointer to its object.
-       If *this was already empty it will harmlessly return nullptr.
+       If *this was already empty it will harmlessly return NULL.
     */
     void *RemoveTailI();
 
 
     /* Remove the node identified by p from the list (deletes the pointer
        to its object from the list, does not free the object itself).
-       Asking to Remove the object at nullptr will harmlessly return nullptr.
+       Asking to Remove the object at NULL will harmlessly return NULL.
        Return the pointer to the object removed.
     */
     void *RemoveI(POSITION p);
 
     /* Add single object *pObj to become a new last element of the list.
-       Return the new tail position, nullptr if it fails.
+       Return the new tail position, NULL if it fails.
        If you are adding a COM objects, you might want AddRef it first.
        Other existing POSITIONs in *this are still valid
     */
@@ -332,7 +332,7 @@ public:
     /* Mirror images of AddHead: */
 
     /* Add single object to become a new first element of the list.
-       Return the new head position, nullptr if it fails.
+       Return the new head position, NULL if it fails.
        Existing POSITIONs in *this are still valid
     */
 protected:
@@ -350,8 +350,8 @@ public:
 
 
     /* Add the object *pObj to *this after position p in *this.
-       AddAfter(nullptr,x) adds x to the start - equivalent to AddHead
-       Return the position of the object added, nullptr if it failed.
+       AddAfter(NULL,x) adds x to the start - equivalent to AddHead
+       Return the position of the object added, NULL if it failed.
        Existing POSITIONs in *this are undisturbed, including p.
     */
 protected:
@@ -359,7 +359,7 @@ protected:
 public:
 
     /* Add the list *pList to *this after position p in *this
-       AddAfter(nullptr,x) adds x to the start - equivalent to AddHead
+       AddAfter(NULL,x) adds x to the start - equivalent to AddHead
        Return TRUE if it all worked, FALSE if it didn't.
        If it fails, some of the objects may be added
        Existing POSITIONs in *this are undisturbed, including p.
@@ -369,8 +369,8 @@ public:
 
     /* Mirror images:
        Add the object *pObj to this-List after position p in *this.
-       AddBefore(nullptr,x) adds x to the end - equivalent to AddTail
-       Return the position of the new object, nullptr if it fails
+       AddBefore(NULL,x) adds x to the end - equivalent to AddTail
+       Return the position of the new object, NULL if it fails
        Existing POSITIONs in *this are undisturbed, including p.
     */
     protected:
@@ -378,7 +378,7 @@ public:
     public:
 
     /* Add the list *pList to *this before position p in *this
-       AddAfter(nullptr,x) adds x to the start - equivalent to AddHead
+       AddAfter(NULL,x) adds x to the start - equivalent to AddHead
        Return TRUE if it all worked, FALSE if it didn't.
        If it fails, some of the objects may be added
        Existing POSITIONs in *this are undisturbed, including p.
@@ -387,7 +387,7 @@ public:
 
 
     /* Note that AddAfter(p,x) is equivalent to AddBefore(Next(p),x)
-       even in cases where p is nullptr or Next(p) is nullptr.
+       even in cases where p is NULL or Next(p) is NULL.
        Similarly for mirror images etc.
        This may make it easier to argue about programs.
     */
@@ -416,10 +416,10 @@ public:
        you go, the Tail/Tail variant gives the most natural result.
        If you are processing in reverse order, Head/Head is best.
 
-       By using nullptr positions and empty lists judiciously either
+       By using NULL positions and empty lists judiciously either
        of the other two can be built up in two operations.
 
-       The definition of nullptr (see Next/Prev etc) means that
+       The definition of NULL (see Next/Prev etc) means that
        degenerate cases include
           "move all elements to new list"
           "Split a list into two lists"
@@ -439,8 +439,8 @@ public:
        e.g.
           foo->MoveToTail(foo->GetHeadPosition(), bar);
               moves one element from the head of foo to the tail of bar
-          foo->MoveToTail(nullptr, bar);
-              is a no-op, returns nullptr
+          foo->MoveToTail(NULL, bar);
+              is a no-op, returns NULL
           foo->MoveToTail(foo->GetTailPosition, bar);
               concatenates foo onto the end of bar and empties foo.
 
@@ -458,8 +458,8 @@ public:
        e.g.
           foo->MoveToHead(foo->GetTailPosition(), bar);
               moves one element from the tail of foo to the head of bar
-          foo->MoveToHead(nullptr, bar);
-              is a no-op, returns nullptr
+          foo->MoveToHead(NULL, bar);
+              is a no-op, returns NULL
           foo->MoveToHead(foo->GetHeadPosition, bar);
               concatenates foo onto the start of bar and empties foo.
     */
@@ -474,7 +474,7 @@ public:
     /* set cursor to the position of each element of list in turn  */
     #define TRAVERSELIST(list, cursor)               \
     for ( cursor = (list).GetHeadPosition()           \
-        ; cursor!=nullptr                               \
+        ; cursor!=NULL                               \
         ; cursor = (list).Next(cursor)                \
         )
 
@@ -484,7 +484,7 @@ public:
     */
     #define REVERSETRAVERSELIST(list, cursor)        \
     for ( cursor = (list).GetTailPosition()           \
-        ; cursor!=nullptr                               \
+        ; cursor!=NULL                               \
         ; cursor = (list).Prev(cursor)                \
         )
 

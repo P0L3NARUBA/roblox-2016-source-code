@@ -34,7 +34,7 @@ Team::~Team()
 
 bool Team::askSetParent(const Instance* parent) const 
 {
-	return Instance::fastDynamicCast<Teams>(parent)!=nullptr;
+	return Instance::fastDynamicCast<Teams>(parent)!=NULL;
 }
 
 int Team::getScore() const 

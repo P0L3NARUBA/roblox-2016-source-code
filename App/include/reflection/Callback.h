@@ -347,7 +347,7 @@ namespace RBX
 				Function Class::*member;
 				OnChanged onChanged;
 			public:
-				Setter(Function Class::*member, OnChanged onChanged = nullptr):member(member),onChanged(onChanged) {}
+				Setter(Function Class::*member, OnChanged onChanged = NULL):member(member),onChanged(onChanged) {}
 
 				virtual void setCallback(DescribedBase* object, const Function& value) const
 				{
@@ -457,7 +457,7 @@ namespace RBX
 			BoundAsyncCallbackDesc(const char* name, Function Class::*member, Security::Permissions security = Security::None, Descriptor::Attributes attributes = Descriptor::Attributes())
 				: AsyncCallbackDescriptor(Class::classDescriptor(), name, attributes, security)
                 , member(member)
-                , onChanged(nullptr)
+                , onChanged(NULL)
 			{
 				declareSignature();
 			}
@@ -511,7 +511,7 @@ namespace RBX
 			BoundAsyncCallbackDesc(const char* name, Function Class::*member, const char* arg1name, Security::Permissions security = Security::None, Descriptor::Attributes attributes = Descriptor::Attributes())
 				: AsyncCallbackDescriptor(Class::classDescriptor(), name, attributes, security)
                 , member(member)
-                , onChanged(nullptr)
+                , onChanged(NULL)
 			{
 				declareSignature(arg1name);
 			}
@@ -569,7 +569,7 @@ namespace RBX
 			BoundAsyncCallbackDesc(const char* name, Function Class::*member, const char* arg1name, const char* arg2name, Security::Permissions security = Security::None, Descriptor::Attributes attributes = Descriptor::Attributes())
 				: AsyncCallbackDescriptor(Class::classDescriptor(), name, attributes, security)
                 , member(member)
-                , onChanged(nullptr)
+                , onChanged(NULL)
 			{
 				declareSignature(arg1name, arg2name);
 			}

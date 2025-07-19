@@ -208,7 +208,7 @@ SDL_SoftStretch(SDL_Surface * src, const SDL_Rect * srcrect,
     int pos, inc;
     int dst_maxrow;
     int src_row, dst_row;
-    Uint8 *srcp = nullptr;
+    Uint8 *srcp = NULL;
     Uint8 *dstp;
     SDL_Rect full_src;
     SDL_Rect full_dst;

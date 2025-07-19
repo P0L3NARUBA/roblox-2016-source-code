@@ -365,7 +365,7 @@
  * A "png_get_copyright" function is available, for convenient use in "about"
  * boxes and the like:
  *
- * printf("%s",png_get_copyright(nullptr));
+ * printf("%s",png_get_copyright(NULL));
  *
  * Also, the PNG logo (in PNG format, of course) is supplied in the
  * files "pngbar.png" and "pngbar.jpg (88x31) and "pngnow.png" (98x31).
@@ -539,37 +539,37 @@ extern "C" {
  */
 
 #ifndef PNG_NO_TYPECAST_NULL
-#define int_p_NULL                (int *)nullptr
-#define png_bytep_NULL            (png_bytep)nullptr
-#define png_bytepp_NULL           (png_bytepp)nullptr
-#define png_doublep_NULL          (png_doublep)nullptr
-#define png_error_ptr_NULL        (png_error_ptr)nullptr
-#define png_flush_ptr_NULL        (png_flush_ptr)nullptr
-#define png_free_ptr_NULL         (png_free_ptr)nullptr
-#define png_infopp_NULL           (png_infopp)nullptr
-#define png_malloc_ptr_NULL       (png_malloc_ptr)nullptr
-#define png_read_status_ptr_NULL  (png_read_status_ptr)nullptr
-#define png_rw_ptr_NULL           (png_rw_ptr)nullptr
-#define png_structp_NULL          (png_structp)nullptr
-#define png_uint_16p_NULL         (png_uint_16p)nullptr
-#define png_voidp_NULL            (png_voidp)nullptr
-#define png_write_status_ptr_NULL (png_write_status_ptr)nullptr
+#define int_p_NULL                (int *)NULL
+#define png_bytep_NULL            (png_bytep)NULL
+#define png_bytepp_NULL           (png_bytepp)NULL
+#define png_doublep_NULL          (png_doublep)NULL
+#define png_error_ptr_NULL        (png_error_ptr)NULL
+#define png_flush_ptr_NULL        (png_flush_ptr)NULL
+#define png_free_ptr_NULL         (png_free_ptr)NULL
+#define png_infopp_NULL           (png_infopp)NULL
+#define png_malloc_ptr_NULL       (png_malloc_ptr)NULL
+#define png_read_status_ptr_NULL  (png_read_status_ptr)NULL
+#define png_rw_ptr_NULL           (png_rw_ptr)NULL
+#define png_structp_NULL          (png_structp)NULL
+#define png_uint_16p_NULL         (png_uint_16p)NULL
+#define png_voidp_NULL            (png_voidp)NULL
+#define png_write_status_ptr_NULL (png_write_status_ptr)NULL
 #else
-#define int_p_NULL                nullptr
-#define png_bytep_NULL            nullptr
-#define png_bytepp_NULL           nullptr
-#define png_doublep_NULL          nullptr
-#define png_error_ptr_NULL        nullptr
-#define png_flush_ptr_NULL        nullptr
-#define png_free_ptr_NULL         nullptr
-#define png_infopp_NULL           nullptr
-#define png_malloc_ptr_NULL       nullptr
-#define png_read_status_ptr_NULL  nullptr
-#define png_rw_ptr_NULL           nullptr
-#define png_structp_NULL          nullptr
-#define png_uint_16p_NULL         nullptr
-#define png_voidp_NULL            nullptr
-#define png_write_status_ptr_NULL nullptr
+#define int_p_NULL                NULL
+#define png_bytep_NULL            NULL
+#define png_bytepp_NULL           NULL
+#define png_doublep_NULL          NULL
+#define png_error_ptr_NULL        NULL
+#define png_flush_ptr_NULL        NULL
+#define png_free_ptr_NULL         NULL
+#define png_infopp_NULL           NULL
+#define png_malloc_ptr_NULL       NULL
+#define png_read_status_ptr_NULL  NULL
+#define png_rw_ptr_NULL           NULL
+#define png_structp_NULL          NULL
+#define png_uint_16p_NULL         NULL
+#define png_voidp_NULL            NULL
+#define png_write_status_ptr_NULL NULL
 #endif
 
 /* Variables declared in png.c - only it needs to define PNG_NO_EXTERN */
@@ -581,7 +581,7 @@ extern "C" {
 PNG_EXPORT_VAR (PNG_CONST char) png_libpng_ver[18];
   /* Need room for 99.99.99beta99z */
 #else
-#define png_libpng_ver png_get_header_ver(nullptr)
+#define png_libpng_ver png_get_header_ver(NULL)
 #endif
 
 #ifdef PNG_USE_GLOBAL_ARRAYS
@@ -669,9 +669,9 @@ typedef png_sPLT_t FAR * FAR * png_sPLT_tpp;
 /* png_text holds the contents of a text/ztxt/itxt chunk in a PNG file,
  * and whether that contents is compressed or not.  The "key" field
  * points to a regular zero-terminated C string.  The "text", "lang", and
- * "lang_key" fields can be regular C strings, empty strings, or nullptr pointers.
+ * "lang_key" fields can be regular C strings, empty strings, or NULL pointers.
  * However, the * structure returned by png_get_text() will always contain
- * regular zero-terminated C strings (possibly empty), never nullptr pointers,
+ * regular zero-terminated C strings (possibly empty), never NULL pointers,
  * so they can be safely used in printf() and other string-handling functions.
  */
 typedef struct png_text_struct
@@ -683,14 +683,14 @@ typedef struct png_text_struct
                               2: iTXt, deflate  */
    png_charp key;          /* keyword, 1-79 character description of "text" */
    png_charp text;         /* comment, may be an empty string (ie "")
-                              or a nullptr pointer */
+                              or a NULL pointer */
    png_size_t text_length; /* length of the text string */
 #ifdef PNG_iTXt_SUPPORTED
    png_size_t itxt_length; /* length of the itxt string */
    png_charp lang;         /* language code, 0-79 characters
-                              or a nullptr pointer */
+                              or a NULL pointer */
    png_charp lang_key;     /* keyword translated UTF-8 string, 0 or more
-                              chars or a nullptr pointer */
+                              chars or a NULL pointer */
 #endif
 } png_text;
 typedef png_text FAR * png_textp;
@@ -1929,7 +1929,7 @@ extern PNG_EXPORT(void,png_set_filter) PNGARG((png_structp png_ptr, int method,
  * filter is that many times as likely to be the same as the "num_weights"
  * previous filters.  This is cumulative for each previous row with a weight.
  * There needs to be "num_weights" values in "filter_weights", or it can be
- * nullptr if the weights aren't being specified.  Weights have no influence on
+ * NULL if the weights aren't being specified.  Weights have no influence on
  * the selection of the first row filter.  Well chosen weights can (in theory)
  * improve the compression for a given image.
  *
@@ -1937,7 +1937,7 @@ extern PNG_EXPORT(void,png_set_filter) PNGARG((png_structp png_ptr, int method,
  * filter type.  Higher costs indicate more decoding expense, and are
  * therefore less likely to be selected over a filter with lower computational
  * costs.  There needs to be a value in "filter_costs" for each valid filter
- * type (given by PNG_FILTER_VALUE_LAST), or it can be nullptr if you aren't
+ * type (given by PNG_FILTER_VALUE_LAST), or it can be NULL if you aren't
  * setting the costs.  Costs try to improve the speed of decompression without
  * unduly increasing the compressed image size.
  *
@@ -2003,7 +2003,7 @@ extern PNG_EXPORT(void,png_init_io) PNGARG((png_structp png_ptr, png_FILE_p fp))
  * supplied functions.  If no messages are to be printed you must still
  * write and use replacement functions. The replacement error_fn should
  * still do a longjmp to the last setjmp location if you are using this
- * method of error handling.  If error_fn or warning_fn is nullptr, the
+ * method of error handling.  If error_fn or warning_fn is NULL, the
  * default function will be used.
  */
 
@@ -2014,11 +2014,11 @@ extern PNG_EXPORT(void,png_set_error_fn) PNGARG((png_structp png_ptr,
 extern PNG_EXPORT(png_voidp,png_get_error_ptr) PNGARG((png_structp png_ptr));
 
 /* Replace the default data output functions with a user supplied one(s).
- * If buffered output is not used, then output_flush_fn can be set to nullptr.
+ * If buffered output is not used, then output_flush_fn can be set to NULL.
  * If PNG_WRITE_FLUSH_SUPPORTED is not defined at libpng compile time
- * output_flush_fn will be ignored (and thus can be nullptr).
- * It is probably a mistake to use nullptr for output_flush_fn if
- * write_data_fn is not also nullptr unless you have built libpng with
+ * output_flush_fn will be ignored (and thus can be NULL).
+ * It is probably a mistake to use NULL for output_flush_fn if
+ * write_data_fn is not also NULL unless you have built libpng with
  * PNG_WRITE_FLUSH_SUPPORTED undefined, because in this case libpng's
  * default flush function, which uses the standard *FILE structure, will
  * be used.
@@ -2465,10 +2465,10 @@ extern PNG_EXPORT(png_uint_32,png_get_text) PNGARG((png_structp png_ptr,
 
 /*
  *  Note while png_set_text() will accept a structure whose text,
- *  language, and  translated keywords are nullptr pointers, the structure
+ *  language, and  translated keywords are NULL pointers, the structure
  *  returned by png_get_text will always contain regular
  *  zero-terminated C strings.  They might be empty strings but
- *  they will never be nullptr pointers.
+ *  they will never be NULL pointers.
  */
 
 #if defined(PNG_TEXT_SUPPORTED)

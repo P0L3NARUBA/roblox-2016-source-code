@@ -80,14 +80,14 @@ Application::Application()
 	: logManager("Roblox", ".Client.dmp", ".Client.crashevent")
 	, crashReportEnabled(true)
 	, hideChat(false)
-	, mapFileForWnd(nullptr)
-	, bufForWnd(nullptr)
+	, mapFileForWnd(NULL)
+	, bufForWnd(NULL)
 	, stopLogsCleanup(0)
 	, clenupFinishedEvent(FALSE, FALSE)
-	, processLocal_stopPreventMultipleJobsThread(nullptr)
-	, marshaller(nullptr)
+	, processLocal_stopPreventMultipleJobsThread(NULL)
+	, marshaller(NULL)
 	, spoofMD5(false)
-	, processLocal_stopWaitForVideoPrerollThread(nullptr)
+	, processLocal_stopWaitForVideoPrerollThread(NULL)
 	, launchMode(SharedLauncher::Play)
 {
 	enteredShutdown = 0;
@@ -105,7 +105,7 @@ Application::~Application()
 		UnmapViewOfFile(bufForWnd);
 	}
 
-	if (mapFileForWnd != nullptr)
+	if (mapFileForWnd != NULL)
 	{
 		CloseHandle(mapFileForWnd);
 	}
@@ -119,8 +119,8 @@ void Application::logsCleanUpHelper()
 	VistaAPIs apis;
 	if (apis.isVistaOrBetter())
 	{
-		LPWSTR lppwstrPath = nullptr;
-		if (apis.SHGetKnownFolderPath(FOLDERID_LocalAppDataLow, KF_FLAG_CREATE, nullptr, &lppwstrPath) != E_NOTIMPL)
+		LPWSTR lppwstrPath = NULL;
+		if (apis.SHGetKnownFolderPath(FOLDERID_LocalAppDataLow, KF_FLAG_CREATE, NULL, &lppwstrPath) != E_NOTIMPL)
 		{
 			std::wstring lowPath = lppwstrPath;
 			lowPath += L"\\RbxLogs\\";
@@ -438,7 +438,7 @@ void Application::OnHelp()
 	if (!DFFlag::DontOpenWikiOnClient) 
 	{
 		ShellExecute(mainWindow, "open", "rundll32.exe", 
-			"url.dll,FileProtocolHandler http://wiki.roblox.com/wiki", nullptr, SW_SHOWDEFAULT);
+			"url.dll,FileProtocolHandler http://wiki.roblox.com/wiki", NULL, SW_SHOWDEFAULT);
 	}
 }
 
@@ -476,8 +476,8 @@ void Application::shareHwnd(HWND hWnd)
 {
 	const char *mainWndStorageName = "RBXMAINWND-4DAAC10B-9C9A-4471-9218-07310329FD0D";
 
-	mapFileForWnd = CreateFileMapping(INVALID_HANDLE_VALUE, nullptr, PAGE_READWRITE, 0, sizeof(hWnd), mainWndStorageName);
-	if (mapFileForWnd != nullptr) 
+	mapFileForWnd = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, sizeof(hWnd), mainWndStorageName);
+	if (mapFileForWnd != NULL) 
 	{
 		FASTLOG1(FLog::RobloxWndInit, "CMainFrame::ShareHwnd wnd=%d", hWnd);
 		bufForWnd = (LPTSTR)MapViewOfFile(mapFileForWnd, FILE_MAP_ALL_ACCESS, 0, 0, sizeof(hWnd));
@@ -669,7 +669,7 @@ bool Application::Initialize(HWND hWnd, HINSTANCE hInstance)
 	shareHwnd(hWnd);
 
 	// Ensure a single instance of the WindowsPlayer is running
-	processLocal_stopPreventMultipleJobsThread = CreateEvent(nullptr, false, false, nullptr);
+	processLocal_stopPreventMultipleJobsThread = CreateEvent(NULL, false, false, NULL);
 	singleRunningInstance.reset(new boost::thread(boost::bind(&Application::waitForNewPlayerProcess, this, hWnd)));
 
 	profanityFilter = ProfanityFilter::getInstance();
@@ -760,7 +760,7 @@ bool Application::Initialize(HWND hWnd, HINSTANCE hInstance)
 	}
 
     // Wait to display the window for video preroll
-    processLocal_stopWaitForVideoPrerollThread = CreateEvent(nullptr, false, false, nullptr);
+    processLocal_stopWaitForVideoPrerollThread = CreateEvent(NULL, false, false, NULL);
 
     if (ClientAppSettings().singleton().GetValueAllowVideoPreRoll() && !waitEventName.empty())
         showWindowAfterEvent.reset(new boost::thread(boost::bind(&Application::waitForShowWindow, this, ClientAppSettings().singleton().GetValueVideoPreRollWaitTimeSeconds() * 1000)));
@@ -824,7 +824,7 @@ bool Application::LoadAppSettings(HINSTANCE hInstance)
 		// Don't bother reading from registry if value to set to 0 in AppSettings.
 		const XmlElement* xmlSilentCrashReport = root->findFirstChildByTag(tagSilentCrashReport);
 		int valSilentCrashReport = 1;
-		if (xmlSilentCrashReport != nullptr) {
+		if (xmlSilentCrashReport != NULL) {
 			xmlSilentCrashReport->getValue(valSilentCrashReport);
 		}
 		if (0 != valSilentCrashReport) {
@@ -858,7 +858,7 @@ bool Application::LoadAppSettings(HINSTANCE hInstance)
 
 		// Hide chat window
 		const XmlElement* xmlHideChatWindow = root->findFirstChildByTag(tagHideChatWindow);
-		if (xmlHideChatWindow != nullptr) {
+		if (xmlHideChatWindow != NULL) {
 			int hide;
 			if (xmlHideChatWindow->getValue(hide)) {
 				hideChat = (hide != 0) ? true : false;
@@ -985,7 +985,7 @@ bool Application::ParseArguments(const char* argv)
 		{
 			std::basic_stringstream<char> options;
 			desc.print(options);
-			MessageBoxA(nullptr, options.str().c_str(), "Roblox", MB_OK);
+			MessageBoxA(NULL, options.str().c_str(), "Roblox", MB_OK);
 			return false;
 		}
 
@@ -1022,7 +1022,7 @@ bool Application::ParseArguments(const char* argv)
 			vi.Load(_AtlBaseModule.m_hInst);
 			std::string versionNumber = vi.GetFileVersionAsDotString();
 			LogManager::ReportEvent(EVENTLOG_INFORMATION_TYPE, versionNumber.c_str());
-			MessageBoxA(nullptr, versionNumber.c_str(), "Version", MB_OK);
+			MessageBoxA(NULL, versionNumber.c_str(), "Version", MB_OK);
 			versionNumber.append("\n");
 			OutputDebugString( versionNumber.c_str() );
 			return false;
@@ -1155,7 +1155,7 @@ void Application::uploadCrashData(bool userRequested)
 			{
 				const int MAX_LOADSTRING = 400;
 				TCHAR message[MAX_LOADSTRING];
-				LoadString(GetModuleHandle(nullptr), IDS_ERROR_REPORT_PROMPT, message, MAX_LOADSTRING);
+				LoadString(GetModuleHandle(NULL), IDS_ERROR_REPORT_PROMPT, message, MAX_LOADSTRING);
 				if (MessageBoxA(mainWindow, message, "ROBLOX", MB_YESNO)==IDYES)
 					dumpErrorUploader->Upload(dmpHandlerUrl);
 				else
@@ -1175,7 +1175,7 @@ void Application::handleError(const std::exception& e)
 	OutputDebugString(message.c_str());
 	LogManager::ReportException(e);
 	if (!RobloxCrashReporter::silent) {
-		MessageBoxA(nullptr, e.what(), "Roblox", MB_OK | MB_ICONSTOP);
+		MessageBoxA(NULL, e.what(), "Roblox", MB_OK | MB_ICONSTOP);
 	}
 }
 
@@ -1185,7 +1185,7 @@ void Application::waitForNewPlayerProcess(HWND hWnd)
 	static const char kPreventMultipleRobloxPlayersMutexName[] = "ROBLOX_singletonMutex";
 
 	// Create (or open if already created) named event
-	HANDLE event = CreateEventA(nullptr, FALSE, FALSE, kPreventMultipleRobloxPlayersEventName);
+	HANDLE event = CreateEventA(NULL, FALSE, FALSE, kPreventMultipleRobloxPlayersEventName);
 
 	// If we cannot create or open the event for some reason we should still run
 	// the process
@@ -1198,8 +1198,8 @@ void Application::waitForNewPlayerProcess(HWND hWnd)
 
 	// Create a mutex to assure we don't have multiple concurrent waits on the
 	// event
-	HANDLE mutex = CreateMutexA(nullptr, TRUE, kPreventMultipleRobloxPlayersMutexName);
-	if (nullptr == mutex) {
+	HANDLE mutex = CreateMutexA(NULL, TRUE, kPreventMultipleRobloxPlayersMutexName);
+	if (NULL == mutex) {
 		LogManager::ReportEvent(EVENTLOG_ERROR_TYPE, 
 			RBX::format("Failure creating named (preventing multiple simultaneous processes), "
 			"GetLastError returned %d", GetLastError()).c_str());
@@ -1245,7 +1245,7 @@ void Application::waitForShowWindow(int delay)
 	if (delay != 0) {
 		HANDLE waitHandle = OpenEventA(SYNCHRONIZE, FALSE, waitEventName.c_str());
 
-		if (waitHandle != nullptr) {
+		if (waitHandle != NULL) {
 			LogManager::ReportEvent(EVENTLOG_INFORMATION_TYPE, 
 				RBX::format("Waiting for event before showing window: %s", waitEventName.c_str()).c_str());
 
@@ -1542,7 +1542,7 @@ void Application::shutdownVerbs()
 
 void Application::doOpenUrl(const std::string url)
 {
-	if(webView && webView->GetWindow(nullptr))
+	if(webView && webView->GetWindow(NULL))
 		return;
 
 	webView.reset( new RbxWebView(url, currentDocument->getGame()) );
@@ -1563,7 +1563,7 @@ void Application::doCloseBrowser()
 {
 	if(!webView)
 		return;
-	if(!webView->GetWindow(nullptr))
+	if(!webView->GetWindow(NULL))
 		return;
 
 	webView->closeDialog();

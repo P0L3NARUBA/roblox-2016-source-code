@@ -180,7 +180,7 @@ void BaseListWidget::removeAction(QAction* action)
 ActionItem* BaseListWidget::getItem(QAction* action)
 {
 	int numChild = 	topLevelItemCount(), currentChild = 0;
-	ActionItem *pCurrentItem = nullptr;
+	ActionItem *pCurrentItem = NULL;
 	while (currentChild < numChild)
 	{		
 		pCurrentItem = static_cast<ActionItem*>(topLevelItem(currentChild++));
@@ -188,7 +188,7 @@ ActionItem* BaseListWidget::getItem(QAction* action)
 			return pCurrentItem;
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 void BaseListWidget::drawRow(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -214,7 +214,7 @@ bool BaseListWidget::isValid(QAction* action)
 bool BaseListWidget::isActionAvailable(QAction* pAction)
 {
 	int numChild = 	topLevelItemCount(), currentChild = 0;
-	ActionItem* pCurrentItem = nullptr;
+	ActionItem* pCurrentItem = NULL;
 	while (currentChild < numChild)
 	{		
 		pCurrentItem = static_cast<ActionItem*>(topLevelItem(currentChild++));
@@ -226,7 +226,7 @@ bool BaseListWidget::isActionAvailable(QAction* pAction)
 
 void BaseListWidget::selectItem(int row)
 {
-	QTreeWidgetItem* itemToSelect = nullptr;
+	QTreeWidgetItem* itemToSelect = NULL;
 	while (row > 0 && row < topLevelItemCount())
 	{
 		itemToSelect = topLevelItem(row++);
@@ -245,7 +245,7 @@ void BaseListWidget::setFilter(const QString& filter, int column)
 
 	QString text;
 	int numChild = 	topLevelItemCount(), currentChild = 0;
-	ActionItem *pCurrentItem = nullptr;
+	ActionItem *pCurrentItem = NULL;
 	while (currentChild < numChild)
 	{
 		pCurrentItem = static_cast<ActionItem*>(topLevelItem(currentChild++));
@@ -264,7 +264,7 @@ AllActionsListWidget::AllActionsListWidget(QWidget* parent)
 {
 	setColumnCount(2);
 
-	QAction* pAction = nullptr;
+	QAction* pAction = NULL;
 	QVariant propVal;
 
 	QList<QAction*> mainWindowActions = UpdateUIManager::Instance().getMainWindow().actions();
@@ -362,7 +362,7 @@ void QuickAccessActionsListWidget::accept()
 {
 	RobloxQuickAccessConfig::QuickAccessActionCollection quickAccessCollection;
 	int numChild = 	topLevelItemCount(), currentChild = 0;
-	ActionItem* pCurrentItem = nullptr;
+	ActionItem* pCurrentItem = NULL;
 
 	// get list of current actions added in quick access list
 	while (currentChild < numChild)
@@ -630,7 +630,7 @@ RobloxQuickAccessConfig::RobloxQuickAccessConfig()
 : m_pMainWindow(&UpdateUIManager::Instance().getMainWindow())
 , m_pluginHostInitialized(false)
 {
-	m_pQuickAccessBar = m_pMainWindow->ribbonBar() ? m_pMainWindow->ribbonBar()->getQuickAccessBar() : nullptr;
+	m_pQuickAccessBar = m_pMainWindow->ribbonBar() ? m_pMainWindow->ribbonBar()->getQuickAccessBar() : NULL;
 	connect(m_pQuickAccessBar, SIGNAL(showCustomizeMenu(QMenu*)), this, SLOT(updateQuickAccessMenu(QMenu*)));
 
 	QActionGroup* pActionGroup = m_pQuickAccessBar->findChild<QActionGroup*>();
@@ -806,7 +806,7 @@ void RobloxQuickAccessConfig::saveQuickAccessConfig()
 	settings.beginWriteArray(QuickAccessConfigKey);
 
 	int index = 0;
-	QAction* action = nullptr;
+	QAction* action = NULL;
 	QuickAccessActionCollection::const_iterator iter = m_currentQuickAccessBarActions.constBegin();
 	while (iter != m_currentQuickAccessBarActions.constEnd()) 
 	{
@@ -835,7 +835,7 @@ void RobloxQuickAccessConfig::addToQuickAccessBar(QAction* actionToAdd, bool vis
 	if (!actionToAdd || !m_pQuickAccessBar)
 		return;
 
-	QAction* pActionBefore = nullptr;
+	QAction* pActionBefore = NULL;
 	// check if we can update already existing proxy action or else add data
 	if (!updateProxyAction(actionToAdd))
 	{
@@ -892,11 +892,11 @@ QAction* RobloxQuickAccessConfig::mapProxyAction(QAction* action, bool force)
 	// proxy actions are used by PluginAction only
 	PluginAction* pluginAction = dynamic_cast<PluginAction*>(action);
 	if (!pluginAction && (!FFlag::StudioSeparateActionByActivationMethod || !force))
-		return nullptr;
+		return NULL;
 
 	QuickAccessBarProxyAction* pProxyAction = dynamic_cast<QuickAccessBarProxyAction*>(getProxyAction(action));
 	if (!pProxyAction && !force)
-		return nullptr;
+		return NULL;
 
 	if (!pProxyAction)
 	{
@@ -914,9 +914,9 @@ QAction* RobloxQuickAccessConfig::resetProxyAction(QAction* action)
 {
 	QuickAccessBarProxyAction* pProxyAction = dynamic_cast<QuickAccessBarProxyAction*>(getProxyAction(action));
 	if (!pProxyAction)
-		return nullptr;
+		return NULL;
 
-	pProxyAction->setSourceAction(nullptr);
+	pProxyAction->setSourceAction(NULL);
 	return pProxyAction;
 }
 
@@ -978,7 +978,7 @@ QAction* RobloxQuickAccessConfig::getProxyAction(QAction* action)
 			return proxyActions[ii];
 	}
 
-	return nullptr;
+	return NULL;
 }
 
  bool RobloxQuickAccessConfig::ActionData::isProxyAction() const
@@ -989,7 +989,7 @@ QAction* RobloxQuickAccessConfig::getProxyAction(QAction* action)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 QuickAccessBarProxyAction::QuickAccessBarProxyAction(QObject* parent)
 : QAction(parent)
-, m_pCurrentSourceAction(nullptr)
+, m_pCurrentSourceAction(NULL)
 {
 	onChanged();
 }
@@ -1077,9 +1077,9 @@ void QuickAccessBarProxyAction::onSourceActionDestroyed(QObject* object)
 
 	if (currentDestroyed)
 	{
-		m_pCurrentSourceAction = nullptr;
+		m_pCurrentSourceAction = NULL;
 
-		QAction* sourceAction = nullptr;
+		QAction* sourceAction = NULL;
 		if (!m_pSourceActions.isEmpty())
 		{
 			sourceAction = m_pSourceActions.pop();

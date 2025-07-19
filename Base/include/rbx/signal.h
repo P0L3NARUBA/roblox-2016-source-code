@@ -206,7 +206,7 @@ namespace rbx
 
 				virtual bool connected() const
 				{
-					return sig != nullptr;
+					return sig != NULL;
 				}
 			public:
 				SAFE_HEAP_STATIC(boost::mutex, mutex);
@@ -221,7 +221,7 @@ namespace rbx
 					if (sig)
 					{
 						signal *s = sig;
-						sig = nullptr;
+						sig = NULL;
 						s->remove(this);
 					}
 				}
@@ -261,11 +261,11 @@ namespace rbx
 				{
 					// Find "prev". This is O(n)
 					slot* prev = head.get();
-					// TODO: Can we just assert that prev!=nullptr?
+					// TODO: Can we just assert that prev!=NULL?
 					while (prev && prev->next != item)
 						prev = prev->next.get();
 
-					// In theory prev should never be nullptr, because for it to be nullptr
+					// In theory prev should never be NULL, because for it to be NULL
 					// the slot would be destroyed, in which case remove() can't be
 					// called. Let's play it safe and null-check anyway.
 					RBX_SIGNALS_ASSERT(!prev || prev->next.get() == item);
@@ -320,7 +320,7 @@ namespace rbx
 						int count = chunkSize;
 						for (node = head; node; node = node->next)
 						{
-							node->sig = nullptr;
+							node->sig = NULL;
 							if (count-- == 0)
 							{
 								// After 10 iterations we need to break out and collect

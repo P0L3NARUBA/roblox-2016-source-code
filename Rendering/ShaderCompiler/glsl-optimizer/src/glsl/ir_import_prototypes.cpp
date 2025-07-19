@@ -50,12 +50,12 @@ public:
       this->mem_ctx = mem_ctx;
       this->list = list;
       this->symbols = symbols;
-      this->function = nullptr;
+      this->function = NULL;
    }
 
    virtual ir_visitor_status visit_enter(ir_function *ir)
    {
-      assert(this->function == nullptr);
+      assert(this->function == NULL);
 
       this->function = this->symbols->get_function(ir->name);
       if (!this->function) {
@@ -73,17 +73,17 @@ public:
    virtual ir_visitor_status visit_leave(ir_function *ir)
    {
       (void) ir;
-      assert(this->function != nullptr);
+      assert(this->function != NULL);
 
-      this->function = nullptr;
+      this->function = NULL;
       return visit_continue;
    }
 
    ir_visitor_status visit_enter(ir_function_signature *ir)
    {
-      assert(this->function != nullptr);
+      assert(this->function != NULL);
 
-      ir_function_signature *copy = ir->clone_prototype(mem_ctx, nullptr);
+      ir_function_signature *copy = ir->clone_prototype(mem_ctx, NULL);
 
       this->function->add_signature(copy);
 

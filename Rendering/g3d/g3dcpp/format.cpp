@@ -57,7 +57,7 @@ std::string vformat(const char *fmt, va_list argPtr) {
     if (actualSize > bufSize) {
 
         // Now use the heap.
-        char* heapBuffer = nullptr;
+        char* heapBuffer = NULL;
 
         if (actualSize < maxSize) {
 

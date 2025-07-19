@@ -61,7 +61,7 @@ static void \
 SDL_FillRect##bpp##SSE(Uint8 *pixels, int pitch, Uint32 color, int w, int h) \
 { \
     int i, n; \
-    Uint8 *p = nullptr; \
+    Uint8 *p = NULL; \
  \
     SSE_BEGIN; \
  \
@@ -134,7 +134,7 @@ static void
 SDL_FillRect1(Uint8 * pixels, int pitch, Uint32 color, int w, int h)
 {
     int n;
-    Uint8 *p = nullptr;
+    Uint8 *p = NULL;
     
     while (h--) {
         n = w;
@@ -173,7 +173,7 @@ static void
 SDL_FillRect2(Uint8 * pixels, int pitch, Uint32 color, int w, int h)
 {
     int n;
-    Uint16 *p = nullptr;
+    Uint16 *p = NULL;
     
     while (h--) {
         n = w;
@@ -206,7 +206,7 @@ SDL_FillRect3(Uint8 * pixels, int pitch, Uint32 color, int w, int h)
     Uint8 b3 = (Uint8) (color & 0xFF);
 #endif
     int n;
-    Uint8 *p = nullptr;
+    Uint8 *p = NULL;
 
     while (h--) {
         n = w;
@@ -240,7 +240,7 @@ SDL_FillRect(SDL_Surface * dst, const SDL_Rect * rect, Uint32 color)
     Uint8 *pixels;
 
     if (!dst) {
-        return SDL_SetError("Passed nullptr destination surface");
+        return SDL_SetError("Passed NULL destination surface");
     }
 
     /* This function doesn't work on surfaces < 8 bpp */
@@ -248,7 +248,7 @@ SDL_FillRect(SDL_Surface * dst, const SDL_Rect * rect, Uint32 color)
         return SDL_SetError("SDL_FillRect(): Unsupported surface format");
     }
 
-    /* If 'rect' == nullptr, then fill the whole surface */
+    /* If 'rect' == NULL, then fill the whole surface */
     if (rect) {
         /* Perform clipping */
         if (!SDL_IntersectRect(rect, &dst->clip_rect, &clipped)) {
@@ -331,7 +331,7 @@ SDL_FillRects(SDL_Surface * dst, const SDL_Rect * rects, int count,
     int status = 0;
 
     if (!rects) {
-        return SDL_SetError("SDL_FillRects() passed nullptr rects");
+        return SDL_SetError("SDL_FillRects() passed NULL rects");
     }
 
     for (i = 0; i < count; ++i) {

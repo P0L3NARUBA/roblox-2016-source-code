@@ -176,7 +176,7 @@ void GImage::flipRGBVertical(
     // Allocate a temp row so the operation
     // is still safe if in == out
     uint8* temp = (uint8*)System::malloc(width * 3);
-    alwaysAssertM(temp != nullptr, "Out of memory"); 
+    alwaysAssertM(temp != NULL, "Out of memory"); 
 
     int oneRow = width * 3;
     int N = height / 2;
@@ -204,7 +204,7 @@ void GImage::flipRGBAVertical(
     // Allocate a temp row so the operation
     // is still safe if in == out
     uint8* temp = (uint8*)System::malloc(width * 4);
-    alwaysAssertM(temp != nullptr, "Out of memory");
+    alwaysAssertM(temp != NULL, "Out of memory");
 
     int oneRow = width * 4;
 
@@ -258,7 +258,7 @@ void GImage::decode(
     debugAssert(m_width >= 0);
     debugAssert(m_height >= 0);
     debugAssert(m_channels >= 1 && m_channels <= 4);
-    debugAssert(m_byte != nullptr);
+    debugAssert(m_byte != NULL);
 }
 
 
@@ -408,7 +408,7 @@ GImage::Format GImage::resolveFormat(
     // character.
 
     // We can't look at the character if it is null.
-    debugAssert(data != nullptr);              
+    debugAssert(data != NULL);              
 
     if (dataLen > 8) {
         if (!png_sig_cmp((png_bytep)data, 0, 8)) {
@@ -467,7 +467,7 @@ GImage::GImage(
     Format              format,
     const MemoryManager::Ref& m) : 
     m_memMan(m),
-    m_byte(nullptr),
+    m_byte(NULL),
     m_channels(0),
     m_width(0),
     m_height(0) {
@@ -568,7 +568,7 @@ void GImage::flipVertical() {
 
 void GImage::rotate90CW(int numTimes) {
 
-    uint8* old = nullptr;
+    uint8* old = NULL;
     numTimes = iWrap(numTimes, 4);
     if (numTimes > 0) {
         old = (uint8*)m_memMan->alloc(m_width * m_height * m_channels);
@@ -602,7 +602,7 @@ void GImage::rotate90CW(int numTimes) {
 
 GImage::GImage(
     const GImage&        other,
-    const MemoryManager::Ref& m) : m_memMan(m), m_byte(nullptr) {
+    const MemoryManager::Ref& m) : m_memMan(m), m_byte(NULL) {
 
     _copy(other);
 }
@@ -617,7 +617,7 @@ void GImage::clear() {
     m_width = 0;
     m_height = 0;
     m_memMan->free(m_byte);
-    m_byte = nullptr;
+    m_byte = NULL;
 }
 
 
@@ -953,7 +953,7 @@ void GImage::convertToL8() {
         {            
             // Average
             Color3uint8* src = (Color3uint8*)m_byte;
-            m_byte = nullptr;
+            m_byte = NULL;
             resize(m_width, m_height, 1);
             for (int i = m_width * m_height - 1; i >= 0; --i) {
                 const Color3uint8   s = src[i];
@@ -968,7 +968,7 @@ void GImage::convertToL8() {
         {            
             // Average
             Color4uint8* src = (Color4uint8*)m_byte;
-            m_byte = nullptr;
+            m_byte = NULL;
             resize(m_width, m_height, 1);
             for (int i = m_width * m_height - 1; i >= 0; --i) {
                 const Color4uint8   s = src[i];
@@ -991,7 +991,7 @@ void GImage::convertToRGBA() {
         {            
             // Spread
             uint8* old = m_byte;
-            m_byte = nullptr;
+            m_byte = NULL;
             resize(m_width, m_height, 4);
             for (int i = m_width * m_height - 1; i >= 0; --i)
             {
@@ -1008,7 +1008,7 @@ void GImage::convertToRGBA() {
         {            
             // Spread
             uint8* old = m_byte;
-            m_byte = nullptr;
+            m_byte = NULL;
             resize(m_width, m_height, 4);
             for (int i = m_width * m_height - 1; i >= 0; --i) 
             {
@@ -1024,7 +1024,7 @@ void GImage::convertToRGBA() {
         {            
             // Add alpha
             Color3uint8* old = (Color3uint8*)m_byte;
-            m_byte = nullptr;
+            m_byte = NULL;
             resize(m_width, m_height, 4);
             for (int i = m_width * m_height - 1; i >= 0; --i)
             {
@@ -1055,7 +1055,7 @@ void GImage::convertToRGB() {
         {            
             // Spread
             uint8* old = m_byte;
-            m_byte = nullptr;
+            m_byte = NULL;
             resize(m_width, m_height, 3);
             for (int i = m_width * m_height - 1; i >= 0; --i) {
                 const uint8  s = old[i];
@@ -1073,7 +1073,7 @@ void GImage::convertToRGB() {
 		// Strip alpha
         {            
             Color4uint8* old = (Color4uint8*)m_byte;
-            m_byte = nullptr;
+            m_byte = NULL;
             resize(m_width, m_height, 3);
             for (int i = m_width * m_height - 1; i >= 0; --i) {
                 const Color4uint8   s = old[i];

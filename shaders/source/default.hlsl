@@ -8,8 +8,7 @@
 BasicMaterialVertexOutput DepthOnlyVS(InstancedBasicMaterialAppData IN) {
     BasicMaterialVertexOutput OUT;
 
-    OUT.Position = mul(float4(IN.Position.xyz, 1.0), ModelMatrixes[IN.InstanceID].Model);
-    OUT.Position = mul(OUT.Position, ViewProjection);
+    OUT.Position = mul(mul(ViewProjection[0], ModelMatrixes[IN.InstanceID].Model), float4(IN.Position.xyz, 1.0));
 
     return OUT;
 }
@@ -19,8 +18,7 @@ BasicMaterialVertexOutput BasicMaterialVS(InstancedBasicMaterialAppData IN) {
 
     float4x4 ModelMatrix = ModelMatrixes[IN.InstanceID].Model;
 
-    OUT.Position = mul(float4(IN.Position.xyz, 1.0), ModelMatrix);
-    OUT.Position = mul(OUT.Position, ViewProjection);
+    OUT.Position = mul(mul(ViewProjection[0], ModelMatrix), float4(IN.Position.xyz, 1.0));
 
     OUT.UV = IN.UV;
     OUT.Color = IN.Color;
@@ -35,8 +33,7 @@ MaterialVertexOutput MaterialVS(InstancedMaterialAppData IN) {
 
     float4x4 ModelMatrix = ModelMatrixes[IN.InstanceID].Model;
 
-    OUT.Position = mul(float4(IN.Position.xyz, 1.0), ModelMatrix);
-    OUT.Position = mul(OUT.Position, ViewProjection);
+    OUT.Position = mul(mul(ViewProjection[0], ModelMatrix), float4(IN.Position.xyz, 1.0));
 
     OUT.UV = IN.UV;
     OUT.Color = IN.Color;
@@ -58,7 +55,7 @@ void BlankPS(BasicMaterialVertexOutput IN) : SV_TARGET {
 }
 
 float4 DefaultPS(BasicMaterialVertexOutput IN) : SV_TARGET {
-    return float4(1.0, 0.0, 1.0, 1.0);
+    return float4(1.0, 0.0, 1.0, IN.Color.a);
 }
 
 /*void DefaultMaterialPS(VertexOutput IN, out float4 OUT : SV_TARGET) {

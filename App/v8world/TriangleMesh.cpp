@@ -49,7 +49,7 @@ KDTreeMeshWrapper::KDTreeMeshWrapper(const std::string& str)
 	}
 
     if (!vertices.empty() && !indices.empty())
-        tree.build(&vertices[0], nullptr, vertices.size(), &indices[0], indices.size() / 3);
+        tree.build(&vertices[0], NULL, vertices.size(), &indices[0], indices.size() / 3);
 }
 
 KDTreeMeshWrapper::~KDTreeMeshWrapper()

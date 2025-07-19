@@ -59,7 +59,7 @@ CURLcode Curl_initinfo(struct SessionHandle *data)
   info->timecond = FALSE;
 
   free(info->contenttype);
-  info->contenttype = nullptr;
+  info->contenttype = NULL;
 
   info->header_size = 0;
   info->request_size = 0;
@@ -166,7 +166,7 @@ static CURLcode getinfo_long(struct SessionHandle *data, CURLINFO info,
     *param_longp = data->info.numconnects;
     break;
   case CURLINFO_LASTSOCKET:
-    sockfd = Curl_getconnectinfo(data, nullptr);
+    sockfd = Curl_getconnectinfo(data, NULL);
 
     /* note: this is not a good conversion for systems with 64 bit sockets and
        32 bit longs */
@@ -287,11 +287,11 @@ static CURLcode getinfo_slist(struct SessionHandle *data, CURLINFO info,
       struct curl_tlssessioninfo *tsi = &data->tsi;
       struct connectdata *conn = data->easy_conn;
       unsigned int sockindex = 0;
-      void *internals = nullptr;
+      void *internals = NULL;
 
       *tsip = tsi;
       tsi->backend = CURLSSLBACKEND_NONE;
-      tsi->internals = nullptr;
+      tsi->internals = NULL;
 
       if(!conn)
         break;
@@ -337,10 +337,10 @@ static CURLcode getinfo_slist(struct SessionHandle *data, CURLINFO info,
 CURLcode Curl_getinfo(struct SessionHandle *data, CURLINFO info, ...)
 {
   va_list arg;
-  long *param_longp = nullptr;
-  double *param_doublep = nullptr;
-  char **param_charp = nullptr;
-  struct curl_slist **param_slistp = nullptr;
+  long *param_longp = NULL;
+  double *param_doublep = NULL;
+  char **param_charp = NULL;
+  struct curl_slist **param_slistp = NULL;
   int type;
   /* default return code is to error out! */
   CURLcode result = CURLE_BAD_FUNCTION_ARGUMENT;

@@ -150,7 +150,7 @@ lpD_POINT test_cont(lpD_POINT pp, short kp, lpD_POINT vp,
 										lpD_POINT p){
 //       
 //    
-	if(vp == nullptr)
+	if(vp == NULL)
 		dpoint_copy(p, &pp[kp]);
 	else
 		nearest_to_vp(vp, pp, kp, p);
@@ -158,9 +158,9 @@ lpD_POINT test_cont(lpD_POINT pp, short kp, lpD_POINT vp,
 		return p;
 //   
 	if(bool_var[CONTOSNAP]){
-	  put_message(EL_CONT_OSNAP, nullptr, 1);
+	  put_message(EL_CONT_OSNAP, NULL, 1);
 		return p;
 	}
 	el_geo_err = EL_CONT_OSNAP;
-	return nullptr;
+	return NULL;
 }

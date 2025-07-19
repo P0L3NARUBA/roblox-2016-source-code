@@ -55,9 +55,9 @@ public:
     inline void destroyData()
 	{
 	    m_allocated_size = 0;
-		if(m_data==nullptr) return;
+		if(m_data==NULL) return;
 		gim_free(m_data);
-		m_data = nullptr;
+		m_data = NULL;
 	}
 
 	inline bool resizeData(GUINT newsize)

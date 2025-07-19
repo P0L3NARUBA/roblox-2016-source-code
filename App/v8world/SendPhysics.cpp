@@ -36,14 +36,14 @@ void SendPhysics::destroySimJob(SimJob* job)
 
 	SimJob* transferTo = (simJobs.size() > 1) 
 										? nextSimJob(job) 
-										: nullptr;
+										: NULL;
 
 	SimJobTracker::transferTrackers(job, transferTo);
 	simJobs.erase(simJobs.iterator_to(*job));
 
 	if (job->getAssembly()) {
 		RBXASSERT(job->getAssembly()->getSimJob() == job);
-		job->getAssembly()->setSimJob(nullptr);
+		job->getAssembly()->setSimJob(NULL);
 	}
 }
 

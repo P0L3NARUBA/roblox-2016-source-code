@@ -34,9 +34,9 @@ void free_tail_list_cur(lpLISTH listh,VADR hpage)
 	get_prev_item(hpage,&hprev);
 	if ( hprev) {
   	lplist = (lpLIST)hprev;
-		lplist->hnext = nullptr;
+		lplist->hnext = NULL;
 	} else
-		listh->hhead = nullptr;
+		listh->hhead = NULL;
 	listh->htail = hprev;
 	while (hpage) {
 		lplist = (lpLIST)hpage;
@@ -78,10 +78,10 @@ WORD free_intermediate_list(lpLISTH listh, VADR hpage_beg, VADR hpage_end)
 void   RecursiveAddChildrenToSceneTree(lpOBJ lpO)
 {
 	ISceneTreeControl::TREENODEHANDLE  tr_hndl = lpO->handle_of_tree_node;
-	if (tr_hndl==nullptr)
+	if (tr_hndl==NULL)
 		return;
 
-	hOBJ  list_elem = nullptr;
+	hOBJ  list_elem = NULL;
 	if (lpO->type==OGROUP)
 		list_elem = ((lpGEO_GROUP)lpO->geo_data)->listh.hhead;
 	else
@@ -127,7 +127,7 @@ void attach_item_head(lpLISTH listh,VADR hitem)
   l = (lpLIST)hitem;
 	if ( LIST_ZUDINA ) l += LIST_ZUDINA;
   l->hnext = listh->hhead;
-  l->hprev = nullptr;
+  l->hprev = NULL;
   listh->hhead = hitem;
 	listh->num++;
 
@@ -141,7 +141,7 @@ void attach_item_head(lpLISTH listh,VADR hitem)
 		  if (!application_interface->GetSceneTreeControl()->ShowNode(lpO->extendedClass))
 		  {
 			lpO->handle_of_tree_node = 
-				application_interface->GetSceneTreeControl()->AddNode(&lpO->extendedClass,nullptr);
+				application_interface->GetSceneTreeControl()->AddNode(&lpO->extendedClass,NULL);
 			if (lpO->type==OPATH || lpO->type==OGROUP)
 			{
 				RecursiveAddChildrenToSceneTree(lpO);
@@ -172,7 +172,7 @@ void attach_item_tail(lpLISTH listh,VADR hitem)
   l = (lpLIST)hitem;
 	if ( LIST_ZUDINA ) l += LIST_ZUDINA;
   l->hprev = listh->htail;
-  l->hnext = nullptr;
+  l->hnext = NULL;
   listh->htail = hitem;
 	listh->num++;
 
@@ -186,7 +186,7 @@ void attach_item_tail(lpLISTH listh,VADR hitem)
 			if (!application_interface->GetSceneTreeControl()->ShowNode(lpO->extendedClass))
 			{
 				lpO->handle_of_tree_node = 
-					application_interface->GetSceneTreeControl()->AddNode(&lpO->extendedClass,nullptr);
+					application_interface->GetSceneTreeControl()->AddNode(&lpO->extendedClass,NULL);
 				if (lpO->type==OPATH || lpO->type==OGROUP)
 				{
 					RecursiveAddChildrenToSceneTree(lpO);

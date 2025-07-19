@@ -105,7 +105,7 @@ shared_ptr<MouseCommand> AdvMoveToolBase::onMouseDown(const shared_ptr<InputObje
 		PartArray partArray;
 		DragUtilities::instancesToParts(instanceSelection->items(), partArray);
 		megaDragger.reset(new MegaDragger(	
-			nullptr, 
+			NULL, 
 			partArray, 
 			workspace) );
 

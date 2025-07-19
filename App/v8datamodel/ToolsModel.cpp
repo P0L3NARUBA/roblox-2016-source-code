@@ -60,7 +60,7 @@ struct AnchorNode
 
 	void operator()(shared_ptr<Instance> instance) {
 		PartInstance* pi = instance->fastDynamicCast<PartInstance>();
-		if (pi!=nullptr) {
+		if (pi!=NULL) {
 			pi->setAnchored(set);
 			return;
 		}
@@ -79,7 +79,7 @@ void anchorAllChildren(shared_ptr<Instance> root, const bool& set)
 static Instance* HasUnAnchoredNode(Instance* instance) 
 {
 	PartInstance* pi = Instance::fastDynamicCast<PartInstance>(instance);
-	if ((pi != nullptr) && !pi->getAnchored()) {
+	if ((pi != NULL) && !pi->getAnchored()) {
 		return pi;
 	}
 
@@ -93,13 +93,13 @@ static Instance* HasUnAnchoredNode(Instance* instance)
 				return iter->get();
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 bool  AnchorTool::allChildrenAnchored(Instance* test) 
 {
 	Instance* answer = HasUnAnchoredNode(test);
-	return (answer == nullptr);
+	return (answer == NULL);
 }
 
 void AnchorTool::onMouseHover(const shared_ptr<InputObject>& inputObject)

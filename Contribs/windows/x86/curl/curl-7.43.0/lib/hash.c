@@ -38,7 +38,7 @@ hash_element_dtor(void *user, void *element)
 
   if(e->ptr) {
     h->dtor(e->ptr);
-    e->ptr = nullptr;
+    e->ptr = NULL;
   }
 
   e->key_len = 0;
@@ -72,11 +72,11 @@ Curl_hash_init(struct curl_hash *h,
       h->table[i] = Curl_llist_alloc((curl_llist_dtor) hash_element_dtor);
       if(!h->table[i]) {
         while(i--) {
-          Curl_llist_destroy(h->table[i], nullptr);
-          h->table[i] = nullptr;
+          Curl_llist_destroy(h->table[i], NULL);
+          h->table[i] = NULL;
         }
         free(h->table);
-        h->table = nullptr;
+        h->table = NULL;
         h->slots = 0;
         return 1; /* failure */
       }
@@ -107,7 +107,7 @@ mk_hash_element(const void *key, size_t key_len, const void *p)
     else {
       /* failed to duplicate the key, free memory and fail */
       free(he);
-      he = nullptr;
+      he = NULL;
     }
   }
   return he;
@@ -152,7 +152,7 @@ Curl_hash_add(struct curl_hash *h, void *key, size_t key_len, void *p)
     free(he);
   }
 
-  return nullptr; /* failure */
+  return NULL; /* failure */
 }
 
 /* remove the identified hash entry, returns non-zero on failure */
@@ -190,7 +190,7 @@ Curl_hash_pick(struct curl_hash *h, void *key, size_t key_len)
     }
   }
 
-  return nullptr;
+  return NULL;
 }
 
 #if defined(DEBUGBUILD) && defined(AGGRESIVE_TEST)
@@ -222,7 +222,7 @@ Curl_hash_destroy(struct curl_hash *h)
 
   for(i = 0; i < h->slots; ++i) {
     Curl_llist_destroy(h->table[i], (void *) h);
-    h->table[i] = nullptr;
+    h->table[i] = NULL;
   }
 
   Curl_safefree(h->table);
@@ -237,7 +237,7 @@ Curl_hash_destroy(struct curl_hash *h)
 void
 Curl_hash_clean(struct curl_hash *h)
 {
-  Curl_hash_clean_with_criterium(h, nullptr, nullptr);
+  Curl_hash_clean_with_criterium(h, NULL, NULL);
 }
 
 /* Cleans all entries that pass the comp function criteria. */
@@ -260,7 +260,7 @@ Curl_hash_clean_with_criterium(struct curl_hash *h, void *user,
       struct curl_hash_element *he = le->ptr;
       lnext = le->next;
       /* ask the callback function if we shall remove this entry or not */
-      if(comp == nullptr || comp(user, he->ptr)) {
+      if(comp == NULL || comp(user, he->ptr)) {
         Curl_llist_remove(list, le, (void *) h);
         --h->size; /* one less entry in the hash now */
       }
@@ -297,7 +297,7 @@ void Curl_hash_start_iterate(struct curl_hash *hash,
 {
   iter->hash = hash;
   iter->slot_index = 0;
-  iter->current_element = nullptr;
+  iter->current_element = NULL;
 }
 
 struct curl_hash_element *
@@ -326,8 +326,8 @@ Curl_hash_next_element(struct curl_hash_iterator *iter)
     return he;
   }
   else {
-    iter->current_element = nullptr;
-    return nullptr;
+    iter->current_element = NULL;
+    return NULL;
   }
 }
 

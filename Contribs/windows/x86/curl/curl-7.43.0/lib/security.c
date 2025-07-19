@@ -201,7 +201,7 @@ static CURLcode read_data(struct connectdata *conn,
 
   len = ntohl(len);
   tmp = realloc(buf->data, len);
-  if(tmp == nullptr)
+  if(tmp == NULL)
     return CURLE_OUT_OF_MEMORY;
 
   buf->data = tmp;
@@ -266,13 +266,13 @@ static ssize_t sec_recv(struct connectdata *conn, int sockindex,
 }
 
 /* Send |length| bytes from |from| to the |fd| socket taking care of encoding
-   and negociating with the server. |from| can be nullptr. */
+   and negociating with the server. |from| can be NULL. */
 /* FIXME: We don't check for errors nor report any! */
 static void do_sec_send(struct connectdata *conn, curl_socket_t fd,
                         const char *from, int length)
 {
   int bytes, htonl_bytes; /* 32-bit integers for htonl */
-  char *buffer = nullptr;
+  char *buffer = NULL;
   char *cmd_buffer;
   size_t cmd_size = 0;
   CURLcode error;
@@ -481,9 +481,9 @@ static CURLcode choose_mech(struct connectdata *conn)
   const struct Curl_sec_client_mech *mech = &Curl_krb5_client_mech;
 
   tmp_allocation = realloc(conn->app_data, mech->size);
-  if(tmp_allocation == nullptr) {
+  if(tmp_allocation == NULL) {
     failf(data, "Failed realloc of size %u", mech->size);
-    mech = nullptr;
+    mech = NULL;
     return CURLE_OUT_OF_MEMORY;
   }
   conn->app_data = tmp_allocation;
@@ -558,13 +558,13 @@ Curl_sec_login(struct connectdata *conn)
 void
 Curl_sec_end(struct connectdata *conn)
 {
-  if(conn->mech != nullptr && conn->mech->end)
+  if(conn->mech != NULL && conn->mech->end)
     conn->mech->end(conn->app_data);
   free(conn->app_data);
-  conn->app_data = nullptr;
+  conn->app_data = NULL;
   if(conn->in_buffer.data) {
     free(conn->in_buffer.data);
-    conn->in_buffer.data = nullptr;
+    conn->in_buffer.data = NULL;
     conn->in_buffer.size = 0;
     conn->in_buffer.index = 0;
     /* FIXME: Is this really needed? */
@@ -572,7 +572,7 @@ Curl_sec_end(struct connectdata *conn)
   }
   conn->sec_complete = 0;
   conn->data_prot = PROT_CLEAR;
-  conn->mech = nullptr;
+  conn->mech = NULL;
 }
 
 #endif /* HAVE_GSSAPI */

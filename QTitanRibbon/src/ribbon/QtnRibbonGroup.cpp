@@ -1548,7 +1548,7 @@ QAction* RibbonGroup::getOptionButtonAction() const
 void RibbonGroup::setOptionButtonAction(QAction* action)
 {
     QTN_D(RibbonGroup);
-    if ( d.m_actOption != nullptr )
+    if ( d.m_actOption != NULL )
         delete d.m_actOption;
 
     d.m_actOption = action;

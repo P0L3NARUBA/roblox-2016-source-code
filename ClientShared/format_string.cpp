@@ -8,7 +8,7 @@
 #if defined(__APPLE__) || defined(__ANDROID__)
 inline int _vscprintf(const char* format, va_list argptr) 
 {
-	return vsnprintf(nullptr, 0, format, argptr);
+	return vsnprintf(NULL, 0, format, argptr);
 }
 static const size_t _TRUNCATE = 0;
 inline int vsnprintf_s(char *buffer,
@@ -68,7 +68,7 @@ std::string vformat(const char *fmt, va_list argPtr) {
     if (actualSize > bufSize) {
 
         // Now use the heap.
-        char* heapBuffer = nullptr;
+        char* heapBuffer = NULL;
 
         if (actualSize < maxSize) {
 
@@ -119,7 +119,7 @@ std::wstring vformat(const wchar_t *fmt, va_list argPtr) {
     if (actualSize > bufSize) {
 
         // Now use the heap.
-        wchar_t* heapBuffer = nullptr;
+        wchar_t* heapBuffer = NULL;
 
         if (actualSize < maxSize) {
 

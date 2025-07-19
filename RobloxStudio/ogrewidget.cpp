@@ -49,8 +49,8 @@ static RBX::KeyCode keyCodeTOUIKeyCode(int keyCode);
 static RBX::ModCode modifiersToUIModCode(int modifier);
 
 QOgreWidget::QOgreWidget(const QString& name,QWidget *parent)
-: QWidget(nullptr)
-, m_pRobloxView(nullptr)
+: QWidget(NULL)
+, m_pRobloxView(NULL)
 , m_bIgnoreEnterEvent(0)
 , m_bIgnoreLeaveEvent(false)
 , m_bUpdateInProgress(false)
@@ -84,9 +84,9 @@ void QOgreWidget::setRobloxView(RobloxView *rbxView)
 
 	QPoint mousePos = mapFromGlobal(QCursor::pos());
 	if (rect().contains(mousePos))
-		enterEvent(nullptr);
+		enterEvent(NULL);
 	else 
-		leaveEvent(nullptr);
+		leaveEvent(NULL);
 }
 
 void QOgreWidget::activate()
@@ -143,7 +143,7 @@ bool QOgreWidget::eventFilter(QObject * watched, QEvent * evt)
 			{
 				QPoint mousePos = mapFromGlobal(QCursor::pos());
 				if (rect().contains(mousePos))
-					enterEvent(nullptr);
+					enterEvent(NULL);
 			}	
 		}
 		else if (eventType == QEvent::MouseButtonRelease)
@@ -191,7 +191,7 @@ bool QOgreWidget::eventFilter(QObject * watched, QEvent * evt)
 	if ( eventType == QEvent::ActivationChange || eventType == QEvent::FocusIn || eventType == QEvent::FocusOut )
 	{
 		if (rect().contains(mapFromGlobal(QCursor::pos())))
-			isActiveWindow() ? enterEvent(nullptr) : leaveEvent(nullptr);
+			isActiveWindow() ? enterEvent(NULL) : leaveEvent(NULL);
 	}
 	else if (eventType == QEvent::Hide && watched->inherits("QDialog"))
 	{
@@ -202,7 +202,7 @@ bool QOgreWidget::eventFilter(QObject * watched, QEvent * evt)
 	if( eventType == QEvent::ActivationChange ) 
 	{
 		if (rect().contains(mapFromGlobal(QCursor::pos())))
-			isActiveWindow() ? enterEvent(nullptr) : leaveEvent(nullptr);
+			isActiveWindow() ? enterEvent(NULL) : leaveEvent(NULL);
 	}
 #endif
 
@@ -267,7 +267,7 @@ void QOgreWidget::closeEvent(QCloseEvent *)
 {
 	if (m_pRobloxView) 
 		delete m_pRobloxView;
-	m_pRobloxView = nullptr;
+	m_pRobloxView = NULL;
 }
 
 void QOgreWidget::enterEvent(QEvent *)
@@ -328,7 +328,7 @@ void QOgreWidget::resizeEvent(QResizeEvent *evt)
 
 	QPoint mousePos = mapFromGlobal(QCursor::pos());
 	if (rect().contains(mousePos))
-		enterEvent(nullptr);
+		enterEvent(NULL);
 }
 
 void QOgreWidget::mousePressEvent(QMouseEvent *evt)
@@ -427,7 +427,7 @@ void QOgreWidget::handleKeyEvent(QKeyEvent * evt, RBX::InputObject::UserInputTyp
 
 	m_pRobloxView->handleKey(eventType, eventState,
         keyCodeTOUIKeyCode(evt->key()), modifiersToUIModCode(evt->modifiers()),
-        (textString.length() > 0) ? textString.c_str()[0] : nullptr,
+        (textString.length() > 0) ? textString.c_str()[0] : NULL,
 		processed);
 
 	if (!FFlag::DontSwallowInputForStudioShortcuts)
@@ -541,12 +541,12 @@ void QOgreWidget::dragEnterEvent(QDragEnterEvent *evt)
 	if (m_bMouseCommandInvoked)
 	{
 		QApplication::setOverrideCursor(Qt::ClosedHandCursor);
-		enterEvent(nullptr);
+		enterEvent(NULL);
 	}
 	else 
 	{
 		QApplication::setOverrideCursor(Qt::DragCopyCursor);
-		leaveEvent(nullptr);
+		leaveEvent(NULL);
 	}
 #endif
 
@@ -599,7 +599,7 @@ void QOgreWidget::dragLeaveEvent(QDragLeaveEvent *evt)
 
 #ifdef Q_WS_MAC
 	QApplication::restoreOverrideCursor();
-	leaveEvent(nullptr);
+	leaveEvent(NULL);
 #endif
 
 	evt->accept();

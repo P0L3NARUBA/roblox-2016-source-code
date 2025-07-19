@@ -8,7 +8,7 @@ lpI_LISTH free_attr_ilisth;
 UCHAR max_attr_name;      
 UCHAR max_attr_text;      
 
-void (*u_attr_exit)  (void) = nullptr;
+void (*u_attr_exit)  (void) = NULL;
 
 
 void alloc_attr_bd(void);
@@ -109,7 +109,7 @@ void attr_exit(void){
 
 void attr_handler_err(short cod,...)
 {
-char    *s = nullptr;
+char    *s = NULL;
 va_list ap;
 
 	if(cod == AT_ERR_FILE){
@@ -200,7 +200,7 @@ void*      v;
 	v = value;
 	if(attr.type == ATTR_BOOL){ //   
 		bcurr = 2; attr.curr = 0;
-		if(value != nullptr){
+		if(value != NULL){
 			num = (sgFloat*)(value);
 			if (*num != 0) bcurr = 1;
 			else bcurr = 0;
@@ -219,7 +219,7 @@ void*      v;
 			unlock_attr();
 		}
 	}
-	else if(attr.type != ATTR_TEXT && value != nullptr){
+	else if(attr.type != ATTR_TEXT && value != NULL){
 		if(!add_attr_value(attr_id, v, &item_id)) goto err;
 		lpattr = lock_attr(attr_id);
 		lpattr->status |= ATT_DEFAULT;

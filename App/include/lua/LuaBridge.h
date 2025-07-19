@@ -72,7 +72,7 @@ public:
 
 		// A re-implementation of luaL_checkudata that doesn't throw an exception
 		void *p = lua_touserdata(L, index);
-		if (p != nullptr) {  /* value is a userdata? */
+		if (p != NULL) {  /* value is a userdata? */
 			if (lua_getmetatable(L, index)) {  /* does it have a metatable? */
 				lua_getfield(L, LUA_REGISTRYINDEX, className);  /* get correct metatable */
 				if (lua_rawequal(L, -1, -2)) {  /* does it have the correct mt? */
@@ -149,7 +149,7 @@ public:
 
 	static void push(lua_State *L, boost::shared_ptr<Class> instance)
 	{
-		if (instance==nullptr)
+		if (instance==NULL)
 			lua_pushnil(L);
 		else
 		{

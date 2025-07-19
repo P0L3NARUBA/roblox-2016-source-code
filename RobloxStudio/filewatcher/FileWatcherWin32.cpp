@@ -86,7 +86,7 @@ namespace FW
 				{
 					int count = WideCharToMultiByte(CP_ACP, 0, pNotify->FileName,
 						pNotify->FileNameLength / sizeof(WCHAR),
-						szFile, MAX_PATH - 1, nullptr, nullptr);
+						szFile, MAX_PATH - 1, NULL, NULL);
 					szFile[count] = TEXT('\0');
 				}
 #			endif
@@ -107,7 +107,7 @@ namespace FW
 	{
 		return ReadDirectoryChangesW(
 			pWatch->mDirHandle, pWatch->mBuffer, sizeof(pWatch->mBuffer), includeSubfolders,
-			pWatch->mNotifyFilter, nullptr, &pWatch->mOverlapped, _clear ? 0 : WatchCallback) != 0;
+			pWatch->mNotifyFilter, NULL, &pWatch->mOverlapped, _clear ? 0 : WatchCallback) != 0;
 	}
 
 	/// Stops monitoring a directory.
@@ -141,12 +141,12 @@ namespace FW
 		pWatch = static_cast<WatchStruct*>(HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, ptrsize));
 
 		pWatch->mDirHandle = CreateFile(szDirectory, FILE_LIST_DIRECTORY,
-			FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, nullptr, 
-			OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OVERLAPPED, nullptr);
+			FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, 
+			OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OVERLAPPED, NULL);
 
 		if (pWatch->mDirHandle != INVALID_HANDLE_VALUE)
 		{
-			pWatch->mOverlapped.hEvent = CreateEvent(nullptr, TRUE, FALSE, nullptr);
+			pWatch->mOverlapped.hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
 			pWatch->mNotifyFilter = mNotifyFilter;
 
 			if (RefreshWatch(pWatch, false, includeSubfolders))
@@ -161,7 +161,7 @@ namespace FW
 		}
 
 		HeapFree(GetProcessHeap(), 0, pWatch);
-		return nullptr;
+		return NULL;
 	}
 
 #pragma endregion
@@ -238,7 +238,7 @@ namespace FW
 	//--------
 	void FileWatcherWin32::update()
 	{
-		MsgWaitForMultipleObjectsEx(0, nullptr, 0, QS_ALLINPUT, MWMO_ALERTABLE);
+		MsgWaitForMultipleObjectsEx(0, NULL, 0, QS_ALLINPUT, MWMO_ALERTABLE);
 	}
 
 	//--------

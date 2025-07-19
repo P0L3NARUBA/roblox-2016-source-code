@@ -17,7 +17,7 @@ CBaseStreamControl::CBaseStreamControl()
 , m_tStopTime(MAX_TIME)
 , m_dwStartCookie(0)
 , m_dwStopCookie(0)
-, m_pRefClock(nullptr)
+, m_pRefClock(NULL)
 , m_FilterState(State_Stopped)
 , m_bIsFlushing(FALSE)
 , m_bStopSendExtra(FALSE)
@@ -26,7 +26,7 @@ CBaseStreamControl::CBaseStreamControl()
 CBaseStreamControl::~CBaseStreamControl()
 {
     // Make sure we release the clock.
-    SetSyncSource(nullptr);
+    SetSyncSource(NULL);
     return;
 }
 
@@ -122,7 +122,7 @@ STDMETHODIMP CBaseStreamControl::StartAt
 //  Retrieve information about current settings
 STDMETHODIMP CBaseStreamControl::GetInfo(AM_STREAM_INFO *pInfo)
 {
-    if (pInfo == nullptr)
+    if (pInfo == NULL)
 	return E_POINTER;
 
     pInfo->tStart = m_tStartTime;
@@ -277,7 +277,7 @@ enum CBaseStreamControl::StreamControlState CBaseStreamControl::CheckStreamState
 
     REFERENCE_TIME rtBufferStart, rtBufferStop;
     const BOOL bNoBufferTimes =
-              pSample == nullptr ||
+              pSample == NULL ||
               FAILED(pSample->GetTime(&rtBufferStart, &rtBufferStop));
 
     StreamControlState state;

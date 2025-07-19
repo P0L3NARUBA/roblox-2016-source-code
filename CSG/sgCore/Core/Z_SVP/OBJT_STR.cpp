@@ -5,7 +5,7 @@ char* GetObjTypeCaption(OBJTYPE type, char* str, int len)
 {
 /*  LoadString(hInstLD, GetObjMethod(type, OMT_OBJTYPE_CAPTION), str, len - 1);
 	str[len - 1] = 0;
-	return str;*/return nullptr;
+	return str;*/return NULL;
 }
 
 //     .
@@ -108,7 +108,7 @@ lpOBJ        obj;
 	bnum = geo->num;
   GetObjTypeCaption(obj->type, str, len);
 
-	if((blk = (IBLOCK *)get_elem(&vd_blocks, bnum)) != nullptr){
+	if((blk = (IBLOCK *)get_elem(&vd_blocks, bnum)) != NULL){
 		strncat(str, "\"", len - strlen(str) - 1);
 		str[len - 1] = 0;
 		strncat(str, blk->name, len - strlen(str) - 1);
@@ -120,7 +120,7 @@ void ot_path_str(hOBJ hobj, char *str, int len)
 {
 lpOBJ     obj;
 CODE_MSG	code;
-void*     par = nullptr;
+void*     par = NULL;
 
   switch (get_primitive_param_2d(hobj, &par)) {
 		case RECTANGLE:
@@ -145,6 +145,6 @@ void*     par = nullptr;
       else                         code = MSG_PATH_CROSS;
       strncat(str, get_message(code)->str, len - strlen(str) - 1);
 	}
-  if (par) SGFree(par); par = nullptr;
+  if (par) SGFree(par); par = NULL;
 }
 

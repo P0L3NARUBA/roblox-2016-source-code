@@ -168,7 +168,7 @@ static bool InitializeSymbolTable( TBuiltInStrings* BuiltInStrings, EShLanguage 
    {
       const char* builtInShaders = (*i).c_str();
 
-      if (PaParseString(const_cast<char*>(builtInShaders), parseContext, nullptr) != 0)
+      if (PaParseString(const_cast<char*>(builtInShaders), parseContext, NULL) != 0)
       {
          infoSink.info.message(EPrefixInternalError, "Unable to parse built-ins");
          return false;
@@ -263,7 +263,7 @@ void C_DECL Hlsl2Glsl_Shutdown()
 		
 		PerProcessGPA->popAll();
 		delete PerProcessGPA;
-		PerProcessGPA = nullptr;
+		PerProcessGPA = NULL;
 	}
 	
 	DetachThread();

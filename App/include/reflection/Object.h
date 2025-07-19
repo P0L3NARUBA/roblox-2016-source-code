@@ -216,25 +216,25 @@ namespace RBX
 			template<class T>
 			inline T* fastDynamicCast()
 			{
-				return (getDescriptor().isA(T::classDescriptor())) ? static_cast<T*>(this) : nullptr;
+				return (getDescriptor().isA(T::classDescriptor())) ? static_cast<T*>(this) : NULL;
 			}
 
 			template<class T>
 			inline const T* fastDynamicCast() const
 			{
-				return (getDescriptor().isA(T::classDescriptor())) ? static_cast<const T*>(this) : nullptr;
+				return (getDescriptor().isA(T::classDescriptor())) ? static_cast<const T*>(this) : NULL;
 			}
 
 			template<class T>
 			static inline T* fastDynamicCast(DescribedBase* instance)
 			{
-				return (instance && instance->getDescriptor().isA(T::classDescriptor())) ? static_cast<T*>(instance) : nullptr;
+				return (instance && instance->getDescriptor().isA(T::classDescriptor())) ? static_cast<T*>(instance) : NULL;
 			}
 
 			template<class T>
 			static inline const T* fastDynamicCast(const DescribedBase* instance)
 			{
-				return (instance && instance->getDescriptor().isA(T::classDescriptor())) ? static_cast<const T*>(instance) : nullptr;
+				return (instance && instance->getDescriptor().isA(T::classDescriptor())) ? static_cast<const T*>(instance) : NULL;
 			}
 
 			// This function replaces shared_dynamic_cast for classes that derives from DescribedCreatable or DescribedNonCreatable.

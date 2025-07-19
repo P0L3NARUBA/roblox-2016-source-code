@@ -14,8 +14,8 @@
 
 
 CPullPin::CPullPin()
-  : m_pReader(nullptr),
-    m_pAlloc(nullptr),
+  : m_pReader(NULL),
+    m_pAlloc(NULL),
     m_State(TM_Exit)
 {
 }
@@ -43,7 +43,7 @@ CPullPin::Connect(IUnknown* pUnk, IMemAllocator* pAlloc, BOOL bSync)
 	return(hr);
     }
 
-    hr = DecideAllocator(pAlloc, nullptr);
+    hr = DecideAllocator(pAlloc, NULL);
     if (FAILED(hr)) {
 	Disconnect();
 	return hr;
@@ -76,12 +76,12 @@ CPullPin::Disconnect()
 
     if (m_pReader) {
 	m_pReader->Release();
-	m_pReader = nullptr;
+	m_pReader = NULL;
     }
 
     if (m_pAlloc) {
 	m_pAlloc->Release();
-	m_pAlloc = nullptr;
+	m_pAlloc = NULL;
     }
 
     return S_OK;
@@ -99,7 +99,7 @@ CPullPin::DecideAllocator(
 {
     ALLOCATOR_PROPERTIES *pRequest;
     ALLOCATOR_PROPERTIES Request;
-    if (pProps == nullptr) {
+    if (pProps == NULL) {
 	Request.cBuffers = 3;
 	Request.cbBuffer = 64*1024;
 	Request.cbAlign = 0;
@@ -291,7 +291,7 @@ CPullPin::QueueSample(
 {
     IMediaSample* pSample;
 
-    HRESULT hr = m_pAlloc->GetBuffer(&pSample, nullptr, nullptr, 0);
+    HRESULT hr = m_pAlloc->GetBuffer(&pSample, NULL, NULL, 0);
     if (FAILED(hr)) {
 	return hr;
     }
@@ -322,7 +322,7 @@ CPullPin::CollectAndDeliver(
     REFERENCE_TIME tStart,
     REFERENCE_TIME tStop)
 {
-    IMediaSample* pSample = nullptr;   // better be sure pSample is set
+    IMediaSample* pSample = NULL;   // better be sure pSample is set
     DWORD_PTR dwUnused;
     HRESULT hr = m_pReader->WaitForNext(
 			INFINITE,
@@ -465,7 +465,7 @@ CPullPin::Process(void)
 
 	    IMediaSample* pSample;
 
-	    hr = m_pAlloc->GetBuffer(&pSample, nullptr, nullptr, 0);
+	    hr = m_pAlloc->GetBuffer(&pSample, NULL, NULL, 0);
 	    if (FAILED(hr)) {
 		OnError(hr);
 		return;

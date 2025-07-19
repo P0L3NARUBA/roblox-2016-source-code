@@ -39,7 +39,7 @@ BOOL put_top_bottom(lpNPW np, lpMESHDD g )
 
 	if (!begin_rw(&g->vdim, ++num_elem)) return FALSE;
 	for (; num_elem < g->vdim.num_elem; num_elem++) {
-		if ( (node = (lpMNODE)get_next_elem(&g->vdim)) == nullptr) {
+		if ( (node = (lpMNODE)get_next_elem(&g->vdim)) == NULL) {
 			end_rw(&g->vdim);
 			return FALSE;
 		}
@@ -62,7 +62,7 @@ BOOL put_bottom_bottom(lpNPW np, hOBJ cross )
 	lpMNODE     node;
 
 	np->nov = np->noe = np->noc = np->nof = 0;
-	while( cross != nullptr )      //     
+	while( cross != NULL )      //     
 	{
 //  
 		if( !create_cross( cross, &vdim_cross ) ) return FALSE;
@@ -72,7 +72,7 @@ BOOL put_bottom_bottom(lpNPW np, hOBJ cross )
 		if( np->nov + vdim_cross.num_elem > np->maxnov )
 			if( !my_expand_face( np, (short)vdim_cross.num_elem )) return FALSE;
 		for (i = 1; i < vdim_cross.num_elem; i++) {
-			if ( (node = (lpMNODE)get_next_elem(&vdim_cross)) == nullptr) {
+			if ( (node = (lpMNODE)get_next_elem(&vdim_cross)) == NULL) {
 				end_rw(&vdim_cross);
 				goto err;
 			}
@@ -183,7 +183,7 @@ BOOL my_expand_face( lpNPW np, short m )
 	j_nov = np->nov + m - np->maxnov;
 	j_noe = 0;
 	if( np->noe + m > np->maxnoe ) j_noe = np->noe + m - np->maxnoe;
-	expand_user_data = nullptr;
+	expand_user_data = NULL;
 	np->nov_tmp = np->maxnov;
 	if( !o_expand_np(np, j_nov, j_noe, 0, 0 ) )	return FALSE;
 	return TRUE;

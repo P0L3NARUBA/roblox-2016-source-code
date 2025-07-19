@@ -91,12 +91,12 @@ get_header(const void *ptr)
 static void
 add_child(ralloc_header *parent, ralloc_header *info)
 {
-   if (parent != nullptr) {
+   if (parent != NULL) {
       info->parent = parent;
       info->next = parent->child;
       parent->child = info;
 
-      if (info->next != nullptr)
+      if (info->next != NULL)
 	 info->next->prev = info;
    }
 }
@@ -114,10 +114,10 @@ ralloc_size(const void *ctx, size_t size)
    ralloc_header *info;
    ralloc_header *parent;
 
-   if (unlikely(block == nullptr))
-      return nullptr;
+   if (unlikely(block == NULL))
+      return NULL;
    info = (ralloc_header *) block;
-   parent = ctx != nullptr ? get_header(ctx) : nullptr;
+   parent = ctx != NULL ? get_header(ctx) : NULL;
 
    add_child(parent, info);
 
@@ -132,12 +132,12 @@ void *
 rzalloc_size(const void *ctx, size_t size)
 {
    void *ptr = ralloc_size(ctx, size);
-   if (likely(ptr != nullptr))
+   if (likely(ptr != NULL))
       memset(ptr, 0, size);
    return ptr;
 }
 
-/* helper function - assumes ptr != nullptr */
+/* helper function - assumes ptr != NULL */
 static void *
 resize(void *ptr, size_t size)
 {
@@ -146,23 +146,23 @@ resize(void *ptr, size_t size)
    old = get_header(ptr);
    info = realloc(old, size + sizeof(ralloc_header));
 
-   if (info == nullptr)
-      return nullptr;
+   if (info == NULL)
+      return NULL;
 
    /* Update parent and sibling's links to the reallocated node. */
-   if (info != old && info->parent != nullptr) {
+   if (info != old && info->parent != NULL) {
       if (info->parent->child == old)
 	 info->parent->child = info;
 
-      if (info->prev != nullptr)
+      if (info->prev != NULL)
 	 info->prev->next = info;
 
-      if (info->next != nullptr)
+      if (info->next != NULL)
 	 info->next->prev = info;
    }
 
    /* Update child->parent links for all children */
-   for (child = info->child; child != nullptr; child = child->next)
+   for (child = info->child; child != NULL; child = child->next)
       child->parent = info;
 
    return PTR_FROM_HEADER(info);
@@ -171,7 +171,7 @@ resize(void *ptr, size_t size)
 void *
 reralloc_size(const void *ctx, void *ptr, size_t size)
 {
-   if (unlikely(ptr == nullptr))
+   if (unlikely(ptr == NULL))
       return ralloc_size(ctx, size);
 
    assert(ralloc_parent(ptr) == ctx);
@@ -182,7 +182,7 @@ void *
 ralloc_array_size(const void *ctx, size_t size, size_t count)
 {
    if (count > SIZE_MAX/size)
-      return nullptr;
+      return NULL;
 
    return ralloc_size(ctx, size * count);
 }
@@ -191,7 +191,7 @@ void *
 rzalloc_array_size(const void *ctx, size_t size, size_t count)
 {
    if (count > SIZE_MAX/size)
-      return nullptr;
+      return NULL;
 
    return rzalloc_size(ctx, size * count);
 }
@@ -200,7 +200,7 @@ void *
 reralloc_array_size(const void *ctx, void *ptr, size_t size, size_t count)
 {
    if (count > SIZE_MAX/size)
-      return nullptr;
+      return NULL;
 
    return reralloc_size(ctx, ptr, size * count);
 }
@@ -210,7 +210,7 @@ ralloc_free(void *ptr)
 {
    ralloc_header *info;
 
-   if (ptr == nullptr)
+   if (ptr == NULL)
       return;
 
    info = get_header(ptr);
@@ -222,19 +222,19 @@ static void
 unlink_block(ralloc_header *info)
 {
    /* Unlink from parent & siblings */
-   if (info->parent != nullptr) {
+   if (info->parent != NULL) {
       if (info->parent->child == info)
 	 info->parent->child = info->next;
 
-      if (info->prev != nullptr)
+      if (info->prev != NULL)
 	 info->prev->next = info->next;
 
-      if (info->next != nullptr)
+      if (info->next != NULL)
 	 info->next->prev = info->prev;
    }
-   info->parent = nullptr;
-   info->prev = nullptr;
-   info->next = nullptr;
+   info->parent = NULL;
+   info->prev = NULL;
+   info->next = NULL;
 }
 
 static void
@@ -242,14 +242,14 @@ unsafe_free(ralloc_header *info)
 {
    /* Recursively free any children...don't waste time unlinking them. */
    ralloc_header *temp;
-   while (info->child != nullptr) {
+   while (info->child != NULL) {
       temp = info->child;
       info->child = temp->next;
       unsafe_free(temp);
    }
 
    /* Free the block itself.  Call the destructor first, if any. */
-   if (info->destructor != nullptr)
+   if (info->destructor != NULL)
       info->destructor(PTR_FROM_HEADER(info));
 
    free(info);
@@ -260,7 +260,7 @@ ralloc_steal(const void *new_ctx, void *ptr)
 {
    ralloc_header *info, *parent;
 
-   if (unlikely(ptr == nullptr))
+   if (unlikely(ptr == NULL))
       return;
 
    info = get_header(ptr);
@@ -276,14 +276,14 @@ ralloc_parent(const void *ptr)
 {
    ralloc_header *info;
 
-   if (unlikely(ptr == nullptr))
-      return nullptr;
+   if (unlikely(ptr == NULL))
+      return NULL;
 
    info = get_header(ptr);
-   return info->parent ? PTR_FROM_HEADER(info->parent) : nullptr;
+   return info->parent ? PTR_FROM_HEADER(info->parent) : NULL;
 }
 
-static void *autofree_context = nullptr;
+static void *autofree_context = NULL;
 
 static void
 autofree(void)
@@ -294,8 +294,8 @@ autofree(void)
 void *
 ralloc_autofree_context(void)
 {
-   if (unlikely(autofree_context == nullptr)) {
-      autofree_context = ralloc_context(nullptr);
+   if (unlikely(autofree_context == NULL)) {
+      autofree_context = ralloc_context(NULL);
       atexit(autofree);
    }
    return autofree_context;
@@ -314,8 +314,8 @@ ralloc_strdup(const void *ctx, const char *str)
    size_t n;
    char *ptr;
 
-   if (unlikely(str == nullptr))
-      return nullptr;
+   if (unlikely(str == NULL))
+      return NULL;
 
    n = strlen(str);
    ptr = ralloc_array(ctx, char, n + 1);
@@ -330,8 +330,8 @@ ralloc_strndup(const void *ctx, const char *str, size_t max)
    size_t n;
    char *ptr;
 
-   if (unlikely(str == nullptr))
-      return nullptr;
+   if (unlikely(str == NULL))
+      return NULL;
 
    n = strlen(str);
    if (n > max)
@@ -349,11 +349,11 @@ cat(char **dest, const char *str, size_t n)
 {
    char *both;
    size_t existing_length;
-   assert(dest != nullptr && *dest != nullptr);
+   assert(dest != NULL && *dest != NULL);
 
    existing_length = strlen(*dest);
    both = resize(*dest, existing_length + n + 1);
-   if (unlikely(both == nullptr))
+   if (unlikely(both == NULL))
       return false;
 
    memcpy(both + existing_length, str, n);
@@ -427,7 +427,7 @@ ralloc_vasprintf(const void *ctx, const char *fmt, va_list args)
    size_t size = printf_length(fmt, args) + 1;
 
    char *ptr = ralloc_size(ctx, size);
-   if (ptr != nullptr)
+   if (ptr != NULL)
       vsnprintf(ptr, size, fmt, args);
 
    return ptr;
@@ -448,7 +448,7 @@ bool
 ralloc_vasprintf_append(char **str, const char *fmt, va_list args)
 {
    size_t existing_length;
-   assert(str != nullptr);
+   assert(str != NULL);
    existing_length = *str ? strlen(*str) : 0;
    return ralloc_vasprintf_rewrite_tail(str, &existing_length, fmt, args);
 }
@@ -471,18 +471,18 @@ ralloc_vasprintf_rewrite_tail(char **str, size_t *start, const char *fmt,
    size_t new_length;
    char *ptr;
 
-   assert(str != nullptr);
+   assert(str != NULL);
 
-   if (unlikely(*str == nullptr)) {
-      // Assuming a nullptr context is probably bad, but it's expected behavior.
-      *str = ralloc_vasprintf(nullptr, fmt, args);
+   if (unlikely(*str == NULL)) {
+      // Assuming a NULL context is probably bad, but it's expected behavior.
+      *str = ralloc_vasprintf(NULL, fmt, args);
       return true;
    }
 
    new_length = printf_length(fmt, args);
 
    ptr = resize(*str, *start + new_length + 1);
-   if (unlikely(ptr == nullptr))
+   if (unlikely(ptr == NULL))
       return false;
 
    vsnprintf(ptr + *start, new_length + 1, fmt, args);

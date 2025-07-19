@@ -33,8 +33,8 @@
 
 RobloxFindWidget::RobloxFindWidget(QWidget *pParent)
 : QWidget(pParent)
-, m_pListView(nullptr)
-, m_pFindListModel(nullptr)
+, m_pListView(NULL)
+, m_pFindListModel(NULL)
 , m_searchedScripts(0)
 , m_matchingScripts(0)
 , m_matchesFound(0)

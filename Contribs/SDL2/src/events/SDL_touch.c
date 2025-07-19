@@ -28,7 +28,7 @@
 
 
 static int SDL_num_touch = 0;
-static SDL_Touch **SDL_touchDevices = nullptr;
+static SDL_Touch **SDL_touchDevices = NULL;
 
 
 /* Public functions */
@@ -75,7 +75,7 @@ SDL_GetTouch(SDL_TouchID id)
     int index = SDL_GetTouchIndex(id);
     if (index < 0 || index >= SDL_num_touch) {
         SDL_SetError("Unknown touch device");
-        return nullptr;
+        return NULL;
     }
     return SDL_touchDevices[index];
 }
@@ -97,7 +97,7 @@ SDL_GetFinger(const SDL_Touch * touch, SDL_FingerID id)
 {
     int index = SDL_GetFingerIndex(touch, id);
     if (index < 0 || index >= touch->num_fingers) {
-        return nullptr;
+        return NULL;
     }
     return touch->fingers[index];
 }
@@ -117,11 +117,11 @@ SDL_GetTouchFinger(SDL_TouchID touchID, int index)
 {
     SDL_Touch *touch = SDL_GetTouch(touchID);
     if (!touch) {
-        return nullptr;
+        return NULL;
     }
     if (index < 0 || index >= touch->num_fingers) {
         SDL_SetError("Unknown touch finger");
-        return nullptr;
+        return NULL;
     }
     return touch->fingers[index];
 }
@@ -159,7 +159,7 @@ SDL_AddTouch(SDL_TouchID touchID, const char *name)
     SDL_touchDevices[index]->id = touchID;
     SDL_touchDevices[index]->num_fingers = 0;
     SDL_touchDevices[index]->max_fingers = 0;
-    SDL_touchDevices[index]->fingers = nullptr;
+    SDL_touchDevices[index]->fingers = NULL;
 
     /* Record this touch device for gestures */
     /* We could do this on the fly in the gesture code if we wanted */
@@ -359,7 +359,7 @@ SDL_TouchQuit(void)
     SDL_assert(SDL_num_touch == 0);
 
     SDL_free(SDL_touchDevices);
-    SDL_touchDevices = nullptr;
+    SDL_touchDevices = NULL;
 }
 
 /* vi: set ts=4 sw=4 expandtab: */

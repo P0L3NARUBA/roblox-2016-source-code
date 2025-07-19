@@ -85,7 +85,7 @@ initialize_mesa_context(struct gl_context *ctx, glslopt_target api)
 struct glslopt_ctx {
 	glslopt_ctx (glslopt_target target) {
 		this->target = target;
-		mem_ctx = ralloc_context (nullptr);
+		mem_ctx = ralloc_context (NULL);
 		initialize_mesa_context (&mesa_ctx, target);
 	}
 	~glslopt_ctx() {
@@ -130,7 +130,7 @@ struct glslopt_shader
 	{
 		void *node;
 		node = ralloc_size(ctx, size);
-		assert(node != nullptr);
+		assert(node != NULL);
 		return node;
 	}
 	static void operator delete(void *node)
@@ -152,12 +152,12 @@ struct glslopt_shader
 	{
 		infoLog = "Shader not compiled yet";
 		
-		whole_program = rzalloc (nullptr, struct gl_shader_program);
-		assert(whole_program != nullptr);
+		whole_program = rzalloc (NULL, struct gl_shader_program);
+		assert(whole_program != NULL);
 		whole_program->InfoLog = ralloc_strdup(whole_program, "");
 		
 		whole_program->Shaders = reralloc(whole_program, whole_program->Shaders, struct gl_shader *, whole_program->NumShaders + 1);
-		assert(whole_program->Shaders != nullptr);
+		assert(whole_program->Shaders != NULL);
 		
 		shader = rzalloc(whole_program, gl_shader);
 		whole_program->Shaders[whole_program->NumShaders] = shader;
@@ -564,7 +564,7 @@ static void find_shader_variables(glslopt_shader* sh, exec_list* ir)
 	foreach_in_list(ir_instruction, node, ir)
 	{
 		ir_variable* const var = node->as_variable();
-		if (var == nullptr)
+		if (var == NULL)
 			continue;
 		if (var->data.mode == ir_var_shader_in)
 		{
@@ -666,7 +666,7 @@ glslopt_shader* glslopt_optimize (glslopt_ctx* ctx, glslopt_shader_type type, co
 	shader->shader->symbols = state->symbols;
 	shader->shader->uses_builtin_functions = state->uses_builtin_functions;
 	
-	struct gl_shader* linked_shader = nullptr;
+	struct gl_shader* linked_shader = NULL;
 
 	if (!state->error && !ir->is_empty() && !(options & kGlslOptionNotFullShader))
 	{

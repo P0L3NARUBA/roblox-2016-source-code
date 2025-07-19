@@ -32,8 +32,8 @@ namespace RBX
 {
 	const char* const sGuiService = "GuiService";
     REFLECTION_BEGIN();
-	static const Reflection::PropDescriptor<GuiService, bool> prop_IsModalDialog("IsModalDialog", category_Data, &GuiService::getModalDialogStatus, nullptr, Reflection::PropertyDescriptor::Attributes::deprecated());
-	static const Reflection::PropDescriptor<GuiService, bool> prop_IsWindows("IsWindows", category_Data, &GuiService::getIsWindows, nullptr, Reflection::PropertyDescriptor::Attributes::deprecated());
+	static const Reflection::PropDescriptor<GuiService, bool> prop_IsModalDialog("IsModalDialog", category_Data, &GuiService::getModalDialogStatus, NULL, Reflection::PropertyDescriptor::Attributes::deprecated());
+	static const Reflection::PropDescriptor<GuiService, bool> prop_IsWindows("IsWindows", category_Data, &GuiService::getIsWindows, NULL, Reflection::PropertyDescriptor::Attributes::deprecated());
 
 	static Reflection::EventDesc<GuiService, void(std::string, std::string)> event_keypressed(&GuiService::keyPressed, "KeyPressed", "key", "modifiers", Security::RobloxScript);
 	static Reflection::EventDesc<GuiService, void(GuiService::SpecialKey, std::string)> event_specialKeypressed(&GuiService::specialKeyPressed, "SpecialKeyPressed", "key", "modifiers", Security::RobloxScript);
@@ -85,7 +85,7 @@ namespace RBX
 	static const Reflection::PropDescriptor<GuiService, bool> prop_coreGamepadNavigationEnabled("CoreGuiNavigationEnabled", category_Data, &GuiService::getCoreGamepadNavEnabled, &GuiService::setCoreGamepadNavEnabled);
 
 	static Reflection::BoundAsyncCallbackDesc<GuiService, void(std::string, std::string)> callback_notificationCallback("SendCoreUiNotification", &GuiService::notificationCallback, "title", "text", Security::RobloxScript);
-	static const Reflection::PropDescriptor<GuiService, bool> prop_menuOpen("MenuIsOpen", category_Data, &GuiService::getMenuOpen, nullptr);
+	static const Reflection::PropDescriptor<GuiService, bool> prop_menuOpen("MenuIsOpen", category_Data, &GuiService::getMenuOpen, NULL);
 	static const Reflection::BoundFuncDesc<GuiService, void(bool)> func_setMenuOpen(&GuiService::setMenuOpen, "SetMenuIsOpen", "open", Security::RobloxScript);
 		
 	static Reflection::EventDesc<GuiService, void()> event_menuOpened(&GuiService::menuOpenedSignal, "MenuOpened", Security::None);
@@ -163,7 +163,7 @@ namespace RBX
 
 	GuiService::GuiService()
 		:Super("GuiService")
-		,currentDialog(nullptr)
+		,currentDialog(NULL)
 		,subscribedChars()
 		,subscribedSpecials()
 		,errorMessage("")
@@ -190,7 +190,7 @@ namespace RBX
 
 	bool GuiService::shouldPreemptCurrentDialog(DialogWrapper* newDialog) const
 	{
-		if(currentDialog == nullptr)
+		if(currentDialog == NULL)
 			return true;
 		if(newDialog->dialogType > currentDialog->dialogType)
 			return true;
@@ -212,7 +212,7 @@ namespace RBX
 	}
 	bool GuiService::getModalDialogStatus() const
 	{
-		if(currentDialog == nullptr)
+		if(currentDialog == NULL)
 			return false;
 		switch(currentDialog->dialogType)
 		{
@@ -347,7 +347,7 @@ namespace RBX
 				DataModel::get(this)->submitTask(boost::bind(currentDialog->hideFunction), DataModelJob::Write);
 
 				queueDialogWrapper(currentDialog, true);
-				currentDialog = nullptr;
+				currentDialog = NULL;
 			}
 
 			currentDialog = wrapper;
@@ -361,7 +361,7 @@ namespace RBX
 	}
 	bool GuiService::showWaitingDialog(CenterDialogType type)
 	{
-		RBXASSERT(currentDialog == nullptr);
+		RBXASSERT(currentDialog == NULL);
 
 		if(!dialogQueue[type].empty()){
 			DialogWrapper* result = dialogQueue[type].front();
@@ -385,7 +385,7 @@ namespace RBX
 			dialogQueue[wrapper->dialogType].remove(wrapper);
 
 			if(wrapper == currentDialog){
-				currentDialog = nullptr;
+				currentDialog = NULL;
 
 				if(showWaitingDialog(CENTER_DIALOG_QUIT_DIALOG) || 
 					showWaitingDialog(CENTER_DIALOG_MODAL_DIALOG) || 
@@ -539,10 +539,10 @@ namespace RBX
 	void GuiService::toggleFullscreen()
 	{
 		// People were modifying verbString when it was loaded into a register by using CE.
-		VMProtectBeginMutation(nullptr);
+		VMProtectBeginMutation(NULL);
 
 		std::string verbString = "ToggleFullScreen";
-		Verb* verb = nullptr;
+		Verb* verb = NULL;
 
 		if(Workspace* workspace = ServiceProvider::find<Workspace>(this))
 		{
@@ -553,7 +553,7 @@ namespace RBX
 			if (verb && verb->getVerbSecurity())
 			{
 				RBX::Tokens::simpleToken |= HATE_VERB_SNATCH;
-				verb = nullptr;
+				verb = NULL;
 			}
 #endif
 		}
@@ -615,7 +615,7 @@ namespace RBX
 			}
 		}
 
-		return nullptr;
+		return NULL;
     }
 
 	GuiObject* GuiService::getSelectedCoreGuiObjectLua() const
@@ -628,7 +628,7 @@ namespace RBX
 			}
 		}
 
-		return nullptr;
+		return NULL;
 	}
 
 	GuiObject* GuiService::getSelectedGuiObject()
@@ -643,7 +643,7 @@ namespace RBX
 			return selectedObject;
 		}
 
-		return nullptr;
+		return NULL;
 	}
 
 	void GuiService::setCoreGamepadNavEnabled(bool value)

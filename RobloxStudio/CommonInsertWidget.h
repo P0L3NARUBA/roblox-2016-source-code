@@ -62,12 +62,12 @@ public:
         boost::shared_ptr<RBX::Instance>    pObjectToInsert,
         boost::shared_ptr<RBX::DataModel>   pDataModel,
 		InsertMode insertMode = InsertMode_InsertWidget,
-		QPoint* mousePosition = nullptr);
+		QPoint* mousePosition = NULL);
     static void InsertObject(
         const QString&                      className,
         boost::shared_ptr<RBX::DataModel>   pDataModel,
 		InsertMode insertMode = InsertMode_InsertWidget,
-		QPoint* mousePosition = nullptr);
+		QPoint* mousePosition = NULL);
 
     static void createWidgets(bool services, InsertObjectListWidget* listWidget, const RBX::Reflection::ClassDescriptor* pDescriptor, shared_ptr<RBX::DataModel> pDataModel);
 
@@ -87,7 +87,7 @@ public:
 
 	static void SetObjectDefaultValues(boost::shared_ptr<RBX::Instance> pObjectToInsert);
 
-	static RBX::Vector3 getInsertLocation(boost::shared_ptr<RBX::DataModel> pDataModel, QPoint* insertPosition, bool* isOnPart = nullptr);
+	static RBX::Vector3 getInsertLocation(boost::shared_ptr<RBX::DataModel> pDataModel, QPoint* insertPosition, bool* isOnPart = NULL);
 
 	virtual QSize sizeHint() const;
 
@@ -102,7 +102,7 @@ private Q_SLOTS:
 	void redrawDialog();
 	void onSelectOnInsertClicked(bool checked);
     void onItemInsertRequested();
-	void onPreviousWidgetDestroyed() { m_quickInsertPreviousWidget = nullptr; }
+	void onPreviousWidgetDestroyed() { m_quickInsertPreviousWidget = NULL; }
 
 protected:
 	virtual bool event(QEvent* e);

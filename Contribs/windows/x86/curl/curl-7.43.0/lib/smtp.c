@@ -254,7 +254,7 @@ static bool smtp_endofresp(struct connectdata *conn, char *line, size_t len,
      only send the response code instead as per Section 4.2. */
   if(line[3] == ' ' || len == 5) {
     result = TRUE;
-    *resp = curlx_sltosi(strtol(line, nullptr, 10));
+    *resp = curlx_sltosi(strtol(line, NULL, 10));
 
     /* Make sure real server never sends internal value */
     if(*resp == 1)
@@ -279,7 +279,7 @@ static bool smtp_endofresp(struct connectdata *conn, char *line, size_t len,
 static void smtp_get_message(char *buffer, char** outptr)
 {
   size_t len = 0;
-  char* message = nullptr;
+  char* message = NULL;
 
   /* Find the start of the message */
   for(message = buffer + 4; *message == ' ' || *message == '\t'; message++)
@@ -544,9 +544,9 @@ static CURLcode smtp_perform_command(struct connectdata *conn)
  */
 static CURLcode smtp_perform_mail(struct connectdata *conn)
 {
-  char *from = nullptr;
-  char *auth = nullptr;
-  char *size = nullptr;
+  char *from = NULL;
+  char *auth = NULL;
+  char *size = NULL;
   CURLcode result = CURLE_OK;
   struct SessionHandle *data = conn->data;
 
@@ -962,7 +962,7 @@ static CURLcode smtp_state_data_resp(struct connectdata *conn, int smtpcode,
     Curl_pgrsSetUploadSize(data, data->state.infilesize);
 
     /* SMTP upload */
-    Curl_setup_transfer(conn, -1, -1, FALSE, nullptr, FIRSTSOCKET, nullptr);
+    Curl_setup_transfer(conn, -1, -1, FALSE, NULL, FIRSTSOCKET, NULL);
 
     /* End of DO phase */
     state(conn, SMTP_STOP);
@@ -1297,7 +1297,7 @@ static CURLcode smtp_perform(struct connectdata *conn, bool *connected,
 
   *dophase_done = FALSE; /* not done yet */
 
-  /* Store the first recipient (or nullptr if not specified) */
+  /* Store the first recipient (or NULL if not specified) */
   smtp->rcpt = data->set.mail_rcpt;
 
   /* Start the first command in the DO phase */
@@ -1389,7 +1389,7 @@ static CURLcode smtp_dophase_done(struct connectdata *conn, bool connected)
 
   if(smtp->transfer != FTPTRANSFER_BODY)
     /* no data to transfer */
-    Curl_setup_transfer(conn, -1, -1, FALSE, nullptr, -1, nullptr);
+    Curl_setup_transfer(conn, -1, -1, FALSE, NULL, -1, NULL);
 
   return CURLE_OK;
 }
@@ -1545,7 +1545,7 @@ static CURLcode smtp_parse_url_path(struct connectdata *conn)
   }
 
   /* URL decode the path and use it as the domain in our EHLO */
-  return Curl_urldecode(conn->data, path, 0, &smtpc->domain, nullptr, TRUE);
+  return Curl_urldecode(conn->data, path, 0, &smtpc->domain, NULL, TRUE);
 }
 
 /***********************************************************************
@@ -1563,7 +1563,7 @@ static CURLcode smtp_parse_custom_request(struct connectdata *conn)
 
   /* URL decode the custom request */
   if(custom)
-    result = Curl_urldecode(data, custom, 0, &smtp->custom, nullptr, TRUE);
+    result = Curl_urldecode(data, custom, 0, &smtp->custom, NULL, TRUE);
 
   return result;
 }
@@ -1581,8 +1581,8 @@ CURLcode Curl_smtp_escape_eob(struct connectdata *conn, const ssize_t nread)
   struct SessionHandle *data = conn->data;
   struct SMTP *smtp = data->req.protop;
   char *scratch = data->state.scratch;
-  char *newscratch = nullptr;
-  char *oldscratch = nullptr;
+  char *newscratch = NULL;
+  char *oldscratch = NULL;
   size_t eob_sent;
 
   /* Do we need to allocate a scratch buffer? */

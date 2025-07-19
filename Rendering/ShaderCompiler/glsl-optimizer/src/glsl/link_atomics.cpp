@@ -61,7 +61,7 @@ namespace {
             realloc(counters, sizeof(active_atomic_counter) *
                     (num_counters + 1));
 
-         if (new_counters == nullptr) {
+         if (new_counters == NULL) {
             _mesa_error_no_memory(__func__);
             return;
          }
@@ -108,7 +108,7 @@ namespace {
 
       for (unsigned i = 0; i < MESA_SHADER_STAGES; ++i) {
          struct gl_shader *sh = prog->_LinkedShaders[i];
-         if (sh == nullptr)
+         if (sh == NULL)
             continue;
 
          foreach_in_list(ir_instruction, node, sh->ir) {

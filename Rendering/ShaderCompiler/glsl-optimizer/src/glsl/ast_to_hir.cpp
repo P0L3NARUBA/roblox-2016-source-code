@@ -74,7 +74,7 @@ _mesa_ast_to_hir(exec_list *instructions, struct _mesa_glsl_parse_state *state)
 
    state->symbols->separate_function_namespace = state->language_version == 110;
 
-   state->current_function = nullptr;
+   state->current_function = NULL;
 
    state->toplevel_ir = instructions;
 
@@ -102,7 +102,7 @@ _mesa_ast_to_hir(exec_list *instructions, struct _mesa_glsl_parse_state *state)
    detect_recursion_unlinked(state, instructions);
    detect_conflicting_assignments(state, instructions);
 
-   state->toplevel_ir = nullptr;
+   state->toplevel_ir = NULL;
 
    /* Move all of the variable declarations to the front of the IR list, and
     * reverse the order.  This has the (intended!) side effect that vertex
@@ -116,7 +116,7 @@ _mesa_ast_to_hir(exec_list *instructions, struct _mesa_glsl_parse_state *state)
 	* statements.
     */
 	ir_instruction* before_node = (ir_instruction*)instructions->head;
-	ir_instruction* after_node = nullptr;
+	ir_instruction* after_node = NULL;
 	while (before_node && (before_node->ir_type == ir_type_precision || before_node->ir_type == ir_type_typedecl))
 	{
 		after_node = before_node;
@@ -126,7 +126,7 @@ _mesa_ast_to_hir(exec_list *instructions, struct _mesa_glsl_parse_state *state)
    foreach_in_list_safe(ir_instruction, node, instructions) {
       ir_variable *const var = node->as_variable();
 
-      if (var == nullptr)
+      if (var == NULL)
          continue;
 
       var->remove();
@@ -138,7 +138,7 @@ _mesa_ast_to_hir(exec_list *instructions, struct _mesa_glsl_parse_state *state)
 
    /* Figure out if gl_FragCoord is actually used in fragment shader */
    ir_variable *const var = state->symbols->get_variable("gl_FragCoord");
-   if (var != nullptr)
+   if (var != NULL)
       state->fs_uses_gl_fragcoord = var->data.used;
 
    /* From section 7.1 (Built-In Language Variables) of the GLSL 4.10 spec:
@@ -245,7 +245,7 @@ apply_implicit_conversion(const glsl_type *to, ir_rvalue * &from,
 
    ir_expression_operation op = get_conversion_operation(to, from->type, state);
    if (op) {
-      from = new(ctx) ir_expression(op, to, from, nullptr);
+      from = new(ctx) ir_expression(op, to, from, NULL);
       return true;
    } else {
       return false;
@@ -699,7 +699,7 @@ shift_result_type(const struct glsl_type *type_a,
  * converted.
  *
  * \return
- * \c nullptr if \c rhs cannot be assigned to a location with type \c lhs_type.
+ * \c NULL if \c rhs cannot be assigned to a location with type \c lhs_type.
  * Otherwise the actual RHS to be assigned will be returned.  This may be
  * \c rhs, or it may be \c rhs after some type conversion.
  *
@@ -737,7 +737,7 @@ validate_assignment(struct _mesa_glsl_parse_state *state,
       } else {
          _mesa_glsl_error(&loc, state,
                           "implicitly sized arrays cannot be assigned");
-         return nullptr;
+         return NULL;
       }
    }
 
@@ -753,7 +753,7 @@ validate_assignment(struct _mesa_glsl_parse_state *state,
                     is_initializer ? "initializer" : "value",
                     rhs->type->name, lhs_type->name);
 
-   return nullptr;
+   return NULL;
 }
 
 static void
@@ -776,7 +776,7 @@ do_assignment(exec_list *instructions, struct _mesa_glsl_parse_state *state,
 {
    void *ctx = state;
    bool error_emitted = (lhs->type->is_error() || rhs->type->is_error());
-   ir_rvalue *extract_channel = nullptr;
+   ir_rvalue *extract_channel = NULL;
 
    /* If the assignment LHS comes back as an ir_binop_vector_extract
     * expression, move it to the RHS as an ir_triop_vector_insert.
@@ -789,7 +789,7 @@ do_assignment(exec_list *instructions, struct _mesa_glsl_parse_state *state,
             validate_assignment(state, lhs_loc, lhs->type,
                                 rhs, is_initializer);
 
-         if (new_rhs == nullptr) {
+         if (new_rhs == NULL) {
             return lhs;
          } else {
             /* This converts:
@@ -809,7 +809,7 @@ do_assignment(exec_list *instructions, struct _mesa_glsl_parse_state *state,
                                          lhs_expr->operands[0],
                                          new_rhs,
                                          extract_channel);
-            lhs = lhs_expr->operands[0]->clone(ctx, nullptr);
+            lhs = lhs_expr->operands[0]->clone(ctx, NULL);
          }
       }
    }
@@ -819,12 +819,12 @@ do_assignment(exec_list *instructions, struct _mesa_glsl_parse_state *state,
       lhs_var->data.assigned = true;
 
    if (!error_emitted) {
-      if (non_lvalue_description != nullptr) {
+      if (non_lvalue_description != NULL) {
          _mesa_glsl_error(&lhs_loc, state,
                           "assignment to %s",
                           non_lvalue_description);
          error_emitted = true;
-      } else if (lhs_var != nullptr && lhs_var->data.read_only) {
+      } else if (lhs_var != NULL && lhs_var->data.read_only) {
          _mesa_glsl_error(&lhs_loc, state,
                           "assignment to read-only variable '%s'",
                           lhs_var->name);
@@ -849,7 +849,7 @@ do_assignment(exec_list *instructions, struct _mesa_glsl_parse_state *state,
 
    ir_rvalue *new_rhs =
       validate_assignment(state, lhs_loc, lhs->type, rhs, is_initializer);
-   if (new_rhs != nullptr) {
+   if (new_rhs != NULL) {
       rhs = new_rhs;
 
       /* If the LHS array was not declared with a size, it takes it size from
@@ -860,11 +860,11 @@ do_assignment(exec_list *instructions, struct _mesa_glsl_parse_state *state,
       if (lhs->type->is_unsized_array()) {
          ir_dereference *const d = lhs->as_dereference();
 
-         assert(d != nullptr);
+         assert(d != NULL);
 
          ir_variable *const var = d->variable_referenced();
 
-         assert(var != nullptr);
+         assert(var != NULL);
 
          if (var->data.max_array_access >= unsigned(rhs->type->array_size())) {
             /* FINISHME: This should actually log the location of the RHS. */
@@ -916,14 +916,14 @@ do_assignment(exec_list *instructions, struct _mesa_glsl_parse_state *state,
       if (extract_channel) {
          rvalue = new(ctx) ir_expression(ir_binop_vector_extract,
                                          rvalue,
-                                         extract_channel->clone(ctx, nullptr));
+                                         extract_channel->clone(ctx, NULL));
       }
 
       *out_rvalue = rvalue;
    } else {
       if (!error_emitted)
          instructions->push_tail(new(ctx) ir_assignment(lhs, rhs));
-      *out_rvalue = nullptr;
+      *out_rvalue = NULL;
    }
 
    return error_emitted;
@@ -952,7 +952,7 @@ ast_node::hir(exec_list *instructions, struct _mesa_glsl_parse_state *state)
    (void) instructions;
    (void) state;
 
-   return nullptr;
+   return NULL;
 }
 
 void
@@ -973,7 +973,7 @@ static ir_rvalue *
 do_comparison(void *mem_ctx, int operation, ir_rvalue *op0, ir_rvalue *op1)
 {
    int join_op;
-   ir_rvalue *cmp = nullptr;
+   ir_rvalue *cmp = NULL;
 
    if (operation == ir_binop_all_equal)
       join_op = ir_binop_logic_and;
@@ -991,9 +991,9 @@ do_comparison(void *mem_ctx, int operation, ir_rvalue *op0, ir_rvalue *op1)
       for (unsigned int i = 0; i < op0->type->length; i++) {
          ir_rvalue *e0, *e1, *result;
 
-         e0 = new(mem_ctx) ir_dereference_array(op0->clone(mem_ctx, nullptr),
+         e0 = new(mem_ctx) ir_dereference_array(op0->clone(mem_ctx, NULL),
                                                 new(mem_ctx) ir_constant(i));
-         e1 = new(mem_ctx) ir_dereference_array(op1->clone(mem_ctx, nullptr),
+         e1 = new(mem_ctx) ir_dereference_array(op1->clone(mem_ctx, NULL),
                                                 new(mem_ctx) ir_constant(i));
          result = do_comparison(mem_ctx, operation, e0, e1);
 
@@ -1014,9 +1014,9 @@ do_comparison(void *mem_ctx, int operation, ir_rvalue *op0, ir_rvalue *op1)
          ir_rvalue *e0, *e1, *result;
          const char *field_name = op0->type->fields.structure[i].name;
 
-         e0 = new(mem_ctx) ir_dereference_record(op0->clone(mem_ctx, nullptr),
+         e0 = new(mem_ctx) ir_dereference_record(op0->clone(mem_ctx, NULL),
                                                  field_name);
-         e1 = new(mem_ctx) ir_dereference_record(op1->clone(mem_ctx, nullptr),
+         e1 = new(mem_ctx) ir_dereference_record(op1->clone(mem_ctx, NULL),
                                                  field_name);
          result = do_comparison(mem_ctx, operation, e0, e1);
 
@@ -1041,7 +1041,7 @@ do_comparison(void *mem_ctx, int operation, ir_rvalue *op0, ir_rvalue *op1)
       break;
    }
 
-   if (cmp == nullptr)
+   if (cmp == NULL)
       cmp = new(mem_ctx) ir_constant(true);
 
    return cmp;
@@ -1209,7 +1209,7 @@ ast_expression::do_hir(exec_list *instructions,
       -1,               /* ast_bool_constant doesn't conv to ir_expression. */
       -1,               /* ast_sequence doesn't convert to ir_expression. */
    };
-   ir_rvalue *result = nullptr;
+   ir_rvalue *result = NULL;
    ir_rvalue *op[3];
    const struct glsl_type *type; /* a temporary variable for switch cases */
    bool error_emitted = false;
@@ -1252,7 +1252,7 @@ ast_expression::do_hir(exec_list *instructions,
       error_emitted = type->is_error();
 
       result = new(ctx) ir_expression(operations[this->oper], type,
-                                      op[0], nullptr);
+                                      op[0], NULL);
       break;
 
    case ast_add:
@@ -1384,7 +1384,7 @@ ast_expression::do_hir(exec_list *instructions,
       }
 
       type = error_emitted ? glsl_type::error_type : op[0]->type;
-      result = new(ctx) ir_expression(ir_unop_bit_not, type, op[0], nullptr);
+      result = new(ctx) ir_expression(ir_unop_bit_not, type, op[0], NULL);
       break;
 
    case ast_logic_and: {
@@ -1480,7 +1480,7 @@ ast_expression::do_hir(exec_list *instructions,
                                          "operand", &error_emitted);
 
       result = new(ctx) ir_expression(operations[this->oper], glsl_type::bool_type,
-                                      op[0], nullptr);
+                                      op[0], NULL);
       break;
 
    case ast_mul_assign:
@@ -1500,7 +1500,7 @@ ast_expression::do_hir(exec_list *instructions,
       error_emitted =
          do_assignment(instructions, state,
                        this->subexpressions[0]->non_lvalue_description,
-                       op[0]->clone(ctx, nullptr), temp_rhs,
+                       op[0]->clone(ctx, NULL), temp_rhs,
                        &result, needs_rvalue, false,
                        this->subexpressions[0]->get_location());
 
@@ -1527,7 +1527,7 @@ ast_expression::do_hir(exec_list *instructions,
       error_emitted =
          do_assignment(instructions, state,
                        this->subexpressions[0]->non_lvalue_description,
-                       op[0]->clone(ctx, nullptr), temp_rhs,
+                       op[0]->clone(ctx, NULL), temp_rhs,
                        &result, needs_rvalue, false,
                        this->subexpressions[0]->get_location());
       break;
@@ -1544,7 +1544,7 @@ ast_expression::do_hir(exec_list *instructions,
       error_emitted =
          do_assignment(instructions, state,
                        this->subexpressions[0]->non_lvalue_description,
-                       op[0]->clone(ctx, nullptr), temp_rhs,
+                       op[0]->clone(ctx, NULL), temp_rhs,
                        &result, needs_rvalue, false,
                        this->subexpressions[0]->get_location());
       break;
@@ -1562,7 +1562,7 @@ ast_expression::do_hir(exec_list *instructions,
       error_emitted =
          do_assignment(instructions, state,
                        this->subexpressions[0]->non_lvalue_description,
-                       op[0]->clone(ctx, nullptr), temp_rhs,
+                       op[0]->clone(ctx, NULL), temp_rhs,
                        &result, needs_rvalue, false,
                        this->subexpressions[0]->get_location());
       break;
@@ -1629,7 +1629,7 @@ ast_expression::do_hir(exec_list *instructions,
 
       if (then_instructions.is_empty()
           && else_instructions.is_empty()
-          && (cond_val != nullptr) && (then_val != nullptr) && (else_val != nullptr)) {
+          && (cond_val != NULL) && (then_val != NULL) && (else_val != NULL)) {
          result = (cond_val->value.b[0]) ? then_val : else_val;
       } else {
          ir_variable *const tmp =
@@ -1675,7 +1675,7 @@ ast_expression::do_hir(exec_list *instructions,
       error_emitted =
          do_assignment(instructions, state,
                        this->subexpressions[0]->non_lvalue_description,
-                       op[0]->clone(ctx, nullptr), temp_rhs,
+                       op[0]->clone(ctx, NULL), temp_rhs,
                        &result, needs_rvalue, false,
                        this->subexpressions[0]->get_location());
       break;
@@ -1699,13 +1699,13 @@ ast_expression::do_hir(exec_list *instructions,
       /* Get a temporary of a copy of the lvalue before it's modified.
        * This may get thrown away later.
        */
-      result = get_lvalue_copy(instructions, op[0]->clone(ctx, nullptr));
+      result = get_lvalue_copy(instructions, op[0]->clone(ctx, NULL));
 
       ir_rvalue *junk_rvalue;
       error_emitted =
          do_assignment(instructions, state,
                        this->subexpressions[0]->non_lvalue_description,
-                       op[0]->clone(ctx, nullptr), temp_rhs,
+                       op[0]->clone(ctx, NULL), temp_rhs,
                        &junk_rvalue, false, false,
                        this->subexpressions[0]->get_location());
 
@@ -1746,7 +1746,7 @@ ast_expression::do_hir(exec_list *instructions,
       ir_variable *var = 
          state->symbols->get_variable(this->primary_expression.identifier);
 
-      if (var != nullptr) {
+      if (var != NULL) {
          var->data.used = true;
          result = new(ctx) ir_dereference_variable(var);
       } else {
@@ -1786,7 +1786,7 @@ ast_expression::do_hir(exec_list *instructions,
        * therefore add instructions to the instruction list), they get dropped
        * on the floor.
        */
-      exec_node *previous_tail_pred = nullptr;
+      exec_node *previous_tail_pred = NULL;
       YYLTYPE previous_operand_loc = loc;
 
       foreach_list_typed (ast_node, ast, link, &this->expressions) {
@@ -1814,7 +1814,7 @@ ast_expression::do_hir(exec_list *instructions,
 
          /* tail_pred is directly accessed instead of using the get_tail()
           * method for performance reasons.  get_tail() has extra code to
-          * return nullptr when the list is empty.  We don't care about that
+          * return NULL when the list is empty.  We don't care about that
           * here, so using tail_pred directly is fine.
           */
          previous_tail_pred = instructions->tail_pred;
@@ -1829,8 +1829,8 @@ ast_expression::do_hir(exec_list *instructions,
       break;
    }
    }
-   type = nullptr; /* use result->type, not type. */
-   assert(result != nullptr || !needs_rvalue);
+   type = NULL; /* use result->type, not type. */
+   assert(result != NULL || !needs_rvalue);
 
    if (result && result->type->is_error() && !error_emitted)
       _mesa_glsl_error(& loc, state, "type mismatch");
@@ -1849,15 +1849,15 @@ ast_expression_statement::hir(exec_list *instructions,
     * for (i = 0; i < 5; i++)
     *     ;
     *
-    * In this case the expression will be nullptr.  Test for nullptr and don't do
+    * In this case the expression will be NULL.  Test for NULL and don't do
     * anything in that case.
     */
-   if (expression != nullptr)
+   if (expression != NULL)
       expression->hir_no_rvalue(instructions, state);
 
    /* Statements do not have r-values.
     */
-   return nullptr;
+   return NULL;
 }
 
 
@@ -1876,7 +1876,7 @@ ast_compound_statement::hir(exec_list *instructions,
 
    /* Compound statements do not have r-values.
     */
-   return nullptr;
+   return NULL;
 }
 
 /**
@@ -1893,7 +1893,7 @@ process_array_size(exec_node *node,
    ir_rvalue *const ir = array_size->hir(& dummy_instructions, state);
    YYLTYPE loc = array_size->get_location();
 
-   if (ir == nullptr) {
+   if (ir == NULL) {
       _mesa_glsl_error(& loc, state,
                        "array size could not be resolved");
       return 0;
@@ -1912,7 +1912,7 @@ process_array_size(exec_node *node,
    }
 
    ir_constant *const size = ir->constant_expression_value();
-   if (size == nullptr) {
+   if (size == NULL) {
       _mesa_glsl_error(& loc, state, "array size must be a "
                        "constant valued expression");
       return 0;
@@ -1943,7 +1943,7 @@ process_array_type(YYLTYPE *loc, const glsl_type *base,
 {
    const glsl_type *array_type = base;
 
-   if (array_specifier != nullptr) {
+   if (array_specifier != NULL) {
       if (base->is_array()) {
 
          /* From page 19 (page 25) of the GLSL 1.20 spec:
@@ -2003,8 +2003,8 @@ ast_fully_specified_type::glsl_type(const char **name,
 {
    const struct glsl_type *type = this->specifier->glsl_type(name, state);
 
-   if (type == nullptr)
-      return nullptr;
+   if (type == NULL)
+      return NULL;
 
    /* GLSL Optimizer change: do allow unspecified precision; hlsl2glsl
 	produces a bunch of wrapper functions without precision specified.
@@ -2013,7 +2013,7 @@ ast_fully_specified_type::glsl_type(const char **name,
        && state->es_shader
        && state->stage == MESA_SHADER_FRAGMENT
        && this->qualifier.precision == ast_precision_none
-       && state->symbols->get_variable("#default precision") == nullptr) {
+       && state->symbols->get_variable("#default precision") == NULL) {
       YYLTYPE loc = this->get_location();
       _mesa_glsl_error(&loc, state,
                        "no precision specified this scope for type `%s'",
@@ -2611,7 +2611,7 @@ apply_type_qualifier_to_variable(const struct ast_type_qualifier *qual,
       }
    }
 
-   if (state->all_invariant && (state->current_function == nullptr)) {
+   if (state->all_invariant && (state->current_function == NULL)) {
       switch (state->stage) {
       case MESA_SHADER_VERTEX:
          if (var->data.mode == ir_var_shader_out)
@@ -2649,7 +2649,7 @@ apply_type_qualifier_to_variable(const struct ast_type_qualifier *qual,
 		       qual_string);
    }
 
-   if (var->name != nullptr && strcmp(var->name, "gl_FragCoord") == 0) {
+   if (var->name != NULL && strcmp(var->name, "gl_FragCoord") == 0) {
 
       /* Section 4.3.8.1, page 39 of GLSL 1.50 spec says:
        *
@@ -2660,7 +2660,7 @@ apply_type_qualifier_to_variable(const struct ast_type_qualifier *qual,
        * fragment shader.
        */
       ir_variable *earlier = state->symbols->get_variable("gl_FragCoord");
-      if (earlier != nullptr &&
+      if (earlier != NULL &&
           earlier->data.used &&
           !state->fs_redeclares_gl_fragcoord) {
          _mesa_glsl_error(loc, state,
@@ -2861,11 +2861,11 @@ apply_type_qualifier_to_variable(const struct ast_type_qualifier *qual,
  *
  * Semantic checks to verify the validity of the redeclaration are also
  * performed.  If semantic checks fail, compilation error will be emitted via
- * \c _mesa_glsl_error, but a non-\c nullptr pointer will still be returned.
+ * \c _mesa_glsl_error, but a non-\c NULL pointer will still be returned.
  *
  * \returns
  * A pointer to an existing variable in the current scope if the declaration
- * is a redeclaration, \c nullptr otherwise.
+ * is a redeclaration, \c NULL otherwise.
  */
 static ir_variable *
 get_variable_being_redeclared(ir_variable *var, YYLTYPE loc,
@@ -2879,10 +2879,10 @@ get_variable_being_redeclared(ir_variable *var, YYLTYPE loc,
     * global scope (for built-ins in the implicit outer scope).
     */
    ir_variable *earlier = state->symbols->get_variable(var->name);
-   if (earlier == nullptr ||
-       (state->current_function != nullptr &&
+   if (earlier == NULL ||
+       (state->current_function != NULL &&
        !state->symbols->name_declared_this_scope(var->name))) {
-      return nullptr;
+      return NULL;
    }
 
 
@@ -2909,7 +2909,7 @@ get_variable_being_redeclared(ir_variable *var, YYLTYPE loc,
 
       earlier->type = var->type;
       delete var;
-      var = nullptr;
+      var = NULL;
    } else if ((state->ARB_fragment_coord_conventions_enable ||
               state->is_version(150, 0))
               && strcmp(var->name, "gl_FragCoord") == 0
@@ -2998,7 +2998,7 @@ process_initializer(ir_variable *var, ast_declaration *decl,
 		    exec_list *initializer_instructions,
 		    struct _mesa_glsl_parse_state *state)
 {
-   ir_rvalue *result = nullptr;
+   ir_rvalue *result = NULL;
 
    YYLTYPE initializer_loc = decl->initializer->get_location();
 
@@ -3024,7 +3024,7 @@ process_initializer(ir_variable *var, ast_declaration *decl,
                        "cannot initialize opaque variable");
    }
 
-   if ((var->data.mode == ir_var_shader_in) && (state->current_function == nullptr)) {
+   if ((var->data.mode == ir_var_shader_in) && (state->current_function == NULL)) {
       _mesa_glsl_error(& initializer_loc, state,
 		       "cannot initialize %s shader input / %s",
 		       _mesa_shader_stage_to_string(state->stage),
@@ -3060,7 +3060,7 @@ process_initializer(ir_variable *var, ast_declaration *decl,
        || type->qualifier.flags.q.uniform) {
       ir_rvalue *new_rhs = validate_assignment(state, initializer_loc,
                                                var->type, rhs, true);
-      if (new_rhs != nullptr) {
+      if (new_rhs != NULL) {
          rhs = new_rhs;
 
          ir_constant *constant_value = rhs->constant_expression_value();
@@ -3071,7 +3071,7 @@ process_initializer(ir_variable *var, ast_declaration *decl,
              * initialized with constant expressions.
              */
             if (!state->ARB_shading_language_420pack_enable
-                || state->current_function == nullptr) {
+                || state->current_function == NULL) {
                _mesa_glsl_error(& initializer_loc, state,
                                 "initializer of %s variable `%s' must be a "
                                 "constant expression",
@@ -3105,7 +3105,7 @@ process_initializer(ir_variable *var, ast_declaration *decl,
       const glsl_type *initializer_type;
       if (!type->qualifier.flags.q.uniform) {
          do_assignment(initializer_instructions, state,
-                       nullptr,
+                       NULL,
                        lhs, rhs,
                        &result, true,
                        true,
@@ -3311,8 +3311,8 @@ ast_declarator_list::hir(exec_list *instructions,
 {
    void *ctx = state;
    const struct glsl_type *decl_type;
-   const char *type_name = nullptr;
-   ir_rvalue *result = nullptr;
+   const char *type_name = NULL;
+   ir_rvalue *result = NULL;
    YYLTYPE loc = this->get_location();
 
    /* From page 46 (page 52 of the PDF) of the GLSL 1.50 spec:
@@ -3324,24 +3324,24 @@ ast_declarator_list::hir(exec_list *instructions,
     *         invariant gl_Position; // make existing gl_Position be invariant"
     *
     * In these cases the parser will set the 'invariant' flag in the declarator
-    * list, and the type will be nullptr.
+    * list, and the type will be NULL.
     */
    if (this->invariant) {
-      assert(this->type == nullptr);
+      assert(this->type == NULL);
 
-      if (state->current_function != nullptr) {
+      if (state->current_function != NULL) {
          _mesa_glsl_error(& loc, state,
                           "all uses of `invariant' keyword must be at global "
                           "scope");
       }
 
       foreach_list_typed (ast_declaration, decl, link, &this->declarations) {
-         assert(decl->array_specifier == nullptr);
-         assert(decl->initializer == nullptr);
+         assert(decl->array_specifier == NULL);
+         assert(decl->initializer == NULL);
 
          ir_variable *const earlier =
             state->symbols->get_variable(decl->identifier);
-         if (earlier == nullptr) {
+         if (earlier == NULL) {
             _mesa_glsl_error(& loc, state,
                              "undeclared variable `%s' cannot be marked "
                              "invariant", decl->identifier);
@@ -3361,23 +3361,23 @@ ast_declarator_list::hir(exec_list *instructions,
 
       /* Invariant redeclarations do not have r-values.
        */
-      return nullptr;
+      return NULL;
    }
 
    if (this->precise) {
-      assert(this->type == nullptr);
+      assert(this->type == NULL);
 
       foreach_list_typed (ast_declaration, decl, link, &this->declarations) {
-         assert(decl->array_specifier == nullptr);
-         assert(decl->initializer == nullptr);
+         assert(decl->array_specifier == NULL);
+         assert(decl->initializer == NULL);
 
          ir_variable *const earlier =
             state->symbols->get_variable(decl->identifier);
-         if (earlier == nullptr) {
+         if (earlier == NULL) {
             _mesa_glsl_error(& loc, state,
                              "undeclared variable `%s' cannot be marked "
                              "precise", decl->identifier);
-         } else if (state->current_function != nullptr &&
+         } else if (state->current_function != NULL &&
                     !state->symbols->name_declared_this_scope(decl->identifier)) {
             /* Note: we have to check if we're in a function, since
              * builtins are treated as having come from another scope.
@@ -3397,10 +3397,10 @@ ast_declarator_list::hir(exec_list *instructions,
       }
 
       /* Precise redeclarations do not have r-values either. */
-      return nullptr;
+      return NULL;
    }
 
-   assert(this->type != nullptr);
+   assert(this->type != NULL);
    assert(!this->invariant);
    assert(!this->precise);
 
@@ -3438,16 +3438,16 @@ ast_declarator_list::hir(exec_list *instructions,
        *   float;' Emit a warning with a description of what they
        *   probably meant to do.
        *
-       * Note that if decl_type is nullptr and there is a structure involved,
+       * Note that if decl_type is NULL and there is a structure involved,
        * there must have been some sort of error with the structure.  In this
        * case we assume that an error was already generated on this line of
        * code for the structure.  There is no need to generate an additional,
        * confusing error.
        */
-      assert(this->type->specifier->structure == nullptr || decl_type != nullptr
+      assert(this->type->specifier->structure == NULL || decl_type != NULL
 	     || state->error);
 
-      if (decl_type == nullptr) {
+      if (decl_type == NULL) {
          _mesa_glsl_error(&loc, state,
                           "invalid type `%s' in empty declaration",
                           type_name);
@@ -3455,9 +3455,9 @@ ast_declarator_list::hir(exec_list *instructions,
          /* Empty atomic counter declarations are allowed and useful
           * to set the default offset qualifier.
           */
-         return nullptr;
+         return NULL;
       } else if (this->type->qualifier.precision != ast_precision_none) {
-         if (this->type->specifier->structure != nullptr) {
+         if (this->type->specifier->structure != NULL) {
             _mesa_glsl_error(&loc, state,
                              "precision qualifiers can't be applied "
                              "to structures");
@@ -3476,7 +3476,7 @@ ast_declarator_list::hir(exec_list *instructions,
                                precision_names[this->type->qualifier.precision],
                                type_name);
          }
-      } else if (this->type->specifier->structure == nullptr) {
+      } else if (this->type->specifier->structure == NULL) {
          _mesa_glsl_warning(&loc, state, "empty declaration");
       }
    }
@@ -3489,8 +3489,8 @@ ast_declarator_list::hir(exec_list *instructions,
        * FINISHME: declaration at a higher scope.
        */
 
-      if ((decl_type == nullptr) || decl_type->is_void()) {
-         if (type_name != nullptr) {
+      if ((decl_type == NULL) || decl_type->is_void()) {
+         if (type_name != NULL) {
             _mesa_glsl_error(& loc, state,
                              "invalid type `%s' in declaration of `%s'",
                              type_name, decl->identifier);
@@ -3569,8 +3569,8 @@ ast_declarator_list::hir(exec_list *instructions,
          }
       }
 
-      if (state->current_function != nullptr) {
-         const char *mode = nullptr;
+      if (state->current_function != NULL) {
+         const char *mode = NULL;
          const char *extra = "";
 
          /* There is no need to check for 'inout' here because the parser will
@@ -3731,7 +3731,7 @@ ast_declarator_list::hir(exec_list *instructions,
           && this->type->qualifier.flags.q.varying) {
 
          const char *i = this->type->qualifier.interpolation_string();
-         assert(i != nullptr);
+         assert(i != NULL);
          const char *s;
          if (this->type->qualifier.flags.q.centroid)
             s = "centroid varying";
@@ -3762,7 +3762,7 @@ ast_declarator_list::hir(exec_list *instructions,
           && this->type->qualifier.has_interpolation()) {
 
          const char *i = this->type->qualifier.interpolation_string();
-         assert(i != nullptr);
+         assert(i != NULL);
 
          switch (state->stage) {
          case MESA_SHADER_VERTEX:
@@ -3830,7 +3830,7 @@ ast_declarator_list::hir(exec_list *instructions,
       ir_variable *earlier =
          get_variable_being_redeclared(var, decl->get_location(), state,
                                        false /* allow_all_redeclarations */);
-      if (earlier != nullptr) {
+      if (earlier != NULL) {
          if (var_is_gl_id &&
              earlier->data.how_declared == ir_var_declared_in_block) {
             _mesa_glsl_error(&loc, state,
@@ -3840,8 +3840,8 @@ ast_declarator_list::hir(exec_list *instructions,
          earlier->data.how_declared = ir_var_declared_normally;
       }
 
-      if (decl->initializer != nullptr) {
-         result = process_initializer((earlier == nullptr) ? var : earlier,
+      if (decl->initializer != NULL) {
+         result = process_initializer((earlier == NULL) ? var : earlier,
                                       decl, this->type,
                                       &initializer_instructions, state);
       }
@@ -3852,14 +3852,14 @@ ast_declarator_list::hir(exec_list *instructions,
        *      its declaration, so they must be initialized when
        *      declared."
        */
-      if (this->type->qualifier.flags.q.constant && decl->initializer == nullptr) {
+      if (this->type->qualifier.flags.q.constant && decl->initializer == NULL) {
          _mesa_glsl_error(& loc, state,
                           "const declaration of `%s' must be initialized",
                           decl->identifier);
       }
 
       if (state->es_shader) {
-         const glsl_type *const t = (earlier == nullptr)
+         const glsl_type *const t = (earlier == NULL)
             ? var->type : earlier->type;
 
          if (t->is_unsized_array())
@@ -3889,7 +3889,7 @@ ast_declarator_list::hir(exec_list *instructions,
        * semantic checks that must be applied.  In addition, variable that was
        * created for the declaration should be added to the IR stream.
        */
-      if (earlier == nullptr) {
+      if (earlier == NULL) {
          validate_identifier(decl->identifier, loc, state);
 
          /* Add the variable to the symbol table.  Note that the initializer's
@@ -3951,13 +3951,13 @@ ast_parameter_declarator::hir(exec_list *instructions,
 {
    void *ctx = state;
    const struct glsl_type *type;
-   const char *name = nullptr;
+   const char *name = NULL;
    YYLTYPE loc = this->get_location();
 
    type = this->type->glsl_type(& name, state);
 
-   if (type == nullptr) {
-      if (name != nullptr) {
+   if (type == NULL) {
+      if (name != NULL) {
          _mesa_glsl_error(& loc, state,
                           "invalid type `%s' in declaration of `%s'",
                           name, this->identifier);
@@ -3983,17 +3983,17 @@ ast_parameter_declarator::hir(exec_list *instructions,
     * parameters and lookups of an unnamed symbol.
     */
    if (type->is_void()) {
-      if (this->identifier != nullptr)
+      if (this->identifier != NULL)
          _mesa_glsl_error(& loc, state,
                           "named parameter cannot have type `void'");
 
       is_void = true;
-      return nullptr;
+      return NULL;
    }
 
-   if (formal_parameter && (this->identifier == nullptr)) {
+   if (formal_parameter && (this->identifier == NULL)) {
       _mesa_glsl_error(& loc, state, "formal parameter lacks a name");
-      return nullptr;
+      return NULL;
    }
 
    /* This only handles "vec4 foo[..]".  The earlier specifier->glsl_type(...)
@@ -4056,7 +4056,7 @@ ast_parameter_declarator::hir(exec_list *instructions,
 
    /* Parameter declarations do not have r-values.
     */
-   return nullptr;
+   return NULL;
 }
 
 
@@ -4066,7 +4066,7 @@ ast_parameter_declarator::parameters_to_hir(exec_list *ast_parameters,
                                             exec_list *ir_parameters,
                                             _mesa_glsl_parse_state *state)
 {
-   ast_parameter_declarator *void_param = nullptr;
+   ast_parameter_declarator *void_param = NULL;
    unsigned count = 0;
 
    foreach_list_typed (ast_parameter_declarator, param, link, ast_parameters) {
@@ -4079,7 +4079,7 @@ ast_parameter_declarator::parameters_to_hir(exec_list *ast_parameters,
       count++;
    }
 
-   if ((void_param != nullptr) && (count > 1)) {
+   if ((void_param != NULL) && (count > 1)) {
       YYLTYPE loc = void_param->get_location();
 
       _mesa_glsl_error(& loc, state,
@@ -4107,8 +4107,8 @@ ast_function::hir(exec_list *instructions,
                   struct _mesa_glsl_parse_state *state)
 {
    void *ctx = state;
-   ir_function *f = nullptr;
-   ir_function_signature *sig = nullptr;
+   ir_function *f = NULL;
+   ir_function_signature *sig = NULL;
    exec_list hir_parameters;
 
    const char *const name = identifier;
@@ -4131,7 +4131,7 @@ ast_function::hir(exec_list *instructions,
     *
     * Note that this language does not appear in GLSL 1.10.
     */
-   if ((state->current_function != nullptr) &&
+   if ((state->current_function != NULL) &&
        state->is_version(120, 100)) {
       YYLTYPE loc = this->get_location();
       _mesa_glsl_error(&loc, state,
@@ -4196,7 +4196,7 @@ ast_function::hir(exec_list *instructions,
 
    /* Create an ir_function if one doesn't already exist. */
    f = state->symbols->get_function(name);
-   if (f == nullptr) {
+   if (f == NULL) {
       f = new(ctx) ir_function(name);
       if (!state->symbols->add_function(f)) {
          /* This function name shadows a non-function use of the same name. */
@@ -4204,7 +4204,7 @@ ast_function::hir(exec_list *instructions,
 
          _mesa_glsl_error(&loc, state, "function name `%s' conflicts with "
                           "non-function", name);
-         return nullptr;
+         return NULL;
       }
 
       emit_function(state, f);
@@ -4216,9 +4216,9 @@ ast_function::hir(exec_list *instructions,
     */
    if (state->es_shader || f->has_user_signature()) {
       sig = f->exact_matching_signature(state, &hir_parameters);
-      if (sig != nullptr) {
+      if (sig != NULL) {
          const char *badvar = sig->qualifiers_match(&hir_parameters);
-         if (badvar != nullptr) {
+         if (badvar != NULL) {
             YYLTYPE loc = this->get_location();
 
             _mesa_glsl_error(&loc, state, "function `%s' parameter `%s' "
@@ -4241,7 +4241,7 @@ ast_function::hir(exec_list *instructions,
                 * function that's already been defined.  This is redundant,
                 * and we should ignore it.
                 */
-               return nullptr;
+               return NULL;
             }
          }
       }
@@ -4264,7 +4264,7 @@ ast_function::hir(exec_list *instructions,
 
    /* Finish storing the information about this new function in its signature.
     */
-   if (sig == nullptr) {
+   if (sig == NULL) {
       sig = new(ctx) ir_function_signature(return_type, (glsl_precision)this->return_type->qualifier.precision);
       f->add_signature(sig);
    }
@@ -4274,7 +4274,7 @@ ast_function::hir(exec_list *instructions,
 
    /* Function declarations (prototypes) do not have r-values.
     */
-   return nullptr;
+   return NULL;
 }
 
 
@@ -4286,10 +4286,10 @@ ast_function_definition::hir(exec_list *instructions,
    prototype->hir(instructions, state);
 
    ir_function_signature *signature = prototype->signature;
-   if (signature == nullptr)
-      return nullptr;
+   if (signature == NULL)
+      return NULL;
 
-   assert(state->current_function == nullptr);
+   assert(state->current_function == NULL);
    state->current_function = signature;
    state->found_return = false;
 
@@ -4298,7 +4298,7 @@ ast_function_definition::hir(exec_list *instructions,
     */
    state->symbols->push_scope();
    foreach_in_list(ir_variable, var, &signature->parameters) {
-      assert(var->as_variable() != nullptr);
+      assert(var->as_variable() != NULL);
 
       /* The only way a parameter would "exist" is if two parameters have
        * the same name.
@@ -4319,7 +4319,7 @@ ast_function_definition::hir(exec_list *instructions,
    state->symbols->pop_scope();
 
    assert(state->current_function == signature);
-   state->current_function = nullptr;
+   state->current_function = NULL;
 
    if (!signature->return_type->is_void() && !state->found_return) {
       YYLTYPE loc = this->get_location();
@@ -4331,7 +4331,7 @@ ast_function_definition::hir(exec_list *instructions,
 
    /* Function definitions do not have r-values.
     */
-   return nullptr;
+   return NULL;
 }
 
 
@@ -4349,7 +4349,7 @@ ast_jump_statement::hir(exec_list *instructions,
       if (opt_return_value) {
          ir_rvalue *ret = opt_return_value->hir(instructions, state);
 
-         /* The value of the return type can be nullptr if the shader says
+         /* The value of the return type can be NULL if the shader says
           * 'return foo();' and foo() is a function that returns void.
           *
           * NOTE: The GLSL spec doesn't say that this is an error.  The type
@@ -4357,7 +4357,7 @@ ast_jump_statement::hir(exec_list *instructions,
           * also void, then this should compile without error.  Seriously.
           */
          const glsl_type *const ret_type =
-            (ret == nullptr) ? glsl_type::void_type : ret->type;
+            (ret == NULL) ? glsl_type::void_type : ret->type;
 
          /* Implicit conversions are not allowed for return values prior to
           * ARB_shading_language_420pack.
@@ -4432,13 +4432,13 @@ ast_jump_statement::hir(exec_list *instructions,
    case ast_break:
    case ast_continue:
       if (mode == ast_continue &&
-          state->loop_nesting_ast == nullptr) {
+          state->loop_nesting_ast == NULL) {
          YYLTYPE loc = this->get_location();
 
          _mesa_glsl_error(& loc, state, "continue may only appear in a loop");
       } else if (mode == ast_break &&
-         state->loop_nesting_ast == nullptr &&
-         state->switch_state.switch_nesting_ast == nullptr) {
+         state->loop_nesting_ast == NULL &&
+         state->switch_state.switch_nesting_ast == NULL) {
          YYLTYPE loc = this->get_location();
 
          _mesa_glsl_error(& loc, state,
@@ -4449,7 +4449,7 @@ ast_jump_statement::hir(exec_list *instructions,
           * going to be placed.  Same goes for the condition for a do-while
           * loop.
           */
-         if (state->loop_nesting_ast != nullptr &&
+         if (state->loop_nesting_ast != NULL &&
              mode == ast_continue) {
             if (state->loop_nesting_ast->rest_expression) {
                state->loop_nesting_ast->rest_expression->hir(instructions,
@@ -4488,7 +4488,7 @@ ast_jump_statement::hir(exec_list *instructions,
 
    /* Jump instructions do not have r-values.
     */
-   return nullptr;
+   return NULL;
 }
 
 
@@ -4518,13 +4518,13 @@ ast_selection_statement::hir(exec_list *instructions,
 
    ir_if *const stmt = new(ctx) ir_if(condition);
 
-   if (then_statement != nullptr) {
+   if (then_statement != NULL) {
       state->symbols->push_scope();
       then_statement->hir(& stmt->then_instructions, state);
       state->symbols->pop_scope();
    }
 
-   if (else_statement != nullptr) {
+   if (else_statement != NULL) {
       state->symbols->push_scope();
       else_statement->hir(& stmt->else_instructions, state);
       state->symbols->pop_scope();
@@ -4534,7 +4534,7 @@ ast_selection_statement::hir(exec_list *instructions,
 
    /* if-statements do not have r-values.
     */
-   return nullptr;
+   return NULL;
 }
 
 
@@ -4570,7 +4570,7 @@ ast_switch_statement::hir(exec_list *instructions,
    state->switch_state.switch_nesting_ast = this;
    state->switch_state.labels_ht = hash_table_ctor(0, hash_table_pointer_hash,
 						   hash_table_pointer_compare);
-   state->switch_state.previous_default = nullptr;
+   state->switch_state.previous_default = NULL;
 
    /* Initalize is_fallthru state to false.
     */
@@ -4619,7 +4619,7 @@ ast_switch_statement::hir(exec_list *instructions,
    state->switch_state = saved;
 
    /* Switch statements do not have r-values. */
-   return nullptr;
+   return NULL;
 }
 
 
@@ -4649,11 +4649,11 @@ ir_rvalue *
 ast_switch_body::hir(exec_list *instructions,
                      struct _mesa_glsl_parse_state *state)
 {
-   if (stmts != nullptr)
+   if (stmts != NULL)
       stmts->hir(instructions, state);
 
    /* Switch bodies do not have r-values. */
-   return nullptr;
+   return NULL;
 }
 
 ir_rvalue *
@@ -4698,7 +4698,7 @@ ast_case_statement_list::hir(exec_list *instructions,
       /* Default case was the last one, no checks required. */
       if (after_default.is_empty()) {
          instructions->append_list(&default_case);
-         return nullptr;
+         return NULL;
       }
 
       foreach_in_list(ir_instruction, ir, &after_default) {
@@ -4709,7 +4709,7 @@ ast_case_statement_list::hir(exec_list *instructions,
 
          /* Clone the check between case label and init expression. */
          ir_expression *exp = (ir_expression*) assign->condition;
-         ir_expression *clone = exp->clone(state, nullptr);
+         ir_expression *clone = exp->clone(state, NULL);
 
          ir_dereference_variable *deref_var =
             new(state) ir_dereference_variable(state->switch_state.run_default);
@@ -4727,7 +4727,7 @@ ast_case_statement_list::hir(exec_list *instructions,
    }
 
    /* Case statements do not have r-values. */
-   return nullptr;
+   return NULL;
 }
 
 ir_rvalue *
@@ -4759,7 +4759,7 @@ ast_case_statement::hir(exec_list *instructions,
    instructions->push_tail(test_fallthru);
 
    /* Case statements do not have r-values. */
-   return nullptr;
+   return NULL;
 }
 
 
@@ -4771,7 +4771,7 @@ ast_case_label_list::hir(exec_list *instructions,
       label->hir(instructions, state);
 
    /* Case labels do not have r-values. */
-   return nullptr;
+   return NULL;
 }
 
 ir_rvalue *
@@ -4786,7 +4786,7 @@ ast_case_label::hir(exec_list *instructions,
    ir_rvalue *const true_val = new(ctx) ir_constant(true);
 
    /* If not default case, ... */
-   if (this->test_value != nullptr) {
+   if (this->test_value != NULL) {
       /* Conditionally set fallthru state based on
        * comparison of cached test expression value to case label.
        */
@@ -4900,7 +4900,7 @@ ast_case_label::hir(exec_list *instructions,
    }
 
    /* Case statements do not have r-values. */
-   return nullptr;
+   return NULL;
 }
 
 void
@@ -4909,11 +4909,11 @@ ast_iteration_statement::condition_to_hir(exec_list *instructions,
 {
    void *ctx = state;
 
-   if (condition != nullptr) {
+   if (condition != NULL) {
       ir_rvalue *const cond =
          condition->hir(instructions, state);
 
-      if ((cond == nullptr)
+      if ((cond == NULL)
           || !cond->type->is_boolean() || !cond->type->is_scalar()) {
          YYLTYPE loc = condition->get_location();
 
@@ -4949,7 +4949,7 @@ ast_iteration_statement::hir(exec_list *instructions,
    if (mode != ast_do_while)
       state->symbols->push_scope();
 
-   if (init_statement != nullptr)
+   if (init_statement != NULL)
       init_statement->hir(instructions, state);
 
    ir_loop *const stmt = new(ctx) ir_loop();
@@ -4969,10 +4969,10 @@ ast_iteration_statement::hir(exec_list *instructions,
    if (mode != ast_do_while)
       condition_to_hir(&stmt->body_instructions, state);
 
-   if (body != nullptr)
+   if (body != NULL)
       body->hir(& stmt->body_instructions, state);
 
-   if (rest_expression != nullptr)
+   if (rest_expression != NULL)
       rest_expression->hir(& stmt->body_instructions, state);
 
    if (mode == ast_do_while)
@@ -4987,7 +4987,7 @@ ast_iteration_statement::hir(exec_list *instructions,
 
    /* Loops do not have r-values.
     */
-   return nullptr;
+   return NULL;
 }
 
 
@@ -5014,7 +5014,7 @@ ast_iteration_statement::hir(exec_list *instructions,
 static bool
 is_valid_default_precision_type(const struct glsl_type *const type)
 {
-   if (type == nullptr)
+   if (type == NULL)
       return false;
 
    switch (type->base_type) {
@@ -5034,8 +5034,8 @@ ir_rvalue *
 ast_type_specifier::hir(exec_list *instructions,
                         struct _mesa_glsl_parse_state *state)
 {
-   if (this->default_precision == ast_precision_none && this->structure == nullptr)
-      return nullptr;
+   if (this->default_precision == ast_precision_none && this->structure == NULL)
+      return NULL;
 
    YYLTYPE loc = this->get_location();
 
@@ -5051,19 +5051,19 @@ ast_type_specifier::hir(exec_list *instructions,
     */
    if (this->default_precision != ast_precision_none) {
       if (!state->check_precision_qualifiers_allowed(&loc))
-         return nullptr;
+         return NULL;
 
-      if (this->structure != nullptr) {
+      if (this->structure != NULL) {
          _mesa_glsl_error(&loc, state,
                           "precision qualifiers do not apply to structures");
-         return nullptr;
+         return NULL;
       }
 
-      if (this->array_specifier != nullptr) {
+      if (this->array_specifier != NULL) {
          _mesa_glsl_error(&loc, state,
                           "default precision statements do not apply to "
                           "arrays");
-         return nullptr;
+         return NULL;
       }
 
       const struct glsl_type *const type =
@@ -5072,13 +5072,13 @@ ast_type_specifier::hir(exec_list *instructions,
          _mesa_glsl_error(&loc, state,
                           "default precision statements apply only to "
                           "float, int, and sampler types");
-         return nullptr;
+         return NULL;
       }
 
       {
          void *ctx = state;
 
-         const char* precision_type = nullptr;
+         const char* precision_type = NULL;
          switch (this->default_precision) {
          case glsl_precision_high:		precision_type = "highp"; break;
          case glsl_precision_medium:		precision_type = "mediump"; break;
@@ -5132,7 +5132,7 @@ ast_type_specifier::hir(exec_list *instructions,
       }
 
       /* FINISHME: Translate precision statements into IR. */
-      return nullptr;
+      return NULL;
    }
 
    /* _mesa_ast_set_aggregate_type() sets the <structure> field so that
@@ -5147,10 +5147,10 @@ ast_type_specifier::hir(exec_list *instructions,
     *    struct T { ... } t = { ... };  (is_declaration = true)
     *    S s = { ... };                 (is_declaration = false)
     */
-   if (this->structure != nullptr && this->structure->is_declaration)
+   if (this->structure != NULL && this->structure->is_declaration)
       return this->structure->hir(instructions, state);
 
-   return nullptr;
+   return NULL;
 }
 
 
@@ -5209,7 +5209,7 @@ ast_process_structure_or_interface_block(exec_list *instructions,
       /* Section 10.9 of the GLSL ES 1.00 specification states that
        * embedded structure definitions have been removed from the language.
        */
-      if (state->es_shader && decl_list->type->specifier->structure != nullptr) {
+      if (state->es_shader && decl_list->type->specifier->structure != NULL) {
          _mesa_glsl_error(&loc, state, "embedded structure definitions are "
                           "not allowed in GLSL ES 1.00");
       }
@@ -5226,13 +5226,13 @@ ast_process_structure_or_interface_block(exec_list *instructions,
           *
           *    "[In interface blocks] opaque types are not allowed."
           *
-          * It should be impossible for decl_type to be nullptr here.  Cases that
-          * might naturally lead to decl_type being nullptr, especially for the
+          * It should be impossible for decl_type to be NULL here.  Cases that
+          * might naturally lead to decl_type being NULL, especially for the
           * is_interface case, will have resulted in compilation having
           * already halted due to a syntax error.
           */
          const struct glsl_type *field_type =
-            decl_type != nullptr ? decl_type : glsl_type::error_type;
+            decl_type != NULL ? decl_type : glsl_type::error_type;
 
          if (is_interface && field_type->contains_opaque()) {
             YYLTYPE loc = decl_list->get_location();
@@ -5293,7 +5293,7 @@ ast_process_structure_or_interface_block(exec_list *instructions,
                                 "row_major and column_major can only be "
                                 "applied to uniform interface blocks");
             } else
-               validate_matrix_layout_for_type(state, &loc, field_type, nullptr);
+               validate_matrix_layout_for_type(state, &loc, field_type, NULL);
          }
 
          if (qual->flags.q.uniform && qual->has_interpolation()) {
@@ -5401,7 +5401,7 @@ ast_struct_specifier::hir(exec_list *instructions,
       const glsl_type **s = reralloc(state, state->user_structures,
                                      const glsl_type *,
                                      state->num_user_structures + 1);
-      if (s != nullptr) {
+      if (s != NULL) {
          s[state->num_user_structures] = t;
          state->user_structures = s;
          state->num_user_structures++;
@@ -5427,7 +5427,7 @@ ast_struct_specifier::hir(exec_list *instructions,
 
    /* Structure type definitions do not have r-values.
     */
-   return nullptr;
+   return NULL;
 }
 
 
@@ -5532,7 +5532,7 @@ ast_interface_block::hir(exec_list *instructions,
    if (!redeclaring_per_vertex)
       validate_identifier(this->block_name, loc, state);
 
-   const glsl_type *earlier_per_vertex = nullptr;
+   const glsl_type *earlier_per_vertex = NULL;
    if (redeclaring_per_vertex) {
       /* Find the previous declaration of gl_PerVertex.  If we're redeclaring
        * the named interface block gl_in, we can find it by looking at the
@@ -5554,8 +5554,8 @@ ast_interface_block::hir(exec_list *instructions,
                              "in the %s shader",
                              _mesa_shader_stage_to_string(state->stage));
          }
-         if (this->instance_name == nullptr ||
-             strcmp(this->instance_name, "gl_in") != 0 || this->array_specifier == nullptr) {
+         if (this->instance_name == NULL ||
+             strcmp(this->instance_name, "gl_in") != 0 || this->array_specifier == NULL) {
             _mesa_glsl_error(&loc, state,
                              "gl_PerVertex input must be redeclared as "
                              "gl_in[]");
@@ -5571,7 +5571,7 @@ ast_interface_block::hir(exec_list *instructions,
                              "allowed in the %s shader",
                              _mesa_shader_stage_to_string(state->stage));
          }
-         if (this->instance_name != nullptr) {
+         if (this->instance_name != NULL) {
             _mesa_glsl_error(&loc, state,
                              "gl_PerVertex output may not be redeclared with "
                              "an instance name");
@@ -5584,11 +5584,11 @@ ast_interface_block::hir(exec_list *instructions,
          break;
       }
 
-      if (earlier_per_vertex == nullptr) {
+      if (earlier_per_vertex == NULL) {
          /* An error has already been reported.  Bail out to avoid null
           * dereferences later in this function.
           */
-         return nullptr;
+         return NULL;
       }
 
       /* Copy locations from the old gl_PerVertex interface block. */
@@ -5657,7 +5657,7 @@ ast_interface_block::hir(exec_list *instructions,
     *     variable (or input block, see interface blocks below) needs to be
     *     declared as an array.
     */
-   if (state->stage == MESA_SHADER_GEOMETRY && this->array_specifier == nullptr &&
+   if (state->stage == MESA_SHADER_GEOMETRY && this->array_specifier == NULL &&
        var_mode == ir_var_shader_in) {
       _mesa_glsl_error(&loc, state, "geometry shader inputs must be arrays");
    }
@@ -5691,7 +5691,7 @@ ast_interface_block::hir(exec_list *instructions,
 
       ir_variable *var;
 
-      if (this->array_specifier != nullptr) {
+      if (this->array_specifier != NULL) {
          /* Section 4.3.7 (Interface Blocks) of the GLSL 1.50 spec says:
           *
           *     For uniform blocks declared an array, each individual array
@@ -5762,7 +5762,7 @@ ast_interface_block::hir(exec_list *instructions,
       /* In order to have an array size, the block must also be declared with
        * an instance name.
        */
-      assert(this->array_specifier == nullptr);
+      assert(this->array_specifier == NULL);
 
       for (unsigned i = 0; i < num_variables; i++) {
          ir_variable *var =
@@ -5796,7 +5796,7 @@ ast_interface_block::hir(exec_list *instructions,
             ir_variable *earlier =
                get_variable_being_redeclared(var, loc, state,
                                              true /* allow_all_redeclarations */);
-            if (!is_gl_identifier(var->name) || earlier == nullptr) {
+            if (!is_gl_identifier(var->name) || earlier == NULL) {
                _mesa_glsl_error(&loc, state,
                                 "redeclaration of gl_PerVertex can only "
                                 "include built-in variables");
@@ -5810,7 +5810,7 @@ ast_interface_block::hir(exec_list *instructions,
             continue;
          }
 
-         if (state->symbols->get_variable(var->name) != nullptr)
+         if (state->symbols->get_variable(var->name) != NULL)
             _mesa_glsl_error(&loc, state, "`%s' redeclared", var->name);
 
          /* Propagate the "binding" keyword into this UBO's fields;
@@ -5848,7 +5848,7 @@ ast_interface_block::hir(exec_list *instructions,
           */
          foreach_in_list_safe(ir_instruction, node, instructions) {
             ir_variable *const var = node->as_variable();
-            if (var != nullptr &&
+            if (var != NULL &&
                 var->get_interface_type() == earlier_per_vertex &&
                 var->data.mode == var_mode) {
                if (var->data.how_declared == ir_var_declared_normally) {
@@ -5864,7 +5864,7 @@ ast_interface_block::hir(exec_list *instructions,
       }
    }
 
-   return nullptr;
+   return NULL;
 }
 
 
@@ -5882,7 +5882,7 @@ ast_gs_input_layout::hir(exec_list *instructions,
       _mesa_glsl_error(&loc, state,
                        "geometry shader input layout does not match"
                        " previous declaration");
-      return nullptr;
+      return NULL;
    }
 
    /* If any shader inputs occurred before this declaration and specified an
@@ -5895,7 +5895,7 @@ ast_gs_input_layout::hir(exec_list *instructions,
                        "this geometry shader input layout implies %u vertices"
                        " per primitive, but a previous input is declared"
                        " with size %u", num_vertices, state->gs_input_size);
-      return nullptr;
+      return NULL;
    }
 
    state->gs_input_prim_type_specified = true;
@@ -5905,7 +5905,7 @@ ast_gs_input_layout::hir(exec_list *instructions,
     */
    foreach_in_list(ir_instruction, node, instructions) {
       ir_variable *var = node->as_variable();
-      if (var == nullptr || var->data.mode != ir_var_shader_in)
+      if (var == NULL || var->data.mode != ir_var_shader_in)
          continue;
 
       /* Note: gl_PrimitiveIDIn has mode ir_var_shader_in, but it's not an
@@ -5926,7 +5926,7 @@ ast_gs_input_layout::hir(exec_list *instructions,
       }
    }
 
-   return nullptr;
+   return NULL;
 }
 
 
@@ -5945,7 +5945,7 @@ ast_cs_input_layout::hir(exec_list *instructions,
             _mesa_glsl_error(&loc, state,
                              "compute shader input layout does not match"
                              " previous declaration");
-            return nullptr;
+            return NULL;
          }
       }
    }
@@ -6004,7 +6004,7 @@ ast_cs_input_layout::hir(exec_list *instructions,
       new(var) ir_constant(glsl_type::ivec3_type, &data);
    var->data.has_initializer = true;
 
-   return nullptr;
+   return NULL;
 }
 
 
@@ -6015,7 +6015,7 @@ detect_conflicting_assignments(struct _mesa_glsl_parse_state *state,
    bool gl_FragColor_assigned = false;
    bool gl_FragData_assigned = false;
    bool user_defined_fs_output_assigned = false;
-   ir_variable *user_defined_fs_output = nullptr;
+   ir_variable *user_defined_fs_output = NULL;
 
    /* It would be nice to have proper location information. */
    YYLTYPE loc;
@@ -6077,7 +6077,7 @@ remove_per_vertex_blocks(exec_list *instructions,
    /* Find the gl_PerVertex interface block of the appropriate (in/out) mode,
     * if it exists in this shader type.
     */
-   const glsl_type *per_vertex = nullptr;
+   const glsl_type *per_vertex = NULL;
    switch (mode) {
    case ir_var_shader_in:
       if (ir_variable *gl_in = state->symbols->get_variable("gl_in"))
@@ -6097,7 +6097,7 @@ remove_per_vertex_blocks(exec_list *instructions,
    /* If we didn't find a built-in gl_PerVertex interface block, then we don't
     * need to do anything.
     */
-   if (per_vertex == nullptr)
+   if (per_vertex == NULL)
       return;
 
    /* If the interface block is used by the shader, then we don't need to do
@@ -6113,7 +6113,7 @@ remove_per_vertex_blocks(exec_list *instructions,
     */
    foreach_in_list_safe(ir_instruction, node, instructions) {
       ir_variable *const var = node->as_variable();
-      if (var != nullptr && var->get_interface_type() == per_vertex &&
+      if (var != NULL && var->get_interface_type() == per_vertex &&
           var->data.mode == mode) {
          state->symbols->disable_variable(var->name);
          var->remove();

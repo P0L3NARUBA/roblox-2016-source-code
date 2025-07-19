@@ -110,7 +110,7 @@ static BOOL stl_export_obj(hOBJ hobj)
 
 /*	lpOBJ 	obj = static_cast<lpOBJ>(hobj);
 
-	if (obj->extendedClass==nullptr)
+	if (obj->extendedClass==NULL)
 		return TRUE;
 	if (obj->extendedClass->GetType()!=SG_OT_3D)
 		return TRUE;
@@ -118,7 +118,7 @@ static BOOL stl_export_obj(hOBJ hobj)
 
 	const SG_ALL_TRIANGLES*  objTr = obj3D->GetTriangles();
 	
-	if (objTr==nullptr)
+	if (objTr==NULL)
 		return TRUE;
 
 	SG_VECTOR  tmpV1, tmpV2;
@@ -166,8 +166,8 @@ static OSCAN_COD stlout_geo_scan(hOBJ hobj, lpSCAN_CONTROL lpsc)
 	if ( scan_flg_np_begin ) num_np = 0; 
 
 	if ( lpsc->breptype != BODY && lpsc->breptype != SURF) return OSSKIP;
-	trian_pre_brep  = nullptr;
-	trian_post_brep = nullptr;
+	trian_pre_brep  = NULL;
+	trian_post_brep = NULL;
 	trian_put_face  = stl_put_face;
 	trian_post_face = stl_post_face;
 	if (lpsc->m) {
@@ -179,10 +179,10 @@ static OSCAN_COD stlout_geo_scan(hOBJ hobj, lpSCAN_CONTROL lpsc)
 	if(!np_cplane(npwg)) return OSFALSE; 
 	ret = trian_np(npwg, num_np++, 3);
 //	ret = trian_brep(hobj, 3);
-	trian_pre_brep  = nullptr;
-	trian_post_brep = nullptr;
-	trian_put_face  = nullptr;
-	trian_post_face = nullptr;
+	trian_pre_brep  = NULL;
+	trian_post_brep = NULL;
+	trian_put_face  = NULL;
+	trian_post_face = NULL;
 	return (ret) ? OSTRUE : OSFALSE;
 }
 

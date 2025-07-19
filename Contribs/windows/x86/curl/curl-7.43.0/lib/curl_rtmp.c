@@ -216,7 +216,7 @@ static CURLcode rtmp_connect(struct connectdata *conn, bool *done)
   setsockopt(r->m_sb.sb_socket, SOL_SOCKET, SO_RCVTIMEO,
              (char *)&tv, sizeof(tv));
 
-  if(!RTMP_Connect1(r, nullptr))
+  if(!RTMP_Connect1(r, NULL))
     return CURLE_FAILED_INIT;
 
   /* Clients must send a periodic BytesReceived report to the server */
@@ -237,10 +237,10 @@ static CURLcode rtmp_do(struct connectdata *conn, bool *done)
 
   if(conn->data->set.upload) {
     Curl_pgrsSetUploadSize(conn->data, conn->data->state.infilesize);
-    Curl_setup_transfer(conn, -1, -1, FALSE, nullptr, FIRSTSOCKET, nullptr);
+    Curl_setup_transfer(conn, -1, -1, FALSE, NULL, FIRSTSOCKET, NULL);
   }
   else
-    Curl_setup_transfer(conn, FIRSTSOCKET, -1, FALSE, nullptr, -1, nullptr);
+    Curl_setup_transfer(conn, FIRSTSOCKET, -1, FALSE, NULL, -1, NULL);
   *done = TRUE;
   return CURLE_OK;
 }
@@ -261,7 +261,7 @@ static CURLcode rtmp_disconnect(struct connectdata *conn,
   RTMP *r = conn->proto.generic;
   (void)dead_connection;
   if(r) {
-    conn->proto.generic = nullptr;
+    conn->proto.generic = NULL;
     RTMP_Close(r);
     RTMP_Free(r);
   }

@@ -25,7 +25,7 @@ BulletShapeConnector::~BulletShapeConnector()
 		{
 			if (manArray[bulletManifoldIndex]->getContactPoint(i).m_userPersistentData == this)
 			{
-				manArray[bulletManifoldIndex]->getContactPoint(i).m_userPersistentData = nullptr;
+				manArray[bulletManifoldIndex]->getContactPoint(i).m_userPersistentData = NULL;
 			}
 		}
 	}

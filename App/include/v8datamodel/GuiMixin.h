@@ -149,7 +149,7 @@ namespace RBX
 				Color4 color = Color4(getImageColor3(), 1 - imageTransparency);						\
 																									\
 				GuiObject* clippingObject = firstAncestorClipping();								\
-				if( clippingObject == nullptr || !absoluteRotation.empty())							\
+				if( clippingObject == NULL || !absoluteRotation.empty())							\
 					guiImageDraw.render2d(adorn, true, getRect2D(), texul, texbr, color, absoluteRotation, Gui::NOTHING, false);	\
 				else																												\
 					guiImageDraw.render2d(adorn, true, getRect2D(), texul, texbr, color, clippingObject->getClippedRect(), Gui::NOTHING, false);	\
@@ -160,13 +160,13 @@ namespace RBX
 		{																																			\
 			TextureId selectImage = getImage();																										\
 																																					\
-			if(guiImageDraw.setImage(adorn, selectImage, GuiDrawImage::NORMAL, nullptr, this, ".Image"))																			\
+			if(guiImageDraw.setImage(adorn, selectImage, GuiDrawImage::NORMAL, NULL, this, ".Image"))																			\
 			{																																		\
                 Color4 rectColor = Color4(getImageColor3(), 1.0 - getImageTransparency());                                                          \
 				Rect2D imageRectTextureOffset = Rect2D::xywh(imageRectOffset, imageRectSize);														\
 				if (imageRectTextureOffset.width() > 0.0f && imageRectTextureOffset.height() > 0.0f)												\
 				{																																											\
-					render2dScale9Impl2(adorn, selectImage, guiImageDraw, sliceCenter, firstAncestorClipping(), rectColor, nullptr, &imageRectTextureOffset);                                         \
+					render2dScale9Impl2(adorn, selectImage, guiImageDraw, sliceCenter, firstAncestorClipping(), rectColor, NULL, &imageRectTextureOffset);                                         \
 				}																																											\
 				else																																										\
 				{																																											\

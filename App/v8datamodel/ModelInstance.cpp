@@ -61,7 +61,7 @@ REFLECTION_END();
 
 ModelInstance::ModelInstance() 
 	:DescribedCreatable<ModelInstance, PVInstance, sModel>("Model")
-	,computedPrimaryPart(nullptr)
+	,computedPrimaryPart(NULL)
 	,lockedName(false)
 	,primaryPartSetByUser()
 	,modelCFrame()
@@ -165,7 +165,7 @@ void ModelInstance::setPrimaryCFrame(CoordinateFrame newCFrame)
 		visitDescendants(boost::bind(&setCFramePart, _1, boost::ref(rotationCoord), boost::ref(deltaCFrame.translation), boost::ref(newCFrame.translation), primaryPart));
 
 		// update primary part separately, since it may not be a descendant of this model
-		setCFramePart(shared_from(primaryPart),rotationCoord,deltaCFrame.translation, newCFrame.translation, nullptr);
+		setCFramePart(shared_from(primaryPart),rotationCoord,deltaCFrame.translation, newCFrame.translation, NULL);
 	}
 	else
 	{
@@ -261,13 +261,13 @@ void ModelInstance::onChildChanged(Instance* instance, const PropertyChanged& ev
 
 void ModelInstance::dirtyAll() 
 {
-	computedPrimaryPart = nullptr;
+	computedPrimaryPart = NULL;
 }
 
 
 bool ModelInstance::askSetParent(const Instance* instance) const
 {
-	return Instance::fastDynamicCast<ModelInstance>(instance)!=nullptr;
+	return Instance::fastDynamicCast<ModelInstance>(instance)!=NULL;
 }
 
 void ModelInstance::onDescendantAdded(Instance* instance)
@@ -281,7 +281,7 @@ void ModelInstance::onDescendantAdded(Instance* instance)
 void ModelInstance::onDescendantRemoving(const shared_ptr<Instance>& instance)
 {
 	if (primaryPartSetByUser.lock().get() == instance.get()) {
-		setPrimaryPartSetByUser(nullptr);
+		setPrimaryPartSetByUser(NULL);
 		modelInPrimary = CoordinateFrame();
 	}
 
@@ -304,7 +304,7 @@ PartInstance* ModelInstance::getPrimaryPart()
 	}
 
 	if (primaryPartSetByUser.lock().get()) {
-		computedPrimaryPart = nullptr;
+		computedPrimaryPart = NULL;
 		return primaryPartSetByUser.lock().get();
 	}
 	else if (computedPrimaryPart) {
@@ -331,8 +331,8 @@ void VisitModelDescendants(shared_ptr<RBX::Instance> instance, PartInstance** bi
 
 void ModelInstance::computePrimaryPart()
 {
-	RBXASSERT(computedPrimaryPart == nullptr);
-	computedPrimaryPart = nullptr;
+	RBXASSERT(computedPrimaryPart == NULL);
+	computedPrimaryPart = NULL;
 	float biggest = -1.0;
 
 	this->visitDescendants(boost::bind(&VisitModelDescendants, _1, &computedPrimaryPart, &biggest));
@@ -409,7 +409,7 @@ const CoordinateFrame ModelInstance::getLocation()
 
 bool ModelInstance::isSelectable3d()
 {
-    return !FFlag::StudioDE6194FixEnabled || getPrimaryPart() != nullptr;
+    return !FFlag::StudioDE6194FixEnabled || getPrimaryPart() != NULL;
 }
 
 // TODO: return closest part within the model?...

@@ -19,7 +19,7 @@ namespace Graphics
     static TypeD3D11CreateDeviceAndSwapChain getDeviceCreationFunction()
     {
         HMODULE module = LoadLibraryA("d3d11.dll");
-        if (!module) return nullptr;
+        if (!module) return NULL;
 
         return (TypeD3D11CreateDeviceAndSwapChain)GetProcAddress(module, "D3D11CreateDeviceAndSwapChain");
     }
@@ -32,12 +32,12 @@ namespace Graphics
 		if (DeviceVRD3D11* result = DeviceVRD3D11::createOpenVR(outAdapter))
 			return result;
 
-		return nullptr;
+		return NULL;
 	}
 
     void DeviceD3D11::createDevice()
     {
-		IDXGIAdapter* adapter = nullptr;
+		IDXGIAdapter* adapter = NULL;
 
 		if (FFlag::RenderVR)
 			vr.reset(createVR(&adapter));
@@ -71,8 +71,8 @@ namespace Graphics
         sd.Flags = 0;
         sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
-        ID3D11DeviceContext* deviceContext = nullptr;
-        HRESULT hr = createDeviceAndSwapChain(adapter, D3D_DRIVER_TYPE_HARDWARE, nullptr, deviceCreationFlags, &requestedFeatureLevel, 1,
+        ID3D11DeviceContext* deviceContext = NULL;
+        HRESULT hr = createDeviceAndSwapChain(adapter, D3D_DRIVER_TYPE_HARDWARE, NULL, deviceCreationFlags, &requestedFeatureLevel, 1,
             D3D11_SDK_VERSION, &sd, &swapChain11, &device11, &featureLevelOut, &deviceContext);
         
         if (FAILED(hr))

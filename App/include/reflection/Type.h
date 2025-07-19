@@ -128,11 +128,11 @@ namespace RBX
 			friend class Type;
 		protected:
 			TType(const char* name)
-				:Type(name, (T*)nullptr)
+				:Type(name, (T*)NULL)
 			{
 			}
 			TType(const char* name, const char* tag)
-				:Type(name, tag, (T*)nullptr)
+				:Type(name, tag, (T*)NULL)
 			{
 			}
 		};
@@ -232,14 +232,14 @@ namespace RBX
 			template<typename T>
 			inline const T* tryCast() const {
 				if (!isType<T>())
-					return nullptr;
+					return NULL;
 				return reinterpret_cast<const T*>(value.getData());
 			}
 
 			template<typename T>
 			inline T* tryCast() {
 				if (!isType<T>())
-					return nullptr;
+					return NULL;
 				return reinterpret_cast<T*>(value.getData());
 			}
 
@@ -303,7 +303,7 @@ namespace RBX
 		ValueType& RBX::Reflection::Variant::genericConvert()
 		{
 			ValueType* id = tryCast<ValueType>();
-			if (id!=nullptr)
+			if (id!=NULL)
 				return *id;
 
 			if (_type->isType<std::string>())

@@ -574,8 +574,8 @@ namespace
   bool is_reparse_point_a_symlink(const path& p)
   {
     handle_wrapper h(create_file_handle(p, FILE_READ_EA,
-      FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, nullptr, OPEN_EXISTING,
-      FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT, nullptr));
+      FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING,
+      FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT, NULL));
     if (h.handle == INVALID_HANDLE_VALUE)
       return false;
 
@@ -583,8 +583,8 @@ namespace
  
     // Query the reparse data
     DWORD dwRetLen;
-    BOOL result = ::DeviceIoControl(h.handle, FSCTL_GET_REPARSE_POINT, nullptr, 0, buf.get(),
-      MAXIMUM_REPARSE_DATA_BUFFER_SIZE, &dwRetLen, nullptr);
+    BOOL result = ::DeviceIoControl(h.handle, FSCTL_GET_REPARSE_POINT, NULL, 0, buf.get(),
+      MAXIMUM_REPARSE_DATA_BUFFER_SIZE, &dwRetLen, NULL);
     if (!result) return false;
  
     return reinterpret_cast<const REPARSE_DATA_BUFFER*>(buf.get())
@@ -1088,7 +1088,7 @@ namespace detail
 
 #   else
     DWORD sz;
-    if ((sz = ::GetCurrentDirectoryW(0, nullptr))== 0)sz = 1;
+    if ((sz = ::GetCurrentDirectoryW(0, NULL))== 0)sz = 1;
     boost::scoped_array<path::value_type> buf(new path::value_type[sz]);
     error(::GetCurrentDirectoryW(sz, buf.get())== 0, ec,
       "boost::filesystem::current_path");
@@ -1775,7 +1775,7 @@ namespace detail
       
 #   else  // Windows
 
-      std::vector<path::value_type> buf(GetTempPathW(0, nullptr));
+      std::vector<path::value_type> buf(GetTempPathW(0, NULL));
 
       if (buf.empty() || GetTempPathW(buf.size(), &buf[0])==0)
       {

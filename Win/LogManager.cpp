@@ -32,7 +32,7 @@ LOGGROUP(CrashReporterInit)
 
 bool LogManager::logsEnabled = true;
 
-MainLogManager* LogManager::mainLogManager = nullptr;
+MainLogManager* LogManager::mainLogManager = NULL;
 
 RBX::mutex MainLogManager::fastLogChannelsLock;
 
@@ -72,9 +72,9 @@ void MainLogManager::fastLogMessage(FLog::Channel id, const char* message)
 	if(mainLogManager)
 	{
 		if(id >= mainLogManager->fastLogChannels.size())
-			mainLogManager->fastLogChannels.resize(id+1, nullptr);
+			mainLogManager->fastLogChannels.resize(id+1, NULL);
 
-		if(mainLogManager->fastLogChannels[id] == nullptr)
+		if(mainLogManager->fastLogChannels[id] == NULL)
 		{
 
 			mainLogManager->fastLogChannels[id] = new RBX::Log(mainLogManager->getFastLogFileName(id).c_str(), "Log Channel");
@@ -162,8 +162,8 @@ std::string ThreadLogManager::getLogFileName()
 RBX::Log* LogManager::getLog()
 {
 	if (!logsEnabled)
-		return nullptr;
-	if (log==nullptr)
+		return NULL;
+	if (log==NULL)
 	{
 		log = new RBX::Log(getLogFileName().c_str(), name.c_str());
 		// TODO: delete an old log that isn't in use
@@ -219,7 +219,7 @@ LONG RobloxCrashReporter::ProcessException(struct _EXCEPTION_POINTERS *info, boo
 	if (!showedMessage && !noMsg)
 	{
 		showedMessage = true;
-		::MessageBox( nullptr, "An unexpected error occurred and ROBLOX needs to quit.  We're sorry!", "ROBLOX Crash", MB_OK );
+		::MessageBox( NULL, "An unexpected error occurred and ROBLOX needs to quit.  We're sorry!", "ROBLOX Crash", MB_OK );
 	}
 
 	LogManager::ReportEvent(EVENTLOG_INFORMATION_TYPE, "DoneProcessException");
@@ -269,14 +269,14 @@ bool MainLogManager::CreateFakeCrashDump()
 		return false;
 	}
 
-	HANDLE hFile = CreateFile(dumpFilepath,GENERIC_WRITE, FILE_SHARE_READ,nullptr,OPEN_ALWAYS,FILE_ATTRIBUTE_NORMAL,nullptr);
+	HANDLE hFile = CreateFile(dumpFilepath,GENERIC_WRITE, FILE_SHARE_READ,NULL,OPEN_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
 	if (hFile==INVALID_HANDLE_VALUE)
 	{
 		return false;
 	}
 
 	DWORD cb;
-	WriteFile(hFile, "Fake", 5, &cb, nullptr);
+	WriteFile(hFile, "Fake", 5, &cb, NULL);
 
 	CloseHandle(hFile);
 	return true;
@@ -340,7 +340,7 @@ MainLogManager::MainLogManager(LPCTSTR productName, const char* crashExtention, 
 	CullLogs("\\", 1024);
 	CullLogs("archive\\", 1024);
 
-	RBXASSERT(mainLogManager == nullptr);
+	RBXASSERT(mainLogManager == NULL);
 	mainLogManager = this;
 
 	RBX::Log::setLogProvider(this);
@@ -590,22 +590,22 @@ MainLogManager::~MainLogManager()
 {
 	RBX::mutex::scoped_lock lock(fastLogChannelsLock);
 
-	FLog::SetExternalLogFunc(nullptr);
+	FLog::SetExternalLogFunc(NULL);
 
 	for(std::size_t i = 0; i < fastLogChannels.size(); i++)
 		delete fastLogChannels[i];
 
-	mainLogManager = nullptr;
+	mainLogManager = NULL;
 }
 
 
 LogManager::~LogManager()
 {
-    if (log != nullptr)
+    if (log != NULL)
 	{
 		std::string logFile = log->logFile;
         delete log;	// this will close the file so that we can move it
-		log = nullptr;
+		log = NULL;
 	}
 
 }
@@ -613,30 +613,30 @@ LogManager::~LogManager()
 inline HRESULT WINAPI RbxReportError(const CLSID& clsid, LPCSTR lpszDesc,
 	DWORD dwHelpID, LPCSTR lpszHelpFile, const IID& iid = GUID_NULL, HRESULT hRes = 0)
 {
-	ATLASSERT(lpszDesc != nullptr);
-	if (lpszDesc == nullptr)
+	ATLASSERT(lpszDesc != NULL);
+	if (lpszDesc == NULL)
 		return E_POINTER;
 	USES_CONVERSION_EX;
 	CComBSTR desc = CString(lpszDesc);
-	if(desc == nullptr)
+	if(desc == NULL)
 		return E_OUTOFMEMORY;
 	
-	CComBSTR helpFile = nullptr;
-	if(lpszHelpFile != nullptr)
+	CComBSTR helpFile = NULL;
+	if(lpszHelpFile != NULL)
 	{
 		helpFile = CString(lpszHelpFile);
-		if(helpFile == nullptr)
+		if(helpFile == NULL)
 			return E_OUTOFMEMORY;
 	}
 		
-	return AtlSetErrorInfo(clsid, desc.Detach(), dwHelpID, helpFile.Detach(), iid, hRes, nullptr);
+	return AtlSetErrorInfo(clsid, desc.Detach(), dwHelpID, helpFile.Detach(), iid, hRes, NULL);
 }
 
 
 inline HRESULT WINAPI RbxReportError(const CLSID& clsid, UINT nID, const IID& iid = GUID_NULL,
 	HRESULT hRes = 0, HINSTANCE hInst = _AtlBaseModule.GetResourceInstance())
 {
-	return AtlSetErrorInfo(clsid, (LPCOLESTR)MAKEINTRESOURCE(nID), 0, nullptr, iid, hRes, hInst);
+	return AtlSetErrorInfo(clsid, (LPCOLESTR)MAKEINTRESOURCE(nID), 0, NULL, iid, hRes, hInst);
 }
 
 inline HRESULT WINAPI RbxReportError(const CLSID& clsid, UINT nID, DWORD dwHelpID,
@@ -650,19 +650,19 @@ inline HRESULT WINAPI RbxReportError(const CLSID& clsid, UINT nID, DWORD dwHelpI
 inline HRESULT WINAPI RbxReportError(const CLSID& clsid, LPCSTR lpszDesc,
 	const IID& iid = GUID_NULL, HRESULT hRes = 0)
 {
-	return RbxReportError(clsid, lpszDesc, 0, nullptr, iid, hRes);
+	return RbxReportError(clsid, lpszDesc, 0, NULL, iid, hRes);
 }
 
 inline HRESULT WINAPI RbxReportError(const CLSID& clsid, LPCOLESTR lpszDesc,
 	const IID& iid = GUID_NULL, HRESULT hRes = 0)
 {
-	return AtlSetErrorInfo(clsid, lpszDesc, 0, nullptr, iid, hRes, nullptr);
+	return AtlSetErrorInfo(clsid, lpszDesc, 0, NULL, iid, hRes, NULL);
 }
 
 inline HRESULT WINAPI RbxReportError(const CLSID& clsid, LPCOLESTR lpszDesc, DWORD dwHelpID,
 	LPCOLESTR lpszHelpFile, const IID& iid = GUID_NULL, HRESULT hRes = 0)
 {
-	return AtlSetErrorInfo(clsid, lpszDesc, dwHelpID, lpszHelpFile, iid, hRes, nullptr);
+	return AtlSetErrorInfo(clsid, lpszDesc, dwHelpID, lpszHelpFile, iid, hRes, NULL);
 }
 
 HRESULT LogManager::ReportCOMError(const CLSID& clsid, LPCOLESTR lpszDesc, HRESULT hRes)

@@ -104,7 +104,7 @@ const CategoryWebSettings kWebSettings[ENTITY_CATEGORY_MAX] =
 		"", // remove not supported
 		"", // dev products don't have content to get/set
 		"", // no content, so no content write url
-		nullptr // no properties fixer
+		NULL // no properties fixer
 	},
 	{
 		"Places",
@@ -142,7 +142,7 @@ const CategoryWebSettings badgesWebSettings = {"GameBadges",
 											   "",
 											   "",
 											   "",
-											   nullptr};
+											   NULL};
 
 template<class IdType>
 IdType extractPropertyHelper(boost::shared_future<std::string> future, const std::string fieldName)
@@ -590,7 +590,7 @@ static EntityProperties* getPropertiesIfNameAndAssetTypeMatch(const std::string&
 	}
 	else
 	{
-		return nullptr;
+		return NULL;
 	}
 }
 
@@ -1069,7 +1069,7 @@ void EntityPropertiesForCategory::handlePage(int loadedPage, std::string* json, 
 		if (doneLoadingCallback)
 		{
 			doneLoadingCallback();
-			doneLoadingCallback = nullptr;
+			doneLoadingCallback = NULL;
 		}
 	}
 }
@@ -1278,7 +1278,7 @@ RobloxGameExplorer::RobloxGameExplorer(QWidget* parent)
 		"Places",
 		QtUtilities::getPixmap(":/images/ClassImages.PNG", 19),
 		&generalDisplayNameGetter,
-		nullptr, // shouldBuildExplorerItemCallback
+		NULL, // shouldBuildExplorerItemCallback
 		boost::bind(&RobloxGameExplorer::placeDoubleClickCallback, this, _1),
 		boost::bind(&RobloxGameExplorer::placeContextMenuHandler, this, _1, _2),
 		boost::bind(&RobloxGameExplorer::placeGroupContextMenuHandler, this, _1),
@@ -1292,8 +1292,8 @@ RobloxGameExplorer::RobloxGameExplorer(QWidget* parent)
 		"Developer Products",
 		QPixmap(":/images/DeveloperProduct.png"),
 		&generalDisplayNameGetter,
-		nullptr, // shouldBuildExplorerItemCallback
-		nullptr, // double click callback
+		NULL, // shouldBuildExplorerItemCallback
+		NULL, // double click callback
 		boost::bind(&RobloxGameExplorer::developerProductContextMenuHandler, this, _1, _2),
 		boost::bind(&RobloxGameExplorer::developerProductGroupContextMenuHandler, this, _1),
 		boost::bind(&RobloxGameExplorer::checkRowForNameUpdate, this, ENTITY_CATEGORY_DeveloperProducts, _1),
@@ -1306,11 +1306,11 @@ RobloxGameExplorer::RobloxGameExplorer(QWidget* parent)
 		"Badges",
 		QPixmap(":/16x16/images/Studio 2.0 icons/16x16/badges.png"),
 		&generalDisplayNameGetter,
-		nullptr, // shouldBuildExplorerItemCallback
-		nullptr, // double click callback
+		NULL, // shouldBuildExplorerItemCallback
+		NULL, // double click callback
 		boost::bind(&RobloxGameExplorer::badgesContextMenuHandler, this, _1, _2),
-		nullptr,
-		nullptr,
+		NULL,
+		NULL,
 		CategoryUiSettings::FlatNames
 	};
 	uiSettings[ENTITY_CATEGORY_Badges] = badgeSettings;
@@ -1675,7 +1675,7 @@ static void kickOffPublish()
 	RBXASSERT(v);
 	if (!v) return;
 
-	v->doIt(nullptr);
+	v->doIt(NULL);
 }
 
 void RobloxGameExplorer::nonGameLoaded()
@@ -1894,7 +1894,7 @@ void RobloxGameExplorer::publishGameThread(boost::function<int()> newUniverseFut
 
 		namedAssetsLoadedEvent.Wait();
 		entitySettings[ENTITY_CATEGORY_NamedAssets]->publishTo<std::string>(
-			targetNamedAssets, std::vector<std::string>(), nullptr);
+			targetNamedAssets, std::vector<std::string>(), NULL);
 
 		targetPlacesLoadedEvent.Wait();
 		boost::unordered_map<int, boost::function<int()> > placeIdRemap;
@@ -2086,7 +2086,7 @@ QStandardItem* RobloxGameExplorer::findGroup(EntityCategory category)
     QModelIndexList resultList = getModel()->match(getModel()->index(0,0), ROLE_CategoryIfGroupRoot,
 		category, 1, Qt::MatchExactly);
     RBXASSERT(resultList.size() <= 1);
-    return resultList.empty() ? nullptr : getModel()->itemFromIndex(*resultList.begin());
+    return resultList.empty() ? NULL : getModel()->itemFromIndex(*resultList.begin());
 }
 
 QStandardItem* RobloxGameExplorer::makeGroup(EntityCategory category)
@@ -2248,7 +2248,7 @@ QStandardItem* RobloxGameExplorer::buildItem(const CategoryUiSettings& uiSetting
 {
 	if (uiSettings.shouldBuildExplorerItemCallback && !uiSettings.shouldBuildExplorerItemCallback(settings))
 	{
-		return nullptr;
+		return NULL;
 	}
 
 	QString name = uiSettings.displayNameGetter(settings);
@@ -2366,7 +2366,7 @@ void RobloxGameExplorer::populateWithLoadedData(int originatingSessionId, int ca
 {
 	EntityCategory category = (EntityCategory)cat;
 	QStandardItem* group = findGroup(category);
-	if (currentSessionId != originatingSessionId || group == nullptr) return;
+	if (currentSessionId != originatingSessionId || group == NULL) return;
 
 	const CategoryUiSettings& settings = uiSettings[category];
 
@@ -2648,7 +2648,7 @@ void RobloxGameExplorer::placeContextMenuHandler(const QPoint& point, EntityProp
 	makeRoot->setIcon(QtUtilities::getPixmap(":/images/ClassImages.PNG", 25));
 	makeRoot->setEnabled(!isCurrentRoot);
 
-	QAction* copyId = nullptr;
+	QAction* copyId = NULL;
 	if (FFlag::GameExplorerCopyId)
 	{
 		copyId = menu.addAction("Copy ID to Clipboard");
@@ -2712,7 +2712,7 @@ void RobloxGameExplorer::developerProductContextMenuHandler(const QPoint& point,
 
 	QAction* rename = menu.addAction("Rename");
 
-	QAction* copyId = nullptr;
+	QAction* copyId = NULL;
 	if (FFlag::GameExplorerCopyId)
 	{
 		copyId = menu.addAction("Copy ID to Clipboard");
@@ -2743,7 +2743,7 @@ void RobloxGameExplorer::badgesContextMenuHandler(const QPoint& point, EntityPro
 
 	QMenu menu(this);
 	QAction* configureAction = menu.addAction(tr("Configure"));
-	QAction* copyIdAction = nullptr;
+	QAction* copyIdAction = NULL;
 	if (FFlag::GameExplorerCopyId)
 		copyIdAction = menu.addAction("Copy ID to Clipboard");
 
@@ -2822,17 +2822,17 @@ void RobloxGameExplorer::namedAssetsContextMenuHandler(const QPoint& point, Enti
 
 	QAction* rename = menu.addAction("Rename");
 
-	QAction* copyPath = nullptr;
+	QAction* copyPath = NULL;
 
-	QAction* insert = nullptr;
-	QAction* insertAsScript = nullptr;
-	QAction* insertAsLocalScript = nullptr;
-	QAction* insertAsModuleScript = nullptr;
-	QAction* publishScript = nullptr;
-	QAction* revertToLastPublished = nullptr;
+	QAction* insert = NULL;
+	QAction* insertAsScript = NULL;
+	QAction* insertAsLocalScript = NULL;
+	QAction* insertAsModuleScript = NULL;
+	QAction* publishScript = NULL;
+	QAction* revertToLastPublished = NULL;
 	bool isImage = false;
 	bool isScript = false;
-	bool hasOpenDataModel = RobloxDocManager::Instance().getPlayDoc() != nullptr; 
+	bool hasOpenDataModel = RobloxDocManager::Instance().getPlayDoc() != NULL; 
 	isImage = properties->get<int>("AssetTypeId") == (int)ASSET_TYPE_ID_Image;
 	isScript = properties->get<int>("AssetTypeId") == (int)ASSET_TYPE_ID_Script;
 	if (isImage)
@@ -3235,7 +3235,7 @@ void RobloxGameExplorer::checkRowForNameUpdate(EntityCategory category, QStandar
 	if (category == ENTITY_CATEGORY_NamedAssets)
 	{
 		QString errorMessage;
-		validated = validateImageName(newName, nullptr, &errorMessage);
+		validated = validateImageName(newName, NULL, &errorMessage);
 		if (!validated)
 		{
 			std::string stdErrorMessage = errorMessage.toStdString();
@@ -3243,7 +3243,7 @@ void RobloxGameExplorer::checkRowForNameUpdate(EntityCategory category, QStandar
 		}
 
 		for (QStandardItem* stepParent = entityRow->parent();
-			stepParent != nullptr && stepParent != findGroup(category);
+			stepParent != NULL && stepParent != findGroup(category);
 			stepParent = stepParent->parent())
 		{
 			newName = stepParent->text() + "/" + newName;
@@ -3281,7 +3281,7 @@ void RobloxGameExplorer::checkRowForNameUpdate(EntityCategory category, QStandar
 				QString("Updating name of %1 to %2").arg(QString::fromStdString(oldName.get())).arg(newName),
 				boost::bind(&updateNameThread, props->asJson(),
 					formatUrl(kWebSettings[category].updateFormatString, currentGameId, rowId),
-					&success, (std::string*)nullptr));
+					&success, (std::string*)NULL));
 		}
 
 		if (!success)

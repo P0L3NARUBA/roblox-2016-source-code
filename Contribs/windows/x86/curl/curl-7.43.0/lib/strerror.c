@@ -594,11 +594,11 @@ get_winsock_error (int err, char *buf, size_t len)
     break;
 
   default:
-    return nullptr;
+    return NULL;
   }
 #else
   if(!err)
-    return nullptr;
+    return NULL;
   else
     p = "error";
 #endif
@@ -639,8 +639,8 @@ const char *Curl_strerror(struct connectdata *conn, int err)
     wchar_t wbuf[256];
     wbuf[0] = L'\0';
 
-    FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, nullptr, err,
-                  LANG_NEUTRAL, wbuf, sizeof(wbuf)/sizeof(wchar_t), nullptr);
+    FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, err,
+                  LANG_NEUTRAL, wbuf, sizeof(wbuf)/sizeof(wchar_t), NULL);
     wcstombs(buf, wbuf, max);
   }
 #else
@@ -649,8 +649,8 @@ const char *Curl_strerror(struct connectdata *conn, int err)
     strncpy(buf, strerror(err), max);
   else {
     if(!get_winsock_error(err, buf, max) &&
-       !FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM, nullptr, err,
-                       LANG_NEUTRAL, buf, (DWORD)max, nullptr))
+       !FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM, NULL, err,
+                       LANG_NEUTRAL, buf, (DWORD)max, NULL))
       snprintf(buf, max, "Unknown error %d (%#x)", err, err);
   }
 #endif
@@ -671,7 +671,7 @@ const char *Curl_strerror(struct connectdata *conn, int err)
  /*
   * The glibc-style strerror_r() only *might* use the buffer we pass to
   * the function, but it always returns the error message as a pointer,
-  * so we must copy that string unconditionally (if non-nullptr).
+  * so we must copy that string unconditionally (if non-NULL).
   */
   {
     char buffer[256];
@@ -708,9 +708,9 @@ const char *Curl_strerror(struct connectdata *conn, int err)
   buf[max] = '\0'; /* make sure the string is zero terminated */
 
   /* strip trailing '\r\n' or '\n'. */
-  if((p = strrchr(buf, '\n')) != nullptr && (p - buf) >= 2)
+  if((p = strrchr(buf, '\n')) != NULL && (p - buf) >= 2)
      *p = '\0';
-  if((p = strrchr(buf, '\r')) != nullptr && (p - buf) >= 1)
+  if((p = strrchr(buf, '\r')) != NULL && (p - buf) >= 1)
      *p = '\0';
 
   if(old_errno != ERRNO)
@@ -779,7 +779,7 @@ const char *Curl_idn_strerror (struct connectdata *conn, int err)
       break;
     default:
       snprintf(buf, max, "error %d", err);
-      str = nullptr;
+      str = NULL;
       break;
   }
 #else
@@ -802,7 +802,7 @@ const char *Curl_sspi_strerror (struct connectdata *conn, int err)
 #ifndef CURL_DISABLE_VERBOSE_STRINGS
   char txtbuf[80];
   char msgbuf[sizeof(conn->syserr_buf)];
-  char *p, *str, *msg = nullptr;
+  char *p, *str, *msg = NULL;
   bool msg_formatted = FALSE;
   int old_errno;
 #endif
@@ -1086,8 +1086,8 @@ const char *Curl_sspi_strerror (struct connectdata *conn, int err)
 
       if(FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM |
                        FORMAT_MESSAGE_IGNORE_INSERTS,
-                       nullptr, err, LANG_NEUTRAL,
-                       wbuf, sizeof(wbuf)/sizeof(wchar_t), nullptr)) {
+                       NULL, err, LANG_NEUTRAL,
+                       wbuf, sizeof(wbuf)/sizeof(wchar_t), NULL)) {
         wcstombs(msgbuf, wbuf, sizeof(msgbuf)-1);
         msg_formatted = TRUE;
       }
@@ -1095,17 +1095,17 @@ const char *Curl_sspi_strerror (struct connectdata *conn, int err)
 #else
     if(FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM |
                       FORMAT_MESSAGE_IGNORE_INSERTS,
-                      nullptr, err, LANG_NEUTRAL,
-                      msgbuf, sizeof(msgbuf)-1, nullptr)) {
+                      NULL, err, LANG_NEUTRAL,
+                      msgbuf, sizeof(msgbuf)-1, NULL)) {
       msg_formatted = TRUE;
     }
 #endif
     if(msg_formatted) {
       msgbuf[sizeof(msgbuf)-1] = '\0';
       /* strip trailing '\r\n' or '\n' */
-      if((p = strrchr(msgbuf, '\n')) != nullptr && (p - msgbuf) >= 2)
+      if((p = strrchr(msgbuf, '\n')) != NULL && (p - msgbuf) >= 2)
          *p = '\0';
-      if((p = strrchr(msgbuf, '\r')) != nullptr && (p - msgbuf) >= 1)
+      if((p = strrchr(msgbuf, '\r')) != NULL && (p - msgbuf) >= 1)
          *p = '\0';
       msg = msgbuf;
     }

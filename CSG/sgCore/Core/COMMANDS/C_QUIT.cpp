@@ -8,7 +8,7 @@ hOBJ 	hobj, hnext;
     pExtFreeAllMem();
 
 
-  free_extern_obj_data = nullptr;
+  free_extern_obj_data = NULL;
 	hobj = objects.hhead;
 	while (hobj) {
 		get_next_item(hobj, &hnext);
@@ -16,7 +16,7 @@ hOBJ 	hobj, hnext;
 		hobj = hnext;
 	}
   
-  SGFree(static_data);    static_data = nullptr;
+  SGFree(static_data);    static_data = NULL;
 
 	free_np_mem_tmp();
 	free_blocks_list();

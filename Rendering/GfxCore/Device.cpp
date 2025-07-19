@@ -45,8 +45,8 @@ DeviceVR::~DeviceVR()
 }
 
 Device::Device()
-	: resourceListHead(nullptr)
-	, resourceListTail(nullptr)
+	: resourceListHead(NULL)
+	, resourceListTail(NULL)
 {
 }
 

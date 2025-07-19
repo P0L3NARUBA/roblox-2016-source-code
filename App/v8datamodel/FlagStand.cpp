@@ -41,7 +41,7 @@ void FlagStand::setTeamColor(BrickColor color) {
 void FlagStand::onServiceProvider(ServiceProvider* oldProvider, ServiceProvider* newProvider)
 {
 	// either entering or leaving the world
-	if(oldProvider == nullptr) {
+	if(oldProvider == NULL) {
 		if (Network::Players::backendProcessing(this)) {
 			FlagStandService *fss = ServiceProvider::create<FlagStandService>(newProvider);
 			fss->RegisterFlagStand(this);
@@ -53,7 +53,7 @@ void FlagStand::onServiceProvider(ServiceProvider* oldProvider, ServiceProvider*
 
 	Super::onServiceProvider(oldProvider, newProvider);
 
-	if(newProvider == nullptr) {
+	if(newProvider == NULL) {
 		if (Network::Players::backendProcessing(this)) {
 			FlagStandService *fss = ServiceProvider::create<FlagStandService>(oldProvider);
 			fss->UnregisterFlagStand(this);
@@ -154,7 +154,7 @@ Flag *FlagStand::getJoinedFlag()
 	// Return true iff the flag stand prim is directly jointed to an object of type Flag
 	Primitive *stand_prim = this->getPartPrimitive();
 	RigidJoint *r = stand_prim->getFirstRigid();
-	while(r != nullptr)
+	while(r != NULL)
 	{
 		PartInstance *p = PartInstance::fromPrimitive(r->otherPrimitive(stand_prim));
 		Flag *f = Instance::fastDynamicCast<Flag>(p->getParent()); // ASSUME: A part's parent will be the flag, if this is a flag.
@@ -162,7 +162,7 @@ Flag *FlagStand::getJoinedFlag()
 		r = stand_prim->getNextRigid(r);
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 
@@ -215,7 +215,7 @@ FlagStand *FlagStandService::findRandomEmptyStandForFlag(Flag *f)
 	// Pick a random flag stand of the same color as the flag
 	// Check to make sure that stand is not occupied.
 	
-	if (flagStands.empty()) return nullptr;
+	if (flagStands.empty()) return NULL;
 	
 	std::vector<FlagStand *> possibleLocations;
 	std::list<FlagStand *>::iterator iter;
@@ -231,7 +231,7 @@ FlagStand *FlagStandService::findRandomEmptyStandForFlag(Flag *f)
 		}
 	}
 	
-	if (possibleLocations.empty()) return nullptr; // no possible locations, return default
+	if (possibleLocations.empty()) return NULL; // no possible locations, return default
 
 	int i = rand() % possibleLocations.size();
 
@@ -241,7 +241,7 @@ FlagStand *FlagStandService::findRandomEmptyStandForFlag(Flag *f)
 FlagStand *FlagStandService::FindStandWithFlag(Flag *f)
 {
 	// Determines if the given flag is in any flag stand
-	if (flagStands.empty()) return nullptr;
+	if (flagStands.empty()) return NULL;
 
 	std::list<FlagStand *>::iterator iter;
 	
@@ -253,7 +253,7 @@ FlagStand *FlagStandService::FindStandWithFlag(Flag *f)
 		}
 	}
 	
-	return nullptr;
+	return NULL;
 }
 
 

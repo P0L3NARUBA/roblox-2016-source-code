@@ -27,7 +27,7 @@ FASTFLAG(StudioEnableWebKitPlugins);
 WebDialog::WebDialog(QWidget* parent, const QString& initialUrl, RBX::DataModel *dm, int widthInPixels, int heightInPixels)
 : RobloxSavingStateDialog<QDialog>(parent, "WebDialog/Geometry")
 , m_initialUrl(initialUrl)
-, m_pWebView(nullptr)
+, m_pWebView(NULL)
 , m_pDataModel(dm)
 , m_iWidthInPixels(widthInPixels)
 , m_iHeightInPixels(heightInPixels)

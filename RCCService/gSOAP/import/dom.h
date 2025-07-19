@@ -157,12 +157,12 @@ In C we use the DOM "serializers" to accomplish this as follows:
     dom.soap = soap_new1(SOAP_DOM_TREE | SOAP_C_UTFSTRING);
     dom.soap->recvfd = stdin;
     if (soap_begin_recv(dom.soap)
-     || nullptr != soap_in_xsd__anyType(dom.soap, nullptr, &dom, nullptr)
+     || NULL != soap_in_xsd__anyType(dom.soap, NULL, &dom, NULL)
      || soap_end_recv(dom.soap))
       ... // parse error
     dom.soap->sendfd = stdout;
     if (soap_begin_send(dom.soap)
-     || soap_out_xsd__anyType(dom.soap, nullptr, 0, &dom, nullptr)
+     || soap_out_xsd__anyType(dom.soap, NULL, 0, &dom, NULL)
      || soap_end_send(dom.soap))
       ... // output error
     soap_end(dom.soap);
@@ -256,7 +256,7 @@ The linked lists of sibling elements nodes and attribute nodes are respectively:
   list of an element node.
 
 Note that for a root node, the @ref soap_dom_element::prnt and @ref
-soap_dom_element::next are both nullptr.
+soap_dom_element::next are both NULL.
 
 Tag names of elements and attributes are stored in @ref soap_dom_element::name
 and @ref soap_dom_attribute::name strings, respectively. The names are UTF-8
@@ -348,7 +348,7 @@ node set.  For example, to iterate over all "product" elements:
 @code
     soap_dom_element dom;
     ...
-    for (soap_dom_element::iterator iter = dom.find(nullptr, "product"); iter != dom.end(); ++iter)
+    for (soap_dom_element::iterator iter = dom.find(NULL, "product"); iter != dom.end(); ++iter)
       cout << "Element " << (*iter).name << endl;
     ...
 @endcode
@@ -358,7 +358,7 @@ To iterate over all elements in a particular namespace:
 @code
     soap_dom_element dom;
     ...
-    for (soap_dom_element::iterator iter = dom.find("http://www.w3.org/2001/XMLSchema", nullptr); iter != dom.end(); ++iter)
+    for (soap_dom_element::iterator iter = dom.find("http://www.w3.org/2001/XMLSchema", NULL); iter != dom.end(); ++iter)
       cout << "Element " << (*iter).name << endl;
     ...
 @endcode
@@ -432,7 +432,7 @@ bindings that should be meaningful to the application. The soap context can be
 set to a new table as follows:
 
 @code
-    Namespace myNamespaces[] = { { "ns", "..." }, ... , { nullptr } };
+    Namespace myNamespaces[] = { { "ns", "..." }, ... , { NULL } };
     soap_dom_element dom;
     dom.soap = soap_new1(SOAP_C_UTFSTRING | SOAP_XML_INDENT);
     dom.soap->namespaces = myNamespaces;
@@ -488,7 +488,7 @@ stock given that the <Result> element has an xsi:type="xsd:float" attribute.
     soap_dom_element body(soap, "http://schemas.xmlsoap.org/soap/envelope/", "Body");
     soap_dom_attribute encodingStyle(soap, "http://schemas.xmlsoap.org/soap/envelope/", "encodingStyle", "http://schemas.xmlsoap.org/soap/encoding/");
     soap_dom_element request(soap, "urn:xmethods-delayed-quotes", "getQuote");
-    soap_dom_element symbol(soap, nullptr, "symbol", "IBM");
+    soap_dom_element symbol(soap, NULL, "symbol", "IBM");
     soap_dom_element response(soap);
     envelope.add(body);
     body.add(encodingStyle);
@@ -496,10 +496,10 @@ stock given that the <Result> element has an xsi:type="xsd:float" attribute.
     request.add(symbol);
     cout << "Request message:" << endl << envelope << endl;
     if (soap_connect(soap, "http://services.xmethods.net/soap", "")
-     || soap_out_xsd__anyType(soap, nullptr, 0, &envelope, nullptr)
+     || soap_out_xsd__anyType(soap, NULL, 0, &envelope, NULL)
      || soap_end_send(soap)
      || soap_begin_recv(soap)
-     || nullptr != soap_in_xsd__anyType(soap, nullptr, &response, nullptr)
+     || NULL != soap_in_xsd__anyType(soap, NULL, &response, NULL)
      || soap_end_recv(soap)
      || soap_closesock(soap))
     { soap_print_fault(soap, stderr);

@@ -499,14 +499,14 @@ SDL_AllocFormat(Uint32 pixel_format)
 
     /* Allocate an empty pixel format structure, and initialize it */
     format = SDL_malloc(sizeof(*format));
-    if (format == nullptr) {
+    if (format == NULL) {
         SDL_OutOfMemory();
-        return nullptr;
+        return NULL;
     }
     if (SDL_InitFormat(format, pixel_format) < 0) {
         SDL_free(format);
         SDL_InvalidParamError("format");
-        return nullptr;
+        return NULL;
     }
 
     if (!SDL_ISPIXELFORMAT_INDEXED(pixel_format)) {
@@ -575,9 +575,9 @@ SDL_InitFormat(SDL_PixelFormat * format, Uint32 pixel_format)
             --format->Aloss;
     }
 
-    format->palette = nullptr;
+    format->palette = NULL;
     format->refcount = 1;
-    format->next = nullptr;
+    format->next = NULL;
 
     return 0;
 }
@@ -621,19 +621,19 @@ SDL_AllocPalette(int ncolors)
     /* Input validation */
     if (ncolors < 1) {
       SDL_InvalidParamError("ncolors");
-      return nullptr;
+      return NULL;
     }
 
     palette = (SDL_Palette *) SDL_malloc(sizeof(*palette));
     if (!palette) {
         SDL_OutOfMemory();
-        return nullptr;
+        return NULL;
     }
     palette->colors =
         (SDL_Color *) SDL_malloc(ncolors * sizeof(*palette->colors));
     if (!palette->colors) {
         SDL_free(palette);
-        return nullptr;
+        return NULL;
     }
     palette->ncolors = ncolors;
     palette->version = 1;
@@ -648,7 +648,7 @@ int
 SDL_SetPixelFormatPalette(SDL_PixelFormat * format, SDL_Palette *palette)
 {
     if (!format) {
-        return SDL_SetError("SDL_SetPixelFormatPalette() passed nullptr format");
+        return SDL_SetError("SDL_SetPixelFormatPalette() passed NULL format");
     }
 
     if (palette && palette->ncolors != (1 << format->BitsPerPixel)) {
@@ -800,7 +800,7 @@ SDL_FindColor(SDL_Palette * pal, Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 Uint32
 SDL_MapRGB(const SDL_PixelFormat * format, Uint8 r, Uint8 g, Uint8 b)
 {
-    if (format->palette == nullptr) {
+    if (format->palette == NULL) {
         return (r >> format->Rloss) << format->Rshift
             | (g >> format->Gloss) << format->Gshift
             | (b >> format->Bloss) << format->Bshift | format->Amask;
@@ -814,7 +814,7 @@ Uint32
 SDL_MapRGBA(const SDL_PixelFormat * format, Uint8 r, Uint8 g, Uint8 b,
             Uint8 a)
 {
-    if (format->palette == nullptr) {
+    if (format->palette == NULL) {
         return (r >> format->Rloss) << format->Rshift
             | (g >> format->Gloss) << format->Gshift
             | (b >> format->Bloss) << format->Bshift
@@ -828,7 +828,7 @@ void
 SDL_GetRGB(Uint32 pixel, const SDL_PixelFormat * format, Uint8 * r, Uint8 * g,
            Uint8 * b)
 {
-    if (format->palette == nullptr) {
+    if (format->palette == NULL) {
         unsigned v;
         v = (pixel & format->Rmask) >> format->Rshift;
         *r = SDL_expand_byte[format->Rloss][v];
@@ -851,7 +851,7 @@ void
 SDL_GetRGBA(Uint32 pixel, const SDL_PixelFormat * format,
             Uint8 * r, Uint8 * g, Uint8 * b, Uint8 * a)
 {
-    if (format->palette == nullptr) {
+    if (format->palette == NULL) {
         unsigned v;
         v = (pixel & format->Rmask) >> format->Rshift;
         *r = SDL_expand_byte[format->Rloss][v];
@@ -889,15 +889,15 @@ Map1to1(SDL_Palette * src, SDL_Palette * dst, int *identical)
                  (src->colors, dst->colors,
                   src->ncolors * sizeof(SDL_Color)) == 0)) {
                 *identical = 1;
-                return (nullptr);
+                return (NULL);
             }
         }
         *identical = 0;
     }
     map = (Uint8 *) SDL_malloc(src->ncolors);
-    if (map == nullptr) {
+    if (map == NULL) {
         SDL_OutOfMemory();
-        return (nullptr);
+        return (NULL);
     }
     for (i = 0; i < src->ncolors; ++i) {
         map[i] = SDL_FindColor(dst,
@@ -919,9 +919,9 @@ Map1toN(SDL_PixelFormat * src, Uint8 Rmod, Uint8 Gmod, Uint8 Bmod, Uint8 Amod,
 
     bpp = ((dst->BytesPerPixel == 3) ? 4 : dst->BytesPerPixel);
     map = (Uint8 *) SDL_malloc(pal->ncolors * bpp);
-    if (map == nullptr) {
+    if (map == NULL) {
         SDL_OutOfMemory();
-        return (nullptr);
+        return (NULL);
     }
 
     /* We memory copy to the pixel map so the endianness is preserved */
@@ -957,9 +957,9 @@ SDL_AllocBlitMap(void)
 
     /* Allocate the empty map */
     map = (SDL_BlitMap *) SDL_calloc(1, sizeof(*map));
-    if (map == nullptr) {
+    if (map == NULL) {
         SDL_OutOfMemory();
-        return (nullptr);
+        return (NULL);
     }
     map->info.r = 0xFF;
     map->info.g = 0xFF;
@@ -982,11 +982,11 @@ SDL_InvalidateMap(SDL_BlitMap * map)
             SDL_FreeSurface(map->dst);
         }
     }
-    map->dst = nullptr;
+    map->dst = NULL;
     map->src_palette_version = 0;
     map->dst_palette_version = 0;
     SDL_free(map->info.table);
-    map->info.table = nullptr;
+    map->info.table = NULL;
 }
 
 int
@@ -1013,7 +1013,7 @@ SDL_MapSurface(SDL_Surface * src, SDL_Surface * dst)
             map->info.table =
                 Map1to1(srcfmt->palette, dstfmt->palette, &map->identity);
             if (!map->identity) {
-                if (map->info.table == nullptr) {
+                if (map->info.table == NULL) {
                     return (-1);
                 }
             }
@@ -1024,7 +1024,7 @@ SDL_MapSurface(SDL_Surface * src, SDL_Surface * dst)
             map->info.table =
                 Map1toN(srcfmt, src->map->info.r, src->map->info.g,
                         src->map->info.b, src->map->info.a, dstfmt);
-            if (map->info.table == nullptr) {
+            if (map->info.table == NULL) {
                 return (-1);
             }
         }
@@ -1033,7 +1033,7 @@ SDL_MapSurface(SDL_Surface * src, SDL_Surface * dst)
             /* BitField --> Palette */
             map->info.table = MapNto1(srcfmt, dstfmt, &map->identity);
             if (!map->identity) {
-                if (map->info.table == nullptr) {
+                if (map->info.table == NULL) {
                     return (-1);
                 }
             }
@@ -1094,7 +1094,7 @@ SDL_CalculateGammaRamp(float gamma, Uint16 * ramp)
       SDL_InvalidParamError("gamma");
       return;
     }
-    if (ramp == nullptr) {
+    if (ramp == NULL) {
       SDL_InvalidParamError("ramp");
       return;
     }

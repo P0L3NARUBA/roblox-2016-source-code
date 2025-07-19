@@ -119,9 +119,9 @@ SDL_LoadBMP_RW(SDL_RWops * src, int freesrc)
     /* Uint32 biClrImportant = 0; */
 
     /* Make sure we are passed a valid data source */
-    surface = nullptr;
+    surface = NULL;
     was_error = SDL_FALSE;
-    if (src == nullptr) {
+    if (src == NULL) {
         was_error = SDL_TRUE;
         goto done;
     }
@@ -293,7 +293,7 @@ SDL_LoadBMP_RW(SDL_RWops * src, int freesrc)
     surface =
         SDL_CreateRGBSurface(0, biWidth, biHeight, biBitCount, Rmask, Gmask,
                              Bmask, Amask);
-    if (surface == nullptr) {
+    if (surface == NULL) {
         was_error = SDL_TRUE;
         goto done;
     }
@@ -442,7 +442,7 @@ SDL_LoadBMP_RW(SDL_RWops * src, int freesrc)
             SDL_RWseek(src, fp_offset, RW_SEEK_SET);
         }
         SDL_FreeSurface(surface);
-        surface = nullptr;
+        surface = NULL;
     }
     if (freesrc && src) {
         SDL_RWclose(src);
@@ -479,7 +479,7 @@ SDL_SaveBMP_RW(SDL_Surface * saveme, SDL_RWops * dst, int freedst)
     Uint32 biClrImportant;
 
     /* Make sure we have somewhere to save */
-    surface = nullptr;
+    surface = NULL;
     if (dst) {
         SDL_bool save32bit = SDL_FALSE;
 #ifdef SAVE_32BIT_BMP

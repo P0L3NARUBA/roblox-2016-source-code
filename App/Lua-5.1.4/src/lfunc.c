@@ -36,7 +36,7 @@ Closure *luaF_newLclosure (lua_State *L, int nelems, Table *e) {
   c->l.isC = 0;
   c->l.env = e;
   c->l.nupvalues = cast_byte(nelems);
-  while (nelems--) c->l.upvals[nelems] = nullptr;
+  while (nelems--) c->l.upvals[nelems] = NULL;
   return c;
 }
 
@@ -55,7 +55,7 @@ UpVal *luaF_findupval (lua_State *L, StkId level) {
   GCObject **pp = &L->openupval;
   UpVal *p;
   UpVal *uv;
-  while (*pp != nullptr && (p = ngcotouv(*pp))->v >= level) {
+  while (*pp != NULL && (p = ngcotouv(*pp))->v >= level) {
     lua_assert(p->v != &p->u.value);
     if (p->v == level) {  /* found a corresponding upvalue? */
       if (isdead(g, obj2gco(p)))  /* is it dead? */
@@ -96,7 +96,7 @@ void luaF_freeupval (lua_State *L, UpVal *uv) {
 void luaF_close (lua_State *L, StkId level) {
   UpVal *uv;
   global_State *g = G(L);
-  while (L->openupval != nullptr && (uv = ngcotouv(L->openupval))->v >= level) {
+  while (L->openupval != NULL && (uv = ngcotouv(L->openupval))->v >= level) {
     GCObject *o = obj2gco(uv);
     lua_assert(!isblack(o) && uv->v != &uv->u.value);
     L->openupval = uv->next;  /* remove from `open' list */
@@ -115,25 +115,25 @@ void luaF_close (lua_State *L, StkId level) {
 Proto *luaF_newproto (lua_State *L) {
   Proto *f = luaM_new(L, Proto);
   luaC_link(L, obj2gco(f), LUA_TPROTO);
-  f->k = nullptr;
+  f->k = NULL;
   f->sizek = 0;
-  f->p = nullptr;
+  f->p = NULL;
   f->sizep = 0;
-  f->code = nullptr;
+  f->code = NULL;
   f->sizecode = 0;
   f->sizelineinfo = 0;
   f->sizeupvalues = 0;
   f->nups = 0;
-  f->upvalues = nullptr;
+  f->upvalues = NULL;
   f->numparams = 0;
   f->is_vararg = 0;
   f->maxstacksize = 0;
-  f->lineinfo = nullptr;
+  f->lineinfo = NULL;
   f->sizelocvars = 0;
-  f->locvars = nullptr;
+  f->locvars = NULL;
   f->linedefined = 0;
   f->lastlinedefined = 0;
-  f->source = nullptr;
+  f->source = NULL;
   return f;
 }
 
@@ -158,7 +158,7 @@ void luaF_freeclosure (lua_State *L, Closure *c) {
 
 /*
 ** Look for n-th local variable at line `line' in function `func'.
-** Returns nullptr if not found.
+** Returns NULL if not found.
 */
 const char *luaF_getlocalname (const Proto *f, int local_number, int pc) {
   int i;
@@ -169,6 +169,6 @@ const char *luaF_getlocalname (const Proto *f, int local_number, int pc) {
         return getstr(f->locvars[i].varname);
     }
   }
-  return nullptr;  /* not found */
+  return NULL;  /* not found */
 }
 

@@ -28,7 +28,7 @@
 
 #include "amigaos.h"
 
-struct Library *SocketBase = nullptr;
+struct Library *SocketBase = NULL;
 extern int errno, h_errno;
 
 #ifdef __libnix__
@@ -42,7 +42,7 @@ void Curl_amiga_cleanup()
 {
   if(SocketBase) {
     CloseLibrary(SocketBase);
-    SocketBase = nullptr;
+    SocketBase = NULL;
   }
 }
 

@@ -57,13 +57,13 @@ char *Curl_dedotdotify(const char *input)
   char *orgclone;
   char *queryp;
   if(!out)
-    return nullptr; /* out of memory */
+    return NULL; /* out of memory */
 
   /* get a cloned copy of the input */
   clone = strdup(input);
   if(!clone) {
     free(out);
-    return nullptr;
+    return NULL;
   }
   orgclone = clone;
   outptr = out;

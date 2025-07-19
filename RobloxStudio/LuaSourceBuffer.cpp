@@ -101,7 +101,7 @@ bool LuaSourceBuffer::isNamedAsset() const
 
 bool LuaSourceBuffer::isModuleScript() const
 {
-	return moduleScript != nullptr;
+	return moduleScript != NULL;
 }
 
 void LuaSourceBuffer::reloadLiveScript()

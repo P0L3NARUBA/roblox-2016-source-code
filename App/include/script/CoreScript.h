@@ -19,7 +19,7 @@ namespace RBX
 
         static boost::optional<ProtectedString> fetchSource(const std::string& name);
 
-		virtual Code requestCode(ScriptInformationProvider* scriptInfoProvider=nullptr);
+		virtual Code requestCode(ScriptInformationProvider* scriptInfoProvider=NULL);
 
 		virtual void extraErrorReporting(lua_State *thread);
 

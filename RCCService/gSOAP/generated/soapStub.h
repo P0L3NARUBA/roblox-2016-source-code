@@ -55,7 +55,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__Status() : version(nullptr), environmentCount(0), soap(nullptr) { }
+	         ns1__Status() : version(NULL), environmentCount(0), soap(NULL) { }
 	virtual ~ns1__Status() { }
 };
 #endif
@@ -79,7 +79,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__Job() : expirationInSeconds(0), category(0), cores(0), soap(nullptr) { }
+	         ns1__Job() : expirationInSeconds(0), category(0), cores(0), soap(NULL) { }
 	virtual ~ns1__Job() { }
 };
 #endif
@@ -102,7 +102,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__ScriptExecution() : name(nullptr), script(nullptr), arguments(nullptr), soap(nullptr) { }
+	         ns1__ScriptExecution() : name(NULL), script(NULL), arguments(NULL), soap(NULL) { }
 	virtual ~ns1__ScriptExecution() { }
 };
 #endif
@@ -123,7 +123,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__ArrayOfLuaValue() : soap(nullptr) { }
+	         ns1__ArrayOfLuaValue() : soap(NULL) { }
 	virtual ~ns1__ArrayOfLuaValue() { }
 };
 #endif
@@ -144,7 +144,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__ArrayOfJob() : soap(nullptr) { }
+	         ns1__ArrayOfJob() : soap(NULL) { }
 	virtual ~ns1__ArrayOfJob() { }
 };
 #endif
@@ -167,7 +167,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__LuaValue() : type((enum ns1__LuaType)0), value(nullptr), table(nullptr), soap(nullptr) { }
+	         ns1__LuaValue() : type((enum ns1__LuaType)0), value(NULL), table(NULL), soap(NULL) { }
 	virtual ~ns1__LuaValue() { }
 };
 #endif
@@ -187,7 +187,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__HelloWorld() : soap(nullptr) { }
+	         _ns1__HelloWorld() : soap(NULL) { }
 	virtual ~_ns1__HelloWorld() { }
 };
 #endif
@@ -208,7 +208,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__HelloWorldResponse() : HelloWorldResult(nullptr), soap(nullptr) { }
+	         _ns1__HelloWorldResponse() : HelloWorldResult(NULL), soap(NULL) { }
 	virtual ~_ns1__HelloWorldResponse() { }
 };
 #endif
@@ -228,7 +228,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__GetVersion() : soap(nullptr) { }
+	         _ns1__GetVersion() : soap(NULL) { }
 	virtual ~_ns1__GetVersion() { }
 };
 #endif
@@ -249,7 +249,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__GetVersionResponse() : soap(nullptr) { }
+	         _ns1__GetVersionResponse() : soap(NULL) { }
 	virtual ~_ns1__GetVersionResponse() { }
 };
 #endif
@@ -269,7 +269,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__GetStatus() : soap(nullptr) { }
+	         _ns1__GetStatus() : soap(NULL) { }
 	virtual ~_ns1__GetStatus() { }
 };
 #endif
@@ -290,7 +290,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__GetStatusResponse() : GetStatusResult(nullptr), soap(nullptr) { }
+	         _ns1__GetStatusResponse() : GetStatusResult(NULL), soap(NULL) { }
 	virtual ~_ns1__GetStatusResponse() { }
 };
 #endif
@@ -312,7 +312,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__OpenJob() : job(nullptr), script(nullptr), soap(nullptr) { }
+	         _ns1__OpenJob() : job(NULL), script(NULL), soap(NULL) { }
 	virtual ~_ns1__OpenJob() { }
 };
 #endif
@@ -334,7 +334,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__OpenJobEx() : job(nullptr), script(nullptr), soap(nullptr) { }
+	         _ns1__OpenJobEx() : job(NULL), script(NULL), soap(NULL) { }
 	virtual ~_ns1__OpenJobEx() { }
 };
 #endif
@@ -355,7 +355,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__OpenJobResponse() : soap(nullptr) { }
+	         _ns1__OpenJobResponse() : soap(NULL) { }
 	virtual ~_ns1__OpenJobResponse() { }
 };
 #endif
@@ -376,7 +376,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__OpenJobExResponse() : OpenJobExResult(nullptr), soap(nullptr) { }
+	         _ns1__OpenJobExResponse() : OpenJobExResult(NULL), soap(NULL) { }
 	virtual ~_ns1__OpenJobExResponse() { }
 };
 #endif
@@ -398,7 +398,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__RenewLease() : expirationInSeconds(0), soap(nullptr) { }
+	         _ns1__RenewLease() : expirationInSeconds(0), soap(NULL) { }
 	virtual ~_ns1__RenewLease() { }
 };
 #endif
@@ -419,7 +419,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__RenewLeaseResponse() : RenewLeaseResult(0), soap(nullptr) { }
+	         _ns1__RenewLeaseResponse() : RenewLeaseResult(0), soap(NULL) { }
 	virtual ~_ns1__RenewLeaseResponse() { }
 };
 #endif
@@ -441,7 +441,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__Execute() : script(nullptr), soap(nullptr) { }
+	         _ns1__Execute() : script(NULL), soap(NULL) { }
 	virtual ~_ns1__Execute() { }
 };
 #endif
@@ -462,7 +462,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__ExecuteResponse() : soap(nullptr) { }
+	         _ns1__ExecuteResponse() : soap(NULL) { }
 	virtual ~_ns1__ExecuteResponse() { }
 };
 #endif
@@ -484,7 +484,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__ExecuteEx() : script(nullptr), soap(nullptr) { }
+	         _ns1__ExecuteEx() : script(NULL), soap(NULL) { }
 	virtual ~_ns1__ExecuteEx() { }
 };
 #endif
@@ -505,7 +505,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__ExecuteExResponse() : ExecuteExResult(nullptr), soap(nullptr) { }
+	         _ns1__ExecuteExResponse() : ExecuteExResult(NULL), soap(NULL) { }
 	virtual ~_ns1__ExecuteExResponse() { }
 };
 #endif
@@ -526,7 +526,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__CloseJob() : soap(nullptr) { }
+	         _ns1__CloseJob() : soap(NULL) { }
 	virtual ~_ns1__CloseJob() { }
 };
 #endif
@@ -546,7 +546,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__CloseJobResponse() : soap(nullptr) { }
+	         _ns1__CloseJobResponse() : soap(NULL) { }
 	virtual ~_ns1__CloseJobResponse() { }
 };
 #endif
@@ -568,7 +568,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__BatchJob() : job(nullptr), script(nullptr), soap(nullptr) { }
+	         _ns1__BatchJob() : job(NULL), script(NULL), soap(NULL) { }
 	virtual ~_ns1__BatchJob() { }
 };
 #endif
@@ -589,7 +589,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__BatchJobResponse() : soap(nullptr) { }
+	         _ns1__BatchJobResponse() : soap(NULL) { }
 	virtual ~_ns1__BatchJobResponse() { }
 };
 #endif
@@ -611,7 +611,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__BatchJobEx() : job(nullptr), script(nullptr), soap(nullptr) { }
+	         _ns1__BatchJobEx() : job(NULL), script(NULL), soap(NULL) { }
 	virtual ~_ns1__BatchJobEx() { }
 };
 #endif
@@ -632,7 +632,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__BatchJobExResponse() : BatchJobExResult(nullptr), soap(nullptr) { }
+	         _ns1__BatchJobExResponse() : BatchJobExResult(NULL), soap(NULL) { }
 	virtual ~_ns1__BatchJobExResponse() { }
 };
 #endif
@@ -653,7 +653,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__GetExpiration() : soap(nullptr) { }
+	         _ns1__GetExpiration() : soap(NULL) { }
 	virtual ~_ns1__GetExpiration() { }
 };
 #endif
@@ -674,7 +674,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__GetExpirationResponse() : GetExpirationResult(0), soap(nullptr) { }
+	         _ns1__GetExpirationResponse() : GetExpirationResult(0), soap(NULL) { }
 	virtual ~_ns1__GetExpirationResponse() { }
 };
 #endif
@@ -694,7 +694,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__GetAllJobs() : soap(nullptr) { }
+	         _ns1__GetAllJobs() : soap(NULL) { }
 	virtual ~_ns1__GetAllJobs() { }
 };
 #endif
@@ -715,7 +715,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__GetAllJobsResponse() : soap(nullptr) { }
+	         _ns1__GetAllJobsResponse() : soap(NULL) { }
 	virtual ~_ns1__GetAllJobsResponse() { }
 };
 #endif
@@ -735,7 +735,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__GetAllJobsEx() : soap(nullptr) { }
+	         _ns1__GetAllJobsEx() : soap(NULL) { }
 	virtual ~_ns1__GetAllJobsEx() { }
 };
 #endif
@@ -756,7 +756,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__GetAllJobsExResponse() : GetAllJobsExResult(nullptr), soap(nullptr) { }
+	         _ns1__GetAllJobsExResponse() : GetAllJobsExResult(NULL), soap(NULL) { }
 	virtual ~_ns1__GetAllJobsExResponse() { }
 };
 #endif
@@ -776,7 +776,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__CloseExpiredJobs() : soap(nullptr) { }
+	         _ns1__CloseExpiredJobs() : soap(NULL) { }
 	virtual ~_ns1__CloseExpiredJobs() { }
 };
 #endif
@@ -797,7 +797,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__CloseExpiredJobsResponse() : CloseExpiredJobsResult(0), soap(nullptr) { }
+	         _ns1__CloseExpiredJobsResponse() : CloseExpiredJobsResult(0), soap(NULL) { }
 	virtual ~_ns1__CloseExpiredJobsResponse() { }
 };
 #endif
@@ -817,7 +817,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__CloseAllJobs() : soap(nullptr) { }
+	         _ns1__CloseAllJobs() : soap(NULL) { }
 	virtual ~_ns1__CloseAllJobs() { }
 };
 #endif
@@ -838,7 +838,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__CloseAllJobsResponse() : CloseAllJobsResult(0), soap(nullptr) { }
+	         _ns1__CloseAllJobsResponse() : CloseAllJobsResult(0), soap(NULL) { }
 	virtual ~_ns1__CloseAllJobsResponse() { }
 };
 #endif
@@ -860,7 +860,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__Diag() : type(0), jobID(nullptr), soap(nullptr) { }
+	         _ns1__Diag() : type(0), jobID(NULL), soap(NULL) { }
 	virtual ~_ns1__Diag() { }
 };
 #endif
@@ -881,7 +881,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__DiagResponse() : soap(nullptr) { }
+	         _ns1__DiagResponse() : soap(NULL) { }
 	virtual ~_ns1__DiagResponse() { }
 };
 #endif
@@ -903,7 +903,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__DiagEx() : type(0), jobID(nullptr), soap(nullptr) { }
+	         _ns1__DiagEx() : type(0), jobID(NULL), soap(NULL) { }
 	virtual ~_ns1__DiagEx() { }
 };
 #endif
@@ -924,7 +924,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__DiagExResponse() : DiagExResult(nullptr), soap(nullptr) { }
+	         _ns1__DiagExResponse() : DiagExResult(NULL), soap(NULL) { }
 	virtual ~_ns1__DiagExResponse() { }
 };
 #endif

@@ -144,7 +144,7 @@ HRESULT RbxWebView::FilterDataObject(IDataObject *pDO, IDataObject **ppDORet)
 
 HRESULT RbxWebView::GetTypeInfoCount(UINT* pctinfo)
 {
-	if (pctinfo == nullptr)
+	if (pctinfo == NULL)
 		return E_POINTER;
 
 	*pctinfo = 1;
@@ -168,7 +168,7 @@ HRESULT RbxWebView::Invoke(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFl
 
 SHDocVw::IWebBrowserAppPtr RbxWebView::getWebBrowser()
 {
-	SHDocVw::IWebBrowserAppPtr pWebBrowser = nullptr;
+	SHDocVw::IWebBrowserAppPtr pWebBrowser = NULL;
 	GetDlgControl(IDC_RBXEXPLORER, __uuidof(SHDocVw::IWebBrowserAppPtr), (void**)&pWebBrowser);
 
 	return pWebBrowser;
@@ -181,11 +181,11 @@ LRESULT RbxWebView::OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& 
 	webBrowserEvents.SetRbxWebView(this);
 
 	// Load the Roblox Icon
-	m_hIcon = ::LoadIcon(GetModuleHandle(nullptr), MAKEINTRESOURCE(IDI_WINDOW_ICON));
+	m_hIcon = ::LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_WINDOW_ICON));
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
-	SHDocVw::IWebBrowserAppPtr pWebBrowser = nullptr;
+	SHDocVw::IWebBrowserAppPtr pWebBrowser = NULL;
 	HRESULT hr = GetDlgControl(IDC_RBXEXPLORER, __uuidof(SHDocVw::IWebBrowserAppPtr), (void**)&pWebBrowser);
 
 	if (SUCCEEDED(hr)) 
@@ -209,7 +209,7 @@ LRESULT RbxWebView::OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& 
 		::UrlMkSetSessionOption(URLMON_OPTION_USERAGENT, &userAgentChars[0], userAgent.length(), 0);
 
 		// navigate to default page
-		pWebBrowser->Navigate(_bstr_t(url.c_str()),nullptr,nullptr,nullptr,nullptr);
+		pWebBrowser->Navigate(_bstr_t(url.c_str()),NULL,NULL,NULL,NULL);
 	}
 	else 
 	{
@@ -238,7 +238,7 @@ void RbxWebView::closeDialog()
 
 LRESULT RbxWebView::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
-	SHDocVw::IWebBrowserAppPtr pWebBrowser = nullptr;
+	SHDocVw::IWebBrowserAppPtr pWebBrowser = NULL;
 	HRESULT hr = GetDlgControl(IDC_RBXEXPLORER, __uuidof(SHDocVw::IWebBrowserAppPtr), (void**)&pWebBrowser);
 
 	if (SUCCEEDED(hr))
@@ -255,7 +255,7 @@ LRESULT RbxWebView::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandl
 
 HRESULT __stdcall WebBrowserEvents::QueryInterface(REFIID riid, LPVOID* ppv)
 {
-	*ppv = nullptr;
+	*ppv = NULL;
 
 	if (IID_IUnknown == riid || __uuidof(SHDocVw::DWebBrowserEventsPtr) == riid)
 	{
@@ -333,7 +333,7 @@ HRESULT WebBrowserEvents::WindowClosing(DISPPARAMS __RPC_FAR *pDispParams)
 		signalGuiServiceUrlWindowClosed(game->getDataModel().get());
 	}
 
-	rbxWebView = nullptr;
+	rbxWebView = NULL;
 
 	return S_OK;
 }

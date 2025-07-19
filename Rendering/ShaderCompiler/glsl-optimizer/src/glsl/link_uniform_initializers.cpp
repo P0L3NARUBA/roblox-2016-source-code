@@ -41,7 +41,7 @@ get_storage(gl_uniform_storage *storage, unsigned num_storage,
 	 return &storage[i];
    }
 
-   return nullptr;
+   return NULL;
 }
 
 static unsigned
@@ -100,8 +100,8 @@ set_sampler_binding(gl_shader_program *prog, const char *name, int binding)
    struct gl_uniform_storage *const storage =
       get_storage(prog->UniformStorage, prog->NumUserUniformStorage, name);
 
-   if (storage == nullptr) {
-      assert(storage != nullptr);
+   if (storage == NULL) {
+      assert(storage != NULL);
       return;
    }
 
@@ -190,8 +190,8 @@ set_uniform_initializer(void *mem_ctx, gl_shader_program *prog,
       get_storage(prog->UniformStorage,
 		  prog->NumUserUniformStorage,
 		  name);
-   if (storage == nullptr) {
-      assert(storage != nullptr);
+   if (storage == NULL) {
+      assert(storage != NULL);
       return;
    }
 
@@ -239,12 +239,12 @@ void
 link_set_uniform_initializers(struct gl_shader_program *prog,
                               unsigned int boolean_true)
 {
-   void *mem_ctx = nullptr;
+   void *mem_ctx = NULL;
 
    for (unsigned int i = 0; i < MESA_SHADER_STAGES; i++) {
       struct gl_shader *shader = prog->_LinkedShaders[i];
 
-      if (shader == nullptr)
+      if (shader == NULL)
 	 continue;
 
       foreach_in_list(ir_instruction, node, shader->ir) {
@@ -254,7 +254,7 @@ link_set_uniform_initializers(struct gl_shader_program *prog,
 	    continue;
 
 	 if (!mem_ctx)
-	    mem_ctx = ralloc_context(nullptr);
+	    mem_ctx = ralloc_context(NULL);
 
          if (var->data.explicit_binding) {
             const glsl_type *const type = var->type;

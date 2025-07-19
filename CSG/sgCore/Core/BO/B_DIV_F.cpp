@@ -7,7 +7,7 @@ static BOOL  b_up(lpNPW np, short face, lpNP_VERTEX_LIST ver);
 
 BOOL b_divide_face(lpNPW np, short face)
 {
-	NP_VERTEX_LIST ver = {0,0,nullptr,nullptr};
+	NP_VERTEX_LIST ver = {0,0,NULL,NULL};
 	D_PLANE        pl;
 	BOOL           rt = TRUE;
 

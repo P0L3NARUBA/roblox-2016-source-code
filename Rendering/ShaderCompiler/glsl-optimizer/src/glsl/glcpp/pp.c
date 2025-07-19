@@ -87,7 +87,7 @@ skip_newline (const char *str)
 {
 	const char *ret = str;
 
-	if (ret == nullptr)
+	if (ret == NULL)
 		return ret;
 
 	if (*ret == '\0')
@@ -145,9 +145,9 @@ remove_line_continuations(glcpp_parser_t *ctx, const char *shader)
 	newline_separator[1] = '\0';
 	newline_separator[2] = '\0';
 
-	if (cr == nullptr) {
+	if (cr == NULL) {
 		/* Nothing to do. */
-	} else if (lf == nullptr) {
+	} else if (lf == NULL) {
 		newline_separator[0] = '\r';
 	} else if (lf == cr + 1) {
 		newline_separator[0] = '\r';
@@ -175,7 +175,7 @@ remove_line_continuations(glcpp_parser_t *ctx, const char *shader)
 			else
 				newline = lf;
 			if (newline &&
-			    (backslash == nullptr || newline < backslash))
+			    (backslash == NULL || newline < backslash))
 			{
 				ralloc_strncat(&clean, shader,
 					       newline - shader + 1);
@@ -190,7 +190,7 @@ remove_line_continuations(glcpp_parser_t *ctx, const char *shader)
 
 		search_start = backslash + 1;
 
-		if (backslash == nullptr)
+		if (backslash == NULL)
 			break;
 
 		/* At each line continuation, (backslash followed by a

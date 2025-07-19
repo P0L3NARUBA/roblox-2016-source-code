@@ -39,22 +39,22 @@ SDL_GetBasePath(void)
     typedef DWORD (WINAPI *GetModuleFileNameExW_t)(HANDLE, HMODULE, LPWSTR, DWORD);
     GetModuleFileNameExW_t pGetModuleFileNameExW;
     DWORD buflen = 128;
-    WCHAR *path = nullptr;
+    WCHAR *path = NULL;
     HANDLE psapi = LoadLibrary(L"psapi.dll");
-    char *retval = nullptr;
+    char *retval = NULL;
     DWORD len = 0;
     int i;
 
     if (!psapi) {
         WIN_SetError("Couldn't load psapi.dll");
-        return nullptr;
+        return NULL;
     }
 
     pGetModuleFileNameExW = (GetModuleFileNameExW_t)GetProcAddress(psapi, "GetModuleFileNameExW");
     if (!pGetModuleFileNameExW) {
         WIN_SetError("Couldn't find GetModuleFileNameExW");
         FreeLibrary(psapi);
-        return nullptr;
+        return NULL;
     }
 
     while (SDL_TRUE) {
@@ -63,12 +63,12 @@ SDL_GetBasePath(void)
             SDL_free(path);
             FreeLibrary(psapi);
             SDL_OutOfMemory();
-            return nullptr;
+            return NULL;
         }
 
         path = (WCHAR *) ptr;
 
-        len = pGetModuleFileNameExW(GetCurrentProcess(), nullptr, path, buflen);
+        len = pGetModuleFileNameExW(GetCurrentProcess(), NULL, path, buflen);
         if (len != buflen) {
             break;
         }
@@ -82,7 +82,7 @@ SDL_GetBasePath(void)
     if (len == 0) {
         SDL_free(path);
         WIN_SetError("Couldn't locate our .exe");
-        return nullptr;
+        return NULL;
     }
 
     for (i = len-1; i > 0; i--) {
@@ -108,32 +108,32 @@ SDL_GetPrefPath(const char *org, const char *app)
      *  and apparently just wraps the new API. This is the new way to do it:
      *
      *     SHGetKnownFolderPath(FOLDERID_RoamingAppData, KF_FLAG_CREATE,
-     *                          nullptr, &wszPath);
+     *                          NULL, &wszPath);
      */
 
     WCHAR path[MAX_PATH];
-    char *retval = nullptr;
-    WCHAR* worg = nullptr;
-    WCHAR* wapp = nullptr;
+    char *retval = NULL;
+    WCHAR* worg = NULL;
+    WCHAR* wapp = NULL;
     size_t new_wpath_len = 0;
     BOOL api_result = FALSE;
 
-    if (!SUCCEEDED(SHGetFolderPathW(nullptr, CSIDL_APPDATA | CSIDL_FLAG_CREATE, nullptr, 0, path))) {
+    if (!SUCCEEDED(SHGetFolderPathW(NULL, CSIDL_APPDATA | CSIDL_FLAG_CREATE, NULL, 0, path))) {
         WIN_SetError("Couldn't locate our prefpath");
-        return nullptr;
+        return NULL;
     }
 
     worg = WIN_UTF8ToString(org);
-    if (worg == nullptr) {
+    if (worg == NULL) {
         SDL_OutOfMemory();
-        return nullptr;
+        return NULL;
     }
 
     wapp = WIN_UTF8ToString(app);
-    if (wapp == nullptr) {
+    if (wapp == NULL) {
         SDL_free(worg);
         SDL_OutOfMemory();
-        return nullptr;
+        return NULL;
     }
 
     new_wpath_len = lstrlenW(worg) + lstrlenW(wapp) + lstrlenW(path) + 3;
@@ -142,19 +142,19 @@ SDL_GetPrefPath(const char *org, const char *app)
         SDL_free(worg);
         SDL_free(wapp);
         WIN_SetError("Path too long.");
-        return nullptr;
+        return NULL;
     }
 
     lstrcatW(path, L"\\");
     lstrcatW(path, worg);
     SDL_free(worg);
 
-    api_result = CreateDirectoryW(path, nullptr);
+    api_result = CreateDirectoryW(path, NULL);
     if (api_result == FALSE) {
         if (GetLastError() != ERROR_ALREADY_EXISTS) {
             SDL_free(wapp);
             WIN_SetError("Couldn't create a prefpath.");
-            return nullptr;
+            return NULL;
         }
     }
 
@@ -162,11 +162,11 @@ SDL_GetPrefPath(const char *org, const char *app)
     lstrcatW(path, wapp);
     SDL_free(wapp);
 
-    api_result = CreateDirectoryW(path, nullptr);
+    api_result = CreateDirectoryW(path, NULL);
     if (api_result == FALSE) {
         if (GetLastError() != ERROR_ALREADY_EXISTS) {
             WIN_SetError("Couldn't create a prefpath.");
-            return nullptr;
+            return NULL;
         }
     }
 

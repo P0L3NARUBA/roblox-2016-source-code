@@ -252,7 +252,7 @@ namespace RBX
 		static bool checkSyntax(const std::string& code, int& line, std::string& errorMessage);
 		static lua_State* getGlobalState(lua_State* thread);
 		static ScriptContext& getContext(lua_State* thread);
-		static void printCallStack(lua_State* thread, std::string* output = nullptr, bool dontPrint = false);
+		static void printCallStack(lua_State* thread, std::string* output = NULL, bool dontPrint = false);
 		static std::string extractCallStack(lua_State* thread, shared_ptr<BaseScript>& source, int& line);
 		// Shutdown helpers
 		bool shouldPreventNewConnections() { return preventNewConnection; }
@@ -336,13 +336,13 @@ namespace RBX
 		// Executes a script, throws an std::exception on error
 		// The script is spawned from the global root thread, but it is "sandboxed" to the extent that global declarations
 		// don't affect other threads
-		// If globalStateToExecuteIn is nullptr we get the global state to execute in by our current identity, which is the first arg to this function
+		// If globalStateToExecuteIn is NULL we get the global state to execute in by our current identity, which is the first arg to this function
 		void executeInNewThread(RBX::Security::Identities identity, const ProtectedString& script, const char* name,
 			boost::function1<size_t, lua_State*> pushArguments, 
 			boost::function2<void, lua_State*, size_t> readImmediateResults, 
 			Scripts::Continuations continuations,
-			lua_State* globalStateToExecuteIn = nullptr,
-			const std::map<std::string, shared_ptr<Instance> >* extraGlobals = nullptr,
+			lua_State* globalStateToExecuteIn = NULL,
+			const std::map<std::string, shared_ptr<Instance> >* extraGlobals = NULL,
             unsigned int modkey = 1);
 
 		// Resumes the thread (expects the top of the stack to contain a function)

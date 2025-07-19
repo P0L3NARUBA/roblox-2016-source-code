@@ -935,7 +935,7 @@ namespace RBX
 				if (values[i] != -1 && static_cast<unsigned int>(values[i]) >= idMap.size())
 					throw RBX::runtime_error("Invalid id %d", values[i]);
 					
-				Instance* ref = values[i] != -1 ? idMap[values[i]].get() : nullptr;
+				Instance* ref = values[i] != -1 ? idMap[values[i]].get() : NULL;
 				
 				refDesc.setRefValueUnsafe(instances[i], ref);
 			}
@@ -1457,7 +1457,7 @@ namespace RBX
 				
 			// for each id, write whether the object is a service parented to root; this affects deserialization
 			// note that since all objects are of the same type it's enough to dynamic_cast once
-			bool isServiceType = instances.size() > 0 && dynamic_cast<const Service*>(instances[0]) != nullptr;
+			bool isServiceType = instances.size() > 0 && dynamic_cast<const Service*>(instances[0]) != NULL;
 			
 			writeRaw(stream, (char)(isServiceType ? bofServiceType : bofPlain));
 			
@@ -1554,7 +1554,7 @@ namespace RBX
 	
 	static const Reflection::ClassDescriptor* deserializeDecodeInstances(MemoryInputStream& stream, Instance* root, std::vector<shared_ptr<Instance> >& idMap, std::vector<Instance*>& objects)
 	{
-		const Reflection::ClassDescriptor* type = nullptr;
+		const Reflection::ClassDescriptor* type = NULL;
 		
 		std::string typeName;
 		readString(stream, typeName);
@@ -1588,7 +1588,7 @@ namespace RBX
 			}
 		}
 		
-		bool isRootServiceProvider = dynamic_cast<ServiceProvider*>(root) != nullptr;
+		bool isRootServiceProvider = dynamic_cast<ServiceProvider*>(root) != NULL;
 
         const Name& typeNameName = Name::lookup(typeName);
 		const ICreator* creator = Creatable<Instance>::getCreator(typeNameName);
@@ -1773,17 +1773,17 @@ namespace RBX
 		
 		void serialize(std::ostream& out, const Instances& instances, unsigned int flags)
 		{
-			serializeImpl(out, nullptr, instances, flags);
+			serializeImpl(out, NULL, instances, flags);
 		}
 	
 		void deserialize(std::istream& in, Instance* root)
 		{
-			deserializeImpl(in, root, nullptr);
+			deserializeImpl(in, root, NULL);
 		}
 		
 		void deserialize(std::istream& in, Instances& result)
 		{
-			deserializeImpl(in, nullptr, &result);
+			deserializeImpl(in, NULL, &result);
 		}
 	}
 }

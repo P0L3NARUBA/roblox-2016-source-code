@@ -84,7 +84,7 @@ namespace RBX {
 			return false;
 		}
 
-		if (Instance::fastDynamicCast<DataModel>(getParent()) == nullptr)
+		if (Instance::fastDynamicCast<DataModel>(getParent()) == NULL)
 		{
 			errorFunction("Unrecognized HttpService");
 			return false;

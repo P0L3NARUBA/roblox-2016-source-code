@@ -54,9 +54,9 @@ int RobloxScriptDoc::slastActivatedRibbonPage = -1;
 
 
 RobloxScriptDoc::RobloxScriptDoc()
-    : m_pMainWindow(nullptr)
-    , m_pParentDoc(nullptr)
-    , m_pTextEdit(nullptr)
+    : m_pMainWindow(NULL)
+    , m_pParentDoc(NULL)
+    , m_pTextEdit(NULL)
     , m_displayName(QString("Script%1").arg(sScriptCount))
     , m_undoAvailable(false)
     , m_redoAvailable(false)
@@ -185,7 +185,7 @@ static void attemptToLockScript(shared_ptr<RBX::DataModel> dm, LuaSourceBuffer l
 		}
 
 		Instance* currentEditor = lsc->getCurrentEditor();
-		if (currentEditor != nullptr)
+		if (currentEditor != NULL)
 		{
 			*weHaveTheLock = currentEditor == localPlayer;
 			*nameOfPlayerWhoOwnsTheLock = currentEditor->getName();
@@ -220,7 +220,7 @@ void RobloxScriptDoc::editingContents()
 {
 	RobloxIDEDoc* ideDoc = RobloxDocManager::Instance().getPlayDoc();
 	RBXASSERT(ideDoc && ideDoc->isCloudEditSession());
-	if (m_updatingText || m_currentlyAttemptingToGetScriptLock || ideDoc == nullptr)
+	if (m_updatingText || m_currentlyAttemptingToGetScriptLock || ideDoc == NULL)
 	{
 		return;
 	}
@@ -271,7 +271,7 @@ bool RobloxScriptDoc::doClose()
 {
 	deActivate();
 
-	FindReplaceProvider::instance().setFindListener(nullptr);
+	FindReplaceProvider::instance().setFindListener(NULL);
 	
 	if (FFlag::StudioEmbeddedFindDialogEnabled)
 	{
@@ -285,7 +285,7 @@ bool RobloxScriptDoc::doClose()
 
 	//this will get deleted once the data model gets removed
 	if (DebuggerClient *pLuaDebuggerClient = DebuggerClientManager::Instance().getDebuggerClient(m_script.toInstance()))
-		pLuaDebuggerClient->setDocument(nullptr);
+		pLuaDebuggerClient->setDocument(NULL);
 	
 	m_pTextEdit->deleteLater();
 
@@ -654,7 +654,7 @@ void RobloxScriptDoc::setScript(shared_ptr<RBX::DataModel> dm, LuaSourceBuffer s
 					RBX::Network::Player* localPlayer = RBX::Network::Players::findLocalPlayer(m_dataModel.get());
 					if (localPlayer && lsc->getCurrentEditor() == localPlayer)
 					{
-						lsc->setCurrentEditor(nullptr);
+						lsc->setCurrentEditor(NULL);
 						lsc->fireSourceChanged();
 						m_haveCloudEditScriptLock = false;
 					}
@@ -669,7 +669,7 @@ void RobloxScriptDoc::setScript(shared_ptr<RBX::DataModel> dm, LuaSourceBuffer s
 		m_script = LuaSourceBuffer();
 		m_dataModel.reset();
 
-		m_pParentDoc = nullptr;
+		m_pParentDoc = NULL;
 
         RobloxDocManager::Instance().deregisterScriptDoc(*this);
 	}
@@ -679,7 +679,7 @@ void RobloxScriptDoc::setScript(shared_ptr<RBX::DataModel> dm, LuaSourceBuffer s
 		m_script = script;
 		m_pParentDoc = RobloxDocManager::Instance().getPlayDoc();
 		m_dataModel = dm;
-		if (script.toInstance() == nullptr)
+		if (script.toInstance() == NULL)
 		{
 			connect(m_pTextEdit.get(), SIGNAL(toggleBreakpoint(int)),
 				this, SLOT(explainBreakpointsDisabled()));
@@ -719,7 +719,7 @@ void RobloxScriptDoc::setScript(shared_ptr<RBX::DataModel> dm, LuaSourceBuffer s
 
 void RobloxScriptDoc::onAncestryChanged(shared_ptr<RBX::Instance> newParent)
 {
-	if (newParent==nullptr)
+	if (newParent==NULL)
 	{
 		if (this->thread() == QThread::currentThread())
 			requestScriptDeletion();
@@ -733,7 +733,7 @@ void RobloxScriptDoc::requestScriptDeletion()
 	if (!m_script.empty())
 		RobloxDocManager::Instance().closeDoc(m_script);
 
-	// Set script to nullptr because it is no longer valid
+	// Set script to NULL because it is no longer valid
 	setScript(shared_ptr<RBX::DataModel>(), LuaSourceBuffer());
 }
 
@@ -888,7 +888,7 @@ void RobloxScriptDoc::setMenuVisibility(bool visible)
 {
 	if (!visible)
 	{
-		FindReplaceProvider::instance().setFindListener(nullptr);
+		FindReplaceProvider::instance().setFindListener(NULL);
 		
 		if (FFlag::StudioEmbeddedFindDialogEnabled)
 		{
@@ -986,7 +986,7 @@ void RobloxScriptDoc::removeScriptLock()
 		RBX::Network::Player* localPlayer = RBX::Network::Players::findLocalPlayer(dataModel.get());
 		if (localPlayer && lsc->getCurrentEditor() == localPlayer)
 		{
-			lsc->setCurrentEditor(nullptr);
+			lsc->setCurrentEditor(NULL);
 			lsc->fireSourceChanged();
 			m_haveCloudEditScriptLock = false;
 		}

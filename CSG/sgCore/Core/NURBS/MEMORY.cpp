@@ -12,15 +12,15 @@ void free_matrix( sgFloat **L, short n ){
 * Expand memory for matrix m x n
 * m - number of rows
 * n - number of colomns
-* return =**L - if memory expand; or = nullptr
+* return =**L - if memory expand; or = NULL
 */
 sgFloat ** mem_matrix( short m, short n ){
 	short i;
 	sgFloat **L;
 
-	if( (L = (sgFloat**)SGMalloc( sizeof(sgFloat*) * m) ) == nullptr) goto err;
+	if( (L = (sgFloat**)SGMalloc( sizeof(sgFloat*) * m) ) == NULL) goto err;
 	for( i = 0; i < m; i++ ) {
-		if( (L[i] = (sgFloat*)SGMalloc(sizeof(sgFloat) * n) ) == nullptr ){
+		if( (L[i] = (sgFloat*)SGMalloc(sizeof(sgFloat) * n) ) == NULL ){
 			free_matrix( L, i );
 			goto err;
 		}
@@ -28,7 +28,7 @@ sgFloat ** mem_matrix( short m, short n ){
 	return L;
 err:
 	nurbs_handler_err(SPL_NO_MEMORY);
-	return nullptr;
+	return NULL;
 }
 
 //-------------------------------------->>>>>>>>>>>>
@@ -44,15 +44,15 @@ void free_matrix_point( lpD_POINT *L, short n ){
 * Expand memory for matrix m x n
 * m - number of rows
 * n - number of colomns
-* return =**L - if memory expand; or = nullptr
+* return =**L - if memory expand; or = NULL
 */
 lpD_POINT * mem_matrix_point( short m, short n ){
 	short i;
 	lpD_POINT *L;
 
-	if( (L = (D_POINT**)SGMalloc( sizeof(lpD_POINT) * m) ) == nullptr) goto err;
+	if( (L = (D_POINT**)SGMalloc( sizeof(lpD_POINT) * m) ) == NULL) goto err;
 	for( i = 0; i < m; i++ ) {
-		if( (L[i] = (D_POINT*)SGMalloc(sizeof(D_POINT) * n) ) == nullptr ){
+		if( (L[i] = (D_POINT*)SGMalloc(sizeof(D_POINT) * n) ) == NULL ){
 			free_matrix_point( L, i );
 			goto err;
 		}
@@ -60,5 +60,5 @@ lpD_POINT * mem_matrix_point( short m, short n ){
 	return L;
 err:
 	nurbs_handler_err(SPL_NO_MEMORY);
-	return nullptr;
+	return NULL;
 }

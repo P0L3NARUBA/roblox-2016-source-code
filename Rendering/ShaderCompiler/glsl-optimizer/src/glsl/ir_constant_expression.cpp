@@ -396,10 +396,10 @@ constant_referenced(const ir_dereference *deref,
                     struct hash_table *variable_context,
                     ir_constant *&store, int &offset)
 {
-   store = nullptr;
+   store = NULL;
    offset = 0;
 
-   if (variable_context == nullptr)
+   if (variable_context == NULL)
       return false;
 
    switch (deref->ir_type) {
@@ -477,7 +477,7 @@ constant_referenced(const ir_dereference *deref,
       break;
    }
 
-   return store != nullptr;
+   return store != NULL;
 }
 
 
@@ -485,16 +485,16 @@ ir_constant *
 ir_rvalue::constant_expression_value(struct hash_table *)
 {
    assert(this->type->is_error());
-   return nullptr;
+   return NULL;
 }
 
 ir_constant *
 ir_expression::constant_expression_value(struct hash_table *variable_context)
 {
    if (this->type->is_error())
-      return nullptr;
+      return NULL;
 
-   ir_constant *op[Elements(this->operands)] = { nullptr, };
+   ir_constant *op[Elements(this->operands)] = { NULL, };
    ir_constant_data data;
 
    memset(&data, 0, sizeof(data));
@@ -502,10 +502,10 @@ ir_expression::constant_expression_value(struct hash_table *variable_context)
    for (unsigned operand = 0; operand < this->get_num_operands(); operand++) {
       op[operand] = this->operands[operand]->constant_expression_value(variable_context);
       if (!op[operand])
-	 return nullptr;
+	 return NULL;
    }
 
-   if (op[1] != nullptr)
+   if (op[1] != NULL)
       switch (this->operation) {
       case ir_binop_lshift:
       case ir_binop_rshift:
@@ -523,7 +523,7 @@ ir_expression::constant_expression_value(struct hash_table *variable_context)
       }
 
    bool op0_scalar = op[0]->type->is_scalar();
-   bool op1_scalar = op[1] != nullptr && op[1]->type->is_scalar();
+   bool op1_scalar = op[1] != NULL && op[1]->type->is_scalar();
 
    /* When iterating over a vector or matrix's components, we want to increase
     * the loop counter.  However, for scalars, we want to stay at 0.
@@ -541,7 +541,7 @@ ir_expression::constant_expression_value(struct hash_table *variable_context)
 
    /* Handle array operations here, rather than below. */
    if (op[0]->type->is_array()) {
-      assert(op[1] != nullptr && op[1]->type->is_array());
+      assert(op[1] != NULL && op[1]->type->is_array());
       switch (this->operation) {
       case ir_binop_all_equal:
 	 return new(ctx) ir_constant(op[0]->has_value(op[1]));
@@ -550,7 +550,7 @@ ir_expression::constant_expression_value(struct hash_table *variable_context)
       default:
 	 break;
       }
-      return nullptr;
+      return NULL;
    }
 
    switch (this->operation) {
@@ -705,7 +705,7 @@ ir_expression::constant_expression_value(struct hash_table *variable_context)
 		}
 		// how would one express "vec3(nan)" in GLSL? no idea, so let's just not handle it
 		if (mag2 == 0.0f)
-			return nullptr;
+			return NULL;
 		float mag = sqrtf(mag2);
 		for (unsigned c = 0; c < op[0]->type->components(); c++) {
 			data.f[c] = op[0]->value.f[c] / mag;
@@ -1650,7 +1650,7 @@ ir_expression::constant_expression_value(struct hash_table *variable_context)
 
    default:
       /* FINISHME: Should handle all expression types. */
-      return nullptr;
+      return NULL;
    }
 
    return new(ctx) ir_constant(this->type, &data);
@@ -1661,7 +1661,7 @@ ir_constant *
 ir_texture::constant_expression_value(struct hash_table *)
 {
    /* texture lookups aren't constant expressions */
-   return nullptr;
+   return NULL;
 }
 
 
@@ -1670,7 +1670,7 @@ ir_swizzle::constant_expression_value(struct hash_table *variable_context)
 {
    ir_constant *v = this->val->constant_expression_value(variable_context);
 
-   if (v != nullptr) {
+   if (v != NULL) {
       ir_constant_data data = { { 0 } };
 
       const unsigned swiz_idx[4] = {
@@ -1690,7 +1690,7 @@ ir_swizzle::constant_expression_value(struct hash_table *variable_context)
       void *ctx = ralloc_parent(this);
       return new(ctx) ir_constant(this->type, &data);
    }
-   return nullptr;
+   return NULL;
 }
 
 
@@ -1699,7 +1699,7 @@ ir_dereference_variable::constant_expression_value(struct hash_table *variable_c
 {
    /* This may occur during compile and var->type is glsl_type::error_type */
    if (!var)
-      return nullptr;
+      return NULL;
 
    /* Give priority to the context hashtable, if it exists */
    if (variable_context) {
@@ -1712,12 +1712,12 @@ ir_dereference_variable::constant_expression_value(struct hash_table *variable_c
     * not the lifetime constant value of the uniform.
     */
    if (var->data.mode == ir_var_uniform)
-      return nullptr;
+      return NULL;
 
    if (!var->constant_value)
-      return nullptr;
+      return NULL;
 
-   return var->constant_value->clone(ralloc_parent(var), nullptr);
+   return var->constant_value->clone(ralloc_parent(var), NULL);
 }
 
 
@@ -1727,7 +1727,7 @@ ir_dereference_array::constant_expression_value(struct hash_table *variable_cont
    ir_constant *array = this->array->constant_expression_value(variable_context);
    ir_constant *idx = this->array_index->constant_expression_value(variable_context);
 
-   if ((array != nullptr) && (idx != nullptr)) {
+   if ((array != NULL) && (idx != NULL)) {
       void *ctx = ralloc_parent(this);
       if (array->type->is_matrix()) {
 	 /* Array access of a matrix results in a vector.
@@ -1769,10 +1769,10 @@ ir_dereference_array::constant_expression_value(struct hash_table *variable_cont
 	 return new(ctx) ir_constant(array, component);
       } else {
 	 const unsigned index = idx->value.u[0];
-	 return array->get_array_element(index)->clone(ctx, nullptr);
+	 return array->get_array_element(index)->clone(ctx, NULL);
       }
    }
-   return nullptr;
+   return NULL;
 }
 
 
@@ -1781,7 +1781,7 @@ ir_dereference_record::constant_expression_value(struct hash_table *)
 {
    ir_constant *v = this->record->constant_expression_value();
 
-   return (v != nullptr) ? v->get_record_field(this->field) : nullptr;
+   return (v != NULL) ? v->get_record_field(this->field) : NULL;
 }
 
 
@@ -1789,7 +1789,7 @@ ir_constant *
 ir_assignment::constant_expression_value(struct hash_table *)
 {
    /* FINISHME: Handle CEs involving assignment (return RHS) */
-   return nullptr;
+   return NULL;
 }
 
 
@@ -1832,7 +1832,7 @@ bool ir_function_signature::constant_expression_evaluate_expression_list(const s
 	       break;
 	 }
 
-	 ir_constant *store = nullptr;
+	 ir_constant *store = NULL;
 	 int offset = 0;
 
 	 if (!constant_referenced(asg->lhs, variable_context, store, offset))
@@ -1851,7 +1851,7 @@ bool ir_function_signature::constant_expression_evaluate_expression_list(const s
       case ir_type_return:
 	 assert (result);
 	 *result = inst->as_return()->value->constant_expression_value(variable_context);
-	 return *result != nullptr;
+	 return *result != NULL;
 
 	 /* (call name (ref) (params))*/
       case ir_type_call: {
@@ -1864,7 +1864,7 @@ bool ir_function_signature::constant_expression_evaluate_expression_list(const s
 	 if (!call->return_deref)
 	    return false;
 
-	 ir_constant *store = nullptr;
+	 ir_constant *store = NULL;
 	 int offset = 0;
 
 	 if (!constant_referenced(call->return_deref, variable_context,
@@ -1890,7 +1890,7 @@ bool ir_function_signature::constant_expression_evaluate_expression_list(const s
 
 	 exec_list &branch = cond->get_bool_component(0) ? iif->then_instructions : iif->else_instructions;
 
-	 *result = nullptr;
+	 *result = NULL;
 	 if (!constant_expression_evaluate_expression_list(branch, variable_context, result))
 	    return false;
 
@@ -1909,7 +1909,7 @@ bool ir_function_signature::constant_expression_evaluate_expression_list(const s
 
    /* Reaching the end of the block is not an error condition */
    if (result)
-      *result = nullptr;
+      *result = NULL;
 
    return true;
 }
@@ -1919,14 +1919,14 @@ ir_function_signature::constant_expression_value(exec_list *actual_parameters, s
 {
    const glsl_type *type = this->return_type;
    if (type == glsl_type::void_type)
-      return nullptr;
+      return NULL;
 
    /* From the GLSL 1.20 spec, page 23:
     * "Function calls to user-defined functions (non-built-in functions)
     *  cannot be used to form constant expressions."
     */
    if (!this->is_builtin())
-      return nullptr;
+      return NULL;
 
    /*
     * Of the builtin functions, only the texture lookups and the noise
@@ -1944,7 +1944,7 @@ ir_function_signature::constant_expression_value(exec_list *actual_parameters, s
    hash_table *deref_hash = hash_table_ctor(8, hash_table_pointer_hash,
 					    hash_table_pointer_compare);
 
-   /* If "origin" is non-nullptr, then the function body is there.  So we
+   /* If "origin" is non-NULL, then the function body is there.  So we
     * have to use the variable objects from the object with the body,
     * but the parameter instanciation on the current object.
     */
@@ -1952,9 +1952,9 @@ ir_function_signature::constant_expression_value(exec_list *actual_parameters, s
 
    foreach_in_list(ir_rvalue, n, actual_parameters) {
       ir_constant *constant = n->constant_expression_value(variable_context);
-      if (constant == nullptr) {
+      if (constant == NULL) {
          hash_table_dtor(deref_hash);
-         return nullptr;
+         return NULL;
       }
 
 
@@ -1964,13 +1964,13 @@ ir_function_signature::constant_expression_value(exec_list *actual_parameters, s
       parameter_info = parameter_info->next;
    }
 
-   ir_constant *result = nullptr;
+   ir_constant *result = NULL;
 
    /* Now run the builtin function until something non-constant
     * happens or we get the result.
     */
    if (constant_expression_evaluate_expression_list(origin ? origin->body : body, deref_hash, &result) && result)
-      result = result->clone(ralloc_parent(this), nullptr);
+      result = result->clone(ralloc_parent(this), NULL);
 
    hash_table_dtor(deref_hash);
 

@@ -7,7 +7,7 @@
 namespace RBX {
 
 ViewportBillboarder::ViewportBillboarder()
-    :guiScreenSize(nullptr)
+    :guiScreenSize(NULL)
     ,alwaysOnTop(false)
     ,screenOffset2D(Vector2::zero())
 {}
@@ -129,7 +129,7 @@ bool ViewportBillboarder::hitTest(const Vector2int16& mousePosition, const Vecto
         RbxRay searchRay = RbxRay::fromOriginAndDirection(unitRay.origin(), unitRay.direction() * 2048);
         Vector3 partHitPointWorld;
         FilterInvisibleNonColliding invisibleNonCollidingObjectsFilter; // invisible & non-colliding parts don't block mouse-clicks
-        if(contactManager.getHit( searchRay, nullptr, &invisibleNonCollidingObjectsFilter, partHitPointWorld) == nullptr)
+        if(contactManager.getHit( searchRay, NULL, &invisibleNonCollidingObjectsFilter, partHitPointWorld) == NULL)
         {
             //We didn't hit anything
             return true;

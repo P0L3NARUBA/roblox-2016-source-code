@@ -391,7 +391,7 @@ int LZ4_freeHeapMemory(void* ctx);
 
 Used to allocate and free hashTable memory 
 to be used by the LZ4_compress_heap* family of functions.
-LZ4_createHeapMemory() returns nullptr is memory allocation fails.
+LZ4_createHeapMemory() returns NULL is memory allocation fails.
 */
 void* LZ4_create() { return malloc(HASHTABLESIZE); }
 int LZ4_free(void* ctx) { free(ctx); return 0; }
@@ -478,7 +478,7 @@ int LZ4_compress(const char* source, char* dest, int inputSize)
 #if HEAPMODE
     void* ctx = LZ4_create();
     int result;
-    if (ctx == nullptr) return 0;    // Failed allocation => compression not done
+    if (ctx == NULL) return 0;    // Failed allocation => compression not done
     if (inputSize < LZ4_64KLIMIT)
         result = LZ4_compress64k_heap(ctx, source, dest, inputSize);
     else result = LZ4_compress_heap(ctx, source, dest, inputSize);
@@ -496,7 +496,7 @@ int LZ4_compress_limitedOutput(const char* source, char* dest, int inputSize, in
 #if HEAPMODE
     void* ctx = LZ4_create();
     int result;
-    if (ctx == nullptr) return 0;    // Failed allocation => compression not done
+    if (ctx == NULL) return 0;    // Failed allocation => compression not done
     if (inputSize < LZ4_64KLIMIT)
         result = LZ4_compress64k_heap_limitedOutput(ctx, source, dest, inputSize, maxOutputSize);
     else result = LZ4_compress_heap_limitedOutput(ctx, source, dest, inputSize, maxOutputSize);

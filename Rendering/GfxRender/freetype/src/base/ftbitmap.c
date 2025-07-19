@@ -76,7 +76,7 @@
     source_pitch_sign = source->pitch < 0 ? -1 : 1;
     target_pitch_sign = target->pitch < 0 ? -1 : 1;
 
-    if ( source->buffer == nullptr )
+    if ( source->buffer == NULL )
     {
       *target = *source;
       if ( source_pitch_sign != target_pitch_sign )
@@ -157,7 +157,7 @@
     int             new_pitch;
     FT_UInt         bpp;
     FT_UInt         i, width, height;
-    unsigned char*  buffer = nullptr;
+    unsigned char*  buffer = NULL;
 
 
     width  = bitmap->width;

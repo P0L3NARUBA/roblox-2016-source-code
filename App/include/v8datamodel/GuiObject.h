@@ -410,8 +410,8 @@ namespace RBX
                                  Rect2D& scaleRect,
                                  GuiObject* clippingObject,
                                  Color4& color,
-								 Rect2D* overrideRect = nullptr,
-								 Rect2D* imageOffsetRect = nullptr);
+								 Rect2D* overrideRect = NULL,
+								 Rect2D* imageOffsetRect = NULL);
 
 		virtual GuiResponse processTouchEvent(const shared_ptr<InputObject>& event);
 		virtual GuiResponse processMouseEvent(const shared_ptr<InputObject>& event);

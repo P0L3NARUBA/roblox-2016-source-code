@@ -22,10 +22,10 @@ BOOL       ret;
   trian_put_face  = stl_put_face;
   trian_post_face = stl_post_face;
 	ret = trian_brep(hobj, 3);
-  trian_pre_brep  = nullptr;
-  trian_post_brep = nullptr;
-  trian_put_face  = nullptr;
-  trian_post_face  = nullptr;
+  trian_pre_brep  = NULL;
+  trian_post_brep = NULL;
+  trian_put_face  = NULL;
+  trian_post_face  = NULL;
 	close_buf(bd);
 	if(!ret) nb_unlink(name);
   if(ret && stl_error)

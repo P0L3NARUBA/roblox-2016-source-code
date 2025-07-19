@@ -89,14 +89,14 @@ DYNAMIC_FASTFLAGVARIABLE(FilterInvalidWhisper, true)
 DYNAMIC_FASTFLAGVARIABLE(CloudEditSupportPlayersKickAndShutdown, true)
 
 REFLECTION_BEGIN();
-static Reflection::PropDescriptor<Players, int> propPlayerCount("NumPlayers", category_Data, &Players::getNumPlayers, nullptr, Reflection::PropertyDescriptor::UI);
-static Reflection::PropDescriptor<Players, int> depPlayerCount("numPlayers", category_Data, &Players::getNumPlayers, nullptr, Reflection::PropertyDescriptor::Attributes::deprecated(propPlayerCount, Reflection::PropertyDescriptor::HIDDEN_SCRIPTING));
-static Reflection::PropDescriptor<Players, int> propPlayerMaxCount("MaxPlayers", category_Data, &Players::getMaxPlayers, nullptr, Reflection::PropertyDescriptor::UI);
+static Reflection::PropDescriptor<Players, int> propPlayerCount("NumPlayers", category_Data, &Players::getNumPlayers, NULL, Reflection::PropertyDescriptor::UI);
+static Reflection::PropDescriptor<Players, int> depPlayerCount("numPlayers", category_Data, &Players::getNumPlayers, NULL, Reflection::PropertyDescriptor::Attributes::deprecated(propPlayerCount, Reflection::PropertyDescriptor::HIDDEN_SCRIPTING));
+static Reflection::PropDescriptor<Players, int> propPlayerMaxCount("MaxPlayers", category_Data, &Players::getMaxPlayers, NULL, Reflection::PropertyDescriptor::UI);
 static Reflection::PropDescriptor<Players, int> propPlayerMaxCountInternal("MaxPlayersInternal", category_Data, &Players::getMaxPlayers, &Players::setMaxPlayers, Reflection::PropertyDescriptor::STANDARD, Security::LocalUser);
-static Reflection::PropDescriptor<Players, int> propPlayerPreferredCount("PreferredPlayers", category_Data, &Players::getPreferredPlayers, nullptr, Reflection::PropertyDescriptor::UI);
+static Reflection::PropDescriptor<Players, int> propPlayerPreferredCount("PreferredPlayers", category_Data, &Players::getPreferredPlayers, NULL, Reflection::PropertyDescriptor::UI);
 static Reflection::PropDescriptor<Players, int> propPlayerPreferredCountInternal("PreferredPlayersInternal", category_Data, &Players::getPreferredPlayers, &Players::setPreferredPlayers, Reflection::PropertyDescriptor::STANDARD, Security::LocalUser);
-Reflection::RefPropDescriptor<Players, Instance> Players::propLocalPlayer("LocalPlayer", category_Data, &Players::getLocalPlayerDangerous, nullptr, Reflection::PropertyDescriptor::UI);
-Reflection::RefPropDescriptor<Players, Instance> dep_propLocalPlayer("localPlayer", category_Data, &Players::getLocalPlayerDangerous, nullptr, Reflection::PropertyDescriptor::Attributes::deprecated(Players::propLocalPlayer, Reflection::PropertyDescriptor::HIDDEN_SCRIPTING));
+Reflection::RefPropDescriptor<Players, Instance> Players::propLocalPlayer("LocalPlayer", category_Data, &Players::getLocalPlayerDangerous, NULL, Reflection::PropertyDescriptor::UI);
+Reflection::RefPropDescriptor<Players, Instance> dep_propLocalPlayer("localPlayer", category_Data, &Players::getLocalPlayerDangerous, NULL, Reflection::PropertyDescriptor::Attributes::deprecated(Players::propLocalPlayer, Reflection::PropertyDescriptor::HIDDEN_SCRIPTING));
 static Reflection::BoundFuncDesc<Players, shared_ptr<Instance>(int)> func_GetPlayerByID(&Players::getPlayerInstanceByID, "GetPlayerById", "userId", Security::LocalUser);
 static Reflection::BoundFuncDesc<Players, shared_ptr<Instance>(int)> func_GetPlayerByIdDeprecated(&Players::getPlayerInstanceByID, "GetPlayerByID", "userID", Security::LocalUser, Reflection::PropertyDescriptor::Attributes::deprecated(func_GetPlayerByID));
 
@@ -136,8 +136,8 @@ static Reflection::BoundFuncDesc<Players, void(std::string)> func_setSaveLeaderb
 static Reflection::BoundFuncDesc<Players, void(std::string)> func_addLeaderboardKey( &Players::addLeaderboardKey, "AddLeaderboardKey", "key", Security::LocalUser);
 
 static Reflection::BoundFuncDesc<Players, void(Players::ChatOption)> func_setChatOption(&Players::setChatOption, "SetChatStyle", "style", Players::CLASSIC_CHAT, Security::Plugin);
-Reflection::PropDescriptor<Players, bool> propClassicChat("ClassicChat", category_Data, &Players::getClassicChat, nullptr, Reflection::PropertyDescriptor::UI);
-Reflection::PropDescriptor<Players, bool> propBubbleChat("BubbleChat", category_Data, &Players::getBubbleChat, nullptr, Reflection::PropertyDescriptor::UI);
+Reflection::PropDescriptor<Players, bool> propClassicChat("ClassicChat", category_Data, &Players::getClassicChat, NULL, Reflection::PropertyDescriptor::UI);
+Reflection::PropDescriptor<Players, bool> propBubbleChat("BubbleChat", category_Data, &Players::getBubbleChat, NULL, Reflection::PropertyDescriptor::UI);
 
 static Reflection::BoundFuncDesc<Players, bool()> func_coreScriptHealthBar(&Players::getUseCoreScriptHealthBar, "GetUseCoreScriptHealthBar", Security::RobloxScript);
 
@@ -198,13 +198,13 @@ namespace {
 
 bool Players::isNetworkClient(Instance* instance)
 {
-	return Instance::fastDynamicCast<RBX::Network::Client>(instance) != nullptr;
+	return Instance::fastDynamicCast<RBX::Network::Client>(instance) != NULL;
 }
 Players::Players()
-	:rakPeer(nullptr)
+	:rakPeer(NULL)
 	,maxPlayers(12)
 	,sysStatsUrl("")
-	,players(Instances()) // Initialize to a non-nullptr value
+	,players(Instances()) // Initialize to a non-NULL value
 	,chatOption(CLASSIC_CHAT)
 	,characterAutoSpawn(true)
 	,testPlayerNameId(0)
@@ -243,7 +243,7 @@ void Players::onReceivedRawGetUserIdSuccess(weak_ptr<DataModel> weakDataModel, s
 		shared_ptr<const Reflection::ValueTable> table;
 		std::string errorMessage;
 
-		if (LuaWebService::parseWebJSONResponseHelper(&response, nullptr, table, errorMessage))
+		if (LuaWebService::parseWebJSONResponseHelper(&response, NULL, table, errorMessage))
 		{
 			int id;
 			if (!valueTableGet(table, "Id", &id)) 
@@ -440,7 +440,7 @@ void Players::onReceivedRawGetUserNameSuccess(weak_ptr<DataModel> weakDataModel,
 		shared_ptr<const Reflection::ValueTable> table;
 		std::string errorMessage;
 
-		if (LuaWebService::parseWebJSONResponseHelper(&response, nullptr, table, errorMessage))
+		if (LuaWebService::parseWebJSONResponseHelper(&response, NULL, table, errorMessage))
 		{
 			std::string userName;
 			if (!valueTableGet(table, "Username", &userName)) 
@@ -515,21 +515,21 @@ bool Players::isCloudEdit(const RBX::Instance* context)
 bool Players::frontendProcessing(const RBX::Instance* context, bool testInDatamodel)
 {
 	const ServiceProvider* serviceProvider = ServiceProvider::findServiceProvider(context);
-	RBXASSERT(!testInDatamodel || serviceProvider!=nullptr);
+	RBXASSERT(!testInDatamodel || serviceProvider!=NULL);
 	return serviceProvider && !serverIsPresent(context, testInDatamodel);
 }
 
 bool Players::backendProcessing(const RBX::Instance* context, bool testInDatamodel)
 {
 	const ServiceProvider* serviceProvider = ServiceProvider::findServiceProvider(context);
-	RBXASSERT(!testInDatamodel || serviceProvider!=nullptr);
+	RBXASSERT(!testInDatamodel || serviceProvider!=NULL);
 	return serviceProvider && !clientIsPresent(context, testInDatamodel);
 }
 
 int Players::getPlayerCount(const RBX::Instance* context)
 {
 	const ServiceProvider* serviceProvider = ServiceProvider::findServiceProvider(context);
-	if(serviceProvider == nullptr)
+	if(serviceProvider == NULL)
 		return 0;
 	Players* players = serviceProvider->find<Network::Players>();
 	return players ? players->getNumPlayers() : 0;
@@ -656,7 +656,7 @@ bool Players::superSafeOn() const
 
 Players::~Players(void)
 {
-	setConnection(nullptr);
+	setConnection(NULL);
 }
 
 static void writeMessage(const AbuseReport::Message& msg, XmlElement* messages)
@@ -898,7 +898,7 @@ void Players::reportAbuseLua(shared_ptr<Instance> instance, std::string reason, 
 	{
 		std::ostringstream strstream;
 		strstream << reason << ";" << comment;
-		reportAbuse(player ? player.get() : nullptr, strstream.str());
+		reportAbuse(player ? player.get() : NULL, strstream.str());
 	}
 }
 
@@ -1082,7 +1082,7 @@ void Players::raisePlayerChattedSignal(const ChatMessage& message)
 }
 void Players::raiseChatMessageSignal(const ChatMessage& message)
 {
-	bool fromOthers = (localPlayer == nullptr) || (message.source != localPlayer);
+	bool fromOthers = (localPlayer == NULL) || (message.source != localPlayer);
 
 	std::string msg;
 	if (ParseChatCommand(message, !fromOthers, &msg))
@@ -1158,7 +1158,7 @@ Players::ReceiveResult Players::OnReceiveChat(Player* sourceValidation, RakNet::
 	if (!sourceInstance)
 	{
 		if(chatType == ID_CHAT_GAME){
-			ChatMessage event(message.c_str(), ChatMessage::CHAT_TYPE_GAME, shared_from<Player>(nullptr));
+			ChatMessage event(message.c_str(), ChatMessage::CHAT_TYPE_GAME, shared_from<Player>(NULL));
 			addChatMessage(event);
 		}
 		else{
@@ -1707,7 +1707,7 @@ void Players::setConnection(ConcurrentRakPeer* rakPeer)
 
 bool Players::askAddChild(const Instance* instance) const
 {
-	return Instance::fastDynamicCast<Player>(instance)!=nullptr;
+	return Instance::fastDynamicCast<Player>(instance)!=NULL;
 }
 
 ModelInstance* Players::findLocalCharacter(RBX::Instance* context)
@@ -1716,7 +1716,7 @@ ModelInstance* Players::findLocalCharacter(RBX::Instance* context)
 		return player->getCharacter();
 	}
 	else {
-		return nullptr;
+		return NULL;
 	}
 } 
 
@@ -1728,7 +1728,7 @@ const ModelInstance* Players::findConstLocalCharacter(const RBX::Instance* conte
 		return player->getConstCharacter();
 	}
 	else {
-		return nullptr;
+		return NULL;
 	}
 }
 
@@ -1738,7 +1738,7 @@ Player* Players::findLocalPlayer(Instance* context)
 		return players->getLocalPlayer();
 	}
 	else {
-		return nullptr;
+		return NULL;
 	}
 } 
 
@@ -1748,7 +1748,7 @@ const Player* Players::findConstLocalPlayer(const Instance* context)
 		return players->getConstLocalPlayer();
 	}
 	else {
-		return nullptr;
+		return NULL;
 	}
 } 
 
@@ -1842,7 +1842,7 @@ Player* Players::getPlayerFromCharacter(RBX::Instance* character)
 		shared_ptr<Instance> player = players->playerFromCharacter(shared_from<Instance>(character));
 		return boost::polymorphic_downcast<Player*>(player.get());
 	}
-	return nullptr;
+	return NULL;
 }
 
 void Players::onDescendantRemoving(const shared_ptr<Instance>& instance)
@@ -2153,7 +2153,7 @@ void Players::onChildAdded(Instance* child)
 			if (otherPlayer)
 			{
 				// TODO: Wrap this into our security framework. This looks like just a hack
-				otherPlayer->setParent(nullptr);
+				otherPlayer->setParent(NULL);
 				//throw std::runtime_error(format("Player %d attempted to join twice. Booting both players", player->getUserID()));
 			}
 		}

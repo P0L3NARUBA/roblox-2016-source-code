@@ -35,15 +35,15 @@ shared_ptr<const Instances> Keyframe::getPoses()
 }
 void Keyframe::addPose(shared_ptr<Instance> pose)
 {
-	if (pose != nullptr) {
+	if (pose != NULL) {
 		pose->setParent(this);
 	}
 }
 void Keyframe::removePose(shared_ptr<Instance> pose)
 {
-	if (pose != nullptr) {
+	if (pose != NULL) {
 		if(pose->getParent() == this){
-			pose->setParent(nullptr);
+			pose->setParent(NULL);
 		}
 	}
 }

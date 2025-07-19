@@ -62,7 +62,7 @@ CategoryItem::CategoryItem(const QString &name)
 void CategoryItem::update(bool storeCollapsedState)
 {
 	int index = 0, numChildModified = 0, numChild = childCount();	
-	PropertyItem *pPropertyItem = nullptr;
+	PropertyItem *pPropertyItem = NULL;
 
 	while (index < numChild)
 	{
@@ -88,7 +88,7 @@ void CategoryItem::update(bool storeCollapsedState)
 void CategoryItem::applyFilter(const QString &filterString)
 {
 	int index = 0, numChildModified = 0, numChild = childCount();	
-	PropertyItem *pPropertyItem = nullptr;
+	PropertyItem *pPropertyItem = NULL;
 
 	while (index < numChild)
 	{
@@ -124,7 +124,7 @@ public:
 				return pItem->createEditor(parent, option);			
 		}
 
-		return nullptr;
+		return NULL;
 	}
 
 	void setEditorData(QWidget * editor, const QModelIndex & index) const
@@ -454,7 +454,7 @@ void PropertyTreeWidget::storeOriginalValues(PropertyItem* item)
 
 	if (RBX::Selection* selection = RBX::ServiceProvider::create<RBX::Selection>(getDataModel().get()))
 	{
-		RBX::Instance* prevInstance = nullptr;
+		RBX::Instance* prevInstance = NULL;
 		for (RBX::Instances::const_iterator iter = selection->begin(); iter != selection->end(); ++iter)
 		{
 			if (item->propertyDescriptor()->isMemberOf((*iter).get()))
@@ -1076,22 +1076,22 @@ void RobloxPropertyWidget::updateSelectionInfoLabel()
 			if ((*curIter)->getName() != instanceName)
 			{
 				instanceName.clear();
-				if (className==nullptr)
+				if (className==NULL)
 					break;
 			}
 
 			if ((*curIter)->getClassName() != *className)
 			{
-				className = nullptr;
+				className = NULL;
 				if (instanceName.empty())
 					break;
 			}
 		}
 
 		//modify label appropriately
-		if (className != nullptr && !instanceName.empty())
+		if (className != NULL && !instanceName.empty())
 			labelText = QString("%1 \"%2\" - %3 items").arg(className->toString().c_str()).arg(instanceName.c_str()).arg(numInstances);
-		else if (className != nullptr)
+		else if (className != NULL)
 			labelText = QString("%1 - %2 items").arg(className->toString().c_str()).arg(numInstances);
 		else
 			labelText = QString("%1 items").arg(numInstances);

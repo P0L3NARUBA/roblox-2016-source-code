@@ -176,7 +176,7 @@ void FillSolidRect(HDC hdc, int x, int y, int cx, int cy, COLORREF clr)
     rect.right   = x + cx;
     rect.bottom  = y + cy;
 
-    ::ExtTextOut(hdc, 0, 0, ETO_OPAQUE, &rect, nullptr, 0, nullptr);
+    ::ExtTextOut(hdc, 0, 0, ETO_OPAQUE, &rect, NULL, 0, NULL);
 }
 
 void Draw3dRect(HDC hdc, int x, int y, int cx, int cy, COLORREF clrTopLeft, COLORREF clrBottomRight)

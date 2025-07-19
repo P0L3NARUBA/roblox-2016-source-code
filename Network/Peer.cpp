@@ -101,7 +101,7 @@ void Peer::decryptDataPart(RakNet::BitStream& inBitstream)
 
 bool Peer::askAddChild(const Instance* instance) const
 {
-	return Instance::fastDynamicCast<Replicator>(instance)!=nullptr;
+	return Instance::fastDynamicCast<Replicator>(instance)!=NULL;
 }
 
 class PeerStatsItem : public Stats::Item
@@ -199,7 +199,7 @@ void Peer::onServiceProvider(ServiceProvider* oldProvider, ServiceProvider* newP
 	{ 
 		shared_ptr<Stats::Item> network = shared_from_polymorphic_downcast<Stats::Item>(stats->findFirstChildByName("Network"));
 		if (network)
-			network->setParent(nullptr);
+			network->setParent(NULL);
 	}
 
 	if (receiveJob)

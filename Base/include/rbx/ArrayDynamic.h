@@ -474,10 +474,10 @@ void ArrayDynamic<T>::copyConstruct( void* dst, const T* src, size_t count )
 }
 
 template< class T >
-ArrayDynamic<T>::ArrayDynamic( ): ArrayBase< T >( nullptr, 0 ), mAlignment( 16 ), mNoInit( false ), mCapacity( 0 ) { }
+ArrayDynamic<T>::ArrayDynamic( ): ArrayBase< T >( NULL, 0 ), mAlignment( 16 ), mNoInit( false ), mCapacity( 0 ) { }
 
 template< class T >
-ArrayDynamic<T>::ArrayDynamic( size_t _size, boost::uint32_t _align ): ArrayBase< T >( nullptr, 0 ), mAlignment( _align ), mNoInit( false ), mCapacity( 0 )
+ArrayDynamic<T>::ArrayDynamic( size_t _size, boost::uint32_t _align ): ArrayBase< T >( NULL, 0 ), mAlignment( _align ), mNoInit( false ), mCapacity( 0 )
 {
     reserve( _size );
     Base::mSize = _size;
@@ -487,14 +487,14 @@ ArrayDynamic<T>::ArrayDynamic( size_t _size, boost::uint32_t _align ): ArrayBase
 }
 
 template< class T >
-ArrayDynamic<T>::ArrayDynamic( size_t _size, ArrayNoInit, boost::uint32_t _align ): ArrayBase< T >( nullptr, 0 ), mAlignment( _align ), mNoInit( true ), mCapacity( 0 )
+ArrayDynamic<T>::ArrayDynamic( size_t _size, ArrayNoInit, boost::uint32_t _align ): ArrayBase< T >( NULL, 0 ), mAlignment( _align ), mNoInit( true ), mCapacity( 0 )
 {
     reserve( _size );
     Base::mSize = _size;
 }
 
 template< class T >
-ArrayDynamic<T>::ArrayDynamic( const ArrayDynamic< T >& a ): ArrayBase< T >( nullptr, 0 ), mAlignment( a.mAlignment ), mNoInit( a.mNoInit ), mCapacity( 0 )
+ArrayDynamic<T>::ArrayDynamic( const ArrayDynamic< T >& a ): ArrayBase< T >( NULL, 0 ), mAlignment( a.mAlignment ), mNoInit( a.mNoInit ), mCapacity( 0 )
 {
     reserve( a.size() );
     copyConstruct( Base::mData, a.data(), a.size() );
@@ -502,7 +502,7 @@ ArrayDynamic<T>::ArrayDynamic( const ArrayDynamic< T >& a ): ArrayBase< T >( nul
 }
 
 template< class T >
-ArrayDynamic<T>::ArrayDynamic( const ArrayBase< T >& a ): ArrayBase< T >( nullptr, 0 ), mAlignment( defaultAlignment ), mNoInit( false ), mCapacity( 0 )
+ArrayDynamic<T>::ArrayDynamic( const ArrayBase< T >& a ): ArrayBase< T >( NULL, 0 ), mAlignment( defaultAlignment ), mNoInit( false ), mCapacity( 0 )
 {
     reserve( a.size() );
     copyConstruct( Base::mData, a.data(), a.size() );
@@ -517,7 +517,7 @@ ArrayDynamic<T>::~ArrayDynamic()
     {
         array_dynamic_details::aligned_free( Base::mData );
         mCapacity = 0;
-        Base::mData = nullptr;
+        Base::mData = NULL;
     }
 }
 
@@ -539,7 +539,7 @@ ArrayDynamic< T >& ArrayDynamic<T>::operator=( const ArrayDynamic< T >& _a )
     {
         array_dynamic_details::aligned_free( Base::mData );
         mCapacity = 0;
-        Base::mData = nullptr;
+        Base::mData = NULL;
     }
     mNoInit = _a.mNoInit;
     mAlignment = _a.mAlignment;

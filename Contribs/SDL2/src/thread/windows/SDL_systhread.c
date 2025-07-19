@@ -83,7 +83,7 @@ RunThread(void *data)
     void *args = pThreadParms->args;
     SDL_free(pThreadParms);
     SDL_RunThread(args);
-    if (pfnEndThread != nullptr)
+    if (pfnEndThread != NULL)
         pfnEndThread(0);
     return (0);
 }
@@ -110,8 +110,8 @@ SDL_SYS_CreateThread(SDL_Thread * thread, void *args,
 int
 SDL_SYS_CreateThread(SDL_Thread * thread, void *args)
 {
-    pfnSDL_CurrentBeginThread pfnBeginThread = nullptr;
-    pfnSDL_CurrentEndThread pfnEndThread = nullptr;
+    pfnSDL_CurrentBeginThread pfnBeginThread = NULL;
+    pfnSDL_CurrentEndThread pfnEndThread = NULL;
 #else
 int
 SDL_SYS_CreateThread(SDL_Thread * thread, void *args)
@@ -132,14 +132,14 @@ SDL_SYS_CreateThread(SDL_Thread * thread, void *args)
     if (pfnBeginThread) {
         unsigned threadid = 0;
         thread->handle = (SYS_ThreadHandle)
-            ((size_t) pfnBeginThread(nullptr, 0, RunThreadViaBeginThreadEx,
+            ((size_t) pfnBeginThread(NULL, 0, RunThreadViaBeginThreadEx,
                                      pThreadParms, 0, &threadid));
     } else {
         DWORD threadid = 0;
-        thread->handle = CreateThread(nullptr, 0, RunThreadViaCreateThread,
+        thread->handle = CreateThread(NULL, 0, RunThreadViaCreateThread,
                                       pThreadParms, 0, &threadid);
     }
-    if (thread->handle == nullptr) {
+    if (thread->handle == NULL) {
         return SDL_SetError("Not enough resources to create thread");
     }
     return 0;
@@ -169,7 +169,7 @@ ignore_exception(void *a, void *b, void *c, void *d)
 void
 SDL_SYS_SetupThread(const char *name)
 {
-    if (name != nullptr) {
+    if (name != NULL) {
         #if 0 /* !!! FIXME: revisit this later. See https://bugzilla.libsdl.org/show_bug.cgi?id=2089 */
         #if (defined(_MSC_VER) && defined(_M_IX86))
         /* This magic tells the debugger to name a thread if it's listening.

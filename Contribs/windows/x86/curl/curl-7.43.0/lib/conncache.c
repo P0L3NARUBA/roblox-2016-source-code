@@ -43,14 +43,14 @@ static void conn_llist_dtor(void *user, void *element)
   struct connectdata *data = element;
   (void)user;
 
-  data->bundle = nullptr;
+  data->bundle = NULL;
 }
 
 static CURLcode bundle_create(struct SessionHandle *data,
                               struct connectbundle **cb_ptr)
 {
   (void)data;
-  DEBUGASSERT(*cb_ptr == nullptr);
+  DEBUGASSERT(*cb_ptr == NULL);
   *cb_ptr = malloc(sizeof(struct connectbundle));
   if(!*cb_ptr)
     return CURLE_OUT_OF_MEMORY;
@@ -72,8 +72,8 @@ static void bundle_destroy(struct connectbundle *cb_ptr)
     return;
 
   if(cb_ptr->conn_list) {
-    Curl_llist_destroy(cb_ptr->conn_list, nullptr);
-    cb_ptr->conn_list = nullptr;
+    Curl_llist_destroy(cb_ptr->conn_list, NULL);
+    cb_ptr->conn_list = NULL;
   }
   free(cb_ptr);
 }
@@ -100,9 +100,9 @@ static int bundle_remove_conn(struct connectbundle *cb_ptr,
   curr = cb_ptr->conn_list->head;
   while(curr) {
     if(curr->ptr == conn) {
-      Curl_llist_remove(cb_ptr->conn_list, curr, nullptr);
+      Curl_llist_remove(cb_ptr->conn_list, curr, NULL);
       cb_ptr->num_connections--;
-      conn->bundle = nullptr;
+      conn->bundle = NULL;
       return 1; /* we removed a handle */
     }
     curr = curr->next;
@@ -142,7 +142,7 @@ static char *hashkey(struct connectdata *conn)
 struct connectbundle *Curl_conncache_find_bundle(struct connectdata *conn,
                                                  struct conncache *connc)
 {
-  struct connectbundle *bundle = nullptr;
+  struct connectbundle *bundle = NULL;
   if(connc) {
     char *key = hashkey(conn);
     if(key) {
@@ -192,7 +192,7 @@ CURLcode Curl_conncache_add_conn(struct conncache *connc,
 {
   CURLcode result;
   struct connectbundle *bundle;
-  struct connectbundle *new_bundle = nullptr;
+  struct connectbundle *new_bundle = NULL;
   struct SessionHandle *data = conn->data;
 
   bundle = Curl_conncache_find_bundle(conn, data->state.conn_cache);
@@ -241,7 +241,7 @@ void Curl_conncache_remove_conn(struct conncache *connc,
 {
   struct connectbundle *bundle = conn->bundle;
 
-  /* The bundle pointer can be nullptr, since this function can be called
+  /* The bundle pointer can be NULL, since this function can be called
      due to a failed connection attempt, before being added to a bundle */
   if(bundle) {
     bundle_remove_conn(bundle, conn);
@@ -322,7 +322,7 @@ Curl_conncache_find_first_connection(struct conncache *connc)
     he = Curl_hash_next_element(&iter);
   }
 
-  return nullptr;
+  return NULL;
 }
 
 

@@ -27,7 +27,7 @@ LOGGROUP(PlayerShutdownLuaTimeoutSeconds)
 
 namespace RBX {
 
-Document::Document() : marshaller(nullptr)
+Document::Document() : marshaller(NULL)
 {
 }
 
@@ -115,7 +115,7 @@ void Document::configureDataModelServices(bool useChat, RBX::DataModel* dataMode
 void Document::Initialize(HWND hWnd, bool useChat)
 {
 	marshaller = FunctionMarshaller::GetWindow();
-	game.reset(new RBX::SecurePlayerGame(nullptr, GetBaseURL().c_str()));
+	game.reset(new RBX::SecurePlayerGame(NULL, GetBaseURL().c_str()));
 
 	configureDataModelServices(useChat, game->getDataModel().get());
 
@@ -218,7 +218,7 @@ std::string Document::GetSEOStr() const
 
 	const int MAX_LOAD_STRING = 100;
 	char defaultImageInfo[MAX_LOAD_STRING];
-	LoadStringA(GetModuleHandle(nullptr), IDS_DEFAULT_IMAGE_INFO, defaultImageInfo, MAX_LOAD_STRING);
+	LoadStringA(GetModuleHandle(NULL), IDS_DEFAULT_IMAGE_INFO, defaultImageInfo, MAX_LOAD_STRING);
 	return std::string(defaultImageInfo);
 }
 

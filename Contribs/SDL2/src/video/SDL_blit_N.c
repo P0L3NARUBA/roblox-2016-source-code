@@ -43,7 +43,7 @@ GetL3CacheSize(void)
     size_t typeSize = sizeof(result);
 
 
-    int err = sysctlbyname(key, &result, &typeSize, nullptr, 0);
+    int err = sysctlbyname(key, &result, &typeSize, NULL, 0);
     if (0 != err)
         return 0;
 
@@ -111,12 +111,12 @@ calc_swizzle32(const SDL_PixelFormat * srcfmt, const SDL_PixelFormat * dstfmt)
      */
     /* ARGB */
     const static const struct SDL_PixelFormat default_pixel_format = {
-        0, nullptr, 0, 0,
+        0, NULL, 0, 0,
         {0, 0},
         0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000,
         0, 0, 0, 0,
         16, 8, 0, 24,
-        0, nullptr
+        0, NULL
     };
     if (!srcfmt) {
         srcfmt = &default_pixel_format;
@@ -163,7 +163,7 @@ Blit_RGB888_RGB565Altivec(SDL_BlitInfo * info)
     int dstskip = info->dst_skip;
     SDL_PixelFormat *srcfmt = info->src_fmt;
     vector unsigned char valpha = vec_splat_u8(0);
-    vector unsigned char vpermute = calc_swizzle32(srcfmt, nullptr);
+    vector unsigned char vpermute = calc_swizzle32(srcfmt, NULL);
     vector unsigned char vgmerge = VECUINT8_LITERAL(0x00, 0x02, 0x00, 0x06,
                                                     0x00, 0x0a, 0x00, 0x0e,
                                                     0x00, 0x12, 0x00, 0x16,
@@ -327,7 +327,7 @@ Blit_RGB565_32Altivec(SDL_BlitInfo * info)
         valpha = vec_splat_u8(0);
     }
 
-    vpermute = calc_swizzle32(nullptr, dstfmt);
+    vpermute = calc_swizzle32(NULL, dstfmt);
     while (height--) {
         vector unsigned char valigner;
         vector unsigned char voverflow;
@@ -474,7 +474,7 @@ Blit_RGB555_32Altivec(SDL_BlitInfo * info)
         valpha = vec_splat_u8(0);
     }
 
-    vpermute = calc_swizzle32(nullptr, dstfmt);
+    vpermute = calc_swizzle32(NULL, dstfmt);
     while (height--) {
         vector unsigned char valigner;
         vector unsigned char voverflow;
@@ -910,7 +910,7 @@ Blit_RGB888_index8(SDL_BlitInfo * info)
     dstskip = info->dst_skip;
     map = info->table;
 
-    if (map == nullptr) {
+    if (map == NULL) {
         while (height--) {
 #ifdef USE_DUFFS_LOOP
             /* *INDENT-OFF* */
@@ -1020,7 +1020,7 @@ Blit_RGB101010_index8(SDL_BlitInfo * info)
     dstskip = info->dst_skip;
     map = info->table;
 
-    if (map == nullptr) {
+    if (map == NULL) {
         while (height--) {
 #ifdef USE_DUFFS_LOOP
             /* *INDENT-OFF* */
@@ -1997,7 +1997,7 @@ BlitNto1(SDL_BlitInfo * info)
     srcfmt = info->src_fmt;
     srcbpp = srcfmt->BytesPerPixel;
 
-    if (map == nullptr) {
+    if (map == NULL) {
         while (height--) {
 #ifdef USE_DUFFS_LOOP
             /* *INDENT-OFF* */
@@ -2226,7 +2226,7 @@ BlitNto1Key(SDL_BlitInfo * info)
     srcbpp = srcfmt->BytesPerPixel;
     ckey &= rgbmask;
 
-    if (palmap == nullptr) {
+    if (palmap == NULL) {
         while (height--) {
             /* *INDENT-OFF* */
             DUFFS_LOOP(
@@ -2538,12 +2538,12 @@ SDL_CalculateBlitN(SDL_Surface * surface)
 
     /* We don't support destinations less than 8-bits */
     if (dstfmt->BitsPerPixel < 8) {
-        return (nullptr);
+        return (NULL);
     }
 
     switch (surface->map->info.flags & ~SDL_COPY_RLE_MASK) {
     case 0:
-        blitfun = nullptr;
+        blitfun = NULL;
         if (dstfmt->BitsPerPixel == 8) {
             if ((srcfmt->BytesPerPixel == 4) &&
                 (srcfmt->Rmask == 0x00FF0000) &&
@@ -2631,7 +2631,7 @@ SDL_CalculateBlitN(SDL_Surface * surface)
         }
     }
 
-    return nullptr;
+    return NULL;
 }
 
 /* vi: set ts=4 sw=4 expandtab: */

@@ -39,7 +39,7 @@ const char *const luaX_tokens [] = {
     "return", "then", "true", "until", "while",
     "..", "...", "==", ">=", "<=", "~=",
     "<number>", "<name>", "<string>", "<eof>",
-    nullptr
+    NULL
 };
 
 
@@ -138,7 +138,7 @@ void luaX_setinput (lua_State *L, LexState *ls, ZIO *z, TString *source) {
   ls->L = L;
   ls->lookahead.token = TK_EOS;  /* no look-ahead token */
   ls->z = z;
-  ls->fs = nullptr;
+  ls->fs = NULL;
   ls->linenumber = 1;
   ls->lastline = 1;
   ls->source = source;
@@ -344,7 +344,7 @@ static int llex (LexState *ls, SemInfo *seminfo) {
           int sep = skip_sep(ls);
           luaZ_resetbuffer(ls->buff);  /* `skip_sep' may dirty the buffer */
           if (sep >= 0) {
-            read_long_string(ls, nullptr, sep);  /* long comment */
+            read_long_string(ls, NULL, sep);  /* long comment */
             luaZ_resetbuffer(ls->buff);
             continue;
           }

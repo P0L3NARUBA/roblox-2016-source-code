@@ -134,7 +134,7 @@ MS_ADPCM_decode(Uint8 ** audio_buf, Uint32 * audio_len)
         MS_ADPCM_state.wSamplesPerBlock *
         MS_ADPCM_state.wavefmt.channels * sizeof(Sint16);
     *audio_buf = (Uint8 *) SDL_malloc(*audio_len);
-    if (*audio_buf == nullptr) {
+    if (*audio_buf == NULL) {
         return SDL_OutOfMemory();
     }
     decoded = *audio_buf;
@@ -359,7 +359,7 @@ IMA_ADPCM_decode(Uint8 ** audio_buf, Uint32 * audio_len)
         IMA_ADPCM_state.wSamplesPerBlock *
         IMA_ADPCM_state.wavefmt.channels * sizeof(Sint16);
     *audio_buf = (Uint8 *) SDL_malloc(*audio_len);
-    if (*audio_buf == nullptr) {
+    if (*audio_buf == NULL) {
         return SDL_OutOfMemory();
     }
     decoded = *audio_buf;
@@ -420,13 +420,13 @@ SDL_LoadWAV_RW(SDL_RWops * src, int freesrc,
     Uint32 headerDiff = 0;
 
     /* FMT chunk */
-    WaveFMT *format = nullptr;
+    WaveFMT *format = NULL;
 
     SDL_zero(chunk);
 
     /* Make sure we are passed a valid data source */
     was_error = 0;
-    if (src == nullptr) {
+    if (src == NULL) {
         was_error = 1;
         goto done;
     }
@@ -449,10 +449,10 @@ SDL_LoadWAV_RW(SDL_RWops * src, int freesrc,
     headerDiff += sizeof(Uint32);       /* for WAVE */
 
     /* Read the audio data format chunk */
-    chunk.data = nullptr;
+    chunk.data = NULL;
     do {
         SDL_free(chunk.data);
-        chunk.data = nullptr;
+        chunk.data = NULL;
         lenread = ReadChunk(src, &chunk);
         if (lenread < 0) {
             was_error = 1;
@@ -546,10 +546,10 @@ SDL_LoadWAV_RW(SDL_RWops * src, int freesrc,
     spec->samples = 4096;       /* Good default buffer size */
 
     /* Read the audio data chunk */
-    *audio_buf = nullptr;
+    *audio_buf = NULL;
     do {
         SDL_free(*audio_buf);
-        *audio_buf = nullptr;
+        *audio_buf = NULL;
         lenread = ReadChunk(src, &chunk);
         if (lenread < 0) {
             was_error = 1;
@@ -590,7 +590,7 @@ SDL_LoadWAV_RW(SDL_RWops * src, int freesrc,
         }
     }
     if (was_error) {
-        spec = nullptr;
+        spec = NULL;
     }
     return (spec);
 }
@@ -610,12 +610,12 @@ ReadChunk(SDL_RWops * src, Chunk * chunk)
     chunk->magic = SDL_ReadLE32(src);
     chunk->length = SDL_ReadLE32(src);
     chunk->data = (Uint8 *) SDL_malloc(chunk->length);
-    if (chunk->data == nullptr) {
+    if (chunk->data == NULL) {
         return SDL_OutOfMemory();
     }
     if (SDL_RWread(src, chunk->data, chunk->length, 1) != 1) {
         SDL_free(chunk->data);
-        chunk->data = nullptr;
+        chunk->data = NULL;
         return SDL_Error(SDL_EFREAD);
     }
     return (chunk->length);

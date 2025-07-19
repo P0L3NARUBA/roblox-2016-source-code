@@ -181,7 +181,7 @@ void InsertServiceDialog::redrawDialog()
 
 		int numChild = m_pInsertObjectListWidget->count();
 		int currentChild = 0;
-		InsertObjectListWidgetItem *pCurrentItem = nullptr;
+		InsertObjectListWidgetItem *pCurrentItem = NULL;
 		while (currentChild < numChild)
 		{		
 			pCurrentItem = static_cast<InsertObjectListWidgetItem*>(m_pInsertObjectListWidget->item(currentChild));

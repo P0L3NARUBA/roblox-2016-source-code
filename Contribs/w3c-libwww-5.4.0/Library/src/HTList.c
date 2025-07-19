@@ -19,10 +19,10 @@
 PUBLIC HTList * HTList_new (void)
 {
     HTList *newList;
-    if ((newList = (HTList  *) HT_CALLOC(1, sizeof (HTList))) == nullptr)
+    if ((newList = (HTList  *) HT_CALLOC(1, sizeof (HTList))) == NULL)
         HT_OUTOFMEM("HTList_new");
-    newList->object = nullptr;
-    newList->next = nullptr;
+    newList->object = NULL;
+    newList->next = NULL;
     return newList;
 }
 
@@ -43,7 +43,7 @@ PUBLIC BOOL HTList_addObject (HTList * me, void * newObject)
 {
     if (me) {
 	HTList *newNode;
-	if ((newNode = (HTList  *) HT_CALLOC(1, sizeof(HTList))) == nullptr)
+	if ((newNode = (HTList  *) HT_CALLOC(1, sizeof(HTList))) == NULL)
 	    HT_OUTOFMEM("HTList_addObject");
 	newNode->object = newObject;
 	newNode->next = me->next;
@@ -77,14 +77,14 @@ PUBLIC BOOL HTList_removeObject (HTList * me, void * oldObject)
 	    }
 	}
     }
-    return NO;			/* object not found or nullptr list */
+    return NO;			/* object not found or NULL list */
 }
 
 PUBLIC HTList * HTList_addList (HTList * me, void * newObject)
 {
     if (me) {
 	HTList *newNode;
-	if ((newNode = (HTList  *) HT_CALLOC(1, sizeof(HTList))) == nullptr)
+	if ((newNode = (HTList  *) HT_CALLOC(1, sizeof(HTList))) == NULL)
 	    HT_OUTOFMEM("HTList_addObject");
 	newNode->object = newObject;
 	newNode->next = me->next;
@@ -92,7 +92,7 @@ PUBLIC HTList * HTList_addList (HTList * me, void * newObject)
 	return newNode;
     } else {
     }
-    return (HTList *) nullptr;
+    return (HTList *) NULL;
 }
 
 PUBLIC HTList * HTList_appendList (HTList * me, void *newObject)
@@ -102,7 +102,7 @@ PUBLIC HTList * HTList_appendList (HTList * me, void *newObject)
 	    me = me->next;
 	return HTList_addList(me, newObject);
     }
-    return (HTList *) nullptr;
+    return (HTList *) NULL;
 }
 
 
@@ -113,7 +113,7 @@ PUBLIC BOOL HTList_quickRemoveElement (HTList * me, HTList * last)
 	HT_FREE(me);
 	return YES;	/* Success */
     }
-    return NO;			/* object not found or nullptr list */
+    return NO;			/* object not found or NULL list */
 }
 
 PUBLIC BOOL HTList_removeObjectAll (HTList * me, void * oldObject)
@@ -151,7 +151,7 @@ PUBLIC void * HTList_removeLastObject  (HTList * me)
 	HT_FREE(lastNode);
 	return lastObject;
     } else			/* Empty list */
-	return nullptr;
+	return NULL;
 }
 
 PUBLIC void * HTList_removeFirstObject  (HTList * me)
@@ -164,11 +164,11 @@ PUBLIC void * HTList_removeFirstObject  (HTList * me)
 	    me = me->next;
 	}
 	firstObject = me->object;
-	prevNode->next = nullptr;
+	prevNode->next = NULL;
 	HT_FREE(me);
 	return firstObject;
     } else			/* Empty list */
-	return nullptr;
+	return NULL;
 }
 
 PUBLIC void * HTList_firstObject  (HTList * me)
@@ -181,7 +181,7 @@ PUBLIC void * HTList_firstObject  (HTList * me)
 	}
 	return me->object;
     } else			/* Empty list */
-	return nullptr;
+	return NULL;
 }
 
 PUBLIC int HTList_count  (HTList * me)
@@ -240,13 +240,13 @@ PUBLIC HTList * HTList_elementOf (HTList * cur, void * object, HTList ** pLast)
     */
     if (pLast)
 	*pLast = last;
-    return nullptr;
+    return NULL;
 }
 
 PUBLIC void * HTList_objectAt  (HTList * me, int position)
 {
     if (position < 0)
-	return nullptr;
+	return NULL;
     if (me) {
 	while ((me = me->next)) {
 	    if (position == 0)
@@ -254,13 +254,13 @@ PUBLIC void * HTList_objectAt  (HTList * me, int position)
 	    position--;
 	}
     }
-    return nullptr;		/* Reached the end of the list */
+    return NULL;		/* Reached the end of the list */
 }
 
 PUBLIC void * HTList_removeObjectAt  (HTList * me, int position)
 {
     if (position < 0)
-	return nullptr;
+	return NULL;
     if (me) {
 	HTList * prevNode;
 	prevNode = me;
@@ -273,7 +273,7 @@ PUBLIC void * HTList_removeObjectAt  (HTList * me, int position)
 	    position--;
 	}
     }
-    return nullptr;  /* Reached the end of the list */
+    return NULL;  /* Reached the end of the list */
 }
 
 /*

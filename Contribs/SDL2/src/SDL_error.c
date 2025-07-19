@@ -56,7 +56,7 @@ SDL_SetError(SDL_PRINTF_FORMAT_STRING const char *fmt, ...)
     SDL_error *error;
 
     /* Ignore call if invalid format pointer was passed */
-    if (fmt == nullptr) return -1;
+    if (fmt == NULL) return -1;
 
     /* Copy in the key, mark error as valid */
     error = SDL_GetErrBuf();
@@ -93,7 +93,7 @@ SDL_SetError(SDL_PRINTF_FORMAT_STRING const char *fmt, ...)
                 {
                     int i = error->argc;
                     const char *str = va_arg(ap, const char *);
-                    if (str == nullptr)
+                    if (str == NULL)
                         str = "(null)";
                     SDL_strlcpy((char *) error->args[i].buf, str,
                                 ERR_MAX_STRLEN);
@@ -212,7 +212,7 @@ SDL_GetErrorMsg(char *errstr, int maxlen)
             msg -= (-maxlen) + 1;
         }
 
-        *msg = 0;               /* nullptr terminate the string */
+        *msg = 0;               /* NULL terminate the string */
     }
     return (errstr);
 }

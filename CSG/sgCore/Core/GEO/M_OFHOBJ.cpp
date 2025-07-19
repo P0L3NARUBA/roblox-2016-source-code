@@ -8,7 +8,7 @@ lpD_POINT middle_of_hobj(hOBJ hobj, OBJTYPE type,
 GEO_OBJ geo;
 
   if(!true_geo_info(hobj, &type, &geo))
-		return nullptr;
+		return NULL;
   return middle_of_geo_obj(type, &geo, vp, p);
 }
 
@@ -31,12 +31,12 @@ BOOL       flag_arc;
 		case OLINE:
       l = (lpGEO_LINE)geo;
 			if(!test_wrd_line(l))
-				return nullptr;
+				return NULL;
       return dpoint_parametr(&l->v1, &l->v2, 0.5, p);
 		case OARC:
       a = (lpGEO_ARC)geo;
 			if(!test_wrd_arc(a, &flag_arc))
-		    return nullptr;
+		    return NULL;
       trans_arc_to_acs(a, flag_arc, a2d, el_g_e, el_e_g);
       w.x = a->r * cos(a->ab + a->angle/2.);
       w.y = a->r * sin(a->ab + a->angle/2.);
@@ -44,6 +44,6 @@ BOOL       flag_arc;
       o_hcncrd(el_e_g, &w, p);
 			return p;
 		default:
-			return nullptr;
+			return NULL;
 	}
 }

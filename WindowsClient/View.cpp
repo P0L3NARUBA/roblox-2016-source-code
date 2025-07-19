@@ -46,11 +46,11 @@ View::View(HWND h)
 	, desireFullscreen(false)
 	, changedResolution(false)
 	, changingResolution(false)
-	, hMonitor(nullptr)
-	, marshaller(nullptr)
+	, hMonitor(NULL)
+	, marshaller(NULL)
 	, windowSettingsValid(false)
 	, windowSettingsMaximized(false)
-	, restoreWindowStyle(nullptr)
+	, restoreWindowStyle(NULL)
 {
 	ZeroMemory(&nonFullscreenPlacement, sizeof(nonFullscreenPlacement));
 
@@ -99,7 +99,7 @@ void View::rememberWindowSettings()
 			GetWindowRect(hWnd, &rect);
 
 			RECT windowTaskRect;
-			HWND taskBar = FindWindow("Shell_traywnd", nullptr);
+			HWND taskBar = FindWindow("Shell_traywnd", NULL);
 			if(taskBar && GetWindowRect(taskBar, &windowTaskRect))
 			{
 				// need to do some adjustment depending on where the task bar is living
@@ -380,7 +380,7 @@ void View::restoreResolution()
 
 	RBX::ScopedAssign<bool> assign(changingResolution, true);
 
-	if (hMonitor == nullptr) {
+	if (hMonitor == NULL) {
 		LogManager::ReportEvent(EVENTLOG_ERROR_TYPE, "Unable to restore resolution, no handle to monitor");
 		return;
 	}
@@ -393,7 +393,7 @@ void View::restoreResolution()
 			// otherwise ChangeDisplaySettings will return DISP_CHANGE_SUCCESSFUL
 			::ShowWindow(GetHWnd(), SW_HIDE);
 
-			LONG result = ChangeDisplaySettingsEx(mi.szDevice, nullptr, nullptr, 0, nullptr);
+			LONG result = ChangeDisplaySettingsEx(mi.szDevice, NULL, NULL, 0, NULL);
 
 			if (result != DISP_CHANGE_SUCCESSFUL) {
 				LogManager::ReportEvent(EVENTLOG_ERROR_TYPE, 
@@ -436,7 +436,7 @@ void View::SetFullscreen(bool value)
 
 void View::initializeSizes()
 {
-	if (GetHWnd() == nullptr) {
+	if (GetHWnd() == NULL) {
 		LogManager::ReportEvent(EVENTLOG_WARNING_TYPE, "Attempt to initialize monitor sizes without valid HWND");
 		return;
 	}
@@ -466,7 +466,7 @@ void View::initializeSizes()
 void View::modifyWindow(DWORD argMask, const RECT& area)
 {
 	SetWindowLongPtr(GetHWnd(), GWL_STYLE, argMask);
-	SetWindowPos(GetHWnd(), nullptr, area.left, area.top, area.right - area.left, area.bottom - area.top, 0);
+	SetWindowPos(GetHWnd(), NULL, area.left, area.top, area.right - area.left, area.bottom - area.top, 0);
 }
 
 void View::changeResolution()
@@ -483,8 +483,8 @@ void View::changeResolution()
 
 	// Get monitor information
 	hMonitor = MonitorFromWindow(GetHWnd(), MONITOR_DEFAULTTONEAREST);
-	if (hMonitor == nullptr) {
-		LogManager::ReportEvent(EVENTLOG_ERROR_TYPE, "Cannot changeResolution, MonitorFromWindow returned nullptr");
+	if (hMonitor == NULL) {
+		LogManager::ReportEvent(EVENTLOG_ERROR_TYPE, "Cannot changeResolution, MonitorFromWindow returned NULL");
 		return;
 	}
 
@@ -507,7 +507,7 @@ void View::changeResolution()
 		CRenderSettingsItem::singleton().getResolutionPreference() == RBX::CRenderSettings::ResolutionAuto, dm);
 
 	LONG result = matches ? DISP_CHANGE_SUCCESSFUL : ChangeDisplaySettingsEx(mi.szDevice, &dm, 
-		nullptr, CDS_FULLSCREEN, nullptr);
+		NULL, CDS_FULLSCREEN, NULL);
 
 	if (result == DISP_CHANGE_SUCCESSFUL) {
 		if (!changedResolution)
@@ -581,7 +581,7 @@ G3D::Vector2int16 View::getCurrentDesktopResolution()
 {
 	G3D::Vector2int16 defaultr(800,600);
 
-	if (nullptr == hMonitor) {
+	if (NULL == hMonitor) {
 		hMonitor = MonitorFromWindow(GetHWnd(), MONITOR_DEFAULTTONEAREST);
 		if (!hMonitor)
 			return defaultr;
@@ -699,7 +699,7 @@ void View::Stop()
 
     if (game && game->getDataModel())
         if (RBX::ControllerService* service = RBX::ServiceProvider::create<RBX::ControllerService>(game->getDataModel().get()))
-            service->setHardwareDevice(nullptr);
+            service->setHardwareDevice(NULL);
 
 	if (userInput)
 	{

@@ -3,6 +3,7 @@
 #include "g3d/Vector4.h"
 
 #include "TextureCompositor.h"
+#include "GlobalShaderData.h"
 
 #include "v8datamodel/PartInstance.h"
 
@@ -74,9 +75,11 @@ namespace RBX
 			void garbageCollectIncremental();
 			void garbageCollectFull();
 
-			static Vector2int16 getSpecular(PartMaterial material);
+			static MaterialData getParameters(PartMaterial material);
 			static float getTiling(PartMaterial material);
 			static int getMaterialId(PartMaterial material);
+
+			GlobalMaterialData getMaterialData() { return globalMaterialData; }
 
 			static unsigned int createFlags(bool skinned, RBX::PartInstance* part, const HumanoidIdentifier* humanoidIdentifier, bool& ignoreDecalsOut);
 
@@ -103,8 +106,29 @@ namespace RBX
 
 			std::pair<Humanoid*, TextureCompositor::JobHandle> compositCache;
 
+			TextureRef albedoTextures;	 /* R: Albedo.r,   G: Albedo.g,   B: Albedo.b,			A: Alpha/Factor	*/
+			TextureRef emissiveTextures; /* R: Emissive.r, G: Emissive.g, B: Emissive.b,		A: Factor		*/
+			TextureRef matValueTextures; /* R: Roughness,  G: Metalness,  B: Ambient Occlusion,	A: Unused		*/
+
+			TextureRef normalTextures; /* R: Normal.x, G: Normal.y, B: Normal.z, A: Unused */
+			TextureRef heightTextures; /* R: Height,   G: --------, B: --------, A: ------ */
+			// We have the height texture separate rather than pack it with another texture, like the normal map texture.
+			// This is to avoid excessive memory bandwith use because it's sampled multiple times with our parallax occlusion mapping system.
+
+			TextureRef clearcoatATextures; /* R: ClearcoatTint.r,     G: ClearcoatTint.g,   B: ClearcoatTint.b,   A: Clearcoat Factor  */
+			TextureRef clearcoatBTextures; /* R: Clearcoat Roughness, G: ClearcoatNormal.x, B: ClearcoatNormal.y, A: ClearcoatNormal.z */
+
+			GlobalMaterialData globalMaterialData;
+
+			void setupSmoothPlasticTextures(VisualEngine* visualEngine, Technique& technique);
+			void setupComplexMaterialTextures(VisualEngine* visualEngine, Technique& technique, const std::string& materialName, int materialId, const std::string& materialVariant);
+			void setupMaterialTextures(VisualEngine* ve, Technique& technique, PartMaterial renderMaterial);
+			void assignMaterialTextures(VisualEngine* visualEngine, Technique& technique) const;
+
+			void createTextureArrays(VisualEngine* visualEngine);
+
 			shared_ptr<Material> createBaseMaterial(unsigned int flags);
-			shared_ptr<Material> createRenderMaterial(unsigned int flags, PartMaterial renderMaterial, bool reflectance);
+			shared_ptr<Material> createRenderMaterial(unsigned int flags, PartMaterial renderMaterial);
 			shared_ptr<Material> createTexturedMaterial(const TextureRef& texture, const std::string& textureName, unsigned int flags);
 
 			Result createDefaultMaterial(PartInstance* part, unsigned int flags, PartMaterial renderMaterial);

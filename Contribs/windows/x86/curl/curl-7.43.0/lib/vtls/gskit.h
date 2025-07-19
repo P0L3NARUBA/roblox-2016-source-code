@@ -60,7 +60,7 @@ int Curl_gskit_check_cxn(struct connectdata *cxn);
 #define curlssl_shutdown(x,y) Curl_gskit_shutdown(x,y)
 #define curlssl_set_engine(x,y) CURLE_NOT_BUILT_IN
 #define curlssl_set_engine_default(x) CURLE_NOT_BUILT_IN
-#define curlssl_engines_list(x) nullptr
+#define curlssl_engines_list(x) NULL
 #define curlssl_version Curl_gskit_version
 #define curlssl_check_cxn(x) Curl_gskit_check_cxn(x)
 #define curlssl_data_pending(x,y) 0

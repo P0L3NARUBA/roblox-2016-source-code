@@ -84,7 +84,7 @@ public:
 	}
 
 
-	void setBaseCollider(btMultiBodyLinkCollider* collider)//collider can be nullptr to disable collision for the base
+	void setBaseCollider(btMultiBodyLinkCollider* collider)//collider can be NULL to disable collision for the base
 	{
 		m_baseCollider = collider;
 	}
@@ -407,7 +407,7 @@ private:
 	
 private:
 
-	btMultiBodyLinkCollider* m_baseCollider;//can be nullptr
+	btMultiBodyLinkCollider* m_baseCollider;//can be NULL
 
     btVector3 base_pos;       // position of COM of base (world frame)
     btQuaternion base_quat;   // rotates world points into base frame

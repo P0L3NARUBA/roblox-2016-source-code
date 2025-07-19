@@ -62,8 +62,8 @@ program_resource_visitor::process(const glsl_type *type, const char *name)
    assert(type->without_array()->is_record()
           || type->without_array()->is_interface());
 
-   char *name_copy = ralloc_strdup(nullptr, name);
-   recursion(type, &name_copy, strlen(name), false, nullptr, false);
+   char *name_copy = ralloc_strdup(NULL, name);
+   recursion(type, &name_copy, strlen(name), false, NULL, false);
    ralloc_free(name_copy);
 }
 
@@ -100,7 +100,7 @@ program_resource_visitor::process(ir_variable *var)
        */
       assert(t->is_array());
       const glsl_type *ifc_type = var->get_interface_type();
-      char *name = ralloc_strdup(nullptr, ifc_type->name);
+      char *name = ralloc_strdup(NULL, ifc_type->name);
       size_t name_length = strlen(name);
       for (unsigned i = 0; i < t->length; i++) {
          size_t new_length = name_length;
@@ -110,7 +110,7 @@ program_resource_visitor::process(ir_variable *var)
           * lowering is only applied to non-uniform interface blocks, so we
           * can safely pass false for row_major.
           */
-         recursion(var->type, &name, new_length, row_major, nullptr, false);
+         recursion(var->type, &name, new_length, row_major, NULL, false);
       }
       ralloc_free(name);
    } else if (var->data.from_named_ifc_block_nonarray) {
@@ -129,27 +129,27 @@ program_resource_visitor::process(ir_variable *var)
        *     Blk.bar
        */
       const glsl_type *ifc_type = var->get_interface_type();
-      char *name = ralloc_asprintf(nullptr, "%s.%s", ifc_type->name, var->name);
+      char *name = ralloc_asprintf(NULL, "%s.%s", ifc_type->name, var->name);
       /* Note: row_major is only meaningful for uniform blocks, and lowering
        * is only applied to non-uniform interface blocks, so we can safely
        * pass false for row_major.
        */
-      recursion(var->type, &name, strlen(name), row_major, nullptr, false);
+      recursion(var->type, &name, strlen(name), row_major, NULL, false);
       ralloc_free(name);
    } else if (t->without_array()->is_record()) {
-      char *name = ralloc_strdup(nullptr, var->name);
-      recursion(var->type, &name, strlen(name), row_major, nullptr, false);
+      char *name = ralloc_strdup(NULL, var->name);
+      recursion(var->type, &name, strlen(name), row_major, NULL, false);
       ralloc_free(name);
    } else if (t->is_interface()) {
-      char *name = ralloc_strdup(nullptr, var->type->name);
-      recursion(var->type, &name, strlen(name), row_major, nullptr, false);
+      char *name = ralloc_strdup(NULL, var->type->name);
+      recursion(var->type, &name, strlen(name), row_major, NULL, false);
       ralloc_free(name);
    } else if (t->is_array() && t->fields.array->is_interface()) {
-      char *name = ralloc_strdup(nullptr, var->type->fields.array->name);
-      recursion(var->type, &name, strlen(name), row_major, nullptr, false);
+      char *name = ralloc_strdup(NULL, var->type->fields.array->name);
+      recursion(var->type, &name, strlen(name), row_major, NULL, false);
       ralloc_free(name);
    } else {
-      this->visit_field(t, var->name, row_major, nullptr, false);
+      this->visit_field(t, var->name, row_major, NULL, false);
    }
 }
 
@@ -166,7 +166,7 @@ program_resource_visitor::recursion(const glsl_type *t, char **name,
     * individually.
     */
    if (t->is_record() || t->is_interface()) {
-      if (record_type == nullptr && t->is_record())
+      if (record_type == NULL && t->is_record())
          record_type = t;
 
       for (unsigned i = 0; i < t->length; i++) {
@@ -206,11 +206,11 @@ program_resource_visitor::recursion(const glsl_type *t, char **name,
          /* Only the first leaf-field of the record gets called with the
           * record type pointer.
           */
-         record_type = nullptr;
+         record_type = NULL;
       }
    } else if (t->is_array() && (t->fields.array->is_record()
                                 || t->fields.array->is_interface())) {
-      if (record_type == nullptr && t->fields.array->is_record())
+      if (record_type == NULL && t->fields.array->is_record())
          record_type = t->fields.array;
 
       for (unsigned i = 0; i < t->length; i++) {
@@ -226,7 +226,7 @@ program_resource_visitor::recursion(const glsl_type *t, char **name,
          /* Only the first leaf-field of the record gets called with the
           * record type pointer.
           */
-         record_type = nullptr;
+         record_type = NULL;
       }
    } else {
       this->visit_field(t, *name, row_major, record_type, last_field);
@@ -558,14 +558,14 @@ private:
        * example, we may be processing the uniform in the fragment shader, but
        * the uniform was already processed in the vertex shader.
        */
-      if (this->uniforms[id].storage != nullptr) {
+      if (this->uniforms[id].storage != NULL) {
          return;
       }
 
       /* Assign explicit locations. */
       if (current_var->data.explicit_location) {
          /* Set sequential locations for struct fields. */
-         if (record_type != nullptr) {
+         if (record_type != NULL) {
             const unsigned entries = MAX2(1, this->uniforms[id].array_elements);
             this->uniforms[id].remap_location =
                current_var->data.location + field_counter;
@@ -582,7 +582,7 @@ private:
       this->uniforms[id].type = base_type;
       this->uniforms[id].initialized = 0;
       this->uniforms[id].num_driver_storage = 0;
-      this->uniforms[id].driver_storage = nullptr;
+      this->uniforms[id].driver_storage = NULL;
       this->uniforms[id].storage = this->values;
       this->uniforms[id].atomic_buffer_index = -1;
       if (this->ubo_block_index != -1) {
@@ -719,7 +719,7 @@ link_update_uniform_buffer_variables(struct gl_shader *shader)
    foreach_in_list(ir_instruction, node, shader->ir) {
       ir_variable *const var = node->as_variable();
 
-      if ((var == nullptr) || !var->is_in_uniform_block())
+      if ((var == NULL) || !var->is_in_uniform_block())
 	 continue;
 
       assert(var->data.mode == ir_var_uniform);
@@ -746,7 +746,7 @@ link_update_uniform_buffer_variables(struct gl_shader *shader)
                const char *begin = shader->UniformBlocks[i].Uniforms[j].Name;
                const char *end = strchr(begin, sentinel);
 
-               if (end == nullptr)
+               if (end == NULL)
                   continue;
 
                if ((ptrdiff_t) l != (end - begin))
@@ -782,7 +782,7 @@ link_set_image_access_qualifiers(struct gl_shader_program *prog)
    for (unsigned i = 0; i < MESA_SHADER_STAGES; i++) {
       gl_shader *sh = prog->_LinkedShaders[i];
 
-      if (sh == nullptr)
+      if (sh == NULL)
 	 continue;
 
       foreach_in_list(ir_instruction, node, sh->ir) {
@@ -812,10 +812,10 @@ link_assign_uniform_locations(struct gl_shader_program *prog,
                               unsigned int boolean_true)
 {
    ralloc_free(prog->UniformStorage);
-   prog->UniformStorage = nullptr;
+   prog->UniformStorage = NULL;
    prog->NumUserUniformStorage = 0;
 
-   if (prog->UniformHash != nullptr) {
+   if (prog->UniformHash != NULL) {
       prog->UniformHash->clear();
    } else {
       prog->UniformHash = new string_to_uint_map;
@@ -832,7 +832,7 @@ link_assign_uniform_locations(struct gl_shader_program *prog,
    for (unsigned i = 0; i < MESA_SHADER_STAGES; i++) {
       struct gl_shader *sh = prog->_LinkedShaders[i];
 
-      if (sh == nullptr)
+      if (sh == NULL)
 	 continue;
 
       /* Uniforms that lack an initializer in the shader code have an initial
@@ -856,7 +856,7 @@ link_assign_uniform_locations(struct gl_shader_program *prog,
       foreach_in_list(ir_instruction, node, sh->ir) {
 	 ir_variable *const var = node->as_variable();
 
-	 if ((var == nullptr) || (var->data.mode != ir_var_uniform))
+	 if ((var == NULL) || (var->data.mode != ir_var_uniform))
 	    continue;
 
 	 /* FINISHME: Update code to process built-in uniforms!
@@ -900,7 +900,7 @@ link_assign_uniform_locations(struct gl_shader_program *prog,
    parcel_out_uniform_storage parcel(prog->UniformHash, uniforms, data);
 
    for (unsigned i = 0; i < MESA_SHADER_STAGES; i++) {
-      if (prog->_LinkedShaders[i] == nullptr)
+      if (prog->_LinkedShaders[i] == NULL)
 	 continue;
 
       parcel.start_shader((gl_shader_stage)i);
@@ -908,7 +908,7 @@ link_assign_uniform_locations(struct gl_shader_program *prog,
       foreach_in_list(ir_instruction, node, prog->_LinkedShaders[i]->ir) {
 	 ir_variable *const var = node->as_variable();
 
-	 if ((var == nullptr) || (var->data.mode != ir_var_uniform))
+	 if ((var == NULL) || (var->data.mode != ir_var_uniform))
 	    continue;
 
 	 /* FINISHME: Update code to process built-in uniforms!
@@ -972,7 +972,7 @@ link_assign_uniform_locations(struct gl_shader_program *prog,
 
 #ifndef NDEBUG
    for (unsigned i = 0; i < num_user_uniforms; i++) {
-      assert(uniforms[i].storage != nullptr);
+      assert(uniforms[i].storage != NULL);
    }
 
    assert(parcel.values == data_end);

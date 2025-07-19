@@ -17,7 +17,7 @@ public:
 	const GlslStruct* getStruct() const { return structType; }
 	GlslStruct* getStruct() { return structType; }
 
-	GlslStruct* structType; // nullptr if type != EgstStruct
+	GlslStruct* structType; // NULL if type != EgstStruct
 };
 
 class GlslStruct

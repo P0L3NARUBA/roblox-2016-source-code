@@ -701,7 +701,7 @@ SDL_CalculateBlendLineFunc(const SDL_PixelFormat * fmt)
             }
         }
     }
-    return nullptr;
+    return NULL;
 }
 
 int
@@ -711,7 +711,7 @@ SDL_BlendLine(SDL_Surface * dst, int x1, int y1, int x2, int y2,
     BlendLineFunc func;
 
     if (!dst) {
-        return SDL_SetError("SDL_BlendLine(): Passed nullptr destination surface");
+        return SDL_SetError("SDL_BlendLine(): Passed NULL destination surface");
     }
 
     func = SDL_CalculateBlendLineFunc(dst->format);
@@ -740,7 +740,7 @@ SDL_BlendLines(SDL_Surface * dst, const SDL_Point * points, int count,
     BlendLineFunc func;
 
     if (!dst) {
-        return SDL_SetError("SDL_BlendLines(): Passed nullptr destination surface");
+        return SDL_SetError("SDL_BlendLines(): Passed NULL destination surface");
     }
 
     func = SDL_CalculateBlendLineFunc(dst->format);

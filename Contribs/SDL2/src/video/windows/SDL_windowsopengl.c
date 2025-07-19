@@ -92,10 +92,10 @@ WIN_GL_LoadLibrary(_THIS, const char *path)
 {
     void *handle;
 
-    if (path == nullptr) {
+    if (path == NULL) {
         path = SDL_getenv("SDL_OPENGL_LIBRARY");
     }
-    if (path == nullptr) {
+    if (path == NULL) {
         path = DEFAULT_OPENGL;
     }
     _this->gl_config.dll_handle = SDL_LoadObject(path);
@@ -152,11 +152,11 @@ void
 WIN_GL_UnloadLibrary(_THIS)
 {
     SDL_UnloadObject(_this->gl_config.dll_handle);
-    _this->gl_config.dll_handle = nullptr;
+    _this->gl_config.dll_handle = NULL;
 
     /* Free OpenGL memory */
     SDL_free(_this->gl_data);
-    _this->gl_data = nullptr;
+    _this->gl_data = NULL;
 }
 
 static void
@@ -205,7 +205,7 @@ WIN_GL_ChoosePixelFormat(HDC hdc, PIXELFORMATDESCRIPTOR * target)
     int count, index, best = 0;
     unsigned int dist, best_dist = ~0U;
 
-    count = DescribePixelFormat(hdc, 1, sizeof(pfd), nullptr);
+    count = DescribePixelFormat(hdc, 1, sizeof(pfd), NULL);
 
     for (index = 1; index <= count; index++) {
 
@@ -347,7 +347,7 @@ WIN_GL_InitExtensions(_THIS)
 
     hwnd =
         CreateWindow(SDL_Appname, SDL_Appname, (WS_POPUP | WS_DISABLED), 0, 0,
-        10, 10, nullptr, nullptr, SDL_Instance, nullptr);
+        10, 10, NULL, NULL, SDL_Instance, NULL);
     if (!hwnd) {
         return;
     }
@@ -370,7 +370,7 @@ WIN_GL_InitExtensions(_THIS)
     if (wglGetExtensionsStringARB) {
         extensions = wglGetExtensionsStringARB(hdc);
     } else {
-        extensions = nullptr;
+        extensions = NULL;
     }
 
     /* Check for WGL_ARB_pixel_format */
@@ -385,8 +385,8 @@ WIN_GL_InitExtensions(_THIS)
             (BOOL(WINAPI *) (HDC, int, int, UINT, const int *, int *))
             WIN_GL_GetProcAddress(_this, "wglGetPixelFormatAttribivARB");
 
-        if ((_this->gl_data->wglChoosePixelFormatARB != nullptr) &&
-            (_this->gl_data->wglGetPixelFormatAttribivARB != nullptr)) {
+        if ((_this->gl_data->wglChoosePixelFormatARB != NULL) &&
+            (_this->gl_data->wglGetPixelFormatAttribivARB != NULL)) {
             _this->gl_data->HAS_WGL_ARB_pixel_format = SDL_TRUE;
         }
     }
@@ -402,8 +402,8 @@ WIN_GL_InitExtensions(_THIS)
             _this->gl_data->HAS_WGL_EXT_swap_control_tear = SDL_TRUE;
         }
     } else {
-        _this->gl_data->wglSwapIntervalEXT = nullptr;
-        _this->gl_data->wglGetSwapIntervalEXT = nullptr;
+        _this->gl_data->wglSwapIntervalEXT = NULL;
+        _this->gl_data->wglGetSwapIntervalEXT = NULL;
     }
 
     /* Check for WGL_EXT_create_context_es2_profile */
@@ -417,7 +417,7 @@ WIN_GL_InitExtensions(_THIS)
         _this->gl_data->HAS_WGL_ARB_context_flush_control = SDL_TRUE;
     }
 
-    _this->gl_data->wglMakeCurrent(hdc, nullptr);
+    _this->gl_data->wglMakeCurrent(hdc, NULL);
     _this->gl_data->wglDeleteContext(hglrc);
     ReleaseDC(hwnd, hdc);
     DestroyWindow(hwnd);
@@ -436,7 +436,7 @@ WIN_GL_ChoosePixelFormatARB(_THIS, int *iAttribs, float *fAttribs)
 
     hwnd =
         CreateWindow(SDL_Appname, SDL_Appname, (WS_POPUP | WS_DISABLED), 0, 0,
-                     10, 10, nullptr, nullptr, SDL_Instance, nullptr);
+                     10, 10, NULL, NULL, SDL_Instance, NULL);
     WIN_PumpEvents(_this);
 
     hdc = GetDC(hwnd);
@@ -455,7 +455,7 @@ WIN_GL_ChoosePixelFormatARB(_THIS, int *iAttribs, float *fAttribs)
                                                     &matching);
         }
 
-        _this->gl_data->wglMakeCurrent(hdc, nullptr);
+        _this->gl_data->wglMakeCurrent(hdc, NULL);
         _this->gl_data->wglDeleteContext(hglrc);
     }
     ReleaseDC(hwnd, hdc);
@@ -614,14 +614,14 @@ WIN_GL_CreateContext(_THIS, SDL_Window * window)
         _this->GL_SwapWindow = WIN_GLES_SwapWindow;
         _this->GL_DeleteContext = WIN_GLES_DeleteContext;
         
-        if (WIN_GLES_LoadLibrary(_this, nullptr) != 0) {
-            return nullptr;
+        if (WIN_GLES_LoadLibrary(_this, NULL) != 0) {
+            return NULL;
         }
         
         return WIN_GLES_CreateContext(_this, window);
 #else
         SDL_SetError("SDL not configured with EGL support");
-        return nullptr;
+        return NULL;
 #endif
     }
 
@@ -644,13 +644,13 @@ WIN_GL_CreateContext(_THIS, SDL_Window * window)
         HGLRC temp_context = _this->gl_data->wglCreateContext(hdc);
         if (!temp_context) {
             SDL_SetError("Could not create GL context");
-            return nullptr;
+            return NULL;
         }
 
         /* Make the context current */
         if (WIN_GL_MakeCurrent(_this, window, temp_context) < 0) {
             WIN_GL_DeleteContext(_this, temp_context);
-            return nullptr;
+            return NULL;
         }
 
         wglCreateContextAttribsARB =
@@ -699,12 +699,12 @@ WIN_GL_CreateContext(_THIS, SDL_Window * window)
 
     if (!context) {
         WIN_SetError("Could not create GL context");
-        return nullptr;
+        return NULL;
     }
 
     if (WIN_GL_MakeCurrent(_this, window, context) < 0) {
         WIN_GL_DeleteContext(_this, context);
-        return nullptr;
+        return NULL;
     }
 
     return context;
@@ -722,14 +722,14 @@ WIN_GL_MakeCurrent(_THIS, SDL_Window * window, SDL_GLContext context)
     /* sanity check that higher level handled this. */
     SDL_assert(window || (!window && !context));
 
-    /* Some Windows drivers freak out if hdc is nullptr, even when context is
-       nullptr, against spec. Since hdc is _supposed_ to be ignored if context
-       is nullptr, we either use the current GL window, or do nothing if we
+    /* Some Windows drivers freak out if hdc is NULL, even when context is
+       NULL, against spec. Since hdc is _supposed_ to be ignored if context
+       is NULL, we either use the current GL window, or do nothing if we
        already have no current context. */
     if (!window) {
         window = SDL_GL_GetCurrentWindow();
         if (!window) {
-            SDL_assert(SDL_GL_GetCurrentContext() == nullptr);
+            SDL_assert(SDL_GL_GetCurrentContext() == NULL);
             return 0;  /* already done. */
         }
     }

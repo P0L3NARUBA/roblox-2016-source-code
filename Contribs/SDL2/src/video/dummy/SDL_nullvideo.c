@@ -115,7 +115,7 @@ DUMMY_VideoInit(_THIS)
     mode.w = 1024;
     mode.h = 768;
     mode.refresh_rate = 0;
-    mode.driverdata = nullptr;
+    mode.driverdata = NULL;
     if (SDL_AddBasicVideoDisplay(&mode) < 0) {
         return -1;
     }

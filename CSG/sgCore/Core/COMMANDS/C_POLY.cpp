@@ -10,7 +10,7 @@ hOBJ create_line(lpD_POINT v1, lpD_POINT v2, lpLISTH listh)
 	lpOBJ			obj;
 	GEO_LINE 	line;
 
-	if ((hobj = o_alloc(OLINE)) != nullptr) {
+	if ((hobj = o_alloc(OLINE)) != NULL) {
 		obj = (lpOBJ)hobj;
 		line.v1 = *v1;
     line.v2 = *v2;
@@ -65,10 +65,10 @@ hOBJ create_polygon(short NumSide, sgFloat OutRadius, D_POINT p0, D_POINT pX, D_
 		o_hcncrd(matr1, &p1, &p2);
 		o_hcncrd(m, &p1, &vp1);
 		o_hcncrd(m, &p2, &vp2);
-		if ((hobj = create_line(&vp1, &vp2, &path.listh))	== nullptr) goto err;
+		if ((hobj = create_line(&vp1, &vp2, &path.listh))	== NULL) goto err;
 		p1 = p2;
 	}
-  if ((hpath = o_alloc(OPATH)) == nullptr) goto err;
+  if ((hpath = o_alloc(OPATH)) == NULL) goto err;
   obj = (lpOBJ)hpath;
   set_obj_nongeo_par(obj);
   memcpy(obj->geo_data, &path, geo_size[OPATH]);
@@ -92,13 +92,13 @@ hOBJ create_polygon(short NumSide, sgFloat OutRadius, D_POINT p0, D_POINT pX, D_
 	}
 	else
 	{
-		if (set_flat_on_path(hpath, nullptr))
+		if (set_flat_on_path(hpath, NULL))
 			obj->status |= ST_FLAT;
 		else      
 			obj->status &= ~ST_FLAT;
 	}
-	//if (!set_flat_on_path(hpath, nullptr)) goto err2;
-	if ((cod = test_self_cross_path(hpath, nullptr)) == OSFALSE) goto err2;
+	//if (!set_flat_on_path(hpath, NULL)) goto err2;
+	if ((cod = test_self_cross_path(hpath, NULL)) == OSFALSE) goto err2;
 	if (cod == OSTRUE) {
 		obj = (lpOBJ)hpath;
 		obj->status |= ST_SIMPLE;
@@ -107,11 +107,11 @@ hOBJ create_polygon(short NumSide, sgFloat OutRadius, D_POINT p0, D_POINT pX, D_
   return hpath;
 err2:
 	autodelete_obj(hpath);
-	return nullptr;
+	return NULL;
 err:
-	while ((hobj = path.listh.hhead) != nullptr) {
+	while ((hobj = path.listh.hhead) != NULL) {
 		o_free(hobj, &path.listh);
 	}
-	return nullptr;
+	return NULL;
 }
 

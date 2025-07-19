@@ -8,11 +8,11 @@ hOBJ o_alloc(OBJTYPE type)
   WORD  size;
 
   onum = otype_num(type);
-  if ( onum == -1 ) return nullptr;
+  if ( onum == -1 ) return NULL;
 
   size = sizeof(OBJ) + geo_size[onum] - 1;
 
-	if ((obj = (lpOBJ)SGMalloc(size)) == nullptr) 	return nullptr;
+	if ((obj = (lpOBJ)SGMalloc(size)) == NULL) 	return NULL;
   memset(obj, 0 ,size);               //  
   obj->type   = type;
 	if ( check_type(struct_filter,type) && obj_attrib.flg_transp )

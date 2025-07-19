@@ -91,7 +91,7 @@ ir_print_visitor::ir_print_visitor(FILE *f)
    printable_names =
       hash_table_ctor(32, hash_table_pointer_hash, hash_table_pointer_compare);
    symbols = _mesa_symbol_table_ctor();
-   mem_ctx = ralloc_context(nullptr);
+   mem_ctx = ralloc_context(NULL);
 }
 
 ir_print_visitor::~ir_print_visitor()
@@ -110,23 +110,23 @@ void ir_print_visitor::indent(void)
 const char *
 ir_print_visitor::unique_name(ir_variable *var)
 {
-   /* var->name can be nullptr in function prototypes when a type is given for a
+   /* var->name can be NULL in function prototypes when a type is given for a
     * parameter but no name is given.  In that case, just return an empty
     * string.  Don't worry about tracking the generated name in the printable
     * names hash because this is the only scope where it can ever appear.
     */
-   if (var->name == nullptr) {
+   if (var->name == NULL) {
       static unsigned arg = 1;
       return ralloc_asprintf(this->mem_ctx, "parameter@%u", arg++);
    }
 
    /* Do we already have a name for this variable? */
    const char *name = (const char *) hash_table_find(this->printable_names, var);
-   if (name != nullptr)
+   if (name != NULL)
       return name;
 
    /* If there's no conflict, just use the original name */
-   if (_mesa_symbol_table_find_symbol(this->symbols, -1, var->name) == nullptr) {
+   if (_mesa_symbol_table_find_symbol(this->symbols, -1, var->name) == NULL) {
       name = var->name;
    } else {
       static unsigned i = 1;
@@ -269,7 +269,7 @@ void ir_print_visitor::visit(ir_texture *ir)
 
       fprintf(f, " ");
 
-      if (ir->offset != nullptr) {
+      if (ir->offset != NULL) {
 	 ir->offset->accept(this);
       } else {
 	 fprintf(f, "0");
@@ -462,7 +462,7 @@ ir_print_visitor::visit(ir_discard *ir)
 {
    fprintf(f, "(discard ");
 
-   if (ir->condition != nullptr) {
+   if (ir->condition != NULL) {
       fprintf(f, " ");
       ir->condition->accept(this);
    }

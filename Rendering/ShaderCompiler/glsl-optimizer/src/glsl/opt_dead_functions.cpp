@@ -51,7 +51,7 @@ class ir_dead_functions_visitor : public ir_hierarchical_visitor {
 public:
    ir_dead_functions_visitor()
    {
-      this->mem_ctx = ralloc_context(nullptr);
+      this->mem_ctx = ralloc_context(NULL);
    }
 
    ~ir_dead_functions_visitor()

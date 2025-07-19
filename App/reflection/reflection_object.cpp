@@ -31,12 +31,12 @@ ClassDescriptor::ClassDescriptors& ClassDescriptor::allClasses()
 
 ClassDescriptor::ClassDescriptor()
 	:Descriptor("<<<ROOT>>>", Descriptor::Attributes())
-	,MemberDescriptorContainer<PropertyDescriptor>(nullptr)
-	,MemberDescriptorContainer<FunctionDescriptor>(nullptr)
-	,MemberDescriptorContainer<EventDescriptor>(nullptr)
-	,MemberDescriptorContainer<YieldFunctionDescriptor>(nullptr)
-	,MemberDescriptorContainer<CallbackDescriptor>(nullptr)
-	,base(nullptr)
+	,MemberDescriptorContainer<PropertyDescriptor>(NULL)
+	,MemberDescriptorContainer<FunctionDescriptor>(NULL)
+	,MemberDescriptorContainer<EventDescriptor>(NULL)
+	,MemberDescriptorContainer<YieldFunctionDescriptor>(NULL)
+	,MemberDescriptorContainer<CallbackDescriptor>(NULL)
+	,base(NULL)
 	,bReplicateType(true)
 	,bCanXmlWrite(true)
 	,bIsScriptable(true)
@@ -218,6 +218,6 @@ bool MemberDescriptor::isMemberOf(const ClassDescriptor& classDescriptor) const
 
 bool MemberDescriptor::isMemberOf(const DescribedBase* instance) const
 {
-	RBXASSERT(instance != nullptr);
+	RBXASSERT(instance != NULL);
 	return isMemberOf(instance->getDescriptor());
 }

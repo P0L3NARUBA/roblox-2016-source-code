@@ -38,7 +38,7 @@ CMediaType::CMediaType(const GUID * type)
 CMediaType::CMediaType(const AM_MEDIA_TYPE& rt, HRESULT* phr)
 {
     HRESULT hr = CopyMediaType(this, &rt);
-    if (FAILED(hr) && (nullptr != phr)) {
+    if (FAILED(hr) && (NULL != phr)) {
         *phr = hr;
     }
 }
@@ -47,7 +47,7 @@ CMediaType::CMediaType(const AM_MEDIA_TYPE& rt, HRESULT* phr)
 CMediaType::CMediaType(const CMediaType& rt, HRESULT* phr)
 {
     HRESULT hr = CopyMediaType(this, &rt);
-    if (FAILED(hr) && (nullptr != phr)) {
+    if (FAILED(hr) && (NULL != phr)) {
         *phr = hr;
     }
 }
@@ -181,7 +181,7 @@ CMediaType::SetTemporalCompression(BOOL bCompressed) {
 BOOL
 CMediaType::SetFormat(BYTE * pformat, ULONG cb)
 {
-    if (nullptr == AllocFormatBuffer(cb))
+    if (NULL == AllocFormatBuffer(cb))
 	return(FALSE);
 
     ASSERT(pbFormat);
@@ -210,12 +210,12 @@ void CMediaType::ResetFormatBuffer()
         CoTaskMemFree((PVOID)pbFormat);
     }
     cbFormat = 0;
-    pbFormat = nullptr;
+    pbFormat = NULL;
 }
 
 
 // allocate length bytes for the format and return a read/write pointer
-// If we cannot allocate the new block of memory we return nullptr leaving
+// If we cannot allocate the new block of memory we return NULL leaving
 // the original block of memory untouched (as does ReallocFormatBuffer)
 
 BYTE*
@@ -232,9 +232,9 @@ CMediaType::AllocFormatBuffer(ULONG length)
     // allocate the new format buffer
 
     BYTE *pNewFormat = (PBYTE)CoTaskMemAlloc(length);
-    if (pNewFormat == nullptr) {
+    if (pNewFormat == NULL) {
         if (length <= cbFormat) return pbFormat; //reuse the old block anyway.
-        return nullptr;
+        return NULL;
     }
 
     // delete the old format
@@ -269,9 +269,9 @@ CMediaType::ReallocFormatBuffer(ULONG length)
     // allocate the new format buffer
 
     BYTE *pNewFormat = (PBYTE)CoTaskMemAlloc(length);
-    if (pNewFormat == nullptr) {
+    if (pNewFormat == NULL) {
         if (length <= cbFormat) return pbFormat; //reuse the old block anyway.
-        return nullptr;
+        return NULL;
     }
 
     // copy any previous format (or part of if new is smaller)
@@ -351,9 +351,9 @@ CMediaType::MatchesPartial(const CMediaType* ppartial) const
 
 void WINAPI DeleteMediaType(AM_MEDIA_TYPE *pmt)
 {
-    // allow nullptr pointers for coding simplicity
+    // allow NULL pointers for coding simplicity
 
-    if (pmt == nullptr) {
+    if (pmt == NULL) {
         return;
     }
 
@@ -376,15 +376,15 @@ AM_MEDIA_TYPE * WINAPI CreateMediaType(AM_MEDIA_TYPE const *pSrc)
     AM_MEDIA_TYPE *pMediaType =
         (AM_MEDIA_TYPE *)CoTaskMemAlloc(sizeof(AM_MEDIA_TYPE));
 
-    if (pMediaType == nullptr) {
-        return nullptr;
+    if (pMediaType == NULL) {
+        return NULL;
     }
     // Copy the variable length format block
 
     HRESULT hr = CopyMediaType(pMediaType,pSrc);
     if (FAILED(hr)) {
         CoTaskMemFree((PVOID)pMediaType);
-        return nullptr;
+        return NULL;
     }
 
     return pMediaType;
@@ -400,9 +400,9 @@ HRESULT WINAPI CopyMediaType(AM_MEDIA_TYPE *pmtTarget, const AM_MEDIA_TYPE *pmtS
     ASSERT(pmtSource != pmtTarget);
     *pmtTarget = *pmtSource;
     if (pmtSource->cbFormat != 0) {
-        ASSERT(pmtSource->pbFormat != nullptr);
+        ASSERT(pmtSource->pbFormat != NULL);
         pmtTarget->pbFormat = (PBYTE)CoTaskMemAlloc(pmtSource->cbFormat);
-        if (pmtTarget->pbFormat == nullptr) {
+        if (pmtTarget->pbFormat == NULL) {
             pmtTarget->cbFormat = 0;
             return E_OUTOFMEMORY;
         } else {
@@ -410,7 +410,7 @@ HRESULT WINAPI CopyMediaType(AM_MEDIA_TYPE *pmtTarget, const AM_MEDIA_TYPE *pmtS
                        pmtTarget->cbFormat);
         }
     }
-    if (pmtTarget->pUnk != nullptr) {
+    if (pmtTarget->pUnk != NULL) {
         pmtTarget->pUnk->AddRef();
     }
 
@@ -426,11 +426,11 @@ void WINAPI FreeMediaType(AM_MEDIA_TYPE& mt)
 
         // Strictly unnecessary but tidier
         mt.cbFormat = 0;
-        mt.pbFormat = nullptr;
+        mt.pbFormat = NULL;
     }
-    if (mt.pUnk != nullptr) {
+    if (mt.pUnk != NULL) {
         mt.pUnk->Release();
-        mt.pUnk = nullptr;
+        mt.pUnk = NULL;
     }
 }
 
@@ -452,7 +452,7 @@ STDAPI CreateAudioMediaType(
     pmt->bFixedSizeSamples    = TRUE;
     pmt->bTemporalCompression = FALSE;
     pmt->lSampleSize          = pwfx->nBlockAlign;
-    pmt->pUnk                 = nullptr;
+    pmt->pUnk                 = NULL;
     if (bSetFormat) {
         if (pwfx->wFormatTag == WAVE_FORMAT_PCM) {
             pmt->cbFormat         = sizeof(WAVEFORMATEX);
@@ -460,7 +460,7 @@ STDAPI CreateAudioMediaType(
             pmt->cbFormat         = sizeof(WAVEFORMATEX) + pwfx->cbSize;
         }
         pmt->pbFormat             = (PBYTE)CoTaskMemAlloc(pmt->cbFormat);
-        if (pmt->pbFormat == nullptr) {
+        if (pmt->pbFormat == NULL) {
             return E_OUTOFMEMORY;
         }
         if (pwfx->wFormatTag == WAVE_FORMAT_PCM) {

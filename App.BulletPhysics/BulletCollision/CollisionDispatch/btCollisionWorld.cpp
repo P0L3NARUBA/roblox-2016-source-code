@@ -483,7 +483,7 @@ void	btCollisionWorld::rayTestSingleInternal(const btTransform& rayFromTrans,con
 						btCollisionWorld::LocalShapeInfo shapeInfo;
 						shapeInfo.m_shapePart = -1;
 						shapeInfo.m_triangleIndex = m_i;
-						if (r.m_localShapeInfo == nullptr)
+						if (r.m_localShapeInfo == NULL)
 							r.m_localShapeInfo = &shapeInfo;
 
 						const btScalar result = m_userCallback->addSingleResult(r, b);
@@ -826,7 +826,7 @@ void	btCollisionWorld::objectQuerySingleInternal(const btConvexShape* castShape,
                                     btCollisionWorld::LocalShapeInfo	shapeInfo;
                                     shapeInfo.m_shapePart = -1;
                                     shapeInfo.m_triangleIndex = m_i;
-                                    if (r.m_localShapeInfo == nullptr)
+                                    if (r.m_localShapeInfo == NULL)
                                         r.m_localShapeInfo = &shapeInfo;
 									const btScalar result = m_userCallback->addSingleResult(r, b);
 									m_closestHitFraction = m_userCallback->m_closestHitFraction;

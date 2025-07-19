@@ -102,7 +102,7 @@ bool Curl_if_is_interface_name(const char *interf)
   struct ifaddrs *iface, *head;
 
   if(getifaddrs(&head) >= 0) {
-    for(iface=head; iface != nullptr; iface=iface->ifa_next) {
+    for(iface=head; iface != NULL; iface=iface->ifa_next) {
       if(curl_strequal(iface->ifa_name, interf)) {
         result = TRUE;
         break;
@@ -130,8 +130,8 @@ if2ip_result_t Curl_if2ip(int af, unsigned int remote_scope,
 #endif
 
   if(getifaddrs(&head) >= 0) {
-    for(iface = head; iface != nullptr; iface=iface->ifa_next) {
-      if(iface->ifa_addr != nullptr) {
+    for(iface = head; iface != NULL; iface=iface->ifa_next) {
+      if(iface->ifa_addr != NULL) {
         if(iface->ifa_addr->sa_family == af) {
           if(curl_strequal(iface->ifa_name, interf)) {
             void *addr;

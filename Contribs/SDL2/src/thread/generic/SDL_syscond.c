@@ -51,7 +51,7 @@ SDL_CreateCond(void)
         cond->waiting = cond->signals = 0;
         if (!cond->lock || !cond->wait_sem || !cond->wait_done) {
             SDL_DestroyCond(cond);
-            cond = nullptr;
+            cond = NULL;
         }
     } else {
         SDL_OutOfMemory();
@@ -82,7 +82,7 @@ int
 SDL_CondSignal(SDL_cond * cond)
 {
     if (!cond) {
-        return SDL_SetError("Passed a nullptr condition variable");
+        return SDL_SetError("Passed a NULL condition variable");
     }
 
     /* If there are waiting threads not already signalled, then
@@ -106,7 +106,7 @@ int
 SDL_CondBroadcast(SDL_cond * cond)
 {
     if (!cond) {
-        return SDL_SetError("Passed a nullptr condition variable");
+        return SDL_SetError("Passed a NULL condition variable");
     }
 
     /* If there are waiting threads not already signalled, then
@@ -162,7 +162,7 @@ SDL_CondWaitTimeout(SDL_cond * cond, SDL_mutex * mutex, Uint32 ms)
     int retval;
 
     if (!cond) {
-        return SDL_SetError("Passed a nullptr condition variable");
+        return SDL_SetError("Passed a NULL condition variable");
     }
 
     /* Obtain the protection mutex, and increment the number of waiters.

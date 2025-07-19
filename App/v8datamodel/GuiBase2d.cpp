@@ -8,8 +8,8 @@ namespace RBX{
 const char* const  sGuiBase2d = "GuiBase2d";
 
 //Read only properties for Absolute position/Absolute size
-Reflection::PropDescriptor<GuiBase2d, Vector2> GuiBase2d::prop_AbsoluteSize("AbsoluteSize", category_Data, &GuiBase2d::getAbsoluteSize, nullptr, Reflection::PropertyDescriptor::UI);
-Reflection::PropDescriptor<GuiBase2d, Vector2> GuiBase2d::prop_AbsolutePosition("AbsolutePosition", category_Data, &GuiBase2d::getAbsolutePosition, nullptr, Reflection::PropertyDescriptor::UI);
+Reflection::PropDescriptor<GuiBase2d, Vector2> GuiBase2d::prop_AbsoluteSize("AbsoluteSize", category_Data, &GuiBase2d::getAbsoluteSize, NULL, Reflection::PropertyDescriptor::UI);
+Reflection::PropDescriptor<GuiBase2d, Vector2> GuiBase2d::prop_AbsolutePosition("AbsolutePosition", category_Data, &GuiBase2d::getAbsolutePosition, NULL, Reflection::PropertyDescriptor::UI);
 
 
 GuiBase2d::GuiBase2d(const char* name)
@@ -87,7 +87,7 @@ bool GuiBase2d::setAbsoluteSize(const Vector2& value, bool fireChangedEvent)
 //Only Gui items can descend from Gui items... no funny business
 bool GuiBase2d::askAddChild(const Instance* instance) const
 {
-	return (Instance::fastDynamicCast<GuiBase2d>(instance) != nullptr);
+	return (Instance::fastDynamicCast<GuiBase2d>(instance) != NULL);
 }
 
 Rect2D GuiBase2d::getRect2D() const		// four integers - maybe we should store size, position as a Rect2d (g3d version) or Rect (our version)?

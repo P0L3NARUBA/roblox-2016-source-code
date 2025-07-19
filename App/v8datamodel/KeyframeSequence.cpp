@@ -58,15 +58,15 @@ shared_ptr<const Instances> KeyframeSequence::getKeyframes()
 }
 void KeyframeSequence::addKeyframe(shared_ptr<Instance> keyframe)
 {
-	if (keyframe != nullptr) {
+	if (keyframe != NULL) {
 		keyframe->setParent(this);
 	}
 }
 void KeyframeSequence::removeKeyframe(shared_ptr<Instance> keyframe)
 {
-	if (keyframe != nullptr) {
+	if (keyframe != NULL) {
 		if(keyframe->getParent() == this){
-			keyframe->setParent(nullptr);
+			keyframe->setParent(NULL);
 		}
 	}
 }
@@ -117,8 +117,8 @@ void KeyframeSequence::apply(std::vector<PoseAccumulator>& jointposes, double la
 	if(trackweight <= 0) return;
 
 	// find two keyframes to lerp.
-	CachedKeyframe* before = nullptr;
-	CachedKeyframe* after = nullptr;
+	CachedKeyframe* before = NULL;
+	CachedKeyframe* after = NULL;
 
 	getCachedData(); // validates cache.
 
@@ -153,11 +153,11 @@ void KeyframeSequence::apply(std::vector<PoseAccumulator>& jointposes, double la
 
 		for(size_t j = 0; j < jointposes.size(); ++j)
 		{			
-			if (jointposes[j].joint.first.lock() != nullptr) 
+			if (jointposes[j].joint.first.lock() != NULL) 
 			{
 				IAnimatableJoint* joint = jointposes[j].joint.second;
 
-				if(joint != nullptr &&
+				if(joint != NULL &&
 					joint->getParentName() == parentName &&
 					joint->getPartName() == childName)
 				{
@@ -167,18 +167,18 @@ void KeyframeSequence::apply(std::vector<PoseAccumulator>& jointposes, double la
 					after = &cache.keyframes[cache.keyframes.size()-1];
 					for(size_t k = 0; k < cache.keyframes.size(); ++k)
 					{
-						if(cache.keyframes[k].time <= keyframetime && cache.keyframes[k].poses[i] != nullptr)
+						if(cache.keyframes[k].time <= keyframetime && cache.keyframes[k].poses[i] != NULL)
 						{
 							before = &cache.keyframes[k];
 						}
-						else if (cache.keyframes[k].poses[i] != nullptr)
+						else if (cache.keyframes[k].poses[i] != NULL)
 						{
 							after = &cache.keyframes[k];
 							break;
 						}
 					}
 
-					if (after->poses[i] == nullptr)
+					if (after->poses[i] == NULL)
 					{
 						after = before;
 					}

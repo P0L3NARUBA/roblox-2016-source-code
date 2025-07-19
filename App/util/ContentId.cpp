@@ -254,9 +254,9 @@ namespace RBX
         // parse out host and path
         char* simplifiedUrl = url.get();
         simplifiedUrl = HTSimplify(&simplifiedUrl);
-        boost::scoped_ptr<char> chost(HTParse(simplifiedUrl, nullptr, PARSE_HOST));
-        boost::scoped_ptr<char> cscheme(HTParse(simplifiedUrl, nullptr, PARSE_ACCESS));
-        boost::scoped_ptr<char> cpath(HTParse(simplifiedUrl, nullptr, PARSE_PATH));
+        boost::scoped_ptr<char> chost(HTParse(simplifiedUrl, NULL, PARSE_HOST));
+        boost::scoped_ptr<char> cscheme(HTParse(simplifiedUrl, NULL, PARSE_ACCESS));
+        boost::scoped_ptr<char> cpath(HTParse(simplifiedUrl, NULL, PARSE_PATH));
 
         std::string scheme = cscheme.get();
         std::string path = cpath.get();

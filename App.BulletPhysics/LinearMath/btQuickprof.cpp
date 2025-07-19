@@ -275,8 +275,8 @@ CProfileNode::CProfileNode( const char * name, CProfileNode * parent ) :
 	StartTime( 0 ),
 	RecursionCounter( 0 ),
 	Parent( parent ),
-	Child( nullptr ),
-	Sibling( nullptr ),
+	Child( NULL ),
+	Sibling( NULL ),
 	m_userPtr(0)
 {
 	Reset();
@@ -286,9 +286,9 @@ CProfileNode::CProfileNode( const char * name, CProfileNode * parent ) :
 void	CProfileNode::CleanupMemory()
 {
 	delete ( Child);
-	Child = nullptr;
+	Child = NULL;
 	delete ( Sibling);
-	Sibling = nullptr;
+	Sibling = NULL;
 }
 
 CProfileNode::~CProfileNode( void )
@@ -388,19 +388,19 @@ void	CProfileIterator::Next(void)
 
 bool	CProfileIterator::Is_Done(void)
 {
-	return CurrentChild == nullptr;
+	return CurrentChild == NULL;
 }
 
 
 void	CProfileIterator::Enter_Child( int index )
 {
 	CurrentChild = CurrentParent->Get_Child();
-	while ( (CurrentChild != nullptr) && (index != 0) ) {
+	while ( (CurrentChild != NULL) && (index != 0) ) {
 		index--;
 		CurrentChild = CurrentChild->Get_Sibling();
 	}
 
-	if ( CurrentChild != nullptr ) {
+	if ( CurrentChild != NULL ) {
 		CurrentParent = CurrentChild;
 		CurrentChild = CurrentParent->Get_Child();
 	}
@@ -409,7 +409,7 @@ void	CProfileIterator::Enter_Child( int index )
 
 void	CProfileIterator::Enter_Parent( void )
 {
-	if ( CurrentParent->Get_Parent() != nullptr ) {
+	if ( CurrentParent->Get_Parent() != NULL ) {
 		CurrentParent = CurrentParent->Get_Parent();
 	}
 	CurrentChild = CurrentParent->Get_Child();
@@ -422,7 +422,7 @@ void	CProfileIterator::Enter_Parent( void )
 **
 ***************************************************************************************************/
 
-CProfileNode	CProfileManager::Root( "Root", nullptr );
+CProfileNode	CProfileManager::Root( "Root", NULL );
 CProfileNode *	CProfileManager::CurrentNode = &CProfileManager::Root;
 int				CProfileManager::FrameCounter = 0;
 unsigned long int			CProfileManager::ResetTime = 0;

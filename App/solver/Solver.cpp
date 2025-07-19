@@ -52,8 +52,8 @@ static RBX_SIMD_INLINE int getBodyIndex(
     BodyIndexation& _allBodyIndexation,
     Body* _body )
 {
-    SimBody* simBody = nullptr;
-    if( _body != nullptr )
+    SimBody* simBody = NULL;
+    if( _body != NULL )
     {
         simBody = _body->getRootSimBody();
     }
@@ -61,7 +61,7 @@ static RBX_SIMD_INLINE int getBodyIndex(
 
     int index = 0;
     // A new body that we haven't seen previously. Add it to the list of anchored bodies and add its index
-    if( it == nullptr )
+    if( it == NULL )
     {
         // We can assert that it is anchored...
         index = (int)_allBodyIndexation.size();
@@ -219,7 +219,7 @@ void PGSSolver::initAnchoredObjects(
     for( int i = 0; i < (int)_anchoredBodyList.size(); i++ )
     {
         auto body = _anchoredBodyList[ i ];
-        if( body != nullptr )
+        if( body != NULL )
         {
             body->updateIfDirty();
         }
@@ -230,9 +230,9 @@ void PGSSolver::initAnchoredObjects(
         VirtualDisplacement velStageVirD;
         VirtualDisplacement posStageVirD;
         staticProps.isStatic = true;
-        boost::uint64_t uid = body != nullptr ? body->getUID() : 0;
+        boost::uint64_t uid = body != NULL ? body->getUID() : 0;
         auto bodyCacheIt = bodyCache.find( uid );
-        if( ( body != nullptr ) && ( bodyCacheIt != bodyCache.end() ) && _config.virtualMassesEnabled )
+        if( ( body != NULL ) && ( bodyCacheIt != bodyCache.end() ) && _config.virtualMassesEnabled )
         {
             const SolverBodyCache& bodyCache = bodyCacheIt->second;
             dynamicProps.linearVelocity = bodyCache.linearVelocity;
@@ -261,7 +261,7 @@ void PGSSolver::initAnchoredObjects(
         {
             Vector3 zero( 0.0f, 0.0f, 0.0f );
 
-            if( body != nullptr )
+            if( body != NULL )
             {
                 // Conveyor belt
                 dynamicProps.linearVelocity = body->getBodyConst()->getPvFast().velocity.linear;
@@ -284,7 +284,7 @@ void PGSSolver::initAnchoredObjects(
             massAndInertia.posToVelMassRatio = 0.0f;
         }
         
-        if( body != nullptr )
+        if( body != NULL )
         {
             dynamicProps.orientation = body->getPV().position.rotation;
             dynamicProps.position = body->getPV().position.translation;
@@ -297,7 +297,7 @@ void PGSSolver::initAnchoredObjects(
 
         staticProps.guid = 0;
         staticProps.bodyUID = uid;
-        if( body != nullptr )
+        if( body != NULL )
         {
             staticProps.guid = body->getBody()->getGuidIndex();
         }
@@ -732,7 +732,7 @@ static void breakIntoIslands( ArrayDynamic< SimBody* >& _islandSimBodies,
 {
     RBXPROFILER_SCOPE("Physics", "breakIntoIslands");
     // Index the bodies
-    DenseHashMap< SimBody*, boost::int32_t > bodyIndexation( nullptr, G3D::ceilPow2( 2 * _simBodies.size() ) );
+    DenseHashMap< SimBody*, boost::int32_t > bodyIndexation( NULL, G3D::ceilPow2( 2 * _simBodies.size() ) );
     ArrayDynamic< SimBody* > simBodyList( _simBodies.size(), ArrayNoInit() );
     boost::int32_t index = 0;
     for( auto b : _simBodies )
@@ -750,16 +750,16 @@ static void breakIntoIslands( ArrayDynamic< SimBody* >& _islandSimBodies,
         auto c = _constraints[ i ];
         std::pair< boost::int32_t, boost::int32_t > pair( -1, -1 );
         boost::int32_t* indexA = bodyIndexation.find( c->getBodyA()->getRootSimBody() );
-        if( indexA != nullptr )
+        if( indexA != NULL )
         {
             adjacencyLists.addToList( *indexA, i );
             pair.first = *indexA;
         }
 
-        if( c->getBodyB() != nullptr )
+        if( c->getBodyB() != NULL )
         {
             boost::int32_t* indexB = bodyIndexation.find( c->getBodyB()->getRootSimBody() );
-            if( indexB != nullptr )
+            if( indexB != NULL )
             {
                 adjacencyLists.addToList( *indexB, i );
                 pair.second = *indexB;
@@ -889,7 +889,7 @@ void PGSSolver::solveInternal( const std::vector< ContactConnector* >& _contactC
             for( const auto& it : pureConstraintSet )
             {
                 if( highPrioritySimBodies.find( it.second->getBodyA()->getRootSimBody() ) == highPrioritySimBodies.end() 
-                    && ( ( it.second->getBodyB() == nullptr ) || highPrioritySimBodies.find( it.second->getBodyB()->getRootSimBody() ) == highPrioritySimBodies.end() ) )
+                    && ( ( it.second->getBodyB() == NULL ) || highPrioritySimBodies.find( it.second->getBodyB()->getRootSimBody() ) == highPrioritySimBodies.end() ) )
                 {
                     continue;
                 }
@@ -985,7 +985,7 @@ void PGSSolver::solveIsland( const ArrayDynamic< Constraint* >& _constraints,
     // Align to cache lines
     int defaultAlignment = 64;
 
-    BodyIndexation bodyIndexation( (SimBody*)nullptr, G3D::ceilPow2( 2 * _simBodies.size() ) );
+    BodyIndexation bodyIndexation( (SimBody*)NULL, G3D::ceilPow2( 2 * _simBodies.size() ) );
     ArrayDynamic< SimBody* > simBodyList;
     {
         RBXPROFILER_SCOPE("Physics", "generateBodyIndices");
@@ -1204,7 +1204,7 @@ void PGSSolver::solveLegacy( const std::vector< ContactConnector* >& _contactCon
 
     // All objects will be indexed in this map. Uses DenseHashMap.
     const boost::unordered_set< SimBody* >& selectedSimBodies = _throttled ? highPrioritySimBodies : simBodies;
-    BodyIndexation bodyIndexation( (SimBody*)nullptr, G3D::ceilPow2( 2 * simBodies.size() ) );
+    BodyIndexation bodyIndexation( (SimBody*)NULL, G3D::ceilPow2( 2 * simBodies.size() ) );
     ArrayDynamic< SimBody* > simBodyList;
     {
         RBXPROFILER_SCOPE("Physics", "generateBodyIndices");
@@ -1238,7 +1238,7 @@ void PGSSolver::solveLegacy( const std::vector< ContactConnector* >& _contactCon
             for( const auto& it : pureConstraintSet )
             {
                 if( highPrioritySimBodies.find( it.second->getBodyA()->getRootSimBody() ) == highPrioritySimBodies.end() 
-                    && ( ( it.second->getBodyB() == nullptr ) || highPrioritySimBodies.find( it.second->getBodyB()->getRootSimBody() ) == highPrioritySimBodies.end() ) )
+                    && ( ( it.second->getBodyB() == NULL ) || highPrioritySimBodies.find( it.second->getBodyB()->getRootSimBody() ) == highPrioritySimBodies.end() ) )
                 {
                     continue;
                 }
@@ -1646,7 +1646,7 @@ ContactManifold* PGSSolver::updateContactManifold( const BodyUIDPair& _pairId, c
 
         return cachedManifoldIt->second;
     }
-    return nullptr;
+    return NULL;
 }
 
 class OrderedConnectorPair: public std::pair< BodyUIDPair, OrderedConnector >
@@ -1708,7 +1708,7 @@ size_t PGSSolver::addContactConnectors( ArrayDynamic< ContactManifold* >& _activ
             if( manifold.size() > 0 )
             {
                 ContactManifold* m = updateContactManifold( pair, manifold );
-                if( m != nullptr )
+                if( m != NULL )
                 {
                     collisionCount += m->collisions.size();
                     _activeManifolds.push_back( m );
@@ -1722,7 +1722,7 @@ size_t PGSSolver::addContactConnectors( ArrayDynamic< ContactManifold* >& _activ
     if( manifold.size() > 0 )
     {
         ContactManifold* m = updateContactManifold( pair, manifold );
-        if( m != nullptr )
+        if( m != NULL )
         {
             collisionCount += m->collisions.size();
             _activeManifolds.push_back( m );

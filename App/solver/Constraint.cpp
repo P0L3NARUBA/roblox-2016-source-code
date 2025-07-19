@@ -49,7 +49,7 @@ void ConstraintBallInSocket::buildEquation( ConstraintJacobianPair* _jacobian,
 {
     const CoordinateFrame& cA = getBodyA()->getPvUnsafe().position;
     CoordinateFrame cB;
-    if( getBodyB() != nullptr )
+    if( getBodyB() != NULL )
     {
         cB = getBodyB()->getPvUnsafe().position;
     }
@@ -156,7 +156,7 @@ void ConstraintLegacyBreakableBallInSocket::buildEquation( ConstraintJacobianPai
 {
     const CoordinateFrame& cA = getBodyA()->getPvUnsafe().position;
     CoordinateFrame cB;
-    if( getBodyB() != nullptr )
+    if( getBodyB() != NULL )
     {
         cB = getBodyB()->getPvUnsafe().position;
     }
@@ -263,7 +263,7 @@ void ConstraintAlign2Axes::buildEquation( ConstraintJacobianPair* _jacobian, boo
 {
     const CoordinateFrame& cA = getBodyA()->getPvUnsafe().position;
     CoordinateFrame cB;
-    if( getBodyB() != nullptr )
+    if( getBodyB() != NULL )
     {
         cB = getBodyB()->getPvUnsafe().position;
     }
@@ -499,7 +499,7 @@ void ConstraintLinearSpring::buildEquation( ConstraintJacobianPair* _jacobian, b
 {
     const CoordinateFrame& cA = getBodyA()->getPvUnsafe().position;
     CoordinateFrame cB;
-    if( getBodyB() != nullptr )
+    if( getBodyB() != NULL )
     {
         cB = getBodyB()->getPvUnsafe().position;
     }
@@ -568,7 +568,7 @@ void ConstraintAchievePosition::buildEquation( ConstraintJacobianPair* _jacobian
 {
     const CoordinateFrame& cA = getBodyA()->getPvUnsafe().position;
     CoordinateFrame cB;
-    if( getBodyB() != nullptr )
+    if( getBodyB() != NULL )
     {
         cB = getBodyB()->getPvUnsafe().position;
     }

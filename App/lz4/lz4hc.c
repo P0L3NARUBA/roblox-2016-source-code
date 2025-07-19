@@ -335,7 +335,7 @@ inline static void* LZ4HC_create (const BYTE* base)
 inline static int LZ4HC_free (void** LZ4HC_Data)
 {
     FREEMEM(*LZ4HC_Data);
-    *LZ4HC_Data = nullptr;
+    *LZ4HC_Data = NULL;
     return (1);
 }
 

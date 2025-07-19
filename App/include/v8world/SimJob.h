@@ -25,7 +25,7 @@ namespace RBX {
 		bool containedBy(SimJob* s);
 		void stopTracking();
 	public:
-		SimJobTracker() : simJob(nullptr) {}
+		SimJobTracker() : simJob(NULL) {}
 
 		~SimJobTracker() {
 			stopTracking();

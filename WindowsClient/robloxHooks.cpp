@@ -127,7 +127,7 @@ namespace RBX
     bool hookPreVeh()
     {
         volatile bool result = false;
-        VMProtectBeginMutation(nullptr);
+        VMProtectBeginMutation(NULL);
         HMODULE ntdll = GetModuleHandleA("ntdll");
         DWORD* loc = reinterpret_cast<DWORD*>(rbxNtdllProcAddress(ntdll, cmpKiUserExceptionDispatcher));
         ntdll = 0;
@@ -182,7 +182,7 @@ namespace RBX
         }
 
         MODULEINFO info;
-        if (GetModuleInformation(GetCurrentProcess(), GetModuleHandle(nullptr), &info, sizeof(MODULEINFO)))
+        if (GetModuleInformation(GetCurrentProcess(), GetModuleHandle(NULL), &info, sizeof(MODULEINFO)))
         {
             moduleStart = reinterpret_cast<size_t>(info.lpBaseOfDll);
             moduleSize = info.SizeOfImage;

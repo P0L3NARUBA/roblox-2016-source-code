@@ -1936,7 +1936,7 @@ yyreduce:
   case 13:
 #line 256 "src/glsl/glcpp/glcpp-parse.y"
     {
-		_define_function_macro (parser, & (yylsp[(1) - (5)]), (yyvsp[(1) - (5)].str), nullptr, (yyvsp[(4) - (5)].token_list));
+		_define_function_macro (parser, & (yylsp[(1) - (5)]), (yyvsp[(1) - (5)].str), NULL, (yyvsp[(4) - (5)].token_list));
 	;}
     break;
 
@@ -1965,7 +1965,7 @@ yyreduce:
 #line 271 "src/glsl/glcpp/glcpp-parse.y"
     {
 
-		if (parser->skip_stack == nullptr ||
+		if (parser->skip_stack == NULL ||
 		    parser->skip_stack->type == SKIP_NO_SKIP)
 		{
 			_glcpp_parser_expand_and_lex_from (parser,
@@ -2025,7 +2025,7 @@ yyreduce:
 		 *
 		 * This avoids generating diagnostics for invalid
 		 * expressions that are being skipped. */
-		if (parser->skip_stack == nullptr ||
+		if (parser->skip_stack == NULL ||
 		    parser->skip_stack->type == SKIP_NO_SKIP)
 		{
 			_glcpp_parser_expand_and_lex_from (parser,
@@ -2045,7 +2045,7 @@ yyreduce:
     {
 		/* #if without an expression is only an error if we
 		 *  are not skipping */
-		if (parser->skip_stack == nullptr ||
+		if (parser->skip_stack == NULL ||
 		    parser->skip_stack->type == SKIP_NO_SKIP)
 		{
 			glcpp_error(& (yylsp[(1) - (3)]), parser, "#if with no expression");
@@ -2066,7 +2066,7 @@ yyreduce:
     {
 		macro_t *macro = hash_table_find (parser->defines, (yyvsp[(4) - (6)].str));
 		ralloc_free ((yyvsp[(4) - (6)].str));
-		_glcpp_parser_skip_stack_push_if (parser, & (yylsp[(1) - (6)]), macro != nullptr);
+		_glcpp_parser_skip_stack_push_if (parser, & (yylsp[(1) - (6)]), macro != NULL);
 	;}
     break;
 
@@ -2082,7 +2082,7 @@ yyreduce:
     {
 		macro_t *macro = hash_table_find (parser->defines, (yyvsp[(4) - (6)].str));
 		ralloc_free ((yyvsp[(4) - (6)].str));
-		_glcpp_parser_skip_stack_push_if (parser, & (yylsp[(3) - (6)]), macro == nullptr);
+		_glcpp_parser_skip_stack_push_if (parser, & (yylsp[(3) - (6)]), macro == NULL);
 	;}
     break;
 
@@ -2175,7 +2175,7 @@ yyreduce:
 		if (parser->version_resolved) {
 			glcpp_error(& (yylsp[(1) - (4)]), parser, "#version must appear on the first line");
 		}
-		_glcpp_parser_handle_version_declaration(parser, (yyvsp[(3) - (4)].ival), nullptr, true);
+		_glcpp_parser_handle_version_declaration(parser, (yyvsp[(3) - (4)].ival), NULL, true);
 	;}
     break;
 
@@ -2228,11 +2228,11 @@ yyreduce:
 #line 446 "src/glsl/glcpp/glcpp-parse.y"
     {
 		if (strlen ((yyvsp[(1) - (1)].str)) >= 3 && strncmp ((yyvsp[(1) - (1)].str), "0x", 2) == 0) {
-			(yyval.ival) = (int)strtoll ((yyvsp[(1) - (1)].str) + 2, nullptr, 16);
+			(yyval.ival) = (int)strtoll ((yyvsp[(1) - (1)].str) + 2, NULL, 16);
 		} else if ((yyvsp[(1) - (1)].str)[0] == '0') {
-			(yyval.ival) = (int)strtoll ((yyvsp[(1) - (1)].str), nullptr, 8);
+			(yyval.ival) = (int)strtoll ((yyvsp[(1) - (1)].str), NULL, 8);
 		} else {
-			(yyval.ival) = (int)strtoll ((yyvsp[(1) - (1)].str), nullptr, 10);
+			(yyval.ival) = (int)strtoll ((yyvsp[(1) - (1)].str), NULL, 10);
 		}
 	;}
     break;
@@ -2248,7 +2248,7 @@ yyreduce:
 #line 460 "src/glsl/glcpp/glcpp-parse.y"
     {
 		(yyval.expression_value).value = (yyvsp[(1) - (1)].ival);
-		(yyval.expression_value).undefined_macro = nullptr;
+		(yyval.expression_value).undefined_macro = NULL;
 	;}
     break;
 
@@ -2259,7 +2259,7 @@ yyreduce:
 		if (parser->is_gles)
 			(yyval.expression_value).undefined_macro = ralloc_strdup (parser, (yyvsp[(1) - (1)].str));
 		else
-			(yyval.expression_value).undefined_macro = nullptr;
+			(yyval.expression_value).undefined_macro = NULL;
 	;}
     break;
 
@@ -2538,12 +2538,12 @@ yyreduce:
 
   case 72:
 #line 650 "src/glsl/glcpp/glcpp-parse.y"
-    { (yyval.token_list) = nullptr; ;}
+    { (yyval.token_list) = NULL; ;}
     break;
 
   case 74:
 #line 655 "src/glsl/glcpp/glcpp-parse.y"
-    { (yyval.token_list) = nullptr; ;}
+    { (yyval.token_list) = NULL; ;}
     break;
 
   case 77:
@@ -3014,8 +3014,8 @@ _string_list_create (void *ctx)
 	string_list_t *list;
 
 	list = ralloc (ctx, string_list_t);
-	list->head = nullptr;
-	list->tail = nullptr;
+	list->head = NULL;
+	list->tail = NULL;
 
 	return list;
 }
@@ -3028,9 +3028,9 @@ _string_list_append_item (string_list_t *list, const char *str)
 	node = ralloc (list, string_node_t);
 	node->str = ralloc_strdup (node, str);
 
-	node->next = nullptr;
+	node->next = NULL;
 
-	if (list->head == nullptr) {
+	if (list->head == NULL) {
 		list->head = node;
 	} else {
 		list->tail->next = node;
@@ -3045,7 +3045,7 @@ _string_list_contains (string_list_t *list, const char *member, int *index)
 	string_node_t *node;
 	int i;
 
-	if (list == nullptr)
+	if (list == NULL)
 		return 0;
 
 	for (i = 0, node = list->head; node; i++, node = node->next) {
@@ -3059,14 +3059,14 @@ _string_list_contains (string_list_t *list, const char *member, int *index)
 	return 0;
 }
 
-/* Return duplicate string in list (if any), nullptr otherwise. */
+/* Return duplicate string in list (if any), NULL otherwise. */
 const char *
 _string_list_has_duplicate (string_list_t *list)
 {
 	string_node_t *node, *dup;
 
-	if (list == nullptr)
-		return nullptr;
+	if (list == NULL)
+		return NULL;
 
 	for (node = list->head; node; node = node->next) {
 		for (dup = node->next; dup; dup = dup->next) {
@@ -3075,7 +3075,7 @@ _string_list_has_duplicate (string_list_t *list)
 		}
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 int
@@ -3084,7 +3084,7 @@ _string_list_length (string_list_t *list)
 	int length = 0;
 	string_node_t *node;
 
-	if (list == nullptr)
+	if (list == NULL)
 		return 0;
 
 	for (node = list->head; node; node = node->next)
@@ -3098,10 +3098,10 @@ _string_list_equal (string_list_t *a, string_list_t *b)
 {
 	string_node_t *node_a, *node_b;
 
-	if (a == nullptr && b == nullptr)
+	if (a == NULL && b == NULL)
 		return 1;
 
-	if (a == nullptr || b == nullptr)
+	if (a == NULL || b == NULL)
 		return 0;
 
 	for (node_a = a->head, node_b = b->head;
@@ -3124,8 +3124,8 @@ _argument_list_create (void *ctx)
 	argument_list_t *list;
 
 	list = ralloc (ctx, argument_list_t);
-	list->head = nullptr;
-	list->tail = nullptr;
+	list->head = NULL;
+	list->tail = NULL;
 
 	return list;
 }
@@ -3138,9 +3138,9 @@ _argument_list_append (argument_list_t *list, token_list_t *argument)
 	node = ralloc (list, argument_node_t);
 	node->argument = argument;
 
-	node->next = nullptr;
+	node->next = NULL;
 
-	if (list->head == nullptr) {
+	if (list->head == NULL) {
 		list->head = node;
 	} else {
 		list->tail->next = node;
@@ -3155,7 +3155,7 @@ _argument_list_length (argument_list_t *list)
 	int length = 0;
 	argument_node_t *node;
 
-	if (list == nullptr)
+	if (list == NULL)
 		return 0;
 
 	for (node = list->head; node; node = node->next)
@@ -3170,20 +3170,20 @@ _argument_list_member_at (argument_list_t *list, int index)
 	argument_node_t *node;
 	int i;
 
-	if (list == nullptr)
-		return nullptr;
+	if (list == NULL)
+		return NULL;
 
 	node = list->head;
 	for (i = 0; i < index; i++) {
 		node = node->next;
-		if (node == nullptr)
+		if (node == NULL)
 			break;
 	}
 
 	if (node)
 		return node->argument;
 
-	return nullptr;
+	return NULL;
 }
 
 /* Note: This function ralloc_steal()s the str pointer. */
@@ -3219,9 +3219,9 @@ _token_list_create (void *ctx)
 	token_list_t *list;
 
 	list = ralloc (ctx, token_list_t);
-	list->head = nullptr;
-	list->tail = nullptr;
-	list->non_space_tail = nullptr;
+	list->head = NULL;
+	list->tail = NULL;
+	list->non_space_tail = NULL;
 
 	return list;
 }
@@ -3233,9 +3233,9 @@ _token_list_append (token_list_t *list, token_t *token)
 
 	node = ralloc (list, token_node_t);
 	node->token = token;
-	node->next = nullptr;
+	node->next = NULL;
 
-	if (list->head == nullptr) {
+	if (list->head == NULL) {
 		list->head = node;
 	} else {
 		list->tail->next = node;
@@ -3249,10 +3249,10 @@ _token_list_append (token_list_t *list, token_t *token)
 void
 _token_list_append_list (token_list_t *list, token_list_t *tail)
 {
-	if (tail == nullptr || tail->head == nullptr)
+	if (tail == NULL || tail->head == NULL)
 		return;
 
-	if (list->head == nullptr) {
+	if (list->head == NULL) {
 		list->head = tail->head;
 	} else {
 		list->tail->next = tail->head;
@@ -3268,8 +3268,8 @@ _token_list_copy (void *ctx, token_list_t *other)
 	token_list_t *copy;
 	token_node_t *node;
 
-	if (other == nullptr)
-		return nullptr;
+	if (other == NULL)
+		return NULL;
 
 	copy = _token_list_create (ctx);
 	for (node = other->head; node; node = node->next) {
@@ -3288,7 +3288,7 @@ _token_list_trim_trailing_space (token_list_t *list)
 
 	if (list->non_space_tail) {
 		tail = list->non_space_tail->next;
-		list->non_space_tail->next = nullptr;
+		list->non_space_tail->next = NULL;
 		list->tail = list->non_space_tail;
 
 		while (tail) {
@@ -3304,14 +3304,14 @@ _token_list_is_empty_ignoring_space (token_list_t *l)
 {
 	token_node_t *n;
 
-	if (l == nullptr)
+	if (l == NULL)
 		return 1;
 
 	n = l->head;
-	while (n != nullptr && n->token->type == SPACE)
+	while (n != NULL && n->token->type == SPACE)
 		n = n->next;
 
-	return n == nullptr;
+	return n == NULL;
 }
 
 int
@@ -3319,7 +3319,7 @@ _token_list_equal_ignoring_space (token_list_t *a, token_list_t *b)
 {
 	token_node_t *node_a, *node_b;
 
-	if (a == nullptr || b == nullptr) {
+	if (a == NULL || b == NULL) {
 		int a_empty = _token_list_is_empty_ignoring_space(a);
 		int b_empty = _token_list_is_empty_ignoring_space(b);
 		return a_empty == b_empty;
@@ -3330,10 +3330,10 @@ _token_list_equal_ignoring_space (token_list_t *a, token_list_t *b)
 
 	while (1)
 	{
-		if (node_a == nullptr && node_b == nullptr)
+		if (node_a == NULL && node_b == NULL)
 			break;
 
-		if (node_a == nullptr || node_b == nullptr)
+		if (node_a == NULL || node_b == NULL)
 			return 0;
 		/* Make sure whitespace appears in the same places in both.
 		 * It need not be exactly the same amount of whitespace,
@@ -3452,7 +3452,7 @@ _token_print (char **out, size_t *len, token_t *token)
 static token_t *
 _token_paste (glcpp_parser_t *parser, token_t *token, token_t *other)
 {
-	token_t *combined = nullptr;
+	token_t *combined = NULL;
 
 	/* Pasting a placeholder onto anything makes no change. */
 	if (other->type == PLACEHOLDER)
@@ -3495,7 +3495,7 @@ _token_paste (glcpp_parser_t *parser, token_t *token, token_t *other)
 		break;
 	}
 
-	if (combined != nullptr) {
+	if (combined != NULL) {
 		/* Inherit the location from the first token */
 		combined->location = token->location;
 		return combined;
@@ -3577,7 +3577,7 @@ _token_list_print (glcpp_parser_t *parser, token_list_t *list)
 {
 	token_node_t *node;
 
-	if (list == nullptr)
+	if (list == NULL)
 		return;
 
 	for (node = list->head; node; node = node->next)
@@ -3600,7 +3600,7 @@ static void add_builtin_define(glcpp_parser_t *parser,
 
    list = _token_list_create(parser);
    _token_list_append(list, tok);
-   _define_object_macro(parser, nullptr, name, list);
+   _define_object_macro(parser, NULL, name, list);
 }
 
 glcpp_parser_t *
@@ -3608,12 +3608,12 @@ glcpp_parser_create (const struct gl_extensions *extensions, gl_api api)
 {
 	glcpp_parser_t *parser;
 
-	parser = ralloc (nullptr, glcpp_parser_t);
+	parser = ralloc (NULL, glcpp_parser_t);
 
 	glcpp_lex_init_extra (parser, &parser->scanner);
 	parser->defines = hash_table_ctor (32, hash_table_string_hash,
 					   hash_table_string_compare);
-	parser->active = nullptr;
+	parser->active = NULL;
 	parser->lexing_directive = 0;
 	parser->space_tokens = 1;
 	parser->last_token_was_newline = 0;
@@ -3624,11 +3624,11 @@ glcpp_parser_create (const struct gl_extensions *extensions, gl_api api)
 	parser->paren_count = 0;
         parser->commented_newlines = 0;
 
-	parser->skip_stack = nullptr;
+	parser->skip_stack = NULL;
 	parser->skipping = 0;
 
-	parser->lex_from_list = nullptr;
-	parser->lex_from_node = nullptr;
+	parser->lex_from_list = NULL;
+	parser->lex_from_node = NULL;
 
 	parser->output = ralloc_strdup(parser, "");
 	parser->output_length = 0;
@@ -3700,7 +3700,7 @@ _arguments_parse (argument_list_t *arguments,
 	while (node && node->token->type == SPACE)
 		node = node->next;
 
-	if (node == nullptr || node->token->type != '(')
+	if (node == NULL || node->token->type != '(')
 		return FUNCTION_NOT_A_FUNCTION;
 
 	node = node->next;
@@ -3728,7 +3728,7 @@ _arguments_parse (argument_list_t *arguments,
 			_argument_list_append (arguments, argument);
 		}
 		else {
-			if (argument->head == nullptr) {
+			if (argument->head == NULL) {
 				/* Don't treat initial whitespace as
 				 * part of the argument. */
 				if (node->token->type == SPACE)
@@ -3807,7 +3807,7 @@ _glcpp_parser_evaluate_defined (glcpp_parser_t *parser,
 	while (node && node->token->type == SPACE)
 		node = node->next;
 
-	if (node == nullptr)
+	if (node == NULL)
 		goto FAIL;
 
 	if (node->token->type == IDENTIFIER || node->token->type == OTHER) {
@@ -3819,7 +3819,7 @@ _glcpp_parser_evaluate_defined (glcpp_parser_t *parser,
 		while (node && node->token->type == SPACE)
 			node = node->next;
 
-		if (node == nullptr || (node->token->type != IDENTIFIER &&
+		if (node == NULL || (node->token->type != IDENTIFIER &&
 				     node->token->type != OTHER))
 		{
 			goto FAIL;
@@ -3833,7 +3833,7 @@ _glcpp_parser_evaluate_defined (glcpp_parser_t *parser,
 		while (node && node->token->type == SPACE)
 			node = node->next;
 
-		if (node == nullptr || node->token->type != ')')
+		if (node == NULL || node->token->type != ')')
 			goto FAIL;
 	} else {
 		goto FAIL;
@@ -3856,13 +3856,13 @@ static void
 _glcpp_parser_evaluate_defined_in_list (glcpp_parser_t *parser,
 					token_list_t *list)
 {
-	token_node_t *node, *node_prev, *replacement, *last = nullptr;
+	token_node_t *node, *node_prev, *replacement, *last = NULL;
 	int value;
 
-	if (list == nullptr)
+	if (list == NULL)
 		return;
 
-	node_prev = nullptr;
+	node_prev = NULL;
 	node = list->head;
 
 	while (node) {
@@ -3935,7 +3935,7 @@ _glcpp_parser_apply_pastes (glcpp_parser_t *parser, token_list_t *list)
 		while (next_non_space && next_non_space->token->type == SPACE)
 			next_non_space = next_non_space->next;
 
-		if (next_non_space == nullptr)
+		if (next_non_space == NULL)
 			break;
 
 		if (next_non_space->token->type != PASTE) {
@@ -3948,7 +3948,7 @@ _glcpp_parser_apply_pastes (glcpp_parser_t *parser, token_list_t *list)
 		while (next_non_space && next_non_space->token->type == SPACE)
 			next_non_space = next_non_space->next;
 
-		if (next_non_space == nullptr) {
+		if (next_non_space == NULL) {
 			yyerror (&node->token->location, parser, "'##' cannot appear at either end of a macro expansion\n");
 			return;
 		}
@@ -3966,7 +3966,7 @@ _glcpp_parser_apply_pastes (glcpp_parser_t *parser, token_list_t *list)
  * implementation of _glcpp_parser_expand_node. It shouldn't be called
  * except for by that function.
  *
- * Returns nullptr if node is a simple token with no expansion, (that is,
+ * Returns NULL if node is a simple token with no expansion, (that is,
  * although 'node' corresponds to an identifier defined as a
  * function-like macro, it is not followed with a parenthesized
  * argument list).
@@ -4008,14 +4008,14 @@ _glcpp_parser_expand_function (glcpp_parser_t *parser,
 	case FUNCTION_STATUS_SUCCESS:
 		break;
 	case FUNCTION_NOT_A_FUNCTION:
-		return nullptr;
+		return NULL;
 	case FUNCTION_UNBALANCED_PARENTHESES:
 		glcpp_error (&node->token->location, parser, "Macro %s call has unbalanced parentheses\n", identifier);
-		return nullptr;
+		return NULL;
 	}
 
 	/* Replace a macro defined as empty with a SPACE token. */
-	if (macro->replacements == nullptr) {
+	if (macro->replacements == NULL) {
 		ralloc_free (arguments);
 		return _token_list_create_with_one_space (parser);
 	}
@@ -4024,14 +4024,14 @@ _glcpp_parser_expand_function (glcpp_parser_t *parser,
 		_string_list_length (macro->parameters)) ||
 	       (_string_list_length (macro->parameters) == 0 &&
 		_argument_list_length (arguments) == 1 &&
-		arguments->head->argument->head == nullptr)))
+		arguments->head->argument->head == NULL)))
 	{
 		glcpp_error (&node->token->location, parser,
 			      "Error: macro %s invoked with %d arguments (expected %d)\n",
 			      identifier,
 			      _argument_list_length (arguments),
 			      _string_list_length (macro->parameters));
-		return nullptr;
+		return NULL;
 	}
 
 	/* Perform argument substitution on the replacement list. */
@@ -4086,7 +4086,7 @@ _glcpp_parser_expand_function (glcpp_parser_t *parser,
  * 'node' in the case that 'node' is a function-like macro and
  * subsequent nodes are arguments).
  *
- * Returns nullptr if node is a simple token with no expansion.
+ * Returns NULL if node is a simple token with no expansion.
  *
  * Otherwise, returns the token list that results from the expansion
  * and sets *last to the last node in the list that was consumed by
@@ -4112,7 +4112,7 @@ _glcpp_parser_expand_node (glcpp_parser_t *parser,
 
 	/* We only expand identifiers */
 	if (token->type != IDENTIFIER) {
-		return nullptr;
+		return NULL;
 	}
 
 	*last = node;
@@ -4130,8 +4130,8 @@ _glcpp_parser_expand_node (glcpp_parser_t *parser,
 	macro = hash_table_find (parser->defines, identifier);
 
 	/* Not a macro, so no expansion needed. */
-	if (macro == nullptr)
-		return nullptr;
+	if (macro == NULL)
+		return NULL;
 
 	/* Finally, don't expand this macro if we're already actively
 	 * expanding it, (to avoid infinite recursion). */
@@ -4155,7 +4155,7 @@ _glcpp_parser_expand_node (glcpp_parser_t *parser,
 		token_list_t *replacement;
 
 		/* Replace a macro defined as empty with a SPACE token. */
-		if (macro->replacements == nullptr)
+		if (macro->replacements == NULL)
 			return _token_list_create_with_one_space (parser);
 
 		replacement = _token_list_copy (parser, macro->replacements);
@@ -4193,8 +4193,8 @@ _parser_active_list_pop (glcpp_parser_t *parser)
 {
 	active_list_t *node = parser->active;
 
-	if (node == nullptr) {
-		parser->active = nullptr;
+	if (node == NULL) {
+		parser->active = NULL;
 		return;
 	}
 
@@ -4209,7 +4209,7 @@ _parser_active_list_contains (glcpp_parser_t *parser, const char *identifier)
 {
 	active_list_t *node;
 
-	if (parser->active == nullptr)
+	if (parser->active == NULL)
 		return 0;
 
 	for (node = parser->active; node; node = node->next)
@@ -4246,16 +4246,16 @@ _glcpp_parser_expand_token_list (glcpp_parser_t *parser,
 				 expansion_mode_t mode)
 {
 	token_node_t *node_prev;
-	token_node_t *node, *last = nullptr;
+	token_node_t *node, *last = NULL;
 	token_list_t *expansion;
 	active_list_t *active_initial = parser->active;
 
-	if (list == nullptr)
+	if (list == NULL)
 		return;
 
 	_token_list_trim_trailing_space (list);
 
-	node_prev = nullptr;
+	node_prev = NULL;
 	node = list->head;
 
 	if (mode == EXPANSION_MODE_EVALUATE_DEFINED)
@@ -4303,7 +4303,7 @@ _glcpp_parser_expand_token_list (glcpp_parser_t *parser,
 				else
 					list->head = last->next;
 				if (last == list->tail)
-					list->tail = nullptr;
+					list->tail = NULL;
 			}
 		} else {
 			node_prev = node;
@@ -4324,7 +4324,7 @@ void
 _glcpp_parser_print_expanded_token_list (glcpp_parser_t *parser,
 					 token_list_t *list)
 {
-	if (list == nullptr)
+	if (list == NULL)
 		return;
 
 	_glcpp_parser_expand_token_list (parser, list, EXPANSION_MODE_IGNORE_DEFINED);
@@ -4392,13 +4392,13 @@ _define_object_macro (glcpp_parser_t *parser,
          * actual file. So if there's no location defined yet, that's what
          * were doing and we don't want to generate an error for using the
          * reserved names. */
-	if (loc != nullptr)
+	if (loc != NULL)
 		_check_for_reserved_macro_name(parser, loc, identifier);
 
 	macro = ralloc (parser, macro_t);
 
 	macro->is_function = 0;
-	macro->parameters = nullptr;
+	macro->parameters = NULL;
 	macro->identifier = ralloc_strdup (macro, identifier);
 	macro->replacements = replacements;
 	ralloc_steal (macro, replacements);
@@ -4429,7 +4429,7 @@ _define_function_macro (glcpp_parser_t *parser,
 	_check_for_reserved_macro_name(parser, loc, identifier);
 
         /* Check for any duplicate parameter names. */
-	if ((dup = _string_list_has_duplicate (parameters)) != nullptr) {
+	if ((dup = _string_list_has_duplicate (parameters)) != NULL) {
 		glcpp_error (loc, parser, "Duplicate macro parameter \"%s\"",
 			     dup);
 	}
@@ -4461,7 +4461,7 @@ glcpp_parser_lex (YYSTYPE *yylval, YYLTYPE *yylloc, glcpp_parser_t *parser)
 	token_node_t *node;
 	int ret;
 
-	if (parser->lex_from_list == nullptr) {
+	if (parser->lex_from_list == NULL) {
 		ret = glcpp_lex (yylval, yylloc, parser->scanner);
 
 		/* XXX: This ugly block of code exists for the sole
@@ -4520,9 +4520,9 @@ glcpp_parser_lex (YYSTYPE *yylval, YYLTYPE *yylloc, glcpp_parser_t *parser)
 
 	node = parser->lex_from_node;
 
-	if (node == nullptr) {
+	if (node == NULL) {
 		ralloc_free (parser->lex_from_list);
-		parser->lex_from_list = nullptr;
+		parser->lex_from_list = NULL;
 		return NEWLINE;
 	}
 
@@ -4539,7 +4539,7 @@ glcpp_parser_lex_from (glcpp_parser_t *parser, token_list_t *list)
 {
 	token_node_t *node;
 
-	assert (parser->lex_from_list == nullptr);
+	assert (parser->lex_from_list == NULL);
 
 	/* Copy list, eliminating any space tokens. */
 	parser->lex_from_list = _token_list_create (parser);
@@ -4555,9 +4555,9 @@ glcpp_parser_lex_from (glcpp_parser_t *parser, token_list_t *list)
 	parser->lex_from_node = parser->lex_from_list->head;
 
 	/* It's possible the list consisted of nothing but whitespace. */
-	if (parser->lex_from_node == nullptr) {
+	if (parser->lex_from_node == NULL) {
 		ralloc_free (parser->lex_from_list);
-		parser->lex_from_list = nullptr;
+		parser->lex_from_list = NULL;
 	}
 }
 
@@ -4592,7 +4592,7 @@ static void
 _glcpp_parser_skip_stack_change_if (glcpp_parser_t *parser, YYLTYPE *loc,
 				    const char *type, int condition)
 {
-	if (parser->skip_stack == nullptr) {
+	if (parser->skip_stack == NULL) {
 		glcpp_error (loc, parser, "#%s without #if\n", type);
 		return;
 	}
@@ -4610,7 +4610,7 @@ _glcpp_parser_skip_stack_pop (glcpp_parser_t *parser, YYLTYPE *loc)
 {
 	skip_node_t *node;
 
-	if (parser->skip_stack == nullptr) {
+	if (parser->skip_stack == NULL) {
 		glcpp_error (loc, parser, "#endif without #if\n");
 		return;
 	}
@@ -4643,7 +4643,7 @@ _glcpp_parser_handle_version_declaration(glcpp_parser_t *parser, intmax_t versio
 	   add_builtin_define(parser, "GL_ES", 1);
            add_builtin_define(parser, "GL_EXT_separate_shader_objects", 1);
 
-	   if (extensions != nullptr) {
+	   if (extensions != NULL) {
 	      if (extensions->OES_EGL_image_external)
 	         add_builtin_define(parser, "GL_OES_EGL_image_external", 1);
               if (extensions->OES_standard_derivatives)
@@ -4656,7 +4656,7 @@ _glcpp_parser_handle_version_declaration(glcpp_parser_t *parser, intmax_t versio
            add_builtin_define(parser, "GL_AMD_shader_trinary_minmax", 1);
 
 
-	   if (extensions != nullptr) {
+	   if (extensions != NULL) {
 	      if (extensions->EXT_texture_array)
 	         add_builtin_define(parser, "GL_EXT_texture_array", 1);
 
@@ -4746,7 +4746,7 @@ _glcpp_parser_handle_version_declaration(glcpp_parser_t *parser, intmax_t versio
 	   }
 	}
 
-	if (extensions != nullptr) {
+	if (extensions != NULL) {
 	   if (extensions->EXT_shader_integer_mix)
 	      add_builtin_define(parser, "GL_EXT_shader_integer_mix", 1);
 	}
@@ -4785,6 +4785,6 @@ glcpp_parser_resolve_implicit_version(glcpp_parser_t *parser)
 			       IMPLICIT_GLSL_VERSION;
 
 	_glcpp_parser_handle_version_declaration(parser, language_version,
-						 nullptr, false);
+						 NULL, false);
 }
 

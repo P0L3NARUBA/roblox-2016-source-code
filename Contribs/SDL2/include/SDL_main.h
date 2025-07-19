@@ -142,7 +142,7 @@ extern DECLSPEC void SDLCALL SDL_UnregisterApp(void);
  *  \brief Initializes and launches an SDL/WinRT application.
  *
  *  \param mainFunction The SDL app's C-style main().
- *  \param reserved Reserved for future use; should be nullptr
+ *  \param reserved Reserved for future use; should be NULL
  *  \return 0 on success, -1 on failure.  On failure, use SDL_GetError to retrieve more
  *      information on the failure.
  */

@@ -26,10 +26,10 @@
 
 #ifdef HAVE_XINPUT_H
 
-XInputGetState_t SDL_XInputGetState = nullptr;
-XInputSetState_t SDL_XInputSetState = nullptr;
-XInputGetCapabilities_t SDL_XInputGetCapabilities = nullptr;
-XInputGetBatteryInformation_t SDL_XInputGetBatteryInformation = nullptr;
+XInputGetState_t SDL_XInputGetState = NULL;
+XInputSetState_t SDL_XInputSetState = NULL;
+XInputGetCapabilities_t SDL_XInputGetCapabilities = NULL;
+XInputGetBatteryInformation_t SDL_XInputGetBatteryInformation = NULL;
 DWORD SDL_XInputVersion = 0;
 
 static HANDLE s_pXInputDLL = 0;
@@ -126,7 +126,7 @@ WIN_UnloadXInputDLL(void)
         SDL_assert(s_XInputDLLRefCount > 0);
         if (--s_XInputDLLRefCount == 0) {
             FreeLibrary(s_pXInputDLL);
-            s_pXInputDLL = nullptr;
+            s_pXInputDLL = NULL;
         }
     } else {
         SDL_assert(s_XInputDLLRefCount == 0);

@@ -16,10 +16,10 @@ void splitpath(const char *path, char *drive, char *dir, char *fName, char *ext)
 {
 	char separator = '\\';
 	
-	char    *endPoint = nullptr,
+	char    *endPoint = NULL,
 	*pos = (char*) path,
-	*temp = nullptr,
-	*lastChar = nullptr;
+	*temp = NULL,
+	*lastChar = NULL;
 	
 	unsigned int    i = 0,
 	unixStyle = 0;
@@ -160,8 +160,8 @@ void splitpath(const char *path, char *drive, char *dir, char *fName, char *ext)
 void makepath(char *path, const char *drive, const char *dir, const char *fName, const char *ext)
 {
 	char separator = '\\';
-	char *lastChar = nullptr;
-	char *pos      = nullptr;
+	char *lastChar = NULL;
+	char *pos      = NULL;
 	
 	unsigned int    i = 0,
 	unixStyle = 0,

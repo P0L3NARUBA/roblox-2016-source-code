@@ -15,7 +15,7 @@ const std::string& GetBaseURL();
 
 void ReportStatisticWithMessage(const std::string& baseUrl, const std::string& id, 
 					 const std::string& simpleMessage,
-					 const char* secondaryFilterName = nullptr, const char* secondaryFilterValue = nullptr);
+					 const char* secondaryFilterName = NULL, const char* secondaryFilterValue = NULL);
 
 void ReportStatistic(const std::string& baseUrl, const std::string& id,
 					 const std::string& primaryFilterName, const std::string& primaryFilterValue,

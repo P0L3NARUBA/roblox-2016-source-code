@@ -317,7 +317,7 @@
     switch ( filter )
     {
     case FT_LCD_FILTER_NONE:
-      library->lcd_filter_func = nullptr;
+      library->lcd_filter_func = NULL;
       library->lcd_extra       = 0;
       break;
 

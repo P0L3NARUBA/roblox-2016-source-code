@@ -80,7 +80,7 @@ void SDL_DUMMY_DestroyWindowFramebuffer(_THIS, SDL_Window * window)
 {
     SDL_Surface *surface;
 
-    surface = (SDL_Surface *) SDL_SetWindowData(window, DUMMY_SURFACE, nullptr);
+    surface = (SDL_Surface *) SDL_SetWindowData(window, DUMMY_SURFACE, NULL);
     SDL_FreeSurface(surface);
 }
 

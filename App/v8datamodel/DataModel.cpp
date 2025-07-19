@@ -220,7 +220,7 @@ static Reflection::BoundFuncDesc<DataModel, void()> closeFunction(&DataModel::cl
 static Reflection::BoundFuncDesc<DataModel, void()> toggleFunction(&DataModel::toggleToolsOff, "ToggleTools", Security::LocalUser);
 
 static Reflection::PropDescriptor<DataModel, bool> prop_isPersonalServer("IsPersonalServer", category_State, &DataModel::getIsPersonalServer, &DataModel::setIsPersonalServer, Reflection::PropertyDescriptor::SCRIPTING, Security::RobloxScript);
-static Reflection::PropDescriptor<DataModel, bool> prop_canSaveLocal("LocalSaveEnabled", category_State, &DataModel::canSaveLocal, nullptr, Reflection::PropertyDescriptor::UI, Security::RobloxScript);
+static Reflection::PropDescriptor<DataModel, bool> prop_canSaveLocal("LocalSaveEnabled", category_State, &DataModel::canSaveLocal, NULL, Reflection::PropertyDescriptor::UI, Security::RobloxScript);
 
 static Reflection::BoundYieldFuncDesc<DataModel, bool()> saveToRobloxFunction(&DataModel::saveToRoblox, "SaveToRoblox", Security::RobloxScript);
 static Reflection::BoundCallbackDesc<bool()> requestShutdownCallback("RequestShutdown", &DataModel::requestShutdownCallback, Security::RobloxScript);
@@ -247,21 +247,21 @@ static Reflection::BoundFuncDesc<DataModel, void(int, DataModel::CreatorType)>  
 static Reflection::BoundFuncDesc<DataModel, void(DataModel::Genre)>  func_setGenre(&DataModel::setGenre, "SetGenre", "genre", Security::Plugin);
 static Reflection::BoundFuncDesc<DataModel, void(DataModel::GearGenreSetting, int)>  func_setGear(&DataModel::setGear, "SetGearSettings", "genreRestriction", "allowedGenres", Security::Plugin);
 
-static Reflection::RefPropDescriptor<DataModel, Workspace> prop_Workspace("Workspace", category_Data, &DataModel::getWorkspace, nullptr, Reflection::PropertyDescriptor::UI);
-static Reflection::RefPropDescriptor<DataModel, Workspace> prop_workspace("workspace", category_Data, &DataModel::getWorkspace, nullptr, Reflection::PropertyDescriptor::Attributes::deprecated(prop_Workspace));
-Reflection::RefPropDescriptor<DataModel, Instance> DataModel::prop_lighting("lighting", category_Data, &DataModel::getLightingDeprecated, nullptr, Reflection::PropertyDescriptor::Attributes::deprecated());
+static Reflection::RefPropDescriptor<DataModel, Workspace> prop_Workspace("Workspace", category_Data, &DataModel::getWorkspace, NULL, Reflection::PropertyDescriptor::UI);
+static Reflection::RefPropDescriptor<DataModel, Workspace> prop_workspace("workspace", category_Data, &DataModel::getWorkspace, NULL, Reflection::PropertyDescriptor::Attributes::deprecated(prop_Workspace));
+Reflection::RefPropDescriptor<DataModel, Instance> DataModel::prop_lighting("lighting", category_Data, &DataModel::getLightingDeprecated, NULL, Reflection::PropertyDescriptor::Attributes::deprecated());
 
-static Reflection::PropDescriptor<DataModel, int> prop_placeId("PlaceId", category_State, &DataModel::getPlaceID, nullptr, Reflection::PropertyDescriptor::UI);
-static Reflection::PropDescriptor<DataModel, int> prop_placeVersion("PlaceVersion", category_State, &DataModel::getPlaceVersion, nullptr, Reflection::PropertyDescriptor::UI);
-static Reflection::PropDescriptor<DataModel, int> prop_creatorId("CreatorId", category_State, &DataModel::getCreatorID, nullptr, Reflection::PropertyDescriptor::UI);
+static Reflection::PropDescriptor<DataModel, int> prop_placeId("PlaceId", category_State, &DataModel::getPlaceID, NULL, Reflection::PropertyDescriptor::UI);
+static Reflection::PropDescriptor<DataModel, int> prop_placeVersion("PlaceVersion", category_State, &DataModel::getPlaceVersion, NULL, Reflection::PropertyDescriptor::UI);
+static Reflection::PropDescriptor<DataModel, int> prop_creatorId("CreatorId", category_State, &DataModel::getCreatorID, NULL, Reflection::PropertyDescriptor::UI);
 static Reflection::PropDescriptor<DataModel, bool> prop_forceR15("ForceR15", category_State, &DataModel::getForceR15, &DataModel::setForceR15, Reflection::PropertyDescriptor::REPLICATE_ONLY, Security::Roblox);
-static Reflection::EnumPropDescriptor<DataModel, DataModel::CreatorType> prop_creatorType("CreatorType", category_State, &DataModel::getCreatorType, nullptr, Reflection::PropertyDescriptor::UI);
-static Reflection::EnumPropDescriptor<DataModel, DataModel::Genre> prop_genre("Genre", category_State, &DataModel::getGenre, nullptr, Reflection::PropertyDescriptor::UI);
-static Reflection::EnumPropDescriptor<DataModel, DataModel::GearGenreSetting> prop_gearGenreSetting("GearGenreSetting", category_State, &DataModel::getGearGenreSetting, nullptr, Reflection::PropertyDescriptor::UI);
+static Reflection::EnumPropDescriptor<DataModel, DataModel::CreatorType> prop_creatorType("CreatorType", category_State, &DataModel::getCreatorType, NULL, Reflection::PropertyDescriptor::UI);
+static Reflection::EnumPropDescriptor<DataModel, DataModel::Genre> prop_genre("Genre", category_State, &DataModel::getGenre, NULL, Reflection::PropertyDescriptor::UI);
+static Reflection::EnumPropDescriptor<DataModel, DataModel::GearGenreSetting> prop_gearGenreSetting("GearGenreSetting", category_State, &DataModel::getGearGenreSetting, NULL, Reflection::PropertyDescriptor::UI);
 static Reflection::BoundFuncDesc<DataModel, bool(DataModel::GearType)>  func_isGearTypeAllowed(&DataModel::isGearTypeAllowed, "IsGearTypeAllowed", "gearType", Security::None);
 static Reflection::EventDesc<DataModel, void()> event_allowedGearTypeChanged(&DataModel::allowedGearTypeChanged, "AllowedGearTypeChanged");
 
-static Reflection::PropDescriptor<DataModel, std::string> prop_getJobId("JobId", "JobInfo", &DataModel::getJobId, nullptr, Reflection::PropertyDescriptor::UI);
+static Reflection::PropDescriptor<DataModel, std::string> prop_getJobId("JobId", "JobInfo", &DataModel::getJobId, NULL, Reflection::PropertyDescriptor::UI);
 
 static Reflection::BoundFuncDesc<DataModel, void(std::string)> setScreenshotSEOInfoFunction(&DataModel::setScreenshotSEOInfo, "SetScreenshotInfo", "info", Security::LocalUser);
 static Reflection::BoundFuncDesc<DataModel, void(std::string)> setVideoSEOInfoFunction(&DataModel::setVideoSEOInfo, "SetVideoInfo", "info", Security::LocalUser);
@@ -278,9 +278,9 @@ static Reflection::BoundFuncDesc<DataModel, void()> writeStatSettingsFunction(&D
 static Reflection::BoundAsyncCallbackDesc<
 	DataModel, shared_ptr<const Reflection::Tuple>(void)> callback_onClose("OnClose", &DataModel::onCloseCallback, &DataModel::onCloseCallbackChanged);
 
-static Reflection::PropDescriptor<DataModel, std::string> desc_VIPServerId("VIPServerId", category_Data, &DataModel::getVIPServerId, nullptr);
+static Reflection::PropDescriptor<DataModel, std::string> desc_VIPServerId("VIPServerId", category_Data, &DataModel::getVIPServerId, NULL);
 static Reflection::BoundFuncDesc<DataModel, void(std::string)> func_setVIPServerId(&DataModel::setVIPServerId, "SetVIPServerId", "newId", Security::LocalUser);
-static Reflection::PropDescriptor<DataModel, int> desc_VIPServerOwnerId("VIPServerOwnerId", category_Data, &DataModel::getVIPServerOwnerId, nullptr);
+static Reflection::PropDescriptor<DataModel, int> desc_VIPServerOwnerId("VIPServerOwnerId", category_Data, &DataModel::getVIPServerOwnerId, NULL);
 static Reflection::BoundFuncDesc<DataModel, void(int)> func_setVIPServerOwnerId(&DataModel::setVIPServerOwnerId, "SetVIPServerOwnerId", "newId", Security::LocalUser);
 REFLECTION_END();
 
@@ -594,12 +594,12 @@ void DataModel::completeShutdown(bool saveLocal)
 	if(shutdownRequestedCount > 0){
 		if(saveLocal && canSave(this)){
 			if(Verb* verb = workspace->getWhitelistVerb("Shutdown", "Client", "AndSave")){
-                Verb::doItWithChecks(verb, nullptr);
+                Verb::doItWithChecks(verb, NULL);
 			}
 		}
 		else{
 			if(Verb* verb = workspace->getWhitelistVerb("Shutdown", "Client", "")){
-                Verb::doItWithChecks(verb, nullptr);
+                Verb::doItWithChecks(verb, NULL);
 			}
 		}
 	}
@@ -865,7 +865,7 @@ void DataModel::onCloseCallbackChanged(const CloseCallback& oldValue)
 //                 by the WebService, for example.
 DataModel::DataModel(RBX::Verb* lockVerb) 
 	:Super("Game"),
-	VerbContainer(nullptr),
+	VerbContainer(NULL),
 	shutdownRequestedCount(0),
 	lockVerb(lockVerb),
 	write_requested(0),
@@ -891,7 +891,7 @@ DataModel::DataModel(RBX::Verb* lockVerb)
 	numPartInstances(0),
 	numInstances(0),
 	mouseOverGui(false),
-	networkMetric(nullptr),
+	networkMetric(NULL),
 #pragma warning(push)
 #pragma warning(disable: 4355) // 'this' : used in base member initializer list
 	workspace(Creatable<Instance>::create<Workspace>(this)),
@@ -899,7 +899,7 @@ DataModel::DataModel(RBX::Verb* lockVerb)
 	forceArrowCursor(true),
 	isGameLoaded(false),
 	areCoreScriptsLoaded(false),
-	game(nullptr),
+	game(NULL),
     networkStatsWindowsOn(false),
 #pragma warning(pop)
 	dataModelInitTime(Time::nowFast()),
@@ -1562,7 +1562,7 @@ void DataModel::onChildAdded(Instance* child)
 	if (Network::Players::isNetworkClient(child))  
 	{
 		// TODO: Hack
-		// For now, this hook sets the mouse command to the nullptr command, regardless of whether there is a player/character or not
+		// For now, this hook sets the mouse command to the NULL command, regardless of whether there is a player/character or not
 		// This prevents the arrow tool from coming up on a multiplayer load
 		workspace->setNullMouseCommand();
 	}
@@ -1571,7 +1571,7 @@ void DataModel::onChildAdded(Instance* child)
 
 bool DataModel::askAddChild(const Instance* instance) const
 {
-	return dynamic_cast<const Service*>(instance)!=nullptr;
+	return dynamic_cast<const Service*>(instance)!=NULL;
 }
 
 
@@ -1685,7 +1685,7 @@ bool DataModel::canRenderMouse()
 		return false;
 	}
 
-	bool playerExists = (RBX::Network::Players::findLocalPlayer(this) != nullptr) && !Network::Players::isCloudEdit(this);
+	bool playerExists = (RBX::Network::Players::findLocalPlayer(this) != NULL) && !Network::Players::isCloudEdit(this);
 
 	if ( UserInputService::isTenFootInterface() )
 	{
@@ -1731,7 +1731,7 @@ void DataModel::renderPass2d(Adorn* adorn, IMetric* graphicsMetric)
 		renderMouse(adorn);
 	}
 
-	tempMetric = nullptr;	// be safe, never use again unless set
+	tempMetric = NULL;	// be safe, never use again unless set
 	RBXASSERT(isInitialized);    //  Show to David or Erik - threading issue
 }
 
@@ -2000,7 +2000,7 @@ float DataModel::physicsStep(float timeInterval, double dt, double dutyDt, int n
 		{	
 			Profiling::Mark mark2(*workspace->profileWorkspaceStep, true, true);
 			
-			Network::Player* dPhysPlayer = (gameMode == Network::DPHYS_CLIENT) ? Network::Players::findLocalPlayer(this) : nullptr;
+			Network::Player* dPhysPlayer = (gameMode == Network::DPHYS_CLIENT) ? Network::Players::findLocalPlayer(this) : NULL;
 			
 			FASTLOG3F(FLog::CyclicExecutiveThrottling, "DataModel::PhysicsStep dt: %f, dtCyclicExecutive: %f, dutyDt: %f", dt, dtCyclicExecutive, dutyDt);
 			if (isCyclicExecutive)
@@ -2184,7 +2184,7 @@ static void notificationCallbackSuccess(DataModel* dm)
 
 GuiResponse DataModel::processAccelerators(const shared_ptr<InputObject>& event)		// true if used the event
 {
-	Verb* verb = nullptr;
+	Verb* verb = NULL;
 	bool preventSinking = false;
 
     if (networkStatsWindowsOn)
@@ -2443,7 +2443,7 @@ GuiResponse DataModel::processPlayerGui(const shared_ptr<InputObject>& event)
 
 GuiResponse DataModel::processCameraCommands(const shared_ptr<InputObject>& event)
 {
-    Verb* verb = nullptr;
+    Verb* verb = NULL;
     
     
     if (FFlag::UserAllCamerasInLua)
@@ -2836,9 +2836,9 @@ bool DataModel::processInputObject(shared_ptr<InputObject> event)
 void DataModel::close()
 {
 	Verb* verb = getWhitelistVerb("E", "xi", "t");
-	if (verb==nullptr)
+	if (verb==NULL)
 		throw std::runtime_error("Couldn't find Exit Verb");
-	Verb::doItWithChecks(verb, nullptr);
+	Verb::doItWithChecks(verb, NULL);
 }
 
 void DataModel::addCustomStat(std::string name, std::string value)
@@ -2898,7 +2898,7 @@ void DataModel::clearContents(bool resettingSimulation)
 		FASTLOG3(FLog::CloseDataModel, "Clearing Workspace -- %d Instances, %d Parts, %d Scripts", workspace->countDescendantsOfType<Instance>(), workspace->countDescendantsOfType<PartInstance>(), workspace->countDescendantsOfType<BaseScript>());		
 		// TODO: Should we simply remove children of ALL service???
 		workspace->removeAllChildren();
-		workspace->setCurrentCamera(nullptr);
+		workspace->setCurrentCamera(NULL);
 	}
 
 	if (starterPackService){
@@ -3496,11 +3496,11 @@ std::string DataModel::getMetric(const std::string& valueName) const
 
 DataModel* DataModel::get(Instance* context)
 {
-	return context ? Instance::fastDynamicCast<DataModel>(context->getRootAncestor()) : nullptr;
+	return context ? Instance::fastDynamicCast<DataModel>(context->getRootAncestor()) : NULL;
 }
 const DataModel* DataModel::get(const Instance* context)
 {
-	return context ? Instance::fastDynamicCast<DataModel>(context->getRootAncestor()) : nullptr;
+	return context ? Instance::fastDynamicCast<DataModel>(context->getRootAncestor()) : NULL;
 }
 
 static void appendJobInfo(DataModel* dataModel, shared_ptr<const TaskScheduler::Job> job, Reflection::ValueArray* result)
@@ -3615,7 +3615,7 @@ static void gameStartInfoLoadedHelperSuccess(weak_ptr<DataModel> dm, std::string
 	FASTLOG(DFLog::R15Character, "DataModel::gameStartInfoLoadedHelperSuccess");
 
 	shared_ptr<DataModel> dm_shared = dm.lock();
-	if (dm_shared.get() == nullptr)
+	if (dm_shared.get() == NULL)
 		return;
 
 	if (json.empty()) 
@@ -3643,7 +3643,7 @@ static void gameStartInfoLoadedHelperError(weak_ptr<DataModel> dm,  std::string 
 	FASTLOG(DFLog::R15Character, "DataModel::gameStartInfoLoadedHelperError");
 
 	shared_ptr<DataModel> dm_shared = dm.lock();
-	if (dm_shared.get() == nullptr)
+	if (dm_shared.get() == NULL)
 		return;
 
 	FASTLOGS(DFLog::R15Character, "DataModel::gameStartInfoLoadedHelperError %s", error.c_str());
@@ -3944,8 +3944,8 @@ void DataModel::toggleToolsOff()
 	Verb* verb = getWhitelistVerb("Toggle", "Play", "Mode");
 
 	// Only toggle if tools are enabled, so user can't use it to turn tools back on
-	if (verb!=nullptr && verb->isChecked()){
-		Verb::doItWithChecks(verb, nullptr);
+	if (verb!=NULL && verb->isChecked()){
+		Verb::doItWithChecks(verb, NULL);
 	}
 }
 
@@ -4117,13 +4117,13 @@ unsigned int DataModel::allHackFlagsOredTogether() {
 
 void DataModel::processHttpRequestResponseOnLock(DataModel *dataModel, std::string* response, std::exception* exception, boost::function<void(shared_ptr<std::string>,shared_ptr<std::exception> exception)> onLockAcquired)
 {
-	if (dataModel == nullptr)
+	if (dataModel == NULL)
 	{
 		return;
 	}
 
-	shared_ptr<std::string> responseCopy(response ? new std::string(*response) : nullptr);
-	shared_ptr<std::exception> exceptionCopy(exception ? new std::exception(*exception) : nullptr);
+	shared_ptr<std::string> responseCopy(response ? new std::string(*response) : NULL);
+	shared_ptr<std::exception> exceptionCopy(exception ? new std::exception(*exception) : NULL);
 	if (DFFlag::DataModelProcessHttpRequestResponseOnLockUseSubmitTask)
 	{
 		dataModel->submitTask(

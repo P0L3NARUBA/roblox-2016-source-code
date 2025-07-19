@@ -35,7 +35,7 @@ namespace RBX {
 
 
 	public:
-		IAdornable() : bucket(nullptr), index2d(-1), index3d(-1), index3dSorted(-1)
+		IAdornable() : bucket(NULL), index2d(-1), index3d(-1), index3dSorted(-1)
 		{}
 
 		~IAdornable();

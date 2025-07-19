@@ -98,7 +98,7 @@ ast_type_qualifier::interpolation_string() const
    else if (this->flags.q.noperspective)
       return "noperspective";
    else
-      return nullptr;
+      return NULL;
 }
 
 bool

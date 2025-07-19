@@ -29,14 +29,14 @@
 CSource::CSource(TCHAR *pName, LPUNKNOWN lpunk, CLSID clsid)
     : CBaseFilter(pName, lpunk, &m_cStateLock, clsid),
       m_iPins(0),
-      m_paStreams(nullptr)
+      m_paStreams(NULL)
 {
 }
 
 CSource::CSource(TCHAR *pName, LPUNKNOWN lpunk, CLSID clsid, HRESULT *phr)
     : CBaseFilter(pName, lpunk, &m_cStateLock, clsid),
       m_iPins(0),
-      m_paStreams(nullptr)
+      m_paStreams(NULL)
 {
     UNREFERENCED_PARAMETER(phr);
 }
@@ -45,14 +45,14 @@ CSource::CSource(TCHAR *pName, LPUNKNOWN lpunk, CLSID clsid, HRESULT *phr)
 CSource::CSource(CHAR *pName, LPUNKNOWN lpunk, CLSID clsid)
     : CBaseFilter(pName, lpunk, &m_cStateLock, clsid),
       m_iPins(0),
-      m_paStreams(nullptr)
+      m_paStreams(NULL)
 {
 }
 
 CSource::CSource(CHAR *pName, LPUNKNOWN lpunk, CLSID clsid, HRESULT *phr)
     : CBaseFilter(pName, lpunk, &m_cStateLock, clsid),
       m_iPins(0),
-      m_paStreams(nullptr)
+      m_paStreams(NULL)
 {
     UNREFERENCED_PARAMETER(phr);
 }
@@ -69,7 +69,7 @@ CSource::~CSource()
 	delete m_paStreams[m_iPins - 1];
     }
 
-    ASSERT(m_paStreams == nullptr);
+    ASSERT(m_paStreams == NULL);
 }
 
 
@@ -82,10 +82,10 @@ HRESULT CSource::AddPin(CSourceStream *pStream)
 
     /*  Allocate space for this pin and the old ones */
     CSourceStream **paStreams = new CSourceStream *[m_iPins + 1];
-    if (paStreams == nullptr) {
+    if (paStreams == NULL) {
         return E_OUTOFMEMORY;
     }
-    if (m_paStreams != nullptr) {
+    if (m_paStreams != NULL) {
         CopyMemory((PVOID)paStreams, (PVOID)m_paStreams,
                    m_iPins * sizeof(m_paStreams[0]));
         paStreams[m_iPins] = pStream;
@@ -107,7 +107,7 @@ HRESULT CSource::RemovePin(CSourceStream *pStream)
         if (m_paStreams[i] == pStream) {
             if (m_iPins == 1) {
                 delete [] m_paStreams;
-                m_paStreams = nullptr;
+                m_paStreams = NULL;
             } else {
                 /*  no need to reallocate */
 		while (++i < m_iPins)
@@ -124,16 +124,16 @@ HRESULT CSource::RemovePin(CSourceStream *pStream)
 // FindPin
 //
 // Set *ppPin to the IPin* that has the id Id.
-// or to nullptr if the Id cannot be matched.
+// or to NULL if the Id cannot be matched.
 STDMETHODIMP CSource::FindPin(LPCWSTR Id, IPin **ppPin)
 {
     CheckPointer(ppPin,E_POINTER);
     ValidateReadWritePtr(ppPin,sizeof(IPin *));
     // The -1 undoes the +1 in QueryId and ensures that totally invalid
-    // strings (for which WstrToInt delivers 0) give a deliver a nullptr pin.
+    // strings (for which WstrToInt delivers 0) give a deliver a NULL pin.
     int i = WstrToInt(Id) -1;
     *ppPin = GetPin(i);
-    if (*ppPin!=nullptr){
+    if (*ppPin!=NULL){
         (*ppPin)->AddRef();
         return NOERROR;
     } else {
@@ -183,7 +183,7 @@ CBasePin *CSource::GetPin(int n) {
         ASSERT(m_paStreams[n]);
 	return m_paStreams[n];
     }
-    return nullptr;
+    return NULL;
 }
 
 
@@ -205,7 +205,7 @@ STDMETHODIMP CSourceStream::QueryId(LPWSTR *Id) {
     int i = 1+ m_pFilter->FindPinNumber(this);
     if (i<1) return VFW_E_NOT_FOUND;
     *Id = (LPWSTR)CoTaskMemAlloc(8);
-    if (*Id==nullptr) {
+    if (*Id==NULL) {
        return E_OUTOFMEMORY;
     }
     IntToWstr(i, *Id);
@@ -467,7 +467,7 @@ HRESULT CSourceStream::DoBufferProcessingLoop(void) {
 
 	    IMediaSample *pSample;
 
-	    HRESULT hr = GetDeliveryBuffer(&pSample,nullptr,nullptr,0);
+	    HRESULT hr = GetDeliveryBuffer(&pSample,NULL,NULL,0);
 	    if (FAILED(hr)) {
                 Sleep(1);
 		continue;	// go round again. Perhaps the error will go away

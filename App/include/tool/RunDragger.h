@@ -31,7 +31,7 @@ namespace RBX {
 			Vector3							lastHitWorld;
 			Vector3							lastDragSnap;
 			SnapInfo() 
-				: snap(nullptr)
+				: snap(NULL)
 				, mySurfaceId((size_t)-1)
 				, hitWorld(Vector3::inf())
 				, lastHitWorld(Vector3::inf())
@@ -66,7 +66,7 @@ namespace RBX {
 
 		// modes
 
-		SnapInfo createSnapSurface(Primitive* snap, G3D::Array<size_t>* ignore = nullptr);
+		SnapInfo createSnapSurface(Primitive* snap, G3D::Array<size_t>* ignore = NULL);
 		bool moveDragPart();
 		bool snapDragPart();
 		void snapRotatePart();

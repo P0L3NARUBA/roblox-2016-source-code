@@ -34,7 +34,7 @@ namespace RBX {
 				LiveThreadRef (lua_State* thread);
 				~LiveThreadRef();
 				bool empty() const {
-					return L == nullptr;
+					return L == NULL;
 				}
 				lua_State* thread() const {
 					return L;
@@ -55,14 +55,14 @@ namespace RBX {
 		ThreadRef(lua_State* thread)
 			:liveThreadRef(new detail::LiveThreadRef(thread)) {}
 		lua_State* get() const {
-			return liveThreadRef ? liveThreadRef->thread() : nullptr;
+			return liveThreadRef ? liveThreadRef->thread() : NULL;
 		}
 		operator lua_State*() const
 		{
 			return get();
 		}
 		bool empty() const {
-			return liveThreadRef && liveThreadRef->thread() != nullptr;
+			return liveThreadRef && liveThreadRef->thread() != NULL;
 		}
 	};
 
@@ -94,7 +94,7 @@ namespace RBX {
 			template<class Func>
 			void forEachRefs(Func func)
 			{
-				for (WeakThreadRef* ref = first; ref!=nullptr; ref = ref->next)
+				for (WeakThreadRef* ref = first; ref!=NULL; ref = ref->next)
 				{
 					func(ref->lock());
 				}
@@ -132,7 +132,7 @@ namespace RBX {
 			return ThreadRef(liveThreadRef.get());
 		}
 		lua_State* threadDangerous() const {
-			return liveThreadRef ? liveThreadRef->thread() : nullptr;
+			return liveThreadRef ? liveThreadRef->thread() : NULL;
 		}
 
 	};

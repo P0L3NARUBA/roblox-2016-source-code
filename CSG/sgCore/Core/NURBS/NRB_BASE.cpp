@@ -37,7 +37,7 @@ sgFloat nurbs_basis_func( short i, short p, sgFloat *U_p, sgFloat u_p ){
 */
 void parameter( lpSPLY_DAT sply_dat, short condition, BOOL p ){
 short			i;
-sgFloat *U=nullptr;
+sgFloat *U=NULL;
 	if( p ) U = sply_dat->U;
 	if( sply_dat->sdtype & SPL_APPR ){
 		parameter_free_APPR( sply_dat->nump-1, sply_dat->degree, sply_dat->P,
@@ -102,7 +102,7 @@ void parameter_free( short n_c, short p_c, lpDA_POINT Q_tmp,
 			sqrt(dpoint_distance( (lpD_POINT)Q_tmp[i], (lpD_POINT)Q_tmp[i-1] ))*S;
 
 //calculate vector U for computation
-	if( U_c != nullptr ) calculate_free_U( n_c, p_c, u_c, U_c );
+	if( U_c != NULL ) calculate_free_U( n_c, p_c, u_c, U_c );
 }
 
 /*******************************************************************************
@@ -129,7 +129,7 @@ void parameter_free_APPR( short n_c, short p_c, lpW_NODE P, sgFloat *u_c, sgFloa
 		u_c[i] = u_c[i-1] + dpoint_distance_4dl( &P[i], &P[i-1] )*S;
 
 //calculate vector U for computation
-	if( U_c != nullptr ) calculate_free_U( n_c, p_c, u_c, U_c );
+	if( U_c != NULL ) calculate_free_U( n_c, p_c, u_c, U_c );
 }
 
 /*******************************************************************************
@@ -157,7 +157,7 @@ void parameter_closed( short n_c, short p_c, lpDA_POINT Q_tmp,
 															sgFloat *u_c, sgFloat *U_c ){
 	short i;
 	parameter_free( n_c, p_c, Q_tmp, u_c, U_c );
-	if( U_c != nullptr ){
+	if( U_c != NULL ){
 		for( i=n_c+p_c+1; i>=p_c+1; i-- ) U_c[i+1] = U_c[i];
 		U_c[p_c+1] /= 2;
 		for( i=n_c+p_c+2; i>=n_c+2; i-- ) U_c[i+1] = U_c[i];
@@ -173,7 +173,7 @@ void parameter_deriv( short n_c, short p_c, lpDA_POINT Q_tmp, lpSNODE deriv,
 											sgFloat *u_c, sgFloat *U_c ){
 	short i, j, k, l, t;
 	parameter_free( n_c, p_c, Q_tmp, u_c, U_c );
-	if( U_c != nullptr ){
+	if( U_c != NULL ){
 		l=n_c+p_c+1;
 		if(dpoint_distance((lpD_POINT)Q_tmp[0],
 											 (lpD_POINT)Q_tmp[n_c - 1])< eps_d ) t=n_c-1;
@@ -201,7 +201,7 @@ void parameter_deriv_closed( short n_c, short p_c, lpDA_POINT Q_tmp, lpSNODE der
 	short i, j, k, l;
 	parameter_free( n_c, p_c, Q_tmp, u_c, U_c );
 
-	if( U_c != nullptr ){
+	if( U_c != NULL ){
 		for( i=n_c+p_c+1; i>=p_c+1; i-- ) U_c[i+1] = U_c[i];
 		U_c[p_c+1] /= 2;
 		for( i=n_c+p_c+2; i>=n_c+2; i-- ) U_c[i+1] = U_c[i];
@@ -243,7 +243,7 @@ void parameter_deriv_closed( short n_c, short p_c, lpDA_POINT Q_tmp, lpSNODE der
 BOOL Calculate_Weight_Point(lpSPLY_DAT sply_dat, short degree, sgFloat t, lpD_POINT p){
 short 	  i;
 sgFloat *N;
-	if((N=(sgFloat*)SGMalloc(sply_dat->nump*sizeof(sgFloat)))==nullptr) return FALSE;
+	if((N=(sgFloat*)SGMalloc(sply_dat->nump*sizeof(sgFloat)))==NULL) return FALSE;
 
 	for( i=0; i<sply_dat->nump; i++ )
 		if( sply_dat->U[i] <= t && t <= sply_dat->U[i + degree + 1] )
@@ -281,9 +281,9 @@ BOOL   ret=FALSE;
 short		 i;
 sgFloat *N_j, *N_i;
 
-	if((N_j=(sgFloat*)SGMalloc(sply_dat->nump*sizeof(sgFloat)))==nullptr) return FALSE;
+	if((N_j=(sgFloat*)SGMalloc(sply_dat->nump*sizeof(sgFloat)))==NULL) return FALSE;
 
-	if((N_i=(sgFloat*)SGMalloc(sply_dat->nump*sizeof(sgFloat)))==nullptr) goto err;
+	if((N_i=(sgFloat*)SGMalloc(sply_dat->nump*sizeof(sgFloat)))==NULL) goto err;
 
 	for( i=0; i<sply_dat->nump; i++ )
 		if( sply_dat->U[i] <= t && t <= sply_dat->U[i+degree+1] )

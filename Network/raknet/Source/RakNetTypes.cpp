@@ -329,11 +329,11 @@ void SystemAddress::ToString_New(bool writePort, char *dest, char portDelineator
 
 	if (address.addr4.sin_family==AF_INET)
 	{
-		ret=getnameinfo((struct sockaddr *) &address.addr4, sizeof(struct sockaddr_in), dest, 22, nullptr, 0, NI_NUMERICHOST);
+		ret=getnameinfo((struct sockaddr *) &address.addr4, sizeof(struct sockaddr_in), dest, 22, NULL, 0, NI_NUMERICHOST);
 	}
 	else
 	{
-		ret=getnameinfo((struct sockaddr *) &address.addr6, sizeof(struct sockaddr_in6), dest, INET6_ADDRSTRLEN, nullptr, 0, NI_NUMERICHOST);
+		ret=getnameinfo((struct sockaddr *) &address.addr6, sizeof(struct sockaddr_in6), dest, INET6_ADDRSTRLEN, NULL, 0, NI_NUMERICHOST);
 	}
 	if (ret!=0)
 	{
@@ -725,12 +725,12 @@ bool RakNetGUID::FromString(const char *source)
 
 
 #if   defined(WIN32)
-	g=_strtoui64(source, nullptr, 10);
+	g=_strtoui64(source, NULL, 10);
 
 
 #else
 	// Changed from g=strtoull(source,0,10); for android
-	g=strtoull(source, (char **)nullptr, 10);
+	g=strtoull(source, (char **)NULL, 10);
 #endif
 	return true;
 

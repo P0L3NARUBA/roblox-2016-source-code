@@ -80,7 +80,7 @@ public:
 	const PVInstance* getTopLevelPVParent() const;		// is right below the root
 
 	bool isTopLevelPVInstance() const	{
-		return (	(queryTypedParent<PVInstance>() == nullptr)
+		return (	(queryTypedParent<PVInstance>() == NULL)
 				||	(getTypedRoot<PVInstance>() == getTypedParent<PVInstance>()));
 	}
 

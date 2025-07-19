@@ -21,7 +21,7 @@ Joint* JointBuilder::canJoin(Primitive* p0, Primitive* p1)
 
 	// 1. If not next to each other or overlapping, bail out
 	if (e0.separatedByMoreThan(e1, Tolerance::jointMaxUnaligned())) {
-		return nullptr;
+		return NULL;
 	}
 	
 	const Matrix3& r0 = p0->getCoordinateFrame().rotation; 
@@ -46,7 +46,7 @@ Joint* JointBuilder::canJoin(Primitive* p0, Primitive* p1)
 			return glueJoint;
 		}
 	}
-	return nullptr;
+	return NULL;
 }
 		
 

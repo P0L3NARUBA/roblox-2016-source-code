@@ -22,11 +22,11 @@ void RBX::Profiling::init(bool enabled)
 #else
 	
 	/* with full error check EL
-	if( pthread_key_create(&tsd_key, nullptr) ) err_abort(status, Error creating key); 
+	if( pthread_key_create(&tsd_key, NULL) ) err_abort(status, Error creating key); 
 	if( pthread_setspecific( tsd_key, value))  
 		err_abort(status, Error in pthread_setspecific); 
 	*/
-	pthread_key_create(&tsd_key, nullptr);
+	pthread_key_create(&tsd_key, NULL);
 	
 	markTlsIndex = reinterpret_cast<uintptr_t>(pthread_getspecific( tsd_key ));
 #endif
@@ -233,7 +233,7 @@ BucketProfile::BucketProfile(const BucketProfile& orig) : data(orig.data), bucke
 {
 }
 
-BucketProfile::BucketProfile() : bucketLimits(nullptr), total(0)
+BucketProfile::BucketProfile() : bucketLimits(NULL), total(0)
 {}
 
 unsigned BucketProfile::findBucket(int v)

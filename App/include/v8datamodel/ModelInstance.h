@@ -175,7 +175,7 @@ namespace RBX {
 			if (!newModelInstance->canSetChildren(_First, _Last))
 				throw std::runtime_error("The requested items cannot be grouped together");
 
-			ModelInstance* commonModel = nullptr;
+			ModelInstance* commonModel = NULL;
 			{
 				_InIt iter = _First;
 				if (iter != _Last)
@@ -212,7 +212,7 @@ namespace RBX {
 				if (C* c = Instance::fastDynamicCast<C>(*iter))
 					return c;
 
-			return nullptr;
+			return NULL;
 		}
 
 		// Find Modifier
@@ -223,7 +223,7 @@ namespace RBX {
 			for (std::vector<Instance*>::const_iterator iter = modelModifiers.begin(); iter!=end; ++iter)
 				if (const C* c = Instance::fastDynamicCast<C>(*iter))
 					return c;
-			return nullptr;
+			return NULL;
 		}
 
 
@@ -236,7 +236,7 @@ namespace RBX {
 					return m->findFirstModifierOfType<C>();
 				}
 			}
-			return nullptr;
+			return NULL;
 		}
 
 		// Find Modifier - static version that takes any instance and checks if its a model
@@ -248,7 +248,7 @@ namespace RBX {
 					return m->findConstFirstModifierOfType<C>();
 				}
 			}
-			return nullptr;
+			return NULL;
 		}
 
 	};

@@ -67,7 +67,7 @@ static inline TPublicType ir_get_decl_type_noarray(TIntermTyped* decl)
 		t.isMatrix(),
 		false,
 		0,
-		t.getBasicType() == EbtStruct ? &t : nullptr,
+		t.getBasicType() == EbtStruct ? &t : NULL,
 		t.getLine()
 	};
 	return p;

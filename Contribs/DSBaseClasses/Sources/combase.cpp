@@ -143,7 +143,7 @@ STDMETHODIMP CUnknown::NonDelegatingQueryInterface(REFIID riid, void ** ppv)
         GetInterface((LPUNKNOWN) (PNDUNKNOWN) this, ppv);
         return NOERROR;
     } else {
-        *ppv = nullptr;
+        *ppv = NULL;
         return E_NOINTERFACE;
     }
 }

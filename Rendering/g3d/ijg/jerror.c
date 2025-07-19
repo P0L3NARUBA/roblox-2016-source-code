@@ -49,7 +49,7 @@
 
 const char * const jpeg_std_message_table[] = {
 #include "jerror.h"
-  nullptr
+  NULL
 };
 
 
@@ -158,7 +158,7 @@ format_message (j_common_ptr cinfo, char * buffer)
 {
   struct jpeg_error_mgr * err = cinfo->err;
   int msg_code = err->msg_code;
-  const char * msgtext = nullptr;
+  const char * msgtext = NULL;
   const char * msgptr;
   char ch;
   boolean isstring;
@@ -166,14 +166,14 @@ format_message (j_common_ptr cinfo, char * buffer)
   /* Look up message string in proper table */
   if (msg_code > 0 && msg_code <= err->last_jpeg_message) {
     msgtext = err->jpeg_message_table[msg_code];
-  } else if (err->addon_message_table != nullptr &&
+  } else if (err->addon_message_table != NULL &&
 	     msg_code >= err->first_addon_message &&
 	     msg_code <= err->last_addon_message) {
     msgtext = err->addon_message_table[msg_code - err->first_addon_message];
   }
 
   /* Defend against bogus message number */
-  if (msgtext == nullptr) {
+  if (msgtext == NULL) {
     err->msg_parm.i[0] = msg_code;
     msgtext = err->jpeg_message_table[0];
   }
@@ -244,7 +244,7 @@ jpeg_std_error (struct jpeg_error_mgr * err)
   err->jpeg_message_table = jpeg_std_message_table;
   err->last_jpeg_message = (int) JMSG_LASTMSGCODE - 1;
 
-  err->addon_message_table = nullptr;
+  err->addon_message_table = NULL;
   err->first_addon_message = 0;	/* for safety */
   err->last_addon_message = 0;
 

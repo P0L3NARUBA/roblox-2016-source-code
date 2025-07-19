@@ -36,7 +36,7 @@ namespace Graphics
 	static TypeCreateDXGIFactory getFactoryCreationFunction()
     {
         HMODULE module = LoadLibraryA("d3d11.dll");
-        if (!module) return nullptr;
+        if (!module) return NULL;
 
 		return (TypeCreateDXGIFactory)GetProcAddress(module, "CreateDXGIFactory");
     }
@@ -44,7 +44,7 @@ namespace Graphics
 	template <typename F> static F getOpenVRFunction(const char* name)
 	{
         HMODULE module = LoadLibraryA("openvr_api.dll");
-		if (!module) return nullptr;
+		if (!module) return NULL;
 
 		return F(GetProcAddress(module, name));
 	}
@@ -53,14 +53,14 @@ namespace Graphics
 	{
 		TypeCreateDXGIFactory createFactory = getFactoryCreationFunction();
 		if (!createFactory)
-			return nullptr;
+			return NULL;
 
 		// Try to find adapter by LUID
-		IDXGIFactory* factory = nullptr;
+		IDXGIFactory* factory = NULL;
 		if (FAILED(createFactory(__uuidof(IDXGIFactory), (void**)&factory)))
-			return nullptr;
+			return NULL;
 
-		IDXGIAdapter* adapter = nullptr;
+		IDXGIAdapter* adapter = NULL;
 		factory->EnumAdapters(index, &adapter);
 
 		ReleaseCheck(factory);
@@ -71,7 +71,7 @@ namespace Graphics
 	static std::string getStringProperty(IVRSystem* system, TrackedDeviceIndex_t device, TrackedDeviceProperty property)
 	{
 		char buf[128] = {};
-		system->GetStringTrackedDeviceProperty(device, property, buf, sizeof(buf), nullptr);
+		system->GetStringTrackedDeviceProperty(device, property, buf, sizeof(buf), NULL);
 
 		return buf;
 	}
@@ -101,7 +101,7 @@ namespace Graphics
 	static DeviceVR::Pose getPoseForIndex(IVRCompositor* compositor, TrackedDeviceIndex_t index)
 	{
 		TrackedDevicePose_t pose;
-		OVR_CHECK(compositor->GetLastPoseForTrackedDeviceIndex(index, &pose, nullptr));
+		OVR_CHECK(compositor->GetLastPoseForTrackedDeviceIndex(index, &pose, NULL));
 
 		return getPose(pose);
 	}
@@ -123,7 +123,7 @@ namespace Graphics
 		shared_ptr<Framebuffer> fb[2];
 		shared_ptr<Texture> textures[2];
 
-		OpenVRD3D11(): system(nullptr), compositor(nullptr)
+		OpenVRD3D11(): system(NULL), compositor(NULL)
 		{
 		}
 
@@ -192,7 +192,7 @@ namespace Graphics
 				OVR_CHECK(compositor->Submit(EVREye(eye), &texture));
 			}
 
-			OVR_CHECK(compositor->WaitGetPoses(nullptr, 0, nullptr, 0));
+			OVR_CHECK(compositor->WaitGetPoses(NULL, 0, NULL, 0));
 		}
 
 		void setup(Device* device) override
@@ -213,14 +213,14 @@ namespace Graphics
 	DeviceVRD3D11* DeviceVRD3D11::createOpenVR(IDXGIAdapter** outAdapter)
 	{
 		if (!FFlag::OpenVR)
-			return nullptr;
+			return NULL;
 
 		auto VR_InitInternal = getOpenVRFunction<uint32_t (*)(EVRInitError *peError, EVRApplicationType eApplicationType)>("VR_InitInternal");
 		auto VR_ShutdownInternal = getOpenVRFunction<void (*)()>("VR_ShutdownInternal");
 		auto VR_GetGenericInterface = getOpenVRFunction<void* (*)(const char *pchInterfaceVersion, EVRInitError *peError)>("VR_GetGenericInterface");
 
 		if (!VR_InitInternal || !VR_ShutdownInternal || !VR_GetGenericInterface)
-			return nullptr;
+			return NULL;
 
 		EVRInitError error;
 		VR_InitInternal(&error, VRApplication_Scene);
@@ -228,7 +228,7 @@ namespace Graphics
 		if (error)
 		{
 			FASTLOG1(FLog::VR, "VR: VR_InitInternal returned %d", error);
-			return nullptr;
+			return NULL;
 		}
 
 		IVRSystem* system = static_cast<IVRSystem*>(VR_GetGenericInterface(IVRSystem_Version, &error));
@@ -237,7 +237,7 @@ namespace Graphics
 		{
 			FASTLOG1(FLog::VR, "VR: Error creating system: %d", error);
 			VR_ShutdownInternal();
-			return nullptr;
+			return NULL;
 		}
 
 		IVRCompositor* compositor = static_cast<IVRCompositor*>(VR_GetGenericInterface(IVRCompositor_Version, &error));
@@ -246,7 +246,7 @@ namespace Graphics
 		{
 			FASTLOG1(FLog::VR, "VR: Error creating compositor: %d", error);
 			VR_ShutdownInternal();
-			return nullptr;
+			return NULL;
 		}
 
 		int adapterIndex = 0;

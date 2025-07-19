@@ -9,8 +9,8 @@ namespace Graphics
 
 Resource::Resource(Device* device)
     : device(device)
-    , prev(nullptr)
-	, next(nullptr)
+    , prev(NULL)
+	, next(NULL)
 {
 	if (device->resourceListHead)
 	{

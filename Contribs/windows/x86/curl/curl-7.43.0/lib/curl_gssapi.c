@@ -70,10 +70,10 @@ OM_uint32 Curl_gss_init_sec_context(
                               0, /* time_req */
                               input_chan_bindings,
                               input_token,
-                              nullptr, /* actual_mech_type */
+                              NULL, /* actual_mech_type */
                               output_token,
                               ret_flags,
-                              nullptr /* time_rec */);
+                              NULL /* time_rec */);
 }
 
 /*

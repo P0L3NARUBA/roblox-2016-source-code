@@ -36,7 +36,7 @@ static short (*attr_item_compare[NUM_ATTR])(ATTR_TYPE type,
 		str_compare,           //ATTR_STR
 		sgFloat_compare,        //ATTR_sgFloat
 		bool_compare,          //ATTR_BOOL
-		nullptr,                  //ATTR_TEXT
+		NULL,                  //ATTR_TEXT
 };
 
 static  ULONG (*attr_value_len[NUM_ATTR])(ATTR_TYPE type, void* value)={
@@ -164,7 +164,7 @@ void*      value;
 				 attr_item.v.value.ni.len : attr_item.v.status;
 	if(0 ==(value = SGMalloc(*len))){
 		attr_handler_err(AT_HEAP);
-		return nullptr;
+		return NULL;
 	}
 	attr_item_value(&attr_item, value);
 	*type = attr_item.type;
@@ -195,8 +195,8 @@ UCHAR         type;
 	read_attr_item(item_id, &attr_item);
 	switch(attr.type){
 		case ATTR_TEXT:
-		if(nullptr == (value = (char*)alloc_and_get_attr_value(item_id, &type, &len)))
-				return nullptr;
+		if(NULL == (value = (char*)alloc_and_get_attr_value(item_id, &type, &len)))
+				return NULL;
 			if((UCHAR)(*value) == ML_S_C){//    
 				 c = value + 1;
 				 while(*c != ML_S_C){
@@ -265,7 +265,7 @@ ULONG  tlen;
 	 read_attr(attr_id, &attr);
 
 	 if(attr.type != ATTR_TEXT){
-		 if((txt = (char*)SGMalloc(MAX_ATTR_STRING + 1)) == nullptr){
+		 if((txt = (char*)SGMalloc(MAX_ATTR_STRING + 1)) == NULL){
 			 attr_handler_err(AT_HEAP);
 			 return FALSE;
 		 }
@@ -275,7 +275,7 @@ ULONG  tlen;
 		 }
 	 }
 	 else{
-		 if((txt = (char*)alloc_and_get_attr_value(item_id, &attr.type, &tlen)) == nullptr)
+		 if((txt = (char*)alloc_and_get_attr_value(item_id, &attr.type, &tlen)) == NULL)
 			 return FALSE;
 	 }
 
@@ -316,7 +316,7 @@ IDENT_V id;
 	}
 	numchar += numstr;
 	if(numstr > 1) numchar += 2;
-	if((txt = (char*)SGMalloc(numchar)) == nullptr){
+	if((txt = (char*)SGMalloc(numchar)) == NULL){
 		attr_handler_err(AT_HEAP);
 		return FALSE;
 	}
@@ -414,7 +414,7 @@ VI_LOCATION   loc;
 	if(0 ==(attr_item = (ATTR_ITEM*)get_next_elem(vd_attr_item))) attr_exit();
 		if(attr_item->v.status != A_NOT_INLINE) continue;
 		get_read_loc(&attr_item->v.value.ni.loc);
-		read_vld_data(attr_item->v.value.ni.len, nullptr);
+		read_vld_data(attr_item->v.value.ni.len, NULL);
 	}
 	end_read_vld();
 	end_rw(vd_attr_item);

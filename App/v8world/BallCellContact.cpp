@@ -54,7 +54,7 @@ BallCellContact::BallCellContact(Primitive* p0, Primitive* p1, const Vector3int1
 
 BallCellContact::~BallCellContact()
 {
-	//resetBestPair(nullptr);
+	//resetBestPair(NULL);
     delete cellMesh;
 }
 
@@ -126,7 +126,7 @@ void BallCellContact::findClosestFeatures(ConnectorArray& newConnectors)
 const POLY::Face* BallCellContact::getFarthestPlane(float& planeToCenter, const Vector3& ballInCell)
 {
 	planeToCenter = -FLT_MAX;			// deep inside to start
-	const POLY::Face* answer = nullptr;
+	const POLY::Face* answer = NULL;
 	for (size_t i = 0; i < getCellMesh()->numFaces(); ++i) {
 		const POLY::Face* face = cellMesh->getFace(i);
 		const Plane& plane = face->plane();
@@ -143,7 +143,7 @@ const POLY::Face* BallCellContact::getFarthestPlane(float& planeToCenter, const 
 const POLY::Edge* BallCellContact::getClosestEdge(const POLY::Face* face, float& edgeToCenter, const Vector3& ballInMC)
 {
 	edgeToCenter = FLT_MAX;
-	POLY::Edge* answer = nullptr;
+	POLY::Edge* answer = NULL;
 	for (size_t i = 0; i < face->numEdges(); ++i) {
 		POLY::Edge* testEdge = face->getEdge(i);
 		Line line = testEdge->computeLine();
@@ -160,7 +160,7 @@ const POLY::Edge* BallCellContact::getClosestEdge(const POLY::Face* face, float&
 const POLY::Edge* BallCellContact::getClosestInVoronoiEdge(const POLY::Face* face, float& edgeToCenter, const Vector3& ballInCell)
 {
 	edgeToCenter = FLT_MAX;
-	POLY::Edge* answer = nullptr;
+	POLY::Edge* answer = NULL;
 	for (size_t i = 0; i < face->numEdges(); ++i) {
 		POLY::Edge* testEdge = face->getEdge(i);
 		Line line = testEdge->computeLine();
@@ -176,9 +176,9 @@ const POLY::Edge* BallCellContact::getClosestInVoronoiEdge(const POLY::Face* fac
 const POLY::Vertex* BallCellContact::getClosestVertex(const POLY::Edge* edge, float& vertexToCenter, const Vector3& ballInMC)
 {
 	vertexToCenter = FLT_MAX;
-	const POLY::Vertex* answer = nullptr;
+	const POLY::Vertex* answer = NULL;
 	for (size_t i = 0; i < 2; ++i) {
-		const POLY::Vertex* testVertex = edge->getVertex(nullptr, i);
+		const POLY::Vertex* testVertex = edge->getVertex(NULL, i);
 		const Vector3& testOffset =  testVertex->getOffset();
 		float distance = (ballInMC - testOffset).magnitude();
 		if (distance < vertexToCenter) {
@@ -204,7 +204,7 @@ BallPlaneConnector* BallCellContact::newBallPlaneConnector(const POLY::Face* fac
 									    face->getId()	);			// id of this face
     }
     else
-        return nullptr;
+        return NULL;
 }
 
 BallEdgeConnector* BallCellContact::newBallEdgeConnector(const POLY::Edge* edge)
@@ -216,12 +216,12 @@ BallEdgeConnector* BallCellContact::newBallEdgeConnector(const POLY::Edge* edge)
 									    getPrimitive(0)->getBody(),
 									    *contactParams,
 									    ball()->getRadius(),
-									    edge->getVertexOffset(nullptr, 0),		// face == nullptr means get vertex 0
-									    edge->computeNormal(nullptr),
+									    edge->getVertexOffset(NULL, 0),		// face == NULL means get vertex 0
+									    edge->computeNormal(NULL),
 									    edge->getId()		);		// id of edge 
     }
     else
-        return nullptr;
+        return NULL;
 }
 
 
@@ -239,7 +239,7 @@ BallVertexConnector* BallCellContact::newBallVertexConnector(const POLY::Vertex*
 									    vertex->getId()			);		// for comparing
     }
     else
-        return nullptr;
+        return NULL;
 }
 
 

@@ -17,7 +17,7 @@ Replicator::ReferencePropertyChangedItem::ReferencePropertyChangedItem(
 	
 	Instance* refInstance = DescribedBase::fastDynamicCast<Instance>(
 		desc.getRefValue(instance.get()));
-	if (refInstance != nullptr) {
+	if (refInstance != NULL) {
 		refInstance->getGuid().extract(newValueGuid);
 	} else {
 		newValueGuid.scope.setNull();

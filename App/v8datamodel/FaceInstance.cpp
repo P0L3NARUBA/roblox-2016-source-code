@@ -16,7 +16,7 @@ FaceInstance::FaceInstance(void)
 
 bool FaceInstance::askSetParent(const Instance* instance) const
 {
-	return Instance::fastDynamicCast<PartInstance>(instance)!=nullptr;
+	return Instance::fastDynamicCast<PartInstance>(instance)!=NULL;
 }
 
 void FaceInstance::setFace(NormalId value) 

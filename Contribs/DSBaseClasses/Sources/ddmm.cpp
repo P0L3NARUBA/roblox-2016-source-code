@@ -31,7 +31,7 @@ BOOL CALLBACK FindDeviceCallback(GUID* lpGUID, LPSTR szName, LPSTR szDevice, LPV
 		p->GUID = *lpGUID;
 		p->lpGUID = &p->GUID;
 	    } else {
-		p->lpGUID = nullptr;
+		p->lpGUID = NULL;
 	    }
 	    p->fFound = TRUE;
 	    return FALSE;
@@ -49,7 +49,7 @@ BOOL CALLBACK FindDeviceCallbackEx(GUID* lpGUID, LPSTR szName, LPSTR szDevice, L
 		p->GUID = *lpGUID;
 		p->lpGUID = &p->GUID;
 	    } else {
-		p->lpGUID = nullptr;
+		p->lpGUID = NULL;
 	    }
 	    p->fFound = TRUE;
 	    return FALSE;
@@ -65,11 +65,11 @@ BOOL CALLBACK FindDeviceCallbackEx(GUID* lpGUID, LPSTR szName, LPSTR szDevice, L
  */
 IDirectDraw * DirectDrawCreateFromDevice(LPSTR szDevice, PDRAWCREATE DirectDrawCreateP, PDRAWENUM DirectDrawEnumerateP)
 {
-	IDirectDraw*    pdd = nullptr;
+	IDirectDraw*    pdd = NULL;
 	FindDeviceData  find;
 
-	if (szDevice == nullptr) {
-		DirectDrawCreateP(nullptr, &pdd, nullptr);
+	if (szDevice == NULL) {
+		DirectDrawCreateP(NULL, &pdd, NULL);
 		return pdd;
 	}
 
@@ -85,7 +85,7 @@ IDirectDraw * DirectDrawCreateFromDevice(LPSTR szDevice, PDRAWCREATE DirectDrawC
 		// make sure it doesn't happen.
 		//
 		UINT ErrorMode = SetErrorMode(SEM_FAILCRITICALERRORS);
-		DirectDrawCreateP(find.lpGUID, &pdd, nullptr);
+		DirectDrawCreateP(find.lpGUID, &pdd, NULL);
 		SetErrorMode(ErrorMode);
 	}
 
@@ -100,11 +100,11 @@ IDirectDraw * DirectDrawCreateFromDevice(LPSTR szDevice, PDRAWCREATE DirectDrawC
  */
 IDirectDraw * DirectDrawCreateFromDeviceEx(LPSTR szDevice, PDRAWCREATE DirectDrawCreateP, LPDIRECTDRAWENUMERATEEXA DirectDrawEnumerateExP)
 {
-	IDirectDraw*    pdd = nullptr;
+	IDirectDraw*    pdd = NULL;
 	FindDeviceData  find;
 
-	if (szDevice == nullptr) {
-		DirectDrawCreateP(nullptr, &pdd, nullptr);
+	if (szDevice == NULL) {
+		DirectDrawCreateP(NULL, &pdd, NULL);
 		return pdd;
 	}
 
@@ -121,7 +121,7 @@ IDirectDraw * DirectDrawCreateFromDeviceEx(LPSTR szDevice, PDRAWCREATE DirectDra
 		// make sure it doesn't happen.
 		//
 		UINT ErrorMode = SetErrorMode(SEM_FAILCRITICALERRORS);
-		DirectDrawCreateP(find.lpGUID, &pdd, nullptr);
+		DirectDrawCreateP(find.lpGUID, &pdd, NULL);
 		SetErrorMode(ErrorMode);
 	}
 

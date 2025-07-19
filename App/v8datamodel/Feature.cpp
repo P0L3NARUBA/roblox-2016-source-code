@@ -286,8 +286,8 @@ const MotorJoint* VelocityMotor::motorJoint() const
 
 void VelocityMotor::setPart(int i, Feature* feature)
 {
-	PartInstance* part = feature ? Instance::fastDynamicCast<PartInstance>(feature->getParent()) : nullptr;
-	Primitive* primitive = part ? part->getPartPrimitive() : nullptr;
+	PartInstance* part = feature ? Instance::fastDynamicCast<PartInstance>(feature->getParent()) : NULL;
+	Primitive* primitive = part ? part->getPartPrimitive() : NULL;
 	CoordinateFrame c = feature ? feature->computeLocalCoordinateFrame() : CoordinateFrame();
 
 	if (motorJoint()->getPrimitive(i) != primitive)
@@ -314,8 +314,8 @@ void VelocityMotor::onAncestorChanged(const AncestorChanged& event)
 	if (oldWorld != newWorld) {
 		if (oldWorld) {
 			oldWorld->removeJoint(motorJoint());		// is this dangerous?...
-			setPart(0, nullptr);
-			setPart(1, nullptr);
+			setPart(0, NULL);
+			setPart(1, NULL);
 			RBXASSERT(!motorJoint()->findWorld());
 		}
 		if (newWorld) {

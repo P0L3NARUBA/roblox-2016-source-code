@@ -76,7 +76,7 @@ namespace RBX {
 	public:
 		CellMeshContact(Primitive* p0, Primitive* p1, const Vector3int32& gridFeature)
 			: CellContact(p0, p1, gridFeature)
-            , cellMesh(nullptr)
+            , cellMesh(NULL)
 		{}
 
 		~CellMeshContact();

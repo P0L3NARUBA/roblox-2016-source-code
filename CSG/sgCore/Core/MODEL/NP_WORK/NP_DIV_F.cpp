@@ -50,7 +50,7 @@ BOOL sub_division( lpNPW np_big ){
   short    first, second, number_of_point, first_edge, i;
   sgFloat step[5] = {2, 3, 1.5, 4, 4/3};
 
-  if( (intersect_list = (short*)SGMalloc( int_num*sizeof(short) ) ) == nullptr )
+  if( (intersect_list = (short*)SGMalloc( int_num*sizeof(short) ) ) == NULL )
     return FALSE;
 
 //face number
@@ -70,9 +70,9 @@ BOOL sub_division( lpNPW np_big ){
 /*
       tb_setcolor(IDXYELLOW);
       tb_put_otr(&np_big->v[first], &np_big->v[second]);
-      put_message( PAUSE_MESSAGE, nullptr, 1 );
+      put_message( PAUSE_MESSAGE, NULL, 1 );
       tb_put_otr(&np_big->v[first], &np_big->v[second]);
-      put_message( PAUSE_MESSAGE, nullptr, 1 );
+      put_message( PAUSE_MESSAGE, NULL, 1 );
 */
 //bild line between first point and second
       if( bild_line( np_big, &first, first_edge,  &second )) break;
@@ -84,7 +84,7 @@ BOOL sub_division( lpNPW np_big ){
     for( i=0; i<number_of_intersect; i +=2 )
       tb_put_otr( &np_big->v[intersect_list[i]],
                   &np_big->v[intersect_list[i+1]]);
-    put_message( PAUSE_MESSAGE, nullptr, 1 );
+    put_message( PAUSE_MESSAGE, NULL, 1 );
 */
 //bild DYMMY edges
     if( !put_internal_edge( np_big ) )  goto err;
@@ -182,7 +182,7 @@ static BOOL bild_line( lpNPW np, short *first,  short first_edge,
   short   sign_old, sign_new;
 
 while(1){
-  if( (tmp_int = (INTSECT_POINT*)SGMalloc( int_num*sizeof(INTSECT_POINT) ) ) == nullptr ) 
+  if( (tmp_int = (INTSECT_POINT*)SGMalloc( int_num*sizeof(INTSECT_POINT) ) ) == NULL ) 
 	  return FALSE;
 // not enoughf memory??????????????????????????????????
 
@@ -298,7 +298,7 @@ static BOOL bild_all_edge( lpNPW np, short first, short second ){
   short     i, j, tmp_num=0;
   INTSECT_POINT *tmp_list;
 
-  if( (tmp_list = (INTSECT_POINT*)SGMalloc( int_num*sizeof(INTSECT_POINT) ) ) == nullptr ){
+  if( (tmp_list = (INTSECT_POINT*)SGMalloc( int_num*sizeof(INTSECT_POINT) ) ) == NULL ){
 //memory??????????????????????????????????
     return FALSE;
   }
@@ -352,7 +352,7 @@ static short determ_intersection( lpNPW np, short first, short second, short cou
   INTSECT_POINT *tmp_int;
   short     tmp_num=0;
 
-  if( (tmp_int = (INTSECT_POINT*)SGMalloc( int_num*sizeof(INTSECT_POINT) ) ) == nullptr ) return 0;
+  if( (tmp_int = (INTSECT_POINT*)SGMalloc( int_num*sizeof(INTSECT_POINT) ) ) == NULL ) return 0;
 // not enoughf memory??????????????????????????????????
 
   edge  = np->c[countour].fe;
@@ -416,19 +416,19 @@ static BOOL gabarit_test(  lpNPW np, short first, short second,
 */
 static BOOL calculate_intersection( lpNPW np, short p1, short p2,
                                     short p3, short p4, lpD_POINT n_point ){
-  lpDA_POINT vector1/*nb =nullptr*/, vector2/*nb =nullptr*/;
+  lpDA_POINT vector1/*nb =NULL*/, vector2/*nb =NULL*/;
   lpDA_POINT point1, point2;
   short        i, j, n, n1;
   sgFloat     t1, t2, m[3];
 
   point1  = (lpDA_POINT)(&np->v[p1]);
-  if( (vector1 = (DA_POINT*)SGMalloc( sizeof(DA_POINT) ) ) == nullptr ) return FALSE;
+  if( (vector1 = (DA_POINT*)SGMalloc( sizeof(DA_POINT) ) ) == NULL ) return FALSE;
   vector1[0][0] = np->v[p2].x - point1[0][0];
   vector1[0][1] = np->v[p2].y - point1[0][1];
   vector1[0][2] = np->v[p2].z - point1[0][2];
 
   point2  = (lpDA_POINT)(&np->v[p3]);
-  if( (vector2 = (DA_POINT*)SGMalloc( sizeof(DA_POINT) ) ) == nullptr ) goto err;
+  if( (vector2 = (DA_POINT*)SGMalloc( sizeof(DA_POINT) ) ) == NULL ) goto err;
   vector2[0][0] = np->v[p4].x - point2[0][0];
   vector2[0][1] = np->v[p4].y - point2[0][1];
   vector2[0][2] = np->v[p4].z - point2[0][2];
@@ -468,8 +468,8 @@ static BOOL calculate_intersection( lpNPW np, short p1, short p2,
   SGFree(vector2);
   return TRUE;
 err:
-  if( vector1 != nullptr) SGFree(vector1);
-  if( vector2 != nullptr) SGFree(vector2);
+  if( vector1 != NULL) SGFree(vector1);
+  if( vector2 != NULL) SGFree(vector2);
   return FALSE;
 }
 
@@ -495,7 +495,7 @@ static BOOL sorting_intersect( lpNPW np, short current,
   sgFloat  *work_list;
   D_POINT R_point;
 
-  if( ( work_list = (sgFloat*)SGMalloc(int_num*sizeof(sgFloat))) == nullptr ) return FALSE;
+  if( ( work_list = (sgFloat*)SGMalloc(int_num*sizeof(sgFloat))) == NULL ) return FALSE;
 
 //calculate distance
   for( i=0; i<number_of_intersect; i++  )

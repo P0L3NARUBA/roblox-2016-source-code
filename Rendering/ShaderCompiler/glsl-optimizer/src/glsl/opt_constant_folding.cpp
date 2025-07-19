@@ -63,7 +63,7 @@ public:
 void
 ir_constant_folding_visitor::handle_rvalue(ir_rvalue **rvalue)
 {
-   if (*rvalue == nullptr || (*rvalue)->ir_type == ir_type_constant)
+   if (*rvalue == NULL || (*rvalue)->ir_type == ir_type_constant)
       return;
 
    /* Note that we do rvalue visitoring on leaving.  So if an
@@ -109,7 +109,7 @@ ir_constant_folding_visitor::visit_enter(ir_assignment *ir)
        */
       if (const_val) {
 	 if (const_val->value.b[0])
-	    ir->condition = nullptr;
+	    ir->condition = NULL;
 	 else
 	    ir->remove();
 	 this->progress = true;
@@ -146,7 +146,7 @@ ir_constant_folding_visitor::visit_enter(ir_call *ir)
    /* Next, see if the call can be replaced with an assignment of a constant */
    ir_constant *const_val = ir->constant_expression_value();
 
-   if (const_val != nullptr) {
+   if (const_val != NULL) {
       ir_assignment *assignment =
 	 new(ralloc_parent(ir)) ir_assignment(ir->return_deref, const_val);
       ir->replace_with(assignment);

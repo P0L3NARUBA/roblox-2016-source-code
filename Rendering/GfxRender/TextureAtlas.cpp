@@ -23,7 +23,7 @@ namespace Graphics
         moduloParam = height - 1;
 
         updateWindow = new unsigned char[textureSize.x * 2 * DFInt::TexAtlasUpdateLineHeight];
-        texture = visualEngine->getDevice()->createTexture(Texture::Type_2D, Texture::Format_L8, textureSize.x, textureSize.y, 1, 1, Texture::Usage_Dynamic);
+        texture = visualEngine->getDevice()->createTexture(Texture::Type_2D, Texture::Format_R8, textureSize.x, textureSize.y, 1, 1, Texture::Usage_Dynamic);
     }
 
     TextureAtlas::~TextureAtlas()

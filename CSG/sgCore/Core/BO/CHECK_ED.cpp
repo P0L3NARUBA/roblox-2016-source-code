@@ -14,26 +14,26 @@ BOOL check = TRUE;
 BOOL check_and_edit_model(hOBJ hobj, hOBJ *hnew_obj, BOOL * pr)
 {
 	int 				 	i, num_np;
-	int *    	b;//nb = nullptr;
-	lpOBJ        	obj;//nb  = nullptr;
+	int *    	b;//nb = NULL;
+	lpOBJ        	obj;//nb  = NULL;
 	lpGEO_BREP   	lpgeobrep;
 	SCAN_CONTROL 	sc;
 	NP_STR       	str1, str2;
 	REGION_3D    	gab;
 	BOOL       	 	rt = TRUE;
 	lpLNP				 	lnp;
-	LISTH     		list_brep = {nullptr,nullptr,0};
+	LISTH     		list_brep = {NULL,NULL,0};
 	GS_CODE				ret;
 	BOOL		      value = TRUE;
 
 	check = TRUE;
-	*hnew_obj = nullptr;
+	*hnew_obj = NULL;
 	flg_exist = 0;
 
 	obj = (lpOBJ)hobj;
 	lpgeobrep = (lpGEO_BREP)obj->geo_data;
 	if (lpgeobrep->type != BODY) {
-		put_message(MSG_CHECK_002,nullptr,0);
+		put_message(MSG_CHECK_002,NULL,0);
 		return FALSE;
 	}
 
@@ -69,7 +69,7 @@ BOOL check_and_edit_model(hOBJ hobj, hOBJ *hnew_obj, BOOL * pr)
 //	end_grad  (num_proc ,ii);
 
 
-	if ((hindex_a = check_index_np()) == nullptr) goto err;
+	if ((hindex_a = check_index_np()) == NULL) goto err;
 	num_index_a = lista.number_all;
 	hindex_b = hindex_a;
 	num_index_b = lista.number_all;
@@ -81,7 +81,7 @@ BOOL check_and_edit_model(hOBJ hobj, hOBJ *hnew_obj, BOOL * pr)
 	npa = npwg;
 	npwg->type = TNPW;
 	if ( (npb = creat_np_mem(TNPW,MAXNOV,MAXNOE,MAXNOF,MAXNOF,MAXNOE))
-				== nullptr ) goto err;
+				== NULL ) goto err;
 	np_init(npb);
 	if ( !(bo_new_user_data(npb)) ) goto err;
 
@@ -102,7 +102,7 @@ BOOL check_and_edit_model(hOBJ hobj, hOBJ *hnew_obj, BOOL * pr)
 			if ( npa->ident > str2.ident ) continue;		
 			if (!(read_np(&lista.bnp,str2.hnp,npb))) goto err;
 			if ( !(check_np(npa, npb, &str1, &str2)) ) {    
-				end_rw(&lista.nb);  //nb b = nullptr;
+				end_rw(&lista.nb);  //nb b = NULL;
 				goto end;
 			}
 			if (str2.lab == 2) { 
@@ -110,19 +110,19 @@ BOOL check_and_edit_model(hOBJ hobj, hOBJ *hnew_obj, BOOL * pr)
 			}
 			write_elem(&lista.vdim,*b,&str2);
 			if (ctrl_c_press) { 
-				put_message(CTRL_C_PRESS, nullptr, 0);
-				end_rw(&lista.nb);  //nb b = nullptr;
+				put_message(CTRL_C_PRESS, NULL, 0);
+				end_rw(&lista.nb);  //nb b = NULL;
 				goto err;
 			}
 		}
-		end_rw(&lista.nb);  //nb b = nullptr;
+		end_rw(&lista.nb);  //nb b = NULL;
 		if (str1.lab == 2)  {
 			if ( !(overwrite_np(&lista.bnp,str1.hnp,npa,TNPW)) ) goto err;
 		}
 		write_elem(&lista.vdim,ii,&str1);
 	}
-	read_user_data_mem  = nullptr;
-	add_user_data_mem   = nullptr;
+	read_user_data_mem  = NULL;
+	add_user_data_mem   = NULL;
 
 //	end_grad  (num_proc , ii);
 	num_proc = -1;
@@ -148,7 +148,7 @@ BOOL check_and_edit_model(hOBJ hobj, hOBJ *hnew_obj, BOOL * pr)
 			write_elem(&lista.vdim,ii,&str1);
 		}
 		if (ctrl_c_press) { 										
-			put_message(CTRL_C_PRESS, nullptr, 0);
+			put_message(CTRL_C_PRESS, NULL, 0);
 			goto end;
 		}
 	}
@@ -159,7 +159,7 @@ BOOL check_and_edit_model(hOBJ hobj, hOBJ *hnew_obj, BOOL * pr)
 
 	goto end;
 err:
-	put_message(MSG_CHECK_001,nullptr,0);
+	put_message(MSG_CHECK_001,NULL,0);
 	rt = FALSE;
 end:
 	*pr = check;
@@ -168,15 +168,15 @@ end:
 	bo_free_user_data(npwg);
 	bo_free_user_data(npb);
 	if ( npb ) free_np_mem(&npb);
-	if (hindex_a != nullptr) { SGFree(hindex_a); hindex_a = nullptr; hindex_b = nullptr; }
+	if (hindex_a != NULL) { SGFree(hindex_a); hindex_a = NULL; hindex_b = NULL; }
 	np_free_stack();
-	np_end_of_put(&lista,NP_CANCEL,0,nullptr);
-	read_user_data_buf  = nullptr;
-	write_user_data_buf	= nullptr;
-	size_user_data      = nullptr;
-	expand_user_data    = nullptr;
-	read_user_data_mem  = nullptr;
-	add_user_data_mem   = nullptr;
+	np_end_of_put(&lista,NP_CANCEL,0,NULL);
+	read_user_data_buf  = NULL;
+	write_user_data_buf	= NULL;
+	size_user_data      = NULL;
+	expand_user_data    = NULL;
+	read_user_data_mem  = NULL;
+	add_user_data_mem   = NULL;
 	return rt;
 }
 #pragma argsused
@@ -186,7 +186,7 @@ static OSCAN_COD check_scan(hOBJ hobj,lpSCAN_CONTROL lpsc)
 	lpD_POINT v;
 
 	if (ctrl_c_press) { 
-		put_message(CTRL_C_PRESS, nullptr, 0);
+		put_message(CTRL_C_PRESS, NULL, 0);
 		return OSFALSE;
 	}
 //	step_grad (num_proc , ii++);
@@ -209,11 +209,11 @@ static hINDEX check_index_np(void)
 {
   short      number_np,i;
 	lpNP_STR str;
-	hINDEX   hindex;//nb  = nullptr;
+	hINDEX   hindex;//nb  = NULL;
 	lpINDEX  index;
 
 	number_np = lista.number_all;        				
-	if ( (hindex = SGMalloc(sizeof(INDEX)*number_np)) == nullptr) 		return nullptr;
+	if ( (hindex = SGMalloc(sizeof(INDEX)*number_np)) == NULL) 		return NULL;
 	index = (lpINDEX)hindex;
 
 	begin_rw(&lista.vdim,0);
@@ -255,7 +255,7 @@ static BOOL check_list_del(void)
 			write_elem(&lista.vdim,ii,&str);
 		} else pr = 1;
 		if (ctrl_c_press) { 											
-			put_message(CTRL_C_PRESS, nullptr, 0);
+			put_message(CTRL_C_PRESS, NULL, 0);
 			goto err;
 		}
 	}
@@ -296,16 +296,16 @@ static BOOL check_list_lable(lpNP_STR_LIST list)
 		}
 
 		if (ctrl_c_press) { 											
-			put_message(CTRL_C_PRESS, nullptr, 0);
+			put_message(CTRL_C_PRESS, NULL, 0);
 			return FALSE;
 		}
 	} while (count_np != list->number_all && count_np != count_old);
 	if (count_np == 0) {
-		put_message(MSG_CHECK_003,nullptr,1);
+		put_message(MSG_CHECK_003,NULL,1);
 		return FALSE;
 	}
 	if (count_np != list->number_all) {
-		put_message(MSG_CHECK_004,nullptr,0);
+		put_message(MSG_CHECK_004,NULL,0);
 		return FALSE;
 	}
 	return TRUE;

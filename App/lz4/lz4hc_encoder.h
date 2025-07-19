@@ -128,11 +128,11 @@ int COMBINED_NAME(FUNCTION_NAME,ctx) (
 #endif
 
     int	ml, ml2, ml3, ml0;
-    const BYTE* ref=nullptr;
-    const BYTE* start2=nullptr;
-    const BYTE* ref2=nullptr;
-    const BYTE* start3=nullptr;
-    const BYTE* ref3=nullptr;
+    const BYTE* ref=NULL;
+    const BYTE* start2=NULL;
+    const BYTE* ref2=NULL;
+    const BYTE* start3=NULL;
+    const BYTE* ref3=NULL;
     const BYTE* start0;
     const BYTE* ref0;
 

@@ -31,7 +31,7 @@ AssemblyItem& MechanismItem::appendAssembly()
 		buffer.append(new AssemblyItem());
 	else
 	{
-		RBXASSERT(buffer[currentElements]!=nullptr);
+		RBXASSERT(buffer[currentElements]!=NULL);
 		buffer[currentElements]->reset();
 	}
 

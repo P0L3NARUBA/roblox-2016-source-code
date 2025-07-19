@@ -49,7 +49,7 @@ static  IDENT_V RegSysAttr(char *Name, char* text, UCHAR Type, UCHAR Size, short
 		  adr = (void*)&num;
 		  break;
     default:
-		  adr = nullptr;
+		  adr = NULL;
 	}
     id = create_sys_attr(Name, text, Type, Size, Prec, AddStatus, adr);
 	va_end(argptr);
@@ -114,7 +114,7 @@ void InitSysAttrs(void)
 									ATTR_sgFloat, 10, 3, ATT_SYSTEM|ATT_ENUM, 0.);
 
 	id_ProtoInfo = RegSysAttr("$ProtoInfo", "ProtoInfo",
-									ATTR_TEXT, 30, 255, ATT_SYSTEM, nullptr);
+									ATTR_TEXT, 30, 255, ATT_SYSTEM, NULL);
 
 	id_Mass = RegSysAttr("$Mass", "Mass",
 									ATTR_sgFloat, 10, 3, ATT_SYSTEM, 0.);

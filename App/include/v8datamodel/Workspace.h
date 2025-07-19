@@ -152,7 +152,7 @@ private:
 	bool									arrowCameraControls;
 
 	shared_ptr<MouseCommand>				currentCommand;		// current MouseCommand being used;
-	shared_ptr<MouseCommand>				stickyCommand;		// last sticky command - if setting to nullptr, this will be used
+	shared_ptr<MouseCommand>				stickyCommand;		// last sticky command - if setting to NULL, this will be used
 	shared_ptr<RBX::InputObject>			idleMouseEvent;		// copy this for the idle event
 
 	int										flySteps;			// used to accelerated cameraFly
@@ -308,7 +308,7 @@ public:
 	// TODO: refactor: Move into ToolManager Service
 
 	MouseCommand* getCurrentMouseCommand() {
-		RBXASSERT(currentCommand.get()!=nullptr);
+		RBXASSERT(currentCommand.get()!=NULL);
 		return currentCommand.get();
 	}
 
@@ -328,7 +328,7 @@ public:
 	/*override*/ Camera* getCamera();	
 	/*override*/ const Camera* getConstCamera() const;	
 	
-	// Don't use these - internal pointer to the current active camera, could be nullptr
+	// Don't use these - internal pointer to the current active camera, could be NULL
 	Camera* getCurrentCameraDangerous() const;
 	void setCurrentCamera(Camera *value); 
 

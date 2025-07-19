@@ -146,7 +146,7 @@ bool TCPInterface::Start(unsigned short port, unsigned short maxIncomingConnecti
 		Itoa(port,portStr,10);
 
 		getaddrinfo(0, portStr, &hints, &servinfo);
-		for (aip = servinfo; aip != nullptr; aip = aip->ai_next)
+		for (aip = servinfo; aip != NULL; aip = aip->ai_next)
 		{
 			// Open socket. The address type depends on what
 			// getaddrinfo() gave us.
@@ -699,7 +699,7 @@ SOCKET TCPInterface::SocketConnect(const char* host, unsigned short remotePort, 
 
 	struct hostent * server;
 	server = gethostbyname(host);
-	if (server == nullptr)
+	if (server == NULL)
 		return (SOCKET) -1;
 
 

@@ -4,11 +4,11 @@ BOOL b_fa(lpNPW np)
 {
 	short        mf;
 	short        face;
-	lpNP_LOOPS l = nullptr;
+	lpNP_LOOPS l = NULL;
 	short        loops = 0;      				
 	BOOL       rt = TRUE, msg = TRUE;
 
-	if ( (l = np_realloc_loops(l,&loops)) == nullptr ) return FALSE;
+	if ( (l = np_realloc_loops(l,&loops)) == NULL ) return FALSE;
 	mf = np->nof;									           
 	for (face = 1 ; face <= mf ; face++) {
 		if ( !np_fa_one(np, face, &l, &loops, msg) ) {

@@ -45,9 +45,9 @@ namespace RBX
 
 	2.	Joint added by Replication	// On other side - either client or server
 
-		a.	JointInstance created with (joint==nullptr, tempPersistJoint != nullptr)
+		a.	JointInstance created with (joint==NULL, tempPersistJoint != NULL)
 		b.  Wait for P0, P1 to be valid, then createJoint();
-			// P0, P1, coord - all nullptr/Bad
+			// P0, P1, coord - all NULL/Bad
 			//
 			//	wait until P0, P1, C0, C1, Type received
 			// then->insert into world
@@ -62,19 +62,19 @@ namespace RBX
 
 		a.	World-> notify destroyJoint
 		b.	JointService::onDestroyEvent
-				If JointInstance-> disassociateJoint (Joint* == nullptr)
-				Parent->nullptr;
-		XXX	Joint is laying around with joint == nullptr, tempPersistJoint == nullptr
+				If JointInstance-> disassociateJoint (Joint* == NULL)
+				Parent->NULL;
+		XXX	Joint is laying around with joint == NULL, tempPersistJoint == NULL
 
 
 	4.	Joint deleted by Replication
 		
-		a.	JointInstance - Parent is set to nullptr
+		a.	JointInstance - Parent is set to NULL
 		b.	removeJoint() called
 		c.	disassociateJoint();
 		d.	world->destroyJoint
 
-		XXX Joint is sitting around with joint and tempPersistJoint == nullptr
+		XXX Joint is sitting around with joint and tempPersistJoint == NULL
 
 
 	/////// SPURIOUS Events
@@ -95,7 +95,7 @@ namespace RBX
 
 JointsService::JointsService()
 	:Service(true)
-	,world(nullptr)
+	,world(NULL)
 {
 	setName("JointsService");
 	Instance::propArchivable.setValue(this, false);
@@ -109,7 +109,7 @@ void JointsService::onServiceProvider(ServiceProvider* oldProvider, ServiceProvi
 	autoJoinConnection.disconnect();
 	autoDestroyConnection.disconnect();
 
-	world = nullptr;
+	world = NULL;
 
 	Super::onServiceProvider(oldProvider, newProvider);
 
@@ -229,8 +229,8 @@ void JointsService::onPostRemoveJoint(Joint* joint, std::vector<Primitive*>& pri
 
 	Primitive* prim0 = joint->getPrimitive(0);
 	Primitive* prim1 = joint->getPrimitive(1);
-	Primitive* rootMovingPrim0 = nullptr;
-	Primitive* rootMovingPrim1 = nullptr;
+	Primitive* rootMovingPrim0 = NULL;
+	Primitive* rootMovingPrim1 = NULL;
 	if (prim0 && prim1)
 	{
 		rootMovingPrim0 = prim0->getRootMovingPrimitive();
@@ -307,7 +307,7 @@ void JointsService::onPostRemoveJoint(Joint* joint, std::vector<Primitive*>& pri
 void JointsService::onAutoJoin(Joint* joint)
 {
 	// Disabling ConcurrencyValidator:
-	// onAutoDestroy might be called as a result of setParent(nullptr), so concurrencyValidator will think there's threading issue 
+	// onAutoDestroy might be called as a result of setParent(NULL), so concurrencyValidator will think there's threading issue 
 	//WriteValidator validator(concurrencyValidator);
 
 	RBXASSERT(joint);
@@ -339,7 +339,7 @@ void JointsService::onAutoJoin(Joint* joint)
 void JointsService::onAutoDestroy(Joint* joint)
 {
 	// Disabling ConcurrencyValidator:
-	// onAutoDestroy might be called as a result of setParent(nullptr) below, so concurrencyValidator will think there's threading issue 
+	// onAutoDestroy might be called as a result of setParent(NULL) below, so concurrencyValidator will think there's threading issue 
 	//WriteValidator validator(concurrencyValidator);
 	RBXASSERT(joint);
 
@@ -348,7 +348,7 @@ void JointsService::onAutoDestroy(Joint* joint)
 
 	if (jointOwner)
 	{
-		static_cast<JointInstance*>(jointOwner)->setParent(nullptr);
+		static_cast<JointInstance*>(jointOwner)->setParent(NULL);
 	}
 }
 

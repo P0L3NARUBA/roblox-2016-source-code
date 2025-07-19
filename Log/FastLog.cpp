@@ -170,7 +170,7 @@ namespace FLog
 
 	TimeFunc timeF = timeDummy;
 
-	ExternalLogFunc logF = nullptr;
+	ExternalLogFunc logF = NULL;
 	
 
 	// Exactly 32 bytes on 32bit platform, add stuff responsibly
@@ -229,7 +229,7 @@ namespace FLog
 		const void* arg2, 
 		const void* arg3, 
 		const void* arg4,
-		float* lastTimeStamp = nullptr)
+		float* lastTimeStamp = NULL)
 	{
 #pragma warning(push)
 #pragma warning(disable: 4996)
@@ -255,7 +255,7 @@ namespace FLog
         unsigned threadid,
         float timeStamp,
         const char* message, 
-        float* lastTimeStamp = nullptr)
+        float* lastTimeStamp = NULL)
     {
 #pragma warning(push)
 #pragma warning(disable: 4996)
@@ -272,7 +272,7 @@ namespace FLog
         return;
     }
 
-	void printMessage(char* result, unsigned maxPrint, size_t threadid, float timeStamp, const char* message, const char* sarg, float* lastTimeStamp = nullptr)
+	void printMessage(char* result, unsigned maxPrint, size_t threadid, float timeStamp, const char* message, const char* sarg, float* lastTimeStamp = NULL)
 	{
 #pragma warning(push)
 #pragma warning(disable: 4996)
@@ -328,7 +328,7 @@ namespace FLog
 
             while (true)
             {
-                LogEntry* entry = nullptr;
+                LogEntry* entry = NULL;
 
                 {
                     boost::unique_lock<boost::mutex> lock(writeQueueMutex);
@@ -571,14 +571,14 @@ namespace FLog
 
 #pragma warning(push)
 #pragma warning(disable: 4996)
-		if(sarg != nullptr)
+		if(sarg != NULL)
 			{
 			const char* start = &sarg[ std::max(0, sargsize-(int)(sizeof(entry.args.sarg)-1)) ];
 			strncpy(entry.args.sarg, start, sizeof(entry.args.sarg));
 			entry.args.sarg[sizeof(entry.args.sarg)-1] = '\0';
 		}
 		else
-			strncpy(entry.args.sarg, "nullptr", sizeof(entry.args.sarg));
+			strncpy(entry.args.sarg, "NULL", sizeof(entry.args.sarg));
 #pragma warning(pop)
 
 		entry.timestamp = (float)timeF();
@@ -680,10 +680,10 @@ namespace FLog
 
 	template<class T> void RegisterVariable(const char* varName, T* value, bool** isSync, FastVarType fastVarType)
 	{
-		if(gVariables == nullptr)
+		if(gVariables == NULL)
 			gVariables = new Variables();
 
-		if(gUnknownVariables == nullptr)
+		if(gUnknownVariables == NULL)
 			gUnknownVariables = new UnknownVariables();
 
 
@@ -693,7 +693,7 @@ namespace FLog
 
         ValueGetSet<T>* varValue = new ValueGetSet<T>(value, fastVarType);
 		gVariables->insert(Variables::value_type(name, varValue));
-        if (isSync != nullptr)
+        if (isSync != NULL)
         {
             *isSync = varValue->getIsSyncAddr();
         }

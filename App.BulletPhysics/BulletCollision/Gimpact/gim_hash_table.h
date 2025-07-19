@@ -286,9 +286,9 @@ protected:
     //! Clear all memory for the hash table
     inline void _clear_table_memory()
     {
-        if(m_hash_table==nullptr) return;
+        if(m_hash_table==NULL) return;
         gim_free(m_hash_table);
-        m_hash_table = nullptr;
+        m_hash_table = NULL;
         m_table_size = 0;
     }
 
@@ -336,7 +336,7 @@ protected:
     //! Destroy hash table memory
     inline void _destroy()
     {
-        if(m_hash_table==nullptr) return;
+        if(m_hash_table==NULL) return;
         _clear_table_memory();
     }
 
@@ -574,7 +574,7 @@ public:
                      GUINT node_size = GIM_DEFAULT_HASH_TABLE_NODE_SIZE,
                      GUINT min_hash_table_size = GIM_INVALID_HASH)
     {
-        m_hash_table = nullptr;
+        m_hash_table = NULL;
         m_table_size = 0;
         m_sorted = false;
         m_node_size = node_size;
@@ -657,7 +657,7 @@ public:
 
     bool switch_to_sorted_array()
     {
-        if(m_hash_table==nullptr) return true;
+        if(m_hash_table==NULL) return true;
         _clear_table_memory();
         return sort();
     }
@@ -757,7 +757,7 @@ public:
     inline T * get_value(GUINT hashkey)
     {
         GUINT index = find(hashkey);
-        if(index == GIM_INVALID_HASH) return nullptr;
+        if(index == GIM_INVALID_HASH) return NULL;
         return &m_nodes[index].m_data;
     }
 
@@ -768,7 +768,7 @@ public:
     {
         if(index > m_nodes.size()) return false;
 
-        if(m_hash_table == nullptr)
+        if(m_hash_table == NULL)
         {
             if(is_sorted())
             {
@@ -792,7 +792,7 @@ public:
     {
         if(index > m_nodes.size()) return false;
 
-        if(m_hash_table == nullptr)
+        if(m_hash_table == NULL)
         {
             return this->_erase_unsorted(index);
         }
@@ -832,7 +832,7 @@ public:
     {
         m_nodes.clear();
 
-        if(m_hash_table==nullptr) return;
+        if(m_hash_table==NULL) return;
         GUINT datasize = m_table_size*m_node_size;
         //Initialize the hashkeys.
         GUINT i;

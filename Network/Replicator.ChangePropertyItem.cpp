@@ -58,7 +58,7 @@ shared_ptr<DeserializedItem> Replicator::ChangePropertyItem::read(Replicator& re
 	}
 
 	if (!deserializedData->propertyDescriptor)
-		throw RBX::runtime_error("Replicator readChangedProperty nullptr descriptor");
+		throw RBX::runtime_error("Replicator readChangedProperty NULL descriptor");
 
 	if (deserializedInstance && !deserializedInstance->getDescriptor().isA(deserializedData->propertyDescriptor->owner))
 	{

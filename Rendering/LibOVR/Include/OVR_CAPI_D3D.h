@@ -66,7 +66,7 @@ typedef enum ovrSwapTextureSetD3D11Flags_
 /// \param[in]  device Specifies the associated ID3D11Device, which must be the one that the textures will be used with in the application's process.
 /// \param[in]  desc Specifies requested texture properties. See notes for more info about texture format.
 /// \param[in]  miscFlags Specifies misc bit flags of type \a ovrSwapTextureSetD3D11Flags used when creating the swap textures
-/// \param[out] outTextureSet Specifies the created ovrSwapTextureSet, which will be valid upon a successful return value, else it will be nullptr.
+/// \param[out] outTextureSet Specifies the created ovrSwapTextureSet, which will be valid upon a successful return value, else it will be NULL.
 ///             This texture set must be eventually destroyed via ovr_DestroySwapTextureSet before destroying the HMD with ovr_Destroy.
 ///
 /// \return Returns an ovrResult indicating success or failure. In the case of failure, use 
@@ -100,7 +100,7 @@ OVR_PUBLIC_FUNCTION(ovrResult) ovr_CreateSwapTextureSetD3D11(ovrSession session,
 /// \param[in]  device Specifies the associated ID3D11Device, which must be the one that the textures will be used with in the application's process.
 /// \param[in]  desc Specifies requested texture properties. See notes for info about texture format.
 /// \param[in]  miscFlags Specifies misc bit flags of type \a ovrSwapTextureSetD3D11Flags used when creating the swap textures
-/// \param[out] outMirrorTexture Specifies the created ovrTexture, which will be valid upon a successful return value, else it will be nullptr.
+/// \param[out] outMirrorTexture Specifies the created ovrTexture, which will be valid upon a successful return value, else it will be NULL.
 ///             This texture must be eventually destroyed via ovr_DestroyMirrorTexture before destroying the HMD with ovr_Destroy.
 ///
 /// \return Returns an ovrResult indicating success or failure. In the case of failure, use 

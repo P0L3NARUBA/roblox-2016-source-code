@@ -47,7 +47,7 @@ namespace RBX
 			: connectionSignal(connectionSignal)
 			, remoteEvent(remoteEvent)
 			, connectionCount(connectionCount)
-			, instance(nullptr)
+			, instance(NULL)
 		{ 
 			
 		}

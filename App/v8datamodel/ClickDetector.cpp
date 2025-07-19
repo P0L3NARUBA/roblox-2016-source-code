@@ -111,7 +111,7 @@ void ClickDetector::fireMouseClick(float distance, RBX::Network::Player* player)
 bool ClickDetector::isClickable(shared_ptr<PartInstance> part, float distanceToCharacter, bool raiseClickedEvent, RBX::Network::Player* player)
 {
 	shared_ptr<Instance> clickDetectorParent = part;
-	while (clickDetectorParent && fastSharedDynamicCast<Workspace>(clickDetectorParent) == nullptr)
+	while (clickDetectorParent && fastSharedDynamicCast<Workspace>(clickDetectorParent) == NULL)
 	{
 		if (shared_ptr<ClickDetector> cd = shared_from(clickDetectorParent->findFirstChildOfType<ClickDetector>()))
 		{
@@ -164,7 +164,7 @@ void ClickDetector::stopHover(shared_ptr<PartInstance> part, RBX::Network::Playe
 				if (ClickDetector* cd = instance->findFirstChildOfType<ClickDetector>()) 
 					cd->fireMouseHoverLeave(player);
 				instance = instance->getParent();
-			} while (instance != nullptr && Instance::fastDynamicCast<Workspace>(instance) == nullptr);
+			} while (instance != NULL && Instance::fastDynamicCast<Workspace>(instance) == NULL);
 		}
 	}
 }
@@ -183,7 +183,7 @@ bool ClickDetector::isHovered(PartInstance *part, float distanceToCharacter, boo
 				}
 			}
 			i = shared_from(i->getParent());
-		} while (i != nullptr && Instance::fastDynamicCast<Workspace>(i.get()) == nullptr);
+		} while (i != NULL && Instance::fastDynamicCast<Workspace>(i.get()) == NULL);
 	}
 	return false;
 }

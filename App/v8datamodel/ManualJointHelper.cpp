@@ -38,21 +38,21 @@ ManualJointHelper::~ManualJointHelper()
 
 ManualJointHelper::ManualJointHelper(Workspace* ws)
 {
-	workspace = nullptr;
+	workspace = NULL;
 	displayPotentialJoints = AdvArrowTool::advManualJointMode;
     isAdornable = false;
 	autoJointsDetected = false;
-    targetPrimitive = nullptr;
+    targetPrimitive = NULL;
 	setWorkspace(ws);
 }
 
 ManualJointHelper::ManualJointHelper(void)
 {
-	workspace = nullptr;
+	workspace = NULL;
 	displayPotentialJoints = AdvArrowTool::advManualJointMode;
     isAdornable = false;
 	autoJointsDetected = false;
-    targetPrimitive = nullptr;
+    targetPrimitive = NULL;
 }
 
 void ManualJointHelper::clearAndDeleteJointSurfacePairs(void)
@@ -153,7 +153,7 @@ void ManualJointHelper::createTerrainJointSurfacePair(Primitive& p0, Primitive& 
 	PartInstance* part1 = PartInstance::fromPrimitive(&p1);
 	RBXASSERT(part1->getParent());
 
-	ConstraintSurfacePair* aPair = nullptr;
+	ConstraintSurfacePair* aPair = NULL;
 
 	RBXASSERT( p1.getConstGeometry()->getGeometryType() != RBX::Geometry::GEOMETRY_MEGACLUSTER );
 	size_t fix = -1;
@@ -216,19 +216,19 @@ void ManualJointHelper::createJointSurfacePair(Primitive& p0, size_t& face0Id, P
 	PartInstance* part1 = PartInstance::fromPrimitive(&p1);
 	RBXASSERT(part1->getParent());
 
-    ConstraintSurfacePair* aPair = nullptr;
+    ConstraintSurfacePair* aPair = NULL;
 
     // First check if either part is associated with a humanoid (body part or child gear, hat, etc)
     // If so, no joint allowed
     const Instance* parent0 = PartInstance::fromConstPrimitive(&p0)->getParent();
-    const Humanoid* aHumanoidModel0 = nullptr;
+    const Humanoid* aHumanoidModel0 = NULL;
     while( parent0 && !aHumanoidModel0 )
     {
         aHumanoidModel0 = Humanoid::modelIsConstCharacter(parent0);
         parent0 = parent0->getParent();
     }
     const Instance* parent1 = PartInstance::fromConstPrimitive(&p1)->getParent();
-    const Humanoid* aHumanoidModel1 = nullptr;
+    const Humanoid* aHumanoidModel1 = NULL;
     while( parent1 && !aHumanoidModel1 && !aHumanoidModel0 )  // don't bother walking p1's tree if we already found a character
     {
         aHumanoidModel1 = Humanoid::modelIsConstCharacter(parent1);
@@ -316,7 +316,7 @@ void ManualJointHelper::setPVInstanceTarget(PVInstance& pVInstToJoin)
     if(part)
         targetPrimitive = part->getPartPrimitive();
     else
-        targetPrimitive = nullptr;
+        targetPrimitive = NULL;
 }
 
 
@@ -339,7 +339,7 @@ void ManualJointHelper::render3dAdorn(Adorn* adorn)
 {
     for( unsigned int i = 0; i < jointSurfacePairs.size(); i++ )
     {
-        // if the target primitive is non nullptr, then the client wants to only render the target body outline
+        // if the target primitive is non NULL, then the client wants to only render the target body outline
         // Otherwise, render all surface pairs
         if(targetPrimitive)
         {
@@ -360,7 +360,7 @@ void ManualJointHelper::onPartAncestryChanged(shared_ptr<Instance> instance, sha
 			Primitive * prim = PartInstance::getPrimitive(part);
 
 			if (prim == targetPrimitive)
-				targetPrimitive = nullptr;
+				targetPrimitive = NULL;
 
 			std::vector<ConstraintSurfacePair*>::iterator iter = jointSurfacePairs.begin();
 			for (; iter != jointSurfacePairs.end(); iter++)
@@ -381,8 +381,8 @@ void ManualJointHelper::onPartAncestryChanged(shared_ptr<Instance> instance, sha
 
 ConstraintSurfacePair::ConstraintSurfacePair()
 {
-	p0 = nullptr;
-	p1 = nullptr;
+	p0 = NULL;
+	p1 = NULL;
 	s0 = (size_t)-1;
 	s1 = (size_t)-1;
 }

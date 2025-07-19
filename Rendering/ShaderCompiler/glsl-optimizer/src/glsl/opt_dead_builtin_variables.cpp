@@ -73,7 +73,7 @@ optimize_dead_builtin_variables(exec_list *instructions,
        */
       if (strcmp(var->name, "gl_ModelViewProjectionMatrix") == 0
           || strcmp(var->name, "gl_Vertex") == 0
-          || strstr(var->name, "Transpose") != nullptr)
+          || strstr(var->name, "Transpose") != NULL)
          continue;
 
       var->remove();

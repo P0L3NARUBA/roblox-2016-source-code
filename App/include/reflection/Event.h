@@ -167,7 +167,7 @@ namespace RBX
             virtual void processRemoteEvent(const EventDescriptor& descriptor, const EventArguments& args, const SystemAddress& source);
 
 			// This is used to replicate events:
-			virtual void raiseEventInvocation(const EventDescriptor& descriptor, const EventArguments& args, const SystemAddress* target = nullptr);
+			virtual void raiseEventInvocation(const EventDescriptor& descriptor, const EventArguments& args, const SystemAddress* target = NULL);
 
 			// If the event source can exist between multiple data models then we need to use submit task
 			// when running lua subscribers to ensure the right data model is locked.
@@ -1119,7 +1119,7 @@ namespace RBX
 					return &this->getSignal(e);
 				}
 				RBXASSERT(0);
-				return nullptr;
+				return NULL;
 			}
 
 			/*override*/ bool isScriptable() const 

@@ -288,10 +288,10 @@
    {
      FT_Memory  memory = library->memory;
      FT_Error   error;
-     FT_Glyph   glyph  = nullptr;
+     FT_Glyph   glyph  = NULL;
 
 
-     *aglyph = nullptr;
+     *aglyph = NULL;
 
      if ( !FT_ALLOC( glyph, clazz->glyph_size ) )
      {
@@ -324,7 +324,7 @@
       goto Exit;
     }
 
-    *target = nullptr;
+    *target = NULL;
 
     if ( !source || !source->clazz )
     {
@@ -363,7 +363,7 @@
     FT_Error    error;
     FT_Glyph    glyph;
 
-    const FT_Glyph_Class*  clazz = nullptr;
+    const FT_Glyph_Class*  clazz = NULL;
 
 
     if ( !slot )
@@ -513,7 +513,7 @@
     FT_GlyphSlot_InternalRec  dummy_internal;
     FT_Error                  error = FT_Err_Ok;
     FT_Glyph                  b, glyph;
-    FT_BitmapGlyph            bitmap = nullptr;
+    FT_BitmapGlyph            bitmap = NULL;
     const FT_Glyph_Class*     clazz;
 
     /* FT_BITMAP_GLYPH_CLASS_GET dereferences `library' in PIC mode */

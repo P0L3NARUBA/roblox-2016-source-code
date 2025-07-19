@@ -91,7 +91,7 @@ std::string RBX::Http::urlDecode(const std::string& fragment)
 			hexBuffer[0] = fragment[i + 1];
 			hexBuffer[1] = fragment[i + 2];
 			hexBuffer[2] = '\0';
-			result += (char)strtol(hexBuffer, nullptr, 16);
+			result += (char)strtol(hexBuffer, NULL, 16);
 			i += 3;
 		}
 		else
@@ -316,7 +316,7 @@ void ReportStatisticWithMessage(const std::string& baseUrl, const std::string& i
 	}
 	data << char(0);
 
-	ReportStatisticPost(baseUrl, id, data.str(), nullptr, nullptr, secondaryFilterName, secondaryFilterValue);
+	ReportStatisticPost(baseUrl, id, data.str(), NULL, NULL, secondaryFilterName, secondaryFilterValue);
 }
 
 void ReportStatistic(const std::string& baseUrl, const std::string& id,
@@ -332,7 +332,7 @@ void ReportStatistic(const std::string& baseUrl, const std::string& id,
 void ReportStatisticPost(const std::string& baseUrl, const std::string& id, const std::string& postData,
 					     const char* secondaryFilterName, const char* secondaryFilterValue)
 {
-	ReportStatisticPost(baseUrl, id, postData, nullptr, nullptr, secondaryFilterName, secondaryFilterValue);
+	ReportStatisticPost(baseUrl, id, postData, NULL, NULL, secondaryFilterName, secondaryFilterValue);
 }
 
 void DontCareResponse(std::string* response, std::exception* exception)

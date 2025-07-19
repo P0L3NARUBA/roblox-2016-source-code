@@ -52,7 +52,7 @@ inline void ReleaseCheck(Ty*& object)
 #if !defined(RBX_PLATFORM_DURANGO) // on xbox, object->Release() always returns 1, just because the COM doc says Release() can return anything
         RBXASSERT(refCnt == 0);
 #endif
-        object = nullptr;
+        object = NULL;
     }
 }
 
@@ -120,7 +120,7 @@ protected:
         SamplerState samplerState;
 
         TextureUnit()
-			: texture(nullptr)
+			: texture(NULL)
 			, samplerState(SamplerState::Filter_Point)
 		{
 		}
@@ -138,6 +138,7 @@ protected:
     ID3D11ShaderResourceView* instancedModelMatrixesResource;
     ID3D11ShaderResourceView* globalsLightListResource;
     size_t globalDataSize;
+    size_t processingDataSize;
 
     unsigned int defaultAnisotropy;
 

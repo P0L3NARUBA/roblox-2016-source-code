@@ -57,7 +57,7 @@ namespace RBX {
 		template<const char* const& sName>
 		static const Name& declare()
 		{
-			if(sName == nullptr)
+			if(sName == NULL)
 				return getNullName();
 
 			static boost::once_flag flag = BOOST_ONCE_INIT;

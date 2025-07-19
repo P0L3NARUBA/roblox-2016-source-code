@@ -33,16 +33,16 @@ char *curlx_strdup(const char *str)
   char *newstr;
 
   if(!str)
-    return (char *)nullptr;
+    return (char *)NULL;
 
   len = strlen(str);
 
   if(len >= ((size_t)-1) / sizeof(char))
-    return (char *)nullptr;
+    return (char *)NULL;
 
   newstr = malloc((len+1)*sizeof(char));
   if(!newstr)
-    return (char *)nullptr;
+    return (char *)NULL;
 
   memcpy(newstr, str, (len+1)*sizeof(char));
 
@@ -58,14 +58,14 @@ char *curlx_strdup(const char *str)
  * Copies the 'source' data to a newly allocated buffer (that is
  * returned). Copies 'length' bytes.
  *
- * Returns the new pointer or nullptr on failure.
+ * Returns the new pointer or NULL on failure.
  *
  ***************************************************************************/
 char *Curl_memdup(const char *src, size_t length)
 {
   char *buffer = malloc(length);
   if(!buffer)
-    return nullptr; /* fail */
+    return NULL; /* fail */
 
   memcpy(buffer, src, length);
 

@@ -33,12 +33,12 @@ void ServerScriptService::setLoadStringEnabled(bool value)
 
 bool ServerScriptService::askAddChild(const Instance* instance) const
 {
-	if (Instance::fastDynamicCast<Folder>(instance) != nullptr)
+	if (Instance::fastDynamicCast<Folder>(instance) != NULL)
 		return true;
 
-	return ((Instance::fastDynamicCast<Script>(instance) != nullptr) &&
-        (Instance::fastDynamicCast<LocalScript>(instance) == nullptr)) ||
-        (Instance::fastDynamicCast<ModuleScript>(instance) != nullptr);
+	return ((Instance::fastDynamicCast<Script>(instance) != NULL) &&
+        (Instance::fastDynamicCast<LocalScript>(instance) == NULL)) ||
+        (Instance::fastDynamicCast<ModuleScript>(instance) != NULL);
 }
 
 bool ServerScriptService::scriptShouldRun(BaseScript* script)

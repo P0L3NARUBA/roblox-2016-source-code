@@ -288,7 +288,7 @@ class HTTPStatistics
             return ServiceCategoryOther;
         }
 
-        boost::scoped_ptr<char> chost(HTParse(url, nullptr, PARSE_PATH));
+        boost::scoped_ptr<char> chost(HTParse(url, NULL, PARSE_PATH));
         if (chost.get() == strstr(chost.get(), DataStore::urlApiPath()))
         {
             return ServiceCategoryDataStore;
@@ -406,8 +406,8 @@ rbx::atomic<int> Http::robloxFailureCount = 0;
 WindowAverage<double, double> Http::robloxResponce(kWindowSize);
 WindowAverage<double, double> Http::cdnResponce(kWindowSize);
 
-RBX::mutex *Http::robloxResponceLock = nullptr;
-RBX::mutex *Http::cdnResponceLock = nullptr;
+RBX::mutex *Http::robloxResponceLock = NULL;
+RBX::mutex *Http::cdnResponceLock = NULL;
 
 Http::MutexGuard Http::lockGuard;
 
@@ -468,10 +468,10 @@ Http::MutexGuard::MutexGuard()
 Http::MutexGuard::~MutexGuard()
 {
     delete robloxResponceLock;
-    robloxResponceLock = nullptr;
+    robloxResponceLock = NULL;
 
     delete cdnResponceLock;
-    cdnResponceLock = nullptr;
+    cdnResponceLock = NULL;
 }
 
 RBX::mutex *Http::getRobloxResponceLock()
@@ -589,9 +589,9 @@ void Http::ThrowLastError(int err, const char* url, const char* message)
     TCHAR buffer[256];
     if (::FormatMessage(
             FORMAT_MESSAGE_FROM_SYSTEM,
-            nullptr, err,
+            NULL, err,
             MAKELANGID(LANG_NEUTRAL, SUBLANG_SYS_DEFAULT),
-            buffer, 256, nullptr) == 0
+            buffer, 256, NULL) == 0
         )
         throw RBX::runtime_error("%s: %s, err=0x%X", url, message, err);
     else
@@ -1050,13 +1050,13 @@ bool Http::isMoneySite(const char* url)
     }
     
     std::string host;
-	boost::scoped_ptr<char> cscheme(HTParse(url, nullptr, PARSE_ACCESS));
+	boost::scoped_ptr<char> cscheme(HTParse(url, NULL, PARSE_ACCESS));
 	if (!isValidScheme(cscheme.get()))
 	{
 		return false;
 	}
 
-	boost::scoped_ptr<char> chost(HTParse(url, nullptr, PARSE_HOST));
+	boost::scoped_ptr<char> chost(HTParse(url, NULL, PARSE_HOST));
 	host = chost.get();
 
     std::transform(host.begin(), host.end(), host.begin(), ::tolower);
@@ -1084,7 +1084,7 @@ bool Http::isStrictlyRobloxSite(const char* url)
         return parsed.isSubdomainOf("roblox.com") || parsed.isSubdomainOf("robloxlabs.com");
     }
 
-    std::string host(HTParse(url, nullptr, PARSE_HOST));
+    std::string host(HTParse(url, NULL, PARSE_HOST));
     if ("roblox.com" != host && !hasEnding(host, ".roblox.com") 
         && "robloxlabs.com" != host && !hasEnding(host, ".robloxlabs.com"))
     {
@@ -1197,16 +1197,16 @@ bool Http::isRobloxSite(const char* url)
     std::string host;
     std::string path;
 
-    boost::scoped_ptr<char> cscheme(HTParse(url, nullptr, PARSE_ACCESS));
+    boost::scoped_ptr<char> cscheme(HTParse(url, NULL, PARSE_ACCESS));
     if (!isValidScheme(cscheme.get()))
     {
         return false;
     }
 
-    boost::scoped_ptr<char> chost(HTParse(url, nullptr, PARSE_HOST));
+    boost::scoped_ptr<char> chost(HTParse(url, NULL, PARSE_HOST));
     host = chost.get();
 
-    boost::scoped_ptr<char> cpath(HTParse(url, nullptr, PARSE_PATH));
+    boost::scoped_ptr<char> cpath(HTParse(url, NULL, PARSE_PATH));
     path = cpath.get();
 
     std::transform(host.begin(), host.end(), host.begin(), ::tolower);
@@ -1270,13 +1270,13 @@ bool Http::isExternalRequest(const char* url)
 
     std::string host;
 
-    boost::scoped_ptr<char> cscheme(HTParse(url, nullptr, PARSE_ACCESS));
+    boost::scoped_ptr<char> cscheme(HTParse(url, NULL, PARSE_ACCESS));
     if (!isValidScheme(cscheme.get()))
     {
         return false;
     }
 
-    boost::scoped_ptr<char> chost(HTParse(url, nullptr, PARSE_HOST));
+    boost::scoped_ptr<char> chost(HTParse(url, NULL, PARSE_HOST));
     host = chost.get();
 
     std::transform(host.begin(), host.end(), host.begin(), ::tolower);
@@ -1340,7 +1340,7 @@ bool Http::trustCheck(const char* url, bool externalRequest)
 
                 // Allow resources embedded inside this app
                 TCHAR module[_MAX_PATH];
-                if (GetModuleFileName(nullptr, module, _MAX_PATH))
+                if (GetModuleFileName(NULL, module, _MAX_PATH))
                 {
                     CString strResourceURL;
                     strResourceURL.Format(_T("res://%s"), module);
@@ -1373,7 +1373,7 @@ bool Http::trustCheck(const char* url, bool externalRequest)
 
 		    // Allow resources embedded inside this app
 		    TCHAR module[_MAX_PATH];
-		    if (GetModuleFileName(nullptr, module, _MAX_PATH))
+		    if (GetModuleFileName(NULL, module, _MAX_PATH))
 		    {
 			    if ("res" == parsed.scheme() && 0 == parsed.host().find(module))
 			    {
@@ -1385,13 +1385,13 @@ bool Http::trustCheck(const char* url, bool externalRequest)
         } // if (DFFlag::UseNewUrlClass)
 
         std::string host;
-        boost::scoped_ptr<char> cscheme(HTParse(url, nullptr, PARSE_ACCESS));
+        boost::scoped_ptr<char> cscheme(HTParse(url, NULL, PARSE_ACCESS));
         if (isValidScheme(cscheme.get()))
         {
             return false;
         }
 
-        boost::scoped_ptr<char> chost(HTParse(url, nullptr, PARSE_HOST));
+        boost::scoped_ptr<char> chost(HTParse(url, NULL, PARSE_HOST));
         host = chost.get();
 
         if ("mshtml.dll" == host ||
@@ -1403,7 +1403,7 @@ bool Http::trustCheck(const char* url, bool externalRequest)
 
         // Allow resources embedded inside this app
         TCHAR module[_MAX_PATH];
-        if (GetModuleFileName(nullptr, module, _MAX_PATH))
+        if (GetModuleFileName(NULL, module, _MAX_PATH))
         {
             std::stringstream ss;
             ss << "res://" << module;

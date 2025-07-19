@@ -31,7 +31,7 @@ if (!begin_rw( list_vdim, 0)) return FALSE;
 np->nov = np->noe = np->noc = np->nof = 0;
 
 for (i = 0; i < list_vdim->num_elem; i++) {//    
-	if ((vdim = (lpVDIM)get_next_elem(list_vdim)) == nullptr) goto err;
+	if ((vdim = (lpVDIM)get_next_elem(list_vdim)) == NULL) goto err;
 
 	nov_old = np->nov;
 
@@ -41,7 +41,7 @@ for (i = 0; i < list_vdim->num_elem; i++) {//
 			if( !my_expand_face( np, (short)vdim->num_elem )) goto err1;
 
 	for( i1=1; i1<vdim->num_elem; i1++) {
-		if( (node = (lpMNODE)get_next_elem(vdim)) == nullptr) goto err1;
+		if( (node = (lpMNODE)get_next_elem(vdim)) == NULL) goto err1;
 		np->v[++np->nov] = node->p;
 	}
 	end_rw(vdim);
@@ -64,7 +64,7 @@ err:
 
 BOOL sub_division_face( lpNPW np, lpVDIM add_vdim ){
 	BOOL           rt=FALSE;
-	NP_VERTEX_LIST ver = {0,0,nullptr,nullptr};
+	NP_VERTEX_LIST ver = {0,0,NULL,NULL};
 	D_PLANE        pl;
 	short            face=1;// !!!!!!!   
 
@@ -207,10 +207,10 @@ lpMNODE	 new_cont, p1;
 
 //    
 	new_num=(short)add_vdim->num_elem;
-	if( (add_vdim_cont=(POINT3 *)SGMalloc(new_num*sizeof(POINT3)))==nullptr ) return FALSE;
+	if( (add_vdim_cont=(POINT3 *)SGMalloc(new_num*sizeof(POINT3)))==NULL ) return FALSE;
 	if (!begin_rw(add_vdim,  0) ) goto err;
 	for(i=0; i<new_num; i++){
-			if( (p = (lpPOINT3)get_next_elem(add_vdim)) == nullptr){
+			if( (p = (lpPOINT3)get_next_elem(add_vdim)) == NULL){
 			end_rw(add_vdim);
 			goto err;
 		}
@@ -223,14 +223,14 @@ lpMNODE	 new_cont, p1;
 //   
 	if( !begin_rw(list_vdim, 0) ) goto err;
 	for( i=0; i<list_vdim->num_elem; i++) {//    
-		if( (vdim = (lpVDIM)get_next_elem(list_vdim)) == nullptr) goto err1;
+		if( (vdim = (lpVDIM)get_next_elem(list_vdim)) == NULL) goto err1;
 
 //       + -  /2
 		num_cont_new=(short)vdim->num_elem;
-		if( (new_cont=(MNODE *)SGMalloc((num_cont_new+new_num)*sizeof(MNODE)))==nullptr ) goto err1;
+		if( (new_cont=(MNODE *)SGMalloc((num_cont_new+new_num)*sizeof(MNODE)))==NULL ) goto err1;
 		if (!begin_rw(vdim, 0))  goto err2;
 		for(i1=0; i1<num_cont_new; i1++){
-			if( (p1=(lpMNODE)get_next_elem(vdim)) == nullptr){
+			if( (p1=(lpMNODE)get_next_elem(vdim)) == NULL){
 				end_rw(vdim);
 				goto err2;
 			}
@@ -294,7 +294,7 @@ lpMNODE	 new_cont, p1;
 	if( !init_vdim(list_vdim, sizeof(VDIM))) return FALSE;
 	begin_rw(&new_list,0);
 	for( i=0; i<new_list.num_elem; i++ ){
-		if( (vdim = (lpVDIM)get_next_elem(&new_list)) == nullptr) goto err0;
+		if( (vdim = (lpVDIM)get_next_elem(&new_list)) == NULL) goto err0;
 		if( !add_elem(list_vdim, vdim)) goto err0;;
 	}
 	rt=TRUE;
@@ -377,7 +377,7 @@ short i;
 lpVDIM vdim;
 	if( !begin_rw(list, 0) ) return FALSE;
 	for( i=0; i<list->num_elem; i++) {//    
-		if( (vdim = (lpVDIM)get_next_elem(list)) == nullptr) return FALSE;
+		if( (vdim = (lpVDIM)get_next_elem(list)) == NULL) return FALSE;
 		free_vdim(vdim);
 	}
 	end_rw(list);

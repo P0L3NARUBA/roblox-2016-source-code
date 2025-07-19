@@ -4,20 +4,23 @@
 #ifndef EXCLUDE_COMMON
 #define EXCLUDE_COMMON
 
-#define TEX_DECLARE2D(name, slot)                \
-    Texture2D name##Texture : register(t##slot); \
+#define TEX_DECLARE2D(type, name, slot)                \
+    Texture2D<##type> name##Texture : register(t##slot); \
     SamplerState name##Sampler : register(s##slot)
-#define TEX_DECLARE2DMS(name, slot)                \
-    Texture2DMS name##Texture : register(t##slot); \
+#define TEX_DECLARE2DMS(type, name, slot)                \
+    Texture2DMS<##type> name##Texture : register(t##slot); \
     SamplerState name##Sampler : register(s##slot)
-#define TEX_DECLARE2DARRAY(name, slot)                \
-    Texture2DArray name##Texture : register(t##slot); \
+#define TEX_DECLARE2DARRAY(type, name, slot)                \
+    Texture2DArray<##type> name##Texture : register(t##slot); \
     SamplerState name##Sampler : register(s##slot)
-#define TEX_DECLARE3D(name, slot)                \
-    Texture3D name##Texture : register(t##slot); \
+#define TEX_DECLARE3D(type, name, slot)                \
+    Texture3D<##type> name##Texture : register(t##slot); \
     SamplerState name##Sampler : register(s##slot)
-#define TEX_DECLARECUBE(name, slot)                \
-    TextureCube name##Texture : register(t##slot); \
+#define TEX_DECLARECUBE(type, name, slot)                \
+    TextureCube<##type> name##Texture : register(t##slot); \
+    SamplerState name##Sampler : register(s##slot)
+#define TEX_DECLARECUBEARRAY(type, name, slot)                \
+    TextureCubeArray<##type> name##Texture : register(t##slot); \
     SamplerState name##Sampler : register(s##slot)
 
 struct BasicAppData /* size 36 */ {

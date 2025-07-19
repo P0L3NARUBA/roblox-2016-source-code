@@ -4,11 +4,11 @@
 
 sgCObject::sgCObject() 
 {
-	m_object_handle = nullptr;
-	m_temp_matrix = nullptr;
+	m_object_handle = NULL;
+	m_temp_matrix = NULL;
 	memset(&m_min,0,sizeof(SG_POINT));
 	memset(&m_max,0,sizeof(SG_POINT));
-	m_user_dynamic_data = nullptr;
+	m_user_dynamic_data = NULL;
 }
 
 
@@ -16,10 +16,10 @@ sgCObject::sgCObject(SG_OBJ_HANDLE objH)
 {
 	m_object_handle = objH;
 	((lpOBJ)(m_object_handle))->extendedClass = this;
-	m_temp_matrix = nullptr;
+	m_temp_matrix = NULL;
 	memset(&m_min,0,sizeof(SG_POINT));
 	memset(&m_max,0,sizeof(SG_POINT));
-	m_user_dynamic_data = nullptr;
+	m_user_dynamic_data = NULL;
 }
 
 void  sgCObject::PostCreate()
@@ -102,7 +102,7 @@ sgCObject::~sgCObject()
 	if (m_user_dynamic_data)
 	{
 		m_user_dynamic_data->Finalize();
-		m_user_dynamic_data = nullptr;
+		m_user_dynamic_data = NULL;
 	}
 	if (m_temp_matrix)
 		delete m_temp_matrix;
@@ -111,17 +111,17 @@ sgCObject::~sgCObject()
 	{
 		SGFree(lpO->bit_buffer);
 	}
-	lpO->bit_buffer = nullptr;
+	lpO->bit_buffer = NULL;
 	lpO->bit_buffer_size = 0;
 }
 
 sgCObject*   sgCObject::Clone()
 {
 	hOBJ hnewObj;
-	if (!o_copy_obj(m_object_handle, &hnewObj, nullptr)) 
+	if (!o_copy_obj(m_object_handle, &hnewObj, NULL)) 
 	{
 		global_sg_error = SG_ER_INTERNAL;
-		return nullptr;
+		return NULL;
 	}
 	global_sg_error = SG_ER_SUCCESS;
 	return ObjectFromHandle(hnewObj);
@@ -162,25 +162,25 @@ bool   sgCObject::SetUserGeometry(const char* user_geometry_ID,
 								 const unsigned short user_geometry_size,
 								 const void* user_geometry_data)
 {
-	if (user_geometry_ID==nullptr)
+	if (user_geometry_ID==NULL)
 	{
 		global_sg_error = SG_ER_BAD_ARGUMENT_NULL_POINTER;
 		return false;
 	}
 
-	if (user_geometry_size!=0 && user_geometry_data==nullptr)
+	if (user_geometry_size!=0 && user_geometry_data==NULL)
 	{
 		global_sg_error = SG_ER_BAD_ARGUMENT_CONFLICT_BEETWEEN_ARGS;
 		return false;
 	}
 
-	if (user_geometry_size==0 && user_geometry_data!=nullptr)
+	if (user_geometry_size==0 && user_geometry_data!=NULL)
 	{
 		global_sg_error = SG_ER_BAD_ARGUMENT_CONFLICT_BEETWEEN_ARGS;
 		return false;
 	}
 
-	if (user_geometry_size!=0 && user_geometry_data!=nullptr && user_geometry_ID==nullptr)
+	if (user_geometry_size!=0 && user_geometry_data!=NULL && user_geometry_ID==NULL)
 	{
 		global_sg_error = SG_ER_BAD_ARGUMENT_CONFLICT_BEETWEEN_ARGS;
 		return false;
@@ -193,7 +193,7 @@ bool   sgCObject::SetUserGeometry(const char* user_geometry_ID,
 		return false;
 	}
 
-	if (user_geometry_size==0 || user_geometry_data==nullptr)
+	if (user_geometry_size==0 || user_geometry_data==NULL)
 		return true;
 
 	lpOBJ pobj = (lpOBJ)m_object_handle;
@@ -235,9 +235,9 @@ const void*   sgCObject::GetUserGeometry(unsigned short& user_geometry_size) con
 	else
 	{
 		user_geometry_size = 0;
-		return nullptr;
+		return NULL;
 	}
-	return nullptr;
+	return NULL;
 }
 
 bool    sgCObject::SetUserDynamicData(const SG_USER_DYNAMIC_DATA* u_d_d)
@@ -255,7 +255,7 @@ SG_USER_DYNAMIC_DATA* sgCObject::GetUserDymanicData() const
 unsigned short  sgCObject::GetAttribute(SG_OBJECT_ATTR_ID attributeId) const
 {
 	lpOBJ pobj = (lpOBJ)m_object_handle;
-	if (pobj==nullptr)
+	if (pobj==NULL)
 	{
 		assert(0);
 		global_sg_error = SG_ER_INTERNAL;
@@ -285,7 +285,7 @@ unsigned short  sgCObject::GetAttribute(SG_OBJECT_ATTR_ID attributeId) const
 bool   sgCObject::SetAttribute(SG_OBJECT_ATTR_ID attributeId, unsigned short attributeValue)
 {
 	lpOBJ pobj = (lpOBJ)m_object_handle;
-	if (pobj==nullptr)
+	if (pobj==NULL)
 	{
 		assert(0);
 		global_sg_error = SG_ER_INTERNAL;
@@ -327,7 +327,7 @@ const char*     sgCObject::GetName() const
 
 bool  sgCObject::SetName(const char* object_name)
 {
-	if (object_name==nullptr)
+	if (object_name==NULL)
 	{
 		global_sg_error = SG_ER_BAD_ARGUMENT_NULL_POINTER;
 		return false;
@@ -346,7 +346,7 @@ const sgCObject*  sgCObject::GetParent() const
 {
 	lpOBJ pobj = (lpOBJ)m_object_handle;
 	if (!pobj->hhold)
-		return nullptr;
+		return NULL;
 	return ((lpOBJ)(pobj->hhold))->extendedClass;
 }
 
@@ -384,7 +384,7 @@ bool       sgCObject::DestroyTempMatrix()
 	if (m_temp_matrix)
 	{
 		delete m_temp_matrix;
-		m_temp_matrix = nullptr;
+		m_temp_matrix = NULL;
 		return true;
 	}
 	return false;
@@ -410,7 +410,7 @@ void   sgCObject::DeleteObject(sgCObject* obj)
 	global_sg_error = SG_ER_SUCCESS;
 
 	obj->Select(false);
-	o_free(GetObjectHandle(obj), nullptr);
+	o_free(GetObjectHandle(obj), NULL);
 
 	detached_objects.remove(obj); 
 }

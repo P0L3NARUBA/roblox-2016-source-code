@@ -22,7 +22,7 @@ D_POINT point;
 
 BOOL check_point_object(lpD_POINT p, hOBJ hobj, lpNP_TYPE_POINT answer)
 {
-	lpOBJ					obj;//nb = nullptr;
+	lpOBJ					obj;//nb = NULL;
 	lpGEO_BREP  	lpgeobrep;
 	REGION_3D   	gab_obj, gab_point;
 	D_POINT				v1, v2;
@@ -58,7 +58,7 @@ BOOL check_point_object(lpD_POINT p, hOBJ hobj, lpNP_TYPE_POINT answer)
 	}
 // find ray
 	cd.k = 0;
-	cd.matr = nullptr;
+	cd.matr = NULL;
 	init_scan(&sc);
 	sc.data          = &cd;
 	sc.user_geo_scan = point_scan1;
@@ -134,7 +134,7 @@ static OSCAN_COD point_scan1(hOBJ hobj, lpSCAN_CONTROL lpsc)
 	lpPOINT_DATA	data;
 
 	if (ctrl_c_press) { 							 
-		put_message(CTRL_C_PRESS, nullptr, 0);
+		put_message(CTRL_C_PRESS, NULL, 0);
 		return OSFALSE;
 	}
 
@@ -168,7 +168,7 @@ static OSCAN_COD point_scan(hOBJ hobj, lpSCAN_CONTROL lpsc)
 	NP_TYPE_POINT lab;
 
 	if (ctrl_c_press) { 												
-		put_message(CTRL_C_PRESS, nullptr, 0);
+		put_message(CTRL_C_PRESS, NULL, 0);
 		return OSFALSE;
 	}
 

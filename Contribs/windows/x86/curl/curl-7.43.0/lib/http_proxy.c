@@ -125,7 +125,7 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
            reasons, and we don't really use the newly cloned URL here
            then. Just free() it. */
       free(data->req.newurl);
-      data->req.newurl = nullptr;
+      data->req.newurl = NULL;
 
       /* initialize a dynamic send-buffer */
       req_buffer = Curl_add_buffer_init();
@@ -207,7 +207,7 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
             Curl_add_buffer_send(req_buffer, conn,
                                  &data->info.request_size, 0, sockindex);
         }
-        req_buffer = nullptr;
+        req_buffer = NULL;
         if(result)
           failf(data, "Failed sending CONNECT to proxy");
       }
@@ -219,7 +219,7 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
       conn->tunnel_state[sockindex] = TUNNEL_CONNECT;
     } /* END CONNECT PHASE */
 
-    check = Curl_timeleft(data, nullptr, TRUE);
+    check = Curl_timeleft(data, NULL, TRUE);
     if(check <= 0) {
       failf(data, "Proxy CONNECT aborted due to timeout");
       return CURLE_RECV_ERROR;
@@ -251,7 +251,7 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
 
       while((nread<BUFSIZE) && (keepon && !error)) {
 
-        check = Curl_timeleft(data, nullptr, TRUE);
+        check = Curl_timeleft(data, NULL, TRUE);
         if(check <= 0) {
           failf(data, "Proxy CONNECT aborted due to timeout");
           error = SELECT_TIMEOUT; /* already too little time */
@@ -470,7 +470,7 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
                   }
                   else if(checkprefix("Content-Length:", line_start)) {
                     cl = curlx_strtoofft(line_start +
-                                         strlen("Content-Length:"), nullptr, 10);
+                                         strlen("Content-Length:"), NULL, 10);
                   }
                   else if(Curl_compareheader(line_start,
                                              "Connection:", "close"))
@@ -551,7 +551,7 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
     }
     else {
       free(data->req.newurl);
-      data->req.newurl = nullptr;
+      data->req.newurl = NULL;
       /* failure, close this connection to avoid re-use */
       connclose(conn, "proxy CONNECT failure");
       Curl_closesocket(conn, conn->sock[sockindex]);
@@ -577,7 +577,7 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
      make sure that it isn't accidentally used for the document request
      after we've connected. So let's free and clear it here. */
   Curl_safefree(conn->allocptr.proxyuserpwd);
-  conn->allocptr.proxyuserpwd = nullptr;
+  conn->allocptr.proxyuserpwd = NULL;
 
   data->state.authproxy.done = TRUE;
 

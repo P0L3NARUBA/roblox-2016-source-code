@@ -25,7 +25,7 @@ BOOL get_group(lpDXF_GROUP dxfg)
 		application_interface->GetProgresser()->Progress(100*(dxfg->bd->p_beg + dxfg->bd->cur_buf)/dxfg->bd->len_file);
 
 	if (ctrl_c_press) {
-		put_message(CTRL_C_PRESS, nullptr, 0);
+		put_message(CTRL_C_PRESS, NULL, 0);
 		return FALSE;
 	}
 	if (g1 >= GR_SHIFT) {

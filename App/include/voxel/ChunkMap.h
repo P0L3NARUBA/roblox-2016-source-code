@@ -20,7 +20,7 @@ public:
 	// contained in this container.
 	ValueType& insert(const SpatialRegion::Id& id);
 
-	// Constant accessor, returns nullptr if id is not contained.
+	// Constant accessor, returns NULL if id is not contained.
 	const ValueType* find(const SpatialRegion::Id& id) const;
 	ValueType* find(const SpatialRegion::Id& id);
 

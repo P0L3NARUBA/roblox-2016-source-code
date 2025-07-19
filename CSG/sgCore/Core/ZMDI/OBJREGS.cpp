@@ -34,17 +34,17 @@ typedef SNAPTEMPL * pSNAPTEMPL;
 int    GeoObjMethodsCount  = 0;
 int    GeoObjTypesCount    = 0;
 
-SG_PTR_TO_DIGIT*       pMethods      = nullptr;
-char**       ppGeoObjNames = nullptr;
-int*         pOldTypes     = nullptr;
-pEL_OBJTYPE  pElTypes      = nullptr;
+SG_PTR_TO_DIGIT*       pMethods      = NULL;
+char**       ppGeoObjNames = NULL;
+int*         pOldTypes     = NULL;
+pEL_OBJTYPE  pElTypes      = NULL;
 
 OBJTYPE  ALL_OBJECTS;
 OBJTYPE  NULL_OBJECTS;
 
-static lpVDIM pGeoObjVD     = nullptr;
-static lpVDIM pMethodsVD    = nullptr;
-static lpVDIM pObjMethodsVD = nullptr;
+static lpVDIM pGeoObjVD     = NULL;
+static lpVDIM pMethodsVD    = NULL;
+static lpVDIM pObjMethodsVD = NULL;
 static EL_OBJTYPE CurrElGeoMask = 0x00000001;
 
 static BOOL ObjectsRegStatus = FALSE;
@@ -170,19 +170,19 @@ void GeoObjectsFreeMem(void)
 {
   if(geo_size)
     SGFree(geo_size);
-  geo_size = nullptr;
+  geo_size = NULL;
   if(ppGeoObjNames)
     SGFree(ppGeoObjNames);
-  ppGeoObjNames = nullptr;
+  ppGeoObjNames = NULL;
   if(pOldTypes)
     SGFree(pOldTypes);
-  pOldTypes = nullptr;
+  pOldTypes = NULL;
   if(pElTypes)
     SGFree(pElTypes);
-  pElTypes = nullptr;
+  pElTypes = NULL;
   if(pMethods)
     SGFree(pMethods);
-  pMethods = nullptr;
+  pMethods = NULL;
 }
 
 SG_PTR_TO_DIGIT* GetMethodArray(METHOD iMethod)
@@ -252,7 +252,7 @@ pOBJTEMPL pObjTempl;
       char Buf[100];
       strcpy(Buf, " MAX_SIMPLE_GEO_SIZE  o_model.h  ");
       //itoa(ObjGeoSize, &Buf[lstrlen(Buf)], 10);
-//	    MessageBox(nullptr, Buf, "!", MB_OK|MB_ICONERROR|MB_TASKMODAL);
+//	    MessageBox(NULL, Buf, "!", MB_OK|MB_ICONERROR|MB_TASKMODAL);
     }
     goto err;
   }

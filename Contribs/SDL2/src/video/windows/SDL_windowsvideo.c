@@ -92,19 +92,19 @@ WIN_CreateDevice(int devindex)
     SDL_VideoDevice *device;
     SDL_VideoData *data;
 
-    SDL_RegisterApp(nullptr, 0, nullptr);
+    SDL_RegisterApp(NULL, 0, NULL);
 
     /* Initialize all variables that we clean on shutdown */
     device = (SDL_VideoDevice *) SDL_calloc(1, sizeof(SDL_VideoDevice));
     if (device) {
         data = (struct SDL_VideoData *) SDL_calloc(1, sizeof(SDL_VideoData));
     } else {
-        data = nullptr;
+        data = NULL;
     }
     if (!data) {
         SDL_free(device);
         SDL_OutOfMemory();
-        return nullptr;
+        return NULL;
     }
     device->driverdata = data;
 
@@ -209,8 +209,8 @@ WIN_VideoInit(_THIS)
     WIN_InitKeyboard(_this);
     WIN_InitMouse(_this);
 
-    SDL_AddHintCallback(SDL_HINT_WINDOWS_ENABLE_MESSAGELOOP, UpdateWindowsEnableMessageLoop, nullptr);
-    SDL_AddHintCallback(SDL_HINT_WINDOW_FRAME_USABLE_WHILE_CURSOR_HIDDEN, UpdateWindowFrameUsableWhileCursorHidden, nullptr);
+    SDL_AddHintCallback(SDL_HINT_WINDOWS_ENABLE_MESSAGELOOP, UpdateWindowsEnableMessageLoop, NULL);
+    SDL_AddHintCallback(SDL_HINT_WINDOW_FRAME_USABLE_WHILE_CURSOR_HIDDEN, UpdateWindowFrameUsableWhileCursorHidden, NULL);
 
     return 0;
 }
@@ -263,9 +263,9 @@ D3D_LoadDLL(void **pD3DDLL, IDirect3D9 **pDirect3D9Interface)
         }
 
         SDL_UnloadObject(*pD3DDLL);
-        *pD3DDLL = nullptr;
+        *pD3DDLL = NULL;
     }
-    *pDirect3D9Interface = nullptr;
+    *pDirect3D9Interface = NULL;
     return SDL_FALSE;
 }
 
@@ -327,18 +327,18 @@ DXGI_LoadDLL(void **pDXGIDLL, IDXGIFactory **pDXGIFactory)
         if (CreateDXGI) {
             GUID dxgiGUID = {0x7b7166ec,0x21c7,0x44ae,{0xb2,0x1a,0xc9,0xae,0x32,0x1a,0xe3,0x69}};
             if (!SUCCEEDED(CreateDXGI(&dxgiGUID, (void**)pDXGIFactory))) {
-                *pDXGIFactory = nullptr;
+                *pDXGIFactory = NULL;
             }
         }
         if (!*pDXGIFactory) {
             SDL_UnloadObject(*pDXGIDLL);
-            *pDXGIDLL = nullptr;
+            *pDXGIDLL = NULL;
             return SDL_FALSE;
         }
 
         return SDL_TRUE;
     } else {
-        *pDXGIFactory = nullptr;
+        *pDXGIFactory = NULL;
         return SDL_FALSE;
     }
 }

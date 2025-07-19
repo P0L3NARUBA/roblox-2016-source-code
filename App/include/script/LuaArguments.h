@@ -46,7 +46,7 @@ namespace RBX {
 		if (const Reflection::EnumDescriptor* desc = Reflection::EnumDescriptor::lookupDescriptor(value.type()))
 		{
 			const Reflection::EnumDescriptor::Item* item = desc->lookup(value);
-			if (item == nullptr)
+			if (item == NULL)
 				throw RBX::runtime_error("Invalid value for enum %s", desc->name.c_str());
 			return f(*item);
 		}
@@ -142,7 +142,7 @@ namespace RBX {
 	class LuaArguments : public Reflection::FunctionDescriptor::Arguments
 	{
 		typedef DenseHashMap<const void*, bool> TablesCollection;
-		static bool getRec(lua_State *L, int luaIndex, Reflection::Variant& value, bool treatNilAsMissing, TablesCollection* visitedTables = nullptr);
+		static bool getRec(lua_State *L, int luaIndex, Reflection::Variant& value, bool treatNilAsMissing, TablesCollection* visitedTables = NULL);
 
 		const int offset;
 		lua_State * const L;

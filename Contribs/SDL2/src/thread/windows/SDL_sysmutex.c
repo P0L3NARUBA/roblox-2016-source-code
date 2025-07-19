@@ -70,8 +70,8 @@ SDL_DestroyMutex(SDL_mutex * mutex)
 int
 SDL_LockMutex(SDL_mutex * mutex)
 {
-    if (mutex == nullptr) {
-        return SDL_SetError("Passed a nullptr mutex");
+    if (mutex == NULL) {
+        return SDL_SetError("Passed a NULL mutex");
     }
 
     EnterCriticalSection(&mutex->cs);
@@ -83,8 +83,8 @@ int
 SDL_TryLockMutex(SDL_mutex * mutex)
 {
     int retval = 0;
-    if (mutex == nullptr) {
-        return SDL_SetError("Passed a nullptr mutex");
+    if (mutex == NULL) {
+        return SDL_SetError("Passed a NULL mutex");
     }
 
     if (TryEnterCriticalSection(&mutex->cs) == 0) {
@@ -97,8 +97,8 @@ SDL_TryLockMutex(SDL_mutex * mutex)
 int
 SDL_UnlockMutex(SDL_mutex * mutex)
 {
-    if (mutex == nullptr) {
-        return SDL_SetError("Passed a nullptr mutex");
+    if (mutex == NULL) {
+        return SDL_SetError("Passed a NULL mutex");
     }
 
     LeaveCriticalSection(&mutex->cs);

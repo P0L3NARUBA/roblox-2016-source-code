@@ -15,7 +15,7 @@ public:
 	void Upload(const std::string& url);
 	void InitCrashEvent(const std::string& url, const std::string& crashEventName);
 
-	static void UploadCrashEventFile(struct _EXCEPTION_POINTERS *info = nullptr);
+	static void UploadCrashEventFile(struct _EXCEPTION_POINTERS *info = NULL);
 
 	// Really trying to minimize heap allocations on crash event upload
 	static boost::scoped_ptr<RBX::Http> crashEventRequest;

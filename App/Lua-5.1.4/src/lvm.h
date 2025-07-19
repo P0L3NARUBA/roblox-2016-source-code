@@ -17,7 +17,7 @@
 #define tostring(L,o) ((ttype(o) == LUA_TSTRING) || (luaV_tostring(L, o)))
 
 #define tonumber(o,n)	(ttype(o) == LUA_TNUMBER || \
-                         (((o) = luaV_tonumber(o,n)) != nullptr))
+                         (((o) = luaV_tonumber(o,n)) != NULL))
 
 #define equalobj(L,o1,o2) \
 	(ttype(o1) == ttype(o2) && luaV_equalval(L, o1, o2))

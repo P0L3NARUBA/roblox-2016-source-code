@@ -170,15 +170,15 @@ using namespace Reflection;
 
 REFLECTION_BEGIN();
 // LUA property reflections
-static Reflection::PropDescriptor<MegaClusterInstance, std::string> desc_ClusterGridV1("ClusterGrid", category_Data, nullptr, &MegaClusterInstance::setPackagedClusterGridV1, Reflection::PropertyDescriptor::LEGACY, Security::None);
-static Reflection::PropDescriptor<MegaClusterInstance, std::string> desc_ClusterGridV2("ClusterGridV2", category_Data, nullptr, &MegaClusterInstance::setPackagedClusterGridV2, Reflection::PropertyDescriptor::LEGACY, Security::None);
+static Reflection::PropDescriptor<MegaClusterInstance, std::string> desc_ClusterGridV1("ClusterGrid", category_Data, NULL, &MegaClusterInstance::setPackagedClusterGridV1, Reflection::PropertyDescriptor::LEGACY, Security::None);
+static Reflection::PropDescriptor<MegaClusterInstance, std::string> desc_ClusterGridV2("ClusterGridV2", category_Data, NULL, &MegaClusterInstance::setPackagedClusterGridV2, Reflection::PropertyDescriptor::LEGACY, Security::None);
 static Reflection::PropDescriptor<MegaClusterInstance, BinaryString> desc_ClusterGridV3("ClusterGridV3", category_Data, &MegaClusterInstance::getPackagedClusteredGridV3, &MegaClusterInstance::setPackagedClusterGridV3, Reflection::PropertyDescriptor::CLUSTER, Security::None);
 
 static Reflection::PropDescriptor<MegaClusterInstance, BinaryString> desc_SmoothGrid("SmoothGrid", category_Data, &MegaClusterInstance::getPackagedSmoothGrid, &MegaClusterInstance::setPackagedSmoothGrid, Reflection::PropertyDescriptor::CLUSTER, Security::None);
 
 static Reflection::PropDescriptor<MegaClusterInstance, int> desc_SmoothReplicate("SmoothReplicate", category_Data, &MegaClusterInstance::getSmoothReplicate, &MegaClusterInstance::setSmoothReplicate, Reflection::PropertyDescriptor::REPLICATE_ONLY, Security::None);
 
-static Reflection::PropDescriptor<MegaClusterInstance, Region3int16> prop_MaxExtents("MaxExtents", category_Data, &MegaClusterInstance::getMaxExtents, nullptr,  PropertyDescriptor::UI );
+static Reflection::PropDescriptor<MegaClusterInstance, Region3int16> prop_MaxExtents("MaxExtents", category_Data, &MegaClusterInstance::getMaxExtents, NULL,  PropertyDescriptor::UI );
 
 // LUA function reflections
 static Reflection::BoundFuncDesc<MegaClusterInstance, shared_ptr<const Reflection::Tuple>(int,int,int)> func_getCell(&MegaClusterInstance::getCellScript, 
@@ -220,7 +220,7 @@ static Reflection::BoundFuncDesc<MegaClusterInstance, void (shared_ptr<Instance>
 	func_pasteRegion(&MegaClusterInstance::pasteRegion, "PasteRegion", "region", "corner", "pasteEmptyCells", Security::None );
 
 static Reflection::PropDescriptor<MegaClusterInstance, bool>
-	prop_IsSmooth("IsSmooth", category_Data, &MegaClusterInstance::isSmooth, nullptr, Reflection::PropertyDescriptor::UI, Security::None);
+	prop_IsSmooth("IsSmooth", category_Data, &MegaClusterInstance::isSmooth, NULL, Reflection::PropertyDescriptor::UI, Security::None);
 static Reflection::BoundFuncDesc<MegaClusterInstance, void(void)> 
 	func_convertToSmooth(&MegaClusterInstance::convertToSmooth, "ConvertToSmooth", Security::Plugin);
 
@@ -318,7 +318,7 @@ MegaClusterInstance::~MegaClusterInstance()
 	FASTLOG1(FLog::MegaClusterInit, "MegaCluster destroyed - %p", this);
 
 	Workspace* parentWorkspace = dynamic_cast<Workspace*>( this->getParent() );
-	if( parentWorkspace ) parentWorkspace->setTerrain( nullptr );
+	if( parentWorkspace ) parentWorkspace->setTerrain( NULL );
 
     // This makes sure we delete physics geometry before voxel grid
     getPartPrimitive()->setGeometryType(Geometry::GEOMETRY_BLOCK);
@@ -356,9 +356,9 @@ void MegaClusterInstance::verifySetParent(const Instance* instance) const
 {
 	Super::verifySetParent(instance);
 
-	const Workspace* workspace = instance != nullptr ?
-		instance->fastDynamicCast<Workspace>() : nullptr;
-	if( instance != nullptr && ((workspace == nullptr) || (workspace->getTerrain() != nullptr)) ){
+	const Workspace* workspace = instance != NULL ?
+		instance->fastDynamicCast<Workspace>() : NULL;
+	if( instance != NULL && ((workspace == NULL) || (workspace->getTerrain() != NULL)) ){
 		throw RBX::runtime_error("Unable to change Terrain's parent. Workspace already has Terrain");
 	}
 
@@ -401,13 +401,13 @@ void MegaClusterInstance::onServiceProvider(ServiceProvider* oldProvider, Servic
 	Super::onServiceProvider(oldProvider, newProvider);
 	FASTLOG2(FLog::MegaClusterInit, "onServiceProvider, oldProvider: %p, new parent: %p", oldProvider, newProvider);
 
-	if(newProvider == nullptr && oldProvider != nullptr)
+	if(newProvider == NULL && oldProvider != NULL)
 	{
 		Workspace* workspace = Workspace::findWorkspace(oldProvider);
 		if(workspace->getTerrain() == this)
 		{
 			FASTLOG(FLog::MegaClusterInit, "onServiceProvider: Clearing terrain instance");
-			workspace->setTerrain(nullptr);
+			workspace->setTerrain(NULL);
 		}
 	}
 }
@@ -417,7 +417,7 @@ void MegaClusterInstance::onAncestorChanged(const AncestorChanged& event)
 	Super::onAncestorChanged(event);
 
 	FASTLOG1(FLog::MegaClusterInit, "Ancestor change, new parent: %p", event.newParent);
-	if(event.newParent == nullptr)
+	if(event.newParent == NULL)
 	{
 		return;
 	}
@@ -1582,8 +1582,8 @@ void MegaClusterInstance::reloadMaterialTable()
 
 	Primitive* myPrim = getPartPrimitive();
 
-	DenseHashSet<Primitive*> primitives(nullptr);
-	DenseHashSet<Contact*> contacts(nullptr);
+	DenseHashSet<Primitive*> primitives(NULL);
+	DenseHashSet<Contact*> contacts(NULL);
 
 	for (int i = 0; i < myPrim->getNumContacts(); ++i)
 	{
@@ -1660,7 +1660,7 @@ void MegaClusterInstance::convertToSmooth()
     // Unparent to get ourselves disconnected from CHS/etc
     Instance* parent = getParent();
 
-    setLockedParent(nullptr);
+    setLockedParent(NULL);
 
 	// Stash old grid somewhere and reinitialize as smooth grid
 	scoped_ptr<Voxel::Grid> oldGrid;
@@ -1902,7 +1902,7 @@ int MegaClusterInstance::writeVoxels(lua_State* L)
 
     const Reflection::EnumDesc<PartMaterial>& matDesc = Reflection::EnumDesc<PartMaterial>::singleton();
 
-	FixedSizeCache<void*, unsigned char, 8> materialCache(nullptr);
+	FixedSizeCache<void*, unsigned char, 8> materialCache(NULL);
 
 	if (!isArray(L, 4, box.getSizeX()))
 		throw RBX::runtime_error("Bad argument materials to 'WriteVoxels' (%dx%dx%d array expected)", box.getSizeX(), box.getSizeY(), box.getSizeZ());
@@ -1945,7 +1945,7 @@ int MegaClusterInstance::writeVoxels(lua_State* L)
 
 				if (materialCacheIndex.first)
 				{
-					const Reflection::EnumDescriptor::Item* matItemDesc = nullptr;
+					const Reflection::EnumDescriptor::Item* matItemDesc = NULL;
 
 					if (!Lua::EnumItem::getItem(L, -2, matItemDesc))
 						luaL_error(L, "Bad argument materials[%d][%d][%d] to 'WriteVoxels' (Enum.Material expected, got %s)", x + 1, y + 1, z + 1, luaL_typename(L, -2));

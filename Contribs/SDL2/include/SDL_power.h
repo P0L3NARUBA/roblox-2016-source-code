@@ -52,12 +52,12 @@ typedef enum
 /**
  *  \brief Get the current power supply details.
  *
- *  \param secs Seconds of battery life left. You can pass a nullptr here if
+ *  \param secs Seconds of battery life left. You can pass a NULL here if
  *              you don't care. Will return -1 if we can't determine a
  *              value, or we're not running on a battery.
  *
  *  \param pct Percentage of battery life left, between 0 and 100. You can
- *             pass a nullptr here if you don't care. Will return -1 if we
+ *             pass a NULL here if you don't care. Will return -1 if we
  *             can't determine a value, or we're not running on a battery.
  *
  *  \return The state of the battery (if any).

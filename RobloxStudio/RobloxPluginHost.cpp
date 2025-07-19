@@ -81,8 +81,8 @@ static const char* kIsVisible = "isVisible";
 
 RobloxPluginHost::RobloxPluginHost(QObject* pParent)
     : QObject(pParent),
-      m_PluginsToolbar(nullptr),
-      m_TerrainToolbar(nullptr),
+      m_PluginsToolbar(NULL),
+      m_TerrainToolbar(NULL),
 	  m_ConvertToSmoothID(0)
 {
     RBX::PluginManager::singleton()->setStudioHost(this);
@@ -398,7 +398,7 @@ void RobloxPluginHost::deleteToolbars(const std::vector<void*>& toolbars)
             continue;
 		}
 
-		QObject* parent = nullptr;
+		QObject* parent = NULL;
 
 		if ( mainWindow.isRibbonStyle() )
 		{
@@ -572,7 +572,7 @@ void RobloxPluginHost::onCreateButton(int toolbarID,int actionID,QString text,QS
         return;
     }
 
-    QAction* action = nullptr;
+    QAction* action = NULL;
 
     if ( text.isEmpty() )
         text = tooltip;
@@ -1300,7 +1300,7 @@ QString RobloxPluginHost::getToolbarName(int id) const
 
 bool RobloxPluginHost::actionState(const QString &actionID, bool &enableState, bool &checkedState)
 {
-	QAction* pAction = nullptr;
+	QAction* pAction = NULL;
 	QMapIterator<int,QAction*> iter(m_ActionMap);
 
 	while (iter.hasNext()) 

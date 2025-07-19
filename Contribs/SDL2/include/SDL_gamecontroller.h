@@ -136,14 +136,14 @@ extern DECLSPEC int SDLCALL SDL_GameControllerAddMapping( const char* mappingStr
 /**
  *  Get a mapping string for a GUID
  *
- *  \return the mapping string.  Must be freed with SDL_free.  Returns nullptr if no mapping is available
+ *  \return the mapping string.  Must be freed with SDL_free.  Returns NULL if no mapping is available
  */
 extern DECLSPEC char * SDLCALL SDL_GameControllerMappingForGUID( SDL_JoystickGUID guid );
 
 /**
  *  Get a mapping string for an open GameController
  *
- *  \return the mapping string.  Must be freed with SDL_free.  Returns nullptr if no mapping is available
+ *  \return the mapping string.  Must be freed with SDL_free.  Returns NULL if no mapping is available
  */
 extern DECLSPEC char * SDLCALL SDL_GameControllerMapping( SDL_GameController * gamecontroller );
 
@@ -156,7 +156,7 @@ extern DECLSPEC SDL_bool SDLCALL SDL_IsGameController(int joystick_index);
 /**
  *  Get the implementation dependent name of a game controller.
  *  This can be called before any controllers are opened.
- *  If no name can be found, this function returns nullptr.
+ *  If no name can be found, this function returns NULL.
  */
 extern DECLSPEC const char *SDLCALL SDL_GameControllerNameForIndex(int joystick_index);
 
@@ -167,7 +167,7 @@ extern DECLSPEC const char *SDLCALL SDL_GameControllerNameForIndex(int joystick_
  *  controller events.  The joystick's instance id (::SDL_JoystickID) will be
  *  used there instead.
  *
- *  \return A controller identifier, or nullptr if an error occurred.
+ *  \return A controller identifier, or NULL if an error occurred.
  */
 extern DECLSPEC SDL_GameController *SDLCALL SDL_GameControllerOpen(int joystick_index);
 

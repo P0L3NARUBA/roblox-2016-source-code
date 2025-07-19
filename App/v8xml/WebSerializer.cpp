@@ -45,7 +45,7 @@ namespace RBX
 			entry->addChild(valueElement);
 			return entry;
 		}
-		return nullptr;
+		return NULL;
 	}
 	XmlElement* WebSerializer::writeValue(const RBX::Reflection::Variant& value)
 	{
@@ -83,7 +83,7 @@ namespace RBX
 					return result;
 				}
 			}
-			return nullptr;
+			return NULL;
 		}
 		if(value.isType<shared_ptr<const RBX::Reflection::ValueMap> >())
 		{
@@ -95,7 +95,7 @@ namespace RBX
 				result->addChild(valueMapRoot);
 				return result;
 			}
-			return nullptr;
+			return NULL;
 		}
 		if(value.isType<shared_ptr<const RBX::Reflection::ValueArray> >())
 		{
@@ -107,9 +107,9 @@ namespace RBX
 				result->addChild(valueListRoot);
 				return result;
 			}
-			return nullptr;
+			return NULL;
 		}
-		return nullptr;		
+		return NULL;		
 	}
 	
 

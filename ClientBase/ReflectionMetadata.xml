@@ -2448,7 +2448,7 @@
 				<Item class="ReflectionMetadataMember">
 					<Properties>
 						<string name="Name">FieldOfView</string>
-						<string name="summary">The current angle, or width, of what the camera can see.  Current acceptable values are from 20 degrees to 80.</string>
+						<string name="summary">The current angle, or width, of what the camera can see.  Current acceptable values are from 1 degree to 120 degrees.</string>
 					</Properties>
 				</Item>
 				<Item class="ReflectionMetadataMember">

@@ -121,7 +121,7 @@ System::System() :
     m_cpuArch("Uninitialized"),
     m_operatingSystem("Uninitialized"),
     m_version("Uninitialized"),
-    m_outOfMemoryCallback(nullptr),
+    m_outOfMemoryCallback(NULL),
     m_realWorldGetTickTime0(0),
     m_highestCPUIDFunction(0) {
 
@@ -210,7 +210,7 @@ void System::init() {
 
         SYSTEM_INFO systemInfo;
         GetSystemInfo(&systemInfo);
-        const char* arch = nullptr;
+        const char* arch = NULL;
         switch (systemInfo.wProcessorArchitecture) {
         case PROCESSOR_ARCHITECTURE_INTEL:
             arch = "Intel";
@@ -448,7 +448,7 @@ std::string System::currentProgramFilename() {
 
 #   ifdef G3D_WIN32
     {
-        GetModuleFileNameA(nullptr, filename, sizeof(filename));
+        GetModuleFileNameA(NULL, filename, sizeof(filename));
     } 
 #   elif defined(G3D_OSX) || defined(G3D_IOS) // ROBLOX
     {
@@ -476,7 +476,7 @@ std::string System::currentProgramFilename() {
             
         debugAssert((int)sizeof(filename) > ret);
             
-        // Ensure proper nullptr termination
+        // Ensure proper NULL termination
         filename[ret] = 0;      
     }
     #endif
@@ -545,11 +545,11 @@ void System::initTime() {
         m_realWorldGetTickTime0 = (RealTime)t.time - t.timezone * G3D::MINUTE + (t.dstflag ? G3D::HOUR : 0);
 
     #else
-        gettimeofday(&m_start, nullptr);
+        gettimeofday(&m_start, NULL);
         // "sse" = "seconds since epoch".  The time
         // function returns the seconds since the epoch
         // GMT (perhaps more correctly called UTC). 
-        time_t gmt = ::time(nullptr);
+        time_t gmt = ::time(NULL);
         
         // No call to free or delete is needed, but subsequent
         // calls to asctime, ctime, mktime, etc. might overwrite
@@ -581,7 +581,7 @@ RealTime System::time() {
         // actually uses RDTSC when on systems that support it, otherwise
         // it uses the system clock.
         struct timeval now;
-        gettimeofday(&now, nullptr);
+        gettimeofday(&now, NULL);
 
         return (now.tv_sec  - instance().m_start.tv_sec) +
             (now.tv_usec - instance().m_start.tv_usec) / 1e6

@@ -107,7 +107,7 @@ void InsertObjectWidget::populateListHelper(bool services, QList<InsertObjectLis
 		try
 		{
 			instance = RBX::Creatable<RBX::Instance>::createByName(pDescriptor.name, RBX::EngineCreator);
-			bool isService = dynamic_cast<RBX::Service*>(instance.get()) != nullptr;
+			bool isService = dynamic_cast<RBX::Service*>(instance.get()) != NULL;
 			if (isService != services)
 				return;
 		}
@@ -203,7 +203,7 @@ void InsertObjectWidget::generateInstanceMap(
 		try
 		{
 			instance = RBX::Creatable<RBX::Instance>::createByName(descriptor->name, RBX::EngineCreator);
-			bool isService = dynamic_cast<RBX::Service*>(instance.get()) != nullptr;
+			bool isService = dynamic_cast<RBX::Service*>(instance.get()) != NULL;
 			if (isService)
 				return;
 		}
@@ -272,7 +272,7 @@ InsertObjectWidget::InsertObjectWidget(QWidget* pParentWidget)
 	: m_bRedrawRequested(false)
 	, m_bInitializationRequired(true)
 	, m_ItemList(new QList<InsertObjectListWidgetItem*>())
-	, m_quickInsertPreviousWidget(nullptr)
+	, m_quickInsertPreviousWidget(NULL)
 	, m_closeDockWhenDoneWithQuickInsert(false)
 {
 	m_pInsertObjectListWidget = new InsertObjectListWidget(this);
@@ -576,7 +576,7 @@ void InsertObjectWidget::InsertObject(
 				// paste instances, this will suppress move and use the position hint to insert the part
 				RBX::Instances instances;
 				instances.push_back(pObjectToInsert);
-				pDataModel->getWorkspace()->insertPasteInstances(instances, pTargetInstance, RBX::INSERT_TO_3D_VIEW, RBX::SUPPRESS_PROMPTS, &pos, nullptr, false);
+				pDataModel->getWorkspace()->insertPasteInstances(instances, pTargetInstance, RBX::INSERT_TO_3D_VIEW, RBX::SUPPRESS_PROMPTS, &pos, NULL, false);
 				// save camera position
 				m_sCameraCFrame = pDataModel->getWorkspace()->getConstCamera()->getCameraCoordinateFrame();
 				//TODO: check if we need to position camera, for non mouse insert i.e. doing an insert from TreeView or Ribbon bar?
@@ -672,7 +672,7 @@ void InsertObjectWidget::InsertObject(
 	generateInstanceMap(
 		&RBX::Reflection::ClassDescriptor::rootDescriptor(),
 		&instanceMap,
-		nullptr);
+		NULL);
 
 	InsertObject(instanceMap[className], pDataModel, insertMode, mousePosition);
 }
@@ -682,7 +682,7 @@ void InsertObjectWidget::setFilter(QString filter)
 	while (m_pInsertObjectListWidget->count() > 0)
 		m_pInsertObjectListWidget->takeItem(0);
 
-	RBX::Instance* pParent = getTargetInstance(nullptr, m_pDataModel);
+	RBX::Instance* pParent = getTargetInstance(NULL, m_pDataModel);
 
 	for (int i = 0; i < m_ItemList->count(); ++i)
 	{
@@ -761,7 +761,7 @@ void InsertObjectWidget::onItemInsertRequested()
 	{
 		m_quickInsertPreviousWidget->activateWindow();
 		m_quickInsertPreviousWidget->setFocus(Qt::MouseFocusReason);
-		m_quickInsertPreviousWidget = nullptr;
+		m_quickInsertPreviousWidget = NULL;
 		UpdateUIManager::Instance().setDockVisibility(eDW_BASIC_OBJECTS, !m_closeDockWhenDoneWithQuickInsert);
 		m_closeDockWhenDoneWithQuickInsert = false;
 	}
@@ -777,7 +777,7 @@ RBX::Instance* InsertObjectWidget::getSelectionFrontPart()
 	{
 		return selection->front().get();
 	}
-	return nullptr;
+	return NULL;
 }
 
 RBX::Instance* InsertObjectWidget::getTargetInstance(RBX::Instance* pInstance, boost::shared_ptr<RBX::DataModel> pDataModel)
@@ -791,7 +791,7 @@ RBX::Instance* InsertObjectWidget::getTargetInstance(RBX::Instance* pInstance, b
 	if (selection && selection->size() > 0)
 	{
 		if (selection->size() > 1)
-			return nullptr;
+			return NULL;
 
 		RBX::Instance* selFront = selection->front().get();
 		if (!pInstance || pInstance->canSetParent(selFront))
@@ -856,7 +856,7 @@ RBX::Vector3 InsertObjectWidget::getInsertLocation(boost::shared_ptr<RBX::DataMo
 				location);
 
 			if (isOnPart)
-				*isOnPart = (foundPart != nullptr);
+				*isOnPart = (foundPart != NULL);
 
 			// if no part found, try to get a point based on the camera
 			if (!foundPart)

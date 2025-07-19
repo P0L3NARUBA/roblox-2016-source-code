@@ -90,7 +90,7 @@ namespace RBX {
 
 		void				refreshCofm();
 
-		Link*				link;				// if link != nullptr, use for "getMeInParent()"
+		Link*				link;				// if link != NULL, use for "getMeInParent()"
 
 		// defining variables
 		bool				canThrottle;		// this body can throttle - i.e., slow down

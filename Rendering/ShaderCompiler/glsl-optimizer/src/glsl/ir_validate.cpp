@@ -47,7 +47,7 @@ public:
       this->ht = hash_table_ctor(0, hash_table_pointer_hash,
 				 hash_table_pointer_compare);
 
-      this->current_function = nullptr;
+      this->current_function = NULL;
 
       this->callback_enter = ir_validate::validate_ir;
       this->data_enter = ht;
@@ -87,13 +87,13 @@ public:
 ir_visitor_status
 ir_validate::visit(ir_dereference_variable *ir)
 {
-   if ((ir->var == nullptr) || (ir->var->as_variable() == nullptr)) {
+   if ((ir->var == NULL) || (ir->var->as_variable() == NULL)) {
       printf("ir_dereference_variable @ %p does not specify a variable %p\n",
 	     (void *) ir, (void *) ir->var);
       abort();
    }
 
-   if (hash_table_find(ht, ir->var) == nullptr) {
+   if (hash_table_find(ht, ir->var) == NULL) {
       printf("ir_dereference_variable @ %p specifies undeclared variable "
 	     "`%s' @ %p\n",
 	     (void *) ir, ir->var->name, (void *) ir->var);
@@ -152,7 +152,7 @@ ir_validate::visit_enter(ir_function *ir)
 {
    /* Function definitions cannot be nested.
     */
-   if (this->current_function != nullptr) {
+   if (this->current_function != NULL) {
       printf("Function definition nested inside another function "
 	     "definition:\n");
       printf("%s %p inside %s %p\n",
@@ -188,7 +188,7 @@ ir_validate::visit_leave(ir_function *ir)
 {
    assert(ralloc_parent(ir->name) == ir);
 
-   this->current_function = nullptr;
+   this->current_function = NULL;
    return visit_continue;
 }
 
@@ -205,8 +205,8 @@ ir_validate::visit_enter(ir_function_signature *ir)
       abort();
    }
 
-   if (ir->return_type == nullptr) {
-      printf("Function signature %p for function %s has nullptr return type.\n",
+   if (ir->return_type == NULL) {
+      printf("Function signature %p for function %s has NULL return type.\n",
 	     (void *) ir, ir->function_name());
       abort();
    }
@@ -598,8 +598,8 @@ ir_validate::visit_leave(ir_expression *ir)
 	 assert(ir->operands[0]->type->base_type == ir->type->base_type);
 	 assert(ir->operands[1]->type->is_scalar());
 	 assert(ir->operands[1]->type->base_type == ir->type->base_type);
-	 assert(ir->operands[2] == nullptr);
-	 assert(ir->operands[3] == nullptr);
+	 assert(ir->operands[2] == NULL);
+	 assert(ir->operands[3] == NULL);
 	 break;
       case 3:
 	 assert(ir->operands[0]->type->is_scalar());
@@ -608,7 +608,7 @@ ir_validate::visit_leave(ir_expression *ir)
 	 assert(ir->operands[1]->type->base_type == ir->type->base_type);
 	 assert(ir->operands[2]->type->is_scalar());
 	 assert(ir->operands[2]->type->base_type == ir->type->base_type);
-	 assert(ir->operands[3] == nullptr);
+	 assert(ir->operands[3] == NULL);
 	 break;
       case 4:
 	 assert(ir->operands[0]->type->is_scalar());
@@ -688,7 +688,7 @@ ir_validate::visit(ir_variable *ir)
             const unsigned *const max_ifc_array_access =
                ir->get_max_ifc_array_access();
 
-            assert(max_ifc_array_access != nullptr);
+            assert(max_ifc_array_access != NULL);
 
             if (max_ifc_array_access[i] >= fields[i].type->length) {
                printf("ir_variable has maximum access out of bounds for "
@@ -701,7 +701,7 @@ ir_validate::visit(ir_variable *ir)
       }
    }
 
-   if (ir->constant_initializer != nullptr && !ir->data.has_initializer) {
+   if (ir->constant_initializer != NULL && !ir->data.has_initializer) {
       printf("ir_variable didn't have an initializer, but has a constant "
 	     "initializer value.\n");
       ir->print();
@@ -710,7 +710,7 @@ ir_validate::visit(ir_variable *ir)
 
    if (ir->data.mode == ir_var_uniform
        && strncmp(ir->name, "gl_", 3) == 0
-       && ir->get_state_slots() == nullptr) {
+       && ir->get_state_slots() == NULL) {
       printf("built-in uniform has no state\n");
       ir->print();
       abort();
@@ -836,7 +836,7 @@ check_node_type(ir_instruction *ir, void *data)
       ir->print(); printf("\n");
    }
    ir_rvalue *value = ir->as_rvalue();
-   if (value != nullptr)
+   if (value != NULL)
       assert(value->type != glsl_type::error_type);
 }
 
@@ -853,7 +853,7 @@ validate_ir_tree(exec_list *instructions)
    v.run(instructions);
 
    foreach_in_list(ir_instruction, ir, instructions) {
-      visit_tree(ir, check_node_type, nullptr);
+      visit_tree(ir, check_node_type, NULL);
    }
 #endif
 }

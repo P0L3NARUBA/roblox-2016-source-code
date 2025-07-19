@@ -90,14 +90,14 @@ BOOL o_expand_np(lpNPW np, short nov, short noe, short nof, short noc)
 	if ( np->f )	SGFree(np->f);
 	if ( np->p )	SGFree(np->p);
 	if ( np->c )	SGFree(np->c);
-	np->v		= nullptr;
-	np->vertInfo = nullptr;
-	np->efr	= nullptr;
-	np->efc =	nullptr;
-	np->gru = nullptr;
-	np->f		= nullptr;
-	np->p 	= nullptr;
-	np->c		=	nullptr;
+	np->v		= NULL;
+	np->vertInfo = NULL;
+	np->efr	= NULL;
+	np->efc =	NULL;
+	np->gru = NULL;
+	np->f		= NULL;
+	np->p 	= NULL;
+	np->c		=	NULL;
 
 //   
 	if ( npm2 & NPM_VER ) {
@@ -215,12 +215,12 @@ lpNPW  creat_np_mem(NPTYPE type,short nov,short noe, short noc, short nof, short
 	len = sizeof(NPW);
 	if ( 0 ==(np = (lpNPW)SGMalloc(len)) ) {
 		handler_err(ERR_NO_HEAP);
-		return nullptr;
+		return NULL;
 	}
 	memset(np,0,len);
 	if ( !check_np_max( np, nov, noe, nof, noc) ) {
 		SGFree(np);
-		return nullptr;
+		return NULL;
 	}
 	np->type = type;
 	np->maxnov = nov;
@@ -253,7 +253,7 @@ lpNPW  creat_np_mem(NPTYPE type,short nov,short noe, short noc, short nof, short
 err:
 	free_np_mem(&np);
 	handler_err(ERR_NO_HEAP);
-	return nullptr;
+	return NULL;
 }
 void free_np_mem(lpNPW * npw1)
 {
@@ -269,7 +269,7 @@ void free_np_mem(lpNPW * npw1)
 	if ( npw->f  ) 	SGFree(npw->f);
 	if ( npw->p ) 	SGFree(npw->p);
   SGFree(npw);
-	*npw1 = nullptr;
+	*npw1 = NULL;
 }
 static short create_level = 0;
 static char flg_create = 0;

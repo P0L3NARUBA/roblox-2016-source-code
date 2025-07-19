@@ -27,7 +27,7 @@
   FT_EXPORT_DEF( const char* )
   FT_Get_Font_Format( FT_Face  face )
   {
-    const char*  result = nullptr;
+    const char*  result = NULL;
 
 
     if ( face )
@@ -42,7 +42,7 @@
   FT_EXPORT_DEF( const char* )
   FT_Get_X11_Font_Format( FT_Face  face )
   {
-    const char*  result = nullptr;
+    const char*  result = NULL;
 
 
     if ( face )

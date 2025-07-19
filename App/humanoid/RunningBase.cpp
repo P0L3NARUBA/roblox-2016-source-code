@@ -126,7 +126,7 @@ void RunningBase::onComputeForceImpl()
 	float mass;
 	
 	if ((getHumanoid()->getWorld()->getUsingPGSSolver()) || 
-		floor == nullptr || 
+		floor == NULL || 
 		floor->getAnchoredProperty() || 
 		(floor->getAssembly() && floor->getAssembly()->getAssemblyState() == Sim::ANCHORED)) {
 		mass = root->getBranchMass();
@@ -233,7 +233,7 @@ void RunningBase::onComputeForceImpl()
 
 		Vector3 horzontalAccel(deltaAccel.x, 0.0f, deltaAccel.z);
 		float maxHorizontalForce;
-		if (floor != nullptr) {
+		if (floor != NULL) {
 			maxHorizontalForce = maxLinearGroundMoveForce();
 		} else {
 			maxHorizontalForce = maxLinearMoveForce();

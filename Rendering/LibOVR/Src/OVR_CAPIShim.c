@@ -115,8 +115,8 @@ static const uint8_t VersionXOR = 0xc9;
     typedef void*                  ModuleFunctionType;
 #endif
 
-#define ModuleHandleTypeNull   ((ModuleHandleType)nullptr)
-#define ModuleFunctionTypeNull ((ModuleFunctionType)nullptr)
+#define ModuleHandleTypeNull   ((ModuleHandleType)NULL)
+#define ModuleFunctionTypeNull ((ModuleFunctionType)NULL)
 
 
 //-----------------------------------------------------------------------------------
@@ -146,7 +146,7 @@ static const uint8_t VersionXOR = 0xc9;
 
 #define OVR_DECLARE_IMPORT(ReturnValue, FunctionName, Arguments)  \
     typedef ReturnValue (OVR_CDECL *FunctionName##Type)Arguments; \
-    FunctionName##Type FunctionName##Ptr = nullptr;
+    FunctionName##Type FunctionName##Ptr = NULL;
 
 
 
@@ -319,7 +319,7 @@ static ovrBool OVR_GetCurrentWorkingDirectory(FilePathCharType* directoryPath, s
 // location of the bundle and not the path to the executable within the bundle. Else return the path to the executable binary itself.
 // The moduleHandle refers to the relevant dynamic (a.k.a. shared) library. The main executable is the main module, and each of the shared
 // libraries is a module. This way you can specify that you want to know the directory of the given shared library, which may be different
-// from the main executable. If the moduleHandle is nullptr then the current application module is used.
+// from the main executable. If the moduleHandle is NULL then the current application module is used.
 static ovrBool OVR_GetCurrentApplicationDirectory(FilePathCharType* directoryPath, size_t directoryPathCapacity, ovrBool appContainer, ModuleHandleType moduleHandle)
 {
     #if defined(_WIN32)
@@ -426,7 +426,7 @@ static ovrBool OVR_GetCurrentModuleDirectory(FilePathCharType* directoryPath, si
 
         return directoryPath[0] ? ovrTrue : ovrFalse;
     #else
-        return OVR_GetCurrentApplicationDirectory(directoryPath, directoryPathCapacity, appContainer, nullptr);
+        return OVR_GetCurrentApplicationDirectory(directoryPath, directoryPathCapacity, appContainer, NULL);
     #endif
 }
 
@@ -441,7 +441,7 @@ static ModuleHandleType OVR_OpenLibrary(const FilePathCharType* libraryPath)
         // Don't bother trying to dlopen() a file that is not even there.
         if (access(libraryPath, X_OK | R_OK ) != 0)
         {
-            return nullptr;
+            return NULL;
         }
 
         dlerror(); // Clear any previous dlopen() errors
@@ -482,7 +482,7 @@ static void OVR_CloseLibrary(ModuleHandleType hLibrary)
 }
 
 
-// Returns a valid ModuleHandleType (e.g. Windows HMODULE) or returns ModuleHandleTypeNull (e.g. nullptr).
+// Returns a valid ModuleHandleType (e.g. Windows HMODULE) or returns ModuleHandleTypeNull (e.g. NULL).
 // The caller is required to eventually call OVR_CloseLibrary on a valid return handle.
 //
 static ModuleHandleType OVR_FindLibraryPath(int requestedProductVersion, int requestedMajorVersion,
@@ -678,7 +678,7 @@ static ModuleHandleType OVR_FindLibraryPath(int requestedProductVersion, int req
                 {
                     char pwBuffer[pwBufferSize];
                     struct passwd  pw;
-                    struct passwd* pwResult = nullptr;
+                    struct passwd* pwResult = NULL;
 
                     if ((getpwuid_r(getuid(), &pw, pwBuffer, pwBufferSize, &pwResult) == 0) && pwResult)
                         homeDirLength = OVR_strlcpy(homeDir, pw.pw_dir, sizeof(homeDir));
@@ -721,7 +721,7 @@ static ModuleHandleType OVR_FindLibraryPath(int requestedProductVersion, int req
         #endif
 
         OVR_GetCurrentWorkingDirectory(cwDir, sizeof(cwDir) / sizeof(cwDir[0]));
-        OVR_GetCurrentApplicationDirectory(appDir, sizeof(appDir) / sizeof(appDir[0]), ovrTrue, nullptr);
+        OVR_GetCurrentApplicationDirectory(appDir, sizeof(appDir) / sizeof(appDir[0]), ovrTrue, NULL);
 
         // Versioned file expectations.
         //     Windows: LibOVRRT<BIT_DEPTH>_<PRODUCT_VERSION>_<MAJOR_VERSION>.dll                                  // Example: LibOVRRT64_1_1.dll -- LibOVRRT 64 bit, product 1, major version 1, minor/patch/build numbers unspecified in the name.
@@ -784,7 +784,7 @@ static ModuleHandleType OVR_FindLibraryPath(int requestedProductVersion, int req
 //
 // global handle to the LivOVR shared library.
 //
-static ModuleHandleType hLibOVR = nullptr;
+static ModuleHandleType hLibOVR = NULL;
 
 // This function is currently unsupported.
 ModuleHandleType ovr_GetLibOVRRTHandle()
@@ -913,54 +913,54 @@ static ovrResult OVR_LoadSharedLibrary(int requestedProductVersion, int requeste
 static void OVR_UnloadSharedLibrary()
 {
     // To consider: Make all pointers be part of a struct and memset the struct to 0 here.
-    ovr_InitializeRenderingShimVersionPtr = nullptr;
-    ovr_InitializePtr = nullptr;
-    ovr_ShutdownPtr = nullptr;
-    ovr_GetVersionStringPtr = nullptr;
-    ovr_GetLastErrorInfoPtr = nullptr;
-    ovr_GetHmdDescPtr = nullptr;
-    ovr_CreatePtr = nullptr;
-    ovr_DestroyPtr = nullptr;
-    ovr_GetSessionStatusPtr = nullptr;
-    ovr_GetEnabledCapsPtr = nullptr;
-    ovr_SetEnabledCapsPtr = nullptr;
-    ovr_GetTrackingCapsPtr = nullptr;
-    ovr_ConfigureTrackingPtr = nullptr;
-    ovr_RecenterPosePtr = nullptr;
-    ovr_GetTrackingStatePtr = nullptr;
-    ovr_GetInputStatePtr = nullptr;
-    ovr_SetControllerVibrationPtr = nullptr;
-    ovr_GetFovTextureSizePtr = nullptr;
-    ovr_SubmitFramePtr = nullptr;
-    ovr_GetRenderDescPtr = nullptr;
-    ovr_GetPredictedDisplayTimePtr = nullptr;
-    ovr_GetTimeInSecondsPtr = nullptr;
-    ovr_ResetBackOfHeadTrackingPtr = nullptr;
-    ovr_ResetMulticameraTrackingPtr = nullptr;
-    ovr_GetBoolPtr = nullptr;
-    ovr_SetBoolPtr = nullptr;
-    ovr_GetIntPtr = nullptr;
-    ovr_SetIntPtr = nullptr;
-    ovr_GetFloatPtr = nullptr;
-    ovr_SetFloatPtr = nullptr;
-    ovr_GetFloatArrayPtr = nullptr;
-    ovr_SetFloatArrayPtr = nullptr;
-    ovr_GetStringPtr = nullptr;
-    ovr_SetStringPtr = nullptr;
-    ovr_TraceMessagePtr = nullptr;
+    ovr_InitializeRenderingShimVersionPtr = NULL;
+    ovr_InitializePtr = NULL;
+    ovr_ShutdownPtr = NULL;
+    ovr_GetVersionStringPtr = NULL;
+    ovr_GetLastErrorInfoPtr = NULL;
+    ovr_GetHmdDescPtr = NULL;
+    ovr_CreatePtr = NULL;
+    ovr_DestroyPtr = NULL;
+    ovr_GetSessionStatusPtr = NULL;
+    ovr_GetEnabledCapsPtr = NULL;
+    ovr_SetEnabledCapsPtr = NULL;
+    ovr_GetTrackingCapsPtr = NULL;
+    ovr_ConfigureTrackingPtr = NULL;
+    ovr_RecenterPosePtr = NULL;
+    ovr_GetTrackingStatePtr = NULL;
+    ovr_GetInputStatePtr = NULL;
+    ovr_SetControllerVibrationPtr = NULL;
+    ovr_GetFovTextureSizePtr = NULL;
+    ovr_SubmitFramePtr = NULL;
+    ovr_GetRenderDescPtr = NULL;
+    ovr_GetPredictedDisplayTimePtr = NULL;
+    ovr_GetTimeInSecondsPtr = NULL;
+    ovr_ResetBackOfHeadTrackingPtr = NULL;
+    ovr_ResetMulticameraTrackingPtr = NULL;
+    ovr_GetBoolPtr = NULL;
+    ovr_SetBoolPtr = NULL;
+    ovr_GetIntPtr = NULL;
+    ovr_SetIntPtr = NULL;
+    ovr_GetFloatPtr = NULL;
+    ovr_SetFloatPtr = NULL;
+    ovr_GetFloatArrayPtr = NULL;
+    ovr_SetFloatArrayPtr = NULL;
+    ovr_GetStringPtr = NULL;
+    ovr_SetStringPtr = NULL;
+    ovr_TraceMessagePtr = NULL;
     #if defined (_WIN32)
-    ovr_CreateSwapTextureSetD3D11Ptr = nullptr;
-    ovr_CreateMirrorTextureD3D11Ptr = nullptr;
+    ovr_CreateSwapTextureSetD3D11Ptr = NULL;
+    ovr_CreateMirrorTextureD3D11Ptr = NULL;
     #endif
-    ovr_CreateSwapTextureSetGLPtr = nullptr;
-    ovr_CreateMirrorTextureGLPtr = nullptr;
-    ovr_DestroySwapTextureSetPtr = nullptr;
-    ovr_DestroyMirrorTexturePtr = nullptr;
-    ovr_SetQueueAheadFractionPtr = nullptr;
-    ovr_LookupPtr = nullptr;
+    ovr_CreateSwapTextureSetGLPtr = NULL;
+    ovr_CreateMirrorTextureGLPtr = NULL;
+    ovr_DestroySwapTextureSetPtr = NULL;
+    ovr_DestroyMirrorTexturePtr = NULL;
+    ovr_SetQueueAheadFractionPtr = NULL;
+    ovr_LookupPtr = NULL;
 
     OVR_CloseLibrary(hLibOVR);
-    hLibOVR = nullptr;
+    hLibOVR = NULL;
 }
 
 
@@ -1079,7 +1079,7 @@ OVR_PUBLIC_FUNCTION(const char*) ovr_GetVersionString()
         return "(Unable to load LibOVR)";
 
     dllVersionString = ovr_GetVersionStringPtr(); // Guaranteed to always be valid.
-    assert(dllVersionString != nullptr);
+    assert(dllVersionString != NULL);
     OVR_strlcpy(dllVersionStringLocal, dllVersionString, sizeof(dllVersionStringLocal));
 
     return dllVersionStringLocal;

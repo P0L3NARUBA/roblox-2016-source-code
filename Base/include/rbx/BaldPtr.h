@@ -21,17 +21,17 @@ public:
 
     /**
      * Constructor.
-     *  Sets pointer to nullptr.
+     *  Sets pointer to NULL.
      */
     inline BaldPtr() 
-        : mPointer(nullptr)
+        : mPointer(NULL)
     {}
 
 	/**
 	 * Constructor.
 	 *  Pointer is also validated.
 	 *
-	 * @param	Pointer     pointer to wrap, may be nullptr
+	 * @param	Pointer     pointer to wrap, may be NULL
 	 */
 	inline BaldPtr(T* Pointer)
         : mPointer(Pointer) 
@@ -43,7 +43,7 @@ public:
 	 * Shallow copies pointer.
 	 *  Pointer is validated.
 	 *
-	 * @param	Pointer     pointer to copy, may be nullptr
+	 * @param	Pointer     pointer to copy, may be NULL
 	 * @return  this pointer
 	 */
 	inline T*& operator=(T* Pointer) 
@@ -55,7 +55,7 @@ public:
 
     /**
      * Dereference operator.
-     *  Checks for nullptr and validates.
+     *  Checks for NULL and validates.
      *
      * @return  reference to pointer
      */
@@ -70,7 +70,7 @@ public:
      * Class pointer cast.
      *  Validates pointer.
      *
-     * @return  pointer cast to a class *, may be nullptr
+     * @return  pointer cast to a class *, may be NULL
      */
     inline operator T*() const
     {
@@ -80,7 +80,7 @@ public:
 
 	/**
 	 * Arrow operator that checks and returns the pointer.
-	 *  Checks for nullptr and validates.
+	 *  Checks for NULL and validates.
 	 *
 	 * @return  data pointer
 	 */
@@ -95,7 +95,7 @@ public:
      * Get the raw pointer value.
      *  Performs no checks.
      *
-     * @return  data pointer, may be nullptr
+     * @return  data pointer, may be NULL
      */
     inline T* get() const { return mPointer; }
 

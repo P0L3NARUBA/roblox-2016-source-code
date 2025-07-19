@@ -109,7 +109,7 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
    - [ ] Cascades
    - [ ] Local lights
 - [ ] Ambient Occlusion
-   - [ ] [Screen-space](https://ar5iv.labs.arxiv.org/html/2301.11376)
+   - [ ] [Screen-space (XeGTAO)](https://github.com/GameTechDev/XeGTAO)
    - [ ] [Distance fields](https://dev.epicgames.com/documentation/en-us/unreal-engine/distance-field-ambient-occlusion-in-unreal-engine)
 - [ ] Advanced post-processing effects
    - [ ] Depth of Field
@@ -141,6 +141,7 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
    - [ ] Placeable environment maps
       - [ ] Parallax correction
    - [ ] Screen-space
+   - [ ] Planar
 - [ ] Reference path tracer
 - [ ] Exposure
    - [ ] Adaptive
@@ -176,7 +177,7 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
    - [ ] Forward+
       - [ ] Early depth pass
    - [ ] Deferred
-      - [ ] [MSAA support](https://docs.nvidia.com/gameworks/content/gameworkslibrary/graphicssamples/d3d_samples/antialiaseddeferredrendering.htm)
+      - [ ] [MSAA support](https://diglib.eg.org/server/api/core/bitstreams/6839f5a2-c94c-4c18-9945-680663ccb097/content)
 - [ ] Proper VR Support
 - [ ] [New physics engine](https://graphics.cs.utah.edu/research/projects/avbd/)
 - [ ] API support

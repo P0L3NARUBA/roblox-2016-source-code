@@ -31,7 +31,7 @@ FASTFLAG(StudioEnableWebKitPlugins);
 
 RobloxToolBox::RobloxToolBox()
 : m_pWorkspace()
-, m_pWebView(nullptr)
+, m_pWebView(NULL)
 , reloadView(false)
 {
 	QGridLayout *layout = new QGridLayout(this);
@@ -99,7 +99,7 @@ void RobloxToolBox::setDataModel(boost::shared_ptr<RBX::DataModel> pDataModel)
 
     if (!m_pWorkspace)
     {
-        m_pWorkspace.reset(new RbxWorkspace(this, m_pDataModel ? m_pDataModel.get() : nullptr));
+        m_pWorkspace.reset(new RbxWorkspace(this, m_pDataModel ? m_pDataModel.get() : NULL));
         firstTime = true;
     }
     else

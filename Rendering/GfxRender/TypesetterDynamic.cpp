@@ -77,8 +77,8 @@ FASTINTVARIABLE(FontSizePadding, 1)
 			GlyphProvider(const std::string& fontPath, TextureAtlas* textureAtlas, unsigned fontId)
 				: textureAtlas(textureAtlas)
                 , fontId(fontId)
-                , library(nullptr)
-                , face(nullptr)
+                , library(NULL)
+                , face(NULL)
 			{
                 memset(&errorGlyph, 0, sizeof(errorGlyph));
                 memset(&errorSizeData, 0, sizeof(errorSizeData));
@@ -177,7 +177,7 @@ FASTINTVARIABLE(FontSizePadding, 1)
 
             void releaseAtlas()
             {
-                textureAtlas = nullptr;
+                textureAtlas = NULL;
             }
 
             void setAtlas(TextureAtlas* atlas)
@@ -480,7 +480,7 @@ FASTINTVARIABLE(FontSizePadding, 1)
 
             Vector2int16 intAvailableSpace = Vector2int16(availableSpace / scale);
 
-            Vector2int16 intSize = layout(stringUnicode, &lines, height, intAvailableSpace, useAvailableSpace, false, nullptr);
+            Vector2int16 intSize = layout(stringUnicode, &lines, height, intAvailableSpace, useAvailableSpace, false, NULL);
             unsigned ascender = glyphProvider->getSizeData(height).ascender;
 
             float startx, starty;
@@ -586,7 +586,7 @@ FASTINTVARIABLE(FontSizePadding, 1)
 			std::vector<GlyphLine> lines;
 
 			Vector2int16 intAvailableSpace = Vector2int16(availableSpace / scale);
-			Vector2int16 intSize = layout(stringUnicode, &lines, height, intAvailableSpace, useAvailableSpace, false, nullptr);
+			Vector2int16 intSize = layout(stringUnicode, &lines, height, intAvailableSpace, useAvailableSpace, false, NULL);
 
 			float startx = round_int(position.x);
 			float starty = fontAdjustY(round_int(position.y), intSize.y, scale, yalign);
@@ -647,10 +647,10 @@ FASTINTVARIABLE(FontSizePadding, 1)
 			float scale = 1.0 / retinaScale;
 
 			Vector2int16 intAvailableSpace = Vector2int16(availableSpace / scale);
-			Vector2int16 intSize = layout(stringUnicode, nullptr, height, intAvailableSpace, useAvailableSpace, DFFlag::TextScaleDontWrapInWords, textFits);
+			Vector2int16 intSize = layout(stringUnicode, NULL, height, intAvailableSpace, useAvailableSpace, DFFlag::TextScaleDontWrapInWords, textFits);
 
 			if (DFFlag::TextScaleDontWrapInWords && textFits == false) {
-				intSize = layout(stringUnicode, nullptr, height, intAvailableSpace, useAvailableSpace, false, textFits);
+				intSize = layout(stringUnicode, NULL, height, intAvailableSpace, useAvailableSpace, false, textFits);
 			}
 
 			return Vector2(intSize) * scale;

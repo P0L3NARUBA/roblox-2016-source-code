@@ -98,7 +98,7 @@ bool RobloxMouseConfig::canOpenContextMenu(RBX::InputObject::UserInputType input
 
 RobloxMouseConfigWidget::RobloxMouseConfigWidget(QWidget* parent)
     : QWidget(parent)
-    , m_contextMenuOption(nullptr)
+    , m_contextMenuOption(NULL)
 {
     initialize();
 }

@@ -87,7 +87,7 @@ RBX::UserInputService* SDLGameController::getUserInputService()
 		}
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 RBX::HapticService* SDLGameController::getHapticService()
@@ -100,7 +100,7 @@ RBX::HapticService* SDLGameController::getHapticService()
 		}
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 RBX::GamepadService* SDLGameController::getGamepadService()
@@ -113,12 +113,12 @@ RBX::GamepadService* SDLGameController::getGamepadService()
 		}
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 SDL_GameController* SDLGameController::removeControllerMapping(int joystickId)
 {
-	SDL_GameController* gameController = nullptr;
+	SDL_GameController* gameController = NULL;
 	RBX::UserInputService* inputService = getUserInputService();
 
 	if (joystickIdToGamepadId.find(joystickId) != joystickIdToGamepadId.end())
@@ -283,7 +283,7 @@ bool SDLGameController::setupHapticsForDevice(int id)
 		return true;
 	}
 
-	SDL_Haptic *haptic = nullptr;
+	SDL_Haptic *haptic = NULL;
 
 	// Open the device
 	haptic = SDL_HapticOpen(id);
@@ -444,7 +444,7 @@ void SDLGameController::onControllerButton( const SDL_ControllerButtonEvent sdlE
 
 	if (RBX::UserInputService* inputService = getUserInputService())
 	{
-        inputService->dangerousFireInputEvent(gamepad[buttonCode], nullptr);
+        inputService->dangerousFireInputEvent(gamepad[buttonCode], NULL);
 	}
 }
 
@@ -500,7 +500,7 @@ void SDLGameController::onControllerAxis( const SDL_ControllerAxisEvent sdlEvent
 
 		if (RBX::UserInputService* inputService = getUserInputService())
 		{
-            inputService->dangerousFireInputEvent(gamepad[axisCode], nullptr);
+            inputService->dangerousFireInputEvent(gamepad[axisCode], NULL);
 		}
 	}
 }

@@ -41,18 +41,18 @@ void CustomEventReceiver::setSource(Instance* sourceEvent) {
 	}
 
 	// disconnect from old sourceEvent if this was connected before
-	if (currentSourceEvent.get() != nullptr) {
+	if (currentSourceEvent.get() != NULL) {
 		currentSourceEvent->removeReceiver(this);
 		this->sourceEvent.reset();
 		// send event only after internal state has been updated
 		eventDisconnected(currentSourceEvent);
 	}
 
-	// connect to the new sourceEvent if it is not nullptr
-	if (sourceEvent != nullptr) {
+	// connect to the new sourceEvent if it is not NULL
+	if (sourceEvent != NULL) {
 		CustomEvent* castSource = Instance::fastDynamicCast<CustomEvent>(sourceEvent);
-		debugAssert(castSource != nullptr);
-		if (castSource != nullptr) {
+		debugAssert(castSource != NULL);
+		if (castSource != NULL) {
 			castSource->addReceiver(this);
 			this->sourceEvent = shared_from(castSource);
 			if (getCurrentValue() != castSource->getPersistedCurrentValue()) {
@@ -63,7 +63,7 @@ void CustomEventReceiver::setSource(Instance* sourceEvent) {
 		}
 	}
 
-	if (sourceEvent == nullptr && getCurrentValue() != 0) {
+	if (sourceEvent == NULL && getCurrentValue() != 0) {
 		sourceValueChanged(0);
 	}
 
@@ -80,7 +80,7 @@ void CustomEventReceiver::onServiceProvider(ServiceProvider* oldProvider, Servic
 	if(newProvider) {
 		newProvider->create<CollectionService>()->addInstance(shared_from(this));
 	} else {
-		setSource(nullptr);
+		setSource(NULL);
 	}
 }
 

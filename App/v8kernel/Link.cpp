@@ -8,7 +8,7 @@ namespace RBX {
 
 
 Link::Link()
-: body(nullptr)
+: body(NULL)
 , stateIndex(Body::getNextStateIndex())
 {
 }

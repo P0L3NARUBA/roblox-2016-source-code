@@ -16,8 +16,8 @@ BOOL np_mesh3v(lpNP_STR_LIST list, lpNPTRP trp, short *ident, lpVDIM coor, sgFlo
 							lpVDIM vdtri)
 {
 	register short i,j;
-	short*		indv = nullptr;		//     Vdim
-	short*		inde;//nb = nullptr;		//     
+	short*		indv = NULL;		//     Vdim
+	short*		inde;//nb = NULL;		//     
 	short			num_act = 0;	// -   
 	short			cur_tr;//nb	= 0;	//   
 	short			v1,v2,v3,nof,edge1,edge2,act_edge,lv1,lv2;
@@ -28,8 +28,8 @@ BOOL np_mesh3v(lpNP_STR_LIST list, lpNPTRP trp, short *ident, lpVDIM coor, sgFlo
 	short     old_next_edge;
 	short     old_v;
 
-	if ((inde = (short*)SGMalloc(sizeof(*inde)*(MAXNOE+1))) == nullptr) goto err;
-	if ((indv = (short*)SGMalloc(sizeof(*indv)*(MAXNOV+1))) == nullptr) goto err;
+	if ((inde = (short*)SGMalloc(sizeof(*inde)*(MAXNOE+1))) == NULL) goto err;
+	if ((indv = (short*)SGMalloc(sizeof(*indv)*(MAXNOV+1))) == NULL) goto err;
 
 //	num_proc = start_grad(GetIDS(IDS_SG318), vdtri->num_elem);
 new_np:                      //  

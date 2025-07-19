@@ -1445,7 +1445,7 @@ BOOL np_mesh3v(lpNP_STR_LIST list, lpNPTRP trp, short *ident, lpVDIM coor, sgFlo
               lpVDIM vdtri);
 BOOL  begin_tri_biand(lpTRI_BIAND trb);
 BOOL  put_tri(lpTRI_BIAND trb, lpNPTRP trp, bool intellect_adding=false);
-BOOL  end_tri_biand(lpTRI_BIAND trb, lpLISTH listho, lpNPTRP trp = nullptr);
+BOOL  end_tri_biand(lpTRI_BIAND trb, lpLISTH listho, lpNPTRP trp = NULL);
 
 
 //-------------- cin_end.cpp

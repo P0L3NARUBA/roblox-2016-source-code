@@ -2,7 +2,7 @@
 
 BOOL  bo_new_user_data(lpNPW np)
 {
-	if ( (np->user = SGMalloc(sizeof(BO_USER)*(np->maxnoe+1))) == nullptr) 	return FALSE;
+	if ( (np->user = SGMalloc(sizeof(BO_USER)*(np->maxnoe+1))) == NULL) 	return FALSE;
 	return TRUE;
 }
 
@@ -10,7 +10,7 @@ void  bo_free_user_data(lpNPW np)
 {
 	if ( np ) {
 		if ( np->user ) SGFree(np->user);
-		np->user = nullptr;
+		np->user = NULL;
 	}
 }
 BOOL bo_copy_user_data(lpNPW dist, lpNPW source)
@@ -19,8 +19,8 @@ BOOL bo_copy_user_data(lpNPW dist, lpNPW source)
 
 	us_dist   = (BO_USER*)dist->user;
 	us_source = (BO_USER*)source->user;
-	if (us_source == nullptr || us_dist == nullptr) return TRUE;
-//	if (us_dist == nullptr) return FALSE;
+	if (us_source == NULL || us_dist == NULL) return TRUE;
+//	if (us_dist == NULL) return FALSE;
 	memcpy(us_dist,us_source,sizeof(us_source)*source->noe);
 	return TRUE;
 }
@@ -29,8 +29,8 @@ BOOL bo_expand_user_data(lpNPW np, short nov, short noe, short nof, short noc)
 {
 	lpBO_USER user_new;
 
-		if (noe == 0 || np->user == nullptr) return TRUE;
-	if ( (user_new = (BO_USER*)SGMalloc(sizeof(BO_USER)*(np->maxnoe+noe+1))) == nullptr) return FALSE;
+		if (noe == 0 || np->user == NULL) return TRUE;
+	if ( (user_new = (BO_USER*)SGMalloc(sizeof(BO_USER)*(np->maxnoe+noe+1))) == NULL) return FALSE;
 	memcpy(user_new,np->user,sizeof(BO_USER)*(np->noe+1));
 	SGFree(np->user);
 	np->user = user_new;
@@ -42,7 +42,7 @@ BOOL bo_write_user_data_buf(lpNP_BUF np_buf,lpNPW npw)
 	lpBUFFER_DAT bd = &np_buf->bd;
 	char flg = 0;
 
-	if (npw->user == nullptr) {
+	if (npw->user == NULL) {
   	if ( !story_data(bd,sizeof(char),&flg) ) return FALSE;
 		return TRUE;
 	}
@@ -89,7 +89,7 @@ WORD bo_size_user_data(lpNPW npw)
 {
 	WORD size;
 
-  if (npw->user == nullptr)
+  if (npw->user == NULL)
   	size = sizeof(char);
 	else
   	size = sizeof(char) + sizeof(BO_USER)*(npw->noe+1);

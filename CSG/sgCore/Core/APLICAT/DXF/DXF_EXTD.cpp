@@ -10,7 +10,7 @@ BOOL dxf_extrude(OBJTYPE type, short color, lpGEO_SIMPLE geo, lpLISTH listh,
 	BOOL			Bool = TRUE;
 	MATR			matr;
 
-	if ( !cr_add_obj(type, color, geo, listh, nullptr, FALSE)) return FALSE;
+	if ( !cr_add_obj(type, color, geo, listh, NULL, FALSE)) return FALSE;
 	if (type == OPATH || type == OSPLINE) {
 		htail = listh->htail;
 		if (type == OPATH) {
@@ -32,13 +32,13 @@ BOOL dxf_extrude(OBJTYPE type, short color, lpGEO_SIMPLE geo, lpLISTH listh,
 		}
 		else
 		{
-			if (set_flat_on_path(htail, nullptr))
+			if (set_flat_on_path(htail, NULL))
 				obj->status |= ST_FLAT;
 			else      
 				obj->status &= ~ST_FLAT;
 		}
-		//if (!set_flat_on_path(htail, nullptr)) return FALSE;
-		if ((cod = test_self_cross_path(htail,nullptr)) == OSFALSE) return FALSE;
+		//if (!set_flat_on_path(htail, NULL)) return FALSE;
+		if ((cod = test_self_cross_path(htail,NULL)) == OSFALSE) return FALSE;
 //cod = OSTRUE;
 		if (cod == OSTRUE) {
 			obj = (lpOBJ)htail;
@@ -54,7 +54,7 @@ BOOL dxf_extrude(OBJTYPE type, short color, lpGEO_SIMPLE geo, lpLISTH listh,
 		o_hcunit(matr);
 		o_tdtran(matr, v);
 		Bool = extrud_mesh(&listh2, 0, matr, closed, &hobj);
-		o_free(htail, nullptr);
+		o_free(htail, NULL);
 		if (!hobj) return FALSE;
 		obj = (lpOBJ)hobj;
 		obj->color = (BYTE)color;

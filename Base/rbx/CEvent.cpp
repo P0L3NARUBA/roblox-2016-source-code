@@ -78,19 +78,19 @@ static void WINAPI RbxThrowLastWin32()
 
 RBX::CEvent::~CEvent() throw()
 {
-	if( m_h != nullptr )
+	if( m_h != NULL )
 	{
 		BOOL result = ::CloseHandle( m_h );
 		RBXASSERT(result != 0);
-		m_h = nullptr;
+		m_h = NULL;
 	}
 }
 
 
 RBX::CEvent::CEvent(bool bManualReset )
-:m_h( nullptr )
+:m_h( NULL )
 {
-	m_h = ::CreateEvent( nullptr, bManualReset ? TRUE : FALSE, FALSE, nullptr );
+	m_h = ::CreateEvent( NULL, bManualReset ? TRUE : FALSE, FALSE, NULL );
 	if (!m_h)
 		RbxThrowLastWin32();
 }

@@ -47,7 +47,7 @@ namespace RBX {
 
 		static inline Log* current()
 		{
-			return provider ? provider->provideLog() : nullptr;
+			return provider ? provider->provideLog() : NULL;
 		}
 
 		static void timeStamp(std::ofstream& stream, bool includeDate);
@@ -58,7 +58,7 @@ namespace RBX {
 		static ILogProvider* provider;
 		static inline std::ofstream& currentStream()
 		{
-			RBXASSERT(provider->provideLog()!=nullptr);
+			RBXASSERT(provider->provideLog()!=NULL);
 			return provider->provideLog()->stream;
 		}
 

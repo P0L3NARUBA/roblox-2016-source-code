@@ -36,7 +36,7 @@ namespace RBX {
 		Vector3					force;
 
 		// This is private - only created by the kernel
-		Point(Body* _body = nullptr);
+		Point(Body* _body = NULL);
 
 		virtual	~Point() 
 		{}

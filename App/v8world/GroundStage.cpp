@@ -121,8 +121,8 @@ void GroundStage::removeGroundJoint(Primitive* p, bool grounded)
 	if (j) {
 		getEdgeStage()->onEdgeRemoving(j);
 		j->removeFromPipeline(this);
-		j->setPrimitive(0, nullptr);
-		j->setPrimitive(1, nullptr);
+		j->setPrimitive(0, NULL);
+		j->setPrimitive(1, NULL);
 		delete j;
 	}
 	RBXASSERT(!Joint::findConstJoint(p, Joint::ANCHOR_JOINT));
@@ -253,7 +253,7 @@ void GroundStage::rebuildFreeGround(Primitive* p)
 RigidJoint* GroundStage::heaviestRigidToGround(Primitive* p)
 {
 	RBXASSERT(!p->requestFixed());
-	RigidJoint* answer = nullptr;
+	RigidJoint* answer = NULL;
 
 	RigidJoint* r = p->getFirstRigid();
 	while (r) {

@@ -52,20 +52,20 @@ COutputQueue::COutputQueue(
              bool          bFlushingOpt        // flushing optimization
             ) : m_lBatchSize(lBatchSize),
                 m_bBatchExact(bBatchExact && (lBatchSize > 1)),
-                m_hThread(nullptr),
-                m_hSem(nullptr),
-                m_List(nullptr),
+                m_hThread(NULL),
+                m_hSem(NULL),
+                m_List(NULL),
                 m_pPin(pInputPin),
-                m_ppSamples(nullptr),
+                m_ppSamples(NULL),
                 m_lWaiting(0),
-                m_pInputPin(nullptr),
+                m_pInputPin(NULL),
                 m_bSendAnyway(FALSE),
                 m_nBatched(0),
                 m_bFlushing(FALSE),
                 m_bFlushed(TRUE),
                 m_bFlushingOpt(bFlushingOpt),
                 m_bTerminate(FALSE),
-                m_hEventPop(nullptr),
+                m_hEventPop(NULL),
                 m_hr(S_OK)
 {
     ASSERT(m_lBatchSize > 0);
@@ -94,7 +94,7 @@ COutputQueue::COutputQueue(
     //  Create our sample batch
 
     m_ppSamples = new PMEDIASAMPLE[m_lBatchSize];
-    if (m_ppSamples == nullptr) {
+    if (m_ppSamples == NULL) {
         *phr = E_OUTOFMEMORY;
         return;
     }
@@ -103,8 +103,8 @@ COutputQueue::COutputQueue(
 
     if (bQueue) {
         DbgLog((LOG_TRACE, 2, TEXT("Creating thread for output pin")));
-        m_hSem = CreateSemaphore(nullptr, 0, 0x7FFFFFFF, nullptr);
-        if (m_hSem == nullptr) {
+        m_hSem = CreateSemaphore(NULL, 0, 0x7FFFFFFF, NULL);
+        if (m_hSem == NULL) {
             DWORD dwError = GetLastError();
             *phr = AmHresultFromWin32(dwError);
             return;
@@ -113,20 +113,20 @@ COutputQueue::COutputQueue(
                                  lListSize,
                                  FALSE         // No lock
                                 );
-        if (m_List == nullptr) {
+        if (m_List == NULL) {
             *phr = E_OUTOFMEMORY;
             return;
         }
 
 
         DWORD dwThreadId;
-        m_hThread = CreateThread(nullptr,
+        m_hThread = CreateThread(NULL,
                                  0,
                                  InitialThreadProc,
                                  (LPVOID)this,
                                  0,
                                  &dwThreadId);
-        if (m_hThread == nullptr) {
+        if (m_hThread == NULL) {
             DWORD dwError = GetLastError();
             *phr = AmHresultFromWin32(dwError);
             return;
@@ -149,10 +149,10 @@ COutputQueue::~COutputQueue()
 {
     DbgLog((LOG_TRACE, 3, TEXT("COutputQueue::~COutputQueue")));
     /*  Free our pointer */
-    if (m_pInputPin != nullptr) {
+    if (m_pInputPin != NULL) {
         m_pInputPin->Release();
     }
-    if (m_hThread != nullptr) {
+    if (m_hThread != NULL) {
         {
             CAutoLock lck(this);
             m_bTerminate = TRUE;
@@ -169,7 +169,7 @@ COutputQueue::~COutputQueue()
     } else {
         FreeSamples();
     }
-    if (m_hSem != nullptr) {
+    if (m_hSem != NULL) {
         EXECUTE_ASSERT(CloseHandle(m_hSem));
     }
     delete [] m_ppSamples;
@@ -234,7 +234,7 @@ DWORD COutputQueue::ThreadProc()
 		    SetEvent(m_hEventPop);
 		}
 
-                if (pSample != nullptr &&
+                if (pSample != NULL &&
                     !IsSpecialSample(pSample)) {
 
                     //  If its just a regular sample just add it to the batch
@@ -250,7 +250,7 @@ DWORD COutputQueue::ThreadProc()
                     //  to send (either because there's nothing or the batch
                     //  isn't full) then prepare to wait
 
-                    if (pSample == nullptr &&
+                    if (pSample == NULL &&
                         (m_bBatchExact || m_nBatched == 0)) {
 
                         //  Tell other thread to set the event when there's
@@ -378,7 +378,7 @@ void COutputQueue::SendAnyway()
 
         m_bSendAnyway = TRUE;
         LONG nProcessed;
-        ReceiveMultiple(nullptr, 0, &nProcessed);
+        ReceiveMultiple(NULL, 0, &nProcessed);
         m_bSendAnyway = FALSE;
 
     } else {
@@ -413,7 +413,7 @@ COutputQueue::NewSegment(
             // NEW_SEGMENT value is a NewSegmentPacket containing the
             // parameters.
             NewSegmentPacket * ppack = new NewSegmentPacket;
-            if (ppack == nullptr) {
+            if (ppack == NULL) {
                 return;
             }
             ppack->tStart = tStart;
@@ -556,7 +556,7 @@ void COutputQueue::EndFlush()
 
 void COutputQueue::QueueSample(IMediaSample *pSample)
 {
-    if (nullptr == m_List->AddTail(pSample)) {
+    if (NULL == m_List->AddTail(pSample)) {
         if (!IsSpecialSample(pSample)) {
             pSample->Release();
         }
@@ -718,7 +718,7 @@ void COutputQueue::FreeSamples()
 	        SetEvent(m_hEventPop);
 	    }
 
-            if (pSample == nullptr) {
+            if (pSample == NULL) {
                 break;
             }
             if (!IsSpecialSample(pSample)) {
@@ -734,7 +734,7 @@ void COutputQueue::FreeSamples()
 		        SetEvent(m_hEventPop);
 		    }
 
-                    ASSERT(ppacket != nullptr);
+                    ASSERT(ppacket != NULL);
                     delete ppacket;
                 }
             }
@@ -754,7 +754,7 @@ void COutputQueue::NotifyThread()
     //  Optimize - no need to signal if it's not waiting
     ASSERT(IsQueued());
     if (m_lWaiting) {
-        ReleaseSemaphore(m_hSem, m_lWaiting, nullptr);
+        ReleaseSemaphore(m_hSem, m_lWaiting, NULL);
         m_lWaiting = 0;
     }
 }

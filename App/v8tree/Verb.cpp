@@ -22,7 +22,7 @@ Verb::Verb(VerbContainer* container, const std::string& name, bool blacklisted)
 
 Verb::~Verb()
 {
-	if (container!=nullptr)
+	if (container!=NULL)
 		container->removeVerb(this);
 }
 
@@ -63,7 +63,7 @@ Verb* VerbContainer::getWhitelistVerb(const std::string& prefix, const std::stri
 Verb* VerbContainer::getVerb(const Name& name)
 {
 	if (name.empty())
-		return nullptr;
+		return NULL;
 
 	std::map<const Name*, Verb*>::iterator iter = whitelistVerbs.find(&name);
 	if (iter!=whitelistVerbs.end())
@@ -73,25 +73,25 @@ Verb* VerbContainer::getVerb(const Name& name)
     if (iter!=blacklistVerbs.end())
         return iter->second;
 
-	if (parent!=nullptr)
+	if (parent!=NULL)
 		return parent->getVerb(name);
 	else
-		return nullptr;
+		return NULL;
 }
 
 Verb* VerbContainer::getWhitelistVerb(const Name& name)
 {
     if (name.empty())
-        return nullptr;
+        return NULL;
 
     std::map<const Name*, Verb*>::iterator iter = whitelistVerbs.find(&name);
     if (iter!=whitelistVerbs.end())
         return iter->second;
 
-    if (parent!=nullptr)
+    if (parent!=NULL)
         return parent->getWhitelistVerb(name);
     else
-        return nullptr;
+        return NULL;
 }
 
 void VerbContainer::addWhitelistVerb(Verb* verb)

@@ -14,7 +14,7 @@ BOOL Coons_Surface( lpVDIM u1, lpVDIM v1, lpVDIM u2, lpVDIM v2,
 	BOOL				cod;
 
 	c_num_np	= -32767;
-	*hrez			= nullptr;
+	*hrez			= NULL;
 	if ( !np_init_list(&c_list_str) ) return FALSE;
 
 	init_vdim(&mdd.vdim,sizeof(MNODE));
@@ -29,7 +29,7 @@ BOOL Coons_Surface( lpVDIM u1, lpVDIM v1, lpVDIM u2, lpVDIM v2,
 err2:
 	free_vdim(&mdd.vdim);
 //nb err:
-	np_end_of_put(&c_list_str,NP_CANCEL,0,nullptr);
+	np_end_of_put(&c_list_str,NP_CANCEL,0,NULL);
 	return FALSE;
 }
 

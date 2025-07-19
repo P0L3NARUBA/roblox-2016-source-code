@@ -94,12 +94,12 @@ g3dfnmatch(const char *pattern, const char *string, int flags)
 			if (c == EOS) {
 				if (flags & FNM_PATHNAME)
 					return ((flags & FNM_LEADING_DIR) ||
-					    strchr(string, '/') == nullptr ?
+					    strchr(string, '/') == NULL ?
 					    0 : FNM_NOMATCH);
 				else
 					return (0);
 			} else if (c == '/' && (flags & FNM_PATHNAME)) {
-				if ((string = strchr(string, '/')) == nullptr)
+				if ((string = strchr(string, '/')) == NULL)
 					return (FNM_NOMATCH);
 				break;
 			}

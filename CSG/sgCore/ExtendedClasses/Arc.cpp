@@ -115,7 +115,7 @@ bool SG_ARC::FromThreePoints(const SG_POINT& begP,
 
 	GEO_ARC pArc;
 	memcpy(&pArc, this, sizeof(SG_ARC));
-	if (!arc_p_p_p(0,1,2,p_2D ,nullptr,0,invert,&pArc))
+	if (!arc_p_p_p(0,1,2,p_2D ,NULL,0,invert,&pArc))
 	{
 		global_sg_error = SG_ER_BAD_ARGUMENT_CONFLICT_BEETWEEN_ARGS;
 		return false;
@@ -432,13 +432,13 @@ bool SG_ARC::FromBeginEndNormalAngle(const SG_POINT& begP,
 
 bool  SG_ARC::Draw(SG_DRAW_LINE_FUNC line_func) const
 {
-	if (line_func==nullptr)
+	if (line_func==NULL)
 	{
 		global_sg_error = SG_ER_BAD_ARGUMENT_NULL_POINTER;
 		return false;
 	}
 	int pcnt=0;
-	SG_POINT* pnts=nullptr;
+	SG_POINT* pnts=NULL;
 	pnts = GetPointsFromArcGeo(this,pcnt);
 	for (int i=0;i<pcnt-1;i++)
 		line_func(pnts+i, pnts+i+1);
@@ -448,13 +448,13 @@ bool  SG_ARC::Draw(SG_DRAW_LINE_FUNC line_func) const
 
 
 sgCArc::sgCArc():sgC2DObject()
-		, m_points(nullptr)
+		, m_points(NULL)
 		, m_points_count(0)
 {
 }
 
 sgCArc::sgCArc(SG_OBJ_HANDLE objH):sgC2DObject(objH)
-		, m_points(nullptr)
+		, m_points(NULL)
 		, m_points_count(0)
 {
 	char* typeID = "{0000000000000-0000-0000-000000000004}";
@@ -494,7 +494,7 @@ sgCArc::~sgCArc()
 	if (m_points)
 	{
 		delete[] m_points;
-		m_points = nullptr;
+		m_points = NULL;
 		m_points_count = 0;
 	}
 }

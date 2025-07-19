@@ -26,7 +26,7 @@ namespace RBX {
 				return getEngineBody();
 			}
 			else {
-				return nullptr;
+				return NULL;
 			}
 		}
 

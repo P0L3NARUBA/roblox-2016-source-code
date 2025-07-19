@@ -6,7 +6,7 @@ BOOL b_vr_line(lpD_POINT vn,lpD_POINT vk)
 	hOBJ				hobj;
 	lpOBJ				obj;
 
-	if((hobj = o_alloc(OLINE)) == nullptr)
+	if((hobj = o_alloc(OLINE)) == NULL)
 		return FALSE;
 	obj = (lpOBJ)hobj;
 	geo_line = (lpGEO_LINE)(obj->geo_data);

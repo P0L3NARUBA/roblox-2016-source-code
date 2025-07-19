@@ -82,14 +82,14 @@ JointInstance::JointInstance(Joint* joint)
 JointInstance::~JointInstance()
 {
 	FASTLOG2(FLog::JointInstanceLifetime, "Joint Instance destroyed: %p, joint: %p", this, joint);
-	RBXASSERT(getParent() == nullptr);
-	RBXASSERT(joint->findWorld() == nullptr);
+	RBXASSERT(getParent() == NULL);
+	RBXASSERT(joint->findWorld() == NULL);
 
-	joint->setJointOwner(nullptr);
-	joint->setPrimitive(0, nullptr);
-	joint->setPrimitive(1, nullptr);
+	joint->setJointOwner(NULL);
+	joint->setPrimitive(0, NULL);
+	joint->setPrimitive(1, NULL);
 	delete joint;
-	joint = nullptr;
+	joint = NULL;
 }
 
 XmlElement* JointInstance::writeXml(const boost::function<bool(Instance*)>& isInScope, RBX::CreatorRole creatorRole)
@@ -97,15 +97,15 @@ XmlElement* JointInstance::writeXml(const boost::function<bool(Instance*)>& isIn
 	PartInstance* const p0 = getPart0();
 	PartInstance* const p1 = getPart1();
 
-	bool const s0 = p0 != nullptr && isInScope(p0);
-	bool const s1 = p1 != nullptr && isInScope(p1);
+	bool const s0 = p0 != NULL && isInScope(p0);
+	bool const s1 = p1 != NULL && isInScope(p1);
 
 	if (s0 != s1)
 	{
 		// Don't write if one of the parts isn't being written.
 		// If both aren't being written, then write this, because
 		// we are presumably writing out just this joint explicitly
-		return nullptr;	
+		return NULL;	
 	}
 
 	return Super::writeXml(isInScope, creatorRole);
@@ -140,8 +140,8 @@ void JointInstance::render3dAdorn(Adorn* adorn)
     if (PartInstance::showSpanningTree && Joint::isSpanningTreeJoint(joint) &&
 		(joint->inSpanningTree() || Joint::isSpringJoint(joint)))			// remove "inSpanningTree" to show all spanning joints
 	{
-		Primitive* p0 = getPart0() ? getPart0()->getPartPrimitive() : nullptr;
-		Primitive* p1 = getPart1() ? getPart1()->getPartPrimitive() : nullptr;
+		Primitive* p0 = getPart0() ? getPart0()->getPartPrimitive() : NULL;
+		Primitive* p1 = getPart1() ? getPart1()->getPartPrimitive() : NULL;
 
 		Vector3 pt0 = p0 ? p0->getCoordinateFrame().translation : Vector3::zero();
 		Vector3 pt1 = p1 ? p1->getCoordinateFrame().translation : Vector3::zero();
@@ -200,7 +200,7 @@ World* JointInstance::computeWorld()
 			return workspace->getWorld();
 		}
 		else {
-			return nullptr;
+			return NULL;
 		}
 	}
 
@@ -211,7 +211,7 @@ World* JointInstance::computeWorld()
 bool JointInstance::inEngine()
 {
 	bool answer = joint->inPipeline();
-	RBXASSERT(answer == (computeWorld() != nullptr));
+	RBXASSERT(answer == (computeWorld() != NULL));
 	return answer;
 }
 
@@ -236,15 +236,15 @@ void JointInstance::handleWorldChanged()
 		// TODO: In future, we should consider Joints automatically registering inside Primitives even outside of the World
 		shared_ptr<PartInstance> lock1(part[0].lock());
 		shared_ptr<PartInstance> lock2(part[1].lock());
-		if(lock1.get() == nullptr)
+		if(lock1.get() == NULL)
 		{
 			FASTLOG1(FLog::JointInstanceLifetime, "JointInstance %p has empty primitive0 on world add", this);
-			joint->setPrimitive(0, nullptr);
+			joint->setPrimitive(0, NULL);
 		}
-		if(lock2.get() == nullptr)
+		if(lock2.get() == NULL)
 		{
 			FASTLOG1(FLog::JointInstanceLifetime, "JointInstance %p has empty primitive1 on world add", this);
-			joint->setPrimitive(1, nullptr);
+			joint->setPrimitive(1, NULL);
 		}
 
 		if (oldWorld) {
@@ -272,7 +272,7 @@ void JointInstance::setPart(int i, PartInstance* value)
 	{
 		FASTLOG3(FLog::JointInstanceLifetime, "Joint instance %p, setting part %u to %p", this, i, value);
 		part[i] = shared_from<PartInstance>(value);
-		joint->setPrimitive(i, value ? value->getPartPrimitive() : nullptr);
+		joint->setPrimitive(i, value ? value->getPartPrimitive() : NULL);
 	}
 }
 
@@ -480,8 +480,8 @@ void ManualWeld::render3dAdorn(Adorn* adorn)
 {
 	Super::render3dAdorn(adorn);
 
-	const Primitive* p0 = getPart0() ? getPart0()->getConstPartPrimitive() : nullptr;
-	const Primitive* p1 = getPart1() ? getPart1()->getConstPartPrimitive() : nullptr;
+	const Primitive* p0 = getPart0() ? getPart0()->getConstPartPrimitive() : NULL;
+	const Primitive* p1 = getPart1() ? getPart1()->getConstPartPrimitive() : NULL;
 
 	if (p0 && p1)
 	{
@@ -536,8 +536,8 @@ void ManualGlue::render3dAdorn(Adorn* adorn)
 {
 	Super::render3dAdorn(adorn);
 
-	const Primitive* p0 = getPart0() ? getPart0()->getConstPartPrimitive() : nullptr;
-	const Primitive* p1 = getPart1() ? getPart1()->getConstPartPrimitive() : nullptr;
+	const Primitive* p0 = getPart0() ? getPart0()->getConstPartPrimitive() : NULL;
+	const Primitive* p1 = getPart1() ? getPart1()->getConstPartPrimitive() : NULL;
 
 	if (p0 && p1)
 	{

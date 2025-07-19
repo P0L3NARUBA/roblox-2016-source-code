@@ -4,7 +4,7 @@
 #include "V8DataModel/DataModel.h"
 
 const char* const RBX::sSelection			= "Selection";
-const char* const RBX::sFilteredSelection	= nullptr;
+const char* const RBX::sFilteredSelection	= NULL;
 
 using namespace RBX;
 
@@ -131,7 +131,7 @@ void Selection::addToSelection(Instance* instance)
 	RBXASSERT(!DataModel::get(this) || DataModel::get(this)->write_requested);
 	shared_ptr<Instance> shared = shared_from(instance);
 
-	RBXASSERT(instance!=nullptr);
+	RBXASSERT(instance!=NULL);
 	shared_ptr<Instances> sel = selection.write();
 	Instances::const_iterator it = std::find( sel->begin(), sel->end(), shared );
 	if (it == sel->end()) {
@@ -269,7 +269,7 @@ void Selection::setSelection(Instance* instance)
 void Selection::removeFromSelection(Instance* instance)
 {
 	RBXASSERT(!DataModel::get(this) || DataModel::get(this)->write_requested);
-	RBXASSERT(instance!=nullptr);
+	RBXASSERT(instance!=NULL);
 
 	shared_ptr<Instances> sel = selection.write();
 	Instances::iterator iter = std::find(sel->begin(), sel->end(), shared_from(instance));

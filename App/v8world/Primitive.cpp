@@ -49,7 +49,7 @@ Primitive::Primitive(Geometry::GeometryType geometryType)
 , anchoredProperty(false)
 , engineType(DYNAMICS_ENGINE)
 , preventCollide(false)
-, world(nullptr)
+, world(NULL)
 , worldIndex(-1)
 , elasticity(Primitive::defaultElasticity())
 , friction(Primitive::defaultFriction())
@@ -57,7 +57,7 @@ Primitive::Primitive(Geometry::GeometryType geometryType)
 , specificGravity(0.0)
 , body(new Body())
 , geometry(newGeometry(geometryType))
-, myOwner(nullptr)
+, myOwner(NULL)
 , fuzzyExtentsStateId(fuzzyExtentsReset())
 #pragma warning(push)
 #pragma warning(disable: 4355) // 'this' : used in base member initializer list
@@ -69,7 +69,7 @@ Primitive::Primitive(Geometry::GeometryType geometryType)
 , networkOwner(Network::NetworkOwner::Unassigned())
 , networkOwnershipRule(NetworkOwnership_Auto)
 , networkIsSleeping(false)
-, surfaceData(nullptr)
+, surfaceData(NULL)
 , customPhysicalProperties(PhysicalProperties())
 {
 	FASTLOG1(FLog::PrimitiveLifetime, "Primitive %p created", this);
@@ -224,7 +224,7 @@ Edge* EdgeList::getNext(const Primitive* p, Edge* e) const
 	unsigned int nextIndex = e->getIndex(p) + 1;
 	return (nextIndex < list.size())
 		? list[nextIndex].edge
-		: nullptr;
+		: NULL;
 }
 
 void EdgeList::insertEdge(Edge* e)
@@ -390,7 +390,7 @@ RigidJoint* Primitive::getFirstRigidAt(Joint* start)
 		}
 		start = this->getNextJoint(start);
 	}
-	return nullptr;
+	return NULL;
 }
 
 
@@ -429,7 +429,7 @@ Joint* Primitive::getJoint(Primitive* p0, Primitive* p1, int index)
 			RBXASSERT(!leastJoints->getJoint(i)->links(p0, p1));
 		}
 	}
-	return nullptr;
+	return NULL;
 }
 
 
@@ -452,7 +452,7 @@ Contact* Primitive::getContact(Primitive* p0, Primitive* p1)
 			RBXASSERT(!leastContacts->getContact(i)->links(p0, p1));
 		}
 	}
-	return nullptr;
+	return NULL;
 }
 
 template<World::TouchInfo::Type T>
@@ -579,7 +579,7 @@ Primitive* Primitive::getMechRoot()
 	{
 		return mechanism->getMechanismPrimitive();
 	}
-	return nullptr;
+	return NULL;
 }
 
 Primitive* Primitive::getRootMovingPrimitive()
@@ -590,7 +590,7 @@ Primitive* Primitive::getRootMovingPrimitive()
 	{
 		return Mechanism::getRootMovingPrimitive(this);
 	}
-	return nullptr;
+	return NULL;
 }
 
 bool Primitive::isAncestorOf(Primitive* prim)
@@ -752,7 +752,7 @@ void Primitive::setCanThrottle(bool value)
 {
 	if (body->getCanThrottle() != value)
 	{
-		Assembly* changing = nullptr;
+		Assembly* changing = NULL;
 		if (world) {
 			changing = world->onPrimitiveEngineChanging(this);
 		}
@@ -769,7 +769,7 @@ void Primitive::setEngineType(EngineType value)
 {
 	if (engineType != value) 
 	{
-		Assembly* changing = nullptr;
+		Assembly* changing = NULL;
 		if (world) {
 			changing = world->onPrimitiveEngineChanging(this);
 		}
@@ -914,7 +914,7 @@ void Primitive::setPV(const PV& newPv)
 		bool assemblyRoot = (assembly && (assembly->getAssemblyPrimitive() == this));
 		bool moved = (newPv.position != bodyPv.position);
 		
-		RBXASSERT((world == nullptr) == (assembly == nullptr));
+		RBXASSERT((world == NULL) == (assembly == NULL));
 
 		if (assemblyRoot || !assembly) {
 			getBody()->setPv(newPv, *this);
@@ -1020,7 +1020,7 @@ SpanningEdge* Primitive::nextSpanningEdgeFromJoint(Joint* j)
 		}
 		j = getNextJoint(j);
 	}
-	return nullptr;
+	return NULL;
 }
 
 

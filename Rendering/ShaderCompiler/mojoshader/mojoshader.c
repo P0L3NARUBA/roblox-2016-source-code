@@ -278,7 +278,7 @@ void MOJOSHADER_internal_free(void *ptr, void *d) { free(ptr); }
 #endif
 
 MOJOSHADER_error MOJOSHADER_out_of_mem_error = {
-    "Out of memory", nullptr, MOJOSHADER_POSITION_NONE
+    "Out of memory", NULL, MOJOSHADER_POSITION_NONE
 };
 
 MOJOSHADER_parseData MOJOSHADER_out_of_mem_data = {
@@ -299,7 +299,7 @@ static inline void out_of_memory(Context *ctx)
 static inline void *Malloc(Context *ctx, const size_t len)
 {
     void *retval = ctx->malloc((int) len, ctx->malloc_data);
-    if (retval == nullptr)
+    if (retval == NULL)
         out_of_memory(ctx);
     return retval;
 } // Malloc
@@ -307,7 +307,7 @@ static inline void *Malloc(Context *ctx, const size_t len)
 static inline char *StrDup(Context *ctx, const char *str)
 {
     char *retval = (char *) Malloc(ctx, strlen(str) + 1);
-    if (retval != nullptr)
+    if (retval != NULL)
         strcpy(retval, str);
     return retval;
 } // StrDup
@@ -333,10 +333,10 @@ static void FreeBridge(void *ptr, void *data)
 static int set_output(Context *ctx, Buffer **section)
 {
     // only create output sections on first use.
-    if (*section == nullptr)
+    if (*section == NULL)
     {
         *section = buffer_create(256, MallocBridge, FreeBridge, ctx);
-        if (*section == nullptr)
+        if (*section == NULL)
             return 0;
     } // if
 
@@ -413,10 +413,10 @@ static void failf(Context *ctx, const char *fmt, ...)
     if (ctx->out_of_memory)
         return;
 
-    // no filename at this level (we pass a nullptr to errorlist_add_va()...)
+    // no filename at this level (we pass a NULL to errorlist_add_va()...)
     va_list ap;
     va_start(ap, fmt);
-    errorlist_add_va(ctx->errors, nullptr, ctx->current_position, fmt, ap);
+    errorlist_add_va(ctx->errors, NULL, ctx->current_position, fmt, ap);
     va_end(ap);
 } // failf
 
@@ -430,7 +430,7 @@ static inline void fail(Context *ctx, const char *reason)
 static void output_line(Context *ctx, const char *fmt, ...) ISPRINTF(2,3);
 static void output_line(Context *ctx, const char *fmt, ...)
 {
-    assert(ctx->output != nullptr);
+    assert(ctx->output != NULL);
     if (isfail(ctx))
         return;  // we failed previously, don't go on...
 
@@ -453,7 +453,7 @@ static void output_line(Context *ctx, const char *fmt, ...)
 
 static inline void output_blank_line(Context *ctx)
 {
-    assert(ctx->output != nullptr);
+    assert(ctx->output != NULL);
     if (!isfail(ctx))
         buffer_append(ctx->output, ctx->endline, ctx->endline_len);
 } // output_blank_line
@@ -470,7 +470,7 @@ static void floatstr(Context *ctx, char *buf, size_t bufsize, float f,
     {
         char *end = buf + len;
         char *ptr = strchr(buf, '.');
-        if (ptr == nullptr)
+        if (ptr == NULL)
         {
             if (leavedecimal)
                 strcat(buf, ".0");
@@ -506,7 +506,7 @@ static inline MOJOSHADER_samplerType cvtD3DToMojoSamplerType(const TextureType t
 
 static void free_reglist(MOJOSHADER_free f, void *d, RegisterList *item)
 {
-    while (item != nullptr)
+    while (item != NULL)
     {
         RegisterList *next = item->next;
         f(item, d);
@@ -526,7 +526,7 @@ static RegisterList *reglist_insert(Context *ctx, RegisterList *prev,
 {
     const uint32 newval = reg_to_ui32(regtype, regnum);
     RegisterList *item = prev->next;
-    while (item != nullptr)
+    while (item != NULL)
     {
         const uint32 val = reg_to_ui32(item->regtype, item->regnum);
         if (newval == val)
@@ -543,7 +543,7 @@ static RegisterList *reglist_insert(Context *ctx, RegisterList *prev,
 
     // we need to insert an entry after (prev).
     item = (RegisterList *) Malloc(ctx, sizeof (RegisterList));
-    if (item != nullptr)
+    if (item != NULL)
     {
         item->regtype = regtype;
         item->regnum = regnum;
@@ -551,7 +551,7 @@ static RegisterList *reglist_insert(Context *ctx, RegisterList *prev,
         item->index = 0;
         item->writemask = 0;
         item->misc = 0;
-        item->array = nullptr;
+        item->array = NULL;
         item->next = prev->next;
         prev->next = item;
     } // if
@@ -564,18 +564,18 @@ static RegisterList *reglist_find(const RegisterList *prev,
 {
     const uint32 newval = reg_to_ui32(rtype, regnum);
     RegisterList *item = prev->next;
-    while (item != nullptr)
+    while (item != NULL)
     {
         const uint32 val = reg_to_ui32(item->regtype, item->regnum);
         if (newval == val)
             return item;  // here it is.
         else if (newval < val)  // should have been here if it existed.
-            return nullptr;
+            return NULL;
         else // if (newval > val)
             item = item->next;
     } // while
 
-    return nullptr;  // wasn't in the list.
+    return NULL;  // wasn't in the list.
 } // reglist_find
 
 static inline const RegisterList *reglist_exists(RegisterList *prev,
@@ -597,7 +597,7 @@ static inline RegisterList *set_used_register(Context *ctx,
                                               const int regnum,
                                               const int written)
 {
-    RegisterList *reg = nullptr;
+    RegisterList *reg = NULL;
     if ((regtype == REG_TYPE_COLOROUT) && (regnum > 0))
         ctx->have_multi_color_outputs = 1;
 
@@ -610,7 +610,7 @@ static inline RegisterList *set_used_register(Context *ctx,
 static inline int get_used_register(Context *ctx, const RegisterType regtype,
                                     const int regnum)
 {
-    return (reglist_exists(&ctx->used_registers, regtype, regnum) != nullptr);
+    return (reglist_exists(&ctx->used_registers, regtype, regnum) != NULL);
 } // get_used_register
 
 static inline void set_defined_register(Context *ctx, const RegisterType rtype,
@@ -622,7 +622,7 @@ static inline void set_defined_register(Context *ctx, const RegisterType rtype,
 static inline int get_defined_register(Context *ctx, const RegisterType rtype,
                                        const int regnum)
 {
-    return (reglist_exists(&ctx->defined_registers, rtype, regnum) != nullptr);
+    return (reglist_exists(&ctx->defined_registers, rtype, regnum) != NULL);
 } // get_defined_register
 
 static void add_attribute_register(Context *ctx, const RegisterType rtype,
@@ -650,7 +650,7 @@ static inline void add_sampler(Context *ctx, const int regnum,
     // !!! FIXME:  (ps_1_1 assume we can add it multiple times...)
     RegisterList *item = reglist_insert(ctx, &ctx->samplers, rtype, regnum);
 
-    if (ctx->samplermap != nullptr)
+    if (ctx->samplermap != NULL)
     {
         unsigned int i;
         for (i = 0; i < ctx->samplermap_count; i++)
@@ -759,7 +759,7 @@ static int isscalar(Context *ctx, const MOJOSHADER_shaderType shader_type,
     if ( (rtype == REG_TYPE_OUTPUT) && ((uses_psize) || (uses_fog)) )
     {
         const RegisterList *reg = reglist_find(&ctx->attributes, rtype, rnum);
-        if (reg != nullptr)
+        if (reg != NULL)
         {
             const MOJOSHADER_usage usage = reg->usage;
             return ( (uses_psize && (usage == MOJOSHADER_USAGE_POINTSIZE)) ||
@@ -784,7 +784,7 @@ static const char *get_D3D_register_string(Context *ctx,
                                            int regnum, char *regnum_str,
                                            size_t regnum_size)
 {
-    const char *retval = nullptr;
+    const char *retval = NULL;
     int has_number = 1;
 
     switch (regtype)
@@ -964,7 +964,7 @@ static const char *make_D3D_srcarg_string_in_buf(Context *ctx,
                                                       arg->regnum, regnum_str,
                                                       sizeof (regnum_str));
 
-    if (regtype_str == nullptr)
+    if (regtype_str == NULL)
     {
         fail(ctx, "Unknown source register type.");
         *buf = '\0';
@@ -988,7 +988,7 @@ static const char *make_D3D_srcarg_string_in_buf(Context *ctx,
                                                   rel_regnum_str,
                                                   sizeof (rel_regnum_str));
 
-        if (regtype_str == nullptr)
+        if (regtype_str == NULL)
         {
             fail(ctx, "Unknown relative source register type.");
             *buf = '\0';
@@ -1048,7 +1048,7 @@ static const char *make_D3D_destarg_string(Context *ctx, char *buf,
     const char *regtype_str = get_D3D_register_string(ctx, arg->regtype,
                                                       arg->regnum, regnum_str,
                                                       sizeof (regnum_str));
-    if (regtype_str == nullptr)
+    if (regtype_str == NULL)
     {
         fail(ctx, "Unknown destination register type.");
         *buf = '\0';
@@ -1752,7 +1752,7 @@ static const char *get_GLSL_uniform_type(Context *ctx, const RegisterType rtype)
         default: fail(ctx, "BUG: used a uniform we don't know how to define.");
     } // switch
 
-    return nullptr;
+    return NULL;
 } // get_GLSL_uniform_type
 
 static const char *get_GLSL_varname_in_buf(Context *ctx, RegisterType rt,
@@ -2044,7 +2044,7 @@ static const char *make_GLSL_srcarg_string(Context *ctx, const size_t idx,
              break;  // stop compiler whining.
     } // switch
 
-    const char *regtype_str = nullptr;
+    const char *regtype_str = NULL;
 
     if (!arg->relative)
     {
@@ -2121,7 +2121,7 @@ static const char *make_GLSL_srcarg_string(Context *ctx, const size_t idx,
                                  arg->swizzle, writemask);
     } // if
 
-    if (regtype_str == nullptr)
+    if (regtype_str == NULL)
     {
         fail(ctx, "Unknown source register type.");
         return buf;
@@ -2357,7 +2357,7 @@ static void emit_GLSL_const_array(Context *ctx, const ConstantsList *clist,
     if (support_glsl120(ctx))
     {
         // GLSL 1.20 can do constant arrays.
-        const char *cstr = nullptr;
+        const char *cstr = NULL;
         push_output(ctx, &ctx->globals);
         output_line(ctx, "const vec4 %s[%d] = vec4[%d](", varname, size, size);
         ctx->indent++;
@@ -2416,7 +2416,7 @@ static void emit_GLSL_uniform(Context *ctx, RegisterType regtype, int regnum,
 
     push_output(ctx, &ctx->globals);
 
-    if (var == nullptr)
+    if (var == NULL)
     {
         get_GLSL_uniform_array_varname(ctx, regtype, name, sizeof (name));
 
@@ -2487,7 +2487,7 @@ static void emit_GLSL_attribute(Context *ctx, RegisterType regtype, int regnum,
                                 int flags)
 {
     // !!! FIXME: this function doesn't deal with write masks at all yet!
-    const char *usage_str = nullptr;
+    const char *usage_str = NULL;
     const char *arrayleft = "";
     const char *arrayright = "";
     char index_str[16] = { '\0' };
@@ -2616,7 +2616,7 @@ static void emit_GLSL_attribute(Context *ctx, RegisterType regtype, int regnum,
             // !!! FIXME:  have to track these separately if this works.
             push_output(ctx, &ctx->globals);
             // no mapping to built-in var? Just make it a regular global, pray.
-            if (usage_str == nullptr)
+            if (usage_str == NULL)
                 output_line(ctx, "vec4 %s;", var);
             else
             {
@@ -2749,7 +2749,7 @@ static void emit_GLSL_attribute(Context *ctx, RegisterType regtype, int regnum,
             fail(ctx, "unknown pixel shader attribute register");
         } // else
 
-        if (usage_str != nullptr)
+        if (usage_str != NULL)
         {
             push_output(ctx, &ctx->globals);
 #if 0
@@ -3158,7 +3158,7 @@ static void emit_GLSL_LABEL(Context *ctx)
 
     // MSDN specs say CALL* has to come before the LABEL, so we know if we
     //  can ditch the entire function here as unused.
-    if (reg == nullptr)
+    if (reg == NULL)
         set_output(ctx, &ctx->ignore);  // Func not used. Parse, but don't output.
 
     // !!! FIXME: it would be nice if we could determine if a function is
@@ -3413,13 +3413,13 @@ static void glsl_texld(Context *ctx, const int texldd)
         const SourceArgInfo *samp_arg = &ctx->source_args[1];
         RegisterList *sreg = reglist_find(&ctx->samplers, REG_TYPE_SAMPLER,
                                           samp_arg->regnum);
-        const char *funcname = nullptr;
+        const char *funcname = NULL;
         char src0[64] = { '\0' };
         char src1[64]; get_GLSL_srcarg_varname(ctx, 1, src1, sizeof (src1)); // !!! FIXME: SRC_MOD?
         char src2[64] = { '\0' };
         char src3[64] = { '\0' };
 
-        if (sreg == nullptr)
+        if (sreg == NULL)
         {
             fail(ctx, "TEXLD using undeclared sampler");
             return;
@@ -4107,7 +4107,7 @@ static const char *make_ARB1_srcarg_string_in_buf(Context *ctx,
     char regnum_str[16] = { '\0' };
 
     // !!! FIXME: use get_ARB1_varname_in_buf() instead?
-    const char *regtype_str = nullptr;
+    const char *regtype_str = NULL;
     if (!arg->relative)
     {
         regtype_str = get_ARB1_register_string(ctx, arg->regtype,
@@ -4363,7 +4363,7 @@ static const char *make_ARB1_destarg_string(Context *ctx, char *buf,
     const char *regtype_str = get_ARB1_register_string(ctx, arg->regtype,
                                                        arg->regnum, regnum_str,
                                                        sizeof (regnum_str));
-    if (regtype_str == nullptr)
+    if (regtype_str == NULL)
     {
         fail(ctx, "Unknown destination register type.");
         return buf;
@@ -4410,7 +4410,7 @@ static void emit_ARB1_dest_modifiers(Context *ctx)
     if (arg->result_shift != 0x0)
     {
         char dst[64]; make_ARB1_destarg_string(ctx, dst, sizeof (dst));
-        const char *multiplier = nullptr;
+        const char *multiplier = NULL;
 
         switch (arg->result_shift)
         {
@@ -4422,7 +4422,7 @@ static void emit_ARB1_dest_modifiers(Context *ctx)
             case 0xF: multiplier = "0.5"; break;
         } // switch
 
-        if (multiplier != nullptr)
+        if (multiplier != NULL)
         {
             char var[64]; get_ARB1_destarg_varname(ctx, var, sizeof (var));
             output_line(ctx, "MUL%s, %s, %s;", dst, var, multiplier);
@@ -4525,8 +4525,8 @@ static void emit_ARB1_opcode_dsss(Context *ctx, const char *opcode)
 
 static void emit_ARB1_start(Context *ctx, const char *profilestr)
 {
-    const char *shader_str = nullptr;
-    const char *shader_full_str = nullptr;
+    const char *shader_str = NULL;
+    const char *shader_full_str = NULL;
     if (shader_is_vertex(ctx))
     {
         shader_str = "vp";
@@ -4774,7 +4774,7 @@ static void emit_ARB1_uniform(Context *ctx, RegisterType regtype, int regnum,
 
     push_output(ctx, &ctx->globals);
 
-    if (var == nullptr)
+    if (var == NULL)
     {
         // all types share one array (rather, all types convert to float4).
         index = ctx->uniform_float4_count + ctx->uniform_int4_count +
@@ -4826,7 +4826,7 @@ static void emit_ARB1_attribute(Context *ctx, RegisterType regtype, int regnum,
                                 int flags)
 {
     // !!! FIXME: this function doesn't deal with write masks at all yet!
-    const char *usage_str = nullptr;
+    const char *usage_str = NULL;
     const char *arrayleft = "";
     const char *arrayright = "";
     char index_str[16] = { '\0' };
@@ -4932,7 +4932,7 @@ static void emit_ARB1_attribute(Context *ctx, RegisterType regtype, int regnum,
             // !!! FIXME:  have to track these separately if this works.
             push_output(ctx, &ctx->globals);
             // no mapping to built-in var? Just make it a regular global, pray.
-            if (usage_str == nullptr)
+            if (usage_str == NULL)
                 output_line(ctx, "%s %s;", arb1_float_temp(ctx), varname);
             else
             {
@@ -5047,7 +5047,7 @@ static void emit_ARB1_attribute(Context *ctx, RegisterType regtype, int regnum,
             fail(ctx, "unknown pixel shader attribute register");
         } // else
 
-        if (usage_str != nullptr)
+        if (usage_str != NULL)
         {
             push_output(ctx, &ctx->globals);
             output_line(ctx, "%s %s = %s%s%s%s;", paramtype_str, varname,
@@ -5260,7 +5260,7 @@ static void emit_ARB1_LABEL(Context *ctx)
 
     // MSDN specs say CALL* has to come before the LABEL, so we know if we
     //  can ditch the entire function here as unused.
-    if (reg == nullptr)
+    if (reg == NULL)
         set_output(ctx, &ctx->ignore);  // Func not used. Parse, but don't output.
 
     // !!! FIXME: it would be nice if we could determine if a function is
@@ -6040,7 +6040,7 @@ static void arb1_texld(Context *ctx, const char *opcode, const int texldd)
     const int regnum = sm1 ? ctx->dest_arg.regnum : ctx->source_args[1].regnum;
     RegisterList *sreg = reglist_find(&ctx->samplers, REG_TYPE_SAMPLER, regnum);
 
-    const char *ttype = nullptr;
+    const char *ttype = NULL;
     char src0[64];
     if (sm1)
         get_ARB1_destarg_varname(ctx, src0, sizeof (src0));
@@ -6058,7 +6058,7 @@ static void arb1_texld(Context *ctx, const char *opcode, const int texldd)
     } // if
 
     // !!! FIXME: this should be in state_TEXLD, not in the arb1/glsl emitters.
-    if (sreg == nullptr)
+    if (sreg == NULL)
     {
         fail(ctx, "TEXLD using undeclared sampler");
         return;
@@ -6413,7 +6413,7 @@ static void determine_constants_arrays(Context *ctx)
 
     for (i = 0; i < ctx->constant_count; i++)
     {
-        if (item == nullptr)
+        if (item == NULL)
         {
             fail(ctx, "BUG: mismatched constant list and count");
             return;
@@ -6423,7 +6423,7 @@ static void determine_constants_arrays(Context *ctx)
         item = item->next;
     } // for
 
-    array[ctx->constant_count] = nullptr;
+    array[ctx->constant_count] = NULL;
 
     // bubble sort ftw.
     int sorted;
@@ -6473,7 +6473,7 @@ static void determine_constants_arrays(Context *ctx)
             {
                 VariableList *var;
                 var = (VariableList *) Malloc(ctx, sizeof (VariableList));
-                if (var == nullptr)
+                if (var == NULL)
                     break;
 
                 var->type = MOJOSHADER_UNIFORM_FLOAT;
@@ -6503,7 +6503,7 @@ static int adjust_swizzle(const Context *ctx, const RegisterType regtype,
         return swizzle;
 
     const RegisterList *reg = reglist_find(&ctx->attributes, regtype, regnum);
-    if (reg == nullptr)
+    if (reg == NULL)
         return swizzle;
 
     size_t i;
@@ -6641,14 +6641,14 @@ static int parse_source_token(Context *ctx, SourceArgInfo *info)
 
                     VariableList *var;
                     const int reltarget = info->regnum;
-                    for (var = ctx->variables; var != nullptr; var = var->next)
+                    for (var = ctx->variables; var != NULL; var = var->next)
                     {
                         const int lo = var->index;
                         if ( (reltarget >= lo) && (reltarget < (lo + var->count)) )
                             break;  // match!
                     } // for
 
-                    if (var == nullptr)
+                    if (var == NULL)
                         fail(ctx, "relative addressing of indeterminate array");
                     else
                     {
@@ -7085,8 +7085,8 @@ static int parse_args_TEXLD(Context *ctx)
 static ConstantsList *alloc_constant_listitem(Context *ctx)
 {
     ConstantsList *item = (ConstantsList *) Malloc(ctx, sizeof (ConstantsList));
-    if (item == nullptr)
-        return nullptr;
+    if (item == NULL)
+        return NULL;
 
     memset(&item->constant, '\0', sizeof (MOJOSHADER_constant));
     item->next = ctx->constants;
@@ -7111,7 +7111,7 @@ static void state_DEF(Context *ctx)
     else
     {
         ConstantsList *item = alloc_constant_listitem(ctx);
-        if (item != nullptr)
+        if (item != NULL)
         {
             item->constant.index = regnum;
             item->constant.type = MOJOSHADER_UNIFORM_FLOAT;
@@ -7136,7 +7136,7 @@ static void state_DEFI(Context *ctx)
     else
     {
         ConstantsList *item = alloc_constant_listitem(ctx);
-        if (item != nullptr)
+        if (item != NULL)
         {
             item->constant.index = regnum;
             item->constant.type = MOJOSHADER_UNIFORM_INT;
@@ -7162,7 +7162,7 @@ static void state_DEFB(Context *ctx)
     else
     {
         ConstantsList *item = alloc_constant_listitem(ctx);
-        if (item != nullptr)
+        if (item != NULL)
         {
             item->constant.index = regnum;
             item->constant.type = MOJOSHADER_UNIFORM_BOOL;
@@ -7364,7 +7364,7 @@ static void check_call_loop_wrappage(Context *ctx, const int regnum)
 
     const int current_usage = (ctx->loops > 0) ? 1 : -1;
     RegisterList *reg = reglist_find(&ctx->used_registers, REG_TYPE_LABEL, regnum);
-    assert(reg != nullptr);
+    assert(reg != NULL);
 
     if (reg->misc == 0)
         reg->misc = current_usage;
@@ -7920,7 +7920,7 @@ static int parse_instruction_token(Context *ctx)
     if ((token & 0x80000000) != 0)
         fail(ctx, "instruction token high bit must be zero.");  // so says msdn.
 
-    if (instruction->opcode_string == nullptr)
+    if (instruction->opcode_string == NULL)
     {
         fail(ctx, "Unknown opcode.");
         return insttoks + 1;  // pray that you resync later.
@@ -7957,7 +7957,7 @@ static int parse_instruction_token(Context *ctx)
     ctx->tokencount = start_tokencount;
     ctx->current_position = start_position;
 
-    if (instruction->state != nullptr)
+    if (instruction->state != NULL)
         instruction->state(ctx);
 
     ctx->instruction_count += instruction->slots;
@@ -8087,13 +8087,13 @@ static int parse_ctab_typeinfo(Context *ctx, const uint8 *start,
         return 0;  // corrupt CTAB.
 
     if (info->member_count == 0)
-        info->members = nullptr;
+        info->members = NULL;
     else
     {
         const size_t len = sizeof (MOJOSHADER_symbolStructMember) *
                             info->member_count;
         info->members = (MOJOSHADER_symbolStructMember *) Malloc(ctx, len);
-        if (info->members == nullptr)
+        if (info->members == NULL)
             return 1;  // we'll check ctx->out_of_memory later.
         memset(info->members, '\0', len);
     } // else
@@ -8111,7 +8111,7 @@ static int parse_ctab_typeinfo(Context *ctx, const uint8 *start,
             return 0;  // info->members will be free()'d elsewhere.
 
         mbr->name = StrDup(ctx, (const char *) (start + name));
-        if (mbr->name == nullptr)
+        if (mbr->name == NULL)
             return 1;  // we'll check ctx->out_of_memory later.
         if (!parse_ctab_typeinfo(ctx, start, bytes, memberinfopos, &mbr->info))
             return 0;
@@ -8166,7 +8166,7 @@ static void parse_constant_table(Context *ctx, const uint32 *tokens,
 
     ctab->symbol_count = constants;
     ctab->symbols = (MOJOSHADER_symbol*)Malloc(ctx, sizeof (MOJOSHADER_symbol) * constants);
-    if (ctab->symbols == nullptr)
+    if (ctab->symbols == NULL)
         return;
     memset(ctab->symbols, '\0', sizeof (MOJOSHADER_symbol) * constants);
 
@@ -8198,12 +8198,12 @@ static void parse_constant_table(Context *ctx, const uint32 *tokens,
         {
             VariableList *item;
             item = (VariableList *) Malloc(ctx, sizeof (VariableList));
-            if (item != nullptr)
+            if (item != NULL)
             {
                 item->type = mojotype;
                 item->index = regidx;
                 item->count = regcnt;
-                item->constant = nullptr;
+                item->constant = NULL;
                 item->used = 0;
                 item->emit_position = -1;
                 item->next = ctx->variables;
@@ -8213,7 +8213,7 @@ static void parse_constant_table(Context *ctx, const uint32 *tokens,
 
         // Add the symbol.
         const char *namecpy = StrDup(ctx, (const char *) (start + name));
-        if (namecpy == nullptr)
+        if (namecpy == NULL)
             return;
 
         MOJOSHADER_symbol *sym = &ctab->symbols[i];
@@ -8358,7 +8358,7 @@ static void parse_preshader(Context *ctx, uint32 tokcount)
 
     MOJOSHADER_preshader *preshader = (MOJOSHADER_preshader *)
                                     Malloc(ctx, sizeof (MOJOSHADER_preshader));
-    if (preshader == nullptr)
+    if (preshader == NULL)
         return;
     memset(preshader, '\0', sizeof (MOJOSHADER_preshader));
     ctx->preshader = preshader;
@@ -8380,7 +8380,7 @@ static void parse_preshader(Context *ctx, uint32 tokcount)
             assert(sizeof (double) == 8);  // just in case.
             const size_t len = sizeof (double) * lit_count;
             preshader->literals = (double *) Malloc(ctx, len);
-            if (preshader->literals == nullptr)
+            if (preshader->literals == NULL)
                 return;  // oh well.
             const double *litptr = (const double *) (clit.tokens + 2);
             int i;
@@ -8436,7 +8436,7 @@ static void parse_preshader(Context *ctx, uint32 tokcount)
     preshader->instruction_count = (unsigned int) opcode_count;
     preshader->instructions = (MOJOSHADER_preshaderInstruction *)
                                 Malloc(ctx, len);
-    if (preshader->instructions == nullptr)
+    if (preshader->instructions == NULL)
         return;
     memset(preshader->instructions, '\0', len);
 
@@ -8701,12 +8701,12 @@ static Context *build_context(const char *profile,
                               const unsigned int smapcount,
                               MOJOSHADER_malloc m, MOJOSHADER_free f, void *d)
 {
-    if (m == nullptr) m = MOJOSHADER_internal_malloc;
-    if (f == nullptr) f = MOJOSHADER_internal_free;
+    if (m == NULL) m = MOJOSHADER_internal_malloc;
+    if (f == NULL) f = MOJOSHADER_internal_free;
 
     Context *ctx = (Context *) m(sizeof (Context), d);
-    if (ctx == nullptr)
-        return nullptr;
+    if (ctx == NULL)
+        return NULL;
 
     memset(ctx, '\0', sizeof (Context));
     ctx->malloc = m;
@@ -8731,17 +8731,17 @@ static Context *build_context(const char *profile,
     ctx->texm3x3pad_src1 = -1;
 
     ctx->errors = errorlist_create(MallocBridge, FreeBridge, ctx);
-    if (ctx->errors == nullptr)
+    if (ctx->errors == NULL)
     {
         f(ctx, d);
-        return nullptr;
+        return NULL;
     } // if
 
     if (!set_output(ctx, &ctx->mainline))
     {
         errorlist_destroy(ctx->errors);
         f(ctx, d);
-        return nullptr;
+        return NULL;
     } // if
 
     const int profileid = find_profile_id(profile);
@@ -8757,7 +8757,7 @@ static Context *build_context(const char *profile,
 
 static void free_constants_list(MOJOSHADER_free f, void *d, ConstantsList *item)
 {
-    while (item != nullptr)
+    while (item != NULL)
     {
         ConstantsList *next = item->next;
         f(item, d);
@@ -8768,7 +8768,7 @@ static void free_constants_list(MOJOSHADER_free f, void *d, ConstantsList *item)
 
 static void free_variable_list(MOJOSHADER_free f, void *d, VariableList *item)
 {
-    while (item != nullptr)
+    while (item != NULL)
     {
         VariableList *next = item->next;
         f(item, d);
@@ -8806,7 +8806,7 @@ static void free_symbols(MOJOSHADER_free f, void *d, MOJOSHADER_symbol *syms,
 static void free_preshader(MOJOSHADER_free f, void *d,
                            MOJOSHADER_preshader *preshader)
 {
-    if (preshader != nullptr)
+    if (preshader != NULL)
     {
         f((void *) preshader->literals, d);
         f((void *) preshader->instructions, d);
@@ -8818,9 +8818,9 @@ static void free_preshader(MOJOSHADER_free f, void *d,
 
 static void destroy_context(Context *ctx)
 {
-    if (ctx != nullptr)
+    if (ctx != NULL)
     {
-        MOJOSHADER_free f = ((ctx->free != nullptr) ? ctx->free : MOJOSHADER_internal_free);
+        MOJOSHADER_free f = ((ctx->free != NULL) ? ctx->free : MOJOSHADER_internal_free);
         void *d = ctx->malloc_data;
         buffer_destroy(ctx->preflight);
         buffer_destroy(ctx->globals);
@@ -8877,25 +8877,25 @@ static MOJOSHADER_uniform *build_uniforms(Context *ctx)
     const size_t len = sizeof (MOJOSHADER_uniform) * ctx->uniform_count;
     MOJOSHADER_uniform *retval = (MOJOSHADER_uniform *) Malloc(ctx, len);
 
-    if (retval != nullptr)
+    if (retval != NULL)
     {
         MOJOSHADER_uniform *wptr = retval;
         memset(wptr, '\0', len);
 
         VariableList *var;
         int written = 0;
-        for (var = ctx->variables; var != nullptr; var = var->next)
+        for (var = ctx->variables; var != NULL; var = var->next)
         {
             if (var->used)
             {
                 const char *name = ctx->profile->get_const_array_varname(ctx,
                                                       var->index, var->count);
-                if (name != nullptr)
+                if (name != NULL)
                 {
                     wptr->type = MOJOSHADER_UNIFORM_FLOAT;
                     wptr->index = var->index;
                     wptr->array_count = var->count;
-                    wptr->constant = (var->constant != nullptr) ? 1 : 0;
+                    wptr->constant = (var->constant != NULL) ? 1 : 0;
                     wptr->name = name;
                     wptr++;
                     written++;
@@ -8910,7 +8910,7 @@ static MOJOSHADER_uniform *build_uniforms(Context *ctx)
             int skip = 0;
 
             // !!! FIXME: does this fail if written > ctx->uniform_count?
-            if (item == nullptr)
+            if (item == NULL)
             {
                 fail(ctx, "BUG: mismatched uniform list and count");
                 break;
@@ -8920,7 +8920,7 @@ static MOJOSHADER_uniform *build_uniforms(Context *ctx)
             switch (item->regtype)
             {
                 case REG_TYPE_CONST:
-                    skip = (item->array != nullptr);
+                    skip = (item->array != NULL);
                     type = MOJOSHADER_UNIFORM_FLOAT;
                     break;
 
@@ -8960,14 +8960,14 @@ static MOJOSHADER_constant *build_constants(Context *ctx)
     const size_t len = sizeof (MOJOSHADER_constant) * ctx->constant_count;
     MOJOSHADER_constant *retval = (MOJOSHADER_constant *) Malloc(ctx, len);
 
-    if (retval != nullptr)
+    if (retval != NULL)
     {
         ConstantsList *item = ctx->constants;
         int i;
 
         for (i = 0; i < ctx->constant_count; i++)
         {
-            if (item == nullptr)
+            if (item == NULL)
             {
                 fail(ctx, "BUG: mismatched constant list and count");
                 break;
@@ -8987,7 +8987,7 @@ static MOJOSHADER_sampler *build_samplers(Context *ctx)
     const size_t len = sizeof (MOJOSHADER_sampler) * ctx->sampler_count;
     MOJOSHADER_sampler *retval = (MOJOSHADER_sampler *) Malloc(ctx, len);
 
-    if (retval != nullptr)
+    if (retval != NULL)
     {
         RegisterList *item = ctx->samplers.next;
         int i;
@@ -8996,7 +8996,7 @@ static MOJOSHADER_sampler *build_samplers(Context *ctx)
 
         for (i = 0; i < ctx->sampler_count; i++)
         {
-            if (item == nullptr)
+            if (item == NULL)
             {
                 fail(ctx, "BUG: mismatched sampler list and count");
                 break;
@@ -9022,13 +9022,13 @@ static MOJOSHADER_attribute *build_attributes(Context *ctx, int *_count)
     if (ctx->attribute_count == 0)
     {
         *_count = 0;
-        return nullptr;  // nothing to do.
+        return NULL;  // nothing to do.
     } // if
 
     const size_t len = sizeof (MOJOSHADER_attribute) * ctx->attribute_count;
     MOJOSHADER_attribute *retval = (MOJOSHADER_attribute *) Malloc(ctx, len);
 
-    if (retval != nullptr)
+    if (retval != NULL)
     {
         RegisterList *item = ctx->attributes.next;
         MOJOSHADER_attribute *wptr = retval;
@@ -9039,7 +9039,7 @@ static MOJOSHADER_attribute *build_attributes(Context *ctx, int *_count)
 
         for (i = 0; i < ctx->attribute_count; i++)
         {
-            if (item == nullptr)
+            if (item == NULL)
             {
                 fail(ctx, "BUG: mismatched attribute list and count");
                 break;
@@ -9093,13 +9093,13 @@ static MOJOSHADER_attribute *build_outputs(Context *ctx, int *_count)
     if (ctx->attribute_count == 0)
     {
         *_count = 0;
-        return nullptr;  // nothing to do.
+        return NULL;  // nothing to do.
     } // if
 
     const size_t len = sizeof (MOJOSHADER_attribute) * ctx->attribute_count;
     MOJOSHADER_attribute *retval = (MOJOSHADER_attribute *) Malloc(ctx, len);
 
-    if (retval != nullptr)
+    if (retval != NULL)
     {
         RegisterList *item = ctx->attributes.next;
         MOJOSHADER_attribute *wptr = retval;
@@ -9109,7 +9109,7 @@ static MOJOSHADER_attribute *build_outputs(Context *ctx, int *_count)
 
         for (i = 0; i < ctx->attribute_count; i++)
         {
-            if (item == nullptr)
+            if (item == NULL)
             {
                 fail(ctx, "BUG: mismatched attribute list and count");
                 break;
@@ -9144,15 +9144,15 @@ static MOJOSHADER_attribute *build_outputs(Context *ctx, int *_count)
 
 static MOJOSHADER_parseData *build_parsedata(Context *ctx)
 {
-    char *output = nullptr;
-    MOJOSHADER_constant *constants = nullptr;
-    MOJOSHADER_uniform *uniforms = nullptr;
-    MOJOSHADER_attribute *attributes = nullptr;
-    MOJOSHADER_attribute *outputs = nullptr;
-    MOJOSHADER_sampler *samplers = nullptr;
-    MOJOSHADER_swizzle *swizzles = nullptr;
-    MOJOSHADER_error *errors = nullptr;
-    MOJOSHADER_parseData *retval = nullptr;
+    char *output = NULL;
+    MOJOSHADER_constant *constants = NULL;
+    MOJOSHADER_uniform *uniforms = NULL;
+    MOJOSHADER_attribute *attributes = NULL;
+    MOJOSHADER_attribute *outputs = NULL;
+    MOJOSHADER_sampler *samplers = NULL;
+    MOJOSHADER_swizzle *swizzles = NULL;
+    MOJOSHADER_error *errors = NULL;
+    MOJOSHADER_parseData *retval = NULL;
     size_t output_len = 0;
     int attribute_count = 0;
     int output_count = 0;
@@ -9161,7 +9161,7 @@ static MOJOSHADER_parseData *build_parsedata(Context *ctx)
         return &MOJOSHADER_out_of_mem_data;
 
     retval = (MOJOSHADER_parseData*) Malloc(ctx, sizeof(MOJOSHADER_parseData));
-    if (retval == nullptr)
+    if (retval == NULL)
         return &MOJOSHADER_out_of_mem_data;
 
     memset(retval, '\0', sizeof (MOJOSHADER_parseData));
@@ -9193,7 +9193,7 @@ static MOJOSHADER_parseData *build_parsedata(Context *ctx)
         {
             const int len = ctx->swizzles_count * sizeof (MOJOSHADER_swizzle);
             swizzles = (MOJOSHADER_swizzle *) Malloc(ctx, len);
-            if (swizzles != nullptr)
+            if (swizzles != NULL)
                 memcpy(swizzles, ctx->swizzles, len);
         } // if
     } // if
@@ -9207,28 +9207,28 @@ static MOJOSHADER_parseData *build_parsedata(Context *ctx)
         Free(ctx, constants);
         Free(ctx, swizzles);
 
-        if (uniforms != nullptr)
+        if (uniforms != NULL)
         {
             for (i = 0; i < ctx->uniform_count; i++)
                 Free(ctx, (void *) uniforms[i].name);
             Free(ctx, uniforms);
         } // if
 
-        if (attributes != nullptr)
+        if (attributes != NULL)
         {
             for (i = 0; i < attribute_count; i++)
                 Free(ctx, (void *) attributes[i].name);
             Free(ctx, attributes);
         } // if
 
-        if (outputs != nullptr)
+        if (outputs != NULL)
         {
             for (i = 0; i < output_count; i++)
                 Free(ctx, (void *) outputs[i].name);
             Free(ctx, outputs);
         } // if
 
-        if (samplers != nullptr)
+        if (samplers != NULL)
         {
             for (i = 0; i < ctx->sampler_count; i++)
                 Free(ctx, (void *) samplers[i].name);
@@ -9273,15 +9273,15 @@ static MOJOSHADER_parseData *build_parsedata(Context *ctx)
         retval->preshader = ctx->preshader;
 
         // we don't own these now, retval does.
-        ctx->ctab.symbols = nullptr;
-        ctx->preshader = nullptr;
+        ctx->ctab.symbols = NULL;
+        ctx->preshader = NULL;
         ctx->ctab.symbol_count = 0;
     } // else
 
     retval->error_count = error_count;
     retval->errors = errors;
-    retval->malloc = (ctx->malloc == MOJOSHADER_internal_malloc) ? nullptr : ctx->malloc;
-    retval->free = (ctx->free == MOJOSHADER_internal_free) ? nullptr : ctx->free;
+    retval->malloc = (ctx->malloc == MOJOSHADER_internal_malloc) ? NULL : ctx->malloc;
+    retval->free = (ctx->free == MOJOSHADER_internal_free) ? NULL : ctx->free;
     retval->malloc_data = ctx->malloc_data;
 
     return retval;
@@ -9300,7 +9300,7 @@ static void process_definitions(Context *ctx)
     RegisterList *prev = &ctx->used_registers;
     RegisterList *item = prev->next;
 
-    while (item != nullptr)
+    while (item != NULL)
     {
         RegisterList *next = item->next;
         const RegisterType regtype = item->regtype;
@@ -9343,7 +9343,7 @@ static void process_definitions(Context *ctx)
                 case REG_TYPE_CONSTBOOL:
                     // separate uniforms into a different list for now.
                     prev->next = next;
-                    item->next = nullptr;
+                    item->next = NULL;
                     uitem->next = item;
                     uitem = item;
                     item = prev;
@@ -9371,7 +9371,7 @@ static void process_definitions(Context *ctx)
 
     // okay, now deal with uniform/constant arrays...
     VariableList *var;
-    for (var = ctx->variables; var != nullptr; var = var->next)
+    for (var = ctx->variables; var != NULL; var = var->next)
     {
         if (var->used)
         {
@@ -9390,14 +9390,14 @@ static void process_definitions(Context *ctx)
     } // for
 
     // ...and uniforms...
-    for (item = ctx->uniforms.next; item != nullptr; item = item->next)
+    for (item = ctx->uniforms.next; item != NULL; item = item->next)
     {
         int arraysize = -1;
 
         // check if this is a register contained in an array...
         if (item->regtype == REG_TYPE_CONST)
         {
-            for (var = ctx->variables; var != nullptr; var = var->next)
+            for (var = ctx->variables; var != NULL; var = var->next)
             {
                 if (!var->used)
                     continue;
@@ -9433,7 +9433,7 @@ static void process_definitions(Context *ctx)
 
 #if 0
     // ...and samplers...
-    for (item = ctx->samplers.next; item != nullptr; item = item->next)
+    for (item = ctx->samplers.next; item != NULL; item = item->next)
     {
         ctx->sampler_count++;
         ctx->profile->sampler_emitter(ctx, item->regnum,
@@ -9443,7 +9443,7 @@ static void process_definitions(Context *ctx)
 #endif
 
     // ...and attributes...
-    for (item = ctx->attributes.next; item != nullptr; item = item->next)
+    for (item = ctx->attributes.next; item != NULL; item = item->next)
     {
         ctx->attribute_count++;
         ctx->profile->attribute_emitter(ctx, item->regtype, item->regnum,
@@ -9485,17 +9485,17 @@ const MOJOSHADER_parseData *MOJOSHADER_parse(const char *profile,
                                              MOJOSHADER_malloc m,
                                              MOJOSHADER_free f, void *d)
 {
-    MOJOSHADER_parseData *retval = nullptr;
-    Context *ctx = nullptr;
+    MOJOSHADER_parseData *retval = NULL;
+    Context *ctx = NULL;
     int rc = 0;
     int failed = 0;
 
-    if ( ((m == nullptr) && (f != nullptr)) || ((m != nullptr) && (f == nullptr)) )
+    if ( ((m == NULL) && (f != NULL)) || ((m != NULL) && (f == NULL)) )
         return &MOJOSHADER_out_of_mem_data;  // supply both or neither.
 
     ctx = build_context(profile, tokenbuf, bufsize, swiz, swizcount,
                         smap, smapcount, m, f, d);
-    if (ctx == nullptr)
+    if (ctx == NULL)
         return &MOJOSHADER_out_of_mem_data;
 	
     if (isfail(ctx))
@@ -9597,7 +9597,7 @@ const MOJOSHADER_parseData *MOJOSHADER_parse(const char *profile,
             break;
         default:
             assert(false);
-            return nullptr;
+            return NULL;
         }
 
         if (ctx->ctab.symbols[i].info.parameter_class == MOJOSHADER_SYMCLASS_OBJECT)
@@ -9721,7 +9721,7 @@ const MOJOSHADER_parseData *MOJOSHADER_parse(const char *profile,
 
     if (shader_is_vertex(ctx))
     {
-        for (RegisterList* item = ctx->attributes.next; item != nullptr; item = item->next)
+        for (RegisterList* item = ctx->attributes.next; item != NULL; item = item->next)
         {
             char name[64];
 
@@ -9799,10 +9799,10 @@ const MOJOSHADER_parseData *MOJOSHADER_parse(const char *profile,
 void MOJOSHADER_freeParseData(const MOJOSHADER_parseData *_data)
 {
     MOJOSHADER_parseData *data = (MOJOSHADER_parseData *) _data;
-    if ((data == nullptr) || (data == &MOJOSHADER_out_of_mem_data))
+    if ((data == NULL) || (data == &MOJOSHADER_out_of_mem_data))
         return;  // no-op.
 
-    MOJOSHADER_free f = (data->free == nullptr) ? MOJOSHADER_internal_free : data->free;
+    MOJOSHADER_free f = (data->free == NULL) ? MOJOSHADER_internal_free : data->free;
     void *d = data->malloc_data;
     int i;
 

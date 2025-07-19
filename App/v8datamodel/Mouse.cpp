@@ -27,24 +27,24 @@ static Reflection::EventDesc<Mouse, void(std::string) > desc_Mouse_KeyDown(&Mous
 static Reflection::EventDesc<Mouse, void(std::string) > dep_Mouse_KeyDown(&Mouse::keyDownSignal, "keyDown", "key", Reflection::Descriptor::Attributes::deprecated(UserInputService::event_InputBegin));
 static Reflection::EventDesc<Mouse, void(std::string) > desc_Mouse_KeyUp(&Mouse::keyUpSignal, "KeyUp", "key", Reflection::Descriptor::Attributes::deprecated(UserInputService::event_InputEnd));
 
-static Reflection::PropDescriptor<Mouse, G3D::CoordinateFrame> desc_Hit("Hit", category_Data, &Mouse::getHit, nullptr);
-static Reflection::PropDescriptor<Mouse, G3D::CoordinateFrame> dep_Hit("hit", category_Data, &Mouse::getHit, nullptr, Reflection::PropertyDescriptor::Attributes::deprecated(desc_Hit, Reflection::PropertyDescriptor::HIDDEN_SCRIPTING));
-static Reflection::PropDescriptor<Mouse, G3D::CoordinateFrame> desc_Origin("Origin", category_Data, &Mouse::getOrigin, nullptr);
-static Reflection::PropDescriptor<Mouse, RBX::RbxRay> desc_UnitRay("UnitRay", category_Data, &Mouse::getUnitRay, nullptr);
+static Reflection::PropDescriptor<Mouse, G3D::CoordinateFrame> desc_Hit("Hit", category_Data, &Mouse::getHit, NULL);
+static Reflection::PropDescriptor<Mouse, G3D::CoordinateFrame> dep_Hit("hit", category_Data, &Mouse::getHit, NULL, Reflection::PropertyDescriptor::Attributes::deprecated(desc_Hit, Reflection::PropertyDescriptor::HIDDEN_SCRIPTING));
+static Reflection::PropDescriptor<Mouse, G3D::CoordinateFrame> desc_Origin("Origin", category_Data, &Mouse::getOrigin, NULL);
+static Reflection::PropDescriptor<Mouse, RBX::RbxRay> desc_UnitRay("UnitRay", category_Data, &Mouse::getUnitRay, NULL);
 static Reflection::RefPropDescriptor<Mouse, Instance> desc_TargetFilter("TargetFilter", category_Data, &Mouse::getTargetFilterUnsafe, &Mouse::setTargetFilter);
-static Reflection::RefPropDescriptor<Mouse, PartInstance> desc_Target("Target", category_Data, &Mouse::getTarget, nullptr);
-static Reflection::RefPropDescriptor<Mouse, PartInstance> dep_Target("target", category_Data, &Mouse::getTarget, nullptr, Reflection::PropertyDescriptor::Attributes::deprecated(desc_Target));
-static Reflection::EnumPropDescriptor<Mouse, NormalId> desc_TargetSurface("TargetSurface", category_Data, &Mouse::getTargetSurface, nullptr);
-static Reflection::PropDescriptor<Mouse, int> desc_Mouse_X("X", category_Data, &Mouse::getX, nullptr);
-static Reflection::PropDescriptor<Mouse, int> desc_Mouse_Y("Y", category_Data, &Mouse::getY, nullptr);
-static Reflection::PropDescriptor<Mouse, int> desc_Mouse_ViewSizeX("ViewSizeX", category_Data, &Mouse::getViewSizeX, nullptr);
-static Reflection::PropDescriptor<Mouse, int> desc_Mouse_ViewSizeY("ViewSizeY", category_Data, &Mouse::getViewSizeY, nullptr);
+static Reflection::RefPropDescriptor<Mouse, PartInstance> desc_Target("Target", category_Data, &Mouse::getTarget, NULL);
+static Reflection::RefPropDescriptor<Mouse, PartInstance> dep_Target("target", category_Data, &Mouse::getTarget, NULL, Reflection::PropertyDescriptor::Attributes::deprecated(desc_Target));
+static Reflection::EnumPropDescriptor<Mouse, NormalId> desc_TargetSurface("TargetSurface", category_Data, &Mouse::getTargetSurface, NULL);
+static Reflection::PropDescriptor<Mouse, int> desc_Mouse_X("X", category_Data, &Mouse::getX, NULL);
+static Reflection::PropDescriptor<Mouse, int> desc_Mouse_Y("Y", category_Data, &Mouse::getY, NULL);
+static Reflection::PropDescriptor<Mouse, int> desc_Mouse_ViewSizeX("ViewSizeX", category_Data, &Mouse::getViewSizeX, NULL);
+static Reflection::PropDescriptor<Mouse, int> desc_Mouse_ViewSizeY("ViewSizeY", category_Data, &Mouse::getViewSizeY, NULL);
 static Reflection::PropDescriptor<Mouse, TextureId> desc_Mouse_Icon("Icon", category_Data, &Mouse::getIcon, &Mouse::setIcon);
 REFLECTION_END();
 
 Mouse::Mouse()
-	: workspace(nullptr)
-	, command(nullptr)
+	: workspace(NULL)
+	, command(NULL)
 {
 }
 
@@ -114,7 +114,7 @@ PartInstance* Mouse::getTarget() const
 
 	FilterDescendents filter(getTargetFilter());
 	return (lastEvent && lastEvent->getUserInputState() != InputObject::INPUT_STATE_NONE) ?
-			MouseCommand::getPart(getWorkspace(), lastEvent, &filter) : nullptr;
+			MouseCommand::getPart(getWorkspace(), lastEvent, &filter) : NULL;
 }
 
 NormalId Mouse::getTargetSurface() const

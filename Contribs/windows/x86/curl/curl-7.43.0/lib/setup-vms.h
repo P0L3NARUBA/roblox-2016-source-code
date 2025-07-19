@@ -86,7 +86,7 @@ char * test_str;
     /* See if the result is in VMS format, if not, we are done */
     /* Assume that this is a PATH, not just some data */
     test_str = strpbrk(path, ":[<^");
-    if(test_str == nullptr) {
+    if(test_str == NULL) {
       return (char *)path;
     }
 
@@ -118,7 +118,7 @@ char * vms_path;
 
     /* first use the DECC getenv() function */
     result = decc$getenv(envvar);
-    if(result == nullptr) {
+    if(result == NULL) {
       return result;
     }
 
@@ -153,7 +153,7 @@ char * unix_path;
 #endif
 
     my_passwd = decc_getpwuid(uid);
-    if(my_passwd == nullptr) {
+    if(my_passwd == NULL) {
       return my_passwd;
     }
 

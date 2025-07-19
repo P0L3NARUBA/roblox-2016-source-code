@@ -824,7 +824,7 @@ const GLES2_Shader *GLES2_GetShader(GLES2_ShaderType type, SDL_BlendMode blendMo
     case SDL_BLENDMODE_MOD:
         return &GLES2_FragmentShader_Modulated_SolidSrc;
     default:
-        return nullptr;
+        return NULL;
     }
     case GLES2_SHADER_FRAGMENT_TEXTURE_ABGR_SRC:
         switch (blendMode) {
@@ -837,7 +837,7 @@ const GLES2_Shader *GLES2_GetShader(GLES2_ShaderType type, SDL_BlendMode blendMo
         case SDL_BLENDMODE_MOD:
             return &GLES2_FragmentShader_Modulated_TextureABGRSrc;
         default:
-            return nullptr;
+            return NULL;
     }
     case GLES2_SHADER_FRAGMENT_TEXTURE_ARGB_SRC:
         switch (blendMode) {
@@ -850,7 +850,7 @@ const GLES2_Shader *GLES2_GetShader(GLES2_ShaderType type, SDL_BlendMode blendMo
         case SDL_BLENDMODE_MOD:
             return &GLES2_FragmentShader_Modulated_TextureARGBSrc;
         default:
-            return nullptr;
+            return NULL;
     }
 
     case GLES2_SHADER_FRAGMENT_TEXTURE_RGB_SRC:
@@ -864,7 +864,7 @@ const GLES2_Shader *GLES2_GetShader(GLES2_ShaderType type, SDL_BlendMode blendMo
         case SDL_BLENDMODE_MOD:
             return &GLES2_FragmentShader_Modulated_TextureRGBSrc;
         default:
-            return nullptr;
+            return NULL;
     }
 
     case GLES2_SHADER_FRAGMENT_TEXTURE_BGR_SRC:
@@ -878,7 +878,7 @@ const GLES2_Shader *GLES2_GetShader(GLES2_ShaderType type, SDL_BlendMode blendMo
         case SDL_BLENDMODE_MOD:
             return &GLES2_FragmentShader_Modulated_TextureBGRSrc;
         default:
-            return nullptr;
+            return NULL;
     }
     
     case GLES2_SHADER_FRAGMENT_TEXTURE_YUV_SRC:
@@ -897,7 +897,7 @@ const GLES2_Shader *GLES2_GetShader(GLES2_ShaderType type, SDL_BlendMode blendMo
     }
 
     default:
-        return nullptr;
+        return NULL;
     }
 }
 

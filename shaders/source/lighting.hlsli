@@ -27,8 +27,7 @@ float3 FresnelDielectric(float cosTheta, float ior) {
     return float3(f, f, f);
 }
 
-float3 FresnelConductor(float cosTheta, float3 n, float3 k)
-{
+float3 FresnelConductor(float cosTheta, float3 n, float3 k) {
     float cosTheta2 = saturate(cosTheta);
 	cosTheta2 *= cosTheta2;
     float sinTheta2 = 1.0 - cosTheta2;
@@ -51,8 +50,11 @@ float3 FresnelConductor(float cosTheta, float3 n, float3 k)
     return 0.5 * (Rp + Rs);
 }
 
-float GGXSmithG2(float NdotL, float NdotV, float alpha2)
-{
+float3 Fresnel(float cosTheta, float3 IOR_A, float3 IOR_B, float IOR, float Metalness) {
+    return lerp(FresnelConductor(cosTheta, IOR_A, IOR_B), FresnelDielectric(cosTheta, IOR), Metalness);
+}
+
+float GGXSmithG2(float NdotL, float NdotV, float alpha2) {
     float lambdaL = sqrt(alpha2 + (1.0 - alpha2) * NdotL * NdotL);
     float lambdaV = sqrt(alpha2 + (1.0 - alpha2) * NdotV * NdotV);
     return 2.0 / (lambdaL / NdotL + lambdaV / NdotV);
@@ -81,7 +83,7 @@ float OrenNayarFujiiDiffuse(float NdotV, float NdotL, float LdotV, float sigma) 
 }
 
 // Rendering equation for direct lighting, using GGX BRDF for speculars and Oren Nayar Fujii/Lambertian for diffuse
-float3 Lighting(float DiffuseStrength, float SpecularStrength, float3 Normal, float3 LightDir, float3 ViewDir, float NDV, float Radiance, float3 Albedo, float Roughness, float Metallic, float IOR) {
+float3 Lighting(float DiffuseStrength, float SpecularStrength, float3 Normal, float3 LightDir, float3 ViewDir, float NDV, float Radiance, float3 Albedo, float Roughness, float Metalness, float IOR) {
     float3 HalfDir = normalize(LightDir + ViewDir);
     float NDH = saturate(dot(Normal, HalfDir));
     float VDH = saturate(dot(HalfDir, ViewDir));
@@ -89,11 +91,11 @@ float3 Lighting(float DiffuseStrength, float SpecularStrength, float3 Normal, fl
     float Diffuse = 0.0;
     float3 Specular = float3(0.0, 0.0, 0.0);
 
-	float3 Fresnel = lerp(FresnelConductor(VDH, F0ToIOR(Albedo * 2), float3(0.0, 0.0, 0.0)), FresnelDielectric(VDH, IOR), Metallic);
+	float3 Fresnel = Fresnel(VDH, F0ToIOR(Albedo), float3(0.0, 0.0, 0.0), IOR, Metalness);
     Roughness = max(Roughness, EPSILON);
     float Roughness2 = Roughness * Roughness;
 
-    DiffuseStrength *= Metallic;
+    DiffuseStrength *= Metalness;
 
     if (DiffuseStrength > 0.0)
     {

@@ -89,13 +89,13 @@ char *curl_version(void)
 #endif
 #ifdef USE_ARES
   /* this function is only present in c-ares, not in the original ares */
-  len = snprintf(ptr, left, " c-ares/%s", ares_version(nullptr));
+  len = snprintf(ptr, left, " c-ares/%s", ares_version(NULL));
   left -= len;
   ptr += len;
 #endif
 #ifdef USE_LIBIDN
   if(stringprep_check_version(LIBIDN_REQUIRED_VERSION)) {
-    len = snprintf(ptr, left, " libidn/%s", stringprep_check_version(nullptr));
+    len = snprintf(ptr, left, " libidn/%s", stringprep_check_version(NULL));
     left -= len;
     ptr += len;
   }
@@ -235,7 +235,7 @@ static const char * const protocols[] = {
   "tftp",
 #endif
 
-  nullptr
+  NULL
 };
 
 static curl_version_info_data version_info = {
@@ -298,15 +298,15 @@ static curl_version_info_data version_info = {
   | CURL_VERSION_UNIX_SOCKETS
 #endif
   ,
-  nullptr, /* ssl_version */
+  NULL, /* ssl_version */
   0,    /* ssl_version_num, this is kept at zero */
-  nullptr, /* zlib_version */
+  NULL, /* zlib_version */
   protocols,
-  nullptr, /* c-ares version */
+  NULL, /* c-ares version */
   0,    /* c-ares version numerical */
-  nullptr, /* libidn version */
+  NULL, /* libidn version */
   0,    /* iconv version */
-  nullptr, /* ssh lib version */
+  NULL, /* ssh lib version */
 };
 
 curl_version_info_data *curl_version_info(CURLversion stamp)
@@ -323,7 +323,7 @@ curl_version_info_data *curl_version_info(CURLversion stamp)
 
 #ifdef HAVE_LIBZ
   version_info.libz_version = zlibVersion();
-  /* libz left nullptr if non-existing */
+  /* libz left NULL if non-existing */
 #endif
 #ifdef USE_ARES
   {
@@ -334,7 +334,7 @@ curl_version_info_data *curl_version_info(CURLversion stamp)
 #endif
 #ifdef USE_LIBIDN
   /* This returns a version string if we use the given version or later,
-     otherwise it returns nullptr */
+     otherwise it returns NULL */
   version_info.libidn = stringprep_check_version(LIBIDN_REQUIRED_VERSION);
   if(version_info.libidn)
     version_info.features |= CURL_VERSION_IDN;

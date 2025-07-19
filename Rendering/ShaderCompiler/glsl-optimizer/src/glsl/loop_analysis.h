@@ -108,7 +108,7 @@ public:
     * If any of the terminators in \c terminators leads to termination of the
     * loop after a constant number of iterations, this is the terminator that
     * leads to termination after the smallest number of iterations.  Otherwise
-    * nullptr.
+    * NULL.
     */
    loop_terminator *limiting_terminator;
 
@@ -133,7 +133,7 @@ public:
       this->contains_calls = false;
       this->var_hash = hash_table_ctor(0, hash_table_pointer_hash,
 				       hash_table_pointer_compare);
-      this->limiting_terminator = nullptr;
+      this->limiting_terminator = NULL;
    }
 
    ~loop_variable_state()
@@ -179,7 +179,7 @@ public:
     * If this is a loop induction variable, the amount by which the variable
     * is incremented on each iteration through the loop.
     *
-    * If this is not a loop induction variable, nullptr.
+    * If this is not a loop induction variable, NULL.
     */
    ir_rvalue *increment;
 
@@ -189,7 +189,7 @@ public:
       /* Induction variables always have a non-null increment, and vice
        * versa.
        */
-      return this->increment != nullptr;
+      return this->increment != NULL;
    }
 
 
@@ -219,7 +219,7 @@ public:
 class loop_terminator : public exec_node {
 public:
    loop_terminator()
-      : ir(nullptr), iterations(-1)
+      : ir(NULL), iterations(-1)
    {
    }
 

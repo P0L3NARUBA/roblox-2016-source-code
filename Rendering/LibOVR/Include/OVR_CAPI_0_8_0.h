@@ -850,7 +850,7 @@ typedef struct OVR_ALIGNAS(8) ovrInitParams_
 
     /// User-supplied log callback function, which may be called at any time
     /// asynchronously from multiple threads until ovr_Shutdown completes.
-    /// Use nullptr to specify no log callback.
+    /// Use NULL to specify no log callback.
     ovrLogCallback LogCallback;
 
     /// User-supplied data which is passed as-is to LogCallback. Typically this 
@@ -923,7 +923,7 @@ extern "C" {
 ///         which is off by default).
 ///      -# Standard OS shared library search location(s) (OS-specific).
 ///
-/// \param params Specifies custom initialization options. May be nullptr to indicate default options.
+/// \param params Specifies custom initialization options. May be NULL to indicate default options.
 /// \return Returns an ovrResult indicating success or failure. In the case of failure, use
 ///         ovr_GetLastErrorInfo to get more information. Example failed results include:
 ///     - ovrError_Initialize: Generic initialization error.
@@ -938,7 +938,7 @@ extern "C" {
 ///
 /// <b>Example code</b>
 ///     \code{.cpp}
-///         ovrResult result = ovr_Initialize(nullptr);
+///         ovrResult result = ovr_Initialize(NULL);
 ///         if(OVR_FAILURE(result)) {
 ///             ovrErrorInfo errorInfo;
 ///             ovr_GetLastErrorInfo(&errorInfo);
@@ -1035,10 +1035,10 @@ OVR_PUBLIC_FUNCTION(int) ovr_TraceMessage(int level, const char* message);
 /// ovr_Initialize must have first been called in order for this to succeed, otherwise ovrHmdDesc::Type
 /// will be reported as ovrHmd_None.
 /// 
-/// \param[in] session Specifies an ovrSession previously returned by ovr_Create, else nullptr in which
+/// \param[in] session Specifies an ovrSession previously returned by ovr_Create, else NULL in which
 ///                case this function detects whether an HMD is present and returns its info if so.
 ///
-/// \return Returns an ovrHmdDesc. If the hmd is nullptr and ovrHmdDesc::Type is ovrHmd_None then 
+/// \return Returns an ovrHmdDesc. If the hmd is NULL and ovrHmdDesc::Type is ovrHmd_None then 
 ///         no HMD is present.
 ///
 OVR_PUBLIC_FUNCTION(ovrHmdDesc) ovr_GetHmdDesc(ovrSession session);
@@ -1055,7 +1055,7 @@ OVR_PUBLIC_FUNCTION(ovrHmdDesc) ovr_GetHmdDesc(ovrSession session);
 /// or no rendering output will be possible. This is important for stability on multi-adapter systems. An
 /// application that simply chooses the default adapter will not run reliably on multi-adapter systems.
 /// \return Returns an ovrResult indicating success or failure. Upon failure
-///         the returned pHmd will be nullptr.
+///         the returned pHmd will be NULL.
 ///
 /// <b>Example code</b>
 ///     \code{.cpp}
@@ -1321,7 +1321,7 @@ typedef struct OVR_ALIGNAS(OVR_PTR_SIZE) ovrLayerHeader_
 /// Three options exist with respect to mono/stereo texture usage:
 ///    - ColorTexture[0] and ColorTexture[1] contain the left and right stereo renderings, respectively.
 ///      Viewport[0] and Viewport[1] refer to ColorTexture[0] and ColorTexture[1], respectively.
-///    - ColorTexture[0] contains both the left and right renderings, ColorTexture[1] is nullptr,
+///    - ColorTexture[0] contains both the left and right renderings, ColorTexture[1] is NULL,
 ///      and Viewport[0] and Viewport[1] refer to sub-rects with ColorTexture[0].
 ///    - ColorTexture[0] contains a single monoscopic rendering, and Viewport[0] and
 ///      Viewport[1] both refer to that rendering.
@@ -1334,7 +1334,7 @@ typedef struct OVR_ALIGNAS(OVR_PTR_SIZE) ovrLayerEyeFov_
     ovrLayerHeader      Header;
 
     /// ovrSwapTextureSets for the left and right eye respectively.
-    /// The second one of which can be nullptr for cases described above.
+    /// The second one of which can be NULL for cases described above.
     ovrSwapTextureSet*  ColorTexture[ovrEye_Count];
 
     /// Specifies the ColorTexture sub-rect UV coordinates.
@@ -1368,7 +1368,7 @@ typedef struct OVR_ALIGNAS(OVR_PTR_SIZE) ovrLayerEyeFov_
 /// Three options exist with respect to mono/stereo texture usage:
 ///    - ColorTexture[0] and ColorTexture[1] contain the left and right stereo renderings, respectively.
 ///      Viewport[0] and Viewport[1] refer to ColorTexture[0] and ColorTexture[1], respectively.
-///    - ColorTexture[0] contains both the left and right renderings, ColorTexture[1] is nullptr,
+///    - ColorTexture[0] contains both the left and right renderings, ColorTexture[1] is NULL,
 ///      and Viewport[0] and Viewport[1] refer to sub-rects with ColorTexture[0].
 ///    - ColorTexture[0] contains a single monoscopic rendering, and Viewport[0] and
 ///      Viewport[1] both refer to that rendering.
@@ -1381,7 +1381,7 @@ typedef struct OVR_ALIGNAS(OVR_PTR_SIZE) ovrLayerEyeFovDepth_
     ovrLayerHeader      Header;
 
     /// ovrSwapTextureSets for the left and right eye respectively.
-    /// The second one of which can be nullptr for cases described above.
+    /// The second one of which can be NULL for cases described above.
     ovrSwapTextureSet*  ColorTexture[ovrEye_Count];
 
     /// Specifies the ColorTexture sub-rect UV coordinates.
@@ -1423,7 +1423,7 @@ typedef struct OVR_ALIGNAS(OVR_PTR_SIZE) ovrLayerEyeFovDepth_
 /// Three options exist with respect to mono/stereo texture usage:
 ///    - ColorTexture[0] and ColorTexture[1] contain the left and right stereo renderings, respectively.
 ///      Viewport[0] and Viewport[1] refer to ColorTexture[0] and ColorTexture[1], respectively.
-///    - ColorTexture[0] contains both the left and right renderings, ColorTexture[1] is nullptr,
+///    - ColorTexture[0] contains both the left and right renderings, ColorTexture[1] is NULL,
 ///      and Viewport[0] and Viewport[1] refer to sub-rects with ColorTexture[0].
 ///    - ColorTexture[0] contains a single monoscopic rendering, and Viewport[0] and
 ///      Viewport[1] both refer to that rendering.
@@ -1436,7 +1436,7 @@ typedef struct OVR_ALIGNAS(OVR_PTR_SIZE) ovrLayerEyeMatrix_
     ovrLayerHeader      Header;
 
     /// ovrSwapTextureSets for the left and right eye respectively.
-    /// The second one of which can be nullptr for cases described above.
+    /// The second one of which can be NULL for cases described above.
     ovrSwapTextureSet*  ColorTexture[ovrEye_Count];
 
     /// Specifies the ColorTexture sub-rect UV coordinates.
@@ -1514,7 +1514,7 @@ typedef struct OVR_ALIGNAS(OVR_PTR_SIZE) ovrLayerDirect_
     ovrLayerHeader      Header;
 
     /// ovrSwapTextureSets for the left and right eye respectively.
-    /// The second one of which can be nullptr for cases described above.
+    /// The second one of which can be NULL for cases described above.
     ovrSwapTextureSet*  ColorTexture[ovrEye_Count];
 
     /// Specifies the ColorTexture sub-rect UV coordinates.
@@ -1559,7 +1559,7 @@ typedef union ovrLayer_Union_
 /// Destroys an ovrSwapTextureSet and frees all the resources associated with it.
 ///
 /// \param[in] session Specifies an ovrSession previously returned by ovr_Create.
-/// \param[in] textureSet Specifies the ovrSwapTextureSet to destroy. If it is nullptr then this function has no effect.
+/// \param[in] textureSet Specifies the ovrSwapTextureSet to destroy. If it is NULL then this function has no effect.
 ///
 /// \see ovr_CreateSwapTextureSetD3D11, ovr_CreateSwapTextureSetGL
 ///
@@ -1569,7 +1569,7 @@ OVR_PUBLIC_FUNCTION(void) ovr_DestroySwapTextureSet(ovrSession session, ovrSwapT
 /// Destroys a mirror texture previously created by one of the mirror texture creation functions.
 ///
 /// \param[in] session Specifies an ovrSession previously returned by ovr_Create.
-/// \param[in] mirrorTexture Specifies the ovrTexture to destroy. If it is nullptr then this function has no effect.
+/// \param[in] mirrorTexture Specifies the ovrTexture to destroy. If it is NULL then this function has no effect.
 ///
 /// \see ovr_CreateMirrorTextureD3D11, ovr_CreateMirrorTextureGL
 ///
@@ -1620,12 +1620,12 @@ OVR_PUBLIC_FUNCTION(ovrEyeRenderDesc) ovr_GetRenderDesc(ovrSession session,
 ///        after the last time ovr_SubmitFrame was called.
 ///
 /// \param[in] viewScaleDesc Provides additional information needed only if layerPtrList contains
-///        a ovrLayerType_Quad. If nullptr, a default version is used based on the current configuration and a 1.0 world scale.
+///        a ovrLayerType_Quad. If NULL, a default version is used based on the current configuration and a 1.0 world scale.
 ///
-/// \param[in] layerPtrList Specifies a list of ovrLayer pointers, which can include nullptr entries to
+/// \param[in] layerPtrList Specifies a list of ovrLayer pointers, which can include NULL entries to
 ///        indicate that any previously shown layer at that index is to not be displayed.
 ///        Each layer header must be a part of a layer structure such as ovrLayerEyeFov or ovrLayerQuad,
-///        with Header.Type identifying its type. A nullptr layerPtrList entry in the array indicates the
+///        with Header.Type identifying its type. A NULL layerPtrList entry in the array indicates the
 //         absence of the given layer.
 ///
 /// \param[in] layerCount Indicates the number of valid elements in layerPtrList. The maximum
@@ -1637,7 +1637,7 @@ OVR_PUBLIC_FUNCTION(ovrEyeRenderDesc) ovr_GetRenderDesc(ovrSession session,
 ///   specified in every call to ovr_SubmitFrame or it won't be displayed.
 ///
 /// - If a layerPtrList entry that was specified in a previous call to ovr_SubmitFrame is
-///   passed as nullptr or is of type ovrLayerType_Disabled, that layer is no longer displayed.
+///   passed as NULL or is of type ovrLayerType_Disabled, that layer is no longer displayed.
 ///
 /// - A layerPtrList entry can be of any layer type and multiple entries of the same layer type
 ///   are allowed. No layerPtrList entry may be duplicated (i.e. the same pointer as an earlier entry).
@@ -1648,7 +1648,7 @@ OVR_PUBLIC_FUNCTION(ovrEyeRenderDesc) ovr_GetRenderDesc(ovrSession session,
 ///         ovrLayerQuad    layer1;
 ///           ...
 ///         ovrLayerHeader* layers[2] = { &layer0.Header, &layer1.Header };
-///         ovrResult result = ovr_SubmitFrame(hmd, frameIndex, nullptr, layers, 2);
+///         ovrResult result = ovr_SubmitFrame(hmd, frameIndex, NULL, layers, 2);
 ///     \endcode
 ///
 /// \return Returns an ovrResult for which OVR_SUCCESS(result) is false upon error and true
@@ -1892,7 +1892,7 @@ OVR_PUBLIC_FUNCTION(ovrBool) ovr_SetFloatArray(ovrSession session, const char* p
 /// \param[in] session Specifies an ovrSession previously returned by ovr_Create.
 /// \param[in] propertyName The name of the property, which needs to be valid only for the call.
 /// \param[in] defaultVal Specifes the value to return if the property couldn't be read.
-/// \return Returns the string property if it exists. Otherwise returns defaultVal, which can be specified as nullptr.
+/// \return Returns the string property if it exists. Otherwise returns defaultVal, which can be specified as NULL.
 ///         The return memory is guaranteed to be valid until next call to ovr_GetString or
 ///         until the HMD is destroyed, whichever occurs first.
 OVR_PUBLIC_FUNCTION(const char*) ovr_GetString(ovrSession session, const char* propertyName,

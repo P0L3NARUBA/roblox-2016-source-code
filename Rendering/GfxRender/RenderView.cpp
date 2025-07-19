@@ -328,7 +328,7 @@ namespace RBX
 			{
 				if (frameRateManagerStatsItem)
 				{
-					frameRateManagerStatsItem->setParent(nullptr);
+					frameRateManagerStatsItem->setParent(NULL);
 					frameRateManagerStatsItem.reset();
 				}
 
@@ -636,11 +636,11 @@ namespace RBX
 
 			if (name == "Delta Between Renders")
 			{
-				return frm != nullptr ? frm->GetFrameTimeAverage() : 0.0;
+				return frm != NULL ? frm->GetFrameTimeAverage() : 0.0;
 			}
 			else if (name == "Total Render")
 			{
-				return frm != nullptr ? frm->GetRenderTimeAverage() : 0.0;
+				return frm != NULL ? frm->GetRenderTimeAverage() : 0.0;
 			}
 			else if (name == "Present Time")
 			{
@@ -664,7 +664,7 @@ namespace RBX
 					(name == "RenderStatsPassUI") ? &visualEngine->getRenderStats()->passUI :
 					(name == "RenderStatsPass3dAdorns") ? &visualEngine->getRenderStats()->pass3DAdorns :
 					(name == "RenderStatsPassTotal") ? &visualEngine->getRenderStats()->passTotal :
-					nullptr;
+					NULL;
 
 				if (!stats) return "unknown pass";
 
@@ -1489,7 +1489,7 @@ namespace RBX
 				if (videoFrameVertexStreamer && frameDataCallback)
 				{
 					frameDataCallback(visualEngine->getDevice());
-					// this has to be checked again, as frameDataCallback can stop video recording and nullptr it
+					// this has to be checked again, as frameDataCallback can stop video recording and NULL it
 					if (videoFrameVertexStreamer)
 						drawRecordingFrame(context);
 				}
@@ -1709,7 +1709,7 @@ namespace RBX
 
 				RBX::ServiceProvider::find<RBX::Workspace>(dataModel.get())->assemble();
 
-				renderPrepareImpl(nullptr, /* updateViewport= */ false);
+				renderPrepareImpl(NULL, /* updateViewport= */ false);
 
 				// Clear adorn rendering queue
 				visualEngine->getAdorn()->finishRenderPass();
@@ -1765,15 +1765,15 @@ namespace RBX
 			if (Camera* camera = dataModel->getWorkspace()->getCamera())
 				camera->setViewport(Vector2int16(width, height));
 
-			renderPrepareImpl(nullptr, /* updateViewport= */ false);
+			renderPrepareImpl(NULL, /* updateViewport= */ false);
 
 			if (crop)
 			{
 				modifyThumbnailCamera(visualEngine.get(), allowDolly);
 			}
 
-			shared_ptr<Renderbuffer> color = visualEngine->getDevice()->createRenderbuffer(Texture::Format_RGBA16F, width, height, 1);
-			shared_ptr<Renderbuffer> depth = visualEngine->getDevice()->createRenderbuffer(Texture::Format_D32F, width, height, 1);
+			shared_ptr<Renderbuffer> color = visualEngine->getDevice()->createRenderbuffer(Texture::Format_RGBA16f, width, height, 1);
+			shared_ptr<Renderbuffer> depth = visualEngine->getDevice()->createRenderbuffer(Texture::Format_D32f, width, height, 1);
 			shared_ptr<Framebuffer> framebuffer = visualEngine->getDevice()->createFramebuffer(color, depth);
 
 			renderPerformImpl(0.f, framebuffer.get());

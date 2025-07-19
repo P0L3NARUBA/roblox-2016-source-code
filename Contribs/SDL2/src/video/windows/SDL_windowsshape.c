@@ -35,23 +35,23 @@ Win32_CreateShaper(SDL_Window * window) {
     result->mode.parameters.binarizationCutoff = 1;
     result->userx = result->usery = 0;
     result->driverdata = (SDL_ShapeData*)SDL_malloc(sizeof(SDL_ShapeData));
-    ((SDL_ShapeData*)result->driverdata)->mask_tree = nullptr;
+    ((SDL_ShapeData*)result->driverdata)->mask_tree = NULL;
     /* Put some driver-data here. */
     window->shaper = result;
     resized_properly = Win32_ResizeWindowShape(window);
     if (resized_properly != 0)
-            return nullptr;
+            return NULL;
 
     return result;
 }
 
 void
 CombineRectRegions(SDL_ShapeTree* node,void* closure) {
-    HRGN mask_region = *((HRGN*)closure),temp_region = nullptr;
+    HRGN mask_region = *((HRGN*)closure),temp_region = NULL;
     if(node->kind == OpaqueShape) {
         /* Win32 API regions exclude their outline, so we widen the region by one pixel in each direction to include the real outline. */
         temp_region = CreateRectRgn(node->data.shape.x,node->data.shape.y,node->data.shape.x + node->data.shape.w + 1,node->data.shape.y + node->data.shape.h + 1);
-        if(mask_region != nullptr) {
+        if(mask_region != NULL) {
             CombineRgn(mask_region,mask_region,temp_region,RGN_OR);
             DeleteObject(temp_region);
         }
@@ -63,10 +63,10 @@ CombineRectRegions(SDL_ShapeTree* node,void* closure) {
 int
 Win32_SetWindowShape(SDL_WindowShaper *shaper,SDL_Surface *shape,SDL_WindowShapeMode *shape_mode) {
     SDL_ShapeData *data;
-    HRGN mask_region = nullptr;
+    HRGN mask_region = NULL;
 
-    if( (shaper == nullptr) ||
-        (shape == nullptr) ||
+    if( (shaper == NULL) ||
+        (shape == NULL) ||
         ((shape->format->Amask == 0) && (shape_mode->mode != ShapeModeColorKey)) ||
         (shape->w != shaper->window->w) ||
         (shape->h != shaper->window->h) ) {
@@ -74,12 +74,12 @@ Win32_SetWindowShape(SDL_WindowShaper *shaper,SDL_Surface *shape,SDL_WindowShape
     }
 
     data = (SDL_ShapeData*)shaper->driverdata;
-    if(data->mask_tree != nullptr)
+    if(data->mask_tree != NULL)
         SDL_FreeShapeTree(&data->mask_tree);
     data->mask_tree = SDL_CalculateShapeTree(*shape_mode,shape);
 
     SDL_TraverseShapeTree(data->mask_tree,&CombineRectRegions,&mask_region);
-    SDL_assert(mask_region != nullptr);
+    SDL_assert(mask_region != NULL);
 
     SetWindowRgn(((SDL_WindowData *)(shaper->window->driverdata))->hwnd, mask_region, TRUE);
 
@@ -90,13 +90,13 @@ int
 Win32_ResizeWindowShape(SDL_Window *window) {
     SDL_ShapeData* data;
 
-    if (window == nullptr)
+    if (window == NULL)
         return -1;
     data = (SDL_ShapeData *)window->shaper->driverdata;
-    if (data == nullptr)
+    if (data == NULL)
         return -1;
 
-    if(data->mask_tree != nullptr)
+    if(data->mask_tree != NULL)
         SDL_FreeShapeTree(&data->mask_tree);
     if(window->shaper->hasshape == SDL_TRUE) {
         window->shaper->userx = window->x;

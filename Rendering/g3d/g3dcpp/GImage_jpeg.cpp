@@ -92,7 +92,7 @@ static void jpeg_memory_dest (
 
 	mem_dest_ptr dest;
 
-	if (cinfo->dest == nullptr) {
+	if (cinfo->dest == NULL) {
         // First time for this JPEG object; call the
         // IJG allocator to get space.
 		cinfo->dest = (struct jpeg_destination_mgr*)
@@ -224,7 +224,7 @@ static void jpeg_memory_src (
 
 	mem_src_ptr src;
 
-	if (cinfo->src == nullptr) {
+	if (cinfo->src == NULL) {
         // First time for this JPEG object
 		cinfo->src = (struct jpeg_source_mgr*)
 			(*cinfo->mem->alloc_small)(
@@ -256,7 +256,7 @@ static void jpeg_memory_src (
 	src->pub.bytes_in_buffer    = 0;
     
     // until buffer loaded
-    src->pub.next_input_byte = nullptr; 
+    src->pub.next_input_byte = NULL; 
 }
 
 
@@ -335,7 +335,7 @@ void GImage::encodeJPEG(
 
     // Free the conservative buffer.
     System::free(compressed_data);
-    compressed_data = nullptr;
+    compressed_data = NULL;
 }
 
 

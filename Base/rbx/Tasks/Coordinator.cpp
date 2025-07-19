@@ -105,19 +105,19 @@ void SequenceBase::onRemoved(TaskScheduler::Job* job)
 bool Exclusive::isInhibited(TaskScheduler::Job* job)
 {
 	RBXASSERT(job != runningJob);
-	return runningJob != nullptr;
+	return runningJob != NULL;
 }
 
 void Exclusive::onPreStep(TaskScheduler::Job* job)
 {
-	RBXASSERT(runningJob == nullptr);
+	RBXASSERT(runningJob == NULL);
 	runningJob = job;
 }
 
 void Exclusive::onPostStep(TaskScheduler::Job* job)
 {
 	RBXASSERT(runningJob == job);
-	runningJob = nullptr;
+	runningJob = NULL;
 }
 
 

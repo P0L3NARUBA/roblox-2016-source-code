@@ -316,15 +316,15 @@ BEGIN(INITIAL);
 static hlmojo_Preprocessor* g_cpp;
 static TParseContext* g_parseContext;
 
-const TSourceLoc gNullSourceLoc = { nullptr, 0 };
+const TSourceLoc gNullSourceLoc = { NULL, 0 };
 
 static int cpp_get_token (hlmojo_Preprocessor* pp, char* buf, int maxSize)
 {
-	const char *tokstr = nullptr;
+	const char *tokstr = NULL;
 	unsigned int len = 0;
 	Token token = TOKEN_UNKNOWN;
 	tokstr = hlmojo_preprocessor_nexttoken (pp, &len, &token);
-	if (tokstr == nullptr)
+	if (tokstr == NULL)
 		return 0;
 		
 	if (hlmojo_preprocessor_outofmemory(pp))
@@ -401,7 +401,7 @@ int IncludeOpenCallback(MOJOSHADER_hlslang_includeType inctype,
 		return 0;
 	}
 
-	char* outdata = (char*) m(out.size() + 1, nullptr);
+	char* outdata = (char*) m(out.size() + 1, NULL);
 	std::memcpy(outdata, out.data(), out.size()+1);
 	*outdataPtr = outdata;
 	*outbytesPtr = out.size();
@@ -414,7 +414,7 @@ void IncludeCloseCallback(const char *data,
 	Hlsl2Glsl_ParseCallbacks* callbacks = reinterpret_cast<Hlsl2Glsl_ParseCallbacks*>(d);
 	if (callbacks->includeCloseCallback)
 		callbacks->includeCloseCallback(data, callbacks->data);
-	f(const_cast<char*>(data), nullptr);
+	f(const_cast<char*>(data), NULL);
 }
 
 //
@@ -435,9 +435,9 @@ int PaParseString(char* source, TParseContext& parseContextLocal, Hlsl2Glsl_Pars
 	
 	sourceLen = (int) strlen(source);
 	
-	MOJOSHADER_hlslang_includeOpen openCallback = nullptr;
-    MOJOSHADER_hlslang_includeClose closeCallback = nullptr;
-	void* data = nullptr;
+	MOJOSHADER_hlslang_includeOpen openCallback = NULL;
+    MOJOSHADER_hlslang_includeClose closeCallback = NULL;
+	void* data = NULL;
 	if (callbacks)
 	{
 		openCallback = IncludeOpenCallback;
@@ -448,7 +448,7 @@ int PaParseString(char* source, TParseContext& parseContextLocal, Hlsl2Glsl_Pars
 	hlmojo_Preprocessor* pp = hlmojo_preprocessor_start("", source, sourceLen,
 		openCallback,
 		closeCallback,
-		nullptr, // defines
+		NULL, // defines
 		0, // define count
 		MOJOSHADER_hlslang_internal_malloc,
 		MOJOSHADER_hlslang_internal_free,
@@ -458,7 +458,7 @@ int PaParseString(char* source, TParseContext& parseContextLocal, Hlsl2Glsl_Pars
 	
     yyrestart(0);
     (&parseContextLocal)->AfterEOF = false;
-	lexlineno.file = nullptr;
+	lexlineno.file = NULL;
     lexlineno.line = 1;
 	
 	int result = 0;
@@ -478,8 +478,8 @@ int PaParseString(char* source, TParseContext& parseContextLocal, Hlsl2Glsl_Pars
 	}
 	
 	hlmojo_preprocessor_end (pp);
-	g_cpp = nullptr;
-	g_parseContext = nullptr;
+	g_cpp = NULL;
+	g_parseContext = NULL;
 	
 	return result;
 }

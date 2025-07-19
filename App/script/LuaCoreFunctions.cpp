@@ -51,7 +51,7 @@ static int getfield (lua_State *L, const char *key, int d) {
 static int os_time (lua_State *L) {
   time_t t;
   if (lua_isnoneornil(L, 1))  /* called without args? */
-    t = time(nullptr);  /* get current time */
+    t = time(NULL);  /* get current time */
   else {
     struct tm ts;
     luaL_checktype(L, 1, LUA_TTABLE);
@@ -86,7 +86,7 @@ const luaL_Reg registry[] =
 {
 	{"difftime",  os_difftime},
 	{"time",      os_time},
-	{nullptr, nullptr}
+	{NULL, NULL}
 };
 
 }
@@ -216,7 +216,7 @@ static int debug_traceback(lua_State *L)
 const luaL_Reg registry[] = 
 {
 	{"traceback",  debug_traceback},
-	{nullptr, nullptr}
+	{NULL, NULL}
 };
 
 }

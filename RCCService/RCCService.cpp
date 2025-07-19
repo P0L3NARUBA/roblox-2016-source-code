@@ -79,17 +79,17 @@ public:
 		}
 		catch (std::exception& e)
 		{
-			return soap_receiver_fault(this, e.what(), nullptr); // return fault to sender 
+			return soap_receiver_fault(this, e.what(), NULL); // return fault to sender 
 		}
 		catch (std::string& s)
 		{
 			StringCrash(s.c_str());
-			return soap_receiver_fault(this, s.c_str(), nullptr); // return fault to sender 
+			return soap_receiver_fault(this, s.c_str(), NULL); // return fault to sender 
 		}
 		catch (...)
 		{
 			RBXCRASH();
-			return soap_receiver_fault(this, "Unexpected C++ exception type", nullptr); // return fault to sender 
+			return soap_receiver_fault(this, "Unexpected C++ exception type", NULL); // return fault to sender 
 		}
 	}
 	virtual	RCCServiceSoapService *copy()
@@ -122,9 +122,9 @@ ExceptionAwareSoap<RCCServiceSoapService> service;
 //
 VOID SvcReportEvent(WORD type, LPCTSTR szFunction) 
 { 
-	HANDLE hEventSource = ::RegisterEventSource(nullptr, SVCNAME);
+	HANDLE hEventSource = ::RegisterEventSource(NULL, SVCNAME);
 
-    if( nullptr != hEventSource )
+    if( NULL != hEventSource )
     {
 	LPCTSTR* lpStrings = &szFunction;
 
@@ -136,7 +136,7 @@ VOID SvcReportEvent(WORD type, LPCTSTR szFunction)
 						 1,					// number of strings to merge with message
 						 0,					// size of binary data, in bytes
 						 lpStrings,			// array of strings to merge with message
-						 nullptr);				// address of binary data
+						 NULL);				// address of binary data
 
         DeregisterEventSource(hEventSource);
     }
@@ -155,7 +155,7 @@ static void startupRCC(int port, LPCTSTR contentpath, bool crashUploaderOnly)
   //service.recv_timeout = 60; // 60 seconds 
   service.accept_timeout = 1; // server stops after 1 second
   //soap.max_keep_alive = 100; // max keep-alive sequence 
-  SOAP_SOCKET m = service.bind(nullptr, port, 100); 
+  SOAP_SOCKET m = service.bind(NULL, port, 100); 
   if (!soap_valid_socket(m)) 
 	  throw std::runtime_error(*soap_faultstring(&service)); 
 
@@ -326,7 +326,7 @@ void WINAPI Handler(DWORD control)
 VOID WINAPI ServiceMain( DWORD dwArgc, LPTSTR *lpszArgv )
 {
 	stopped = CreateEvent( 
-        nullptr,               // default security attributes
+        NULL,               // default security attributes
         TRUE,               // manual-reset event
         FALSE,               // initial state is not signaled
         TEXT("Stopped")  // object name
@@ -391,12 +391,12 @@ bool SvcUninstall(const char* name)
     // Get a handle to the SCM database. 
  
     CServiceHandle schSCManager = OpenSCManager( 
-        nullptr,                    // local computer
-        nullptr,                    // ServicesActive database 
+        NULL,                    // local computer
+        NULL,                    // ServicesActive database 
         SC_MANAGER_ALL_ACCESS);  // full access rights 
 
 	CServiceHandle schService = ::OpenService(schSCManager, name, DELETE);
-    if (schService == nullptr) 
+    if (schService == NULL) 
     {
         printf("OpenService failed (%d)\n", GetLastError()); 
         return false;
@@ -411,17 +411,17 @@ void SvcStart(const char* name)
     // Get a handle to the SCM database. 
  
     CServiceHandle schSCManager = OpenSCManager( 
-        nullptr,                    // local computer
-        nullptr,                    // ServicesActive database 
+        NULL,                    // local computer
+        NULL,                    // ServicesActive database 
         SC_MANAGER_ALL_ACCESS);  // full access rights 
 
 	CServiceHandle schService = ::OpenService(schSCManager, name, SERVICE_START);
-    if (schService == nullptr) 
+    if (schService == NULL) 
     {
         printf("OpenService failed (%d)\n", GetLastError()); 
         return;
     }
-	if (!StartService(schService, nullptr, nullptr))
+	if (!StartService(schService, NULL, NULL))
         printf("StartService failed (%d)\n", GetLastError()); 
 	else
         printf("Service Starting\n"); 
@@ -432,12 +432,12 @@ void SvcStop(const char* name)
     // Get a handle to the SCM database. 
  
     CServiceHandle schSCManager = OpenSCManager( 
-        nullptr,                    // local computer
-        nullptr,                    // ServicesActive database 
+        NULL,                    // local computer
+        NULL,                    // ServicesActive database 
         SC_MANAGER_ALL_ACCESS);  // full access rights 
 
 	CServiceHandle schService = ::OpenService(schSCManager, name, SERVICE_STOP);
-    if (schService == nullptr) 
+    if (schService == NULL) 
     {
         printf("OpenService failed (%d)\n", GetLastError()); 
         return;
@@ -465,7 +465,7 @@ void EventLogInstall()
 
     TCHAR szPath[MAX_PATH];
 
-    if( !GetModuleFileName( nullptr, szPath, MAX_PATH ) )
+    if( !GetModuleFileName( NULL, szPath, MAX_PATH ) )
 		throw std::runtime_error("GetModuleFileName failed");
 
 	key.SetStringValue("EventMessageFile", szPath, REG_EXPAND_SZ);
@@ -476,17 +476,17 @@ void SvcInstall()
 {
     TCHAR szPath[MAX_PATH];
 
-    if( !GetModuleFileName( nullptr, szPath, MAX_PATH ) )
+    if( !GetModuleFileName( NULL, szPath, MAX_PATH ) )
 		throw std::runtime_error("GetModuleFileName failed");
 
     // Get a handle to the SCM database. 
  
     CServiceHandle schSCManager = OpenSCManager( 
-        nullptr,                    // local computer
-        nullptr,                    // ServicesActive database 
+        NULL,                    // local computer
+        NULL,                    // ServicesActive database 
         SC_MANAGER_CREATE_SERVICE);  
  
-    if (nullptr == schSCManager) 
+    if (NULL == schSCManager) 
 		throw std::runtime_error("OpenSCManager failed");
 
     // Create the service
@@ -500,13 +500,13 @@ void SvcInstall()
         SERVICE_AUTO_START,        // start type 
         SERVICE_ERROR_NORMAL,      // error control type 
         szPath,                    // path to service's binary 
-        nullptr,                      // no load ordering group 
-        nullptr,                      // no tag identifier 
-        nullptr,                      // no dependencies 
-        nullptr,                      // LocalSystem account 
-        nullptr);                     // no password 
+        NULL,                      // no load ordering group 
+        NULL,                      // no tag identifier 
+        NULL,                      // no dependencies 
+        NULL,                      // LocalSystem account 
+        NULL);                     // no password 
  
-    if (schService == nullptr) 
+    if (schService == NULL) 
     {
 		if (GetLastError()==ERROR_SERVICE_EXISTS)
 		{
@@ -520,8 +520,8 @@ void SvcInstall()
 
 	 SERVICE_FAILURE_ACTIONS fa;
      fa.dwResetPeriod = 100;
-     fa.lpRebootMsg = nullptr;
-     fa.lpCommand = nullptr;
+     fa.lpRebootMsg = NULL;
+     fa.lpCommand = NULL;
      fa.cActions = 3;
      SC_ACTION sa[3];
      sa[0].Delay = 5000; 

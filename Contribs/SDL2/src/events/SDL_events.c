@@ -37,7 +37,7 @@
 #define SDL_MAX_QUEUED_EVENTS   65535
 
 /* Public data -- the event filter */
-SDL_EventFilter SDL_EventOK = nullptr;
+SDL_EventFilter SDL_EventOK = NULL;
 void *SDL_EventOKParam;
 
 typedef struct SDL_EventWatcher {
@@ -46,7 +46,7 @@ typedef struct SDL_EventWatcher {
     struct SDL_EventWatcher *next;
 } SDL_EventWatcher;
 
-static SDL_EventWatcher *SDL_event_watchers = nullptr;
+static SDL_EventWatcher *SDL_event_watchers = NULL;
 
 typedef struct {
     Uint32 bits[8];
@@ -81,7 +81,7 @@ static struct
     SDL_EventEntry *free;
     SDL_SysWMEntry *wmmsg_used;
     SDL_SysWMEntry *wmmsg_free;
-} SDL_EventQ = { nullptr, SDL_TRUE, 0, 0, nullptr, nullptr, nullptr, nullptr, nullptr };
+} SDL_EventQ = { NULL, SDL_TRUE, 0, 0, NULL, NULL, NULL, NULL, NULL };
 
 
 /* Public functions */
@@ -129,16 +129,16 @@ SDL_StopEventLoop(void)
 
     SDL_EventQ.count = 0;
     SDL_EventQ.max_events_seen = 0;
-    SDL_EventQ.head = nullptr;
-    SDL_EventQ.tail = nullptr;
-    SDL_EventQ.free = nullptr;
-    SDL_EventQ.wmmsg_used = nullptr;
-    SDL_EventQ.wmmsg_free = nullptr;
+    SDL_EventQ.head = NULL;
+    SDL_EventQ.tail = NULL;
+    SDL_EventQ.free = NULL;
+    SDL_EventQ.wmmsg_used = NULL;
+    SDL_EventQ.wmmsg_free = NULL;
 
     /* Clear disabled event state */
     for (i = 0; i < SDL_arraysize(SDL_disabled_events); ++i) {
         SDL_free(SDL_disabled_events[i]);
-        SDL_disabled_events[i] = nullptr;
+        SDL_disabled_events[i] = NULL;
     }
 
     while (SDL_event_watchers) {
@@ -146,12 +146,12 @@ SDL_StopEventLoop(void)
         SDL_event_watchers = tmp->next;
         SDL_free(tmp);
     }
-    SDL_EventOK = nullptr;
+    SDL_EventOK = NULL;
 
     if (SDL_EventQ.lock) {
         SDL_UnlockMutex(SDL_EventQ.lock);
         SDL_DestroyMutex(SDL_EventQ.lock);
-        SDL_EventQ.lock = nullptr;
+        SDL_EventQ.lock = NULL;
     }
 }
 
@@ -170,7 +170,7 @@ SDL_StartEventLoop(void)
     if (!SDL_EventQ.lock) {
         SDL_EventQ.lock = SDL_CreateMutex();
     }
-    if (SDL_EventQ.lock == nullptr) {
+    if (SDL_EventQ.lock == NULL) {
         return (-1);
     }
 #endif /* !SDL_THREADS_DISABLED */
@@ -197,7 +197,7 @@ SDL_AddEvent(SDL_Event * event)
         return 0;
     }
 
-    if (SDL_EventQ.free == nullptr) {
+    if (SDL_EventQ.free == NULL) {
         entry = (SDL_EventEntry *)SDL_malloc(sizeof(*entry));
         if (!entry) {
             return 0;
@@ -217,13 +217,13 @@ SDL_AddEvent(SDL_Event * event)
         SDL_EventQ.tail->next = entry;
         entry->prev = SDL_EventQ.tail;
         SDL_EventQ.tail = entry;
-        entry->next = nullptr;
+        entry->next = NULL;
     } else {
         SDL_assert(!SDL_EventQ.head);
         SDL_EventQ.head = entry;
         SDL_EventQ.tail = entry;
-        entry->prev = nullptr;
-        entry->next = nullptr;
+        entry->prev = NULL;
+        entry->next = NULL;
     }
     ++SDL_EventQ.count;
 
@@ -246,11 +246,11 @@ SDL_CutEvent(SDL_EventEntry *entry)
     }
 
     if (entry == SDL_EventQ.head) {
-        SDL_assert(entry->prev == nullptr);
+        SDL_assert(entry->prev == NULL);
         SDL_EventQ.head = entry->next;
     }
     if (entry == SDL_EventQ.tail) {
-        SDL_assert(entry->next == nullptr);
+        SDL_assert(entry->next == NULL);
         SDL_EventQ.tail = entry->prev;
     }
 
@@ -288,8 +288,8 @@ SDL_PeepEvents(SDL_Event * events, int numevents, SDL_eventaction action,
             SDL_Event tmpevent;
             Uint32 type;
 
-            /* If 'events' is nullptr, just see if they exist */
-            if (events == nullptr) {
+            /* If 'events' is NULL, just see if they exist */
+            if (events == NULL) {
                 action = SDL_PEEKEVENT;
                 numevents = 1;
                 events = &tmpevent;
@@ -303,7 +303,7 @@ SDL_PeepEvents(SDL_Event * events, int numevents, SDL_eventaction action,
                 wmmsg->next = SDL_EventQ.wmmsg_free;
                 SDL_EventQ.wmmsg_free = wmmsg;
             }
-            SDL_EventQ.wmmsg_used = nullptr;
+            SDL_EventQ.wmmsg_used = NULL;
 
             for (entry = SDL_EventQ.head; entry && used < numevents; entry = next) {
                 next = entry->next;
@@ -344,13 +344,13 @@ SDL_PeepEvents(SDL_Event * events, int numevents, SDL_eventaction action,
 SDL_bool
 SDL_HasEvent(Uint32 type)
 {
-    return (SDL_PeepEvents(nullptr, 0, SDL_PEEKEVENT, type, type) > 0);
+    return (SDL_PeepEvents(NULL, 0, SDL_PEEKEVENT, type, type) > 0);
 }
 
 SDL_bool
 SDL_HasEvents(Uint32 minType, Uint32 maxType)
 {
-    return (SDL_PeepEvents(nullptr, 0, SDL_PEEKEVENT, minType, maxType) > 0);
+    return (SDL_PeepEvents(NULL, 0, SDL_PEEKEVENT, minType, maxType) > 0);
 }
 
 void
@@ -482,7 +482,7 @@ void
 SDL_SetEventFilter(SDL_EventFilter filter, void *userdata)
 {
     /* Set filter and discard pending events */
-    SDL_EventOK = nullptr;
+    SDL_EventOK = NULL;
     SDL_FlushEvents(SDL_FIRSTEVENT, SDL_LASTEVENT);
     SDL_EventOKParam = userdata;
     SDL_EventOK = filter;
@@ -515,7 +515,7 @@ SDL_AddEventWatch(SDL_EventFilter filter, void *userdata)
     /* create the watcher */
     watcher->callback = filter;
     watcher->userdata = userdata;
-    watcher->next = nullptr;
+    watcher->next = NULL;
 
     /* add the watcher to the end of the list */
     if (SDL_event_watchers) {
@@ -532,7 +532,7 @@ SDL_AddEventWatch(SDL_EventFilter filter, void *userdata)
 void
 SDL_DelEventWatch(SDL_EventFilter filter, void *userdata)
 {
-    SDL_EventWatcher *prev = nullptr;
+    SDL_EventWatcher *prev = NULL;
     SDL_EventWatcher *curr;
 
     for (curr = SDL_event_watchers; curr; prev = curr, curr = curr->next) {

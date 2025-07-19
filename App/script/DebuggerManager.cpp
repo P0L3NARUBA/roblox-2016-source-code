@@ -38,7 +38,7 @@ namespace RBX
 		public:
 			PauseNowBreakpoint()
 			{
-				baseThread = nullptr;
+				baseThread = NULL;
 			}
 
 			virtual bool hitTest(lua_State* L, lua_Debug *ar)
@@ -53,7 +53,7 @@ namespace RBX
 		public:
 			StepInBreakpoint():hitPausedLine(false)
 			{
-				baseThread = nullptr;
+				baseThread = NULL;
 			}
 			virtual bool hitTest(lua_State* L, lua_Debug *ar)
 			{
@@ -80,7 +80,7 @@ namespace RBX
 		public:
 			StepOutBreakpoint():depth(0),readyForLine(false) 
 			{
-				baseThread = nullptr;
+				baseThread = NULL;
 			}
 
 			virtual bool hitTest(lua_State* L, lua_Debug *ar)
@@ -115,7 +115,7 @@ namespace RBX
 		public:
 			StepOverBreakpoint():depth(0),hitPausedLine(false) 
 			{
-				baseThread = nullptr;
+				baseThread = NULL;
 			}
 
 			virtual bool hitTest(lua_State* L, lua_Debug *ar)
@@ -159,7 +159,7 @@ using namespace Scripting;
 REFLECTION_BEGIN();
 static Reflection::BoundFuncDesc<DebuggerManager, shared_ptr<Instance>(shared_ptr<Instance>)> func_AddDebugger(&DebuggerManager::addDebugger_Reflection, "AddDebugger", "script", Security::None);
 static Reflection::BoundFuncDesc<DebuggerManager, void()> func_Enable(&DebuggerManager::enableDebugging, "EnableDebugging", Security::LocalUser);
-static Reflection::PropDescriptor<DebuggerManager, bool> prop_Enabled("DebuggingEnabled", category_Data, &DebuggerManager::getEnabled, nullptr);
+static Reflection::PropDescriptor<DebuggerManager, bool> prop_Enabled("DebuggingEnabled", category_Data, &DebuggerManager::getEnabled, NULL);
 static Reflection::BoundFuncDesc<DebuggerManager, void()> func_Resume(&DebuggerManager::resume, "Resume", Security::None);
 static Reflection::BoundFuncDesc<DebuggerManager, void()> func_StepOver(&DebuggerManager::stepOver, "StepOver", Security::None);
 static Reflection::BoundFuncDesc<DebuggerManager, void()> func_StepInto(&DebuggerManager::stepInto, "StepIn", Security::None);
@@ -185,11 +185,11 @@ static Reflection::BoundFuncDesc<ScriptDebugger, void(std::string, Reflection::V
 static Reflection::BoundFuncDesc<ScriptDebugger, void(std::string, Reflection::Variant, int)> func_SetUpvalue(&ScriptDebugger::setUpvalue, "SetUpvalue", "name", "value", "stackFrame", 0, Security::None);
 static Reflection::BoundFuncDesc<ScriptDebugger, void(std::string, Reflection::Variant)> func_SetGlobal(&ScriptDebugger::setGlobal, "SetGlobal", "name", "value", Security::None);
 // The Script property is read-only by design. If we want to make it writable, then we need to watch for changes and update DebuggerManager::debuggers
-const Reflection::RefPropDescriptor<ScriptDebugger, Instance> prop_Script("Script", category_Data, &ScriptDebugger::getScript, nullptr, Reflection::PropertyDescriptor::UI);
+const Reflection::RefPropDescriptor<ScriptDebugger, Instance> prop_Script("Script", category_Data, &ScriptDebugger::getScript, NULL, Reflection::PropertyDescriptor::UI);
 const Reflection::PropDescriptor<ScriptDebugger, std::string> prop_ScriptPath("ScriptPath", category_Data, &ScriptDebugger::getScriptPath, &ScriptDebugger::setScriptPath, Reflection::PropertyDescriptor::STREAMING);
-static Reflection::PropDescriptor<ScriptDebugger, bool> prop_IsDebugging("IsDebugging", category_Data, &ScriptDebugger::isDebugging, nullptr, Reflection::PropertyDescriptor::UI);																	
-static Reflection::PropDescriptor<ScriptDebugger, bool> prop_IsPaused("IsPaused", category_Data, &ScriptDebugger::isPaused, nullptr, Reflection::PropertyDescriptor::UI);																	
-static Reflection::PropDescriptor<ScriptDebugger, int> prop_CurrentLine("CurrentLine", category_Data, &ScriptDebugger::getCurrentLine, nullptr, Reflection::PropertyDescriptor::UI);																	
+static Reflection::PropDescriptor<ScriptDebugger, bool> prop_IsDebugging("IsDebugging", category_Data, &ScriptDebugger::isDebugging, NULL, Reflection::PropertyDescriptor::UI);																	
+static Reflection::PropDescriptor<ScriptDebugger, bool> prop_IsPaused("IsPaused", category_Data, &ScriptDebugger::isPaused, NULL, Reflection::PropertyDescriptor::UI);																	
+static Reflection::PropDescriptor<ScriptDebugger, int> prop_CurrentLine("CurrentLine", category_Data, &ScriptDebugger::getCurrentLine, NULL, Reflection::PropertyDescriptor::UI);																	
 static Reflection::EventDesc<ScriptDebugger, void(int)> event_EncounteredBreak(&ScriptDebugger::encounteredBreak, "EncounteredBreak", "line");
 static Reflection::EventDesc<ScriptDebugger, void()> event_Resuming(&ScriptDebugger::resuming, "Resuming");
 static Reflection::EventDesc<ScriptDebugger, void(shared_ptr<Instance>)> event_BreakpointAdded(&ScriptDebugger::breakpointAdded, "BreakpointAdded", "breakpoint");
@@ -198,7 +198,7 @@ static Reflection::EventDesc<ScriptDebugger, void(shared_ptr<Instance>)> event_W
 static Reflection::EventDesc<ScriptDebugger, void(shared_ptr<Instance>)> event_WatchRemoved(&ScriptDebugger::watchRemoved, "WatchRemoved", "watch");
 
 // The Line property is read-only by design. If we want to make it writable, then we need to watch for changes and update ScriptDebugger::breakpoints
-static Reflection::PropDescriptor<DebuggerBreakpoint, int> prop_Line("Line", category_Data, &DebuggerBreakpoint::getLine, nullptr, Reflection::PropertyDescriptor::UI);																	
+static Reflection::PropDescriptor<DebuggerBreakpoint, int> prop_Line("Line", category_Data, &DebuggerBreakpoint::getLine, NULL, Reflection::PropertyDescriptor::UI);																	
 Reflection::BoundProp<int> DebuggerBreakpoint::prop_Line_Data("line", category_Data, &DebuggerBreakpoint::line, Reflection::PropertyDescriptor::STREAMING);																	
 Reflection::BoundProp<bool> DebuggerBreakpoint::prop_Enabled("IsEnabled", category_Data, &DebuggerBreakpoint::enabled);
 Reflection::BoundProp<std::string> DebuggerBreakpoint::prop_Condition("Condition", category_Data, &DebuggerBreakpoint::condition);
@@ -207,7 +207,7 @@ Reflection::BoundProp<std::string> DebuggerWatch::prop_Expression("Expression", 
 static Reflection::BoundFuncDesc<DebuggerWatch, void()> func_CheckExpressionSyntax(&DebuggerWatch::checkExpressionSyntax, "CheckSyntax", Security::None);
 REFLECTION_END();
 
-static DebuggerManager* gDebuggerManager = nullptr;
+static DebuggerManager* gDebuggerManager = NULL;
 static void doBasicSingleton()
 {
 	static shared_ptr<DebuggerManager> sing = Creatable<Instance>::create<DebuggerManager>();
@@ -228,7 +228,7 @@ DebuggerManager& DebuggerManager::singleton()
 
 DebuggerManager::DebuggerManager(void)
 :enabled(false)
-,dataModel(nullptr)
+,dataModel(NULL)
 ,executionMode(ExecutionMode_Continue)
 ,breakOnErrorMode(BreakOnErrorMode_Never)
 ,resuming(false)
@@ -355,7 +355,7 @@ ScriptDebugger* DebuggerManager::findDebugger( Instance* script )
 		if (iter != debuggers.end())
 			return iter->second;
 	}
-	return nullptr;
+	return NULL;
 }
 
 shared_ptr<ScriptDebugger> DebuggerManager::addDebugger( Instance* script )
@@ -662,10 +662,10 @@ void DebuggerManager::onHook(lua_State* L, lua_Debug *ar)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ScriptDebugger::ScriptDebugger( Instance& script )
 :currentLine(0) 
-,breakpointHookData(nullptr)
-,globalRawScriptPtr(nullptr)
-,prevFuncTable(nullptr)
-,prevRawScriptPtr(nullptr)
+,breakpointHookData(NULL)
+,globalRawScriptPtr(NULL)
+,prevFuncTable(NULL)
+,prevRawScriptPtr(NULL)
 ,ignoreDebuggerBreak(false)
 ,currentThreadID(0)
 ,rootThreadResumed(false)
@@ -780,7 +780,7 @@ static int getIndexInfo(lua_State * L)
 			for(int index = 1; index <= debugInfo.nups; ++index)
 			{
 				const char * name = lua_getupvalue(parentThread, funcIndex, index);
-				if(name != nullptr && strcmp(name, key) == 0)
+				if(name != NULL && strcmp(name, key) == 0)
 				{
 					// Move the value across
 					lua_xmove(parentThread, L, 1);
@@ -798,7 +798,7 @@ static int getIndexInfo(lua_State * L)
 		// Check in the locals
 		int index = 1;
 		const char * name;
-		while( (name = lua_getlocal(parentThread, &debugInfo, index++)) != nullptr)
+		while( (name = lua_getlocal(parentThread, &debugInfo, index++)) != NULL)
 		{
 			if(strcmp(name, key) == 0)
 			{
@@ -900,7 +900,7 @@ Reflection::Variant DebuggerManager::readWatchValue(std::string expression, int 
 	RBXASSERT_BALLANCED_LUA_STACK(L);
 
 	lua_State* evalThread = lua_newthread(L);
-	lua_sethook(evalThread, nullptr, 0, 0);	// Prevent re-entrancy
+	lua_sethook(evalThread, NULL, 0, 0);	// Prevent re-entrancy
 
 	Lua::ScopedPopper pop(L, 1);
 
@@ -1087,7 +1087,7 @@ void ScriptDebugger::debuggerBreak( lua_State* L, lua_Debug *ar )
 
 	breakpointHookData = ar;
 	encounteredBreak(currentLine);
-	breakpointHookData = nullptr;
+	breakpointHookData = NULL;
 
 	if (pausedThread.empty())
 	{
@@ -1225,7 +1225,7 @@ static const char *traverseGlobals(lua_State *L, const TValue *o)
 			  return getstr(tsvalue(gkey(node)));
 	  }
   }
-  return nullptr;
+  return NULL;
 }
 
 static void populateFunctionName(lua_State *L, ScriptDebugger::FunctionInfo& funcInfo)
@@ -1290,7 +1290,7 @@ bool ScriptDebugger::onLineHook( lua_State* L, lua_Debug *ar )
 		return false;
 	}
 
-	DebuggerBreakpoint* bp = nullptr;
+	DebuggerBreakpoint* bp = NULL;
 	if (hasDifferentScriptInstances(L))
 	{
 		lua_getinfo(L, "f", ar);
@@ -1396,7 +1396,7 @@ DebuggerBreakpoint* ScriptDebugger::findBreakpoint( int line )
 		if (iter != breakpoints.end())
 			return (iter->second);
 	}
-	return nullptr;
+	return NULL;
 }
 
 shared_ptr<DebuggerBreakpoint> ScriptDebugger::setBreakpoint( int line )
@@ -1546,10 +1546,10 @@ void ScriptDebugger::onScriptStopped()
 	pausedThread.reset();
 	errorThread.reset();
 	currentLine = 0;
-	breakpointHookData = nullptr;
-	globalRawScriptPtr = nullptr;
-	prevFuncTable = nullptr;
-    prevRawScriptPtr = nullptr;
+	breakpointHookData = NULL;
+	globalRawScriptPtr = NULL;
+	prevFuncTable = NULL;
+    prevRawScriptPtr = NULL;
 	rootThreadResumed = false;
 	currentThreadID = 0;
 	pausedThreads.clear();
@@ -1564,7 +1564,7 @@ void ScriptDebugger::onScriptParentChanged(shared_ptr<RBX::Instance> newParent)
 		// now reset debugger data
 		onScriptStopped();
 		// do the cleanup
-		setParent(nullptr);
+		setParent(NULL);
 	}
 	else
 	{
@@ -1597,7 +1597,7 @@ ScriptContext::Result ScriptDebugger::resumeThread(lua_State* thread, bool evalL
 	if (!isPausedThread(reinterpret_cast<uintptr_t>(thread)) || isErrorThread(reinterpret_cast<uintptr_t>(thread)))
 	{
 		specialBreakpoint.reset();
-		breakpointHookData = nullptr;
+		breakpointHookData = NULL;
 		errorThread.reset();
 		pausedThreads.erase(reinterpret_cast<uintptr_t>(thread));
 		return result;
@@ -1825,7 +1825,7 @@ RBX::Instance* ScriptDebugger::getScriptForLuaState(lua_State* L)
 	RBXASSERT(lua_isnil(L, -1) || lua_isfunction(L, -1));
 	if (lua_isnil(L, -1) || lua_iscfunction(L, -1))
 	{
-		return nullptr;
+		return NULL;
 	}
 
 	Lua::ScopedPopper pop(L, 2);
@@ -1839,7 +1839,7 @@ RBX::Instance* ScriptDebugger::getScriptForLuaState(lua_State* L)
 	if (varResult.isType<boost::shared_ptr<RBX::Instance> >())
 		return varResult.get<boost::shared_ptr<RBX::Instance> >().get();
 
-	return nullptr;
+	return NULL;
 }
 
 bool ScriptDebugger::hasDifferentScriptInstances(lua_State* L)
@@ -1937,7 +1937,7 @@ std::string ScriptDebugger::getScriptPath() const
 void ScriptDebugger::setScriptPath(std::string scriptPath)
 {
 	RBX::Instance* pParent = RBX::DataModel::get(RBX::Scripting::DebuggerManager::singleton().getDataModel());
-	RBX::Instance* pChild = nullptr;
+	RBX::Instance* pChild = NULL;
 
 	std::string childPath(scriptPath), savedHashString;
 

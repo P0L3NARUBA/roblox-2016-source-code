@@ -44,7 +44,7 @@ DataModelMesh::DataModelMesh()
 
 bool DataModelMesh::askSetParent(const Instance* instance) const
 {
-	return Instance::fastDynamicCast<PartInstance>(instance)!=nullptr;
+	return Instance::fastDynamicCast<PartInstance>(instance)!=NULL;
 }
 
 

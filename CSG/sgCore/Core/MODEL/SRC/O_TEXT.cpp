@@ -40,9 +40,9 @@ struct u_d_t {
 };
 
 TSTYLE  style_for_init = {0, 5., 100., 0., 0., 50.};
-lpFT_BD ft_bd = nullptr;
+lpFT_BD ft_bd = NULL;
 UCHAR   faf_flag = 0;
-char*   tmp_text_str = nullptr;
+char*   tmp_text_str = NULL;
 
 
 void init_draft_info(/*const char* applpath, const char* applname*/)
@@ -92,7 +92,7 @@ GS_CODE get_text_geo_par(lpGEO_TEXT gtext)
 	short    i;
 	MATR     m;
 	IDENT_V  curr_font;
-	lpFONT   font = nullptr;
+	lpFONT   font = NULL;
 	UCHAR    *text;
 	ULONG    len;
 	RTT_UI   ud;
@@ -107,7 +107,7 @@ GS_CODE get_text_geo_par(lpGEO_TEXT gtext)
 	gcond.user  = &ud;
 
 	curr_font = 0;
-	if((text = (UCHAR*)alloc_and_get_ft_value(gtext->text_id, &len)) == nullptr){
+	if((text = (UCHAR*)alloc_and_get_ft_value(gtext->text_id, &len)) == NULL){
 		ret = G_CANCEL;
 	}
 	ud.text = text;
@@ -121,7 +121,7 @@ GS_CODE get_text_geo_par(lpGEO_TEXT gtext)
 
 //	if(!draw_geo_text(gtext, text_gab_lsk, &gtext->min)) return G_CANCEL;
 /*	if(gtext->min.x == GAB_NO_DEF) {
-		put_message(EMPTY_TEXT_MSG, nullptr, 0);
+		put_message(EMPTY_TEXT_MSG, NULL, 0);
 		return G_CANCEL;
 	}*/
 
@@ -141,7 +141,7 @@ GS_CODE get_text_geo_par(lpGEO_TEXT gtext)
 	flags[0] = 1;
 	if(curr_font != gtext->font_id){
 		if(font) SGFree(font);
-		if((font = (FONT*)alloc_and_get_ft_value(gtext->font_id, &len)) == nullptr){
+		if((font = (FONT*)alloc_and_get_ft_value(gtext->font_id, &len)) == NULL){
 			return G_CANCEL;
 		}
 		curr_font = gtext->font_id;
@@ -175,9 +175,9 @@ short i;
 	ft_bd->def_font = ft_bd->curr_font = 0;
 	ft_bd->curr_style = style_for_init;
 	strcpy(ft_bd->draft_title, DRAFT_TITLE);
-	if((ft_bd->buf = (char*)SGMalloc(MAX_SHP_LEN)) == nullptr) goto err;
+	if((ft_bd->buf = (char*)SGMalloc(MAX_SHP_LEN)) == NULL) goto err;
 //    
-	if((dim_info = (DIMINFO*)SGMalloc(sizeof(DIMINFO))) == nullptr) goto err;
+	if((dim_info = (DIMINFO*)SGMalloc(sizeof(DIMINFO))) == NULL) goto err;
 	return;
 err:
 	if(ft_bd) SGFree(ft_bd);
@@ -195,7 +195,7 @@ char       ext   [MAXEXT];
 char       fname [MAXFILE + MAXEXT];
 char       addname[MAXPATH];
 char*      lname;
-lpFONT     font = nullptr;
+lpFONT     font = NULL;
 IDENT_V    id;
 ULONG      len;
 
@@ -212,7 +212,7 @@ ULONG      len;
 			SGFree(font);
 			return id;
 		}
-		SGFree(font); font = nullptr;
+		SGFree(font); font = NULL;
 		if(!il_get_next_item(&ft_bd->vd, id, &id)) attr_exit();
 	}
 	//    -  
@@ -250,7 +250,7 @@ ULONG      len;
 		goto err6;
 	}
 met_load:
-	if(0 ==(font = load_font(lname, &len, nullptr, 0, errcode))) goto err;
+	if(0 ==(font = load_font(lname, &len, NULL, 0, errcode))) goto err;
 
 	if(!(id = add_ft_value(FTFONT, font, len))) goto err7;
 	SGFree(font);
@@ -284,13 +284,13 @@ char          buf[30];
 SHORT	        fdata[3];
 UCHAR         *tab, *c_out;
 WORD          *itab;
-lpFONT        fontt = nullptr;
-lpFONT        font  = nullptr;
+lpFONT        fontt = NULL;
+lpFONT        font  = NULL;
 short         len, rlen = 0, tablen, sdw, hran_len, i;
 
 	if(!init_buf(&bd, name, BUF_OLD)){
 		*errcode = 2;
-		return nullptr;
+		return NULL;
 	}
 	len = strlen(tytle1);
 	if(bd.len_file < len + sizeof(fdata))      goto err1; //  
@@ -332,7 +332,7 @@ short         len, rlen = 0, tablen, sdw, hran_len, i;
 	if(0 ==(font = (FONT *)SGMalloc(*lenfont)))
 		goto err3;
 	memcpy(font, fontt, sizeof(FONT) + sdw);
-	SGFree(fontt); fontt = nullptr;
+	SGFree(fontt); fontt = NULL;
 	//tab = ((UCHAR*)font) + (sizeof(FONT) - 1);
   tab = &(font->table[0]);
 	if(load_data(&bd, hran_len, tab + sdw) != hran_len)  goto err2;
@@ -384,7 +384,7 @@ err:
 	if(font)  SGFree(font);
 	if(fontt) SGFree(fontt);
 	*lenfont = 0;
-	return nullptr;
+	return NULL;
 }
 
 static void set_max_sym_len(lpFONT font)
@@ -404,7 +404,7 @@ D_POINT  p, p0 = {0., 0., 0.};
 		sym = tsym_OemToAnsi((WORD)*tab);
 		if(sym == 0) continue;
 		p = p0;
-		if(draw_sym1(font, sym, FALSE, 1., 1., 0., &p, idle_sym_line, nullptr)){
+		if(draw_sym1(font, sym, FALSE, 1., 1., 0., &p, idle_sym_line, NULL)){
 			dx = p.x - p0.x;
 			if(dx > 0) d += dx;
 		}
@@ -420,7 +420,7 @@ BOOL draw_geo_text(lpGEO_TEXT geo,
 {
 struct       u_d_t ud;
 lpFONT       font;
-UCHAR        *text = nullptr;
+UCHAR        *text = NULL;
 BOOL         ret;
 ULONG        len;
 
@@ -536,7 +536,7 @@ BOOL      vstatus, fstatus;
 		if(spsflag){ // 
 			pold = *p;
 			if(fstatus && (!vstatus)){
-				if(!draw_shp(font, sym, vstatus, gdx, gdy, sx, p, idle_sym_line, nullptr))
+				if(!draw_shp(font, sym, vstatus, gdx, gdy, sx, p, idle_sym_line, NULL))
 					return FALSE;
 				xsdv = p->x - pold.x;
 				if(xsdv > xavg) cf = xavg/xsdv;
@@ -550,7 +550,7 @@ BOOL      vstatus, fstatus;
 			if(sym == 13){c++; p->x = xbeg; continue;}
 			pold = *p;
 			if(fstatus && (!vstatus)){
-				if(!draw_sym1(font, sym, vstatus, gdx, gdy, sx, p, idle_sym_line, nullptr))
+				if(!draw_sym1(font, sym, vstatus, gdx, gdy, sx, p, idle_sym_line, NULL))
 					return FALSE;
 				xsdv = p->x - pold.x;
 				if(xsdv > xavg) cf = xavg/xsdv;
@@ -934,7 +934,7 @@ UCHAR  csym;
 		f += (strlen(f) + 1);
 		return f;
 	}
-	return nullptr;
+	return NULL;
 }
 
 BOOL text_gab_lsk(lpD_POINT pb, lpD_POINT pe, void* gab)
@@ -1011,7 +1011,7 @@ void*    value;
 				 ft_item.v.value.ni.len : ft_item.v.status;
 	if(0 ==(value = SGMalloc(*len))){
 		attr_handler_err(AT_HEAP);
-		return nullptr;
+		return NULL;
 	}
 	ft_item_value(&ft_item, value);
 	return value;
@@ -1100,7 +1100,7 @@ VI_LOCATION   loc;
 		if(0 ==(ft_item = (FT_ITEM *)get_next_elem(&ft_bd->vd))) attr_exit();
 		if(ft_item->v.status != A_NOT_INLINE) continue;
 		get_read_loc(&ft_item->v.value.ni.loc);
-		read_vld_data(ft_item->v.value.ni.len, nullptr);
+		read_vld_data(ft_item->v.value.ni.len, NULL);
 	}
 	end_read_vld();
 	end_rw(&ft_bd->vd);
@@ -1156,7 +1156,7 @@ ULONG   len1;
 
 	id = ft_bd->ft_listh[fttype].head;
 	while(id){
-		if((name = (char*)alloc_and_get_ft_value(id, &len1)) == nullptr) return FALSE;
+		if((name = (char*)alloc_and_get_ft_value(id, &len1)) == NULL) return FALSE;
 		if((len1 != len) || (strcmp(name, (char*)shp))){
 			SGFree(name);
 			if(!il_get_next_item(&ft_bd->vd, id, &id)) return FALSE;
@@ -1299,7 +1299,7 @@ int           curPos = 0;
 			idlist[j++] = id;
 			if(!il_get_next_item(&ft_bd->vd, id, &id)){
 				SGFree(idlist);
-				ft_bd->idlist[i - FTARROW] = nullptr;
+				ft_bd->idlist[i - FTARROW] = NULL;
 				goto err1;
 			}
 		}
@@ -1326,7 +1326,7 @@ IDENT_V    id;
 	for(i = FTARROW; i < FTNUMTYPES; i++){
 		len = (WORD)ft_bd->ft_listh[i].num;
 		if(ft_bd->idlist[i - FTARROW]) SGFree(ft_bd->idlist[i - FTARROW]);
-		if(!len) ft_bd->idlist[i - FTARROW] = nullptr;
+		if(!len) ft_bd->idlist[i - FTARROW] = NULL;
 		else     ft_bd->idlist[i - FTARROW] = (long*)SGMalloc(sizeof(IDENT_V)*(len + 1));
 		idlist = ft_bd->idlist[i - FTARROW];
 		if(!idlist) continue;
@@ -1336,7 +1336,7 @@ IDENT_V    id;
 			idlist[j++] = id;
 			if(!il_get_next_item(&ft_bd->vd, id, &id)){
 				SGFree(idlist);
-				ft_bd->idlist[i - FTARROW] = nullptr;
+				ft_bd->idlist[i - FTARROW] = NULL;
 				return FALSE;
 			}
 		}

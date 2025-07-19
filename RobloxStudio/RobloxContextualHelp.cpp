@@ -49,7 +49,7 @@ void RobloxContextualHelpService::onHelpTopicChanged(const QString& helpTopic)
 }
 
 RobloxContextualHelp::RobloxContextualHelp()
-    : m_pWebView(nullptr)
+    : m_pWebView(NULL)
     , m_urlDirty(false)
 {
 	QGridLayout *layout = new QGridLayout(this);

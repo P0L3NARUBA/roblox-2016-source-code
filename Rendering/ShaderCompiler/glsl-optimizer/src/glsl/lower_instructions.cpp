@@ -168,7 +168,7 @@ lower_instructions_visitor::sub_to_add_neg(ir_expression *ir)
 {
    ir->operation = ir_binop_add;
    ir->operands[1] = new(ir) ir_expression(ir_unop_neg, ir->operands[1]->type,
-					   ir->operands[1], nullptr);
+					   ir->operands[1], NULL);
    this->progress = true;
 }
 
@@ -207,20 +207,20 @@ lower_instructions_visitor::int_div_to_mul_rcp(ir_expression *ir)
 				      ir->operands[1]->type->matrix_columns);
 
    if (ir->operands[1]->type->base_type == GLSL_TYPE_INT)
-      op1 = new(ir) ir_expression(ir_unop_i2f, vec_type, ir->operands[1], nullptr);
+      op1 = new(ir) ir_expression(ir_unop_i2f, vec_type, ir->operands[1], NULL);
    else
-      op1 = new(ir) ir_expression(ir_unop_u2f, vec_type, ir->operands[1], nullptr);
+      op1 = new(ir) ir_expression(ir_unop_u2f, vec_type, ir->operands[1], NULL);
 
-   op1 = new(ir) ir_expression(ir_unop_rcp, op1->type, op1, nullptr);
+   op1 = new(ir) ir_expression(ir_unop_rcp, op1->type, op1, NULL);
 
    vec_type = glsl_type::get_instance(GLSL_TYPE_FLOAT,
 				      ir->operands[0]->type->vector_elements,
 				      ir->operands[0]->type->matrix_columns);
 
    if (ir->operands[0]->type->base_type == GLSL_TYPE_INT)
-      op0 = new(ir) ir_expression(ir_unop_i2f, vec_type, ir->operands[0], nullptr);
+      op0 = new(ir) ir_expression(ir_unop_i2f, vec_type, ir->operands[0], NULL);
    else
-      op0 = new(ir) ir_expression(ir_unop_u2f, vec_type, ir->operands[0], nullptr);
+      op0 = new(ir) ir_expression(ir_unop_u2f, vec_type, ir->operands[0], NULL);
 
    vec_type = glsl_type::get_instance(GLSL_TYPE_FLOAT,
 				      ir->type->vector_elements,
@@ -235,7 +235,7 @@ lower_instructions_visitor::int_div_to_mul_rcp(ir_expression *ir)
       ir->operation = ir_unop_i2u;
       ir->operands[0] = new(ir) ir_expression(ir_unop_f2i, op0);
    }
-   ir->operands[1] = nullptr;
+   ir->operands[1] = NULL;
 
    this->progress = true;
 }
@@ -261,7 +261,7 @@ lower_instructions_visitor::pow_to_exp2(ir_expression *ir)
    ir->operation = ir_unop_exp2;
    ir->operands[0] = new(ir) ir_expression(ir_binop_mul, ir->operands[1]->type,
 					   ir->operands[1], log2_x);
-   ir->operands[1] = nullptr;
+   ir->operands[1] = NULL;
    this->progress = true;
 }
 
@@ -270,7 +270,7 @@ lower_instructions_visitor::log_to_log2(ir_expression *ir)
 {
    ir->operation = ir_binop_mul;
    ir->operands[0] = new(ir) ir_expression(ir_unop_log2, ir->operands[0]->type,
-					   ir->operands[0], nullptr);
+					   ir->operands[0], NULL);
    ir->operands[1] = new(ir) ir_constant(float(1.0 / M_LOG2E));
    this->progress = true;
 }
@@ -284,7 +284,7 @@ lower_instructions_visitor::mod_to_fract(ir_expression *ir)
 
    ir_assignment *const assign =
       new(ir) ir_assignment(new(ir) ir_dereference_variable(temp),
-			    ir->operands[1], nullptr);
+			    ir->operands[1], NULL);
 
    this->base_ir->insert_before(assign);
 
@@ -302,7 +302,7 @@ lower_instructions_visitor::mod_to_fract(ir_expression *ir)
    ir_rvalue *expr = new(ir) ir_expression(ir_unop_fract,
 					   ir->operands[0]->type,
 					   div_expr,
-					   nullptr);
+					   NULL);
 
    ir->operation = ir_binop_mul;
    ir->operands[0] = new(ir) ir_dereference_variable(temp);
@@ -328,7 +328,7 @@ lower_instructions_visitor::bitfield_insert_to_bfm_bfi(ir_expression *ir)
                                            ir->operands[2]);
    /* ir->operands[1] is still the value to insert. */
    ir->operands[2] = base_expr;
-   ir->operands[3] = nullptr;
+   ir->operands[3] = NULL;
 
    this->progress = true;
 }
@@ -440,11 +440,11 @@ lower_instructions_visitor::ldexp_to_arith(ir_expression *ir)
     *     floating-point type, the result is undefined."
     */
 
-   ir_constant *exp_shift_clone = exp_shift->clone(ir, nullptr);
+   ir_constant *exp_shift_clone = exp_shift->clone(ir, NULL);
    ir->operation = ir_unop_bitcast_i2f;
    ir->operands[0] = bitfield_insert(bitcast_f2i(x), resulting_biased_exp,
                                      exp_shift_clone, exp_width);
-   ir->operands[1] = nullptr;
+   ir->operands[1] = NULL;
 
    /* Don't generate new IR that would need to be lowered in an additional
     * pass.
@@ -466,10 +466,10 @@ lower_instructions_visitor::carry_to_arith(ir_expression *ir)
     *   carry = ir_unop_b2i bcarry
     */
 
-   ir_rvalue *x_clone = ir->operands[0]->clone(ir, nullptr);
+   ir_rvalue *x_clone = ir->operands[0]->clone(ir, NULL);
    ir->operation = ir_unop_i2u;
    ir->operands[0] = b2i(less(add(ir->operands[0], ir->operands[1]), x_clone));
-   ir->operands[1] = nullptr;
+   ir->operands[1] = NULL;
 
    this->progress = true;
 }
@@ -486,7 +486,7 @@ lower_instructions_visitor::borrow_to_arith(ir_expression *ir)
 
    ir->operation = ir_unop_i2u;
    ir->operands[0] = b2i(less(ir->operands[0], ir->operands[1]));
-   ir->operands[1] = nullptr;
+   ir->operands[1] = NULL;
 
    this->progress = true;
 }

@@ -74,16 +74,16 @@ tree_to_vine(ir_expression *root)
    ir_rvalue *vine_tail = root;
    ir_rvalue *remainder = root->operands[1];
 
-   while (remainder != nullptr) {
+   while (remainder != NULL) {
       ir_expression *remainder_temp = remainder->as_expression();
       ir_expression *remainder_left = remainder_temp ?
-         remainder_temp->operands[0]->as_expression() : nullptr;
+         remainder_temp->operands[0]->as_expression() : NULL;
 
-      if (remainder_left == nullptr) {
+      if (remainder_left == NULL) {
          /* move vine_tail down one */
          vine_tail = remainder;
          remainder = remainder->as_expression() ?
-            ((ir_expression *)remainder)->operands[1] : nullptr;
+            ((ir_expression *)remainder)->operands[1] : NULL;
          size++;
       } else {
          /* rotate */
@@ -224,7 +224,7 @@ is_reduction(ir_instruction *ir, void *data)
       return;
    }
 
-   if (ird->type != nullptr && ird->type != expr->type) {
+   if (ird->type != NULL && ird->type != expr->type) {
       ird->is_reduction = false;
       return;
    }
@@ -245,7 +245,7 @@ handle_expression(ir_expression *expr)
 {
    struct is_reduction_data ird;
    ird.operation = (ir_expression_operation)0;
-   ird.type = nullptr;
+   ird.type = NULL;
    ird.num_expr = 0;
    ird.is_reduction = true;
    ird.contains_constant = false;
@@ -304,7 +304,7 @@ ir_rebalance_visitor::handle_rvalue(ir_rvalue **rvalue)
    if (new_rvalue == *rvalue)
       return;
 
-   visit_tree(new_rvalue, nullptr, nullptr, update_types);
+   visit_tree(new_rvalue, NULL, NULL, update_types);
 
    *rvalue = new_rvalue;
    this->progress = true;

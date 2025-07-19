@@ -91,7 +91,7 @@ static const char *keywords[] =
   "namespace",
   "new",
   "not",
-  "nullptr",
+  "NULL",
   "operator",
   "or",
   "private",
@@ -483,7 +483,7 @@ const char *Types::nsprefix(const char *prefix, const char *URI)
     }
     return s;
   }
-  return nullptr;
+  return NULL;
 }
 
 // Find a C name for a QName. If the name has no qualifier, use URI. Suggest prefix for URI
@@ -500,7 +500,7 @@ const char *Types::fname(const char *prefix, const char *URI, const char *qname,
   if (s)
   { name = s + 1;
     if (qname[0] == '"' && qname[1] == '"')
-      s = nullptr;
+      s = NULL;
     else if (*qname == '"')
     { t = (char*)emalloc(s - qname - 1);
       strncpy(t, qname + 1, s - qname - 2);
@@ -509,14 +509,14 @@ const char *Types::fname(const char *prefix, const char *URI, const char *qname,
     }
     else if (!strncmp(qname, "xs:", 3))	// this hack is necessary since the nsmap table defines "xs" for "xsd"
     { s = "xsd";
-      URI = nullptr;
+      URI = NULL;
     }
     else
     { t = (char*)emalloc(s - qname + 1);
       strncpy(t, qname, s - qname);
       t[s - qname] = '\0';
       s = t;
-      URI = nullptr;
+      URI = NULL;
     }
   }
   else
@@ -535,7 +535,7 @@ const char *Types::fname(const char *prefix, const char *URI, const char *qname,
   t = buf;
   if (!prefix || *prefix)
   { s = p;
-    // no longer add '_' when URI != nullptr, since nsprefix() will do this
+    // no longer add '_' when URI != NULL, since nsprefix() will do this
     if (prefix && *prefix == '_')
     { if (!URI)
         *t++ = '_';
@@ -616,16 +616,16 @@ const char *Types::fname(const char *prefix, const char *URI, const char *qname,
 }
 
 bool Types::is_defined(const char *prefix, const char *URI, const char *qname)
-{ const char *t = fname(prefix, URI, qname, nullptr, LOOKUP);
+{ const char *t = fname(prefix, URI, qname, NULL, LOOKUP);
   return usetypemap.find(t) != usetypemap.end();
 }
 
 const char *Types::aname(const char *prefix, const char *URI, const char *qname)
-{ return fname(prefix, URI, qname, nullptr, NOLOOKUP);
+{ return fname(prefix, URI, qname, NULL, NOLOOKUP);
 }
 
 const char *Types::cname(const char *prefix, const char *URI, const char *qname)
-{ return fname(prefix, URI, qname, nullptr, LOOKUP);
+{ return fname(prefix, URI, qname, NULL, LOOKUP);
 }
 
 const char *Types::tname(const char *prefix, const char *URI, const char *qname)
@@ -658,7 +658,7 @@ const char *Types::tnameptr(bool flag, const char *prefix, const char *URI, cons
 }
 
 const char *Types::pname(bool flag, const char *prefix, const char *URI, const char *qname)
-{ const char *r, *s = nullptr, *t;
+{ const char *r, *s = NULL, *t;
   t = cname(prefix, URI, qname);
   if (flag)
   { if (ptrtypemap.find(t) != ptrtypemap.end())
@@ -703,12 +703,12 @@ const char *Types::pname(bool flag, const char *prefix, const char *URI, const c
 const char *Types::deftname(enum Type type, const char *pointer, bool is_pointer, const char *prefix, const char *URI, const char *qname)
 { char buf[1024];
   char *s;
-  const char *q = nullptr, *t;
-  t = fname(prefix, URI, qname, nullptr, LOOKUP);
+  const char *q = NULL, *t;
+  t = fname(prefix, URI, qname, NULL, LOOKUP);
   if (deftypemap[t])
   { if (vflag)
       fprintf(stderr, "Name %s already defined (probably in %s file)\n", qname, mapfile);
-    return nullptr;
+    return NULL;
   }
   switch (type)
   { case ENUM:
@@ -750,7 +750,7 @@ const char *Types::deftname(enum Type type, const char *pointer, bool is_pointer
 const char *Types::ename(const char *type, const char *value)
 { const char *s = enames[Pair(type,value)];
   if (!s)
-  { s = fname(nullptr, nullptr, value, &rnames, NOLOOKUP);
+  { s = fname(NULL, NULL, value, &rnames, NOLOOKUP);
     if (!eflag && type && *type)
     { // Add prefix to enum
       if (!*s || (s[0] == '_' && s[1] == '\0'))
@@ -771,7 +771,7 @@ const char *Types::ename(const char *type, const char *value)
 
 // get operation name
 const char *Types::oname(const char *prefix, const char *URI, const char *qname)
-{ const char *s = fname(prefix, URI, qname, nullptr, LOOKUP);
+{ const char *s = fname(prefix, URI, qname, NULL, LOOKUP);
   if (s && usetypemap.find(s) != usetypemap.end())
   { // Avoid name clash with structs/classes of the same name
     onames.insert(s);
@@ -800,7 +800,7 @@ const char *Types::sname(const char *URI, const char *name)
     rnames.insert(s);
   }
   else if (URI)
-  { s = nsprefix(nullptr, URI);	/* TODO: this may be affected? */
+  { s = nsprefix(NULL, URI);	/* TODO: this may be affected? */
     t = (char*)emalloc(strlen(s) + 16);
     sprintf(t, "_%s__struct_%d", s, snum++);
     s = t;
@@ -831,7 +831,7 @@ const char *Types::uname(const char *URI)
     rnames.insert(s);
   }
   else if (URI)
-  { s = nsprefix(nullptr, URI);	/* TODO: this may be affected? */
+  { s = nsprefix(NULL, URI);	/* TODO: this may be affected? */
     t = (char*)emalloc(strlen(s) + 16);
     sprintf(t, "_%s__union_%d", s, unum++);
     s = t;
@@ -863,7 +863,7 @@ const char *Types::gname(const char *URI, const char *name)
     rnames.insert(s);
   }
   else if (URI)
-  { s = nsprefix(nullptr, URI);	/* TODO: this may be affected? */
+  { s = nsprefix(NULL, URI);	/* TODO: this may be affected? */
     t = (char*)emalloc(strlen(s) + 16);
     sprintf(t, "_%s__enum_%d", s, gnum++);
     s = t;
@@ -882,14 +882,14 @@ bool Types::is_nillable(const xs__element& element)
 }
 
 bool Types::is_basetypeforunion(const char *URI, const char *type)
-{ const char *t = tname(nullptr, URI, type);
+{ const char *t = tname(NULL, URI, type);
   if (!strcmp(t, "std::string"))
     return false;
   return is_basetype(URI, type);
 }
 
 bool Types::is_basetype(const char *URI, const char *type)
-{ const char *t = tname(nullptr, URI, type);
+{ const char *t = tname(NULL, URI, type);
   if (!strncmp(t, "enum ", 5))
     return true;
   if (strstr(t, "__") && strcmp(t, "xsd__byte"))
@@ -908,7 +908,7 @@ void Types::dump(FILE *fd)
 
 void Types::define(const char *URI, const char *name, const xs__complexType& complexType)
 { // generate prototype for structs/classes and store name
-  const char *prefix = nullptr;
+  const char *prefix = NULL;
   if (complexType.name)
     name = complexType.name;
   else
@@ -956,14 +956,14 @@ void Types::define(const char *URI, const char *name, const xs__complexType& com
 }
 
 void Types::gen(const char *URI, const char *name, const xs__simpleType& simpleType, bool anonymous)
-{ const char *t = nullptr;
-  const char *prefix = nullptr;
+{ const char *t = NULL;
+  const char *prefix = NULL;
   if (simpleType.name)
     name = simpleType.name;
   else
     prefix = "_";
   if (!anonymous)
-  { t = deftypemap[cname(nullptr, URI, name)];
+  { t = deftypemap[cname(NULL, URI, name)];
     if (t)
     { fprintf(stream, "\n/// Imported simpleType \"%s\":%s from typemap %s.\n", URI, name, mapfile?mapfile:"");
       document(simpleType.annotation);
@@ -976,7 +976,7 @@ void Types::gen(const char *URI, const char *name, const xs__simpleType& simpleT
   }
   if (simpleType.restriction && simpleType.restriction->base)
   { const char *base = simpleType.restriction->base;
-    const char *baseURI = nullptr;
+    const char *baseURI = NULL;
     if (simpleType.restriction->simpleTypePtr() && simpleType.restriction->simpleTypePtr()->schemaPtr())
       baseURI = simpleType.restriction->simpleTypePtr()->schemaPtr()->targetNamespace;
     if (!anonymous)
@@ -987,7 +987,7 @@ void Types::gen(const char *URI, const char *name, const xs__simpleType& simpleT
     { bool is_numeric = true; // check if all enumeration values are numeric
       bool is_qname = !strcmp(base, "xs:QName");
       if (!anonymous)
-      { t = deftname(ENUM, nullptr, false, prefix, URI, name);
+      { t = deftname(ENUM, NULL, false, prefix, URI, name);
         if (t && !eflag)
           fprintf(stream, "/// Note: enum values are prefixed with '%s' to avoid name clashes, please use wsdl2h option -e to omit this prefix\n", t);
       }
@@ -1042,7 +1042,7 @@ void Types::gen(const char *URI, const char *name, const xs__simpleType& simpleT
     { if (simpleType.restriction->length && simpleType.restriction->length->value)
         fprintf(stream, "/// Length of this string is exactly %s characters\n", simpleType.restriction->length->value);
       else
-      { const char *a = nullptr, *b = nullptr;
+      { const char *a = NULL, *b = NULL;
         if (simpleType.restriction->minLength)
           a = simpleType.restriction->minLength->value;
         if (simpleType.restriction->maxLength)
@@ -1060,7 +1060,7 @@ void Types::gen(const char *URI, const char *name, const xs__simpleType& simpleT
         fprintf(stream, "/// %snumber of fraction digits is %s\n", simpleType.restriction->fractionDigits->fixed?"fixed ":"", simpleType.restriction->fractionDigits->value);
       for (vector<xs__pattern>::const_iterator pattern1 = simpleType.restriction->pattern.begin(); pattern1 != simpleType.restriction->pattern.end(); ++pattern1)
         fprintf(stream, "/// Content pattern is \"%s\"\n", xstring((*pattern1).value));
-      const char *ai = nullptr, *ae = nullptr, *bi = nullptr, *be = nullptr;
+      const char *ai = NULL, *ae = NULL, *bi = NULL, *be = NULL;
       if (simpleType.restriction->minInclusive)
         ai = simpleType.restriction->minInclusive->value;
       else if (simpleType.restriction->minExclusive)
@@ -1087,11 +1087,11 @@ void Types::gen(const char *URI, const char *name, const xs__simpleType& simpleT
       if (!simpleType.restriction->attribute.empty())
       { fprintf(stderr, "\nWarning: simpleType '%s' should not have attributes\n", name?name:"");
       }
-      const char *s = tname(nullptr, baseURI, base);
+      const char *s = tname(NULL, baseURI, base);
       if (!anonymous)
       { bool is_ptr = false;
-        is_ptr = (strchr(s, '*') != nullptr) || (s == pname(true, nullptr, baseURI, base));
-        t = deftname(TYPEDEF, nullptr, is_ptr, prefix, URI, name);
+        is_ptr = (strchr(s, '*') != NULL) || (s == pname(true, NULL, baseURI, base));
+        t = deftname(TYPEDEF, NULL, is_ptr, prefix, URI, name);
         if (t)
           fprintf(stream, "typedef %s %s", s, t);
       }
@@ -1148,7 +1148,7 @@ void Types::gen(const char *URI, const char *name, const xs__simpleType& simpleT
       }
       document(simpleType.annotation);
       if (!anonymous)
-      { t = deftname(ENUM, nullptr, false, prefix, URI, name);
+      { t = deftname(ENUM, NULL, false, prefix, URI, name);
         if (t)
           fprintf(stream, "enum * %s\n{\n", t);
       }
@@ -1195,7 +1195,7 @@ void Types::gen(const char *URI, const char *name, const xs__simpleType& simpleT
         }
         document(simpleType.annotation);
         if (!anonymous)
-        { t = deftname(ENUM, nullptr, false, prefix, URI, name);
+        { t = deftname(ENUM, NULL, false, prefix, URI, name);
           if (t)
             fprintf(stream, "enum * %s\n{\n", t);
         }
@@ -1230,10 +1230,10 @@ void Types::gen(const char *URI, const char *name, const xs__simpleType& simpleT
         }
       }
       else
-      { const char *s = tname(nullptr, nullptr, "xsd:string");
+      { const char *s = tname(NULL, NULL, "xsd:string");
         if (!anonymous)
         { fprintf(stream, "\n/// \"%s\":%s is a simpleType containing a whitespace separated list of %s.\n", URI?URI:"", name, simpleType.list->itemType);
-          t = deftname(TYPEDEF, nullptr, strchr(s, '*') != nullptr, prefix, URI, name);
+          t = deftname(TYPEDEF, NULL, strchr(s, '*') != NULL, prefix, URI, name);
         }
         document(simpleType.annotation);
         if (t)
@@ -1251,7 +1251,7 @@ void Types::gen(const char *URI, const char *name, const xs__simpleType& simpleT
       }
       document(simpleType.annotation);
       if (!anonymous)
-      { t = deftname(ENUM, nullptr, false, prefix, URI, name);
+      { t = deftname(ENUM, NULL, false, prefix, URI, name);
         if (t && !eflag)
           fprintf(stream, "/// Note: enum values are prefixed with '%s' to avoid name clashes, please use wsdl2h option -e to omit this prefix\n", t);
       }
@@ -1291,9 +1291,9 @@ void Types::gen(const char *URI, const char *name, const xs__simpleType& simpleT
   }
   else if (simpleType.union_)
   { if (simpleType.union_->memberTypes)
-    { const char *s = tname(nullptr, nullptr, "xsd:string");
+    { const char *s = tname(NULL, NULL, "xsd:string");
       if (!anonymous)
-        t = deftname(TYPEDEF, nullptr, strchr(s, '*') != nullptr, prefix, URI, name);
+        t = deftname(TYPEDEF, NULL, strchr(s, '*') != NULL, prefix, URI, name);
       fprintf(stream, "\n/// union of values \"%s\"\n", simpleType.union_->memberTypes);
       if (t)
         fprintf(stream, "typedef %s %s;\n", s, t);
@@ -1303,10 +1303,10 @@ void Types::gen(const char *URI, const char *name, const xs__simpleType& simpleT
       }
     }
     else if (!simpleType.union_->simpleType.empty())
-    { const char *s = tname(nullptr, nullptr, "xsd:string");
+    { const char *s = tname(NULL, NULL, "xsd:string");
       fprintf(stream, "\n");
       if (!anonymous)
-        t = deftname(TYPEDEF, nullptr, strchr(s, '*') != nullptr, prefix, URI, name);
+        t = deftname(TYPEDEF, NULL, strchr(s, '*') != NULL, prefix, URI, name);
       for (vector<xs__simpleType>::const_iterator simpleType1 = simpleType.union_->simpleType.begin(); simpleType1 != simpleType.union_->simpleType.end(); ++simpleType1)
         if ((*simpleType1).restriction)
         { fprintf(stream, "/// union of values from \"%s\"\n", (*simpleType1).restriction->base);
@@ -1327,8 +1327,8 @@ void Types::gen(const char *URI, const char *name, const xs__simpleType& simpleT
 }
 
 void Types::gen(const char *URI, const char *name, const xs__complexType& complexType, bool anonymous)
-{ const char *t = nullptr;
-  const char *prefix = nullptr;
+{ const char *t = NULL;
+  const char *prefix = NULL;
   bool soapflag = false;
   if (complexType.name)
     name = complexType.name;
@@ -1361,7 +1361,7 @@ void Types::gen(const char *URI, const char *name, const xs__complexType& comple
       else
         fprintf(stream, "class %s\n{ public:\n", t);
       const char *base = "xs:string";
-      const char *baseURI = nullptr;
+      const char *baseURI = NULL;
       const xs__complexType *p = &complexType; 
       do
       { if (!p->simpleContent)
@@ -1391,7 +1391,7 @@ void Types::gen(const char *URI, const char *name, const xs__complexType& comple
       }
       while (p);
       fprintf(stream, "/// __item wraps '%s' simpleContent.\n", base);
-      fprintf(stream, elementformat, tname(nullptr, baseURI, base), "__item");
+      fprintf(stream, elementformat, tname(NULL, baseURI, base), "__item");
       fprintf(stream, ";\n");
       p = &complexType; 
       bool flag = true;
@@ -1429,7 +1429,7 @@ void Types::gen(const char *URI, const char *name, const xs__complexType& comple
     }
     else if (complexType.simpleContent->extension)
     { const char *base = "xs:string";
-      const char *baseURI = nullptr;
+      const char *baseURI = NULL;
       if (cflag || fflag || anonymous)
       { if (anonymous)
         { if (cflag)
@@ -1472,7 +1472,7 @@ void Types::gen(const char *URI, const char *name, const xs__complexType& comple
         }
         while (p);
         fprintf(stream, "/// __item wraps '%s' simpleContent.\n", base);
-        fprintf(stream, elementformat, tname(nullptr, baseURI, base), "__item");
+        fprintf(stream, elementformat, tname(NULL, baseURI, base), "__item");
         fprintf(stream, ";\n");
         p = &complexType; 
         bool flag = true;
@@ -1512,7 +1512,7 @@ void Types::gen(const char *URI, const char *name, const xs__complexType& comple
           complexType.simpleContent->extension->complexTypePtr())
         { if (complexType.simpleContent->extension->complexTypePtr()->schemaPtr())
             baseURI = complexType.simpleContent->extension->complexTypePtr()->schemaPtr()->targetNamespace;
-          fprintf(stream, "class %s : public %s\n{ public:\n", t, cname(nullptr, baseURI, base));
+          fprintf(stream, "class %s : public %s\n{ public:\n", t, cname(NULL, baseURI, base));
           soapflag = true;
         }
         else
@@ -1525,7 +1525,7 @@ void Types::gen(const char *URI, const char *name, const xs__complexType& comple
           else
             fprintf(stream, "class %s\n{ public:\n", t);
           fprintf(stream, "/// __item wraps '%s' simpleContent.\n", base);
-          fprintf(stream, elementformat, tname(nullptr, baseURI, base), "__item");
+          fprintf(stream, elementformat, tname(NULL, baseURI, base), "__item");
           fprintf(stream, ";\n");
         }
         gen(URI, complexType.simpleContent->extension->attribute);
@@ -1543,7 +1543,7 @@ void Types::gen(const char *URI, const char *name, const xs__complexType& comple
         fprintf(stream, "\n/// \"%s\":%s is a%s complexType with complexContent restriction of %s.\n", URI?URI:"", name, complexType.abstract?"n abstract":"", complexType.complexContent->restriction->base);
       document(complexType.annotation);
       if (!strcmp(complexType.complexContent->restriction->base, "SOAP-ENC:Array"))
-      { char *item = nullptr, *type = nullptr;
+      { char *item = NULL, *type = NULL;
         if (!complexType.complexContent->restriction->attribute.empty())
         { xs__attribute& attribute = complexType.complexContent->restriction->attribute.front();
           if (attribute.wsdl__arrayType)
@@ -1647,10 +1647,10 @@ void Types::gen(const char *URI, const char *name, const xs__complexType& comple
       else if (fflag)
         fprintf(stream, "class %s\n{ public:\n", t);
       else // TODO: what to do if base class is in another namespace and elements must be qualified in XML payload?
-      { const char *baseURI = nullptr;
+      { const char *baseURI = NULL;
         if (p && p->schemaPtr())
           baseURI = p->schemaPtr()->targetNamespace;
-        fprintf(stream, "class %s : public %s\n{ public:\n", t, cname(nullptr, baseURI, base));
+        fprintf(stream, "class %s : public %s\n{ public:\n", t, cname(NULL, baseURI, base));
         soapflag = true;
       }
       while (p)
@@ -1659,7 +1659,7 @@ void Types::gen(const char *URI, const char *name, const xs__complexType& comple
           pURI = p->schemaPtr()->targetNamespace;
         else
           pURI = URI;
-        const char *b = cname(nullptr, pURI, p->name);
+        const char *b = cname(NULL, pURI, p->name);
         static int nesting = 0;
         if (cflag || fflag || anonymous)
           fprintf(stream, "/// INHERITED FROM %s:\n", b);
@@ -1794,7 +1794,7 @@ void Types::gen(const char *URI, const vector<xs__attribute>& attributes)
 }
 
 void Types::gen(const char *URI, const xs__attribute& attribute)
-{ const char *name, *type, *nameURI = nullptr, *typeURI = nullptr;
+{ const char *name, *type, *nameURI = NULL, *typeURI = NULL;
   name = attribute.name;
   type = attribute.type;
   bool is_optional = attribute.use != required && attribute.use != default_ && attribute.use != fixed_ && !attribute.default_;
@@ -1804,7 +1804,7 @@ void Types::gen(const char *URI, const xs__attribute& attribute)
   if (!URI)
     URI = attribute.schemaPtr()->targetNamespace;
   if (attribute.attributePtr()) // attribute ref
-  { char *prefix = nullptr;
+  { char *prefix = NULL;
     name = attribute.attributePtr()->name;
     if (attribute.attributePtr()->schemaPtr())
     { nameURI = typeURI = attribute.attributePtr()->schemaPtr()->targetNamespace;
@@ -1818,24 +1818,24 @@ void Types::gen(const char *URI, const xs__attribute& attribute)
     }
     fprintf(stream, "/// Attribute reference %s.\n", attribute.ref);
     document(attribute.attributePtr()->annotation);
-    fprintf(stream, attributeformat, pname(is_optional, prefix, typeURI, type), aname(nullptr, nameURI, name)); // make sure no name - type clash
+    fprintf(stream, attributeformat, pname(is_optional, prefix, typeURI, type), aname(NULL, nameURI, name)); // make sure no name - type clash
   }
   else if (name && type)
   { fprintf(stream, "/// Attribute %s of type %s.\n", name, type);
-    fprintf(stream, attributeformat, pname(is_optional, nullptr, URI, type), aname(nullptr, nameURI, name)); // make sure no name - type clash
+    fprintf(stream, attributeformat, pname(is_optional, NULL, URI, type), aname(NULL, nameURI, name)); // make sure no name - type clash
   }
   else if (name && attribute.simpleTypePtr())
   { fprintf(stream, "@");
     gen(URI, name, *attribute.simpleTypePtr(), true);
-    fprintf(stream, (is_optional && !cflag && !sflag) ? pointerformat : elementformat, "", aname(nullptr, nameURI, name));
+    fprintf(stream, (is_optional && !cflag && !sflag) ? pointerformat : elementformat, "", aname(NULL, nameURI, name));
   }
   else if (attribute.ref)
   { fprintf(stream, "/// Imported attribute reference %s.\n", attribute.ref);
-    fprintf(stream, attributeformat, pname(is_optional, "_", nullptr, attribute.ref), aname(nullptr, nullptr, attribute.ref));
+    fprintf(stream, attributeformat, pname(is_optional, "_", NULL, attribute.ref), aname(NULL, NULL, attribute.ref));
   }
   else
   { fprintf(stream, "/// Attribute '%s' has no type or ref: assuming string content.\n", name?name:"");
-    fprintf(stream, attributeformat, tname(nullptr, nullptr, "xs:string"), aname(nullptr, nameURI, name));
+    fprintf(stream, attributeformat, tname(NULL, NULL, "xs:string"), aname(NULL, nameURI, name));
   }
   switch (attribute.use)
   { case prohibited:
@@ -1850,7 +1850,7 @@ void Types::gen(const char *URI, const xs__attribute& attribute)
   }
   if (attribute.default_)
   { if (type)
-    { const char *t = tname(nullptr, typeURI?typeURI:URI, type);
+    { const char *t = tname(NULL, typeURI?typeURI:URI, type);
       if (!strncmp(t, "unsigned ", 9))
         t += 9;
       if (!strcmp(t, "bool")
@@ -1933,8 +1933,8 @@ void Types::gen(const char *URI, const vector<xs__sequence*>& sequences)
 }
 
 void Types::gen(const char *URI, const xs__sequence& sequence)
-{ const char *s = nullptr;
-  char *t = nullptr;
+{ const char *s = NULL;
+  char *t = NULL;
   bool tmp_union1 = with_union;
   bool tmp_union2 = fake_union;
   with_union = false;
@@ -1985,7 +1985,7 @@ void Types::gen(const char *URI, const vector<xs__element>& elements)
 }
 
 void Types::gen(const char *URI, const xs__element& element)
-{ const char *name, *type, *nameURI = nullptr, *typeURI = nullptr;
+{ const char *name, *type, *nameURI = NULL, *typeURI = NULL;
   name = element.name;
   type = element.type;
   document(element.annotation);
@@ -1994,7 +1994,7 @@ void Types::gen(const char *URI, const xs__element& element)
   if (!URI)
     URI = element.schemaPtr()->targetNamespace;
   if (element.elementPtr()) // element ref
-  { char *prefix = nullptr;
+  { char *prefix = NULL;
     name = element.elementPtr()->name;
     if (element.elementPtr()->schemaPtr())
     { nameURI = typeURI = element.elementPtr()->schemaPtr()->targetNamespace;
@@ -2021,30 +2021,30 @@ void Types::gen(const char *URI, const xs__element& element)
       { const char *s = tnameptr(cflag && !zflag, prefix, typeURI, type);
         if (cflag || sflag)
         { fprintf(stream, "/// Size of the dynamic array of %s is %s..%s\n", s, element.minOccurs ? element.minOccurs : "1", element.maxOccurs);
-          fprintf(stream, sizeformat, "int", aname(nullptr, nullptr, name));
+          fprintf(stream, sizeformat, "int", aname(NULL, NULL, name));
           if (is_integer(element.maxOccurs))
             fprintf(stream, " %s:%s", element.minOccurs ? element.minOccurs : "1", element.maxOccurs);
           fprintf(stream, ";\n");
           if (cflag && !zflag)
           { fprintf(stream, "/// Array of length %s..%s\n", element.minOccurs ? element.minOccurs : "1", element.maxOccurs);
-            fprintf(stream, elementformat, s, aname(nullptr, nameURI, name));
+            fprintf(stream, elementformat, s, aname(NULL, nameURI, name));
           }
           else
           { fprintf(stream, "/// Pointer to array of length %s..%s\n", element.minOccurs ? element.minOccurs : "1", element.maxOccurs);
-            fprintf(stream, pointerformat, s, aname(nullptr, nameURI, name));
+            fprintf(stream, pointerformat, s, aname(NULL, nameURI, name));
           }
         }
         else
         { fprintf(stream, "/// Vector of %s with length %s..%s\n", s, element.minOccurs ? element.minOccurs : "1", element.maxOccurs);
           if (with_union)
-            fprintf(stream, pointervectorformat, s, aname(nullptr, nameURI, name));
+            fprintf(stream, pointervectorformat, s, aname(NULL, nameURI, name));
           else
-            fprintf(stream, vectorformat, s, aname(nullptr, nameURI, name));
+            fprintf(stream, vectorformat, s, aname(NULL, nameURI, name));
         }
       }
       else
       { fprintf(stream, "/// Element reference %s.\n", element.ref);
-        fprintf(stream, elementformat, pname((with_union && !cflag && !is_basetypeforunion(typeURI, type)) || fake_union || is_nillable(element), prefix, typeURI, type), aname(nullptr, nameURI, name));
+        fprintf(stream, elementformat, pname((with_union && !cflag && !is_basetypeforunion(typeURI, type)) || fake_union || is_nillable(element), prefix, typeURI, type), aname(NULL, nameURI, name));
       }
     }
   }
@@ -2060,33 +2060,33 @@ void Types::gen(const char *URI, const xs__element& element)
         gen_substitutions(URI, element);
       }
       if (element.maxOccurs && strcmp(element.maxOccurs, "1")) // maxOccurs != "1"
-      { const char *s = tnameptr(cflag && !zflag, nullptr, URI, type);
+      { const char *s = tnameptr(cflag && !zflag, NULL, URI, type);
         if (cflag || sflag)
         { fprintf(stream, "/// Size of array of %s is %s..%s\n", s, element.minOccurs ? element.minOccurs : "1", element.maxOccurs);
-          fprintf(stream, sizeformat, "int", aname(nullptr, nullptr, name));
+          fprintf(stream, sizeformat, "int", aname(NULL, NULL, name));
           if (is_integer(element.maxOccurs))
             fprintf(stream, " %s:%s", element.minOccurs ? element.minOccurs : "1", element.maxOccurs);
           fprintf(stream, ";\n");
           if (cflag && !zflag)
           { fprintf(stream, "/// Array of length %s..%s\n", element.minOccurs ? element.minOccurs : "1", element.maxOccurs);
-            fprintf(stream, elementformat, s, aname(nullptr, nameURI, name));
+            fprintf(stream, elementformat, s, aname(NULL, nameURI, name));
           }
           else
           { fprintf(stream, "/// Pointer to array of length %s..%s\n", element.minOccurs ? element.minOccurs : "1", element.maxOccurs);
-            fprintf(stream, pointerformat, s, aname(nullptr, nameURI, name));
+            fprintf(stream, pointerformat, s, aname(NULL, nameURI, name));
           }
         }
         else
         { fprintf(stream, "/// Vector of %s with length %s..%s\n", s, element.minOccurs ? element.minOccurs : "1", element.maxOccurs);
           if (with_union)
-            fprintf(stream, pointervectorformat, s, aname(nullptr, nameURI, name));
+            fprintf(stream, pointervectorformat, s, aname(NULL, nameURI, name));
           else
-            fprintf(stream, vectorformat, s, aname(nullptr, nameURI, name));
+            fprintf(stream, vectorformat, s, aname(NULL, nameURI, name));
         }
       }
       else
       { fprintf(stream, "/// Element %s of type %s.\n", name, type);
-        fprintf(stream, elementformat, pname((with_union && !cflag && !is_basetypeforunion(URI, type)) || fake_union || is_nillable(element), nullptr, URI, type), aname(nullptr, nameURI, name));
+        fprintf(stream, elementformat, pname((with_union && !cflag && !is_basetypeforunion(URI, type)) || fake_union || is_nillable(element), NULL, URI, type), aname(NULL, nameURI, name));
       }
     }
   }
@@ -2094,7 +2094,7 @@ void Types::gen(const char *URI, const xs__element& element)
   { document(element.simpleTypePtr()->annotation);
     if (element.maxOccurs && strcmp(element.maxOccurs, "1")) // maxOccurs != "1"
     { fprintf(stream, "/// Size of %s array is %s..%s\n", name, element.minOccurs ? element.minOccurs : "1", element.maxOccurs);
-      fprintf(stream, sizeformat, "int", aname(nullptr, nullptr, name));
+      fprintf(stream, sizeformat, "int", aname(NULL, NULL, name));
       if (is_integer(element.maxOccurs))
         fprintf(stream, " %s:%s", element.minOccurs ? element.minOccurs : "1", element.maxOccurs);
       fprintf(stream, ";\n");
@@ -2103,14 +2103,14 @@ void Types::gen(const char *URI, const xs__element& element)
     if (is_nillable(element)
      || element.maxOccurs && strcmp(element.maxOccurs, "1") // maxOccurs != "1"
      || (with_union && !cflag) || fake_union)
-      fprintf(stream, pointerformat, "", aname(nullptr, nameURI, name));
+      fprintf(stream, pointerformat, "", aname(NULL, nameURI, name));
     else
-      fprintf(stream, elementformat, "", aname(nullptr, nameURI, name));
+      fprintf(stream, elementformat, "", aname(NULL, nameURI, name));
   }
   else if (name && element.complexTypePtr())
   { if (element.maxOccurs && strcmp(element.maxOccurs, "1")) // maxOccurs != "1"
     { fprintf(stream, "/// Size of %s array is %s..%s\n", name, element.minOccurs ? element.minOccurs : "1", element.maxOccurs);
-      fprintf(stream, sizeformat, "int", aname(nullptr, nullptr, name));
+      fprintf(stream, sizeformat, "int", aname(NULL, NULL, name));
       if (is_integer(element.maxOccurs))
         fprintf(stream, " %s:%s", element.minOccurs ? element.minOccurs : "1", element.maxOccurs);
       fprintf(stream, ";\n");
@@ -2119,35 +2119,35 @@ void Types::gen(const char *URI, const xs__element& element)
     if (is_nillable(element)
      || element.maxOccurs && strcmp(element.maxOccurs, "1") // maxOccurs != "1"
      || (with_union && !cflag) || fake_union)
-      fprintf(stream, pointerformat, "}", aname(nullptr, nameURI, name));
+      fprintf(stream, pointerformat, "}", aname(NULL, nameURI, name));
     else
-      fprintf(stream, elementformat, "}", aname(nullptr, nameURI, name));
+      fprintf(stream, elementformat, "}", aname(NULL, nameURI, name));
   }
   else if (element.ref)
   { fprintf(stream, "/// Imported element reference %s.\n", element.ref);
-    fprintf(stream, elementformat, pname((with_union && !cflag) || fake_union || is_nillable(element), "_", nullptr, element.ref), aname(nullptr, nameURI, element.ref));
+    fprintf(stream, elementformat, pname((with_union && !cflag) || fake_union || is_nillable(element), "_", NULL, element.ref), aname(NULL, nameURI, element.ref));
   }
   else if (name)
   { fprintf(stream, "/// Element '%s' has no type or ref: assuming XML content.\n", name?name:"");
     if (element.maxOccurs && strcmp(element.maxOccurs, "1")) // maxOccurs != "1"
     { if (cflag || sflag)
-      { fprintf(stream, sizeformat, "int", aname(nullptr, nullptr, name));
+      { fprintf(stream, sizeformat, "int", aname(NULL, NULL, name));
         if (is_integer(element.maxOccurs))
           fprintf(stream, " %s:%s", element.minOccurs ? element.minOccurs : "1", element.maxOccurs);
         fprintf(stream, ";\n");
         fprintf(stream, "/// Pointer to array of XML.\n");
-        fprintf(stream, pointerformat, "_XML", aname(nullptr, nameURI, name));
+        fprintf(stream, pointerformat, "_XML", aname(NULL, nameURI, name));
       }
       else
       { fprintf(stream, "/// Vector of XML with length %s..%s\n", element.minOccurs ? element.minOccurs : "1", element.maxOccurs);
         if (with_union)
-          fprintf(stream, pointervectorformat, "_XML", aname(nullptr, nameURI, name));
+          fprintf(stream, pointervectorformat, "_XML", aname(NULL, nameURI, name));
         else
-          fprintf(stream, vectorformat, "_XML", aname(nullptr, nameURI, name));
+          fprintf(stream, vectorformat, "_XML", aname(NULL, nameURI, name));
       }
     }
     else
-      fprintf(stream, elementformat, "_XML", aname(nullptr, nameURI, name));
+      fprintf(stream, elementformat, "_XML", aname(NULL, nameURI, name));
   }
   else
     fprintf(stream, "/// Element has no type or ref.");
@@ -2161,7 +2161,7 @@ void Types::gen(const char *URI, const xs__element& element)
     if (element.default_)
     { // determine whether the element can be assigned a default value, this is dependent on the choice of mapping for primitive types
       if (type)
-      { const char *t = tname(nullptr, typeURI?typeURI:URI, type);
+      { const char *t = tname(NULL, typeURI?typeURI:URI, type);
         if (!strncmp(t, "unsigned ", 9))
           t += 9;
         if (!strcmp(t, "bool")
@@ -2215,16 +2215,16 @@ void Types::gen(const char *URI, const xs__group& group)
   else if (group.sequence)
     gen(URI, group.sequence->element);
   else if (group.choice)
-    gen(URI, nullptr, *group.choice);
+    gen(URI, NULL, *group.choice);
 }
 
 void Types::gen(const char *URI, const vector<xs__choice>& choices)
 { for (vector<xs__choice>::const_iterator choice = choices.begin(); choice != choices.end(); ++choice)
-    gen(URI, nullptr, *choice);
+    gen(URI, NULL, *choice);
 }
 
 void Types::gen(const char *URI, const char *name, const xs__choice& choice)
-{ const char *r = nullptr, *s = nullptr, *t = nullptr;
+{ const char *r = NULL, *s = NULL, *t = NULL;
   bool use_union = !uflag;
   bool wrap_union = false;
   bool tmp_union;
@@ -2278,7 +2278,7 @@ void Types::gen(const char *URI, const char *name, const xs__choice& choice)
         fprintf(stream, " %s", choice.minOccurs);
       fprintf(stream, ";\t///< Union %s selector: set to SOAP_UNION_%s_<fieldname>%s\n", t, t, choice.minOccurs && !strcmp(choice.minOccurs, "0") ? " or 0" : "");
       if (name)
-        fprintf(stream, "/// Union for choice in type %s\n", cname(nullptr, URI, name));
+        fprintf(stream, "/// Union for choice in type %s\n", cname(NULL, URI, name));
       fprintf(stream, "    union %s\n    {\n", t);
     }
     tmp_union = with_union;
@@ -2327,7 +2327,7 @@ void Types::gen(const char *URI, const xs__any& any)
     fprintf(stream, " maxOccurs=\"%s\"", any.maxOccurs);
   fprintf(stream, ">\n/// TODO: Schema extensibility is user-definable.\n///       Consult the protocol documentation to change or insert declarations.\n///       Use wsdl2h option -x to remove this element.\n///       Use wsdl2h option -d for xsd__anyType DOM (soap_dom_element).\n");
   if (!xflag)
-  { const char *t = tname(nullptr, nullptr, "xsd:any");
+  { const char *t = tname(NULL, NULL, "xsd:any");
     if (any.maxOccurs && strcmp(any.maxOccurs, "1"))
     { if (cflag || sflag)
       { fprintf(stream, "/// Size of the dynamic array of XML or DOM nodes is %s..%s\n", any.minOccurs ? any.minOccurs : "1", any.maxOccurs);
@@ -2355,7 +2355,7 @@ void Types::gen(const char *URI, const xs__anyAttribute& anyAttribute)
     fprintf(stream, "/// <anyAttribute namespace=\"%s\">\n", anyAttribute.namespace_);
   fprintf(stream, "/// TODO: Schema extensibility is user-definable.\n///       Consult the protocol documentation to change or insert declarations.\n///       Use wsdl2h option -x to remove this attribute.\n///       Use wsdl2h option -d for xsd__anyAttribute DOM (soap_dom_attribute).\n");
   if (!xflag)
-  { const char *t = tname(nullptr, nullptr, "xsd:anyAttribute");
+  { const char *t = tname(NULL, NULL, "xsd:anyAttribute");
     fprintf(stream, attributeformat, t, "__anyAttribute");
     if (dflag)
       fprintf(stream, ";\t///< Store anyAttribute content in DOM soap_dom_attribute linked node structure.\n");
@@ -2365,7 +2365,7 @@ void Types::gen(const char *URI, const xs__anyAttribute& anyAttribute)
 }
 
 void Types::gen_soap_array(const char *name, const char *t, const char *item, const char *type)
-{ char *tmp = nullptr, *dims = nullptr, size[8];
+{ char *tmp = NULL, *dims = NULL, size[8];
   if (type)
   { tmp = (char*)emalloc(strlen(type) + 1);
     strcpy(tmp, type);
@@ -2388,15 +2388,15 @@ void Types::gen_soap_array(const char *name, const char *t, const char *item, co
       sprintf(size, "[%d]", (int)(s - dims + 1));
   }
   if (tmp)
-  { if (strchr(tmp, '[') != nullptr)
-    { gen_soap_array(nullptr, "", item, tmp);
-      fprintf(stream, arrayformat, "}", item ? aname(nullptr, nullptr, item) : "");
+  { if (strchr(tmp, '[') != NULL)
+    { gen_soap_array(NULL, "", item, tmp);
+      fprintf(stream, arrayformat, "}", item ? aname(NULL, NULL, item) : "");
       fprintf(stream, ";\n");
     }
     else
-    { const char *s = pname(!is_basetype(nullptr, tmp), nullptr, nullptr, tmp);
+    { const char *s = pname(!is_basetype(NULL, tmp), NULL, NULL, tmp);
       fprintf(stream, "/// Pointer to array of %s.\n", s);
-      fprintf(stream, arrayformat, s, item ? aname(nullptr, nullptr, item) : "");
+      fprintf(stream, arrayformat, s, item ? aname(NULL, NULL, item) : "");
       fprintf(stream, ";\n");
     }
     if (*size)
@@ -2419,7 +2419,7 @@ void Types::gen_soap_array(const char *name, const char *t, const char *item, co
 void Types::gen_substitutions(const char *URI, const xs__element &element)
 { const std::vector<xs__element*> *substitutions;
   const char *name;
-  const char *r = nullptr, *s = nullptr;
+  const char *r = NULL, *s = NULL;
   bool use_union = !uflag;
   bool wrap_union = false;
   bool tmp_union;
@@ -2447,7 +2447,7 @@ void Types::gen_substitutions(const char *URI, const xs__element &element)
     s = strstr(t, "__union");
     if (!s)
       s = "__union";
-    r = aname(nullptr, nullptr, name);
+    r = aname(NULL, NULL, name);
     if (element.maxOccurs && strcmp(element.maxOccurs, "1"))
     { if (with_union)
       { // Generate a wrapper when we need a union within a union
@@ -2522,7 +2522,7 @@ void Types::modify(const char *name)
 const char* Types::format(const char *text)
 { const char *s = text;
   if (!s)
-    return nullptr;
+    return NULL;
   while (*s && *s != '$')
   { if (*s == '\\')
     { switch (s[1])
@@ -2580,7 +2580,7 @@ static char *getline(char *s, size_t n, FILE *fd)
   }
   *t++ = '\0';
   if (!*s && c == EOF)
-    return nullptr;
+    return NULL;
   return s;
 }
 

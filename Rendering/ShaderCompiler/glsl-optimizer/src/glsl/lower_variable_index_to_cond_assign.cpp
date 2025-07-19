@@ -135,17 +135,17 @@ public:
       : variable_to_replace(variable_to_replace), value(value),
 	progress(false)
    {
-      assert(this->variable_to_replace != nullptr);
-      assert(this->value != nullptr);
+      assert(this->variable_to_replace != NULL);
+      assert(this->value != NULL);
    }
 
    virtual void handle_rvalue(ir_rvalue **rvalue)
    {
       ir_dereference_variable *const dv = (*rvalue)->as_dereference_variable();
 
-      if ((dv != nullptr) && (dv->var == this->variable_to_replace)) {
+      if ((dv != NULL) && (dv->var == this->variable_to_replace)) {
 	 this->progress = true;
-	 *rvalue = this->value->clone(ralloc_parent(*rvalue), nullptr);
+	 *rvalue = this->value->clone(ralloc_parent(*rvalue), NULL);
       }
    }
 
@@ -160,7 +160,7 @@ public:
 class find_variable_index : public ir_hierarchical_visitor {
 public:
    find_variable_index()
-      : deref(nullptr)
+      : deref(NULL)
    {
       /* empty */
    }
@@ -168,7 +168,7 @@ public:
    virtual ir_visitor_status visit_enter(ir_dereference_array *ir)
    {
       if (is_array_or_matrix(ir->array)
-	  && (ir->array_index->as_constant() == nullptr)) {
+	  && (ir->array_index->as_constant() == NULL)) {
 	 this->deref = ir;
 	 return visit_stop;
       }
@@ -192,12 +192,12 @@ struct assignment_generator
    ir_variable* var;
 
    assignment_generator()
-      : base_ir(nullptr),
-        rvalue(nullptr),
-        old_index(nullptr),
+      : base_ir(NULL),
+        rvalue(NULL),
+        old_index(NULL),
         is_write(false),
         write_mask(0),
-        var(nullptr)
+        var(NULL)
    {
    }
 
@@ -211,7 +211,7 @@ struct assignment_generator
       /* Clone the old r-value in its entirety.  Then replace any occurances of
        * the old variable index with the new constant index.
        */
-      ir_dereference *element = this->rvalue->clone(mem_ctx, nullptr);
+      ir_dereference *element = this->rvalue->clone(mem_ctx, NULL);
       ir_constant *const index = new(mem_ctx) ir_constant(i);
       deref_replacer r(this->old_index, index);
       element->accept(&r);
@@ -279,12 +279,12 @@ struct switch_generator
 	    compare_index_block(list, index, i, comps, this->mem_ctx);
 
          if (comps == 1) {
-            this->generator.generate(i, cond_deref->clone(this->mem_ctx, nullptr),
+            this->generator.generate(i, cond_deref->clone(this->mem_ctx, NULL),
 				     list);
          } else {
             for (unsigned j = 0; j < comps; j++) {
 	       ir_rvalue *const cond_swiz =
-		  new(this->mem_ctx) ir_swizzle(cond_deref->clone(this->mem_ctx, nullptr),
+		  new(this->mem_ctx) ir_swizzle(cond_deref->clone(this->mem_ctx, NULL),
 						j, 0, 0, 0, 1);
 
                this->generator.generate(i + j, cond_swiz, list);
@@ -362,7 +362,7 @@ public:
        * FINISHME: uniforms.  It seems like this should do the same.
        */
       const ir_variable *const var = deref->array->variable_referenced();
-      if (var == nullptr)
+      if (var == NULL)
 	 return this->lower_temps;
 
       switch (var->data.mode) {
@@ -391,7 +391,7 @@ public:
 
    bool needs_lowering(ir_dereference_array *deref) const
    {
-      if (deref == nullptr || deref->array_index->as_constant()
+      if (deref == NULL || deref->array_index->as_constant()
 	  || !is_array_or_matrix(deref->array))
 	 return false;
 
@@ -425,7 +425,7 @@ public:
 	 ir_dereference *lhs = new(mem_ctx) ir_dereference_variable(var);
 	 ir_assignment *assign = new(mem_ctx) ir_assignment(lhs,
 							    orig_assign->rhs,
-							    nullptr);
+							    NULL);
 
          base_ir->insert_before(assign);
       } else {
@@ -443,10 +443,10 @@ public:
 
       ir_dereference *lhs = new(mem_ctx) ir_dereference_variable(index);
       ir_assignment *assign =
-	 new(mem_ctx) ir_assignment(lhs, orig_deref->array_index, nullptr);
+	 new(mem_ctx) ir_assignment(lhs, orig_deref->array_index, NULL);
       base_ir->insert_before(assign);
 
-      orig_deref->array_index = lhs->clone(mem_ctx, nullptr);
+      orig_deref->array_index = lhs->clone(mem_ctx, NULL);
 
       assignment_generator ag;
       ag.rvalue = orig_base;
@@ -466,7 +466,7 @@ public:
        * condition!  This is acomplished by wrapping the new conditional
        * assignments in an if-statement that uses the original condition.
        */
-      if ((orig_assign != nullptr) && (orig_assign->condition != nullptr)) {
+      if ((orig_assign != NULL) && (orig_assign->condition != NULL)) {
 	 /* No need to clone the condition because the IR that it hangs on is
 	  * going to be removed from the instruction sequence.
 	  */
@@ -495,7 +495,7 @@ public:
       ir_dereference_array* orig_deref = (*pir)->as_dereference_array();
       if (needs_lowering(orig_deref)) {
          ir_variable *var =
-	    convert_dereference_array(orig_deref, nullptr, orig_deref);
+	    convert_dereference_array(orig_deref, NULL, orig_deref);
          assert(var);
          *pir = new(ralloc_parent(base_ir)) ir_dereference_variable(var);
          this->progress = true;
@@ -510,7 +510,7 @@ public:
       find_variable_index f;
       ir->lhs->accept(&f);
 
-      if ((f.deref != nullptr) && storage_type_needs_lowering(f.deref)) {
+      if ((f.deref != NULL) && storage_type_needs_lowering(f.deref)) {
          convert_dereference_array(f.deref, ir, ir->lhs);
          ir->remove();
          this->progress = true;

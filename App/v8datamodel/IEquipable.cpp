@@ -34,7 +34,7 @@ void IEquipable::buildWeld(PartInstance* humanoidPart,
 	// Build the weld
 	if (weld.get()) {
 		RBXASSERT_FISHING(0);
-		weld->setParent(nullptr);
+		weld->setParent(NULL);
 		weld.reset();
 	}
 

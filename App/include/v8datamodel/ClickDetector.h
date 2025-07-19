@@ -52,7 +52,7 @@ namespace RBX {
 		static bool isClickable(shared_ptr<PartInstance> part, float distanceToCharacter, bool raiseClickedEvent, RBX::Network::Player* player);
 		static bool isHovered(PartInstance *part, float distanceToCharacter, bool raiseHoveredEvent, RBX::Network::Player* player);
 		static void stopHover(shared_ptr<PartInstance> part, RBX::Network::Player* player);
-		/* override */ bool askSetParent(const Instance* parent) const {return (Instance::fastDynamicCast<PartInstance>(parent) != nullptr) || (Instance::fastDynamicCast<ModelInstance>(parent) != nullptr);}
+		/* override */ bool askSetParent(const Instance* parent) const {return (Instance::fastDynamicCast<PartInstance>(parent) != NULL) || (Instance::fastDynamicCast<ModelInstance>(parent) != NULL);}
 		/* override */ bool askAddChild(const Instance* instance) const {return true;}
 
 		

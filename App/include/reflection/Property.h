@@ -483,7 +483,7 @@ namespace RBX
 			BoundProp(const char* name, const char* category, V Class::*member, typename PropertyDescriptor::Attributes flags = PropertyDescriptor::STANDARD, Security::Permissions security = Security::None)
 				:Reflection::TypedPropertyDescriptor<V>(Class::classDescriptor(), name, category, std::auto_ptr<typename TypedPropertyDescriptor<V>::GetSet>(), flags, security)
 			{
-				this->getset.reset(new BoundPropGetSet<Class>(*this, member, nullptr));
+				this->getset.reset(new BoundPropGetSet<Class>(*this, member, NULL));
 				this->checkFlags();
 			}
 		};

@@ -331,7 +331,7 @@ bool Replicator::StreamJob::isInStreamedRegions(const Extents& ext) const
 
 PartInstance* findRootPartInstanceAncestor(Instance* instance, PartInstance* bestSoFar)
 {
-	if (instance == nullptr)
+	if (instance == NULL)
 	{
 		return bestSoFar;
 	}
@@ -403,9 +403,9 @@ void Replicator::StreamJob::receiveInstanceGcMessage(const Guid::Data& id)
 		// Figure out if the gc is legit, or if the server should re-send the
 		// instance to the client because its state has changed since the client
 		// GC'ed.
-		PartInstance* rootAncestor = findRootPartInstanceAncestor(instance.get(), nullptr);
-		bool shouldReSend = rootAncestor == nullptr;
-		if (rootAncestor != nullptr)
+		PartInstance* rootAncestor = findRootPartInstanceAncestor(instance.get(), NULL);
+		bool shouldReSend = rootAncestor == NULL;
+		if (rootAncestor != NULL)
 		{
 			Primitive* rootAncestorPrim = rootAncestor->getPartPrimitive();
 
@@ -776,7 +776,7 @@ bool Replicator::StreamJob::collectPartsForMinPlayerArea()
 
 bool Replicator::StreamJob::collectPartsFromNextRegion(bool highPriority)
 {
-	DenseHashSet<Primitive*> found(nullptr);
+	DenseHashSet<Primitive*> found(NULL);
 	unsigned int collectedInstances = 0;
 
 	StreamRegion::Id regionId;

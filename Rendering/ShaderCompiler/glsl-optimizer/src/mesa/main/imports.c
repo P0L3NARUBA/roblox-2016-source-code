@@ -82,7 +82,7 @@ _mesa_align_malloc(size_t bytes, unsigned long alignment)
    void *mem;
    int err = posix_memalign(& mem, alignment, bytes);
    if (err)
-      return nullptr;
+      return NULL;
    return mem;
 #elif defined(_WIN32) && defined(_MSC_VER)
    return _aligned_malloc(bytes, alignment);
@@ -93,7 +93,7 @@ _mesa_align_malloc(size_t bytes, unsigned long alignment)
 
    ptr = (uintptr_t)malloc(bytes + alignment + sizeof(void *));
    if (!ptr)
-      return nullptr;
+      return NULL;
 
    buf = (ptr + alignment + sizeof(void *)) & ~(uintptr_t)(alignment - 1);
    *(uintptr_t *)(buf - sizeof(void *)) = ptr;
@@ -121,7 +121,7 @@ _mesa_align_calloc(size_t bytes, unsigned long alignment)
    void *mem;
    
    mem = _mesa_align_malloc(bytes, alignment);
-   if (mem != nullptr) {
+   if (mem != NULL) {
       (void) memset(mem, 0, bytes);
    }
 
@@ -130,7 +130,7 @@ _mesa_align_calloc(size_t bytes, unsigned long alignment)
    void *mem;
 
    mem = _aligned_malloc(bytes, alignment);
-   if (mem != nullptr) {
+   if (mem != NULL) {
       (void) memset(mem, 0, bytes);
    }
 
@@ -142,7 +142,7 @@ _mesa_align_calloc(size_t bytes, unsigned long alignment)
 
    ptr = (uintptr_t)calloc(1, bytes + alignment + sizeof(void *));
    if (!ptr)
-      return nullptr;
+      return NULL;
 
    buf = (ptr + alignment + sizeof(void *)) & ~(uintptr_t)(alignment - 1);
    *(uintptr_t *)(buf - sizeof(void *)) = ptr;
@@ -165,7 +165,7 @@ _mesa_align_calloc(size_t bytes, unsigned long alignment)
  * \param ptr pointer to the memory to be freed.
  * The actual address to free is stored in the word immediately before the
  * address the client sees.
- * Note that it is legal to pass nullptr pointer to this function and will be
+ * Note that it is legal to pass NULL pointer to this function and will be
  * handled accordingly.
  */
 void
@@ -479,7 +479,7 @@ _mesa_half_to_float(GLhalfARB val)
 
 /**
  * Implemented using malloc() and strcpy.
- * Note that nullptr is handled accordingly.
+ * Note that NULL is handled accordingly.
  */
 char *
 _mesa_strdup( const char *s )
@@ -492,7 +492,7 @@ _mesa_strdup( const char *s )
       return s2;
    }
    else {
-      return nullptr;
+      return NULL;
    }
 }
 
@@ -503,9 +503,9 @@ _mesa_strtof( const char *s, char **end )
 #if defined(_GNU_SOURCE) && !defined(__CYGWIN__) && !defined(__FreeBSD__) && \
    !defined(ANDROID) && !defined(__HAIKU__) && !defined(__UCLIBC__) && \
    !defined(__NetBSD__)
-   static locale_t loc = nullptr;
+   static locale_t loc = NULL;
    if (!loc) {
-      loc = newlocale(LC_CTYPE_MASK, "C", nullptr);
+      loc = newlocale(LC_CTYPE_MASK, "C", NULL);
    }
    return strtof_l(s, end, loc);
 #elif defined(_ISOC99_SOURCE) || (defined(_XOPEN_SOURCE) && _XOPEN_SOURCE >= 600)

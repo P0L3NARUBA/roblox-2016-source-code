@@ -145,7 +145,7 @@ void MovingAssemblyStage::onEdgeRemoving(Edge* e)
 void MovingAssemblyStage::jointsStepUiInternal(double distributedGameTime, Joint* j, bool fromAnimation)
 {
 	RBXASSERT(j->canStepUi());
-	Assembly* a0 = nullptr;
+	Assembly* a0 = NULL;
 	bool a0IsGrounded = false;
 	if (Joint::isKinematicJoint(j)) {
 		a0 = j->getPrimitive(0)->getAssembly();

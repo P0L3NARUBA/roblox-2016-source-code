@@ -196,8 +196,8 @@ float btGImpactCollisionAlgorithm::getAverageTriangleCollisionTime()
 btGImpactCollisionAlgorithm::btGImpactCollisionAlgorithm( const btCollisionAlgorithmConstructionInfo& ci, const btCollisionObjectWrapper* body0Wrap,const btCollisionObjectWrapper* body1Wrap)
 : btActivatingCollisionAlgorithm(ci,body0Wrap,body1Wrap)
 {
-	m_manifoldPtr = nullptr;
-	m_convex_algorithm = nullptr;
+	m_manifoldPtr = NULL;
+	m_convex_algorithm = NULL;
 }
 
 btGImpactCollisionAlgorithm::~btGImpactCollisionAlgorithm()

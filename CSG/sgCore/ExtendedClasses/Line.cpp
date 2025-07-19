@@ -31,7 +31,7 @@ sgCLine* sgCLine::Create(sgFloat pX1, sgFloat pY1, sgFloat pZ1,
 	if (sgSpaceMath::PointsDistance(gp.p1,gp.p2)<eps_d)
 	{
 		global_sg_error = SG_ER_BAD_ARGUMENT_ZERO_LENGTH;
-		return nullptr;   //  
+		return NULL;   //  
 	}
 
 	global_sg_error = SG_ER_SUCCESS;

@@ -250,7 +250,7 @@ TVariable::TVariable(const TVariable& copyOf, TStructureMap& remapper) : TSymbol
 {
 	type.copyType(copyOf.type, remapper);
 	userType = copyOf.userType;
-	// for builtIn symbol table level, unionArray and arrayInformation pointers should be nullptr
+	// for builtIn symbol table level, unionArray and arrayInformation pointers should be NULL
 	assert(copyOf.arrayInformationType == 0); 
 	arrayInformationType = 0;
 }
@@ -426,11 +426,11 @@ TSymbol* TSymbolTableLevel::findCompatible (const TFunction *call, bool &ambiguo
 	else if ( funcList.size () > 1 )
 	{
 		ambiguous = true;
-		return nullptr;
+		return NULL;
 	}
 	
 	// No function found
-	return nullptr;
+	return NULL;
 }
 
 void TSymbolTable::copyTable(const TSymbolTable& copyOf)

@@ -16,8 +16,8 @@
 #include "HTList.h"
 #include "HTMemory.h"					 /* Implemented here */
 
-PRIVATE HTList * HTMemCall = nullptr;		    /* List of memory freers */
-PRIVATE HTMemory_exitCallback * PExit = nullptr;	  /* panic and exit function */
+PRIVATE HTList * HTMemCall = NULL;		    /* List of memory freers */
+PRIVATE HTMemory_exitCallback * PExit = NULL;	  /* panic and exit function */
 PRIVATE size_t LastAllocSize = 0;		  /* size of last allocation */ 
 
 /* ------------------------------------------------------------------------- */
@@ -51,7 +51,7 @@ PUBLIC BOOL HTMemoryCall_deleteAll (void)
 {
     if (HTMemCall) {
 	HTList_delete(HTMemCall);
-	HTMemCall = nullptr;
+	HTMemCall = NULL;
 	return YES;
     }
     return NO;
@@ -64,15 +64,15 @@ PUBLIC void * HTMemory_malloc (size_t size)
 {
     void * ptr;
     ptr = malloc(LastAllocSize = size);
-    if (ptr != nullptr) return ptr;
+    if (ptr != NULL) return ptr;
     if (HTMemCall) {
 	HTMemoryCallback * pres;
 	while ((pres = (HTMemoryCallback *) HTList_nextObject(HTMemCall))) {
 	    (*pres)(size);
-	    if ((ptr = malloc(size)) != nullptr) return ptr;
+	    if ((ptr = malloc(size)) != NULL) return ptr;
 	}
     }
-    return nullptr;
+    return NULL;
 }
 
 /*
@@ -82,16 +82,16 @@ PUBLIC void * HTMemory_calloc (size_t nobj, size_t size)
 {
     void * ptr;
     ptr = calloc(nobj, LastAllocSize = size);
-    if (ptr != nullptr) return ptr;
+    if (ptr != NULL) return ptr;
     if (HTMemCall) {
 	HTMemoryCallback * pres;
 	size_t total = size * nobj;
 	while ((pres = (HTMemoryCallback *) HTList_nextObject(HTMemCall))) {
 	    (*pres)(total);
-	    if ((ptr = calloc(nobj, size)) != nullptr) return ptr;
+	    if ((ptr = calloc(nobj, size)) != NULL) return ptr;
 	}
     }
-    return nullptr;
+    return NULL;
 }
 
 /*
@@ -101,15 +101,15 @@ PUBLIC void * HTMemory_realloc (void * p, size_t size)
 {
     void * ptr;
     ptr = realloc(p, LastAllocSize = size);
-    if (ptr != nullptr) return ptr;
+    if (ptr != NULL) return ptr;
     if (HTMemCall) {
 	HTMemoryCallback * pres;
 	while ((pres = (HTMemoryCallback *) HTList_nextObject(HTMemCall))) {
 	    (*pres)(size);
-	    if ((ptr = realloc(p, size)) != nullptr) return ptr;
+	    if ((ptr = realloc(p, size)) != NULL) return ptr;
 	}
     }
-    return nullptr;
+    return NULL;
 }
 
 /*

@@ -19,7 +19,7 @@ void MOJOSHADER_hlslang_internal_free(void *ptr, void *d) { free(ptr); }
 #endif
 
 MOJOSHADER_hlslang_error MOJOSHADER_hlslang_out_of_mem_error = {
-    "Out of memory", nullptr, MOJOSHADER_hlslang_POSITION_NONE
+    "Out of memory", NULL, MOJOSHADER_hlslang_POSITION_NONE
 };
 
 

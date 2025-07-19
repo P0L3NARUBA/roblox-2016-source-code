@@ -3,8 +3,8 @@
 #include "V8Tree/Service.h"
 #include "util/g3dcore.h"
 #include "G3D/LightingParameters.h"
-/*#define BOOST_DATE_TIME_NO_LIB
-#include "boost/date_time/posix_time/posix_time.hpp"*/
+#define BOOST_DATE_TIME_NO_LIB
+#include "boost/date_time/posix_time/posix_time.hpp"
 
 namespace RBX {
 

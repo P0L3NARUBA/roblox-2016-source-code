@@ -317,22 +317,18 @@ namespace RBX
 				return MeshId();
 		}
 
-		static float getPartTransparency(PartInstance* part)
-		{
-			// Reflectance affects Transparency for plastic parts - part with Transparency at 0.99 and Reflectance at 1 should still be somewhat visible
-			return (part->getRenderMaterial() == PLASTIC_MATERIAL)
-				? part->getTransparencyUi() * (1 - getPartReflectance(part))
-				: part->getTransparencyUi();
+		static float getPartTransparency(PartInstance* part) {
+			return part->getTransparencyUi();
 		}
 
-		static Color4uint8 getBaseColor(PartInstance* part, Decal* decal, DataModelMesh* specialShape, const GeometryGenerator::Options& options)
+		static Color4 getBaseColor(PartInstance* part, Decal* decal, DataModelMesh* specialShape, const GeometryGenerator::Options& options)
 		{
 			float transparency = decal ? decal->getTransparencyUi() : getPartTransparency(part);
-			unsigned char alpha = 255 - static_cast<int>(G3D::clamp(transparency, 0.f, 1.f) * 255.f);
+			float alpha = 1.0f - G3D::clamp(transparency, 0.0f, 1.0f);
 
 			// Decal never takes part/mesh colors
 			if (decal)
-				return Color4uint8(255, 255, 255, alpha);
+				return Color4(1.0f, 1.0f, 1.0f, alpha);
 
 			// Requested colors from mesh
 			if (options.flags & GeometryGenerator::Flag_VertexColorMesh)
@@ -340,22 +336,23 @@ namespace RBX
 				FileMesh* fileMesh = Instance::fastDynamicCast<FileMesh>(specialShape);
 
 				if (fileMesh && !fileMesh->getTextureId().isNull())
-					return Color4uint8(Color3uint8(Color3(specialShape->getVertColor())), alpha);
+					return Color4(Color3(specialShape->getVertColor()), alpha);
 				else
-					return Color4uint8(255, 255, 255, alpha);
+					return Color4(1.0f, 1.0f, 1.0f, alpha);
 			}
 
 			// Requested colors from part
 			if (options.flags & GeometryGenerator::Flag_VertexColorPart)
-				return Color4uint8(part->getColor(), alpha);
+				return Color4(part->getColor(), alpha);
 
-			return Color4uint8(255, 255, 255, alpha);
+			return Color4(1.0f, 1.0f, 1.0f, alpha);
 		}
 
-		static Color4uint8 getColor(PartInstance* part, Decal* decal, DataModelMesh* specialShape, const GeometryGenerator::Options& options, unsigned int randomSeed, bool isBlock)
-		{
-			Color4uint8 diffuse = getBaseColor(part, decal, specialShape, options);
+		static Color4 getColor(PartInstance* part, Decal* decal, DataModelMesh* specialShape, const GeometryGenerator::Options& options, unsigned int randomSeed, bool isBlock) {
+			Color4 color = getBaseColor(part, decal, specialShape, options);
 
+			/*Color4uint8 diffuse = getBaseColor(part, decal, specialShape, options);
+			
 			Color4uint8 color =
 				(isBlock && (options.flags & GeometryGenerator::Flag_RandomizeBlockAppearance))
 				? Color4uint8(
@@ -363,15 +360,12 @@ namespace RBX
 					(diffuse.g & 0xf8) | (randomSeed & 7),
 					(diffuse.b & 0xf8) | (randomSeed & 7),
 					diffuse.a)
-				: diffuse;
+				: diffuse;*/
 
-			return
-				(options.flags & GeometryGenerator::Flag_DiffuseColorBGRA)
-				? Color4uint8(color.b, color.g, color.r, color.a)
-				: color;
+			return (options.flags & GeometryGenerator::Flag_DiffuseColorBGRA) ? Color4uint8(color.b, color.g, color.r, color.a) : color;
 		}
 
-		static Color4uint8 getExtra(PartInstance* part, const GeometryGenerator::Options& options)
+		/*static Color4uint8 getExtra(PartInstance* part, const GeometryGenerator::Options& options)
 		{
 			Vector2int16 specular = MaterialGenerator::getSpecular(part->getRenderMaterial());
 			int reflectance = getPartReflectance(part) * 255;
@@ -380,7 +374,7 @@ namespace RBX
 				(options.flags & GeometryGenerator::Flag_ExtraIsZero)
 				? Color4uint8(0, 0, 0, 0)
 				: Color4uint8(options.extra, specular.x, specular.y, reflectance);
-		}
+		}*/
 
 		static Vector3 getMeshScale(PartInstance* part, DataModelMesh* specialShape, const HumanoidIdentifier* humanoidIdentifier)
 		{
@@ -598,7 +592,7 @@ namespace RBX
 
 			if (!mVertices) return;
 
-			Color4 color = Color4(getColor(part, decal, specialShape, options, 0, false));
+			Color4 color = getColor(part, decal, specialShape, options, 0, false);
 			Vector3 scale = getMeshScale(part, specialShape, humanoidIdentifier);
 
 			const CoordinateFrame& cframe = options.cframe;
@@ -737,7 +731,7 @@ namespace RBX
 
 			if (!mVertices) return;
 
-			Color4uint8 color = getColor(part, decal, nullptr, options, randomSeed, true);
+			Color4 color = getColor(part, decal, NULL, options, randomSeed, true);
 			//Color4uint8 extra = getExtra(part, options);
 
 			PartMaterial renderMaterial = part->getRenderMaterial();
@@ -895,7 +889,7 @@ namespace RBX
 							Vector3 localPos = computeCylinderPosition(unitPos, genSize, radius, normal2d);
 							Vector3 outPos = options.cframe.pointToWorldSpace(verticalRotate<vertical>(localPos) + center);
 
-							Vector2 mainUV = (verticalRotateDecal<vertical>(normal2d.yx()) * capDesc.normal2dToUV + Vector2(1, 1)) * 0.5f * mainMultiplier;
+							Vector2 mainUV = (verticalRotateDecal<vertical>(normal2d.yx()) * capDesc.normal2dToUV + Vector2(1.0f, 1.0f)) * 0.5f * mainMultiplier;
 
 							Vector3 normal = options.cframe.vectorToWorldSpace(verticalRotate<vertical>(fanPoint));
 							fillVertex(vertices[vertexOffset + vertexCounter], outPos, (mainUV + surfaceOffset) * surfaceTiling, color, normal, tangents[face], materialId);
@@ -1035,7 +1029,7 @@ namespace RBX
 
 			if (!mVertices) return;
 
-			Color4 color = Color4(getColor(part, decal, nullptr, options, randomSeed, true));
+			Color4 color = getColor(part, decal, NULL, options, randomSeed, true);
 
 			PartMaterial renderMaterial = part->getRenderMaterial();
 
@@ -1267,7 +1261,7 @@ namespace RBX
 
 			if (!mVertices) return;
 
-			Color4uint8 color = getColor(part, decal, nullptr, options, randomSeed, true);
+			Color4 color = getColor(part, decal, NULL, options, randomSeed, true);
 			//Color4uint8 extra = getExtra(part, options);
 
 			PartMaterial renderMaterial = part->getRenderMaterial();
@@ -1403,10 +1397,10 @@ namespace RBX
 						outUvs[1] = outUvs[0];
 				}
 
-				fillVertex(vertices[vertexOffset + 0], corners[faces[face][0]], outUvs[0], color, normals[face], Vector3(), materialId);
-				fillVertex(vertices[vertexOffset + 1], corners[faces[face][1]], outUvs[1], color, normals[face], Vector3(), materialId);
-				fillVertex(vertices[vertexOffset + 2], corners[faces[face][2]], outUvs[2], color, normals[face], Vector3(), materialId);
-				fillVertex(vertices[vertexOffset + 3], corners[faces[face][3]], outUvs[3], color, normals[face], Vector3(), materialId);
+				fillVertex(vertices[vertexOffset + 0], corners[faces[face][0]], outUvs[0], color, normals[face], tangents[face], materialId);
+				fillVertex(vertices[vertexOffset + 1], corners[faces[face][1]], outUvs[1], color, normals[face], tangents[face], materialId);
+				fillVertex(vertices[vertexOffset + 2], corners[faces[face][2]], outUvs[2], color, normals[face], tangents[face], materialId);
+				fillVertex(vertices[vertexOffset + 3], corners[faces[face][3]], outUvs[3], color, normals[face], tangents[face], materialId);
 
 				fillQuadIndices(&indices[indexOffset], vertexOffset, 0, 1, 2, 3);
 
@@ -1715,7 +1709,7 @@ namespace RBX
 
 			if (!mVertices) return;
 
-			Color4 color = Color4(getColor(part, decal, nullptr, options, randomSeed, true));
+			Color4 color = getColor(part, decal, NULL, options, randomSeed, true);
 
 			const CoordinateFrame& cframe = options.cframe;
 
@@ -1926,7 +1920,7 @@ namespace RBX
 
 			if (!mVertices) return;
 
-			Color4 color = Color4(getColor(part, decal, nullptr, options, randomSeed, false));
+			Color4 color = getColor(part, decal, NULL, options, randomSeed, false);
 
 			const CoordinateFrame& cframe = options.cframe;
 
@@ -2065,7 +2059,7 @@ namespace RBX
 				this->bboxMin = bboxMin;
 				this->bboxMax = bboxMax;
 
-				color = Color4(getColor(part, nullptr, nullptr, options, randomSeed, false));
+				color = getColor(part, NULL, NULL, options, randomSeed, false);
 
 				cframe = options.cframe;
 
@@ -2344,8 +2338,8 @@ namespace RBX
 		}
 
 		GeometryGenerator::GeometryGenerator()
-			: mVertices(nullptr)
-			, mIndices(nullptr)
+			: mVertices(NULL)
+			, mIndices(NULL)
 			, mVertexCount(0)
 			, mIndexCount(0)
 			, mBboxMin(Vector3::maxFinite())
@@ -2384,7 +2378,7 @@ namespace RBX
 			mBboxMax = max;
 		}
 
-		void GeometryGenerator::addInstance(PartInstance* part, Decal* decal, const Options& options, const Resources& resources, const HumanoidIdentifier* humanoidIdentifier /*=nullptr*/)
+		void GeometryGenerator::addInstance(PartInstance* part, Decal* decal, const Options& options, const Resources& resources, const HumanoidIdentifier* humanoidIdentifier /*=NULL*/)
 		{
 			addPartImpl(part, decal, options, resources, humanoidIdentifier, /* ignoreMaterialsStuds= */ false);
 
@@ -2485,7 +2479,7 @@ namespace RBX
 				return;
 			}
 
-			addPartImpl(part, nullptr, options, Resources(), /*humanoidIdentifier=*/ nullptr, /* ignoreMaterialsStuds= */ true);
+			addPartImpl(part, NULL, options, Resources(), /*humanoidIdentifier=*/ NULL, /* ignoreMaterialsStuds= */ true);
 
 			part->setCookie(oldCookie);
 		}
@@ -2555,15 +2549,15 @@ namespace RBX
 			unsigned short* indices = mIndices;
 
 			Vector3 size = part->getPartSizeXml();
-			RBX::Color4uint8 partColor = getColor(part, decal, nullptr, options, randomSeed, true);
-			const RBX::Color4uint8& extra = getExtra(part, options);
+			RBX::Color4 partColor = getColor(part, decal, NULL, options, randomSeed, true);
+			//const RBX::Color4uint8& extra = getExtra(part, options);
 
 			bool isNegate = part->fastDynamicCast<NegateOperation>() != 0;
 			bool usePartColor = operation->getUsePartColor();
 
-			if (isNegate)
-			{
-				partColor = RBX::Color4uint8(255, 154, 161, 150);
+			if (isNegate) {
+				partColor = RBX::Color4(1.0f, 0.5f, 0.5f, 0.5f);
+
 				if ((options.flags & GeometryGenerator::Flag_DiffuseColorBGRA) != 0)
 					std::swap(partColor.r, partColor.b);
 			}
@@ -2582,27 +2576,27 @@ namespace RBX
 				for (size_t vi = 0; vi < meshVertices.size(); vi++)
 				{
 					const CSGVertex& vert = meshVertices[vi];
-					Vector3 pos = vert.pos * scale;
-					Vector3 normal = vert.normal;
-					Vector3 tangent = vert.tangent;
-					Color4 vertColor = Color4(partColor);
+					Vector3 pos = vert.Position * scale;
+					Vector3 normal = vert.Normal;
+					Vector3 tangent = vert.Tangent;
+					Color4 vertColor = partColor;
 
 					if (!isNegate && !usePartColor && !decal)
 					{
-						vertColor = meshVertices[vi].color;
+						vertColor = meshVertices[vi].Color;
 						vertColor.a = partColor.a;
 						if ((options.flags & GeometryGenerator::Flag_DiffuseColorBGRA) != 0)
 							std::swap(vertColor.r, vertColor.b);
 					}
 
-					Vector2 uv = vert.uv;
+					Vector2 uv = vert.UV;
 
 					if (isScaled)
 						uv = vert.generateUv(pos);
 
 					if (decal)
 					{
-						if (vert.extra.r - 1 != decal->getFace())
+						if (false)//vert.extra.r - 1 != decal->getFace())
 						{
 							uv = Vector2();
 							vertColor.a = 0.0f;
@@ -2661,20 +2655,20 @@ namespace RBX
 				{
 					const CSGVertex& vert = decal ? meshVertices[csgMesh->getVertexRemap(decal->getFace())[vi]] : meshVertices[vi];
 
-					Vector3 pos = vert.pos * scale;
-					Vector3 normal = vert.normal;
-					Vector3 tangent = vert.tangent;
-					Color4uint8 vertColor = partColor;
+					Vector3 pos = vert.Position * scale;
+					Vector3 normal = vert.Normal;
+					Vector3 tangent = vert.Tangent;
+					Color4 vertColor = partColor;
 
 					if (!isNegate && !usePartColor && !decal)
 					{
-						vertColor = meshVertices[vi].color;
+						vertColor = meshVertices[vi].Color;
 						vertColor.a = partColor.a;
 						if ((options.flags & GeometryGenerator::Flag_DiffuseColorBGRA) != 0)
 							std::swap(vertColor.r, vertColor.b);
 					}
 
-					Vector2 uv = vert.uv;
+					Vector2 uv = vert.UV;
 
 					if (isScaled)
 						uv = vert.generateUv(pos);
@@ -2760,12 +2754,12 @@ namespace RBX
 			LcmRand randGen;
 			randGen.setSeed(static_cast<unsigned>(reinterpret_cast<long>(part)));
 
-			unsigned int numfaces = 6;
-			mVertexCount += numfaces * 4;
-			mIndexCount += numfaces * 6;
+			unsigned int numfaces = 6u;
+			mVertexCount += numfaces * 4u;
+			mIndexCount += numfaces * 6u;
 
-			Color4uint8 color = RBX::Color4uint8(randGen.value() % 255, randGen.value() % 255, randGen.value() % 255, 100);
-			Color4uint8 extra = getExtra(part, options);
+			Color4 color = RBX::Color4(float(randGen.value() % 255) / 255.0f, float(randGen.value() % 255) / 255.0f, float(randGen.value() % 255) / 255.0f, 0.4f);
+			//Color4uint8 extra = getExtra(part, options);
 
 			const Vector3 size = part->getPartSizeUi();
 			const CoordinateFrame& cframe = options.cframe;
@@ -2809,8 +2803,8 @@ namespace RBX
 			tangent.z = 1;	// Set Normals to Z
 
 			Vector2 uv;
-			uv.x = 0;
-			uv.y = 0;
+			uv.x = 0.0f;
+			uv.y = 0.0f;
 
 			static const unsigned int faces[6][4] =
 			{
@@ -2825,10 +2819,10 @@ namespace RBX
 			for (unsigned int face = 0; face < numfaces; face++)
 			{
 				unsigned int internalOffset = face * 4;
-				fillVertex(vertices[internalOffset + vertexOffset + 0], corners[faces[face][0]], uv, color, normal, Vector3());
-				fillVertex(vertices[internalOffset + vertexOffset + 1], corners[faces[face][1]], uv, color, normal, Vector3());
-				fillVertex(vertices[internalOffset + vertexOffset + 2], corners[faces[face][2]], uv, color, normal, Vector3());
-				fillVertex(vertices[internalOffset + vertexOffset + 3], corners[faces[face][3]], uv, color, normal, Vector3());
+				fillVertex(vertices[internalOffset + vertexOffset + 0], corners[faces[face][0]], uv, color, normal, tangent);
+				fillVertex(vertices[internalOffset + vertexOffset + 1], corners[faces[face][1]], uv, color, normal, tangent);
+				fillVertex(vertices[internalOffset + vertexOffset + 2], corners[faces[face][2]], uv, color, normal, tangent);
+				fillVertex(vertices[internalOffset + vertexOffset + 3], corners[faces[face][3]], uv, color, normal, tangent);
 
 				unsigned int internalIndexOffset = face * 6;
 				fillQuadIndices(&indices[internalIndexOffset + indexOffset], internalOffset + vertexOffset, 0, 1, 2, 3);
@@ -2871,7 +2865,7 @@ namespace RBX
 			Vertex* vertices = mVertices;
 			unsigned short* indices = mIndices;
 
-			const RBX::Color4uint8& extra = getExtra(part, options);
+			//const RBX::Color4uint8& extra = getExtra(part, options);
 			const CoordinateFrame& cframe = options.cframe;
 
 			Vector3 axisX = Vector3(cframe.rotation[0][0], cframe.rotation[1][0], cframe.rotation[2][0]);
@@ -2885,7 +2879,7 @@ namespace RBX
 
 			for (unsigned int i = 0; i < meshConvexes.size(); i++)
 			{
-				const RBX::Color4 color = RBX::Color4((randGen.value() % 255) / 255, (randGen.value() % 255) / 255, (randGen.value() % 255) / 255, 0.4);
+				const RBX::Color4 color = RBX::Color4(float(randGen.value() % 255) / 255.0f, float(randGen.value() % 255) / 255.0f, float(randGen.value() % 255) / 255.0f, 0.4f);
 
 				for (unsigned int j = 0; j < meshConvexes[i].vertices.size(); j++)
 				{

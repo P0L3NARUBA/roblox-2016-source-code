@@ -29,11 +29,11 @@ using RBX::utf8_encode;
 
 CVersionInfo::CVersionInfo()
 {
-  m_pVerData = nullptr;
-  m_pffi = nullptr;
+  m_pVerData = NULL;
+  m_pffi = NULL;
   m_wLangID = 0;
   m_wCharset = 1252; //Use the ANSI code page as a default
-  m_pTranslations = nullptr;
+  m_pTranslations = NULL;
   m_nTranslations = 0;
 }
 
@@ -44,15 +44,15 @@ CVersionInfo::~CVersionInfo()
 
 void CVersionInfo::Unload()
 {
-  m_pffi = nullptr;
+  m_pffi = NULL;
   if (m_pVerData)
   {
     delete [] m_pVerData;
-    m_pVerData = nullptr;
+    m_pVerData = NULL;
   }
   m_wLangID = 0;
   m_wCharset = 1252; //Use the ANSI code page as a default
-  m_pTranslations = nullptr;
+  m_pTranslations = NULL;
   m_nTranslations = 0;
 }
 
@@ -104,7 +104,7 @@ BOOL CVersionInfo::Load(const std::wstring& fileName)
     if (m_pVerData)
     {
       delete [] m_pVerData;
-      m_pVerData = nullptr;
+      m_pVerData = NULL;
     }
   }
 
@@ -159,7 +159,7 @@ std::string CVersionInfo::GetValue(const std::string& sKey)
 	  m_wLangID, m_wCharset, sKey.c_str());
 
   //Do the query
-  LPCTSTR pVal = nullptr;
+  LPCTSTR pVal = NULL;
   UINT nLen = 0;
   if (VerQueryValue(m_pVerData, CVTS2W(sQueryValue).c_str(), (LPVOID*)&pVal, &nLen)) 
     sVal = CVTW2S(pVal);

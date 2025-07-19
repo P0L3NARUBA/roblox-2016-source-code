@@ -6,7 +6,7 @@ static sgFloat def_angle_point_on_arc(lpD_POINT p, lpGEO_ARC a);
 
 BOOL bo_arc_object(lpGEO_ARC arc, lpREGION_3D gab_arc, hOBJ hbody, lpVDIM vdim)
 {
-	lpOBJ					obj;//nb  = nullptr;
+	lpOBJ					obj;//nb  = NULL;
 	SCAN_CONTROL  sc;
 	OSCAN_COD			cod;
 	BO_ARC_DATA			cd;
@@ -39,7 +39,7 @@ static OSCAN_COD arc_scan(hOBJ hobj, lpSCAN_CONTROL lpsc)
 	lpD_POINT			v;
 
 	if (ctrl_c_press) {  	 
-		put_message(CTRL_C_PRESS, nullptr, 0);
+		put_message(CTRL_C_PRESS, NULL, 0);
 		return OSFALSE;
 	}
 
@@ -69,7 +69,7 @@ static BOOL b_arc_np(lpNPW np, lpGEO_ARC arc, BOOL flag_arc, lpVDIM vdim)
 	GEO_LINE				line;
 	BO_INTER_POINT  ip;   	
 	NP_TYPE_POINT		type;   
-	NP_VERTEX_LIST 	ver = {0,0,nullptr,nullptr};
+	NP_VERTEX_LIST 	ver = {0,0,NULL,NULL};
 	BOOL            rt;//nb  = TRUE;
 	D_POINT					p[2];
 

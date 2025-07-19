@@ -150,7 +150,7 @@ void    btAlignedFreeInternal   (void* ptr,int line,char* filename)
    sFreeFunc(real);
  } else
  {
-	 printf("nullptr ptr\n");
+	 printf("NULL ptr\n");
  }
 }
 

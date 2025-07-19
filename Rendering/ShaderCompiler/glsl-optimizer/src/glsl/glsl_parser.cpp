@@ -3601,7 +3601,7 @@ yyreduce:
   case 5:
 #line 317 "src/glsl/glsl_parser.yy"
     {
-      state->process_version_directive(&(yylsp[(2) - (3)]), (yyvsp[(2) - (3)].n), nullptr);
+      state->process_version_directive(&(yylsp[(2) - (3)]), (yyvsp[(2) - (3)].n), NULL);
       if (state->error) {
          YYERROR;
       }
@@ -3644,10 +3644,10 @@ yyreduce:
   case 18:
 #line 372 "src/glsl/glsl_parser.yy"
     {
-      /* FINISHME: The nullptr test is required because pragmas are set to
-       * FINISHME: nullptr. (See production rule for external_declaration.)
+      /* FINISHME: The NULL test is required because pragmas are set to
+       * FINISHME: NULL. (See production rule for external_declaration.)
        */
-      if ((yyvsp[(1) - (1)].node) != nullptr)
+      if ((yyvsp[(1) - (1)].node) != NULL)
          state->translation_unit.push_tail(& (yyvsp[(1) - (1)].node)->link);
    ;}
     break;
@@ -3655,10 +3655,10 @@ yyreduce:
   case 19:
 #line 380 "src/glsl/glsl_parser.yy"
     {
-      /* FINISHME: The nullptr test is required because pragmas are set to
-       * FINISHME: nullptr. (See production rule for external_declaration.)
+      /* FINISHME: The NULL test is required because pragmas are set to
+       * FINISHME: NULL. (See production rule for external_declaration.)
        */
-      if ((yyvsp[(2) - (2)].node) != nullptr)
+      if ((yyvsp[(2) - (2)].node) != NULL)
          state->translation_unit.push_tail(& (yyvsp[(2) - (2)].node)->link);
    ;}
     break;
@@ -3679,7 +3679,7 @@ yyreduce:
 #line 404 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      (yyval.expression) = new(ctx) ast_expression(ast_identifier, nullptr, nullptr, nullptr);
+      (yyval.expression) = new(ctx) ast_expression(ast_identifier, NULL, NULL, NULL);
       (yyval.expression)->set_location((yylsp[(1) - (1)]));
       (yyval.expression)->primary_expression.identifier = (yyvsp[(1) - (1)].identifier);
    ;}
@@ -3689,7 +3689,7 @@ yyreduce:
 #line 411 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      (yyval.expression) = new(ctx) ast_expression(ast_int_constant, nullptr, nullptr, nullptr);
+      (yyval.expression) = new(ctx) ast_expression(ast_int_constant, NULL, NULL, NULL);
       (yyval.expression)->set_location((yylsp[(1) - (1)]));
       (yyval.expression)->primary_expression.int_constant = (yyvsp[(1) - (1)].n);
    ;}
@@ -3699,7 +3699,7 @@ yyreduce:
 #line 418 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      (yyval.expression) = new(ctx) ast_expression(ast_uint_constant, nullptr, nullptr, nullptr);
+      (yyval.expression) = new(ctx) ast_expression(ast_uint_constant, NULL, NULL, NULL);
       (yyval.expression)->set_location((yylsp[(1) - (1)]));
       (yyval.expression)->primary_expression.uint_constant = (yyvsp[(1) - (1)].n);
    ;}
@@ -3709,7 +3709,7 @@ yyreduce:
 #line 425 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      (yyval.expression) = new(ctx) ast_expression(ast_float_constant, nullptr, nullptr, nullptr);
+      (yyval.expression) = new(ctx) ast_expression(ast_float_constant, NULL, NULL, NULL);
       (yyval.expression)->set_location((yylsp[(1) - (1)]));
       (yyval.expression)->primary_expression.float_constant = (yyvsp[(1) - (1)].real);
    ;}
@@ -3719,7 +3719,7 @@ yyreduce:
 #line 432 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      (yyval.expression) = new(ctx) ast_expression(ast_bool_constant, nullptr, nullptr, nullptr);
+      (yyval.expression) = new(ctx) ast_expression(ast_bool_constant, NULL, NULL, NULL);
       (yyval.expression)->set_location((yylsp[(1) - (1)]));
       (yyval.expression)->primary_expression.bool_constant = (yyvsp[(1) - (1)].n);
    ;}
@@ -3736,7 +3736,7 @@ yyreduce:
 #line 447 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      (yyval.expression) = new(ctx) ast_expression(ast_array_index, (yyvsp[(1) - (4)].expression), (yyvsp[(3) - (4)].expression), nullptr);
+      (yyval.expression) = new(ctx) ast_expression(ast_array_index, (yyvsp[(1) - (4)].expression), (yyvsp[(3) - (4)].expression), NULL);
       (yyval.expression)->set_location_range((yylsp[(1) - (4)]), (yylsp[(4) - (4)]));
    ;}
     break;
@@ -3752,7 +3752,7 @@ yyreduce:
 #line 457 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      (yyval.expression) = new(ctx) ast_expression(ast_field_selection, (yyvsp[(1) - (3)].expression), nullptr, nullptr);
+      (yyval.expression) = new(ctx) ast_expression(ast_field_selection, (yyvsp[(1) - (3)].expression), NULL, NULL);
       (yyval.expression)->set_location_range((yylsp[(1) - (3)]), (yylsp[(3) - (3)]));
       (yyval.expression)->primary_expression.identifier = (yyvsp[(3) - (3)].identifier);
    ;}
@@ -3762,7 +3762,7 @@ yyreduce:
 #line 464 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      (yyval.expression) = new(ctx) ast_expression(ast_post_inc, (yyvsp[(1) - (2)].expression), nullptr, nullptr);
+      (yyval.expression) = new(ctx) ast_expression(ast_post_inc, (yyvsp[(1) - (2)].expression), NULL, NULL);
       (yyval.expression)->set_location_range((yylsp[(1) - (2)]), (yylsp[(2) - (2)]));
    ;}
     break;
@@ -3771,7 +3771,7 @@ yyreduce:
 #line 470 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      (yyval.expression) = new(ctx) ast_expression(ast_post_dec, (yyvsp[(1) - (2)].expression), nullptr, nullptr);
+      (yyval.expression) = new(ctx) ast_expression(ast_post_dec, (yyvsp[(1) - (2)].expression), NULL, NULL);
       (yyval.expression)->set_location_range((yylsp[(1) - (2)]), (yylsp[(2) - (2)]));
    ;}
     break;
@@ -3780,7 +3780,7 @@ yyreduce:
 #line 488 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      (yyval.expression) = new(ctx) ast_expression(ast_field_selection, (yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), nullptr);
+      (yyval.expression) = new(ctx) ast_expression(ast_field_selection, (yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), NULL);
       (yyval.expression)->set_location_range((yylsp[(1) - (3)]), (yylsp[(3) - (3)]));
    ;}
     break;
@@ -3867,7 +3867,7 @@ yyreduce:
 #line 595 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      (yyval.expression) = new(ctx) ast_expression(ast_pre_inc, (yyvsp[(2) - (2)].expression), nullptr, nullptr);
+      (yyval.expression) = new(ctx) ast_expression(ast_pre_inc, (yyvsp[(2) - (2)].expression), NULL, NULL);
       (yyval.expression)->set_location((yylsp[(1) - (2)]));
    ;}
     break;
@@ -3876,7 +3876,7 @@ yyreduce:
 #line 601 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      (yyval.expression) = new(ctx) ast_expression(ast_pre_dec, (yyvsp[(2) - (2)].expression), nullptr, nullptr);
+      (yyval.expression) = new(ctx) ast_expression(ast_pre_dec, (yyvsp[(2) - (2)].expression), NULL, NULL);
       (yyval.expression)->set_location((yylsp[(1) - (2)]));
    ;}
     break;
@@ -3885,7 +3885,7 @@ yyreduce:
 #line 607 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      (yyval.expression) = new(ctx) ast_expression((yyvsp[(1) - (2)].n), (yyvsp[(2) - (2)].expression), nullptr, nullptr);
+      (yyval.expression) = new(ctx) ast_expression((yyvsp[(1) - (2)].n), (yyvsp[(2) - (2)].expression), NULL, NULL);
       (yyval.expression)->set_location_range((yylsp[(1) - (2)]), (yylsp[(2) - (2)]));
    ;}
     break;
@@ -4094,7 +4094,7 @@ yyreduce:
 #line 793 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      (yyval.expression) = new(ctx) ast_expression((yyvsp[(2) - (3)].n), (yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), nullptr);
+      (yyval.expression) = new(ctx) ast_expression((yyvsp[(2) - (3)].n), (yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), NULL);
       (yyval.expression)->set_location_range((yylsp[(1) - (3)]), (yylsp[(3) - (3)]));
    ;}
     break;
@@ -4166,7 +4166,7 @@ yyreduce:
     {
       void *ctx = state;
       if ((yyvsp[(1) - (3)].expression)->oper != ast_sequence) {
-         (yyval.expression) = new(ctx) ast_expression(ast_sequence, nullptr, nullptr, nullptr);
+         (yyval.expression) = new(ctx) ast_expression(ast_sequence, NULL, NULL, NULL);
          (yyval.expression)->set_location_range((yylsp[(1) - (3)]), (yylsp[(3) - (3)]));
          (yyval.expression)->expressions.push_tail(& (yyvsp[(1) - (3)].expression)->link);
       } else {
@@ -4376,12 +4376,12 @@ yyreduce:
 #line 1013 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      ast_declaration *decl = new(ctx) ast_declaration((yyvsp[(3) - (3)].identifier), nullptr, nullptr);
+      ast_declaration *decl = new(ctx) ast_declaration((yyvsp[(3) - (3)].identifier), NULL, NULL);
       decl->set_location((yylsp[(3) - (3)]));
 
       (yyval.declarator_list) = (yyvsp[(1) - (3)].declarator_list);
       (yyval.declarator_list)->declarations.push_tail(&decl->link);
-      state->symbols->add_variable(new(state) ir_variable(nullptr, (yyvsp[(3) - (3)].identifier), ir_var_auto, glsl_precision_undefined));
+      state->symbols->add_variable(new(state) ir_variable(NULL, (yyvsp[(3) - (3)].identifier), ir_var_auto, glsl_precision_undefined));
    ;}
     break;
 
@@ -4389,12 +4389,12 @@ yyreduce:
 #line 1023 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      ast_declaration *decl = new(ctx) ast_declaration((yyvsp[(3) - (4)].identifier), (yyvsp[(4) - (4)].array_specifier), nullptr);
+      ast_declaration *decl = new(ctx) ast_declaration((yyvsp[(3) - (4)].identifier), (yyvsp[(4) - (4)].array_specifier), NULL);
       decl->set_location_range((yylsp[(3) - (4)]), (yylsp[(4) - (4)]));
 
       (yyval.declarator_list) = (yyvsp[(1) - (4)].declarator_list);
       (yyval.declarator_list)->declarations.push_tail(&decl->link);
-      state->symbols->add_variable(new(state) ir_variable(nullptr, (yyvsp[(3) - (4)].identifier), ir_var_auto, glsl_precision_undefined));
+      state->symbols->add_variable(new(state) ir_variable(NULL, (yyvsp[(3) - (4)].identifier), ir_var_auto, glsl_precision_undefined));
    ;}
     break;
 
@@ -4407,7 +4407,7 @@ yyreduce:
 
       (yyval.declarator_list) = (yyvsp[(1) - (6)].declarator_list);
       (yyval.declarator_list)->declarations.push_tail(&decl->link);
-      state->symbols->add_variable(new(state) ir_variable(nullptr, (yyvsp[(3) - (6)].identifier), ir_var_auto, glsl_precision_undefined));
+      state->symbols->add_variable(new(state) ir_variable(NULL, (yyvsp[(3) - (6)].identifier), ir_var_auto, glsl_precision_undefined));
    ;}
     break;
 
@@ -4415,12 +4415,12 @@ yyreduce:
 #line 1043 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      ast_declaration *decl = new(ctx) ast_declaration((yyvsp[(3) - (5)].identifier), nullptr, (yyvsp[(5) - (5)].expression));
+      ast_declaration *decl = new(ctx) ast_declaration((yyvsp[(3) - (5)].identifier), NULL, (yyvsp[(5) - (5)].expression));
       decl->set_location((yylsp[(3) - (5)]));
 
       (yyval.declarator_list) = (yyvsp[(1) - (5)].declarator_list);
       (yyval.declarator_list)->declarations.push_tail(&decl->link);
-      state->symbols->add_variable(new(state) ir_variable(nullptr, (yyvsp[(3) - (5)].identifier), ir_var_auto, glsl_precision_undefined));
+      state->symbols->add_variable(new(state) ir_variable(NULL, (yyvsp[(3) - (5)].identifier), ir_var_auto, glsl_precision_undefined));
    ;}
     break;
 
@@ -4438,7 +4438,7 @@ yyreduce:
 #line 1064 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      ast_declaration *decl = new(ctx) ast_declaration((yyvsp[(2) - (2)].identifier), nullptr, nullptr);
+      ast_declaration *decl = new(ctx) ast_declaration((yyvsp[(2) - (2)].identifier), NULL, NULL);
       decl->set_location((yylsp[(2) - (2)]));
 
       (yyval.declarator_list) = new(ctx) ast_declarator_list((yyvsp[(1) - (2)].fully_specified_type));
@@ -4451,7 +4451,7 @@ yyreduce:
 #line 1074 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      ast_declaration *decl = new(ctx) ast_declaration((yyvsp[(2) - (3)].identifier), (yyvsp[(3) - (3)].array_specifier), nullptr);
+      ast_declaration *decl = new(ctx) ast_declaration((yyvsp[(2) - (3)].identifier), (yyvsp[(3) - (3)].array_specifier), NULL);
       decl->set_location_range((yylsp[(2) - (3)]), (yylsp[(3) - (3)]));
 
       (yyval.declarator_list) = new(ctx) ast_declarator_list((yyvsp[(1) - (3)].fully_specified_type));
@@ -4477,7 +4477,7 @@ yyreduce:
 #line 1094 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      ast_declaration *decl = new(ctx) ast_declaration((yyvsp[(2) - (4)].identifier), nullptr, (yyvsp[(4) - (4)].expression));
+      ast_declaration *decl = new(ctx) ast_declaration((yyvsp[(2) - (4)].identifier), NULL, (yyvsp[(4) - (4)].expression));
       decl->set_location((yylsp[(2) - (4)]));
 
       (yyval.declarator_list) = new(ctx) ast_declarator_list((yyvsp[(1) - (4)].fully_specified_type));
@@ -4490,10 +4490,10 @@ yyreduce:
 #line 1104 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      ast_declaration *decl = new(ctx) ast_declaration((yyvsp[(2) - (2)].identifier), nullptr, nullptr);
+      ast_declaration *decl = new(ctx) ast_declaration((yyvsp[(2) - (2)].identifier), NULL, NULL);
       decl->set_location((yylsp[(2) - (2)]));
 
-      (yyval.declarator_list) = new(ctx) ast_declarator_list(nullptr);
+      (yyval.declarator_list) = new(ctx) ast_declarator_list(NULL);
       (yyval.declarator_list)->set_location_range((yylsp[(1) - (2)]), (yylsp[(2) - (2)]));
       (yyval.declarator_list)->invariant = true;
 
@@ -4505,10 +4505,10 @@ yyreduce:
 #line 1116 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      ast_declaration *decl = new(ctx) ast_declaration((yyvsp[(2) - (2)].identifier), nullptr, nullptr);
+      ast_declaration *decl = new(ctx) ast_declaration((yyvsp[(2) - (2)].identifier), NULL, NULL);
       decl->set_location((yylsp[(2) - (2)]));
 
-      (yyval.declarator_list) = new(ctx) ast_declarator_list(nullptr);
+      (yyval.declarator_list) = new(ctx) ast_declarator_list(NULL);
       (yyval.declarator_list)->set_location_range((yylsp[(1) - (2)]), (yylsp[(2) - (2)]));
       (yyval.declarator_list)->precise = true;
 
@@ -5877,7 +5877,7 @@ yyreduce:
 #line 2006 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      (yyval.struct_specifier) = new(ctx) ast_struct_specifier(nullptr, (yyvsp[(3) - (4)].declarator_list));
+      (yyval.struct_specifier) = new(ctx) ast_struct_specifier(NULL, (yyvsp[(3) - (4)].declarator_list));
       (yyval.struct_specifier)->set_location_range((yylsp[(2) - (4)]), (yylsp[(4) - (4)]));
    ;}
     break;
@@ -5937,7 +5937,7 @@ yyreduce:
 #line 2060 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      (yyval.declaration) = new(ctx) ast_declaration((yyvsp[(1) - (1)].identifier), nullptr, nullptr);
+      (yyval.declaration) = new(ctx) ast_declaration((yyvsp[(1) - (1)].identifier), NULL, NULL);
       (yyval.declaration)->set_location((yylsp[(1) - (1)]));
    ;}
     break;
@@ -5946,7 +5946,7 @@ yyreduce:
 #line 2066 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      (yyval.declaration) = new(ctx) ast_declaration((yyvsp[(1) - (2)].identifier), (yyvsp[(2) - (2)].array_specifier), nullptr);
+      (yyval.declaration) = new(ctx) ast_declaration((yyvsp[(1) - (2)].identifier), (yyvsp[(2) - (2)].array_specifier), NULL);
       (yyval.declaration)->set_location_range((yylsp[(1) - (2)]), (yylsp[(2) - (2)]));
    ;}
     break;
@@ -5991,7 +5991,7 @@ yyreduce:
 #line 2121 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      (yyval.compound_statement) = new(ctx) ast_compound_statement(true, nullptr);
+      (yyval.compound_statement) = new(ctx) ast_compound_statement(true, NULL);
       (yyval.compound_statement)->set_location_range((yylsp[(1) - (2)]), (yylsp[(2) - (2)]));
    ;}
     break;
@@ -6022,7 +6022,7 @@ yyreduce:
 #line 2146 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      (yyval.compound_statement) = new(ctx) ast_compound_statement(false, nullptr);
+      (yyval.compound_statement) = new(ctx) ast_compound_statement(false, NULL);
       (yyval.compound_statement)->set_location_range((yylsp[(1) - (2)]), (yylsp[(2) - (2)]));
    ;}
     break;
@@ -6039,9 +6039,9 @@ yyreduce:
   case 333:
 #line 2161 "src/glsl/glsl_parser.yy"
     {
-      if ((yyvsp[(1) - (1)].node) == nullptr) {
+      if ((yyvsp[(1) - (1)].node) == NULL) {
          _mesa_glsl_error(& (yylsp[(1) - (1)]), state, "<nil> statement");
-         assert((yyvsp[(1) - (1)].node) != nullptr);
+         assert((yyvsp[(1) - (1)].node) != NULL);
       }
 
       (yyval.node) = (yyvsp[(1) - (1)].node);
@@ -6052,9 +6052,9 @@ yyreduce:
   case 334:
 #line 2171 "src/glsl/glsl_parser.yy"
     {
-      if ((yyvsp[(2) - (2)].node) == nullptr) {
+      if ((yyvsp[(2) - (2)].node) == NULL) {
          _mesa_glsl_error(& (yylsp[(2) - (2)]), state, "<nil> statement");
-         assert((yyvsp[(2) - (2)].node) != nullptr);
+         assert((yyvsp[(2) - (2)].node) != NULL);
       }
       (yyval.node) = (yyvsp[(1) - (2)].node);
       (yyval.node)->link.insert_before(& (yyvsp[(2) - (2)].node)->link);
@@ -6065,7 +6065,7 @@ yyreduce:
 #line 2183 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      (yyval.node) = new(ctx) ast_expression_statement(nullptr);
+      (yyval.node) = new(ctx) ast_expression_statement(NULL);
       (yyval.node)->set_location((yylsp[(1) - (1)]));
    ;}
     break;
@@ -6100,7 +6100,7 @@ yyreduce:
 #line 2212 "src/glsl/glsl_parser.yy"
     {
       (yyval.selection_rest_statement).then_statement = (yyvsp[(1) - (1)].node);
-      (yyval.selection_rest_statement).else_statement = nullptr;
+      (yyval.selection_rest_statement).else_statement = NULL;
    ;}
     break;
 
@@ -6115,7 +6115,7 @@ yyreduce:
 #line 2224 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      ast_declaration *decl = new(ctx) ast_declaration((yyvsp[(2) - (4)].identifier), nullptr, (yyvsp[(4) - (4)].expression));
+      ast_declaration *decl = new(ctx) ast_declaration((yyvsp[(2) - (4)].identifier), NULL, (yyvsp[(4) - (4)].expression));
       ast_declarator_list *declarator = new(ctx) ast_declarator_list((yyvsp[(1) - (4)].fully_specified_type));
       decl->set_location_range((yylsp[(2) - (4)]), (yylsp[(4) - (4)]));
       declarator->set_location((yylsp[(1) - (4)]));
@@ -6136,7 +6136,7 @@ yyreduce:
   case 343:
 #line 2250 "src/glsl/glsl_parser.yy"
     {
-      (yyval.switch_body) = new(state) ast_switch_body(nullptr);
+      (yyval.switch_body) = new(state) ast_switch_body(NULL);
       (yyval.switch_body)->set_location_range((yylsp[(1) - (2)]), (yylsp[(2) - (2)]));
    ;}
     break;
@@ -6160,7 +6160,7 @@ yyreduce:
   case 346:
 #line 2268 "src/glsl/glsl_parser.yy"
     {
-      (yyval.case_label) = new(state) ast_case_label(nullptr);
+      (yyval.case_label) = new(state) ast_case_label(NULL);
       (yyval.case_label)->set_location((yylsp[(2) - (2)]));
    ;}
     break;
@@ -6227,7 +6227,7 @@ yyreduce:
     {
       void *ctx = state;
       (yyval.node) = new(ctx) ast_iteration_statement(ast_iteration_statement::ast_while,
-                                            nullptr, (yyvsp[(3) - (5)].node), nullptr, (yyvsp[(5) - (5)].node));
+                                            NULL, (yyvsp[(3) - (5)].node), NULL, (yyvsp[(5) - (5)].node));
       (yyval.node)->set_location_range((yylsp[(1) - (5)]), (yylsp[(4) - (5)]));
    ;}
     break;
@@ -6237,7 +6237,7 @@ yyreduce:
     {
       void *ctx = state;
       (yyval.node) = new(ctx) ast_iteration_statement(ast_iteration_statement::ast_do_while,
-                                            nullptr, (yyvsp[(5) - (7)].expression), nullptr, (yyvsp[(2) - (7)].node));
+                                            NULL, (yyvsp[(5) - (7)].expression), NULL, (yyvsp[(2) - (7)].node));
       (yyval.node)->set_location_range((yylsp[(1) - (7)]), (yylsp[(6) - (7)]));
    ;}
     break;
@@ -6255,7 +6255,7 @@ yyreduce:
   case 359:
 #line 2354 "src/glsl/glsl_parser.yy"
     {
-      (yyval.node) = nullptr;
+      (yyval.node) = NULL;
    ;}
     break;
 
@@ -6263,7 +6263,7 @@ yyreduce:
 #line 2361 "src/glsl/glsl_parser.yy"
     {
       (yyval.for_rest_statement).cond = (yyvsp[(1) - (2)].node);
-      (yyval.for_rest_statement).rest = nullptr;
+      (yyval.for_rest_statement).rest = NULL;
    ;}
     break;
 
@@ -6279,7 +6279,7 @@ yyreduce:
 #line 2375 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      (yyval.node) = new(ctx) ast_jump_statement(ast_jump_statement::ast_continue, nullptr);
+      (yyval.node) = new(ctx) ast_jump_statement(ast_jump_statement::ast_continue, NULL);
       (yyval.node)->set_location((yylsp[(1) - (2)]));
    ;}
     break;
@@ -6288,7 +6288,7 @@ yyreduce:
 #line 2381 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      (yyval.node) = new(ctx) ast_jump_statement(ast_jump_statement::ast_break, nullptr);
+      (yyval.node) = new(ctx) ast_jump_statement(ast_jump_statement::ast_break, NULL);
       (yyval.node)->set_location((yylsp[(1) - (2)]));
    ;}
     break;
@@ -6297,7 +6297,7 @@ yyreduce:
 #line 2387 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      (yyval.node) = new(ctx) ast_jump_statement(ast_jump_statement::ast_return, nullptr);
+      (yyval.node) = new(ctx) ast_jump_statement(ast_jump_statement::ast_return, NULL);
       (yyval.node)->set_location((yylsp[(1) - (2)]));
    ;}
     break;
@@ -6315,7 +6315,7 @@ yyreduce:
 #line 2399 "src/glsl/glsl_parser.yy"
     {
       void *ctx = state;
-      (yyval.node) = new(ctx) ast_jump_statement(ast_jump_statement::ast_discard, nullptr);
+      (yyval.node) = new(ctx) ast_jump_statement(ast_jump_statement::ast_discard, NULL);
       (yyval.node)->set_location((yylsp[(1) - (2)]));
    ;}
     break;
@@ -6332,7 +6332,7 @@ yyreduce:
 
   case 369:
 #line 2409 "src/glsl/glsl_parser.yy"
-    { (yyval.node) = nullptr; ;}
+    { (yyval.node) = NULL; ;}
     break;
 
   case 370:
@@ -6427,7 +6427,7 @@ yyreduce:
        * the same language versions, we don't have to explicitly
        * version-check both things.
        */
-      if (block->instance_name != nullptr) {
+      if (block->instance_name != NULL) {
          state->check_version(150, 300, & (yylsp[(1) - (7)]), "interface blocks with "
                                "an instance name are not allowed");
       }
@@ -6519,7 +6519,7 @@ yyreduce:
 #line 2582 "src/glsl/glsl_parser.yy"
     {
       (yyval.interface_block) = new(state) ast_interface_block(*state->default_uniform_qualifier,
-                                          nullptr, nullptr);
+                                          NULL, NULL);
    ;}
     break;
 
@@ -6527,7 +6527,7 @@ yyreduce:
 #line 2587 "src/glsl/glsl_parser.yy"
     {
       (yyval.interface_block) = new(state) ast_interface_block(*state->default_uniform_qualifier,
-                                          (yyvsp[(1) - (1)].identifier), nullptr);
+                                          (yyvsp[(1) - (1)].identifier), NULL);
       (yyval.interface_block)->set_location((yylsp[(1) - (1)]));
    ;}
     break;
@@ -6587,14 +6587,14 @@ yyreduce:
       if (!state->default_uniform_qualifier->merge_qualifier(& (yylsp[(1) - (3)]), state, (yyvsp[(1) - (3)].type_qualifier))) {
          YYERROR;
       }
-      (yyval.node) = nullptr;
+      (yyval.node) = NULL;
    ;}
     break;
 
   case 385:
 #line 2647 "src/glsl/glsl_parser.yy"
     {
-      (yyval.node) = nullptr;
+      (yyval.node) = NULL;
       if (!state->in_qualifier->merge_in_qualifier(& (yylsp[(1) - (3)]), state, (yyvsp[(1) - (3)].type_qualifier), (yyval.node))) {
          YYERROR;
       }
@@ -6628,7 +6628,7 @@ yyreduce:
          /* Allow future assigments of global out's stream id value */
          state->out_qualifier->flags.q.explicit_stream = 0;
       }
-      (yyval.node) = nullptr;
+      (yyval.node) = NULL;
    ;}
     break;
 

@@ -64,7 +64,7 @@ static char *formboundary(struct SessionHandle *data);
  * Adds a HttpPost structure to the list, if parent_post is given becomes
  * a subpost of parent_post instead of a direct list element.
  *
- * Returns newly allocated HttpPost on success and nullptr if malloc failed.
+ * Returns newly allocated HttpPost on success and NULL if malloc failed.
  *
  ***************************************************************************/
 static struct curl_httppost *
@@ -95,7 +95,7 @@ AddHttpPost(char *name, size_t namelength,
     post->flags = flags;
   }
   else
-    return nullptr;
+    return NULL;
 
   if(parent_post) {
     /* now, point our 'more' to the original 'more' */
@@ -122,8 +122,8 @@ AddHttpPost(char *name, size_t namelength,
  *
  * Adds a FormInfo structure to the list presented by parent_form_info.
  *
- * Returns newly allocated FormInfo on success and nullptr if malloc failed/
- * parent_form_info is nullptr.
+ * Returns newly allocated FormInfo on success and NULL if malloc failed/
+ * parent_form_info is NULL.
  *
  ***************************************************************************/
 static FormInfo * AddFormInfo(char *value,
@@ -140,7 +140,7 @@ static FormInfo * AddFormInfo(char *value,
     form_info->flags = HTTPPOST_FILENAME;
   }
   else
-    return nullptr;
+    return NULL;
 
   if(parent_form_info) {
     /* now, point our 'more' to the original 'more' */
@@ -166,7 +166,7 @@ static FormInfo * AddFormInfo(char *value,
 static const char *ContentTypeForFilename(const char *filename,
                                           const char *prevtype)
 {
-  const char *contenttype = nullptr;
+  const char *contenttype = NULL;
   unsigned int i;
   /*
    * No type was specified, we scan through a few well-known
@@ -191,7 +191,7 @@ static const char *ContentTypeForFilename(const char *filename,
   else
     contenttype = HTTPPOST_CONTENTTYPE_DEFAULT;
 
-  if(filename) { /* in case a nullptr was passed in */
+  if(filename) { /* in case a NULL was passed in */
     for(i=0; i<sizeof(ctts)/sizeof(ctts[0]); i++) {
       if(strlen(filename) >= strlen(ctts[i].extension)) {
         if(strequal(filename +
@@ -261,13 +261,13 @@ CURLFORMcode FormAdd(struct curl_httppost **httppost,
                      struct curl_httppost **last_post,
                      va_list params)
 {
-  FormInfo *first_form, *current_form, *form = nullptr;
+  FormInfo *first_form, *current_form, *form = NULL;
   CURLFORMcode return_value = CURL_FORMADD_OK;
-  const char *prevtype = nullptr;
-  struct curl_httppost *post = nullptr;
+  const char *prevtype = NULL;
+  struct curl_httppost *post = NULL;
   CURLformoption option;
-  struct curl_forms *forms = nullptr;
-  char *array_value=nullptr; /* value read from an array */
+  struct curl_forms *forms = NULL;
+  char *array_value=NULL; /* value read from an array */
 
   /* This is a state variable, that if TRUE means that we're parsing an
      array that we got passed to us. If FALSE we're parsing the input
@@ -413,7 +413,7 @@ CURLFORMcode FormAdd(struct curl_httppost **httppost,
               if(!fname)
                 return_value = CURL_FORMADD_MEMORY;
               else {
-                form = AddFormInfo(fname, nullptr, current_form);
+                form = AddFormInfo(fname, NULL, current_form);
                 if(!form) {
                   free(fname);
                   return_value = CURL_FORMADD_MEMORY;
@@ -421,7 +421,7 @@ CURLFORMcode FormAdd(struct curl_httppost **httppost,
                 else {
                   form->value_alloc = TRUE;
                   current_form = form;
-                  form = nullptr;
+                  form = NULL;
                 }
               }
             }
@@ -456,7 +456,7 @@ CURLFORMcode FormAdd(struct curl_httppost **httppost,
           array_state?array_value:va_arg(params, char *);
         if(buffer) {
           current_form->buffer = buffer; /* store for the moment */
-          current_form->value = buffer; /* make it non-nullptr to be accepted
+          current_form->value = buffer; /* make it non-NULL to be accepted
                                            as fine */
         }
         else
@@ -483,7 +483,7 @@ CURLFORMcode FormAdd(struct curl_httppost **httppost,
           current_form->userp = userp;
           current_form->value = userp; /* this isn't strictly true but we
                                           derive a value from this later on
-                                          and we need this non-nullptr to be
+                                          and we need this non-NULL to be
                                           accepted as a fine form part */
         }
         else
@@ -502,7 +502,7 @@ CURLFORMcode FormAdd(struct curl_httppost **httppost,
               if(!type)
                 return_value = CURL_FORMADD_MEMORY;
               else {
-                form = AddFormInfo(nullptr, type, current_form);
+                form = AddFormInfo(NULL, type, current_form);
                 if(!form) {
                   free(type);
                   return_value = CURL_FORMADD_MEMORY;
@@ -510,7 +510,7 @@ CURLFORMcode FormAdd(struct curl_httppost **httppost,
                 else {
                   form->contenttype_alloc = TRUE;
                   current_form = form;
-                  form = nullptr;
+                  form = NULL;
                 }
               }
             }
@@ -574,7 +574,7 @@ CURLFORMcode FormAdd(struct curl_httppost **httppost,
     /* On error, free allocated fields for all nodes of the FormInfo linked
        list without deallocating nodes. List nodes are deallocated later on */
     FormInfo *ptr;
-    for(ptr = first_form; ptr != nullptr; ptr = ptr->more) {
+    for(ptr = first_form; ptr != NULL; ptr = ptr->more) {
       if(ptr->name_alloc) {
         Curl_safefree(ptr->name);
         ptr->name_alloc = FALSE;
@@ -598,9 +598,9 @@ CURLFORMcode FormAdd(struct curl_httppost **httppost,
     /* go through the list, check for completeness and if everything is
      * alright add the HttpPost item otherwise set return_value accordingly */
 
-    post = nullptr;
+    post = NULL;
     for(form = first_form;
-        form != nullptr;
+        form != NULL;
         form = form->more) {
       if(((!form->name || !form->value) && !post) ||
          ( (form->contentslength) &&
@@ -635,7 +635,7 @@ CURLFORMcode FormAdd(struct curl_httppost **httppost,
         }
         if(!(form->flags & HTTPPOST_PTRNAME) &&
            (form == first_form) ) {
-          /* Note that there's small risk that form->name is nullptr here if the
+          /* Note that there's small risk that form->name is NULL here if the
              app passed in a bad combo, so we better check for that first. */
           if(form->name) {
             /* copy name (without strdup; possibly contains null characters) */
@@ -685,7 +685,7 @@ CURLFORMcode FormAdd(struct curl_httppost **httppost,
          list which are not already owned by the httppost linked list
          without deallocating nodes. List nodes are deallocated later on */
       FormInfo *ptr;
-      for(ptr = form; ptr != nullptr; ptr = ptr->more) {
+      for(ptr = form; ptr != NULL; ptr = ptr->more) {
         if(ptr->name_alloc) {
           Curl_safefree(ptr->name);
           ptr->name_alloc = FALSE;
@@ -757,7 +757,7 @@ curl_off_t VmsRealFileSize(const char * name,
   FILE * file;
 
   file = fopen(name, "r"); /* VMS */
-  if(file == nullptr)
+  if(file == NULL)
     return 0;
 
   count = 0;
@@ -803,7 +803,7 @@ static curl_off_t VmsSpecialSize(const char * name,
 /*
  * AddFormData() adds a chunk of data to the FormData linked list.
  *
- * size is incremented by the chunk length, unless it is nullptr
+ * size is incremented by the chunk length, unless it is NULL
  */
 static CURLcode AddFormData(struct FormData **formp,
                             enum formtype type,
@@ -814,7 +814,7 @@ static CURLcode AddFormData(struct FormData **formp,
   struct FormData *newform = malloc(sizeof(struct FormData));
   if(!newform)
     return CURLE_OUT_OF_MEMORY;
-  newform->next = nullptr;
+  newform->next = NULL;
 
   if(type <= FORM_CONTENT) {
     /* we make it easier for plain strings: */
@@ -899,9 +899,9 @@ void Curl_formclean(struct FormData **form_ptr)
       free(form->line); /* free the line */
     free(form);       /* free the struct */
 
-  } while((form = next) != nullptr); /* continue */
+  } while((form = next) != NULL); /* continue */
 
-  *form_ptr = nullptr;
+  *form_ptr = NULL;
 }
 
 /*
@@ -918,7 +918,7 @@ int curl_formget(struct curl_httppost *form, void *arg,
   curl_off_t size;
   struct FormData *data, *ptr;
 
-  result = Curl_getformdata(nullptr, &data, form, nullptr, &size);
+  result = Curl_getformdata(NULL, &data, form, NULL, &size);
   if(result)
     return (int)result;
 
@@ -981,7 +981,7 @@ void curl_formfree(struct curl_httppost *form)
     free(form->showfilename); /* free the faked file name */
     free(form);       /* free the struct */
 
-  } while((form = next) != nullptr); /* continue */
+  } while((form = next) != NULL); /* continue */
 }
 
 #ifndef HAVE_BASENAME
@@ -1038,12 +1038,12 @@ static char *strippath(const char *fullfile)
   filename = strdup(fullfile); /* duplicate since basename() may ruin the
                                   buffer it works on */
   if(!filename)
-    return nullptr;
+    return NULL;
   base = strdup(basename(filename));
 
   free(filename); /* free temporary buffer */
 
-  return base; /* returns an allocated string or nullptr ! */
+  return base; /* returns an allocated string or NULL ! */
 }
 
 static CURLcode formdata_add_filename(const struct curl_httppost *file,
@@ -1052,8 +1052,8 @@ static CURLcode formdata_add_filename(const struct curl_httppost *file,
 {
   CURLcode result = CURLE_OK;
   char *filename = file->showfilename;
-  char *filebasename = nullptr;
-  char *filename_escaped = nullptr;
+  char *filebasename = NULL;
+  char *filename_escaped = NULL;
 
   if(!filename) {
     filebasename = strippath(file->contents);
@@ -1099,7 +1099,7 @@ static CURLcode formdata_add_filename(const struct curl_httppost *file,
  *
  * This function will not do a failf() for the potential memory failures but
  * should for all other errors it spots. Just note that this function MAY get
- * a nullptr pointer in the 'data' argument.
+ * a NULL pointer in the 'data' argument.
  */
 
 CURLcode Curl_getformdata(struct SessionHandle *data,
@@ -1108,17 +1108,17 @@ CURLcode Curl_getformdata(struct SessionHandle *data,
                           const char *custom_content_type,
                           curl_off_t *sizep)
 {
-  struct FormData *form = nullptr;
+  struct FormData *form = NULL;
   struct FormData *firstform;
   struct curl_httppost *file;
   CURLcode result = CURLE_OK;
 
   curl_off_t size = 0; /* support potentially ENORMOUS formposts */
   char *boundary;
-  char *fileboundary = nullptr;
+  char *fileboundary = NULL;
   struct curl_slist* curList;
 
-  *finalform = nullptr; /* default form is empty */
+  *finalform = NULL; /* default form is empty */
 
   if(!post)
     return result; /* no input => no output! */
@@ -1128,7 +1128,7 @@ CURLcode Curl_getformdata(struct SessionHandle *data,
     return CURLE_OUT_OF_MEMORY;
 
   /* Make the first line of the output */
-  result = AddFormDataf(&form, nullptr,
+  result = AddFormDataf(&form, NULL,
                         "%s; boundary=%s\r\n",
                         custom_content_type?custom_content_type:
                         "Content-Type: multipart/form-data",
@@ -1289,7 +1289,7 @@ CURLcode Curl_getformdata(struct SessionHandle *data,
         else {
           if(data)
             failf(data, "couldn't open file \"%s\"", file->contents);
-          *finalform = nullptr;
+          *finalform = NULL;
           result = CURLE_READ_ERROR;
         }
       }
@@ -1323,7 +1323,7 @@ CURLcode Curl_getformdata(struct SessionHandle *data,
         break;
     }
 
-  } while((post = post->next) != nullptr); /* for each field */
+  } while((post = post->next) != NULL); /* for each field */
 
   /* end-boundary for everything */
   if(!result)
@@ -1357,7 +1357,7 @@ int Curl_FormInit(struct Form *form, struct FormData *formdata )
 
   form->data = formdata;
   form->sent = 0;
-  form->fp = nullptr;
+  form->fp = NULL;
   form->fread_func = ZERO_NULL;
 
   return 0;
@@ -1425,7 +1425,7 @@ static size_t readfromfile(struct Form *form, char *buffer,
     /* this is the last chunk from the file, move on */
     if(form->fp) {
       fclose(form->fp);
-      form->fp = nullptr;
+      form->fp = NULL;
     }
     form->data = form->data->next;
   }

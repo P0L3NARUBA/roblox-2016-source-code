@@ -44,7 +44,7 @@ Dphysics Server;	Address Match (null)		If Awake or Sim
 			Assembly::FilterPhase	from;
 			Assembly::FilterPhase	to;
 
-			MoveInstructions() : a(nullptr), from(Assembly::NOT_ASSIGNED), to(Assembly::NOT_ASSIGNED)
+			MoveInstructions() : a(NULL), from(Assembly::NOT_ASSIGNED), to(Assembly::NOT_ASSIGNED)
 			{}
 
 			MoveInstructions(Assembly* _a, Assembly::FilterPhase _from, Assembly::FilterPhase _to) : a(_a), from(_from), to(_to)

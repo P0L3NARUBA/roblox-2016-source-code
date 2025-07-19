@@ -169,9 +169,9 @@
   {
     ft_fclose( STREAM_FILE( stream ) );
 
-    stream->descriptor.pointer = nullptr;
+    stream->descriptor.pointer = NULL;
     stream->size               = 0;
-    stream->base               = nullptr;
+    stream->base               = NULL;
   }
 
 
@@ -230,12 +230,12 @@
     if ( !stream )
       return FT_THROW( Invalid_Stream_Handle );
 
-    stream->descriptor.pointer = nullptr;
+    stream->descriptor.pointer = NULL;
     stream->pathname.pointer   = (char*)filepathname;
-    stream->base               = nullptr;
+    stream->base               = NULL;
     stream->pos                = 0;
-    stream->read               = nullptr;
-    stream->close              = nullptr;
+    stream->read               = NULL;
+    stream->close              = NULL;
 
     file = ft_fopen( filepathname, "rb" );
     if ( !file )
@@ -292,7 +292,7 @@
     memory = (FT_Memory)ft_smalloc( sizeof ( *memory ) );
     if ( memory )
     {
-      memory->user    = nullptr;
+      memory->user    = NULL;
       memory->alloc   = ft_alloc;
       memory->realloc = ft_realloc;
       memory->free    = ft_free;

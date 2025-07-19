@@ -158,17 +158,17 @@ void file_descriptor_impl::open(const detail::path& p, BOOST_IOS::openmode mode)
         ::CreateFileW( p.c_wstr(),
                        dwDesiredAccess,
                        FILE_SHARE_READ | FILE_SHARE_WRITE,
-                       nullptr,                   // lpSecurityAttributes
+                       NULL,                   // lpSecurityAttributes
                        dwCreationDisposition,
                        FILE_ATTRIBUTE_NORMAL,
-                       nullptr ) :                // hTemplateFile
+                       NULL ) :                // hTemplateFile
         ::CreateFileA( p.c_str(),
                        dwDesiredAccess,
                        FILE_SHARE_READ | FILE_SHARE_WRITE,
-                       nullptr,                   // lpSecurityAttributes
+                       NULL,                   // lpSecurityAttributes
                        dwCreationDisposition,
                        FILE_ATTRIBUTE_NORMAL,
-                       nullptr );                 // hTemplateFile
+                       NULL );                 // hTemplateFile
     if (handle != INVALID_HANDLE_VALUE) {
         handle_ = handle;
         flags_ = close_always;
@@ -262,7 +262,7 @@ std::streamsize file_descriptor_impl::read(char* s, std::streamsize n)
 {
 #ifdef BOOST_IOSTREAMS_WINDOWS
     DWORD result;
-    if (!::ReadFile(handle_, s, n, &result, nullptr))
+    if (!::ReadFile(handle_, s, n, &result, NULL))
     {
         // report EOF if the write-side of a pipe has been closed
         if (GetLastError() == ERROR_BROKEN_PIPE)
@@ -286,7 +286,7 @@ std::streamsize file_descriptor_impl::write(const char* s, std::streamsize n)
 {
 #ifdef BOOST_IOSTREAMS_WINDOWS
     DWORD ignore;
-    if (!::WriteFile(handle_, s, n, &ignore, nullptr))
+    if (!::WriteFile(handle_, s, n, &ignore, NULL))
         throw_system_failure("failed writing");
     return n;
 #else // #ifdef BOOST_IOSTREAMS_WINDOWS

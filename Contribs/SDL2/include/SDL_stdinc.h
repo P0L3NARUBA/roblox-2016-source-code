@@ -433,7 +433,7 @@ extern DECLSPEC int SDLCALL SDL_vsnprintf(SDL_OUT_Z_CAP(maxlen) char *text, size
 
 #ifndef HAVE_M_PI
 #ifndef M_PI
-#define M_PI    3.14159265358979323846264338327950288   /* pi */
+#define M_PI    3.1415927f   /* pi */
 #endif
 #endif
 
@@ -473,7 +473,7 @@ extern DECLSPEC size_t SDLCALL SDL_iconv(SDL_iconv_t cd, const char **inbuf,
                                          size_t * outbytesleft);
 /**
  *  This function converts a string between encodings in one pass, returning a
- *  string that must be freed with SDL_free() or nullptr on error.
+ *  string that must be freed with SDL_free() or NULL on error.
  */
 extern DECLSPEC char *SDLCALL SDL_iconv_string(const char *tocode,
                                                const char *fromcode,

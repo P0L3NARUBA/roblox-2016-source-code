@@ -103,7 +103,7 @@ inet_pton4(const char *src, unsigned char *dst)
   while((ch = *src++) != '\0') {
     const char *pch;
 
-    if((pch = strchr(digits, ch)) != nullptr) {
+    if((pch = strchr(digits, ch)) != NULL) {
       unsigned int val = *tp * 10 + (unsigned int)(pch - digits);
 
       if(saw_digit && *tp == 0)
@@ -158,7 +158,7 @@ inet_pton6(const char *src, unsigned char *dst)
 
   memset((tp = tmp), 0, IN6ADDRSZ);
   endp = tp + IN6ADDRSZ;
-  colonp = nullptr;
+  colonp = NULL;
   /* Leading :: requires some special handling. */
   if(*src == ':')
     if(*++src != ':')
@@ -169,9 +169,9 @@ inet_pton6(const char *src, unsigned char *dst)
   while((ch = *src++) != '\0') {
     const char *pch;
 
-    if((pch = strchr((xdigits = xdigits_l), ch)) == nullptr)
+    if((pch = strchr((xdigits = xdigits_l), ch)) == NULL)
       pch = strchr((xdigits = xdigits_u), ch);
-    if(pch != nullptr) {
+    if(pch != NULL) {
       val <<= 4;
       val |= (pch - xdigits);
       if(++saw_xdigit > 4)
@@ -208,7 +208,7 @@ inet_pton6(const char *src, unsigned char *dst)
     *tp++ = (unsigned char) (val >> 8) & 0xff;
     *tp++ = (unsigned char) val & 0xff;
   }
-  if(colonp != nullptr) {
+  if(colonp != NULL) {
     /*
      * Since some memmove()'s erroneously fail to handle
      * overlapping regions, we'll do the shift by hand.

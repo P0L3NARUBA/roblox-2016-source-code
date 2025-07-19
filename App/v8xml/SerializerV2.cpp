@@ -87,7 +87,7 @@ public:
 		}
 
 		// Unable to find the requested InstanceHandle
-		assign(binding.idref, binding.propertyOwner, InstanceHandle(nullptr));
+		assign(binding.idref, binding.propertyOwner, InstanceHandle(NULL));
 		return false;
 	}
 
@@ -191,7 +191,7 @@ void SerializerV2::loadXML(std::istream& stream, RBX::DataModel* dataModel)
 
 shared_ptr<Instance> SerializerV2::loadInstanceXML(const XmlElement* itemElement, IReferenceBinder& binder, CreatorRole creatorRole)
 {
-	const RBX::Name* className = nullptr;
+	const RBX::Name* className = NULL;
 	if (itemElement->findAttributeValue(tag_class, className))
 	{
 		shared_ptr<Instance> instance = Creatable<Instance>::createByName(*className, RBX::SerializationCreator);
@@ -220,7 +220,7 @@ void SerializerV2::loadInstancesXML(const XmlElement* root, Instances& result, I
 
 	if (root->getTag() == tag_roblox) {
 		const XmlAttribute* version = root->findAttribute(tag_version);
-		if (version!=nullptr && version->getValue(schemaVersionLoading) && schemaVersionLoading >= 4) {
+		if (version!=NULL && version->getValue(schemaVersionLoading) && schemaVersionLoading >= 4) {
 			v4model = true;
 
 			const XmlElement* childElement = root->findFirstChildByTag(tag_Item);

@@ -26,7 +26,7 @@ sgCEllipsoid* sgCEllipsoid::Create(sgFloat radius1, sgFloat radius2, sgFloat rad
 		radius3<eps_d ||
 		merid_cnt<2 ||
 		parall_cnt<2)
-			return nullptr;
+			return NULL;
 
 	sgFloat par[5];
 

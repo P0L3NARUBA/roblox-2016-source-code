@@ -21,7 +21,7 @@
  ***************************************************************************/
 
 /* Escape and unescape URL encoding in strings. The functions return a new
- * allocated string or nullptr if an error occurred.  */
+ * allocated string or NULL if an error occurred.  */
 
 #include "curl_setup.h"
 
@@ -67,20 +67,20 @@ static bool Curl_isunreserved(unsigned char in)
 /* for ABI-compatibility with previous versions */
 char *curl_escape(const char *string, int inlength)
 {
-  return curl_easy_escape(nullptr, string, inlength);
+  return curl_easy_escape(NULL, string, inlength);
 }
 
 /* for ABI-compatibility with previous versions */
 char *curl_unescape(const char *string, int length)
 {
-  return curl_easy_unescape(nullptr, string, length, nullptr);
+  return curl_easy_unescape(NULL, string, length, NULL);
 }
 
 char *curl_easy_escape(CURL *handle, const char *string, int inlength)
 {
   size_t alloc = (inlength?(size_t)inlength:strlen(string))+1;
   char *ns;
-  char *testing_ptr = nullptr;
+  char *testing_ptr = NULL;
   unsigned char in; /* we need to treat the characters unsigned */
   size_t newlen = alloc;
   size_t strindex=0;
@@ -89,7 +89,7 @@ char *curl_easy_escape(CURL *handle, const char *string, int inlength)
 
   ns = malloc(alloc);
   if(!ns)
-    return nullptr;
+    return NULL;
 
   length = alloc-1;
   while(length--) {
@@ -106,7 +106,7 @@ char *curl_easy_escape(CURL *handle, const char *string, int inlength)
         testing_ptr = realloc(ns, alloc);
         if(!testing_ptr) {
           free( ns );
-          return nullptr;
+          return NULL;
         }
         else {
           ns = testing_ptr;
@@ -117,7 +117,7 @@ char *curl_easy_escape(CURL *handle, const char *string, int inlength)
       if(result) {
         /* Curl_convert_to_network calls failf if unsuccessful */
         free(ns);
-        return nullptr;
+        return NULL;
       }
 
       snprintf(&ns[strindex], 4, "%%%02X", in);
@@ -205,18 +205,18 @@ CURLcode Curl_urldecode(struct SessionHandle *data,
  * Unescapes the given URL escaped string of given length. Returns a
  * pointer to a malloced string with length given in *olen.
  * If length == 0, the length is assumed to be strlen(string).
- * If olen == nullptr, no output length is stored.
+ * If olen == NULL, no output length is stored.
  */
 char *curl_easy_unescape(CURL *handle, const char *string, int length,
                          int *olen)
 {
-  char *str = nullptr;
+  char *str = NULL;
   size_t inputlen = length;
   size_t outputlen;
   CURLcode res = Curl_urldecode(handle, string, inputlen, &str, &outputlen,
                                 FALSE);
   if(res)
-    return nullptr;
+    return NULL;
   if(olen)
     *olen = curlx_uztosi(outputlen);
   return str;

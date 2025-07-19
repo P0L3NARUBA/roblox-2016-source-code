@@ -150,7 +150,7 @@ BOOL move_sply_point(lpSPLY_DAT sply_dat, short num, lpD_POINT point){
 		else if( sply_dat->sdtype & SPL_CLOSE )
                	l2 = dpoint_distance((lpD_POINT)&sply_dat->knots[1], point);
 		if( l1<eps_d || l2<eps_d ) {
-//			put_message(SPL_BAD_POINT, nullptr, 0);  //   
+//			put_message(SPL_BAD_POINT, NULL, 0);  //   
 			return FALSE;
 		}
 		memcpy(&sply_dat->knots[num], point, sizeof(D_POINT));
@@ -378,7 +378,7 @@ BOOL change_INT_APPR(lpSPLY_DAT sply_dat){
 // free arrays for short spline
 	if (sply_dat->derivates) {
 		SGFree(sply_dat->derivates);
-		sply_dat->derivates = nullptr;
+		sply_dat->derivates = NULL;
 	}
 
 	sply_dat->numd = 0;
@@ -404,15 +404,15 @@ short j = MAX_POINT_ON_SPLINE, i;
 // free array for APPR spline
 	if( sply_dat->P ){
 		SGFree( sply_dat->P );
-		sply_dat->P = nullptr;
+		sply_dat->P = NULL;
 	}
 
 // new arrays for short spline
-	if((sply_dat->P = (W_NODE*)SGMalloc((2*j+2)*sizeof(W_NODE))) == nullptr)return FALSE;
+	if((sply_dat->P = (W_NODE*)SGMalloc((2*j+2)*sizeof(W_NODE))) == NULL)return FALSE;
 //all weight put into 1
 	for( i=0; i<2*j+2; i++ ) sply_dat->P[i].vertex[3] = 1.;
 
-	if((sply_dat->derivates = (SNODE*)SGMalloc(j*sizeof(SNODE))) == nullptr) return FALSE;
+	if((sply_dat->derivates = (SNODE*)SGMalloc(j*sizeof(SNODE))) == NULL) return FALSE;
 	memset(sply_dat->derivates, 0, j*sizeof(SNODE));
 	sply_dat->numd = 0;
 

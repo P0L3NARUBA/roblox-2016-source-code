@@ -8,7 +8,7 @@ namespace RBX {
 
 void IStepped::onServiceProviderIStepped(ServiceProvider* oldProvider, ServiceProvider* newProvider)
 {
-	RBXASSERT((oldProvider == nullptr) != (newProvider == nullptr));
+	RBXASSERT((oldProvider == NULL) != (newProvider == NULL));
 
 	steppedConnection.disconnect();
 

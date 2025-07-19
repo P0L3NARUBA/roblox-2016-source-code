@@ -76,12 +76,12 @@ bool is_path_on_one_line(hOBJ hobj)
 
 /*
 		       
-						calc_plane == nullptr
+						calc_plane == NULL
 								: FALSE - -  (.)
 														TRUE - /  ST_FLAT
 		
 		  
-						calc_plane != nullptr
+						calc_plane != NULL
 								: FALSE -   
 																		(.   )
 														TRUE  -  
@@ -108,15 +108,15 @@ err1:
 		free_vdim(&vdim);
 		return FALSE;
 	}
-	if ((mnode = (MNODE *)get_next_elem(&vdim)) == nullptr) {
+	if ((mnode = (MNODE *)get_next_elem(&vdim)) == NULL) {
 err2:
 		end_rw(&vdim);
 		goto err1;
 	}
 	root = mnode->p;
-	if ((mnode = (MNODE *)get_next_elem(&vdim)) == nullptr) goto err2;
+	if ((mnode = (MNODE *)get_next_elem(&vdim)) == NULL) goto err2;
 	first = mnode->p;
-	/*while ((mnode = (MNODE *)get_next_elem(&vdim)) != nullptr) {
+	/*while ((mnode = (MNODE *)get_next_elem(&vdim)) != NULL) {
 		second = mnode->p;
 		dpoint_sub(&first, &root, &a);
 		dpoint_sub(&second, &root, &b);
@@ -127,7 +127,7 @@ err2:
 		first = second;
 	}*/
 
-	/**RA*/while ((mnode = (MNODE *)get_next_elem(&vdim)) != nullptr) {
+	/**RA*/while ((mnode = (MNODE *)get_next_elem(&vdim)) != NULL) {
 	/**RA*/	second = mnode->p;
 	/**RA*/	if (!sgSpaceMath::IsPointsOnOneLine(*((SG_POINT*)&root),
 	/**RA*/									*((SG_POINT*)&first),
@@ -161,7 +161,7 @@ err2:
 	// ===       
 	flat = TRUE;
 	if (!begin_rw(&vdim, 0)) goto err1;
-	while ((mnode = (MNODE *)get_next_elem(&vdim)) != nullptr) {
+	while ((mnode = (MNODE *)get_next_elem(&vdim)) != NULL) {
 
 		D_POINT  ppp1 = plane.v;
 		D_POINT  ppp2 = mnode->p;

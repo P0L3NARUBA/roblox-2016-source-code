@@ -55,7 +55,7 @@ namespace RBX {
 		static float getMaxSize()			{return MaxSize;}
 
 	protected:
-		bool askSetParent(const Instance* parent) const {return Instance::fastDynamicCast<PartInstance>(parent) != nullptr;}
+		bool askSetParent(const Instance* parent) const {return Instance::fastDynamicCast<PartInstance>(parent) != NULL;}
 		bool askAddChild(const Instance* instance) const {return true;}
 	};
 }	// namespace RBX

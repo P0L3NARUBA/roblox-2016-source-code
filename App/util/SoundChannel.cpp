@@ -75,7 +75,7 @@ static Reflection::PropDescriptor<SoundChannel, float> sound_desc_MaxDistance("M
 // DFFLag::RollOffModeEnabled 
 // static Reflection::EnumPropDescriptor<SoundChannel, RollOffMode> sound_desc_RollOffMode("RollOffMode", category_Data, &SoundChannel::getRollOffMode, &SoundChannel::setRollOffMode);
 
-static Reflection::PropDescriptor<SoundChannel, double> sound_desc_SoundLength("TimeLength", category_Data, &SoundChannel::getSoundLength, nullptr, Reflection::PropertyDescriptor::UI);
+static Reflection::PropDescriptor<SoundChannel, double> sound_desc_SoundLength("TimeLength", category_Data, &SoundChannel::getSoundLength, NULL, Reflection::PropertyDescriptor::UI);
 static Reflection::PropDescriptor<SoundChannel, double> sound_desc_SoundPosition("TimePosition", category_Data, &SoundChannel::getSoundPosition, &SoundChannel::setSoundPositionLua, Reflection::PropertyDescriptor::UI);
 
 static Reflection::PropDescriptor<SoundChannel, bool> sound_desc_Looped("Looped", category_Behavior, &SoundChannel::getLooped, &SoundChannel::setLooped);
@@ -86,8 +86,8 @@ static Reflection::BoundFuncDesc<SoundChannel, void()> sound_resumeFunction(&Sou
 static Reflection::BoundFuncDesc<SoundChannel, void()> sound_pauseFunction(&SoundChannel::pause, "Pause", Security::None);
 static Reflection::BoundFuncDesc<SoundChannel, void()> sound_stopFunction(&SoundChannel::stop, "Stop", Security::None);
 
-static Reflection::PropDescriptor<SoundChannel, bool> sound_desc_IsPlaying("IsPlaying", category_Data, &SoundChannel::isPlaying, nullptr, Reflection::PropertyDescriptor::UI);
-static Reflection::PropDescriptor<SoundChannel, bool> sound_desc_isPaused("IsPaused", category_Data, &SoundChannel::isPaused, nullptr, Reflection::PropertyDescriptor::UI);
+static Reflection::PropDescriptor<SoundChannel, bool> sound_desc_IsPlaying("IsPlaying", category_Data, &SoundChannel::isPlaying, NULL, Reflection::PropertyDescriptor::UI);
+static Reflection::PropDescriptor<SoundChannel, bool> sound_desc_isPaused("IsPaused", category_Data, &SoundChannel::isPaused, NULL, Reflection::PropertyDescriptor::UI);
 
 static Reflection::EventDesc<SoundChannel, void(std::string, int)> sound_loopedSignal(&SoundChannel::soundLoopedSignal, "DidLoop", "soundId", "numOfTimesLooped");
 static Reflection::EventDesc<SoundChannel, void(std::string)> sound_pausedSignal(&SoundChannel::soundPausedSignal, "Paused", "soundId");
@@ -111,15 +111,15 @@ static Reflection::RemoteEventDesc<SoundChannel, void(int)> event_soundResumedFr
 static Reflection::BoundFuncDesc<SoundChannel, void()> sound_stopFunctionDep(&SoundChannel::stop, "stop", Security::None, Reflection::Descriptor::Attributes::deprecated(sound_stopFunction));
 static Reflection::BoundFuncDesc<SoundChannel, void()> sound_playFunctionDeprecated(&SoundChannel::play, "play", Security::None, Reflection::Descriptor::Attributes::deprecated(sound_playFunction));
 static Reflection::BoundFuncDesc<SoundChannel, void()> sound_dep_pauseFunction(&SoundChannel::pause, "pause", Security::None, Reflection::Descriptor::Attributes::deprecated(sound_pauseFunction));
-static Reflection::PropDescriptor<SoundChannel, bool> sound_desc_dep_IsPlaying("isPlaying", category_Data, &SoundChannel::isPlaying, nullptr, Reflection::PropertyDescriptor::Attributes::deprecated(sound_desc_IsPlaying));
+static Reflection::PropDescriptor<SoundChannel, bool> sound_desc_dep_IsPlaying("isPlaying", category_Data, &SoundChannel::isPlaying, NULL, Reflection::PropertyDescriptor::Attributes::deprecated(sound_desc_IsPlaying));
 REFLECTION_END();
 
 SoundChannel::SoundChannel()
 	:looped(false)
 	,is3D(false)
 	,playOnRemove(false)
-	,fmod_channel(nullptr)
-	,part(nullptr)
+	,fmod_channel(NULL)
+	,part(NULL)
 	,volume(0.5)
 	,pitch(1)
 	,minDistance(10)
@@ -140,7 +140,7 @@ SoundChannel::~SoundChannel()
 {
 	FASTLOG3(DFLog::SoundTrace, "SoundChannel::~SoundChannel(%p, %p, %p)", this, fmod_channel, sound.get());
     releaseChannel();
-	RBXASSERT(fmod_channel==nullptr);
+	RBXASSERT(fmod_channel==NULL);
 	RBXASSERT(!sound);
 }
 
@@ -155,8 +155,8 @@ void SoundChannel::releaseChannel()
 		SoundService::checkResultNoThrow(fmod_channel->getUserData(reinterpret_cast<void**>(&oldSound)), "getUserData", this, fmod_channel);
 		RBXASSERT(oldSound==0 || oldSound==this);
 #endif
-            SoundService::checkResultNoThrow(fmod_channel->setUserData(reinterpret_cast<void*>(nullptr)), "setUserData release", this, fmod_channel);
-		fmod_channel = nullptr;
+            SoundService::checkResultNoThrow(fmod_channel->setUserData(reinterpret_cast<void*>(NULL)), "setUserData release", this, fmod_channel);
+		fmod_channel = NULL;
 	}
 	if (sound)
 	{
@@ -361,7 +361,7 @@ void SoundChannel::onSoundLoaded(const Instance *context, bool shouldPlayOnLoad)
 {
 	FASTLOG3(DFLog::SoundTrace, "SoundChannel::onSoundLoaded(%p, %p, %d)", this, context, shouldPlayOnLoad);
 
-	is3D = part != nullptr;
+	is3D = part != NULL;
 
 	SoundService* soundService = ServiceProvider::create<SoundService>(context);
 	if (soundService)
@@ -445,7 +445,7 @@ bool SoundChannel::isPlaying() const
 
 bool SoundChannel::isSoundLoaded() const
 {
-	return sound != nullptr && sound->id == getSoundId();
+	return sound != NULL && sound->id == getSoundId();
 }
 
 void SoundChannel::loadSound(const Instance *context, bool shouldPlayOnLoad)
@@ -516,7 +516,7 @@ double SoundChannel::getSoundLength() const
 	FASTLOG2(DFLog::SoundTrace, "SoundChannel::getSoundLength(%p, %p)", this, fmod_channel);
 
 	unsigned length = 0;
-	FMOD::Sound* fmod_sound = sound ? sound->tryLoad(this) : nullptr;
+	FMOD::Sound* fmod_sound = sound ? sound->tryLoad(this) : NULL;
 	if (fmod_sound)
 	{
 		FMOD_RESULT fmodResult = fmod_sound->getLength(&length, FMOD_TIMEUNIT_MS);
@@ -870,8 +870,8 @@ void SoundChannel::onChannelEnd(const FMOD_CHANNEL *channel)
 		FASTLOG2(FLog::Sound, "Sound ended for channel = %p, fmod_channel = %p", this, fmod_channel);
 		FASTLOGS(FLog::Sound, "Sound ended for soundId = %s", getSoundId().c_str());
 
-		SoundService::checkResultNoThrow(fmod_channel->setUserData(reinterpret_cast<void*>(nullptr)), "setUserData onChannelEnd", this, fmod_channel);
-		fmod_channel = nullptr;
+		SoundService::checkResultNoThrow(fmod_channel->setUserData(reinterpret_cast<void*>(NULL)), "setUserData onChannelEnd", this, fmod_channel);
+		fmod_channel = NULL;
 
 		if (sound)
 		{
@@ -897,7 +897,7 @@ FMOD_RESULT F_CALLBACK callbackChannelEnd(FMOD_CHANNELCONTROL *channelControl, F
 		// TODO: For some reason not all channels call this function... I have no idea why.  The result is that we have some sound "leaks" reported by getSoundStats()
 		RBX::Soundscape::SoundChannel* sound;
 		FMOD_RESULT fmodResult = FMOD_Channel_GetUserData(channel, reinterpret_cast<void**>(&sound));
-		SoundService::checkResultNoThrow(fmodResult, "FMOD_Channel_GetUserData", nullptr, channel);
+		SoundService::checkResultNoThrow(fmodResult, "FMOD_Channel_GetUserData", NULL, channel);
 		if (FMOD_OK == fmodResult && sound)
         {
                 sound->onChannelEnd(channel);
@@ -1058,7 +1058,7 @@ void SoundChannel::playSound(const Instance* context, bool isResuming)
 							FASTLOGS(FLog::Sound, "SoundChannel %s", ss.str().c_str());
 						}
 
-						FMOD_RESULT fmodResult = soundService->system->playSound(fmod_sound, nullptr, true, &fmod_channel);
+						FMOD_RESULT fmodResult = soundService->system->playSound(fmod_sound, NULL, true, &fmod_channel);
 						if (FMOD_OK != fmodResult)
 						{
 							FASTLOGS(FLog::Sound, "Failed to play soundId = %s", getSoundId().c_str());
@@ -1071,7 +1071,7 @@ void SoundChannel::playSound(const Instance* context, bool isResuming)
 
 						updateLooped();
 
-						SoundService::checkResult(fmod_sound->getDefaults(&defaultFrequency, nullptr), "getDefaults play", this, fmod_sound);
+						SoundService::checkResult(fmod_sound->getDefaults(&defaultFrequency, NULL), "getDefaults play", this, fmod_sound);
 						if (pitch != 1)
 						{
 							SoundService::checkResult(fmod_channel->setFrequency(pitch * defaultFrequency), "setFrequency play", this, fmod_channel);
@@ -1189,9 +1189,9 @@ void SoundChannel::stop()
 			soundStoppedSignal(getSoundId().toString());
 		}
 		
-		SoundService::checkResultNoThrow(fmod_channel->setUserData(reinterpret_cast<void*>(nullptr)), "setUserData", this, fmod_channel);
+		SoundService::checkResultNoThrow(fmod_channel->setUserData(reinterpret_cast<void*>(NULL)), "setUserData", this, fmod_channel);
 		SoundService::checkResultNoThrow(fmod_channel->stop(), "stop", this, fmod_channel);
-		fmod_channel = nullptr;
+		fmod_channel = NULL;
 
 		numOfTimesLooped = 0;
 	}

@@ -33,7 +33,7 @@ Instance* MouseCommand::getTopSelectable3d(PartInstance* part) const
 	RBXASSERT(part);
 
 	// do not allow selection of a part that is not selectable
-	if( !part->isSelectable3d() ) return nullptr;
+	if( !part->isSelectable3d() ) return NULL;
 
 	Instance* answer = part;
 	Instance* temp = part->getParent();
@@ -149,11 +149,11 @@ PartInstance* MouseCommand::getUnlockedPartByLocalCharacter(const shared_ptr<Inp
 
 PartInstance* MouseCommand::getUnlockedPart(const shared_ptr<InputObject>& inputObject, Vector3& hitWorld)
 {
-	PartInstance* part = getPart(workspace, inputObject, nullptr, hitWorld);
+	PartInstance* part = getPart(workspace, inputObject, NULL, hitWorld);
 	if(part && !part->getPartLocked())
 		return part;
 	else
-		return nullptr;
+		return NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -166,15 +166,15 @@ PartInstance* MouseCommand::getPart(
 {
 	RbxRay unitRay = getUnitMouseRay(inputObject, workspace);
 	if (unitRay.direction().y != unitRay.direction().y)	// fending against #INV camera direction
-		return nullptr;
-    ContactManager* contactManager = nullptr;
+		return NULL;
+    ContactManager* contactManager = NULL;
     if(workspace && workspace->getWorld())
     {
         contactManager = workspace->getWorld()->getContactManager();
     }
     
     if (!contactManager)
-        return nullptr;
+        return NULL;
     
 
 	std::vector<const Primitive *> ignorePrims;
@@ -210,7 +210,7 @@ PartInstance* MouseCommand::getMousePart(
 							float maxSearchGrid)
 {
 	if (!unitRay.direction().isUnit())
-		return nullptr;
+		return NULL;
 	RbxRay searchRay = RbxRay::fromOriginAndDirection(unitRay.origin(), unitRay.direction() * maxSearch());
 	
 	Primitive* bestPrimitive = contactManager.getHit(	searchRay,
@@ -218,7 +218,7 @@ PartInstance* MouseCommand::getMousePart(
 														filter,
 														hitPoint);
 
-	return bestPrimitive ? PartInstance::fromPrimitive(bestPrimitive) : nullptr;
+	return bestPrimitive ? PartInstance::fromPrimitive(bestPrimitive) : NULL;
 }
 
 

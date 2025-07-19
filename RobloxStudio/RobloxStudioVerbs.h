@@ -699,7 +699,7 @@ class ExportSelectionVerb:public QObject, public RBX::Verb
 public:
 	ExportSelectionVerb(RBX::DataModel*);
 
-	virtual bool isEnabled() const { return (RobloxDocManager::Instance().getPlayDoc() != nullptr); }
+	virtual bool isEnabled() const { return (RobloxDocManager::Instance().getPlayDoc() != NULL); }
 	virtual bool isChecked() const { return false; }
 	virtual bool isSelected() const { return false; }
 	virtual void doIt(RBX::IDataState* dataState);
@@ -714,7 +714,7 @@ class ExportPlaceVerb : public QObject, public RBX::Verb
 public:
 	ExportPlaceVerb(RBX::DataModel*);
 
-	virtual bool isEnabled() const { return (RobloxDocManager::Instance().getPlayDoc() != nullptr); }
+	virtual bool isEnabled() const { return (RobloxDocManager::Instance().getPlayDoc() != NULL); }
 	virtual bool isChecked() const { return false; }
 	virtual bool isSelected() const { return false; }
 	virtual void doIt(RBX::IDataState* dataState);

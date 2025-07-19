@@ -89,13 +89,13 @@ namespace RBX {
 	//The main windows parent can be any kind of non-GUI instance
 	bool ScreenGui::askSetParent(const Instance* instance) const
 	{
-		return (Instance::fastDynamicCast<GuiBase2d>(instance) == nullptr);
+		return (Instance::fastDynamicCast<GuiBase2d>(instance) == NULL);
 	}
 
 	bool ScreenGui::isAncestorRenderableGui() const
 	{
 		const Instance* ancestor = getParent();
-		while(ancestor != nullptr)
+		while(ancestor != NULL)
 		{
 			if( ancestor->fastDynamicCast<BasePlayerGui>() )
 				return true;
@@ -128,7 +128,7 @@ namespace RBX {
 
 	void ScreenGui::render2d(Adorn* adorn)
 	{
-		render2dContext(adorn, nullptr);
+		render2dContext(adorn, NULL);
 	}
 
 	void ScreenGui::render2dContext(Adorn* adorn, const Instance* context)

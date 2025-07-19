@@ -305,10 +305,10 @@ void InstanceUpdateHandler::onPropertyChanged(const RBX::Reflection::PropertyDes
 RobloxTreeWidgetItem* InstanceUpdateHandler::processChildAdd(shared_ptr<RBX::Instance> pInstance)
 {
 	RobloxTreeWidget *pTreeWidget = getTreeWidget();
-	RobloxTreeWidgetItem *pWidgetItem = nullptr;
+	RobloxTreeWidgetItem *pWidgetItem = NULL;
 
 	if (pTreeWidget->findItemFromInstance(pInstance.get()))
-		return nullptr;
+		return NULL;
 	
 	if (getItemParent())
 	{
@@ -375,7 +375,7 @@ void InstanceUpdateHandler::removeFromRemovalList(RobloxTreeWidgetItem *pTreeWid
 		return;
 
 	int currentChild = 0;
-	RobloxTreeWidgetItem *pCurrentItem = nullptr;
+	RobloxTreeWidgetItem *pCurrentItem = NULL;
 
 	while (currentChild < numChild)
 	{		
@@ -422,7 +422,7 @@ void InstanceUpdateHandler::processChildRemove()
 		}
 
 		// Process them
-		RobloxTreeWidgetItem *pTreeWidgetItem = nullptr;
+		RobloxTreeWidgetItem *pTreeWidgetItem = NULL;
 		for (std::vector<RobloxTreeWidgetItem*>::iterator iter = itemsToRemove.begin(); iter!=itemsToRemove.end(); ++iter)
 		{
 			pTreeWidgetItem = *iter;
@@ -748,7 +748,7 @@ void RobloxTreeWidgetItem::aboutToDelete(RobloxTreeWidget* pTreeWidget)
 	}
 	
 	int currentChild = 0;
-	RobloxTreeWidgetItem *pCurrentItem = nullptr;
+	RobloxTreeWidgetItem *pCurrentItem = NULL;
 	
 	while (currentChild < numChild)
 	{		
@@ -911,7 +911,7 @@ bool RobloxTreeWidgetItem::isExplorerItem(const shared_ptr<RBX::Instance>& pInst
 
     // For everything else, check the class metadata
 	boost::shared_ptr<const RBX::Reflection::Metadata::Reflection> pReflection = RBX::Reflection::Metadata::Reflection::singleton();
-	RBX::Reflection::Metadata::Class* pClassData = pReflection ? pReflection->get(pInstance->getDescriptor(), true) : nullptr;
+	RBX::Reflection::Metadata::Class* pClassData = pReflection ? pReflection->get(pInstance->getDescriptor(), true) : NULL;
 	if(pClassData && pClassData->isExplorerItem())
 		return true;
 
@@ -921,7 +921,7 @@ bool RobloxTreeWidgetItem::isExplorerItem(const shared_ptr<RBX::Instance>& pInst
 int RobloxTreeWidgetItem::getImageIndex(const shared_ptr<RBX::Instance>& pInstance)
 {
 	boost::shared_ptr<const RBX::Reflection::Metadata::Reflection> pReflection = RBX::Reflection::Metadata::Reflection::singleton();
-	RBX::Reflection::Metadata::Class* pClassData = pReflection ? pReflection->get(pInstance->getDescriptor(), true) : nullptr;
+	RBX::Reflection::Metadata::Class* pClassData = pReflection ? pReflection->get(pInstance->getDescriptor(), true) : NULL;
 	if(pClassData)
 		return pClassData->getExplorerImageIndex();
 
@@ -939,8 +939,8 @@ RobloxTreeWidget::RobloxTreeWidget(boost::shared_ptr<RBX::DataModel> pDataModel)
 : InstanceUpdateHandler(pDataModel)
 , m_pDataModel(pDataModel)
 , m_treeWidgetMutex(QMutex::Recursive)
-, m_pInstanceSelectionHandler(nullptr)
-, m_pRubberBand(nullptr)
+, m_pInstanceSelectionHandler(NULL)
+, m_pRubberBand(NULL)
 , m_bIgnoreInstanceSelectionChanged(false)
 , m_bIgnoreItemSelectionChanged(false)
 , m_bUpdateRequested(false)
@@ -948,9 +948,9 @@ RobloxTreeWidget::RobloxTreeWidget(boost::shared_ptr<RBX::DataModel> pDataModel)
 , m_bDeletionRequested(false)
 , m_currentFilter("")
 , m_filterRunning(false)
-, m_lastSelectedItem(nullptr)
+, m_lastSelectedItem(NULL)
 , m_isActive(false)
-, m_savedMarkerItem(nullptr)
+, m_savedMarkerItem(NULL)
 {
 	setHeaderHidden(true);
 	setUniformRowHeights(true);
@@ -1091,7 +1091,7 @@ RobloxTreeWidgetItem* RobloxTreeWidget::findItemFromInstance(const RBX::Instance
 	InstanceMap::iterator iter = m_InstanceMap.find(pInstance);
 	if (iter != m_InstanceMap.end())	
 		return iter->second;
-	return nullptr;
+	return NULL;
 }
 
 void RobloxTreeWidget::scrollToInstance(RBX::Instance *pInstance)
@@ -1117,7 +1117,7 @@ int RobloxTreeWidget::getIndexToInsertAt(shared_ptr<RBX::Instance> pInstance)
 		return -1;
 
 	int itemTypeToAdd = RobloxTreeWidgetItem::getItemType(pInstance), currentChild = 0;
-	RobloxTreeWidgetItem *pCurrentItem = nullptr;
+	RobloxTreeWidgetItem *pCurrentItem = NULL;
 
 	while (currentChild < numChild)
 	{		
@@ -1206,7 +1206,7 @@ void RobloxTreeWidget::contextMenuEvent(QContextMenuEvent * evt)
 	QList<QAction*> commonActions;
 	UpdateUIManager::Instance().commonContextMenuActions(commonActions);
 
-	QAction *pAction = nullptr;
+	QAction *pAction = NULL;
 	for (int ii=0; ii<commonActions.size(); ++ii)
 	{
 		pAction = commonActions.at(ii);
@@ -1215,7 +1215,7 @@ void RobloxTreeWidget::contextMenuEvent(QContextMenuEvent * evt)
 			// hack to add sub menu for inserting basic objects
 			if ( pAction == UpdateUIManager::Instance().getMainWindow().insertIntoFileAction )
 			{
-				RBX::Instance* parent = nullptr;
+				RBX::Instance* parent = NULL;
 				if ( currentItem() )
 				{
 					RobloxTreeWidgetItem* item = static_cast<RobloxTreeWidgetItem*>(currentItem());
@@ -1325,12 +1325,12 @@ void RobloxTreeWidget::requestItemDelete(RobloxTreeWidgetItem* item)
 
 void RobloxTreeWidget::onInstanceSelectionChanged(const RBX::SelectionChanged& evt)
 {
-	if (evt.addedItem != nullptr)
+	if (evt.addedItem != NULL)
 		if(RBX::Instance *pInstance = evt.addedItem.get())
 			if(RBX::GuiObject* guiObject = dynamic_cast<RBX::GuiObject*>(pInstance))
 				guiObject->setSelectionBox(true);
 
-	if (evt.removedItem != nullptr)
+	if (evt.removedItem != NULL)
 		if(RBX::Instance *pInstance = evt.removedItem.get())
 			if(RBX::GuiObject* guiObject = dynamic_cast<RBX::GuiObject*>(pInstance))
 				guiObject->setSelectionBox(false);
@@ -1344,7 +1344,7 @@ void RobloxTreeWidget::onInstanceSelectionChanged(const RBX::SelectionChanged& e
 	QMutexLocker lock(treeWidgetMutex());
 	bool isModificationRequired = false;
 
-	if (evt.addedItem != nullptr)
+	if (evt.addedItem != NULL)
 	{
 		RBX::Instance* pInstance = evt.addedItem.get();
 		if (isValidSelection(pInstance))
@@ -1356,7 +1356,7 @@ void RobloxTreeWidget::onInstanceSelectionChanged(const RBX::SelectionChanged& e
 		}
 	}
 
-	if (evt.removedItem != nullptr)
+	if (evt.removedItem != NULL)
 	{
 		RBX::Instance* pInstance = evt.removedItem.get();
 		
@@ -2012,7 +2012,7 @@ void RobloxTreeWidget::onTreeWidgetUpdate()
 		while (pChild->getParent() && !findItemFromInstance(pChild->getParent()))
 			pChild = pChild->getParent();
 
-		RobloxTreeWidgetItem* newChildNode = nullptr;
+		RobloxTreeWidgetItem* newChildNode = NULL;
 
 		if (RobloxTreeWidgetItem* pParentItem = findItemFromInstance(pChild->getParent()))
 		{
@@ -2121,12 +2121,12 @@ void RobloxTreeWidget::mousePressEvent(QMouseEvent * evt)
 	{    
 		m_pRubberBand->hide();
 		m_pRubberBand->deleteLater();
-		m_pRubberBand = nullptr;
+		m_pRubberBand = NULL;
 	}
 	else
 	{
-		//although it will be set to nullptr in mouseReleaseEvent but just to be sure setting it to nullptr again
-		m_pRubberBand = nullptr;
+		//although it will be set to NULL in mouseReleaseEvent but just to be sure setting it to NULL again
+		m_pRubberBand = NULL;
 	}
 
 
@@ -2206,7 +2206,7 @@ void RobloxTreeWidget::mouseReleaseEvent(QMouseEvent * evt)
 	//clean up rubberband
     m_pRubberBand->hide();
 	m_pRubberBand->deleteLater();
-	m_pRubberBand = nullptr;
+	m_pRubberBand = NULL;
 }
 
 bool RobloxTreeWidget::canDragSelect(QMouseEvent * evt)
@@ -2319,7 +2319,7 @@ static int nearestWidgetItemIndex(RobloxTreeWidgetItem *pParentWidgetItem, int f
 	{
 		int mid = (first + last) / 2;
 		RobloxTreeWidgetItem *pCurrentItem = static_cast<RobloxTreeWidgetItem*>(pParentWidgetItem->child(mid));
-		RBXASSERT(pCurrentItem != nullptr);
+		RBXASSERT(pCurrentItem != NULL);
 
 		if (itemTypeToAdd == pCurrentItem->itemType()) 
 			return mid; 
@@ -2386,7 +2386,7 @@ void RobloxTreeWidget::setInstanceSelectionHandler(InstanceSelectionHandler* han
 
 void RobloxTreeWidget::markLocationToSuppressScrolling()
 {
-	if (m_savedMarkerItem == nullptr)
+	if (m_savedMarkerItem == NULL)
 	{
 		m_savedMarkerItem = getMarkerItem();
 	}
@@ -2404,7 +2404,7 @@ void RobloxTreeWidget::scrollBackToLastMarkedLocation()
 
 			verticalScrollBar()->setValue(verticalScrollBar()->value() + (savedRow - currentRow) * verticalScrollBar()->singleStep());
 		}
-		m_savedMarkerItem = nullptr;
+		m_savedMarkerItem = NULL;
 	}
 }
 
@@ -2440,12 +2440,12 @@ void RobloxTreeWidget::setPlayersDataManager(boost::shared_ptr<PlayersDataManage
 void RobloxTreeWidget::itemDeletionRequested(RobloxTreeWidgetItem* pItem)
 {
 	if (pItem == m_savedMarkerItem)
-		m_savedMarkerItem = nullptr;
+		m_savedMarkerItem = NULL;
 }
 
 RobloxExplorerWidget::RobloxExplorerWidget(QWidget *pParent)
 : QWidget(pParent)
-, m_robloxTreeWidget(nullptr)
+, m_robloxTreeWidget(NULL)
 , m_sendingCounter(false)
 {
 	m_lineEdit = new QLineEdit();

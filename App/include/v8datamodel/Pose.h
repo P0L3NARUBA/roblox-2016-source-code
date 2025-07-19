@@ -60,7 +60,7 @@ namespace RBX {
 
 		/*override*/ bool askAddChild(const Instance* instance) const 
 		{ 
-			return Instance::fastDynamicCast<Pose>(instance) != nullptr; 
+			return Instance::fastDynamicCast<Pose>(instance) != NULL; 
 		}
 
 		/*override*/ void onChildAdded(Instance* child)

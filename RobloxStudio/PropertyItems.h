@@ -43,7 +43,7 @@ public:
 	virtual Qt::TextElideMode getTextElideMode() const { return Qt::ElideRight; }
 
 	//for editing of values, will be called from "PropertyItemDelegate" (default implementation)
-	virtual QWidget* createEditor(QWidget*, const QStyleOptionViewItem&) { return nullptr; }
+	virtual QWidget* createEditor(QWidget*, const QStyleOptionViewItem&) { return NULL; }
 	virtual void     setModelData(QWidget*)  {}
 	virtual void     setModelDataSafe(QWidget*)  {}
 	virtual void     setEditorData(QWidget*) {}

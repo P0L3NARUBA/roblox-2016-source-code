@@ -34,7 +34,7 @@ namespace RBX
                 : root(static_cast<Page*>(operator new(sizeof(Page))))
                 , offset(0)
             {
-                root->next = nullptr;
+                root->next = NULL;
             }
 
             ~Allocator()
@@ -282,7 +282,7 @@ namespace RBX
             const char* value;
             
             AstName()
-                : value(nullptr)
+                : value(NULL)
             {
             }
             
@@ -928,7 +928,7 @@ namespace RBX
             virtual int getClassIndex() const = 0;
             
             template <typename T> bool is() const { return getClassIndex() == AstRtti<T>::value; }
-            template <typename T> T* as() { return getClassIndex() == AstRtti<T>::value ? static_cast<T*>(this) : nullptr; }
+            template <typename T> T* as() { return getClassIndex() == AstRtti<T>::value ? static_cast<T*>(this) : NULL; }
             
             Location location;
         };
@@ -1766,7 +1766,7 @@ namespace RBX
                 
                 AstStat* thenbody = parseBlock();
                 
-                AstStat* elsebody = nullptr;
+                AstStat* elsebody = NULL;
                 Location end = start;
                 
                 if (lexer.current().type == Lexeme::ReservedElseif)
@@ -1898,7 +1898,7 @@ namespace RBX
                     
                     AstExpr* to = parseExpr();
                     
-                    AstExpr* step = nullptr;
+                    AstExpr* step = NULL;
                     
                     if (lexer.current().type == ',')
                     {
@@ -2151,7 +2151,7 @@ namespace RBX
                 
                 unsigned int localsBegin = saveLocals();
                 
-                AstLocal* self = nullptr;
+                AstLocal* self = NULL;
                 
                 if (hasself)
                 {
@@ -2462,7 +2462,7 @@ namespace RBX
                 else if (lexer.current().type == Lexeme::Number)
                 {
                     const char* datap = lexer.current().data->c_str();
-                    char* dataend = nullptr;
+                    char* dataend = NULL;
                     
                     double value = strtod(datap, &dataend);
 
@@ -2614,7 +2614,7 @@ namespace RBX
                         }
                         else
                         {
-                            pairs.push_back(nullptr);
+                            pairs.push_back(NULL);
                             pairs.push_back(expr);
                         }
                     }
@@ -2706,7 +2706,7 @@ namespace RBX
             {
                 AstArray<T> result;
                 
-                result.data = size ? new (allocator) T[size] : nullptr;
+                result.data = size ? new (allocator) T[size] : NULL;
                 result.size = size;
                 
                 std::copy(data, data + size, result.data);
@@ -2716,7 +2716,7 @@ namespace RBX
 
             template <typename T> AstArray<T> copy(const TempVector<T>& data)
             {
-                return copy(data.empty() ? nullptr : &data[0], data.size());
+                return copy(data.empty() ? NULL : &data[0], data.size());
             }
             
             AstArray<char> copy(const std::string& data)
@@ -2746,7 +2746,7 @@ namespace RBX
                 unsigned int offset;
                 
                 Local()
-                    : local(nullptr)
+                    : local(NULL)
                     , offset(0)
                 {
                 }
@@ -2864,19 +2864,19 @@ namespace RBX
                 deprecatedGlobals[names.getOrAdd("Wait")] = "wait";
                 
                 // Global functions that should not exist
-                deprecatedGlobals[names.getOrAdd("DebuggerManager")] = nullptr;
-                deprecatedGlobals[names.getOrAdd("PluginManager")] = nullptr;
-                deprecatedGlobals[names.getOrAdd("printidentity")] = nullptr;
-                deprecatedGlobals[names.getOrAdd("Stats")] = nullptr;
-                deprecatedGlobals[names.getOrAdd("stats")] = nullptr;
-                deprecatedGlobals[names.getOrAdd("Version")] = nullptr;
-                deprecatedGlobals[names.getOrAdd("version")] = nullptr;
-                deprecatedGlobals[names.getOrAdd("settings")] = nullptr;
+                deprecatedGlobals[names.getOrAdd("DebuggerManager")] = NULL;
+                deprecatedGlobals[names.getOrAdd("PluginManager")] = NULL;
+                deprecatedGlobals[names.getOrAdd("printidentity")] = NULL;
+                deprecatedGlobals[names.getOrAdd("Stats")] = NULL;
+                deprecatedGlobals[names.getOrAdd("stats")] = NULL;
+                deprecatedGlobals[names.getOrAdd("Version")] = NULL;
+                deprecatedGlobals[names.getOrAdd("version")] = NULL;
+                deprecatedGlobals[names.getOrAdd("settings")] = NULL;
                 
                 // Lua globals that don't work (security) but are still defined
-                deprecatedGlobals[names.getOrAdd("load")] = nullptr;
-                deprecatedGlobals[names.getOrAdd("dofile")] = nullptr;
-                deprecatedGlobals[names.getOrAdd("loadfile")] = nullptr;
+                deprecatedGlobals[names.getOrAdd("load")] = NULL;
+                deprecatedGlobals[names.getOrAdd("dofile")] = NULL;
+                deprecatedGlobals[names.getOrAdd("loadfile")] = NULL;
             }
         };
         
@@ -3141,11 +3141,11 @@ namespace RBX
                 const char* const * deprecated;
                 
                 Global()
-                    : firstRef(nullptr)
-                    , onlyFunctionRef(nullptr)
+                    : firstRef(NULL)
+                    , onlyFunctionRef(NULL)
                     , assigned(false)
                     , builtin(false)
-                    , deprecated(nullptr)
+                    , deprecated(NULL)
                 {
                 }
             };
@@ -3248,7 +3248,7 @@ namespace RBX
 
 			void trackGlobalRef(AstExprGlobal* node)
 			{
-                AstExprFunction* function = functionStack.empty() ? nullptr : functionStack.back();
+                AstExprFunction* function = functionStack.empty() ? NULL : functionStack.back();
                 
                 Global& g = globals[node->name];
                 
@@ -3262,7 +3262,7 @@ namespace RBX
                 else
                 {
 					if (g.onlyFunctionRef != function)
-                        g.onlyFunctionRef = nullptr;
+                        g.onlyFunctionRef = NULL;
                 }
 			}
         };
@@ -3449,7 +3449,7 @@ namespace RBX
             {
                 if (AstExprIndexName* index = node->func->as<AstExprIndexName>())
                 {
-                    AstExprConstantString* arg0 = node->args.size > 0 ? node->args.data[0]->as<AstExprConstantString>() : nullptr;
+                    AstExprConstantString* arg0 = node->args.size > 0 ? node->args.data[0]->as<AstExprConstantString>() : NULL;
                     
                     if (arg0)
                     {
@@ -3522,7 +3522,7 @@ namespace RBX
                     local = local->shadow;
                 }
                 
-                return nullptr;
+                return NULL;
             }
             
             virtual bool visit(AstExprLocal* node)
@@ -3597,13 +3597,13 @@ namespace RBX
                 
                 Value()
                     : type(Null)
-                    , klass(nullptr)
+                    , klass(NULL)
                 {
                 }
                 
                 explicit Value(Type type)
                     : type(type)
-                    , klass(nullptr)
+                    , klass(NULL)
                 {
                 }
                 
@@ -3662,13 +3662,13 @@ namespace RBX
                 const Name& name = Name::lookup(std::string(arg->value.data, arg->value.size));
  
                 if (name.empty())
-                    return nullptr;
+                    return NULL;
                 
                 Reflection::ClassDescriptor::ClassDescriptors::const_iterator it =
                     std::lower_bound(Reflection::ClassDescriptor::all_begin(), Reflection::ClassDescriptor::all_end(), name, ClassDescriptorNamePredicate());
                 
                 if (it == Reflection::ClassDescriptor::all_end() || (*it)->name != name)
-                    return nullptr;
+                    return NULL;
                 
                 return *it;
             }
@@ -3729,7 +3729,7 @@ namespace RBX
                 {
                     if (AstExprIndexName* index = e->func->as<AstExprIndexName>())
                     {
-                        AstExprConstantString* arg = e->args.size >= 1 ? e->args.data[0]->as<AstExprConstantString>() : nullptr;
+                        AstExprConstantString* arg = e->args.size >= 1 ? e->args.data[0]->as<AstExprConstantString>() : NULL;
                         
                         if (arg && !e->self && index->index == "new")
                         {
@@ -3758,7 +3758,7 @@ namespace RBX
                     for (size_t i = 0; i < e->pairs.size; i += 2)
                     {
                         AstExpr* key = e->pairs.data[i];
-                        AstExprConstantString* kv = key ? key->as<AstExprConstantString>() : nullptr;
+                        AstExprConstantString* kv = key ? key->as<AstExprConstantString>() : NULL;
                         
                         if (kv)
                             tables[table].keys.insert(std::string(kv->value.data, kv->value.size));

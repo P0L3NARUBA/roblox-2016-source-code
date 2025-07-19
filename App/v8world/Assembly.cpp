@@ -22,10 +22,10 @@ Assembly::Assembly()
 , filterPhase(NOT_ASSIGNED)
 , inCode(false)
 , networkHumanoidState(0)
-, simJob(nullptr)
+, simJob(NULL)
 , recursivePassId(-1)
 , recursiveDepth(-1)
-, history(nullptr)
+, history(NULL)
 #pragma warning(push)
 #pragma warning(disable: 4355) // 'this' : used in base member initializer list
 , maxRadius(this, &Assembly::computeAssemblyMaxRadius)
@@ -36,9 +36,9 @@ Assembly::Assembly()
 
 Assembly::~Assembly()
 {
-	RBXASSERT(history == nullptr);
+	RBXASSERT(history == NULL);
 	RBXASSERT(state == Sim::ANCHORED);
-	RBXASSERT(simJob == nullptr);
+	RBXASSERT(simJob == NULL);
 	RBXASSERT(recursiveDepth == -1);
 }
 /*
@@ -66,7 +66,7 @@ void Assembly::reset(Sim::AssemblyState newState)
 		}
 
 		delete history;
-		history = nullptr;
+		history = NULL;
 		return;
 	}
 
@@ -140,7 +140,7 @@ Assembly* Assembly::getPrimitiveAssembly(Primitive* p)
 		RBXASSERT_IF_VALIDATING(!answer || dynamic_cast<Assembly*>(answer));
 		return answer;
 	}
-	return nullptr;
+	return NULL;
 }
 
 const Assembly* Assembly::getConstPrimitiveAssembly(const Primitive* p)
@@ -150,7 +150,7 @@ const Assembly* Assembly::getConstPrimitiveAssembly(const Primitive* p)
 		RBXASSERT_IF_VALIDATING(!answer || dynamic_cast<const Assembly*>(answer));
 		return answer;
 	}
-	return nullptr;
+	return NULL;
 }
 
 void Assembly::onLowersChanged()
@@ -330,7 +330,7 @@ void Assembly::gatherPrimitiveExternalEdges(Primitive* p)
 	while (e)
 	{
 		Primitive* other = e->otherPrimitive(p);
-		if (other && (other->getAssembly()!= this)) 		// could be edge from P to nullptr (ground)
+		if (other && (other->getAssembly()!= this)) 		// could be edge from P to NULL (ground)
 		{
 			assemblyExternalEdges.append(e);
 		}
@@ -352,7 +352,7 @@ const G3D::Array<Edge*>& Assembly::getAssemblyEdges()
 
 bool Assembly::computeIsGroundingPrimitive(const Primitive* p)
 {
-	if (Joint::findConstJoint(p, Joint::ANCHOR_JOINT) != nullptr) {
+	if (Joint::findConstJoint(p, Joint::ANCHOR_JOINT) != NULL) {
 		return true;
 	}
 	else {

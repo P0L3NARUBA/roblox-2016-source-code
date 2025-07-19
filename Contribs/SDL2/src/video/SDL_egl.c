@@ -140,28 +140,28 @@ SDL_EGL_UnloadLibrary(_THIS)
     if (_this->egl_data) {
         if (_this->egl_data->egl_display) {
             _this->egl_data->eglTerminate(_this->egl_data->egl_display);
-            _this->egl_data->egl_display = nullptr;
+            _this->egl_data->egl_display = NULL;
         }
 
         if (_this->egl_data->dll_handle) {
             SDL_UnloadObject(_this->egl_data->dll_handle);
-            _this->egl_data->dll_handle = nullptr;
+            _this->egl_data->dll_handle = NULL;
         }
         if (_this->egl_data->egl_dll_handle) {
             SDL_UnloadObject(_this->egl_data->egl_dll_handle);
-            _this->egl_data->egl_dll_handle = nullptr;
+            _this->egl_data->egl_dll_handle = NULL;
         }
         
         SDL_free(_this->egl_data);
-        _this->egl_data = nullptr;
+        _this->egl_data = NULL;
     }
 }
 
 int
 SDL_EGL_LoadLibrary(_THIS, const char *egl_path, NativeDisplayType native_display)
 {
-    void *dll_handle = nullptr, *egl_dll_handle = nullptr; /* The naming is counter intuitive, but hey, I just work here -- Gabriel */
-    char *path = nullptr;
+    void *dll_handle = NULL, *egl_dll_handle = NULL; /* The naming is counter intuitive, but hey, I just work here -- Gabriel */
+    char *path = NULL;
 #if SDL_VIDEO_DRIVER_WINDOWS || SDL_VIDEO_DRIVER_WINRT
     const char *d3dcompiler;
 #endif
@@ -191,11 +191,11 @@ SDL_EGL_LoadLibrary(_THIS, const char *egl_path, NativeDisplayType native_displa
 
     /* A funny thing, loading EGL.so first does not work on the Raspberry, so we load libGL* first */
     path = SDL_getenv("SDL_VIDEO_GL_DRIVER");
-    if (path != nullptr) {
+    if (path != NULL) {
         egl_dll_handle = SDL_LoadObject(path);
     }
 
-    if (egl_dll_handle == nullptr) {
+    if (egl_dll_handle == NULL) {
         if (_this->gl_config.profile_mask == SDL_GL_CONTEXT_PROFILE_ES) {
             if (_this->gl_config.major_version > 1) {
                 path = DEFAULT_OGL_ES2;
@@ -203,7 +203,7 @@ SDL_EGL_LoadLibrary(_THIS, const char *egl_path, NativeDisplayType native_displa
             } else {
                 path = DEFAULT_OGL_ES;
                 egl_dll_handle = SDL_LoadObject(path);
-                if (egl_dll_handle == nullptr) {
+                if (egl_dll_handle == NULL) {
                     path = DEFAULT_OGL_ES_PVR;
                     egl_dll_handle = SDL_LoadObject(path);
                 }
@@ -218,26 +218,26 @@ SDL_EGL_LoadLibrary(_THIS, const char *egl_path, NativeDisplayType native_displa
     }
     _this->egl_data->egl_dll_handle = egl_dll_handle;
 
-    if (egl_dll_handle == nullptr) {
+    if (egl_dll_handle == NULL) {
         return SDL_SetError("Could not initialize OpenGL / GLES library");
     }
 
     /* Loading libGL* in the previous step took care of loading libEGL.so, but we future proof by double checking */
-    if (egl_path != nullptr) {
+    if (egl_path != NULL) {
         dll_handle = SDL_LoadObject(egl_path);
     }   
     /* Try loading a EGL symbol, if it does not work try the default library paths */
-    if (dll_handle == nullptr || SDL_LoadFunction(dll_handle, "eglChooseConfig") == nullptr) {
-        if (dll_handle != nullptr) {
+    if (dll_handle == NULL || SDL_LoadFunction(dll_handle, "eglChooseConfig") == NULL) {
+        if (dll_handle != NULL) {
             SDL_UnloadObject(dll_handle);
         }
         path = SDL_getenv("SDL_VIDEO_EGL_DRIVER");
-        if (path == nullptr) {
+        if (path == NULL) {
             path = DEFAULT_EGL;
         }
         dll_handle = SDL_LoadObject(path);
-        if (dll_handle == nullptr || SDL_LoadFunction(dll_handle, "eglChooseConfig") == nullptr) {
-            if (dll_handle != nullptr) {
+        if (dll_handle == NULL || SDL_LoadFunction(dll_handle, "eglChooseConfig") == NULL) {
+            if (dll_handle != NULL) {
                 SDL_UnloadObject(dll_handle);
             }
             return SDL_SetError("Could not load EGL library");
@@ -272,7 +272,7 @@ SDL_EGL_LoadLibrary(_THIS, const char *egl_path, NativeDisplayType native_displa
         return SDL_SetError("Could not get EGL display");
     }
     
-    if (_this->egl_data->eglInitialize(_this->egl_data->egl_display, nullptr, nullptr) != EGL_TRUE) {
+    if (_this->egl_data->eglInitialize(_this->egl_data->egl_display, NULL, NULL) != EGL_TRUE) {
         return SDL_SetError("Could not initialize EGL");
     }
 #endif
@@ -432,7 +432,7 @@ SDL_EGL_CreateContext(_THIS, EGLSurface egl_surface)
 
     if (!_this->egl_data) {
         /* The EGL library wasn't loaded, SDL_GetError() should have info */
-        return nullptr;
+        return NULL;
     }
 
     if (_this->gl_config.share_with_current_context) {
@@ -479,7 +479,7 @@ SDL_EGL_CreateContext(_THIS, EGLSurface egl_surface)
 #endif /* EGL_KHR_create_context */
         {
             SDL_SetError("Could not create EGL context (context attributes are not supported)");
-            return nullptr;
+            return NULL;
         }
     }
 
@@ -498,7 +498,7 @@ SDL_EGL_CreateContext(_THIS, EGLSurface egl_surface)
 
     if (egl_context == EGL_NO_CONTEXT) {
         SDL_SetError("Could not create EGL context");
-        return nullptr;
+        return NULL;
     }
 
     _this->egl_data->egl_swapinterval = 0;
@@ -506,7 +506,7 @@ SDL_EGL_CreateContext(_THIS, EGLSurface egl_surface)
     if (SDL_EGL_MakeCurrent(_this, egl_surface, egl_context) < 0) {
         SDL_EGL_DeleteContext(_this, egl_context);
         SDL_SetError("Could not make EGL context current");
-        return nullptr;
+        return NULL;
     }
 
     return (SDL_GLContext) egl_context;
@@ -580,8 +580,8 @@ SDL_EGL_DeleteContext(_THIS, SDL_GLContext context)
         return;
     }
     
-    if (egl_context != nullptr && egl_context != EGL_NO_CONTEXT) {
-        SDL_EGL_MakeCurrent(_this, nullptr, nullptr);
+    if (egl_context != NULL && egl_context != EGL_NO_CONTEXT) {
+        SDL_EGL_MakeCurrent(_this, NULL, NULL);
         _this->egl_data->eglDestroyContext(_this->egl_data->egl_display, egl_context);
     }
         
@@ -611,7 +611,7 @@ SDL_EGL_CreateSurface(_THIS, NativeWindowType nw)
     return _this->egl_data->eglCreateWindowSurface(
             _this->egl_data->egl_display,
             _this->egl_data->egl_config,
-            nw, nullptr);
+            nw, NULL);
 }
 
 void

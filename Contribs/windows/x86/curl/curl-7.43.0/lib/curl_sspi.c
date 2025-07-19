@@ -48,10 +48,10 @@ typedef PSecurityFunctionTable (APIENTRY *INITSECURITYINTERFACE_FN)(VOID);
 #endif
 
 /* Handle of security.dll or secur32.dll, depending on Windows version */
-HMODULE s_hSecDll = nullptr;
+HMODULE s_hSecDll = NULL;
 
 /* Pointer to SSPI dispatch table */
-PSecurityFunctionTable s_pSecFn = nullptr;
+PSecurityFunctionTable s_pSecFn = NULL;
 
 /*
  * Curl_sspi_global_init()
@@ -143,8 +143,8 @@ void Curl_sspi_global_cleanup(void)
 {
   if(s_hSecDll) {
     FreeLibrary(s_hSecDll);
-    s_hSecDll = nullptr;
-    s_pSecFn = nullptr;
+    s_hSecDll = NULL;
+    s_pSecFn = NULL;
   }
 }
 
@@ -203,7 +203,7 @@ CURLcode Curl_create_sspi_identity(const char *userp, const char *passwdp,
   }
   identity->User = dup_user.tbyte_ptr;
   identity->UserLength = curlx_uztoul(_tcslen(dup_user.tchar_ptr));
-  dup_user.tchar_ptr = nullptr;
+  dup_user.tchar_ptr = NULL;
 
   /* Setup the identity's domain and length */
   dup_domain.tchar_ptr = malloc(sizeof(TCHAR) * (domlen + 1));
@@ -215,7 +215,7 @@ CURLcode Curl_create_sspi_identity(const char *userp, const char *passwdp,
   *(dup_domain.tchar_ptr + domlen) = TEXT('\0');
   identity->Domain = dup_domain.tbyte_ptr;
   identity->DomainLength = curlx_uztoul(domlen);
-  dup_domain.tchar_ptr = nullptr;
+  dup_domain.tchar_ptr = NULL;
 
   Curl_unicodefree(useranddomain.tchar_ptr);
 
@@ -230,7 +230,7 @@ CURLcode Curl_create_sspi_identity(const char *userp, const char *passwdp,
   }
   identity->Password = dup_passwd.tbyte_ptr;
   identity->PasswordLength = curlx_uztoul(_tcslen(dup_passwd.tchar_ptr));
-  dup_passwd.tchar_ptr = nullptr;
+  dup_passwd.tchar_ptr = NULL;
 
   Curl_unicodefree(passwd.tchar_ptr);
 

@@ -46,15 +46,15 @@ SDL_CreateSemaphore(Uint32 initial_value)
     if (sem) {
         /* Create the semaphore, with max value 32K */
 #if __WINRT__
-        sem->id = CreateSemaphoreEx(nullptr, initial_value, 32 * 1024, nullptr, 0, SEMAPHORE_ALL_ACCESS);
+        sem->id = CreateSemaphoreEx(NULL, initial_value, 32 * 1024, NULL, 0, SEMAPHORE_ALL_ACCESS);
 #else
-        sem->id = CreateSemaphore(nullptr, initial_value, 32 * 1024, nullptr);
+        sem->id = CreateSemaphore(NULL, initial_value, 32 * 1024, NULL);
 #endif
         sem->count = initial_value;
         if (!sem->id) {
             SDL_SetError("Couldn't create semaphore");
             SDL_free(sem);
-            sem = nullptr;
+            sem = NULL;
         }
     } else {
         SDL_OutOfMemory();
@@ -82,7 +82,7 @@ SDL_SemWaitTimeout(SDL_sem * sem, Uint32 timeout)
     DWORD dwMilliseconds;
 
     if (!sem) {
-        return SDL_SetError("Passed a nullptr sem");
+        return SDL_SetError("Passed a NULL sem");
     }
 
     if (timeout == SDL_MUTEX_MAXWAIT) {
@@ -126,7 +126,7 @@ Uint32
 SDL_SemValue(SDL_sem * sem)
 {
     if (!sem) {
-        SDL_SetError("Passed a nullptr sem");
+        SDL_SetError("Passed a NULL sem");
         return 0;
     }
     return (Uint32)sem->count;
@@ -136,7 +136,7 @@ int
 SDL_SemPost(SDL_sem * sem)
 {
     if (!sem) {
-        return SDL_SetError("Passed a nullptr sem");
+        return SDL_SetError("Passed a NULL sem");
     }
     /* Increase the counter in the first place, because
      * after a successful release the semaphore may
@@ -144,7 +144,7 @@ SDL_SemPost(SDL_sem * sem)
      * is waiting for this semaphore.
      */
     InterlockedIncrement(&sem->count);
-    if (ReleaseSemaphore(sem->id, 1, nullptr) == FALSE) {
+    if (ReleaseSemaphore(sem->id, 1, NULL) == FALSE) {
         InterlockedDecrement(&sem->count);      /* restore */
         return SDL_SetError("ReleaseSemaphore() failed");
     }

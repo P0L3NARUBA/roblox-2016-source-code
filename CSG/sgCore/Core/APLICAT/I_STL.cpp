@@ -15,7 +15,7 @@ short ImportStl(lpBUFFER_DAT bd, lpLISTH listho, lpMATR m, bool solid_checking)
 
 	string[0] = 0;
 	load_str( bd, MAX_STR_STL, string);
-	if ( (/*p=*/strstr(string,str_solid)) != nullptr ) {
+	if ( (/*p=*/strstr(string,str_solid)) != NULL ) {
 			i = stl_ascii( bd, listho, string, m, solid_checking);
 	}	else {
 			i = stl_binary( bd, listho, m, solid_checking);
@@ -45,12 +45,12 @@ static  short stl_ascii(lpBUFFER_DAT bd, lpLISTH listho, char *string,
 	while ( (i=load_str( bd, MAX_STR_STL, string)) != 0) {
 //		step_grad (num_proc , bd->p_beg+bd->cur_buf);
 		if ( i == 1 ) continue;
-		if ( (p = strstr(string,str_loop)) == nullptr) continue;
+		if ( (p = strstr(string,str_loop)) == NULL) continue;
 		for ( j=0; j<3; j++ ) {
 once:
 			if ( !(i=load_str( bd, MAX_STR_STL, string))) goto err;
 			if ( i == 1 ) goto once;
-			if ( (p = strstr(string,str_vertex)) == nullptr) goto err;
+			if ( (p = strstr(string,str_vertex)) == NULL) goto err;
 			p += sizeof(str_vertex);
 			num = 3;
 			if ( !get_nums_from_string(p, (sgFloat*)&pp, &num) ) goto err;
@@ -76,12 +76,12 @@ once:
 	while ( (i=load_str( bd, MAX_STR_STL, string)) != 0) {
 //    step_grad (num_proc , bd->p_beg+bd->cur_buf);
 		if ( i == 1 ) continue;
-		if ( (p = strstr(string,str_loop)) == nullptr) continue;
+		if ( (p = strstr(string,str_loop)) == NULL) continue;
 		for ( j=0; j<3; j++ ) {
 once2:
 			if ( !(i=load_str( bd, MAX_STR_STL, string))) goto err;
 			if ( i == 1 ) goto once2;
-			if ( (p = strstr(string,str_vertex)) == nullptr) goto err;
+			if ( (p = strstr(string,str_vertex)) == NULL) goto err;
 			p += sizeof(str_vertex);
 			num = 3;
 			if ( !get_nums_from_string(p, (sgFloat*)&trp.v[j], &num) ) goto err;
@@ -139,7 +139,7 @@ static  short stl_binary(lpBUFFER_DAT bd, lpLISTH listho, lpMATR m, bool solid_c
 			p.x = ver[0];	p.y = ver[1];	p.z = ver[2];
 			modify_limits_by_point(&p, &min, &max);
 		}
-		if ( load_data( bd, 2, nullptr) != 2 ) break; // goto err;
+		if ( load_data( bd, 2, NULL) != 2 ) break; // goto err;
 	}
 //	end_grad  (num_proc , bd->p_beg+bd->cur_buf);
 	p.x = - (min.x + max.x) / 2;
@@ -165,7 +165,7 @@ static  short stl_binary(lpBUFFER_DAT bd, lpLISTH listho, lpMATR m, bool solid_c
 			trp.v[j].x = ver[0];	trp.v[j].y = ver[1];	trp.v[j].z = ver[2];
 			o_hcncrd(matr,&trp.v[j],&trp.v[j]);
 		}
-		if ( load_data( bd, 2, nullptr) != 2 ) break; // goto err;
+		if ( load_data( bd, 2, NULL) != 2 ) break; // goto err;
 
 		if ( !put_tri(&trb, &trp, solid_checking)) {
 			a_handler_err(AE_ERR_DATA);

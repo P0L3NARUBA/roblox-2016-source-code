@@ -82,11 +82,11 @@ UserInput::UserInput(HWND wnd, shared_ptr<RBX::Game> game, View* view)
 	, parentView(view)
 {
 #ifdef _DEBUG
-	hArrow = LoadCursor(nullptr, IDC_CROSS);
-	hInvisibleCursor = LoadCursor(GetModuleHandle(nullptr), IDC_CROSS);
+	hArrow = LoadCursor(NULL, IDC_CROSS);
+	hInvisibleCursor = LoadCursor(GetModuleHandle(NULL), IDC_CROSS);
 #else
-	hArrow = LoadCursor(nullptr, IDC_ARROW);
-	hInvisibleCursor = LoadCursor(GetModuleHandle(nullptr),
+	hArrow = LoadCursor(NULL, IDC_ARROW);
+	hInvisibleCursor = LoadCursor(GetModuleHandle(NULL),
 		MAKEINTRESOURCE(IDR_INVISIBLECURSOR));
 #endif
 
@@ -95,13 +95,13 @@ UserInput::UserInput(HWND wnd, shared_ptr<RBX::Game> game, View* view)
 	memset(&diKeys, 0, sizeof(diKeys));
 
 	HRESULT hr;
-	if( FAILED( hr = DirectInput8Create(GetModuleHandle(nullptr),
+	if( FAILED( hr = DirectInput8Create(GetModuleHandle(NULL),
 										DIRECTINPUT_VERSION,
 										IID_IDirectInput8,
 										(VOID**)&diPtr,
-										nullptr ) ) )
+										NULL ) ) )
 	{
-		MessageBoxA(nullptr, "ROBLOX could not initialize input. Please make sure you have a mouse and keyboard plugged in.", "ROBLOX", MB_OK);
+		MessageBoxA(NULL, "ROBLOX could not initialize input. Please make sure you have a mouse and keyboard plugged in.", "ROBLOX", MB_OK);
 		return;
 	}
 
@@ -170,15 +170,15 @@ void getDiProp(DIPROPDWORD& dipdw)
 void UserInput::createMouse()
 {
 	HRESULT hr;
-	if (FAILED(hr = diPtr->CreateDevice( GUID_SysMouse, &diMousePtr, nullptr)))
+	if (FAILED(hr = diPtr->CreateDevice( GUID_SysMouse, &diMousePtr, NULL)))
 	{
-		MessageBoxA(nullptr, "Could not find a mouse! ROBLOX requires a mouse.", "ROBLOX", MB_OK);
+		MessageBoxA(NULL, "Could not find a mouse! ROBLOX requires a mouse.", "ROBLOX", MB_OK);
 		return;
 	}
 
 	if (FAILED(hr = diMousePtr->SetDataFormat(&c_dfDIMouse2)))
 	{
-		MessageBoxA(nullptr, "Could not find a mouse (data format failed)! ROBLOX requires a mouse.", "ROBLOX", MB_OK);
+		MessageBoxA(NULL, "Could not find a mouse (data format failed)! ROBLOX requires a mouse.", "ROBLOX", MB_OK);
 		return;
 	}
 
@@ -186,7 +186,7 @@ void UserInput::createMouse()
 	getDiProp(dipdw);
 	if (FAILED(hr = diMousePtr->SetProperty(DIPROP_BUFFERSIZE, &dipdw.diph)))
 	{
-		MessageBoxA(nullptr, "Could not find a mouse (set property failed)! ROBLOX requires a mouse.", "ROBLOX", MB_OK);
+		MessageBoxA(NULL, "Could not find a mouse (set property failed)! ROBLOX requires a mouse.", "ROBLOX", MB_OK);
 		return;
 	}
 }
@@ -195,15 +195,15 @@ void UserInput::createKeyboard()
 {
 	HRESULT hr;
 
-	if (FAILED(hr = diPtr->CreateDevice(GUID_SysKeyboard, &diKeyboardPtr, nullptr)))
+	if (FAILED(hr = diPtr->CreateDevice(GUID_SysKeyboard, &diKeyboardPtr, NULL)))
 	{
-		MessageBoxA(nullptr, "Could not find a keyboard! ROBLOX requires a keyboard.", "ROBLOX", MB_OK);
+		MessageBoxA(NULL, "Could not find a keyboard! ROBLOX requires a keyboard.", "ROBLOX", MB_OK);
 		return;
 	}
 
 	if (FAILED(hr = diKeyboardPtr->SetDataFormat(&c_dfDIKeyboard)))
 	{
-		MessageBoxA(nullptr, "Could not find a keyboard (data format failed)! ROBLOX requires a keyboard.", "ROBLOX", MB_OK);
+		MessageBoxA(NULL, "Could not find a keyboard (data format failed)! ROBLOX requires a keyboard.", "ROBLOX", MB_OK);
 		return;
 	}
 
@@ -211,16 +211,16 @@ void UserInput::createKeyboard()
 	getDiProp(dipdw);
 	if (FAILED(hr = diKeyboardPtr->SetProperty(DIPROP_BUFFERSIZE, &dipdw.diph)))
 	{
-		MessageBoxA(nullptr, "Could not find a keyboard (set property failed)! ROBLOX requires a keyboard.", "ROBLOX", MB_OK);
+		MessageBoxA(NULL, "Could not find a keyboard (set property failed)! ROBLOX requires a keyboard.", "ROBLOX", MB_OK);
 		return;
 	}
 }
 
 void UserInput::createAccelerators()
 {
-	HACCEL hAccel = LoadAccelerators(GetModuleHandle(nullptr), MAKEINTRESOURCE(IDR_GAME_ACCELERATOR)); 
-	if (nullptr != hAccel) {
-		int numAccelerators = CopyAcceleratorTable(hAccel, nullptr, 0);
+	HACCEL hAccel = LoadAccelerators(GetModuleHandle(NULL), MAKEINTRESOURCE(IDR_GAME_ACCELERATOR)); 
+	if (NULL != hAccel) {
+		int numAccelerators = CopyAcceleratorTable(hAccel, NULL, 0);
 		accelerators.resize(numAccelerators);
 		if (numAccelerators != 0) {
 			CopyAcceleratorTable(hAccel, &accelerators[0], numAccelerators);
@@ -242,7 +242,7 @@ void UserInput::setKeyboardDesired(bool set)
 
 void UserInput::updateMouse()
 {
-	if (!diMousePtr || diMousePtr.p == nullptr)
+	if (!diMousePtr || diMousePtr.p == NULL)
 	{
 		isMouseAcquired = false;
 		return;
@@ -323,7 +323,7 @@ void UserInput::unAcquireMouse()
 
 void UserInput::updateKeyboard()
 {
-	if (diKeyboardPtr.p == nullptr)
+	if (diKeyboardPtr.p == NULL)
 		return;
 
 	if (isKeyboardAcquired == desireKeyboardAcquired)
@@ -787,7 +787,7 @@ void UserInput::sendMouseEvent(InputObject::UserInputType mouseEventType,
 void UserInput::sendEvent(shared_ptr<InputObject> event)
 {
 	if( RBX::UserInputService* userInputService = RBX::ServiceProvider::find<RBX::UserInputService>(game->getDataModel().get()) )
-		userInputService->fireInputEvent(event, nullptr);
+		userInputService->fireInputEvent(event, NULL);
 }
 
 bool UserInput::isFullScreenMode() const
@@ -951,7 +951,7 @@ void UserInput::processInput()
 	if (isMouseAcquired)
 		readBufferedMouseData();
 
-	if (diKeyboardPtr!=nullptr)
+	if (diKeyboardPtr!=NULL)
 		diKeyboardPtr->GetDeviceState(256, diKeys);
 
 	if (isKeyboardAcquired)

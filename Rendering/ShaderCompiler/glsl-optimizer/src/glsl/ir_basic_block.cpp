@@ -35,7 +35,7 @@ static ir_if* as_if_skip_discard (ir_instruction* ir)
 {
 	ir_if* irif = ir->as_if();
 	if (!irif)
-		return nullptr;
+		return NULL;
 	if (!irif->else_instructions.is_empty())
 		return irif;
 	
@@ -51,7 +51,7 @@ static ir_if* as_if_skip_discard (ir_instruction* ir)
 	}
 	
 	if (count == 1 && only_discards)
-		return nullptr;
+		return NULL;
 	
 	return irif;
 }
@@ -79,8 +79,8 @@ void call_for_basic_blocks(exec_list *instructions,
 					    void *data),
 			   void *data)
 {
-   ir_instruction *leader = nullptr;
-   ir_instruction *last = nullptr;
+   ir_instruction *leader = NULL;
+   ir_instruction *last = NULL;
 
    foreach_in_list(ir_instruction, ir, instructions) {
       ir_if *ir_if;
@@ -92,17 +92,17 @@ void call_for_basic_blocks(exec_list *instructions,
 
       if ((ir_if = as_if_skip_discard(ir))) {
 	 callback(leader, ir, data);
-	 leader = nullptr;
+	 leader = NULL;
 
 	 call_for_basic_blocks(&ir_if->then_instructions, callback, data);
 	 call_for_basic_blocks(&ir_if->else_instructions, callback, data);
       } else if ((ir_loop = ir->as_loop())) {
 	 callback(leader, ir, data);
-	 leader = nullptr;
+	 leader = NULL;
 	 call_for_basic_blocks(&ir_loop->body_instructions, callback, data);
       } else if (ir->as_jump() || ir->as_call()) {
 	 callback(leader, ir, data);
-	 leader = nullptr;
+	 leader = NULL;
       } else if ((ir_function = ir->as_function())) {
 	 /* A function definition doesn't interrupt our basic block
 	  * since execution doesn't go into it.  We should process the

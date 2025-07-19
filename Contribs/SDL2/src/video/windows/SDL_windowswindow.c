@@ -46,7 +46,7 @@
 #endif
 
 /* Fake window to help with DirectInput events. */
-HWND SDL_HelperWindow = nullptr;
+HWND SDL_HelperWindow = NULL;
 static WCHAR *SDL_HelperWindowClassName = TEXT("SDLHelperWindowInputCatcher");
 static WCHAR *SDL_HelperWindowName = TEXT("SDLHelperWindowInputMsgWindow");
 static ATOM SDL_HelperWindowClass = 0;
@@ -101,7 +101,7 @@ WIN_SetWindowPositionInternal(_THIS, SDL_Window * window, UINT flags)
     rect.top = 0;
     rect.right = window->w;
     rect.bottom = window->h;
-    menu = (style & WS_CHILDWINDOW) ? FALSE : (GetMenu(hwnd) != nullptr);
+    menu = (style & WS_CHILDWINDOW) ? FALSE : (GetMenu(hwnd) != NULL);
     AdjustWindowRectEx(&rect, style, menu, 0);
     w = (rect.right - rect.left);
     h = (rect.bottom - rect.top);
@@ -145,14 +145,14 @@ SetupWindowData(_THIS, SDL_Window * window, HWND hwnd, SDL_bool created)
 #ifdef GWLP_WNDPROC
     data->wndproc = (WNDPROC) GetWindowLongPtr(hwnd, GWLP_WNDPROC);
     if (data->wndproc == WIN_WindowProc) {
-        data->wndproc = nullptr;
+        data->wndproc = NULL;
     } else {
         SetWindowLongPtr(hwnd, GWLP_WNDPROC, (LONG_PTR) WIN_WindowProc);
     }
 #else
     data->wndproc = (WNDPROC) GetWindowLong(hwnd, GWL_WNDPROC);
     if (data->wndproc == WIN_WindowProc) {
-        data->wndproc = nullptr;
+        data->wndproc = NULL;
     } else {
         SetWindowLong(hwnd, GWL_WNDPROC, (LONG_PTR) WIN_WindowProc);
     }
@@ -178,7 +178,7 @@ SetupWindowData(_THIS, SDL_Window * window, HWND hwnd, SDL_bool created)
                 rect.top = 0;
                 rect.right = window->w;
                 rect.bottom = window->h;
-                menu = (style & WS_CHILDWINDOW) ? FALSE : (GetMenu(hwnd) != nullptr);
+                menu = (style & WS_CHILDWINDOW) ? FALSE : (GetMenu(hwnd) != NULL);
                 AdjustWindowRectEx(&rect, style, menu, 0);
                 w = (rect.right - rect.left);
                 h = (rect.bottom - rect.top);
@@ -285,8 +285,8 @@ WIN_CreateWindow(_THIS, SDL_Window * window)
     h = (rect.bottom - rect.top);
 
     hwnd =
-        CreateWindow(SDL_Appname, TEXT(""), style, x, y, w, h, nullptr, nullptr,
-                     SDL_Instance, nullptr);
+        CreateWindow(SDL_Appname, TEXT(""), style, x, y, w, h, NULL, NULL,
+                     SDL_Instance, NULL);
     if (!hwnd) {
         return WIN_SetError("Couldn't create window");
     }
@@ -368,11 +368,11 @@ WIN_CreateWindowFrom(_THIS, SDL_Window * window, const void *data)
             /* This hint is a pointer (in string form) of the address of
                the window to share a pixel format with
             */
-            SDL_Window *otherWindow = nullptr;
+            SDL_Window *otherWindow = NULL;
             SDL_sscanf(hint, "%p", (void**)&otherWindow);
 
             /* Do some error checking on the pointer */
-            if (otherWindow != nullptr && otherWindow->magic == &_this->window_magic)
+            if (otherWindow != NULL && otherWindow->magic == &_this->window_magic)
             {
                 /* If the otherWindow has SDL_WINDOW_OPENGL set, set it for the new window as well */
                 if (otherWindow->flags & SDL_WINDOW_OPENGL)
@@ -402,7 +402,7 @@ void
 WIN_SetWindowIcon(_THIS, SDL_Window * window, SDL_Surface * icon)
 {
     HWND hwnd = ((SDL_WindowData *) window->driverdata)->hwnd;
-    HICON hicon = nullptr;
+    HICON hicon = NULL;
     BYTE *icon_bmp;
     int icon_len, y;
     SDL_RWops *dst;
@@ -582,7 +582,7 @@ WIN_SetWindowFullscreen(_THIS, SDL_Window * window, SDL_VideoDisplay * display, 
         rect.top = 0;
         rect.right = window->windowed.w;
         rect.bottom = window->windowed.h;
-        menu = (style & WS_CHILDWINDOW) ? FALSE : (GetMenu(hwnd) != nullptr);
+        menu = (style & WS_CHILDWINDOW) ? FALSE : (GetMenu(hwnd) != NULL);
         AdjustWindowRectEx(&rect, style, menu, 0);
         w = (rect.right - rect.left);
         h = (rect.bottom - rect.top);
@@ -603,7 +603,7 @@ WIN_SetWindowGammaRamp(_THIS, SDL_Window * window, const Uint16 * ramp)
     HDC hdc;
     BOOL succeeded = FALSE;
 
-    hdc = CreateDC(data->DeviceName, nullptr, nullptr, nullptr);
+    hdc = CreateDC(data->DeviceName, NULL, NULL, NULL);
     if (hdc) {
         succeeded = SetDeviceGammaRamp(hdc, (LPVOID)ramp);
         if (!succeeded) {
@@ -622,7 +622,7 @@ WIN_GetWindowGammaRamp(_THIS, SDL_Window * window, Uint16 * ramp)
     HDC hdc;
     BOOL succeeded = FALSE;
 
-    hdc = CreateDC(data->DeviceName, nullptr, nullptr, nullptr);
+    hdc = CreateDC(data->DeviceName, NULL, NULL, NULL);
     if (hdc) {
         succeeded = GetDeviceGammaRamp(hdc, (LPVOID)ramp);
         if (!succeeded) {
@@ -660,7 +660,7 @@ WIN_DestroyWindow(_THIS, SDL_Window * window)
             DestroyWindow(data->hwnd);
         } else {
             /* Restore any original event handler... */
-            if (data->wndproc != nullptr) {
+            if (data->wndproc != NULL) {
 #ifdef GWLP_WNDPROC
                 SetWindowLongPtr(data->hwnd, GWLP_WNDPROC,
                                  (LONG_PTR) data->wndproc);
@@ -672,7 +672,7 @@ WIN_DestroyWindow(_THIS, SDL_Window * window)
         }
         SDL_free(data);
     }
-    window->driverdata = nullptr;
+    window->driverdata = NULL;
 }
 
 SDL_bool
@@ -698,11 +698,11 @@ WIN_GetWindowWMInfo(_THIS, SDL_Window * window, SDL_SysWMinfo * info)
 int
 SDL_HelperWindowCreate(void)
 {
-    HINSTANCE hInstance = GetModuleHandle(nullptr);
+    HINSTANCE hInstance = GetModuleHandle(NULL);
     WNDCLASS wce;
 
     /* Make sure window isn't created twice. */
-    if (SDL_HelperWindow != nullptr) {
+    if (SDL_HelperWindow != NULL) {
         return 0;
     }
 
@@ -723,9 +723,9 @@ SDL_HelperWindowCreate(void)
                                       SDL_HelperWindowName,
                                       WS_OVERLAPPED, CW_USEDEFAULT,
                                       CW_USEDEFAULT, CW_USEDEFAULT,
-                                      CW_USEDEFAULT, HWND_MESSAGE, nullptr,
-                                      hInstance, nullptr);
-    if (SDL_HelperWindow == nullptr) {
+                                      CW_USEDEFAULT, HWND_MESSAGE, NULL,
+                                      hInstance, NULL);
+    if (SDL_HelperWindow == NULL) {
         UnregisterClass(SDL_HelperWindowClassName, hInstance);
         return WIN_SetError("Unable to create Helper Window");
     }
@@ -740,15 +740,15 @@ SDL_HelperWindowCreate(void)
 void
 SDL_HelperWindowDestroy(void)
 {
-    HINSTANCE hInstance = GetModuleHandle(nullptr);
+    HINSTANCE hInstance = GetModuleHandle(NULL);
 
     /* Destroy the window. */
-    if (SDL_HelperWindow != nullptr) {
+    if (SDL_HelperWindow != NULL) {
         if (DestroyWindow(SDL_HelperWindow) == 0) {
             WIN_SetError("Unable to destroy Helper Window");
             return;
         }
-        SDL_HelperWindow = nullptr;
+        SDL_HelperWindow = NULL;
     }
 
     /* Unregister the class. */
@@ -816,7 +816,7 @@ WIN_UpdateClipCursor(SDL_Window *window)
             }
         }
     } else {
-        ClipCursor(nullptr);
+        ClipCursor(NULL);
     }
 }
 

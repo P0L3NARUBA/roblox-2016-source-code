@@ -78,7 +78,7 @@ namespace Graphics
 			RenderEntity* solidEntity;
 			RenderEntity* waterEntity;
 			
-			ChunkData(): solidEntity(nullptr), waterEntity(nullptr), dirty(false)
+			ChunkData(): solidEntity(NULL), waterEntity(NULL), dirty(false)
 			{
 			}
 		};
@@ -132,7 +132,7 @@ namespace Graphics
 			RenderEntity* solidEntity;
 			RenderEntity* waterEntity;
 			
-			Chunk(): flags(0), solidEntity(nullptr), waterEntity(nullptr)
+			Chunk(): flags(0), solidEntity(NULL), waterEntity(NULL)
 			{
 			}
 

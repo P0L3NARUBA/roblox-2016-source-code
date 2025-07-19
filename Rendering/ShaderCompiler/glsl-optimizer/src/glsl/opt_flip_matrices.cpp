@@ -42,8 +42,8 @@ public:
    matrix_flipper(exec_list *instructions)
    {
       progress = false;
-      mvp_transpose = nullptr;
-      texmat_transpose = nullptr;
+      mvp_transpose = NULL;
+      texmat_transpose = NULL;
 
       foreach_in_list(ir_instruction, ir, instructions) {
          ir_variable *var = ir->as_variable();
@@ -94,7 +94,7 @@ matrix_flipper::visit_enter(ir_expression *ir)
    } else if (texmat_transpose &&
               strcmp(mat_var->name, "gl_TextureMatrix") == 0) {
       ir_dereference_array *array_ref = ir->operands[0]->as_dereference_array();
-      assert(array_ref != nullptr);
+      assert(array_ref != NULL);
       ir_dereference_variable *var_ref = array_ref->array->as_dereference_variable();
       assert(var_ref && var_ref->var == mat_var);
 

@@ -146,7 +146,7 @@ SDL_CreateThread(SDL_ThreadFunction fn, const char *name, void *data);
 /**
  * Get the thread name, as it was specified in SDL_CreateThread().
  *  This function returns a pointer to a UTF-8 string that names the
- *  specified thread, or nullptr if it doesn't have a name. This is internal
+ *  specified thread, or NULL if it doesn't have a name. This is internal
  *  memory, not to be free()'d by the caller, and remains valid until the
  *  specified thread is cleaned up by SDL_WaitThread().
  */
@@ -160,7 +160,7 @@ extern DECLSPEC SDL_threadID SDLCALL SDL_ThreadID(void);
 /**
  *  Get the thread identifier for the specified thread.
  *
- *  Equivalent to SDL_ThreadID() if the specified thread is nullptr.
+ *  Equivalent to SDL_ThreadID() if the specified thread is NULL.
  */
 extern DECLSPEC SDL_threadID SDLCALL SDL_GetThreadID(SDL_Thread * thread);
 
@@ -179,13 +179,13 @@ extern DECLSPEC int SDLCALL SDL_SetThreadPriority(SDL_ThreadPriority priority);
  *  As such, only one thread may call SDL_WaitThread() on another.
  *
  *  The return code for the thread function is placed in the area
- *  pointed to by \c status, if \c status is not nullptr.
+ *  pointed to by \c status, if \c status is not NULL.
  *
  *  You may not wait on a thread that has been used in a call to
  *  SDL_DetachThread(). Use either that function or this one, but not
  *  both, or behavior is undefined.
  *
- *  It is safe to pass nullptr to this function; it is a no-op.
+ *  It is safe to pass NULL to this function; it is a no-op.
  */
 extern DECLSPEC void SDLCALL SDL_WaitThread(SDL_Thread * thread, int *status);
 
@@ -213,7 +213,7 @@ extern DECLSPEC void SDLCALL SDL_WaitThread(SDL_Thread * thread, int *status);
  *  Use either that function or this one, but not both, or behavior is
  *  undefined.
  *
- *  It is safe to pass nullptr to this function; it is a no-op.
+ *  It is safe to pass NULL to this function; it is a no-op.
  */
 extern DECLSPEC void SDLCALL SDL_DetachThread(SDL_Thread * thread);
 
@@ -254,7 +254,7 @@ extern DECLSPEC SDL_TLSID SDLCALL SDL_TLSCreate(void);
  *
  *  \param id The thread local storage ID
  *
- *  \return The value associated with the ID for the current thread, or nullptr if no value has been set.
+ *  \return The value associated with the ID for the current thread, or NULL if no value has been set.
  *
  *  \sa SDL_TLSCreate()
  *  \sa SDL_TLSSet()

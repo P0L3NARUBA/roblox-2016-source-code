@@ -263,7 +263,7 @@ private:
 	void commentSelection();    
 	void uncommentSelection();
     void toggleCommentSelection();
-	void updateSelection(bool* isBlockUnfolded = nullptr);
+	void updateSelection(bool* isBlockUnfolded = NULL);
     void goToError();
     void expandAllFolds();
     void collapseAllFolds();

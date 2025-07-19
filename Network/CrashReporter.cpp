@@ -38,7 +38,7 @@
 
 #pragma optimize("", off)
 
-CrashReporter* CrashReporter::singleton = nullptr;
+CrashReporter* CrashReporter::singleton = NULL;
 
 // More info at:
 // http://www.codeproject.com/debug/postmortemdebug_standalone1.asp
@@ -55,7 +55,7 @@ DYNAMIC_FASTINTVARIABLE(WriteFullDmpPercent, 0)
 
 CrashReporter::CrashReporter() :
 	threadResult(0)
-	,exceptionInfo(nullptr)
+	,exceptionInfo(NULL)
 	,reportCrashEvent(FALSE)
 	,hangReportingEnabled(false)
 	,isAlive(true)
@@ -63,7 +63,7 @@ CrashReporter::CrashReporter() :
 	,destructing(false)
 	,immediateUploadEnabled(true)
 {
-	assert(singleton==nullptr);
+	assert(singleton==NULL);
 	singleton = this;
 }
 
@@ -125,7 +125,7 @@ LONG CrashReporter::ProcessExceptionHelper(struct _EXCEPTION_POINTERS *Exception
 	if(FAILED(GenerateDmpFileName(dumpFilepath, _MAX_PATH, false, writeFullDmp)))
 		return EXCEPTION_CONTINUE_SEARCH;
 
-	HANDLE hFile = CreateFile(dumpFilepath,GENERIC_WRITE, FILE_SHARE_READ,nullptr,OPEN_ALWAYS,FILE_ATTRIBUTE_NORMAL,nullptr);
+	HANDLE hFile = CreateFile(dumpFilepath,GENERIC_WRITE, FILE_SHARE_READ,NULL,OPEN_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
 	if (hFile==INVALID_HANDLE_VALUE)
 		return EXCEPTION_CONTINUE_SEARCH;
 
@@ -138,14 +138,14 @@ LONG CrashReporter::ProcessExceptionHelper(struct _EXCEPTION_POINTERS *Exception
 	if (!MiniDumpWriteDump(
 		GetCurrentProcess(), GetCurrentProcessId(),
 		hFile, (MINIDUMP_TYPE)dumpType,
-		ExceptionInfo ? &eInfo : nullptr, nullptr, nullptr
+		ExceptionInfo ? &eInfo : NULL, NULL, NULL
 		))
 	{
 		HRESULT hr = GetLastError();
 		DWORD bytesWritten = 0;
 		TCHAR msg[1024];
 		StringCchPrintf(msg, ARRAYSIZE(msg), "MiniDumpWriteDump() failed with hr = 0x%08x", hr);
-		WriteFile(hFile, &msg, (strlen(msg)+1) * sizeof(TCHAR), &bytesWritten, nullptr);
+		WriteFile(hFile, &msg, (strlen(msg)+1) * sizeof(TCHAR), &bytesWritten, NULL);
 
 		result = EXCEPTION_CONTINUE_SEARCH;
 	}
@@ -236,13 +236,13 @@ void CrashReporter::TheadFunc(struct _EXCEPTION_POINTERS *excpInfo)
 
 static LONG ProcessExceptionStatic(PEXCEPTION_POINTERS excpInfo)
 {
-	if (excpInfo == nullptr) 
+	if (excpInfo == NULL) 
 	{
 		LONG result;
 		// Generate exception to get proper context in dump
 		__try 
 		{
-			RaiseException(EXCEPTION_BREAKPOINT, 0, 0, nullptr);
+			RaiseException(EXCEPTION_BREAKPOINT, 0, 0, NULL);
 		} 
 		__except(result = ProcessExceptionStatic(GetExceptionInformation()), EXCEPTION_EXECUTE_HANDLER) 
 		{
@@ -294,14 +294,14 @@ If you don’t want this behavior and you will be sure that your handler will be c
 LPTOP_LEVEL_EXCEPTION_FILTER WINAPI MyDummySetUnhandledExceptionFilter(
 LPTOP_LEVEL_EXCEPTION_FILTER lpTopLevelExceptionFilter) 
 {
-return nullptr;
+return NULL;
 }
 BOOL PreventSetUnhandledExceptionFilter()
 {
 	HMODULE hKernel32 = LoadLibrary("kernel32.dll");
-	if (hKernel32==nullptr) return FALSE;
+	if (hKernel32==NULL) return FALSE;
 	void *pOrgEntry = GetProcAddress(hKernel32, "SetUnhandledExceptionFilter");
-	if(pOrgEntry==nullptr) return FALSE;
+	if(pOrgEntry==NULL) return FALSE;
 	unsigned char newJump[ 100 ];
 	DWORD dwOrgEntryAddr = (DWORD) pOrgEntry;
 	dwOrgEntryAddr += 5; // add 5 for 5 op-codes for jmp far
@@ -335,7 +335,7 @@ void fixExceptionsThroughKernel()
 		GetProcessUserModeExceptionPolicy get = 
 			(GetProcessUserModeExceptionPolicy)GetProcAddress(hKernelDll, "GetProcessUserModeExceptionPolicy");
 
-		if (set != nullptr && get != nullptr)
+		if (set != NULL && get != NULL)
 		{
 			FASTLOG(FLog::Crash, "Found Get/SetProcessUserModeExceptionPolicy");
 			DWORD dwFlags;
@@ -385,7 +385,7 @@ void CrashReporter::WatcherThreadFunc()
 					// Generate exception to get proper context in dump
 					__try 
 					{
-						RaiseException(EXCEPTION_BREAKPOINT, 0, 0, nullptr);
+						RaiseException(EXCEPTION_BREAKPOINT, 0, 0, NULL);
 					} 
 					__except(result = ProcessException(GetExceptionInformation(), true /*silent*/), EXCEPTION_EXECUTE_HANDLER) 
 					{
@@ -420,7 +420,7 @@ void CrashReporter::LaunchUploadProcess()
 
 	// start new process to upload dmp
 	char filename[ MAX_PATH ];
-	DWORD size = GetModuleFileNameA( nullptr, filename, MAX_PATH );
+	DWORD size = GetModuleFileNameA( NULL, filename, MAX_PATH );
 	if (size && !strstr(filename, "RCCService"))
 	{
 		FASTLOG(FLog::Crash, "Launching process to upload dmp.");
@@ -429,7 +429,7 @@ void CrashReporter::LaunchUploadProcess()
 		PROCESS_INFORMATION pi;
 		char cmd[256];
 		sprintf_s(cmd, 256, "\"%s\" -d", filename);
-		::CreateProcess(nullptr, cmd, nullptr, nullptr, false, NORMAL_PRIORITY_CLASS, nullptr, nullptr, &si, &pi);
+		::CreateProcess(NULL, cmd, NULL, NULL, false, NORMAL_PRIORITY_CLASS, NULL, NULL, &si, &pi);
 	}
 }
 void CrashReporter::DisableHangReporting()

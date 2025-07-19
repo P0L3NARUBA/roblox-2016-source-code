@@ -78,7 +78,7 @@ void Accoutrement::render3dSelect(Adorn* adorn, SelectState selectState)
 
 void Accoutrement::dropAll(ModelInstance* character)
 {
-	Accoutrement::dropAllOthers(character, nullptr);
+	Accoutrement::dropAllOthers(character, NULL);
 }
 
 void Accoutrement::dropAllOthers(ModelInstance *character, Accoutrement *exception)
@@ -106,7 +106,7 @@ const PartInstance* Accoutrement::getHandleConst() const
 
 Attachment* Accoutrement::findFirstMatchingAttachment(Instance* model, const std::string& originalAttachmentName)
 {
-	if (model != nullptr)
+	if (model != NULL)
 	{
 		if (shared_ptr<const Instances> children = model->getChildren2())
 		{
@@ -115,17 +115,17 @@ Attachment* Accoutrement::findFirstMatchingAttachment(Instance* model, const std
 				Instance* child = (*childIterator).get();
 				Attachment* attachment = Instance::fastDynamicCast<Attachment>(child);
 				//check to see if child is an attachment and if the attachment fits with our original attachment
-				if ((attachment != nullptr) && (attachment->getName() == originalAttachmentName))
+				if ((attachment != NULL) && (attachment->getName() == originalAttachmentName))
 				{
 					return attachment;
 				}
 
 				//Continue recursive search but ignore accourtements/accessories
-				if (Instance::fastDynamicCast<Accoutrement>(child) == nullptr)
+				if (Instance::fastDynamicCast<Accoutrement>(child) == NULL)
 				{
 					Attachment* foundAttachment = Accoutrement::findFirstMatchingAttachment(child, originalAttachmentName);
 					//If the deeper search found one then keep handign it up, otherwise continue searching horizontally
-					if (foundAttachment != nullptr)
+					if (foundAttachment != NULL)
 					{
 						return foundAttachment;
 					}
@@ -133,7 +133,7 @@ Attachment* Accoutrement::findFirstMatchingAttachment(Instance* model, const std
 			}
 		}
 	}
-	return nullptr;
+	return NULL;
 }
 
 
@@ -256,7 +256,7 @@ Accoutrement::AccoutrementState Accoutrement::computeDesiredState(Instance *test
 		return IN_WORKSPACE;
 	}
 	// make sure we are not already wearing a hat
-	/*if (testParent->findFirstChildOfType<Accoutrement>() != nullptr)
+	/*if (testParent->findFirstChildOfType<Accoutrement>() != NULL)
 	{
 		return IN_WORKSPACE;
 	}*/
@@ -388,8 +388,8 @@ void Accoutrement::upTo_Equipped()
 
 		//Code for new attachment based system
 		Attachment* attachment = handle->findFirstChildOfType<Attachment>();
-		Attachment* matchingAttachment =  nullptr;
-		PartInstance* matchingAttachmentPart = nullptr;
+		Attachment* matchingAttachment =  NULL;
+		PartInstance* matchingAttachmentPart = NULL;
 		if (attachment)
 		{
 			if ((matchingAttachment = Accoutrement::findFirstMatchingAttachment(getParent(), attachment->getName())))
@@ -435,14 +435,14 @@ void Accoutrement::upTo_Equipped()
 
 void Accoutrement::downFrom_Equipped()
 {
-	ModelInstance* oldCharacter = nullptr;
+	ModelInstance* oldCharacter = NULL;
 
 	if (weld)
 	{
 		if (DFFlag::AccessoriesAndAttachments)
 		{
 			PartInstance* handle = getHandle();
-			PartInstance* oldAttachmentPart = nullptr;
+			PartInstance* oldAttachmentPart = NULL;
 			if (handle && (weld->getParent() == handle))
 			{
 				//If the weld is under the handle, then it is using the new attachment system
@@ -466,7 +466,7 @@ void Accoutrement::downFrom_Equipped()
 				oldCharacter = Instance::fastDynamicCast<ModelInstance>(oldArm->getParent());
 			}
 		}
-		weld->setParent(nullptr);
+		weld->setParent(NULL);
 		weld.reset();
 	}
 
@@ -565,7 +565,7 @@ void Accoutrement::onEvent_HandleTouched(shared_ptr<Instance> other)
 		Instance* touchingCharacter = other->getParent();
 		if (computeDesiredState(touchingCharacter) == EQUIPPED)
 		{
-			if (touchingCharacter->findFirstChildOfType<Accoutrement>() == nullptr)
+			if (touchingCharacter->findFirstChildOfType<Accoutrement>() == NULL)
 			{
 				setParent(touchingCharacter);
 			}
@@ -617,12 +617,12 @@ void Accoutrement::onAncestorChanged(const AncestorChanged& event)
 
 void Accoutrement::updateWeld()
 {
-	if (weld != nullptr)
+	if (weld != NULL)
 	{
 		// all this does not occur client side
 		RBXASSERT(Network::Players::backendProcessing(this));
 
-		Attachment* attachment = nullptr;
+		Attachment* attachment = NULL;
 
 		PartInstance* handle = getHandle();
 		if (handle && (weld->getParent() == handle))
@@ -658,7 +658,7 @@ void Accoutrement::setAttachmentPoint(const CoordinateFrame& value)
 		}
 		else
 		{
-			if (weld != nullptr)
+			if (weld != NULL)
 			{
 				// all this does not occur client side
 				RBXASSERT(Network::Players::backendProcessing(this));

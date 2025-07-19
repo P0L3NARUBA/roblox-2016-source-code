@@ -33,7 +33,7 @@ Assembly* AssemblyStage::onEngineChanging(Primitive* p)
 			return a;
 		}
 	}
-	return nullptr;
+	return NULL;
 }
 
 void AssemblyStage::onEngineChanged(Assembly* a)

@@ -17,11 +17,11 @@ Crypt::Crypt()
 	int dwBlobLen = 256;
 
 	// http://support.microsoft.com/kb/238187
-	if (!CryptAcquireContext(&context, nullptr, MS_DEF_PROV, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT))
+	if (!CryptAcquireContext(&context, NULL, MS_DEF_PROV, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT))
 	{
 		if (::GetLastError()==NTE_BAD_KEYSET)
 		{
-			if (!CryptAcquireContext(&context, nullptr, MS_DEF_PROV, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT | CRYPT_NEWKEYSET))
+			if (!CryptAcquireContext(&context, NULL, MS_DEF_PROV, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT | CRYPT_NEWKEYSET))
 				throw RBX::runtime_error("Error %x during CryptAcquireContext 2\n", GetLastError());
 		}
 		else
@@ -46,7 +46,7 @@ Crypt::~Crypt()
 bool Crypt::verifySignatureBase64(std::string message, std::string signatureBase64)
 {
 	HCRYPTHASH hash;
-	if (!CryptCreateHash(context, CALG_SHA1, nullptr, 0, &hash))
+	if (!CryptCreateHash(context, CALG_SHA1, NULL, 0, &hash))
 #ifdef _DEBUG
 		 throw RBX::runtime_error("Error %x during CryptCreateHash", GetLastError());
 #else
@@ -81,7 +81,7 @@ bool Crypt::verifySignatureBase64(std::string message, std::string signatureBase
 #pragma warning(push)
 #pragma warning(disable: 6309)
 #pragma warning(disable: 6387)
-		result = CryptVerifySignature(hash, signatureRev, signatureLen, key, nullptr, 0) != 0;
+		result = CryptVerifySignature(hash, signatureRev, signatureLen, key, NULL, 0) != 0;
 		if (!result) {
 #ifdef _DEBUG
 			throw RBX::runtime_error("CryptVerifySignature Error 0x%x. sigLen=%d sigB64='%s' message='%s'", GetLastError(), signatureLen, signatureBase64.c_str(), message.c_str());

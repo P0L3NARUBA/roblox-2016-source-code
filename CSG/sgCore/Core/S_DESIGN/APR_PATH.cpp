@@ -223,10 +223,10 @@ static  OSCAN_COD apr_spline(lpOBJ obj, lpSCAN_CONTROL lpsc)
 		}
 	}
 
-	if (obj->extendedClass==nullptr || 
-		(reinterpret_cast<sgCSpline*>(obj->extendedClass)->GetGeometry()==nullptr) ||
-		(reinterpret_cast<sgCSpline*>(obj->extendedClass)->GetGeometry()->GetPointsCount()==nullptr) ||
-		(reinterpret_cast<sgCSpline*>(obj->extendedClass)->GetGeometry()->GetPoints()==nullptr))
+	if (obj->extendedClass==NULL || 
+		(reinterpret_cast<sgCSpline*>(obj->extendedClass)->GetGeometry()==NULL) ||
+		(reinterpret_cast<sgCSpline*>(obj->extendedClass)->GetGeometry()->GetPointsCount()==NULL) ||
+		(reinterpret_cast<sgCSpline*>(obj->extendedClass)->GetGeometry()->GetPoints()==NULL))
 	{
 				if (!begin_use_sply((lpGEO_SPLINE)obj->geo_data, &sply_dat)) return OSFALSE;
 				get_first_sply_point(&sply_dat, c_h_tolerance,
@@ -247,7 +247,7 @@ static  OSCAN_COD apr_spline(lpOBJ obj, lpSCAN_CONTROL lpsc)
 					if (knot) mnode.num &= ~AP_COND;
 				}
 				if ( (lpmnode = (MNODE*)get_elem((lpVDIM)lpsc->data,
-													((lpVDIM)lpsc->data)->num_elem -1)) == nullptr) goto err;
+													((lpVDIM)lpsc->data)->num_elem -1)) == NULL) goto err;
 				lpmnode->num = (constr2) ? AP_CONSTR : AP_NULL;
 				lpmnode->num |= AP_SOPR;
 				cod = OSTRUE;
@@ -296,7 +296,7 @@ static  OSCAN_COD apr_spline(lpOBJ obj, lpSCAN_CONTROL lpsc)
 				}
 			}
 			if ( (lpmnode = (MNODE*)get_elem((lpVDIM)lpsc->data,
-				((lpVDIM)lpsc->data)->num_elem -1)) == nullptr) 
+				((lpVDIM)lpsc->data)->num_elem -1)) == NULL) 
 					return OSFALSE;
 			lpmnode->num = (constr2) ? AP_CONSTR : AP_NULL;
 			lpmnode->num |= AP_SOPR;

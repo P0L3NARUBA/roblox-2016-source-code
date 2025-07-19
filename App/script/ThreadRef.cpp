@@ -78,8 +78,8 @@ void WeakThreadRef::addToNode()
 			first->previous = this;
 		}
 		else
-			this->next = nullptr;
-		this->previous = nullptr;
+			this->next = NULL;
+		this->previous = NULL;
 		node->first = this;
 	}
 }
@@ -96,9 +96,9 @@ void WeakThreadRef::removeFromNode()
 			previous->next = next;
 		if (node->first==this)
 			node->first = next;
-		next = nullptr;
-		previous = nullptr;
-		node = nullptr;
+		next = NULL;
+		previous = NULL;
+		node = NULL;
 	}
 }
 
@@ -122,13 +122,13 @@ void WeakThreadRef::removeRef()
 void WeakThreadRef::Node::eraseAllRefs()
 {
 	Mutex::scoped_lock lock(sync);
-	for (WeakThreadRef* ref = first; ref!=nullptr; ref = ref->next)
+	for (WeakThreadRef* ref = first; ref!=NULL; ref = ref->next)
 	{
 		ref->removeRef();
-		ref->node = nullptr;
+		ref->node = NULL;
 	}
 
-	first = nullptr;
+	first = NULL;
 }
 
 WeakThreadRef::Node::~Node()
@@ -438,7 +438,7 @@ namespace RBX
 			}
 
 			RBX::Lua::WeakFunctionRef* val = tryCast<RBX::Lua::WeakFunctionRef>();
-			if (val==nullptr)
+			if (val==NULL)
 				throw std::runtime_error("Unable to cast value to function");
 			return *val;
 		}
@@ -454,7 +454,7 @@ namespace RBX
 		shared_ptr<GenericFunction>& Variant::convert<shared_ptr<GenericFunction> >(void)
 		{
 			shared_ptr<GenericFunction>* val = tryCast<shared_ptr<GenericFunction> >();
-			if (val == nullptr)
+			if (val == NULL)
 				throw std::runtime_error("The value is not a function");
 			return *val;
 		}
@@ -470,7 +470,7 @@ namespace RBX
 		shared_ptr<GenericAsyncFunction>& Variant::convert<shared_ptr<GenericAsyncFunction> >(void)
 		{
 			shared_ptr<GenericAsyncFunction>* val = tryCast<shared_ptr<GenericAsyncFunction> >();
-			if (val == nullptr)
+			if (val == NULL)
 				throw std::runtime_error("The value is not a function");
 			return *val;
 		}

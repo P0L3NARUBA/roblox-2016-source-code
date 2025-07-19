@@ -337,7 +337,7 @@ struct ir_lower_jumps_visitor : public ir_control_flow_visitor {
     * that store the return value (if there is one), set the return
     * flag, and then break.
     *
-    * It is safe to pass nullptr to this function.
+    * It is safe to pass NULL to this function.
     */
    void lower_return_unconditionally(ir_instruction *ir)
    {
@@ -365,7 +365,7 @@ struct ir_lower_jumps_visitor : public ir_control_flow_visitor {
     * that sets the break flag, without consulting
     * should_lower_jump().
     *
-    * It is safe to pass nullptr to this function.
+    * It is safe to pass NULL to this function.
     */
    void lower_break_unconditionally(ir_instruction *ir)
    {
@@ -589,7 +589,7 @@ retry: /* we get here if we put code after the if inside a branch */
                ir->insert_after(new(ir) ir_loop_jump(ir_loop_jump::jump_break));
             /* FINISHME: unify returns with identical expressions */
             else if(jump_strengths[0] == strength_return && this->function.signature->return_type->is_void())
-               ir->insert_after(new(ir) ir_return(nullptr));
+               ir->insert_after(new(ir) ir_return(NULL));
 	    else
 	       unify = false;
 

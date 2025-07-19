@@ -93,7 +93,7 @@ ir_vec_index_to_cond_assign_visitor::convert_vec_index_to_cond_assign(void *mem_
 				    ir_var_temporary, glsl_precision_undefined);
 	list.push_tail(index);
    deref = new(base_ir) ir_dereference_variable(index);
-   assign = new(base_ir) ir_assignment(deref, orig_index, nullptr);
+   assign = new(base_ir) ir_assignment(deref, orig_index, NULL);
    list.push_tail(assign);
 
    /* Store the value inside a temp, thus avoiding matrixes duplication */
@@ -120,14 +120,14 @@ ir_vec_index_to_cond_assign_visitor::convert_vec_index_to_cond_assign(void *mem_
    /* Generate a conditional move of each vector element to the temp. */
    for (i = 0; i < (int)orig_vector->type->vector_elements; i++) {
       ir_rvalue *condition_swizzle =
-         new(base_ir) ir_swizzle(cond_deref->clone(mem_ctx, nullptr),
+         new(base_ir) ir_swizzle(cond_deref->clone(mem_ctx, NULL),
                                  i, 0, 0, 0, 1);
 
       /* Just clone the rest of the deref chain when trying to get at the
        * underlying variable.
        */
       ir_rvalue *swizzle =
-	 new(base_ir) ir_swizzle(deref_value->clone(mem_ctx, nullptr),
+	 new(base_ir) ir_swizzle(deref_value->clone(mem_ctx, NULL),
 				 i, 0, 0, 0, 1);
 
       deref = new(base_ir) ir_dereference_variable(var);
@@ -149,7 +149,7 @@ ir_vec_index_to_cond_assign_visitor::convert_vector_extract_to_cond_assign(ir_rv
 {
    ir_expression *const expr = ir->as_expression();
 
-   if (expr == nullptr || expr->operation != ir_binop_vector_extract)
+   if (expr == NULL || expr->operation != ir_binop_vector_extract)
       return ir;
 
    return convert_vec_index_to_cond_assign(ralloc_parent(ir),

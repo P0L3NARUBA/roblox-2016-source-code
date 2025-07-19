@@ -27,7 +27,7 @@
 #define M_PI       3.14159265358979323846
 #endif
 
-FASTFLAG(GlowEnabled)
+//FASTFLAG(GlowEnabled)
 FASTINTVARIABLE(RenderMaxParticleSize, 200);
 
 DYNAMIC_FASTFLAG(EnableParticleDrag)
@@ -220,7 +220,7 @@ Emitter::Emitter(VisualEngine* ve, bool enableCurves_, const std::string& contex
 	velocity = Velocity();
 	velocityInheritance = 0;
 	lockedToLocalSpace = false;
-	sphericalDirection = Vector2(M_PI / 2, M_PI / 2);
+	sphericalDirection = Vector2(M_PI / 2.0f, M_PI / 2.0f);
 
     Appearance def = {};
     def.blendCode = Blend_AlphaBlend;
@@ -596,7 +596,7 @@ static TextureRef gettex( VisualEngine* ve, const std::string& name, const std::
 static BlendState createBlendState(Emitter::BlendMode blendMode)
 {
     // to understand values of separate alpha blend, check the setupTechnique function in MaterialGenerator.cpp
-	if (FFlag::GlowEnabled)
+	/*if (FFlag::GlowEnabled)
     {
         switch (blendMode)
         {
@@ -624,7 +624,7 @@ static BlendState createBlendState(Emitter::BlendMode blendMode)
         }
     }
     else
-    {
+    {*/
         switch (blendMode)
         {
         case Emitter::Blend_None: 
@@ -649,7 +649,7 @@ static BlendState createBlendState(Emitter::BlendMode blendMode)
             RBXASSERT(false); // did you add new mode?
             return BlendState(BlendState::Mode_None);
         }
-    }
+    //}
     
 }
 
@@ -739,7 +739,7 @@ Extents Emitter::computeBBox()
 
 		while (p.life > 0)
 		{
-			simulateParticle(p, 0.05, wsAccel, CoordinateFrame(), inheritMotion);
+			simulateParticle(p, 0.05f, wsAccel, CoordinateFrame(), inheritMotion);
 			boundingBox.expandToContain(cframe.pointToObjectSpace(p.pos));
 		}
 	}

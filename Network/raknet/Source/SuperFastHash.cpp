@@ -44,7 +44,7 @@ uint32_t SuperFastHashIncremental (const char * data, int len, unsigned int last
 	uint32_t tmp;
 	int rem;
 
-	if (len <= 0 || data == nullptr) return 0;
+	if (len <= 0 || data == NULL) return 0;
 
 	rem = len & 3;
 	len >>= 2;

@@ -108,7 +108,7 @@ namespace RBX
 		template <typename Base> GeometryBufferD3D11<Base>::GeometryBufferD3D11(Device* device, size_t elementSize, size_t elementCount, GeometryBuffer::Usage usage)
 			: Base(device, elementSize, elementCount, usage)
 			, locked(0)
-			, object(nullptr)
+			, object(NULL)
 		{
 		}
 
@@ -124,7 +124,7 @@ namespace RBX
 			bd.MiscFlags = 0;
 			bd.StructureByteStride = 0;
 
-			HRESULT hr = device11->CreateBuffer(&bd, nullptr, &object);
+			HRESULT hr = device11->CreateBuffer(&bd, NULL, &object);
 			if (FAILED(hr))
 				throw RBX::runtime_error("Couldn't create geometry buffer: %x", hr);
 		}
@@ -154,7 +154,7 @@ namespace RBX
 				if (FAILED(hr))
 				{
 					FASTLOG2(FLog::Graphics, "Failed to lock VB (size %d): %x", elementCount * elementSize, hr);
-					return nullptr;
+					return NULL;
 				}
 
 				locked = resource.pData;
@@ -180,7 +180,7 @@ namespace RBX
 				context11->Unmap(object, 0);
 			}
 
-			locked = nullptr;
+			locked = NULL;
 		}
 
 		template <typename Base> void GeometryBufferD3D11<Base>::upload(unsigned int offset, const void* data, unsigned int size)
@@ -240,7 +240,7 @@ namespace RBX
 
 			if (*layoutCache != layout.get())
 			{
-				VertexLayoutD3D11* vertexLayout = static_cast<VertexLayoutD3D11*>(layout.get());
+				auto* vertexLayout = static_cast<VertexLayoutD3D11*>(layout.get());
 				*layoutCache = vertexLayout;
 
 				ID3D11InputLayout* inputLayout11 = (*programCache)->getInputLayout11(vertexLayout);
@@ -253,7 +253,7 @@ namespace RBX
 
 				for (size_t i = 0; i < vertexBuffers.size(); ++i)
 				{
-					VertexBufferD3D11* vb = static_cast<VertexBufferD3D11*>(vertexBuffers[i].get());
+					auto* vb = static_cast<VertexBufferD3D11*>(vertexBuffers[i].get());
 					ID3D11Buffer* vb11 = vb->getObject();
 					unsigned int offsetVB = 0;
 					unsigned int stride = vb->getElementSize();
@@ -270,8 +270,6 @@ namespace RBX
 			//(*programCache)->uploadConstantBuffers();
 
 			context11->IASetPrimitiveTopology(gGeometryPrimitiveD3D11[primitive]);
-
-			//context11->DrawIndexedInstanced(count, 0, offset, baseVertexIndex, 0);
 
 			if (indexBuffer) {
 				context11->DrawIndexed(count, offset, baseVertexIndex);

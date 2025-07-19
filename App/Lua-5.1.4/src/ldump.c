@@ -61,7 +61,7 @@ static void DumpVector(const void* b, int n, size_t size, DumpState* D)
 
 static void DumpString(const TString* s, DumpState* D)
 {
- if (s==nullptr || getstr(s)==nullptr)
+ if (s==NULL || getstr(s)==NULL)
  {
   size_t size=0;
   DumpVar(size,D);
@@ -129,7 +129,7 @@ static void DumpDebug(const Proto* f, DumpState* D)
 
 static void DumpFunction(const Proto* f, const TString* p, DumpState* D)
 {
- DumpString((f->source==p || D->strip) ? nullptr : cast(const TString*, f->source),D);
+ DumpString((f->source==p || D->strip) ? NULL : cast(const TString*, f->source),D);
  DumpInt(f->linedefined,D);
  DumpInt(f->lastlinedefined,D);
  DumpChar(f->nups,D);
@@ -162,7 +162,7 @@ int luaU_dump (lua_State* L, const Proto* f, lua_Writer w, void* data, int strip
  D.status=0;
  DumpHeader(&D);
 #ifndef LUAVM_SECURE
- DumpFunction(f,nullptr,&D);
+ DumpFunction(f,NULL,&D);
 #endif
  return D.status;
 }

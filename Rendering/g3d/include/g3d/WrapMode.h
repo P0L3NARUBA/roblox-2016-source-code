@@ -67,7 +67,7 @@ public:
 private:
     
     static const char* toString(int i, Value& v) {
-        static const char* str[] = {"CLAMP", "TILE", "ZERO", "IGNORE", "ERROR", nullptr}; 
+        static const char* str[] = {"CLAMP", "TILE", "ZERO", "IGNORE", "ERROR", NULL}; 
         static const Value val[] = {CLAMP, TILE, ZERO, IGNORE, ERROR};
         const char* s = str[i];
         if (s) {

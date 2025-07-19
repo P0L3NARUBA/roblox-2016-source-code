@@ -41,7 +41,7 @@ Joint::Joint(Primitive* prim0,
 			 Primitive* prim1,
 			 const CoordinateFrame& _jointCoord0,
 			 const CoordinateFrame& _jointCoord1)
-: jointOwner(nullptr)
+: jointOwner(NULL)
 , Edge(prim0, prim1)
 , jointCoord0(_jointCoord0)
 , jointCoord1(_jointCoord1)
@@ -50,8 +50,8 @@ Joint::Joint(Primitive* prim0,
 }
 
 Joint::Joint()
-: jointOwner(nullptr)
-, Edge(nullptr, nullptr)
+: jointOwner(NULL)
+, Edge(NULL, NULL)
 {
 	FASTLOG1(FLog::JointLifetime, "Joint %p created, empty primitives", this);
 	// confirm CoordinateFrame default constructor
@@ -92,7 +92,7 @@ const Joint* Joint::findConstJoint(const Primitive* p, Joint::JointType jointTyp
 			return j;
 		}
 	}
-	return nullptr;
+	return NULL;
 }
 
 const Joint* Joint::getConstJoint(const Primitive* p, Joint::JointType jointType)
@@ -110,7 +110,7 @@ Joint* Joint::getJoint(Primitive* p, Joint::JointType jointType)
 
 void Joint::setJointOwner(IJointOwner* value)
 {
-	RBXASSERT((value == nullptr) != (jointOwner == nullptr));
+	RBXASSERT((value == NULL) != (jointOwner == NULL));
 	jointOwner = value;
 }
 
@@ -287,8 +287,8 @@ static int biggerJointGuid2(const Joint* j0, const Joint* j1)
 	const Guid* j00 = &j0->getConstPrimitive(0)->getGuid();
 	const Guid* j10 = &j1->getConstPrimitive(0)->getGuid();
 
-	const Guid* j01 = j0->getConstPrimitive(1) ? &j0->getConstPrimitive(1)->getGuid() : nullptr;
-	const Guid* j11 = j1->getConstPrimitive(1) ? &j1->getConstPrimitive(1)->getGuid() : nullptr;
+	const Guid* j01 = j0->getConstPrimitive(1) ? &j0->getConstPrimitive(1)->getGuid() : NULL;
+	const Guid* j11 = j1->getConstPrimitive(1) ? &j1->getConstPrimitive(1)->getGuid() : NULL;
 
 	int answer = Guid::compare(j00, j01, j10, j11);
 	RBXASSERT(answer == Guid::compare(j01, j00, j10, j11));

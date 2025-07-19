@@ -47,7 +47,7 @@ BasicFindDialog::BasicFindDialog(QWidget *parent)
 
 BasicFindDialog::~BasicFindDialog()
 {
-	m_pFindListener = nullptr;
+	m_pFindListener = NULL;
 }
 
 void BasicFindDialog::setFindListener(IFindListener* listener)
@@ -167,7 +167,7 @@ void BasicFindDialog::keyPressEvent(QKeyEvent* evt)
 
 FindAllDialog::FindAllDialog(QWidget *parent)
 :   BasicFindDialog(parent),
-    m_pLookInComboBox(nullptr)
+    m_pLookInComboBox(NULL)
 {
 	initDialog();
 }
@@ -518,11 +518,11 @@ FindReplaceProvider& FindReplaceProvider::instance()
 }
 
 FindReplaceProvider::FindReplaceProvider()
-	: m_pEmbeddedFindReplaceWidget(nullptr)
-	, m_pFindDialog(nullptr)
-	, m_pReplaceDialog(nullptr)
-	, m_pFindAllDialog(nullptr)
-	, m_pGotoLineDialog(nullptr)
+	: m_pEmbeddedFindReplaceWidget(NULL)
+	, m_pFindDialog(NULL)
+	, m_pReplaceDialog(NULL)
+	, m_pFindAllDialog(NULL)
+	, m_pGotoLineDialog(NULL)
 {
 	if (FFlag::StudioEmbeddedFindDialogEnabled)
 	{
@@ -547,11 +547,11 @@ FindReplaceProvider::FindReplaceProvider()
 
 FindReplaceProvider::~FindReplaceProvider()
 {
-	m_pFindDialog = nullptr;       // Will be deleted by parent i.e. main window
-	m_pReplaceDialog = nullptr;    // Will be deleted by parent i.e. main window
-	m_pFindAllDialog = nullptr;
-	m_pGotoLineDialog = nullptr;
-	m_pEmbeddedFindReplaceWidget = nullptr;
+	m_pFindDialog = NULL;       // Will be deleted by parent i.e. main window
+	m_pReplaceDialog = NULL;    // Will be deleted by parent i.e. main window
+	m_pFindAllDialog = NULL;
+	m_pGotoLineDialog = NULL;
+	m_pEmbeddedFindReplaceWidget = NULL;
 }
 
 void FindReplaceProvider::setFindListener(IFindListener* listener)

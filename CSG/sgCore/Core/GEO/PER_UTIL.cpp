@@ -59,7 +59,7 @@ sgFloat    al, bl, cl;
 	if(hypot(w.x, w.y) < eps_d){
 
 
-		if(vp == nullptr){
+		if(vp == NULL){
 	    el_geo_err = NEED_PP_MSG;
 			return FALSE;
 		}

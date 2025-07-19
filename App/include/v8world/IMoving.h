@@ -52,7 +52,7 @@ namespace RBX {
 		virtual void onBuoyancyChanged( bool value ) = 0;		// callback to PartInstance from Primitive
         virtual bool isInContinousMotion() = 0;
 
-        virtual const Primitive* getConstPartPrimitiveVirtual() const {return nullptr;}
+        virtual const Primitive* getConstPartPrimitiveVirtual() const {return NULL;}
 
 		bool getSleeping() const {
 			return (stepsToSleep == 0);
@@ -65,7 +65,7 @@ namespace RBX {
         void addMovementNode(const CoordinateFrame& cFrame, const Velocity& velocity, const Time& timeStamp);
         void setLastCFrame(const CoordinateFrame& cFrame);
         const CoordinateFrame& getLastCFrame(const CoordinateFrame& defaultCFrame) const;
-        bool hasLastCFrame() {return lastCFrame != nullptr;}
+        bool hasLastCFrame() {return lastCFrame != NULL;}
         void setLastUpdateTime(const Time& time);
         const Time& getLastUpdateTime() const;
 	};

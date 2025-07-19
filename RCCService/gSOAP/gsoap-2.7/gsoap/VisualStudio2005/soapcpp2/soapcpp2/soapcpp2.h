@@ -185,24 +185,24 @@ typedef	enum Storage
 
 typedef	enum Level { INTERNAL, GLOBAL, PARAM, LOCAL } Level;
 
-#define mknone()	mktype(Tnone,     nullptr, 0)
-#define mkvoid()	mktype(Tvoid,     nullptr, 0)
+#define mknone()	mktype(Tnone,     NULL, 0)
+#define mkvoid()	mktype(Tvoid,     NULL, 0)
 #define mkbool()	mktype(Tenum,     booltable, 4)
-#define mkchar()	mktype(Tchar,     nullptr, 1)
-#define mkwchart()	mktype(Twchar,    nullptr, 4)
-#define mkshort()	mktype(Tshort,    nullptr, 2)
-#define mkint()		mktype(Tint,      nullptr, 4)
-#define mklong()	mktype(Tlong,     nullptr, 8)
-#define mkllong()	mktype(Tllong,    nullptr, 8)
-#define mkfloat()	mktype(Tfloat,    nullptr, 4)
-#define mkdouble()	mktype(Tdouble,   nullptr, 8)
-#define mkldouble()	mktype(Tldouble,  nullptr, 16)	/* long double */
-#define mkuchar()	mktype(Tuchar,    nullptr, 1)	/* unsigned char */
-#define mkushort()	mktype(Tushort,   nullptr, 2)	/* unsigned short */
-#define mkuint()	mktype(Tuint,     nullptr, 4)	/* unsigned int */
-#define mkulong()	mktype(Tulong,    nullptr, 8)	/* unsigned long */
-#define mkullong()	mktype(Tullong,   nullptr, 8)	/* unsigned long */
-#define mktimet()	mktype(Ttime,     nullptr, 4)
+#define mkchar()	mktype(Tchar,     NULL, 1)
+#define mkwchart()	mktype(Twchar,    NULL, 4)
+#define mkshort()	mktype(Tshort,    NULL, 2)
+#define mkint()		mktype(Tint,      NULL, 4)
+#define mklong()	mktype(Tlong,     NULL, 8)
+#define mkllong()	mktype(Tllong,    NULL, 8)
+#define mkfloat()	mktype(Tfloat,    NULL, 4)
+#define mkdouble()	mktype(Tdouble,   NULL, 8)
+#define mkldouble()	mktype(Tldouble,  NULL, 16)	/* long double */
+#define mkuchar()	mktype(Tuchar,    NULL, 1)	/* unsigned char */
+#define mkushort()	mktype(Tushort,   NULL, 2)	/* unsigned short */
+#define mkuint()	mktype(Tuint,     NULL, 4)	/* unsigned int */
+#define mkulong()	mktype(Tulong,    NULL, 8)	/* unsigned long */
+#define mkullong()	mktype(Tullong,   NULL, 8)	/* unsigned long */
+#define mktimet()	mktype(Ttime,     NULL, 4)
 #define mkenum(t)	mktype(Tenum,	  t,    4)
 #define mkmask(t)	mktype(Tenum,	  t,    8)
 #define	mkpointer(t)	mktype(Tpointer,  t,    4)

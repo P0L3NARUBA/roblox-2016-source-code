@@ -64,12 +64,12 @@ class ir_vectorize_visitor : public ir_hierarchical_visitor {
 public:
    void clear()
    {
-      assignment[0] = nullptr;
-      assignment[1] = nullptr;
-      assignment[2] = nullptr;
-      assignment[3] = nullptr;
-      current_assignment = nullptr;
-      last_assignment = nullptr;
+      assignment[0] = NULL;
+      assignment[1] = NULL;
+      assignment[2] = NULL;
+      assignment[3] = NULL;
+      current_assignment = NULL;
+      last_assignment = NULL;
       channels = 0;
       has_swizzle = false;
    }
@@ -253,15 +253,15 @@ write_mask_matches_swizzle(unsigned write_mask,
 ir_visitor_status
 ir_vectorize_visitor::visit_enter(ir_assignment *ir)
 {
-   ir_dereference *lhs = this->last_assignment != nullptr ?
-                         this->last_assignment->lhs : nullptr;
-   ir_rvalue *rhs = this->last_assignment != nullptr ?
-                    this->last_assignment->rhs : nullptr;
+   ir_dereference *lhs = this->last_assignment != NULL ?
+                         this->last_assignment->lhs : NULL;
+   ir_rvalue *rhs = this->last_assignment != NULL ?
+                    this->last_assignment->rhs : NULL;
 
    if (ir->condition ||
        this->channels >= 4 ||
        !single_channel_write_mask(ir->write_mask) ||
-       this->assignment[write_mask_to_swizzle(ir->write_mask)] != nullptr ||
+       this->assignment[write_mask_to_swizzle(ir->write_mask)] != NULL ||
        (lhs && !ir->lhs->equals(lhs)) ||
        (rhs && !ir->rhs->equals(rhs, ir_type_swizzle))) {
       try_vectorize();
@@ -287,7 +287,7 @@ ir_vectorize_visitor::visit_enter(ir_swizzle *ir)
       if (write_mask_matches_swizzle(this->current_assignment->write_mask, ir)) {
          this->has_swizzle = true;
       } else {
-         this->current_assignment = nullptr;
+         this->current_assignment = NULL;
       }
    }
    return visit_continue;
@@ -302,7 +302,7 @@ ir_vectorize_visitor::visit_enter(ir_swizzle *ir)
 ir_visitor_status
 ir_vectorize_visitor::visit_enter(ir_dereference_array *)
 {
-   this->current_assignment = nullptr;
+   this->current_assignment = NULL;
    return visit_continue_with_parent;
 }
 
@@ -314,7 +314,7 @@ ir_visitor_status
 ir_vectorize_visitor::visit_enter(ir_expression *ir)
 {
    if (ir->is_horizontal()) {
-      this->current_assignment = nullptr;
+      this->current_assignment = NULL;
       return visit_continue_with_parent;
    }
    return visit_continue;
@@ -361,7 +361,7 @@ ir_vectorize_visitor::visit_enter(ir_loop *ir)
 ir_visitor_status
 ir_vectorize_visitor::visit_enter(ir_texture *)
 {
-   this->current_assignment = nullptr;
+   this->current_assignment = NULL;
    return visit_continue_with_parent;
 }
 
@@ -384,7 +384,7 @@ ir_vectorize_visitor::visit_leave(ir_assignment *ir)
 
       this->last_assignment = this->current_assignment;
    }
-   this->current_assignment = nullptr;
+   this->current_assignment = NULL;
    this->has_swizzle = false;
    return visit_continue;
 }

@@ -22,7 +22,7 @@ namespace RBX {
 		boost::mutex keyframeSequenceCacheMutex;			//synchronizes the keyframeSequenceCache
 		KeyframeSequenceCache keyframeSequenceCache;
 
-		shared_ptr<KeyframeSequence> privateGetKeyframeSequence(ContentId assetId, bool blocking, bool useCache, const std::string& contextString = "", const Instance* contextInstance = nullptr);
+		shared_ptr<KeyframeSequence> privateGetKeyframeSequence(ContentId assetId, bool blocking, bool useCache, const std::string& contextString = "", const Instance* contextInstance = NULL);
         
         void JSONHttpHelper(const std::string* response, const std::exception* exception, boost::function<void(shared_ptr<const Reflection::ValueTable>)> resumeFunction, boost::function<void(std::string)> errorFunction);
 	public:

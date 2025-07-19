@@ -164,14 +164,14 @@ void Water::update(DataModel* dataModel, float dt)
 		if (isCameraUnderwater(terrain, waveFrequency, wavePhase, waveHeight) && !disableWaterFog)
 		{
 			// At depth=0 fog factor = -fogStart/(fogEnd - fogStart) = waterDensity
-			float fogStart = -waterDepth * waterDensity / (1 - waterDensity);
+			/*float fogStart = -waterDepth * waterDensity / (1 - waterDensity);
 			float fogEnd = waterDepth;
 			
 			SceneManager* sceneManager = visualEngine->getSceneManager();
 			
-			//sceneManager->setSkyEnabled(false);
+			sceneManager->setSkyEnabled(false);
 			sceneManager->setClearColor(Color4(waterColor));
-			sceneManager->setFog(waterColor, fogStart, fogEnd);
+			sceneManager->setFog(waterColor, fogStart, fogEnd);*/
 		}
 		
 		if (smoothMaterial)
@@ -197,11 +197,11 @@ void Water::update(DataModel* dataModel, float dt)
 
         if (isCameraUnderwaterLegacy(terrain))
         {
-            SceneManager* sceneManager = visualEngine->getSceneManager();
+            /*SceneManager* sceneManager = visualEngine->getSceneManager();
 
-            //sceneManager->setSkyEnabled(false);
+            sceneManager->setSkyEnabled(false);
             sceneManager->setClearColor(Color4(kWaterColor));
-            sceneManager->setFog(kWaterColor, -50, 60);
+            sceneManager->setFog(kWaterColor, -50, 60);*/
         }
 
     	double currentTime = Time::nowFastSec();
@@ -304,7 +304,7 @@ const shared_ptr<Material>& Water::getSmoothMaterial()
 
     smoothMaterial = shared_ptr<Material>(new Material());
 
-    if (shared_ptr<ShaderProgram> program = visualEngine->getShaderManager()->getProgram("SmoothWaterHQVS", "SmoothWaterHQGBufferFS"))
+    /*if (shared_ptr<ShaderProgram> program = visualEngine->getShaderManager()->getProgram("SmoothWaterHQVS", "SmoothWaterHQGBufferFS"))
     {
         Technique technique(program, 0);
 
@@ -342,7 +342,7 @@ const shared_ptr<Material>& Water::getSmoothMaterial()
         technique.setTexture(0, tm->load(ContentId("rbxasset://textures/water_Subsurface.dds"), TextureManager::Fallback_White), SamplerState::Filter_Linear);
 
         smoothMaterial->addTechnique(technique);
-    }
+    }*/
 
     return smoothMaterial;
 }

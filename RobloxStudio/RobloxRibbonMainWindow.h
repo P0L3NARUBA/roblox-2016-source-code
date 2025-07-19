@@ -164,8 +164,8 @@ class ToolButtonProxyMenu : public QMenu
 public:
     ToolButtonProxyMenu(QString name, QWidget* parent)
         : QMenu(name, parent)
-       , toolButton(nullptr)
-       , boundAction(nullptr)
+       , toolButton(NULL)
+       , boundAction(NULL)
        , selectChangesText(false)
     {}
     

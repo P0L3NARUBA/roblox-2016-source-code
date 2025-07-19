@@ -77,7 +77,7 @@ Reflection::BoundProp<float> PlatformService::desc_Contrast("Contrast", category
 Reflection::BoundProp<float> PlatformService::desc_GrayscaleLevel("GrayscaleLevel", category_Appearance, &PlatformService::grayscaleLevel, Reflection::PropertyDescriptor::SCRIPTING, Security::RobloxScript);
 Reflection::BoundProp<float> PlatformService::desc_BlurIntensity("BlurIntensity", category_Appearance, &PlatformService::blurIntensity, Reflection::PropertyDescriptor::SCRIPTING, Security::RobloxScript);
 Reflection::BoundProp<Color3> PlatformService::desc_TintColor("TintColor", category_Appearance, &PlatformService::tintColor, Reflection::PropertyDescriptor::SCRIPTING, Security::RobloxScript);
-Reflection::PropDescriptor<PlatformService, int> PlatformService::prop_DatamodelType("DatamodelType", category_Data, &PlatformService::getPlatformDatamodelType, nullptr, Reflection::PropertyDescriptor::SCRIPTING, Security::RobloxScript);
+Reflection::PropDescriptor<PlatformService, int> PlatformService::prop_DatamodelType("DatamodelType", category_Data, &PlatformService::getPlatformDatamodelType, NULL, Reflection::PropertyDescriptor::SCRIPTING, Security::RobloxScript);
 
 namespace Reflection 
 {
@@ -615,7 +615,7 @@ void PlatformService::beginHeroStat(std::string eventName, double value, boost::
             if (value != DBL_MIN)
                 r = platform->setHeroStat(eventName, &val);
             else
-                r = platform->setHeroStat(eventName, nullptr);
+                r = platform->setHeroStat(eventName, NULL);
 
             endTask(this, [=](...) { cl->resume((int)r); delete cl; } );
         }

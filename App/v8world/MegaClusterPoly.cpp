@@ -62,7 +62,7 @@ bool MegaClusterPoly::hitTestTerrain(const RbxRay& rayInMe, Vector3& localHitPoi
 }
 
 const Grid::Region getRegionForCellLocation(const Grid* store,
-		const Vector3int16& location, Grid::Region* previousRegion=nullptr) {
+		const Vector3int16& location, Grid::Region* previousRegion=NULL) {
 	if (previousRegion && previousRegion->contains(location)) {
 		return *previousRegion;
 	} else {
@@ -1047,7 +1047,7 @@ btConvexHullShape* MegaClusterPoly::getBulletCellShape(Voxel::CellBlock shape)
 	if (shape >= 0 && shape < CELL_BLOCK_Empty)
 		return bulletCellShapes[shape];
 	else
-		return nullptr;
+		return NULL;
 }
 
 } // namespace RBX

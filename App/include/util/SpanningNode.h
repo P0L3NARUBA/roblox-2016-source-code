@@ -22,7 +22,7 @@ namespace RBX {
 		void setEdgeToParent(SpanningEdge* edge);
 
 	public:
-		SpanningNode() : edgeToParent(nullptr) {}
+		SpanningNode() : edgeToParent(NULL) {}
 
 		~SpanningNode() {}
 

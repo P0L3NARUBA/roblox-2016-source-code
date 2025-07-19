@@ -107,7 +107,7 @@ CURLcode Curl_input_negotiate(struct connectdata *conn, bool proxy,
 
     input_token.length = rawlen;
 
-    DEBUGASSERT(input_token.value != nullptr);
+    DEBUGASSERT(input_token.value != NULL);
   }
 
   major_status = Curl_gss_init_sec_context(data,
@@ -119,7 +119,7 @@ CURLcode Curl_input_negotiate(struct connectdata *conn, bool proxy,
                                            &input_token,
                                            &output_token,
                                            TRUE,
-                                           nullptr);
+                                           NULL);
   Curl_safefree(input_token.value);
 
   neg_ctx->status = major_status;
@@ -146,7 +146,7 @@ CURLcode Curl_output_negotiate(struct connectdata *conn, bool proxy)
 {
   struct negotiatedata *neg_ctx = proxy?&conn->data->state.proxyneg:
     &conn->data->state.negotiate;
-  char *encoded = nullptr;
+  char *encoded = NULL;
   size_t len = 0;
   char *userp;
   CURLcode result;
@@ -158,14 +158,14 @@ CURLcode Curl_output_negotiate(struct connectdata *conn, bool proxy)
                               &encoded, &len);
   if(result) {
     gss_release_buffer(&discard_st, &neg_ctx->output_token);
-    neg_ctx->output_token.value = nullptr;
+    neg_ctx->output_token.value = NULL;
     neg_ctx->output_token.length = 0;
     return result;
   }
 
   if(!encoded || !len) {
     gss_release_buffer(&discard_st, &neg_ctx->output_token);
-    neg_ctx->output_token.value = nullptr;
+    neg_ctx->output_token.value = NULL;
     neg_ctx->output_token.length = 0;
     return CURLE_REMOTE_ACCESS_DENIED;
   }
@@ -183,7 +183,7 @@ CURLcode Curl_output_negotiate(struct connectdata *conn, bool proxy)
 
   free(encoded);
 
-  return (userp == nullptr) ? CURLE_OUT_OF_MEMORY : CURLE_OK;
+  return (userp == NULL) ? CURLE_OUT_OF_MEMORY : CURLE_OK;
 }
 
 static void cleanup(struct negotiatedata *neg_ctx)

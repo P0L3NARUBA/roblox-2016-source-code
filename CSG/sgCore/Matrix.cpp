@@ -4,25 +4,25 @@ sgCMatrix::sgCMatrix()
 {
 	memset(m_matrix,0,sizeof(sgFloat)*16);
 	m_matrix[0] = m_matrix[5] = m_matrix[10] = m_matrix[15] = 1.0;
-	m_temp_buffer = nullptr;
+	m_temp_buffer = NULL;
 }
 
 sgCMatrix::sgCMatrix(const sgFloat* mtrx)
 {
-	if (mtrx==nullptr)
+	if (mtrx==NULL)
 	{
 		memset(m_matrix,0,sizeof(sgFloat)*16);
 		m_matrix[0] = m_matrix[5] = m_matrix[10] = m_matrix[15] = 1.0;
 	}
 	else
 		memcpy(m_matrix,mtrx,sizeof(sgFloat)*16);
-	m_temp_buffer = nullptr;
+	m_temp_buffer = NULL;
 }
 
 sgCMatrix::sgCMatrix(sgCMatrix& m_b)
 {
 	memcpy(m_matrix, m_b.m_matrix, sizeof(sgFloat)*16);
-	m_temp_buffer = nullptr;
+	m_temp_buffer = NULL;
 	if (m_b.m_temp_buffer)
 	{
 		m_temp_buffer = new sgFloat[16];
@@ -39,11 +39,11 @@ sgCMatrix::~sgCMatrix()
 sgCMatrix& sgCMatrix::operator = (const sgCMatrix& m_b) 
 {
 	memcpy(m_matrix, m_b.m_matrix, sizeof(sgFloat)*16);
-	m_temp_buffer = nullptr;
+	m_temp_buffer = NULL;
 	
 	if (m_temp_buffer)
 		delete[] m_temp_buffer;
-	m_temp_buffer = nullptr;
+	m_temp_buffer = NULL;
 	if (m_b.m_temp_buffer)
 	{
 		m_temp_buffer = new sgFloat[16];
@@ -59,12 +59,12 @@ bool  sgCMatrix::SetMatrix(const sgCMatrix* other_m)
 		global_sg_error = SG_ER_BAD_ARGUMENT_NULL_POINTER;
 		return false;
 	}
-	assert(other_m!=nullptr);
+	assert(other_m!=NULL);
 	memcpy(m_matrix, other_m->m_matrix, sizeof(sgFloat)*16);
 	
 	if (m_temp_buffer)
 		delete[] m_temp_buffer;
-	m_temp_buffer = nullptr;
+	m_temp_buffer = NULL;
 	if (other_m->m_temp_buffer)
 	{
 		m_temp_buffer = new sgFloat[16];
@@ -81,7 +81,7 @@ const sgFloat*  sgCMatrix::GetData()
 
 const sgFloat*   sgCMatrix::GetTransparentData()
 {
-	if (m_temp_buffer==nullptr)
+	if (m_temp_buffer==NULL)
 		m_temp_buffer = new sgFloat[16];
 	m_temp_buffer[0] = m_matrix[0];
 	m_temp_buffer[5]=  m_matrix[5];

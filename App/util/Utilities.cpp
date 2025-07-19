@@ -46,7 +46,7 @@ std::string RBX::sha1(const std::string& source)
 	// so here we convert "version" to hashed valued for comparison when new clients join
 	std::string hashedValue;
 	HCRYPTPROV context;
-	if(CryptAcquireContext(&context, nullptr, nullptr, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT))
+	if(CryptAcquireContext(&context, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT))
 	{
 		HCRYPTHASH hash;
 		if (CryptCreateHash(context, CALG_SHA1, 0, 0, &hash))

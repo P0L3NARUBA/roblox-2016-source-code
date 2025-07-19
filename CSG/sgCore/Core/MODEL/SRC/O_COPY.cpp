@@ -14,7 +14,7 @@ BOOL o_copy_obj(hOBJ hobjin, hOBJ * hobjout, char * path)
 	strcpy(nametmp, tempnam("/usr/temp","pge"));
 	}
 
-	*hobjout = nullptr;
+	*hobjout = NULL;
 	appl_init();
 	if (!init_buf(&bd,nametmp,BUF_NEWINMEM)) {
 		return FALSE;
@@ -32,7 +32,7 @@ BOOL o_copy_obj(hOBJ hobjin, hOBJ * hobjout, char * path)
 	cod = TRUE;
 err:
 	close_buf(&bd);
-	if ( *hobjout && !cod )	o_free(*hobjout,nullptr);
+	if ( *hobjout && !cod )	o_free(*hobjout,NULL);
 //	nb_unlink(name);
 	nb_unlink(nametmp);
 	return cod;

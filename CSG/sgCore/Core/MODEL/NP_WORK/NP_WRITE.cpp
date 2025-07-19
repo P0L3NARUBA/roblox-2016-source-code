@@ -11,7 +11,7 @@ void np_zero_list(lpNP_STR_LIST list)
 {
 	memset(list,0,sizeof(NP_STR_LIST));
 //	list->bnp.bd.handle = -1;
-	list->bnp.bd.handle = nullptr;
+	list->bnp.bd.handle = NULL;
 }
 BOOL np_init_list(lpNP_STR_LIST list)
 {
@@ -77,7 +77,7 @@ BOOL np_str_form(BOOL (*user_gab_inter)(lpREGION_3D g1,lpREGION_3D g2),
 
 	for (i=0; i<list1->number_all; i++) {  //    
 		if (ctrl_c_press) {												 //   Ctrl/C
-//			put_message(CTRL_C_PRESS, nullptr, 0);
+//			put_message(CTRL_C_PRESS, NULL, 0);
 //			end_grad  (num_proc , i);
 			return OSBREAK;
 		}
@@ -120,7 +120,7 @@ BOOL np_str_form_precision(BOOL (*user_gab_inter)(lpREGION_3D g1,lpREGION_3D g2)
 
 	for (i=0; i<list1->number_all; i++) {  //    
 		if (ctrl_c_press) {												 //   Ctrl/C
-//			put_message(CTRL_C_PRESS, nullptr, 0);
+//			put_message(CTRL_C_PRESS, NULL, 0);
 //			end_grad  (num_proc , i);
 			return OSBREAK;
 		}
@@ -184,10 +184,10 @@ short np_end_of_put(lpNP_STR_LIST list, REGIMTYPE regim, float angle,
 	lpNP_STR    str_t1;
 	NP_STR      str_t,str;
 	BREPTYPE    type;
-	int *    b = nullptr;
-	hOBJ        hbrep = nullptr;
-	lpOBJ       brep = nullptr;
-	lpGEO_BREP  lpgeobrep = nullptr;
+	int *    b = NULL;
+	hOBJ        hbrep = NULL;
+	lpOBJ       brep = NULL;
+	lpGEO_BREP  lpgeobrep = NULL;
 	VLD         vld;
 	VI_LOCATION viloc,viloctmp;
 	REGION_3D   g = {{1.e35,1.e35,1.e35},{-1.e35,-1.e35,-1.e35}};
@@ -202,7 +202,7 @@ short np_end_of_put(lpNP_STR_LIST list, REGIMTYPE regim, float angle,
 	if (!(np_str_form(np_gab_inter,list,list))) goto err;
 
 	np1 = npwg;
-	if ( (np2 = creat_np_mem(TNPW,MAXNOV,MAXNOE,MAXNOF,MAXNOC,MAXNOE)) == nullptr )
+	if ( (np2 = creat_np_mem(TNPW,MAXNOV,MAXNOE,MAXNOF,MAXNOC,MAXNOE)) == NULL )
 		goto err;
 
 //	num_proc = start_grad(GetIDS(IDS_SG317), list->number_all);
@@ -381,7 +381,7 @@ short np_end_of_put(lpNP_STR_LIST list, REGIMTYPE regim, float angle,
 //					number++;
 					write_elem(&list->vdim,*b,&str_t);
 				}
-				end_rw(&list->nb);   b = nullptr;
+				end_rw(&list->nb);   b = NULL;
 				for (i=1 ; i <= np1->noe ; i++) {
 					if (np1->efc[i].fp == 0 || np1->efc[i].fm == 0) {
 						type = SURF;
@@ -423,7 +423,7 @@ short np_end_of_put(lpNP_STR_LIST list, REGIMTYPE regim, float angle,
 				viloc = viloctmp;
 			}
 		}
-		if ( ( hbrep = o_alloc(OBREP)) == nullptr)	goto err;
+		if ( ( hbrep = o_alloc(OBREP)) == NULL)	goto err;
 		brep = (lpOBJ)hbrep;
 		lpgeobrep = (lpGEO_BREP)brep->geo_data;
 		o_hcunit(lpgeobrep->matr);
@@ -438,7 +438,7 @@ short np_end_of_put(lpNP_STR_LIST list, REGIMTYPE regim, float angle,
 		if ( !put_np_brep(&lnp,&lpgeobrep->num)) goto err;
 		attach_item_tail(list_brep, hbrep);
 		number_obj++;
-		hbrep = nullptr;
+		hbrep = NULL;
 
 	  str_compress(list);
 	} while (list->number_np != 0);    //  
@@ -450,8 +450,8 @@ err:
 	number = 0;
 	free_np_mem(&np2);
 	free_vld_data(&vld);
-	if (b != nullptr)    end_rw(&list->nb);
-	if (hbrep != nullptr)      o_free(hbrep,nullptr);
+	if (b != NULL)    end_rw(&list->nb);
+	if (hbrep != NULL)      o_free(hbrep,NULL);
 cancel:
 //  end_grad  (num_proc , ni);
 	np_free_stack();
@@ -472,10 +472,10 @@ int np_end_of_put_1(lpNP_STR_LIST list, REGIMTYPE regim, float angle,
 	lpNP_STR    str_t1;
 	NP_STR      str_t,str;
 	BREPTYPE    type;
-	long *		  b      = nullptr;
-	hOBJ        hbrep  = nullptr;
-	lpOBJ       brep   = nullptr;
-	lpGEO_BREP  lpgeobrep = nullptr;
+	long *		  b      = NULL;
+	hOBJ        hbrep  = NULL;
+	lpOBJ       brep   = NULL;
+	lpGEO_BREP  lpgeobrep = NULL;
 	VLD         vld;
 	VI_LOCATION viloc,viloctmp;
 	REGION_3D   g; // = {{1.e35,1.e35,1.e35},{-1.e35,-1.e35,-1.e35}};
@@ -500,7 +500,7 @@ int np_end_of_put_1(lpNP_STR_LIST list, REGIMTYPE regim, float angle,
 	if (!(np_str_form_precision(np_gab_inter, list, list, precision))) goto err;
 
 	np1 = npwg;
-	if ( (np2 = creat_np_mem(TNPW,MAXNOV,MAXNOE,MAXNOF,MAXNOC,MAXNOE)) == nullptr )
+	if ( (np2 = creat_np_mem(TNPW,MAXNOV,MAXNOE,MAXNOF,MAXNOC,MAXNOE)) == NULL )
 		goto err;
 
 //	num_proc = start_grad(GetIDS(IDS_SG317), list->number_all);
@@ -529,7 +529,7 @@ int np_end_of_put_1(lpNP_STR_LIST list, REGIMTYPE regim, float angle,
 			number_old = number;
 			number = 0;
 			if (ctrl_c_press) {												 //   Ctrl/C
-	//			put_message(CTRL_C_PRESS, nullptr, 0);
+	//			put_message(CTRL_C_PRESS, NULL, 0);
 				goto err;
 			}
 			for (istr=fi; istr<list->number_all; istr++) {
@@ -757,7 +757,7 @@ int np_end_of_put_1(lpNP_STR_LIST list, REGIMTYPE regim, float angle,
 //					number++;
 					write_elem(&list->vdim,*b,&str_t);
 				}
-				end_rw(&list->nb);   b = nullptr;
+				end_rw(&list->nb);   b = NULL;
 				for (i=1 ; i <= np1->noe ; i++) {
 					if (np1->efc[i].fp == 0 || np1->efc[i].fm == 0) {
 						type = SURF;
@@ -798,7 +798,7 @@ int np_end_of_put_1(lpNP_STR_LIST list, REGIMTYPE regim, float angle,
 				viloc = viloctmp;
 			}
 		}
-		if ( ( hbrep = o_alloc(OBREP)) == nullptr)	goto err;
+		if ( ( hbrep = o_alloc(OBREP)) == NULL)	goto err;
 		brep = (lpOBJ)hbrep;
 		lpgeobrep = (lpGEO_BREP)brep->geo_data;
 		o_hcunit(lpgeobrep->matr);
@@ -813,7 +813,7 @@ int np_end_of_put_1(lpNP_STR_LIST list, REGIMTYPE regim, float angle,
 		if ( !put_np_brep(&lnp,&lpgeobrep->num)) goto err;
 		attach_item_tail(list_brep, hbrep);
 		number_obj++;
-		hbrep = nullptr;
+		hbrep = NULL;
 
 		str_compress(list);
 	} while (list->number_np != 0);    //  
@@ -825,8 +825,8 @@ err:
 	number = 0;
 	free_np_mem(&np2);
 	free_vld_data(&vld);
-	if (b != nullptr)    end_rw(&list->nb);
-	if (hbrep != nullptr)      o_free(hbrep,nullptr);
+	if (b != NULL)    end_rw(&list->nb);
+	if (hbrep != NULL)      o_free(hbrep,NULL);
 cancel:
 //	end_grad  (num_proc , ni);
 	np_free_stack();
@@ -904,7 +904,7 @@ void str_compress(lpNP_STR_LIST list)
 void np_str_free(lpNP_STR_LIST list)
 {
 //	if ( list->bnp.bd.handle != -1 )	end_rw_np(&list->bnp);
-	if ( list->bnp.bd.handle != nullptr )	end_rw_np(&list->bnp);
+	if ( list->bnp.bd.handle != NULL )	end_rw_np(&list->bnp);
 	if ( list->vdim.page[0] )  free_vdim(&list->vdim);
 	if ( list->nb.page[0] )    free_vdim(&list->nb);
 	np_zero_list(list);

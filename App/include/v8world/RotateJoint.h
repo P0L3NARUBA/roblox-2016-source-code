@@ -91,7 +91,7 @@ namespace RBX {
 		float uiValue;
 
 	public:
-		DynamicRotateJoint() : uiValue(0.0f), rotateConnector(nullptr)
+		DynamicRotateJoint() : uiValue(0.0f), rotateConnector(NULL)
 		{}
 
 		DynamicRotateJoint(
@@ -126,7 +126,7 @@ namespace RBX {
         float currentAngle;
         ConstraintAlign2Axes* alignmentConstraint;
 	public:
-		RotatePJoint(): currentAngle( 0.0f ), alignmentConstraint(nullptr)
+		RotatePJoint(): currentAngle( 0.0f ), alignmentConstraint(NULL)
 		{}
 
 		RotatePJoint(
@@ -135,7 +135,7 @@ namespace RBX {
 			const CoordinateFrame& c0,
 			const CoordinateFrame& c1,
 			float baseAngle)
-			: DynamicRotateJoint(axlePrim, holePrim, c0, c1, baseAngle), currentAngle( 0.0f ), alignmentConstraint(nullptr)
+			: DynamicRotateJoint(axlePrim, holePrim, c0, c1, baseAngle), currentAngle( 0.0f ), alignmentConstraint(NULL)
 		{}
 
         ~RotatePJoint();
@@ -155,7 +155,7 @@ namespace RBX {
         ConstraintAngularVelocity* angularVelocityConstraint;
 
 	public:
-		RotateVJoint(): angularVelocityConstraint( nullptr )
+		RotateVJoint(): angularVelocityConstraint( NULL )
 		{}
 
 		RotateVJoint(

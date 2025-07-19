@@ -185,7 +185,7 @@ QString RobloxMainWindow::sGeometryKey = "window_geometry";
 
 RobloxMainWindow* RobloxMainWindow::get(QObject* context)
 {
-	while(context != nullptr && dynamic_cast<RobloxMainWindow*>(context) == nullptr)
+	while(context != NULL && dynamic_cast<RobloxMainWindow*>(context) == NULL)
 	{
 		context = context->parent();
 	}
@@ -195,18 +195,18 @@ RobloxMainWindow* RobloxMainWindow::get(QObject* context)
 
 RobloxMainWindow::RobloxMainWindow(const QMap<QString, QString> argMap)
 : RobloxRibbonMainWindow(this)
-, m_pSettingsDialog(nullptr)
-, m_pMinutesPlayedTimer(nullptr)
-, m_pInsertServiceDlg(nullptr)
-, m_pShortcutHelpDialog(nullptr)
-, m_pInputConfigDialog(nullptr)
+, m_pSettingsDialog(NULL)
+, m_pMinutesPlayedTimer(NULL)
+, m_pInsertServiceDlg(NULL)
+, m_pShortcutHelpDialog(NULL)
+, m_pInputConfigDialog(NULL)
 , m_pPluginHost(new RobloxPluginHost(this))
-, m_splashScreen(nullptr)
-, m_publishGameDialog(nullptr)
-, m_pCounterSenderTimer(nullptr)
+, m_splashScreen(NULL)
+, m_publishGameDialog(NULL)
+, m_pCounterSenderTimer(NULL)
 , m_AutoSaveAccum(0)
 , m_IsInitialized(false)
-, m_pPublishedProjectsWebDialog(nullptr)
+, m_pPublishedProjectsWebDialog(NULL)
 , m_isRibbon(false)
 , m_fileOpenHandled(false)
 , m_BuildMode(BM_ADVANCED)
@@ -214,8 +214,8 @@ RobloxMainWindow::RobloxMainWindow(const QMap<QString, QString> argMap)
 , m_editScriptActions("EditScript", &studioAnalytics)
 , m_mouseActions("ManipulatePart", &studioAnalytics)
 , m_inserts("Inserts", &studioAnalytics)
-, m_cookieConstraintChecker(nullptr)
-, m_cookieConstraintCheckDone(nullptr)
+, m_cookieConstraintChecker(NULL)
+, m_cookieConstraintCheckDone(NULL)
 {
 	try
 	{
@@ -343,12 +343,12 @@ RobloxMainWindow::RobloxMainWindow(const QMap<QString, QString> argMap)
 				Option[0].dwOption = INTERNET_PER_CONN_FLAGS;
 
 				List.dwSize = sizeof(INTERNET_PER_CONN_OPTION_LIST);
-				List.pszConnection = nullptr;
+				List.pszConnection = NULL;
 				List.dwOptionCount = 1;
 				List.dwOptionError = 0;
 				List.pOptions = Option;
 
-				if (InternetQueryOption(nullptr, INTERNET_OPTION_PER_CONNECTION_OPTION, &List, &nSize))
+				if (InternetQueryOption(NULL, INTERNET_OPTION_PER_CONNECTION_OPTION, &List, &nSize))
 				{
 					if (Option[0].Value.dwValue & PROXY_TYPE_PROXY)
 					{
@@ -560,12 +560,12 @@ RobloxMainWindow::RobloxMainWindow(const QMap<QString, QString> argMap)
 				
         m_PropertyChangedConnection = AuthoringSettings::singleton().propertyChangedSignal.connect(
             boost::bind(&RobloxMainWindow::onPropertyChanged,this,_1));
-        onPropertyChanged(nullptr);
+        onPropertyChanged(NULL);
 
         if (FFlag::StudioEarlyCookieConstraintCheckGlobal ||
 			RobloxSettings::getBaseURL().contains("robloxlabs", Qt::CaseInsensitive))
 		{
-			m_cookieConstraintChecker = new QWebView(nullptr);
+			m_cookieConstraintChecker = new QWebView(NULL);
 			m_cookieConstraintCheckDone = new QEventLoop(this);
 			m_cookieConstraintChecker->setAttribute(Qt::WA_DeleteOnClose);
 			m_cookieConstraintChecker->page()->setNetworkAccessManager(&RobloxNetworkAccessManager::Instance());
@@ -575,9 +575,9 @@ RobloxMainWindow::RobloxMainWindow(const QMap<QString, QString> argMap)
 			m_cookieConstraintChecker->load(RobloxSettings::getBaseURL());
 			m_cookieConstraintCheckDone->exec();
 			m_cookieConstraintCheckDone->deleteLater();
-			m_cookieConstraintCheckDone = nullptr;
+			m_cookieConstraintCheckDone = NULL;
 			// if the window is destroyed from close we want to null it out here.
-			m_cookieConstraintChecker = nullptr;
+			m_cookieConstraintChecker = NULL;
 		}
         
 #ifdef _WIN32
@@ -1377,7 +1377,7 @@ bool RobloxMainWindow::filePublishedProjects()
 	WebDialog dlg(
         this, 
         url.prepend(RobloxSettings::getBaseURL()),
-        nullptr, 
+        NULL, 
 		RBX::ClientAppSettings::singleton().GetValuePublishedProjectsPageWidth(), 
 		RBX::ClientAppSettings::singleton().GetValuePublishedProjectsPageHeight() );
     dlg.setMinimumSize( FInt::StudioWebDialogMinimumWidth, FInt::StudioWebDialogMinimumHeight);
@@ -1429,7 +1429,7 @@ void RobloxMainWindow::publishGame()
 
 	if (!m_publishGameDialog) 
     {
-		m_publishGameDialog = new WebDialog(this, initialUrl, nullptr);
+		m_publishGameDialog = new WebDialog(this, initialUrl, NULL);
         m_publishGameDialog->setMinimumSize( FInt::StudioWebDialogMinimumWidth, FInt::StudioWebDialogMinimumHeight);
     }
 	else
@@ -2043,7 +2043,7 @@ void RobloxMainWindow::setupSlots()
 		}
 		else
 		{
-			recentOpenedFiles[i] = nullptr;
+			recentOpenedFiles[i] = NULL;
 		}
 	}
 
@@ -2336,7 +2336,7 @@ void RobloxMainWindow::sendCounterEvent(std::string counterName, bool fireImmedi
 	static boost::scoped_ptr<CountersClient> m_pCountersClient;
 
 	if (!m_pCountersClient)
-		m_pCountersClient.reset(new CountersClient(GetBaseURL().c_str(), "76E5A40C-3AE1-4028-9F10-7C62520BD94F", nullptr));
+		m_pCountersClient.reset(new CountersClient(GetBaseURL().c_str(), "76E5A40C-3AE1-4028-9F10-7C62520BD94F", NULL));
 
 	// TODO - change project settings to not have wchar as a native type.  Qt can't do wide string operations.
 	std::wstring wstringCounterName = convert_s2w(counterName);
@@ -2360,7 +2360,7 @@ void RobloxMainWindow::sendOffCounters()
 	boost::scoped_ptr<CountersClient> countersClient;
 
 	if (!countersClient)
-		countersClient.reset(new CountersClient(GetBaseURL().c_str(), "76E5A40C-3AE1-4028-9F10-7C62520BD94F", nullptr));
+		countersClient.reset(new CountersClient(GetBaseURL().c_str(), "76E5A40C-3AE1-4028-9F10-7C62520BD94F", NULL));
 
 	countersClient->reportEvents();
 #endif
@@ -2556,7 +2556,7 @@ QAction* RobloxMainWindow::getActionByName(const QString& actionName)
 		if ((*iter)->objectName() == actionName)
 			return *iter;
 
-	return nullptr;
+	return NULL;
 }
 
 void RobloxMainWindow::saveDefaultApplicationState()
@@ -2721,7 +2721,7 @@ void RobloxMainWindow::onDeleteSplashScreen()
     if ( m_splashScreen )
     {
         delete m_splashScreen;
-        m_splashScreen = nullptr;
+        m_splashScreen = NULL;
     }
 }
 
@@ -3103,7 +3103,7 @@ void RobloxMainWindow::cookieConstraintCheckerLoadFinished(bool ok)
 			m_cookieConstraintChecker, SIGNAL(                     loadFinished(bool)),
 			this,                      SLOT(cookieConstraintCheckerLoadFinished(bool)));
 		m_cookieConstraintChecker->deleteLater();
-		m_cookieConstraintChecker = nullptr;
+		m_cookieConstraintChecker = NULL;
 		m_cookieConstraintCheckDone->exit();
 	}
 }

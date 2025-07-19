@@ -10,7 +10,7 @@ lpGEO_LINE lp = (lpGEO_LINE)&el_geo1;
 D_POINT  pp;
 
 	if(!test_wrd_line(l))
-		return nullptr;
+		return NULL;
 	gcs_to_vcs (&l->v1, &lp->v1);
 	gcs_to_vcs (&l->v2, &lp->v2);
 	if(!eq_line(&lp->v1, &lp->v2, &a, &b, &c)){
@@ -49,7 +49,7 @@ lpGEO_ARC a2d = &el_geo1;
 
 
 	if(!test_wrd_arc(a, &flag_arc))
-		return nullptr;
+		return NULL;
 
 	tr_vp_to_acs(a, flag_arc, vp, &vg, &va, a2d, el_g_e, el_e_g);
 

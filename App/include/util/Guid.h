@@ -73,7 +73,7 @@ namespace RBX
 		bool operator ==(const Guid& other) const { return data == other.data; }
 		bool operator <(const Guid& other) const { return data < other.data; }
 
-		// Compare 2 pairs of Guids. a0-a1 and b0-b1 are commutativity. Any item may be nullptr
+		// Compare 2 pairs of Guids. a0-a1 and b0-b1 are commutativity. Any item may be NULL
 		static int compare(const Guid* a, const Guid* b);
 		static int compare(const Guid* a0, const Guid* a1, const Guid* b0, const Guid* b1);
 	

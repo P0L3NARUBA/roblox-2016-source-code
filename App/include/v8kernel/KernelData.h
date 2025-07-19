@@ -87,12 +87,12 @@ namespace RBX {
 			RBXASSERT(!c->isInKernel());
 			Body* body0 = c->getBody(Connector::body0);
 			Body* body1 = c->getBody(Connector::body1);
-			SimBody* simBody0 = body0 ? body0->getRootSimBody() : nullptr;
-			SimBody* simBody1 = body1 ? body1->getRootSimBody() : nullptr;
+			SimBody* simBody0 = body0 ? body0->getRootSimBody() : NULL;
+			SimBody* simBody1 = body1 ? body1->getRootSimBody() : NULL;
 			
 			Connector::KernelType connectorType = c->getConnectorKernelType();
- 			if ((simBody0 == nullptr || !simBody0->isInKernel()) &&
-				(simBody1 == nullptr || !simBody1->isInKernel()) &&
+ 			if ((simBody0 == NULL || !simBody0->isInKernel()) &&
+				(simBody1 == NULL || !simBody1->isInKernel()) &&
 				connectorType != Connector::HUMANOID &&
 				connectorType != Connector::JOINT &&
 				connectorType != Connector::KERNEL_JOINT)
@@ -166,8 +166,8 @@ namespace RBX {
 			if (body1)
 				addConnectorToBody(c, body1);
 
-			RBXASSERT(simBody0 == nullptr || simBody0->validateBodyLists());
-			RBXASSERT(simBody1 == nullptr || simBody1->validateBodyLists());
+			RBXASSERT(simBody0 == NULL || simBody0->validateBodyLists());
+			RBXASSERT(simBody1 == NULL || simBody1->validateBodyLists());
 		}
 
 		inline void removeConnector(Connector* c)
@@ -177,8 +177,8 @@ namespace RBX {
 			
 			Body* body0 = c->getBody(Connector::body0);
 			Body* body1 = c->getBody(Connector::body1);
-			SimBody* simBody0 = body0 ? body0->getRootSimBody() : nullptr;
-			SimBody* simBody1 = body1 ? body1->getRootSimBody() : nullptr;
+			SimBody* simBody0 = body0 ? body0->getRootSimBody() : NULL;
+			SimBody* simBody1 = body1 ? body1->getRootSimBody() : NULL;
 
 			if (c->isHumanoid())
 			{
@@ -240,8 +240,8 @@ namespace RBX {
 			if (body1)
 				removeConnectorFromBody(c, body1);
 
-			RBXASSERT(simBody0 == nullptr || simBody0->validateBodyLists());
-			RBXASSERT(simBody1 == nullptr || simBody1->validateBodyLists());
+			RBXASSERT(simBody0 == NULL || simBody0->validateBodyLists());
+			RBXASSERT(simBody1 == NULL || simBody1->validateBodyLists());
 		}
 
 	private:

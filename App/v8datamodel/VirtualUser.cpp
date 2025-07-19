@@ -89,7 +89,7 @@ namespace RBX {
 		{
 			ControllerService* service = ServiceProvider::find<ControllerService>(oldProvider);
 			if (service && service->getHardwareDevice()==virtualHardwareDevice.get())
-				service->setHardwareDevice(nullptr);
+				service->setHardwareDevice(NULL);
 			virtualHardwareDevice.reset();
 		}
 
@@ -178,11 +178,11 @@ namespace RBX {
 	{
 		// Hex numbers are converted:
 		if (key.substr(0, 2)=="0x")
-			return (KeyCode) strtol(key.c_str(), nullptr, 0);
+			return (KeyCode) strtol(key.c_str(), NULL, 0);
 
 		// 3-digit strings are interpreted as decimal numbers
 		if (key.length()==3)
-			return (KeyCode) strtol(key.c_str(), nullptr, 0);
+			return (KeyCode) strtol(key.c_str(), NULL, 0);
 
 		if (key.length()!=1)
 			throw RBX::runtime_error("Unsupported key %s", key.c_str());

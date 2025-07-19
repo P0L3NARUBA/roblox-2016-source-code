@@ -115,7 +115,7 @@ public:
     virtual void onClumpChanged(PartInstance* part);
 	
 	void getAllParts(std::vector< shared_ptr<PartInstance> >& retParts) const;
-    PartInstance* getPart() const { if (parts.empty()) return nullptr; return parts[0].instance; }
+    PartInstance* getPart() const { if (parts.empty()) return NULL; return parts[0].instance; }
     
 private:
     void checkBindings();

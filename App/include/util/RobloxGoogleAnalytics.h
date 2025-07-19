@@ -36,10 +36,10 @@ namespace RobloxGoogleAnalytics
 
     // Allow for easy initialization based on a lottery number.
     // Calls setCanUseAnalytics and init.
-    void lotteryInit(const std::string &accountPropertyID, size_t maxThreadScheduleSize, int lotteryThreshold, const char * productName = nullptr, int robloxAnalyticsLottery = -1, const std::string &sessionKey = "sessionID=");
+    void lotteryInit(const std::string &accountPropertyID, size_t maxThreadScheduleSize, int lotteryThreshold, const char * productName = NULL, int robloxAnalyticsLottery = -1, const std::string &sessionKey = "sessionID=");
 
 	// Must be called before using the singleton.
-	void init(const std::string &accountPropertyID, size_t maxThreadScheduleSize, const char * productName = nullptr);
+	void init(const std::string &accountPropertyID, size_t maxThreadScheduleSize, const char * productName = NULL);
 
 	bool isInitialized();
 

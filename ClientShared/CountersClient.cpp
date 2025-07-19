@@ -75,9 +75,9 @@ void CountersClient::reportEvents(std::set<std::wstring> &events)
 
 	// Initialize the User Agent
 #ifdef UNICODE
-	HINTERNET session = InternetOpen(L"Roblox/WinInet", PRE_CONFIG_INTERNET_ACCESS, nullptr, nullptr, 0);
+	HINTERNET session = InternetOpen(L"Roblox/WinInet", PRE_CONFIG_INTERNET_ACCESS, NULL, NULL, 0);
 #else
-	HINTERNET session = InternetOpen("Roblox/WinInet", PRE_CONFIG_INTERNET_ACCESS, nullptr, nullptr, 0);
+	HINTERNET session = InternetOpen("Roblox/WinInet", PRE_CONFIG_INTERNET_ACCESS, NULL, NULL, 0);
 #endif
 	if (!session) 
 	{
@@ -92,7 +92,7 @@ void CountersClient::reportEvents(std::set<std::wstring> &events)
 
 	s = u.GetUrlPath();
 	s += u.GetExtraInfo();
-	HINTERNET request = ::HttpOpenRequest(connection, _T("POST"), s, HTTP_VERSION, _T(""), nullptr, isSecure ? INTERNET_FLAG_SECURE : 0, 0); 
+	HINTERNET request = ::HttpOpenRequest(connection, _T("POST"), s, HTTP_VERSION, _T(""), NULL, isSecure ? INTERNET_FLAG_SECURE : 0, 0); 
 	if (!request) 
 	{
 		goto Error;
@@ -105,7 +105,7 @@ void CountersClient::reportEvents(std::set<std::wstring> &events)
 	InternetSetOption(request, INTERNET_OPTION_RECEIVE_TIMEOUT, (void*)&timeout, sizeof(timeout));
 	InternetSetOption(request, INTERNET_OPTION_SEND_TIMEOUT, (void*)&timeout, sizeof(timeout));
 
-	DWORD httpSendResult = ::HttpSendRequest(request, nullptr, 0, (LPVOID)postData.c_str(), postData.length());
+	DWORD httpSendResult = ::HttpSendRequest(request, NULL, 0, (LPVOID)postData.c_str(), postData.length());
 	if (!httpSendResult) 
 	{
 		goto Error;

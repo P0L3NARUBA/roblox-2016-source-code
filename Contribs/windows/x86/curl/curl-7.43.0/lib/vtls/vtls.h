@@ -135,7 +135,7 @@ bool Curl_ssl_false_start(void);
 #define Curl_ssl_shutdown(x,y) CURLE_NOT_BUILT_IN
 #define Curl_ssl_set_engine(x,y) CURLE_NOT_BUILT_IN
 #define Curl_ssl_set_engine_default(x) CURLE_NOT_BUILT_IN
-#define Curl_ssl_engines_list(x) nullptr
+#define Curl_ssl_engines_list(x) NULL
 #define Curl_ssl_send(a,b,c,d,e) -1
 #define Curl_ssl_recv(a,b,c,d,e) -1
 #define Curl_ssl_initsessions(x,y) CURLE_OK

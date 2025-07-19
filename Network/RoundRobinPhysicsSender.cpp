@@ -46,7 +46,7 @@ void RoundRobinPhysicsSender::sendPhysicsData(RakNet::BitStream& bitStream, cons
 
 	if (assembly)
 	{
-        senderStats = nullptr;
+        senderStats = NULL;
         if (replicator.settings().trackPhysicsDetails)
         {
             senderStats = &(replicator.replicatorStats.physicsSenderStats);
@@ -70,7 +70,7 @@ void RoundRobinPhysicsSender::sendPhysicsData(RakNet::BitStream& bitStream, cons
 					RakNet::BitSize_t characterBytes = bitStream.GetNumberOfBytesUsed();
                     CoordinateFrame cFrame = part->getCoordinateFrame();
                     float accumulatedError;
-					sendMechanism(bitStream, part, detailed, currentStepTimestamp, cFrame, accumulatedError, nullptr);
+					sendMechanism(bitStream, part, detailed, currentStepTimestamp, cFrame, accumulatedError, NULL);
 					if (senderStats && detailed) {
 						senderStats->details.characterAnim.increment();
 						senderStats->details.characterAnimSize.sample(bitStream.GetNumberOfBytesUsed() - characterBytes);
@@ -78,7 +78,7 @@ void RoundRobinPhysicsSender::sendPhysicsData(RakNet::BitStream& bitStream, cons
 				}
 				else
                 {
-					replicator.serializeId(bitStream, nullptr); // token: done with this mechanism
+					replicator.serializeId(bitStream, NULL); // token: done with this mechanism
                 }
 			}
 			else if (replicator.trySerializeId(bitStream, part))
@@ -86,7 +86,7 @@ void RoundRobinPhysicsSender::sendPhysicsData(RakNet::BitStream& bitStream, cons
 				RakNet::BitSize_t characterBytes = bitStream.GetNumberOfBytesUsed();
                 CoordinateFrame cFrame = part->getCoordinateFrame();
                 float accumulatedError;
-				sendMechanism(bitStream, part, detailed, currentStepTimestamp, cFrame, accumulatedError, nullptr);
+				sendMechanism(bitStream, part, detailed, currentStepTimestamp, cFrame, accumulatedError, NULL);
 				if (senderStats && detailed) {
 					senderStats->details.characterAnim.increment();
 					senderStats->details.characterAnimSize.sample(bitStream.GetNumberOfBytesUsed() - characterBytes);
@@ -106,7 +106,7 @@ const SimJob* RoundRobinPhysicsSender::findTargetPlayerCharacterSimJob()
 			return SimJob::getConstSimJobFromPrimitive(primitive);
 		}
 	}
-	return nullptr;
+	return NULL;
 }
 
 class RoundRobinPhysicsSender::JobSender : public boost::noncopyable
@@ -160,7 +160,7 @@ class RoundRobinPhysicsSender::JobSender : public boost::noncopyable
 			if (sender.replicator.isStreamingEnabled())
 				*bitStream << true;
 			else
-				sender.replicator.serializeId(*bitStream, nullptr);
+				sender.replicator.serializeId(*bitStream, NULL);
 
 			// Send ID_PHYSICS
             ReplicatorStats::PhysicsSenderStats& physStats =
@@ -181,8 +181,8 @@ public:
 	JobSender(RoundRobinPhysicsSender& sender, ConcurrentRakPeer *peer)
 		:sender(sender)
 		,rakPeer(peer)
-		,firstA(nullptr)
-		,firstM(nullptr)
+		,firstA(NULL)
+		,firstM(NULL)
 		,packetPriority(sender.replicator.settings().getPhysicsSendPriority())
 		,packetCount(0)
 		,itemCount(0)
@@ -294,7 +294,7 @@ int RoundRobinPhysicsSender::sendPacket(int maxPackets, PacketPriority packetPri
 			}
 			else
 			{
-				characterSimJob = nullptr;	// don't ignore me below
+				characterSimJob = NULL;	// don't ignore me below
 			}
 		}
 

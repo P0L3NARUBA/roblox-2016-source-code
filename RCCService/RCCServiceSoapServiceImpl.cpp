@@ -559,7 +559,7 @@ public:
 	static void convertToLua(const RBX::Reflection::Variant& source, ns1__LuaValue& dest, soap* soap)
 	{
 		assert(dest.type == ns1__LuaType__LUA_USCORETNIL);
-		assert(dest.value == nullptr);
+		assert(dest.value == NULL);
 
 		if (source.isType<void>())
 		{
@@ -905,7 +905,7 @@ public:
 		srand(RBX::randomSeed()); // make sure this thread is seeded
 		std::string id = job.id;
 
-		dataModel = RBX::DataModel::createDataModel(startHeartbeat, new RBX::NullVerb(nullptr,""), false);
+		dataModel = RBX::DataModel::createDataModel(startHeartbeat, new RBX::NullVerb(NULL,""), false);
         setupServerConnections(dataModel.get());
 
 		RBX::Network::Players* players = dataModel->find<RBX::Network::Players>();
@@ -1061,7 +1061,7 @@ public:
 				this->execute(id, script, result, soap);
 
 				RBX::RunService* runService = RBX::ServiceProvider::find<RBX::RunService>(pDataModel);
-				RBXASSERT(runService != nullptr);
+				RBXASSERT(runService != NULL);
 				j->notifyAliveConnection = runService->heartbeatSignal.connect(boost::bind(&CWebService::notifyAlive, this, _1));
 
 				{
@@ -1106,7 +1106,7 @@ public:
 		mainLogManager->NotifyFGThreadAlive();
 	}
 	
-	void closeJob(const std::string& jobID, const char* errorMessage = nullptr)
+	void closeJob(const std::string& jobID, const char* errorMessage = NULL)
 	{
 		// Take a mutex for the duration of closeJob here. The arbiter thinks that as 
 		// soon as closeJob returns it is safe to force kill the rcc process, so make
@@ -1168,7 +1168,7 @@ public:
 					jobsToClose.push_back(iter->first);
 		}
 		*result = jobsToClose.size();
-		std::for_each(jobsToClose.begin(), jobsToClose.end(), boost::bind(&CWebService::closeJob, this, _1, (const char*)nullptr));
+		std::for_each(jobsToClose.begin(), jobsToClose.end(), boost::bind(&CWebService::closeJob, this, _1, (const char*)NULL));
 	}
 
 	void closeAllJobs(int* result)
@@ -1183,7 +1183,7 @@ public:
 				jobsToClose.push_back(iter->first);
 		}
 		*result = jobsToClose.size();
-		std::for_each(jobsToClose.begin(), jobsToClose.end(), boost::bind(&CWebService::closeJob, this, _1, (const char*)nullptr));
+		std::for_each(jobsToClose.begin(), jobsToClose.end(), boost::bind(&CWebService::closeJob, this, _1, (const char*)NULL));
 	}
 
 	void getAllJobs(std::vector<ns1__Job * >& result, soap* soap)
@@ -1341,7 +1341,7 @@ CWebService::CWebService(bool crashUploadOnly) :
 	// create a thread to periodically check for security key changes
 	fetchSecurityDataThread.reset(new boost::thread(RBX::thread_wrapper(boost::bind(&CWebService::validateSecurityData, this), "CWebService::validateSecurityData")));
 
-	counters.reset(new CountersClient(GetBaseURL().c_str(), "76E5A40C-3AE1-4028-9F10-7C62520BD94F", nullptr));
+	counters.reset(new CountersClient(GetBaseURL().c_str(), "76E5A40C-3AE1-4028-9F10-7C62520BD94F", NULL));
 	
 	RBX::ViewBase::InitPluginModules();
 
@@ -1461,7 +1461,7 @@ void CWebService::LoadClientSettings(std::string& clientDest, std::string& thumb
 
 void CWebService::LoadAppSettings()
 {
-	boost::filesystem::path exePath = RBX::FileSystem::getUserDirectory(false, RBX::DirExe, nullptr);
+	boost::filesystem::path exePath = RBX::FileSystem::getUserDirectory(false, RBX::DirExe, NULL);
 
 	FASTLOGS(FLog::RCCServiceInit, "Loading AppSettings.xml, current path: %s", exePath.string());
 
@@ -1824,7 +1824,7 @@ namespace
     static bool isServiceInstalled(const char* svcName)
     {
         bool result = false;
-        SC_HANDLE scm = OpenSCManager(nullptr, nullptr, nullptr);
+        SC_HANDLE scm = OpenSCManager(NULL, NULL, NULL);
         SC_HANDLE thumbService = OpenService(scm, svcName, SERVICE_QUERY_STATUS);
         if (thumbService)
         {

@@ -244,7 +244,7 @@ namespace RBX
 	protected:
 		virtual bool askSetParent(const Instance* instance) const {
 			// ConstrainedValues only make sense in Configuration objects
-			return (Instance::fastDynamicCast<Configuration>(instance) != nullptr);
+			return (Instance::fastDynamicCast<Configuration>(instance) != NULL);
 		}
 	};
 	extern const char* const sIntConstrainedValue;

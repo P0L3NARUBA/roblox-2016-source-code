@@ -196,9 +196,9 @@ bool CSHA1::HashFile( char *szFileName )
 	unsigned long ulFileSize = 0, ulRest = 0, ulBlocks = 0;
 	unsigned long i = 0;
 	unsigned char uData[ MAX_FILE_READ_BUFFER ];
-	FILE *fIn = nullptr;
+	FILE *fIn = NULL;
 
-	if ( ( fIn = fopen( szFileName, "rb" ) ) == nullptr )
+	if ( ( fIn = fopen( szFileName, "rb" ) ) == NULL )
 		return ( false );
 
 	fseek( fIn, 0, SEEK_END );
@@ -232,7 +232,7 @@ bool CSHA1::HashFile( char *szFileName )
 	}
 
 	fclose( fIn );
-	fIn = nullptr;
+	fIn = NULL;
 
 	return ( true );
 }

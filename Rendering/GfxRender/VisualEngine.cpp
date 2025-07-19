@@ -63,6 +63,7 @@ namespace RBX
 			FASTLOG1(FLog::Graphics, "Video memory size: %lld", SystemUtil::getVideoMemory());
 
 			GlobalShaderData::define(device);
+			GlobalProcessingData::define(device);
 			GlobalMaterialData::define(device);
 			GlobalLightList::define(device);
 
@@ -75,7 +76,7 @@ namespace RBX
 			// initialize texture manager
 			textureManager.reset(new TextureManager(this));
 
-			// create light grid
+			// create light grid - disabled because we're using high quality local lighting now
 			/*LightGrid::TextureMode gridTextureMode =
 				device->getShadingLanguage() == "glsles"
 				? LightGrid::Texture_2D
@@ -165,22 +166,20 @@ namespace RBX
 
 			// set up caps
 			bool gbufferSupported = false;
-			/*shaderManager->getProgram("PassThroughVS", "SSAOFS").get() != nullptr &&
+			/*shaderManager->getProgram("PassThroughVS", "SSAOFS").get() != NULL &&
 			device->getCaps().maxDrawBuffers >= 2 &&
 			(device->getFeatureLevel() == "D3D11" || SystemUtil::getVideoMemory() >= 128*1024*1024);*/
 
 			renderCaps->setSupportsGBuffer(gbufferSupported);
 
-			if (shared_ptr<ShaderProgram> program = shaderManager->getProgram("DefaultSkinnedVS", "DefaultFS"))
-			{
+			if (shared_ptr<ShaderProgram> program = shaderManager->getProgram("DefaultSkinnedVS", "DefaultFS")) {
 				unsigned int boneCount = program->getMaxWorldTransforms();
 
 				FASTLOG1(FLog::Graphics, "Supported bones for skinning: %d", boneCount);
 
 				renderCaps->setSkinningBoneCount(boneCount);
 			}
-			else
-			{
+			else {
 				FASTLOG(FLog::Graphics, "Supported bones for skinning: 0 (no shader support)");
 			}
 
@@ -223,9 +222,9 @@ namespace RBX
 			}
 			else
 			{
-				contentProvider = nullptr;
-				meshContentProvider = nullptr;
-				lighting = nullptr;
+				contentProvider = NULL;
+				meshContentProvider = NULL;
+				lighting = NULL;
 
 				if (sceneUpdater)
 				{
@@ -295,7 +294,7 @@ namespace RBX
 			// update camera for FRM culling
 			cameraCullFrm = cameraCull;
 
-			cameraCullFrm.changeProjectionPerspectiveZ(-value.nearPlaneZ(), std::min(-value.farPlaneZ(), sqrtf(frameRateManager->GetRenderCullSqDistance())));
+			cameraCullFrm.changeProjectionPerspectiveZ(-value.nearPlaneZ(), -value.farPlaneZ()); //std::min(-value.farPlaneZ(), sqrtf(frameRateManager->GetRenderCullSqDistance())));
 		}
 
 		void VisualEngine::reloadShaders()

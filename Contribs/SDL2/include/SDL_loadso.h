@@ -52,7 +52,7 @@ extern "C" {
 
 /**
  *  This function dynamically loads a shared object and returns a pointer
- *  to the object handle (or nullptr if there was an error).
+ *  to the object handle (or NULL if there was an error).
  *  The 'sofile' parameter is a system dependent name of the object file.
  */
 extern DECLSPEC void *SDLCALL SDL_LoadObject(const char *sofile);

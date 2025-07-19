@@ -9,7 +9,7 @@ namespace RBX
 		V* value;
 		V oldValue;
 	public:
-		ScopedAssign() : value(nullptr) {}
+		ScopedAssign() : value(NULL) {}
 		ScopedAssign(V& value, const V& newValue)
 			:value(&value)
 			,oldValue(value)

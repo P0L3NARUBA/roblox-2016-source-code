@@ -14,11 +14,11 @@ BOOL screw_mesh(lpLISTH listh_path, lpD_POINT f, lpD_POINT s,
 	MATR        m_all;
 	hOBJ        hobject;
 	MESHDD      mdd;
-	lpNPW       np = nullptr;
+	lpNPW       np = NULL;
 	BOOL		cod;//nb  = FALSE;
 
 	c_num_np = -32767;
-	*hrez = nullptr;
+	*hrez = NULL;
 
 	if ( !np_init_list(&c_list_str) ) {
 		free_vdim(&mdd.vdim);
@@ -27,12 +27,12 @@ BOOL screw_mesh(lpLISTH listh_path, lpD_POINT f, lpD_POINT s,
 
 //   
 	if ( (np = creat_np_mem(TNPW,MAXNOV,MAXNOE,MAXNOC, MAXNOF,
-													MAXNOE)) == nullptr)  goto err1;
+													MAXNOE)) == NULL)  goto err1;
 	np_init((lpNP)np);
 	np->ident = c_num_np++;
 
 	hobject = listh_path->hhead;  //  
-	while( hobject != nullptr )      //     
+	while( hobject != NULL )      //     
 	{
 		o_hcunit( m_all );            // 
 //      
@@ -78,7 +78,7 @@ BOOL screw_mesh(lpLISTH listh_path, lpD_POINT f, lpD_POINT s,
 err1:
 	free_np_mem(&np);
 	free_vdim(&mdd.vdim);
-	np_end_of_put(&c_list_str,NP_CANCEL,0,nullptr);
+	np_end_of_put(&c_list_str,NP_CANCEL,0,NULL);
 	return FALSE;
 }
 
@@ -126,7 +126,7 @@ static BOOL create_screw( lpMESHDD g, hOBJ hpath,
 
 	if (!begin_rw(&vdim, 0)) goto err;
 	for (i = 0; i < vdim.num_elem; i++) {//    
-		if ( (lpnode = (lpMNODE)get_next_elem(&vdim)) == nullptr) goto err1;
+		if ( (lpnode = (lpMNODE)get_next_elem(&vdim)) == NULL) goto err1;
 		node = *lpnode;
 //     
 		if (! (o_hcncrd( m_all, &node.p, &node.p )) ) goto err1;

@@ -51,7 +51,7 @@ static size_t convert_lineends(struct SessionHandle *data,
   char *inPtr, *outPtr;
 
   /* sanity check */
-  if((startPtr == nullptr) || (size < 1)) {
+  if((startPtr == NULL) || (size < 1)) {
     return size;
   }
 
@@ -132,7 +132,7 @@ void Curl_infof(struct SessionHandle *data, const char *fmt, ...)
     vsnprintf(print_buffer, sizeof(print_buffer), fmt, ap);
     va_end(ap);
     len = strlen(print_buffer);
-    Curl_debug(data, CURLINFO_TEXT, print_buffer, len, nullptr);
+    Curl_debug(data, CURLINFO_TEXT, print_buffer, len, NULL);
   }
 }
 
@@ -158,7 +158,7 @@ void Curl_failf(struct SessionHandle *data, const char *fmt, ...)
       data->state.buffer[len] = '\n';
       data->state.buffer[++len] = '\0';
     }
-    Curl_debug(data, CURLINFO_TEXT, data->state.buffer, len, nullptr);
+    Curl_debug(data, CURLINFO_TEXT, data->state.buffer, len, NULL);
   }
 
   va_end(ap);
@@ -381,8 +381,8 @@ CURLcode Curl_client_chop_write(struct connectdata *conn,
                                 size_t len)
 {
   struct SessionHandle *data = conn->data;
-  curl_write_callback writeheader = nullptr;
-  curl_write_callback writebody = nullptr;
+  curl_write_callback writeheader = NULL;
+  curl_write_callback writebody = NULL;
 
   if(!len)
     return CURLE_OK;
@@ -550,7 +550,7 @@ CURLcode Curl_read(struct connectdata *conn, /* connection data */
   CURLcode result = CURLE_RECV_ERROR;
   ssize_t nread = 0;
   size_t bytesfromsocket = 0;
-  char *buffertofill = nullptr;
+  char *buffertofill = NULL;
   bool pipelining = Curl_pipeline_wanted(conn->data->multi, CURLPIPE_HTTP1);
 
   /* Set 'num' to 0 or 1, depending on which socket that has been sent here.
@@ -678,7 +678,7 @@ int Curl_debug(struct SessionHandle *data, curl_infotype type,
   int rc;
   if(data->set.printhost && conn && conn->host.dispname) {
     char buffer[160];
-    const char *t=nullptr;
+    const char *t=NULL;
     const char *w="Data";
     switch (type) {
     case CURLINFO_HEADER_IN:

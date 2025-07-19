@@ -41,12 +41,12 @@
  *
  * \return
  * The \c ir_rvalue assigned to the variable outside the loop.  May return
- * \c nullptr if no initializer can be found.
+ * \c NULL if no initializer can be found.
  */
 ir_rvalue *
 find_initial_value(ir_loop *loop, ir_variable *var, ir_instruction **out_containing_ir)
 {
-   *out_containing_ir = nullptr;
+   *out_containing_ir = NULL;
    ir_variable_refcount_visitor refs;
    
    for (exec_node *node = loop->prev;
@@ -62,13 +62,13 @@ find_initial_value(ir_loop *loop, ir_variable *var, ir_instruction **out_contain
       case ir_type_if:
          ir->accept(&refs);
          if (refs.find_variable_entry(var))
-            return nullptr;
+            return NULL;
          break;
 
       case ir_type_function:
       case ir_type_function_signature:
 	 assert(!"Should not get here.");
-	 return nullptr;
+	 return NULL;
 
       case ir_type_assignment: {
 	 ir_assignment *assign = ir->as_assignment();
@@ -77,7 +77,7 @@ find_initial_value(ir_loop *loop, ir_variable *var, ir_instruction **out_contain
 	 if (assignee == var)
 	 {
 	    *out_containing_ir = assign;
-	    return (assign->condition != nullptr) ? nullptr : assign->rhs;
+	    return (assign->condition != NULL) ? NULL : assign->rhs;
 	 }
 
 	 break;
@@ -88,7 +88,7 @@ find_initial_value(ir_loop *loop, ir_variable *var, ir_instruction **out_contain
       }
    }
 
-   return nullptr;
+   return NULL;
 }
 
 
@@ -96,10 +96,10 @@ int
 calculate_iterations(ir_rvalue *from, ir_rvalue *to, ir_rvalue *increment,
 		     enum ir_expression_operation op)
 {
-   if (from == nullptr || to == nullptr || increment == nullptr)
+   if (from == NULL || to == NULL || increment == NULL)
       return -1;
 
-   void *mem_ctx = ralloc_context(nullptr);
+   void *mem_ctx = ralloc_context(NULL);
 
    ir_expression *const sub =
       new(mem_ctx) ir_expression(ir_binop_sub, from->type, to, from);
@@ -109,13 +109,13 @@ calculate_iterations(ir_rvalue *from, ir_rvalue *to, ir_rvalue *increment,
 
    ir_constant *iter = div->constant_expression_value();
 
-   if (iter == nullptr)
+   if (iter == NULL)
       return -1;
 
    if (!iter->type->is_integer()) {
       ir_rvalue *cast =
 	 new(mem_ctx) ir_expression(ir_unop_f2i, glsl_type::int_type, iter,
-				    nullptr);
+				    NULL);
 
       iter = cast->constant_expression_value();
    }
@@ -161,7 +161,7 @@ calculate_iterations(ir_rvalue *from, ir_rvalue *to, ir_rvalue *increment,
 
       ir_constant *const cmp_result = cmp->constant_expression_value();
 
-      assert(cmp_result != nullptr);
+      assert(cmp_result != NULL);
       if (cmp_result->get_bool_component(0)) {
 	 iter_value += bias[i];
 	 valid_loop = true;
@@ -200,12 +200,12 @@ loop_control_visitor::visit_leave(ir_loop *ir)
    /* If we've entered a loop that hasn't been analyzed, something really,
     * really bad has happened.
     */
-   if (ls == nullptr) {
-      assert(ls != nullptr);
+   if (ls == NULL) {
+      assert(ls != NULL);
       return visit_continue;
    }
 
-   if (ls->limiting_terminator != nullptr) {
+   if (ls->limiting_terminator != NULL) {
       /* If the limiting terminator has an iteration count of zero, then we've
        * proven that the loop cannot run, so delete it.
        */

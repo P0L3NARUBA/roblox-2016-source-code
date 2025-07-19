@@ -64,18 +64,18 @@ namespace RBX
 			, device11(static_cast<DeviceD3D11*>(device)->getDevice11())
 			, globalDataSize(0)
 			, defaultAnisotropy(1)
-			, cachedProgram(nullptr)
-			, cachedVertexLayout(nullptr)
-			, cachedGeometry(nullptr)
-			, cachedFramebuffer(nullptr)
+			, cachedProgram(NULL)
+			, cachedVertexLayout(NULL)
+			, cachedGeometry(NULL)
+			, cachedFramebuffer(NULL)
 			, cachedRasterizerState(RasterizerState::Cull_None)
 			, cachedBlendState(BlendState::Mode_None)
 			, cachedDepthState(DepthState::Function_Always, false)
-			, globalsConstantBuffer(nullptr)
-			, globalsProcessingDataBuffer(nullptr)
-			, globalsMaterialDataBuffer(nullptr)
-			, globalsLightListBuffer(nullptr)
-			, d3d9(nullptr)
+			, globalsConstantBuffer(NULL)
+			, globalsProcessingDataBuffer(NULL)
+			, globalsMaterialDataBuffer(NULL)
+			, globalsLightListBuffer(NULL)
+			, d3d9(NULL)
 		{
 			immediateContext11 = deviceContext11;
 
@@ -109,7 +109,7 @@ namespace RBX
 			if (d3d9)
 			{
 				FreeLibrary(d3d9);
-				d3d9 = nullptr;
+				d3d9 = NULL;
 			}
 
 			ReleaseCheck(immediateContext11);
@@ -132,9 +132,8 @@ namespace RBX
 			blendStateHash.clear();
 		}
 
-		void DeviceContextD3D11::defineGlobalConstants(size_t dataSize)
-		{
-			RBXASSERT(globalsConstantBuffer == nullptr);
+		void DeviceContextD3D11::defineGlobalConstants(size_t dataSize) {
+			RBXASSERT(globalsConstantBuffer == NULL);
 			if (globalsConstantBuffer)
 				return;
 
@@ -148,13 +147,12 @@ namespace RBX
 
 			globalDataSize = dataSize;
 
-			HRESULT hr = device11->CreateBuffer(&bd, nullptr, &globalsConstantBuffer);
+			HRESULT hr = device11->CreateBuffer(&bd, NULL, &globalsConstantBuffer);
 			RBXASSERT(SUCCEEDED(hr));
 		}
 
-		void DeviceContextD3D11::defineGlobalProcessingData(size_t dataSize)
-		{
-			RBXASSERT(globalsProcessingDataBuffer == nullptr);
+		void DeviceContextD3D11::defineGlobalProcessingData(size_t dataSize) {
+			RBXASSERT(globalsProcessingDataBuffer == NULL);
 			if (globalsProcessingDataBuffer)
 				return;
 
@@ -166,13 +164,14 @@ namespace RBX
 			bd.StructureByteStride = 0;
 			bd.MiscFlags = 0;
 
-			HRESULT hr = device11->CreateBuffer(&bd, nullptr, &globalsProcessingDataBuffer);
+			processingDataSize = dataSize;
+
+			HRESULT hr = device11->CreateBuffer(&bd, NULL, &globalsProcessingDataBuffer);
 			RBXASSERT(SUCCEEDED(hr));
 		}
 
-		void DeviceContextD3D11::defineGlobalMaterialData(size_t dataSize)
-		{
-			RBXASSERT(globalsMaterialDataBuffer == nullptr);
+		void DeviceContextD3D11::defineGlobalMaterialData(size_t dataSize) {
+			RBXASSERT(globalsMaterialDataBuffer == NULL);
 			if (globalsMaterialDataBuffer)
 				return;
 
@@ -184,13 +183,12 @@ namespace RBX
 			bd.StructureByteStride = 0;
 			bd.MiscFlags = 0;
 
-			HRESULT hr = device11->CreateBuffer(&bd, nullptr, &globalsMaterialDataBuffer);
+			HRESULT hr = device11->CreateBuffer(&bd, NULL, &globalsMaterialDataBuffer);
 			RBXASSERT(SUCCEEDED(hr));
 		}
 
-		void DeviceContextD3D11::defineInstancedModelMatrixes(size_t dataSize, size_t elementSize)
-		{
-			RBXASSERT(instancedModelMatrixesBuffer == nullptr);
+		void DeviceContextD3D11::defineInstancedModelMatrixes(size_t dataSize, size_t elementSize) {
+			RBXASSERT(instancedModelMatrixesBuffer == NULL);
 			if (instancedModelMatrixesBuffer)
 				return;
 
@@ -202,7 +200,7 @@ namespace RBX
 			bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 			bd.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
 
-			HRESULT hr = device11->CreateBuffer(&bd, nullptr, &instancedModelMatrixesBuffer);
+			HRESULT hr = device11->CreateBuffer(&bd, NULL, &instancedModelMatrixesBuffer);
 			RBXASSERT(SUCCEEDED(hr));
 
 			D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
@@ -215,9 +213,8 @@ namespace RBX
 			RBXASSERT(SUCCEEDED(hr));
 		}
 
-		void DeviceContextD3D11::defineGlobalLightList(size_t dataSize, size_t elementSize)
-		{
-			RBXASSERT(globalsLightListBuffer == nullptr);
+		void DeviceContextD3D11::defineGlobalLightList(size_t dataSize, size_t elementSize) {
+			RBXASSERT(globalsLightListBuffer == NULL);
 			if (globalsLightListBuffer)
 				return;
 
@@ -229,7 +226,7 @@ namespace RBX
 			bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 			bd.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
 
-			HRESULT hr = device11->CreateBuffer(&bd, nullptr, &globalsLightListBuffer);
+			HRESULT hr = device11->CreateBuffer(&bd, NULL, &globalsLightListBuffer);
 			RBXASSERT(SUCCEEDED(hr));
 
 			D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
@@ -242,34 +239,32 @@ namespace RBX
 			RBXASSERT(SUCCEEDED(hr));
 		}
 
-		void DeviceContextD3D11::updateGlobalConstants(const void* data, size_t dataSize)
-		{
+		void DeviceContextD3D11::updateGlobalConstants(const void* data, size_t dataSize) {
 			RBXASSERT(dataSize == globalDataSize);
 
-			immediateContext11->UpdateSubresource(globalsConstantBuffer, 0, nullptr, data, 0, 0);
+			immediateContext11->UpdateSubresource(globalsConstantBuffer, 0, NULL, data, 0, 0);
 
 			immediateContext11->VSSetConstantBuffers(0, 1, &globalsConstantBuffer);
 			immediateContext11->PSSetConstantBuffers(0, 1, &globalsConstantBuffer);
 		}
 
-		void DeviceContextD3D11::updateGlobalProcessingData(const void* data, size_t dataSize)
-		{
-			immediateContext11->UpdateSubresource(globalsProcessingDataBuffer, 0, nullptr, data, 0, 0);
+		void DeviceContextD3D11::updateGlobalProcessingData(const void* data, size_t dataSize) {
+			RBXASSERT(dataSize == processingDataSize);
+
+			immediateContext11->UpdateSubresource(globalsProcessingDataBuffer, 0, NULL, data, 0, 0);
 
 			//immediateContext11->VSSetConstantBuffers(0, 1, &globalsProcessingDataBuffer);
 			immediateContext11->PSSetConstantBuffers(0, 1, &globalsProcessingDataBuffer);
 		}
 
-		void DeviceContextD3D11::updateGlobalMaterialData(const void* data, size_t dataSize)
-		{
-			immediateContext11->UpdateSubresource(globalsMaterialDataBuffer, 0, nullptr, data, 0, 0);
+		void DeviceContextD3D11::updateGlobalMaterialData(const void* data, size_t dataSize) {
+			immediateContext11->UpdateSubresource(globalsMaterialDataBuffer, 0, NULL, data, 0, 0);
 
 			//immediateContext11->VSSetConstantBuffers(0, 1, &globalsMaterialDataBuffer);
 			immediateContext11->PSSetConstantBuffers(1, 1, &globalsMaterialDataBuffer);
 		}
 
-		void DeviceContextD3D11::updateInstancedModelMatrixes(const void* data, size_t dataSize)
-		{
+		void DeviceContextD3D11::updateInstancedModelMatrixes(const void* data, size_t dataSize) {
 			D3D11_MAPPED_SUBRESOURCE mappedResource2;
 			HRESULT hr = immediateContext11->Map(instancedModelMatrixesBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource2);
 			RBXASSERT(SUCCEEDED(hr));
@@ -281,8 +276,7 @@ namespace RBX
 			immediateContext11->PSSetShaderResources(31, 1, &instancedModelMatrixesResource);
 		}
 
-		void DeviceContextD3D11::updateGlobalLightList(const void* data, size_t dataSize)
-		{
+		void DeviceContextD3D11::updateGlobalLightList(const void* data, size_t dataSize) {
 			D3D11_MAPPED_SUBRESOURCE mappedResource2;
 			HRESULT hr = immediateContext11->Map(globalsLightListBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource2);
 			RBXASSERT(SUCCEEDED(hr));
@@ -317,16 +311,16 @@ namespace RBX
 						TextureUnit& u = cachedTextureUnits[i];
 						if (u.texture == ownerTex.get())
 						{
-							ID3D11ShaderResourceView* nullSRV = nullptr;
+							ID3D11ShaderResourceView* nullSRV = NULL;
 							immediateContext11->PSSetShaderResources(i, 1, &nullSRV);
-							u.texture = nullptr;
+							u.texture = NULL;
 						}
 					}
 				}
 			}
 
 			RenderbufferD3D11* dsBuffer = static_cast<RenderbufferD3D11*>(depth.get());
-			ID3D11DepthStencilView* dsv = dsBuffer ? static_cast<ID3D11DepthStencilView*>(dsBuffer->getObject()) : nullptr;
+			ID3D11DepthStencilView* dsv = dsBuffer ? static_cast<ID3D11DepthStencilView*>(dsBuffer->getObject()) : NULL;
 
 			immediateContext11->OMSetRenderTargets(color.size(), rtArray, dsv);
 
@@ -530,23 +524,23 @@ namespace RBX
 		void DeviceContextD3D11::clearStates()
 		{
 			// Clear framebuffer cache
-			cachedFramebuffer = nullptr;
+			cachedFramebuffer = NULL;
 
 			// Clear program cache
-			cachedProgram = nullptr;
+			cachedProgram = NULL;
 
 			// Clear vertex layout cache
-			cachedVertexLayout = nullptr;
+			cachedVertexLayout = NULL;
 
 			// Clear geometry cache
-			cachedGeometry = nullptr;
+			cachedGeometry = NULL;
 
 			// Clear texture cache
 			for (size_t i = 0; i < ARRAYSIZE(cachedTextureUnits); ++i)
 			{
 				TextureUnit& u = cachedTextureUnits[i];
 
-				u.texture = nullptr;
+				u.texture = NULL;
 
 				// Clear state to an invalid value to guarantee a cache miss on the next setup
 				u.samplerState = SamplerState::Filter_Count;
@@ -629,7 +623,7 @@ namespace RBX
 			{
 				cachedProgram = static_cast<ShaderProgramD3D11*>(program);
 				cachedProgram->bind();
-				cachedVertexLayout = nullptr; // VertexLayout is per vertex shader
+				cachedVertexLayout = NULL; // VertexLayout is per vertex shader
 			}
 		}
 
@@ -732,17 +726,17 @@ namespace RBX
 
 		void DeviceContextD3D11::invalidateCachedGeometry()
 		{
-			cachedGeometry = nullptr;
+			cachedGeometry = NULL;
 		}
 
 		void DeviceContextD3D11::invalidateCachedProgram()
 		{
-			cachedProgram = nullptr;
+			cachedProgram = NULL;
 		}
 
 		void DeviceContextD3D11::invalidateCachedVertexLayout()
 		{
-			cachedVertexLayout = nullptr;
+			cachedVertexLayout = NULL;
 		}
 
 		void DeviceContextD3D11::invalidateCachedTexture(Texture* texture)
@@ -752,7 +746,7 @@ namespace RBX
 				TextureUnit& u = cachedTextureUnits[stage];
 
 				if (u.texture == texture)
-					u.texture = nullptr;
+					u.texture = NULL;
 			}
 		}
 

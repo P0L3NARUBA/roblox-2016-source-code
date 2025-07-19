@@ -88,7 +88,7 @@ krb5_decode(void *app_data, void *buf, int len,
 
   enc.value = buf;
   enc.length = len;
-  maj = gss_unseal(&min, *context, &enc, &dec, nullptr, nullptr);
+  maj = gss_unseal(&min, *context, &enc, &dec, NULL, NULL);
   if(maj != GSS_S_COMPLETE) {
     if(len >= 4)
       strcpy(buf, "599 ");
@@ -176,7 +176,7 @@ krb5_auth(void *app_data, struct connectdata *conn)
   chan.acceptor_address.value =
     &((struct sockaddr_in *)REMOTE_ADDR)->sin_addr.s_addr;
   chan.application_data.length = 0;
-  chan.application_data.value = nullptr;
+  chan.application_data.value = NULL;
 
   /* this loop will execute twice (once for service, once for host) */
   for(;;) {
@@ -186,7 +186,7 @@ krb5_auth(void *app_data, struct connectdata *conn)
 
       if(result)
         return -2;
-      if(Curl_GetFTPResponse(&nread, conn, nullptr))
+      if(Curl_GetFTPResponse(&nread, conn, NULL))
         return -1;
 
       if(data->state.buffer[0] != '3')
@@ -208,8 +208,8 @@ krb5_auth(void *app_data, struct connectdata *conn)
       service = srv_host;
       continue;
     }
-    /* We pass nullptr as |output_name_type| to avoid a leak. */
-    gss_display_name(&min, gssname, &output_buffer, nullptr);
+    /* We pass NULL as |output_name_type| to avoid a leak. */
+    gss_display_name(&min, gssname, &output_buffer, NULL);
     Curl_infof(data, "Trying against %s\n", output_buffer.value);
     gssresp = GSS_C_NO_BUFFER;
     *context = GSS_C_NO_CONTEXT;
@@ -229,11 +229,11 @@ krb5_auth(void *app_data, struct connectdata *conn)
                                       gssresp,
                                       &output_buffer,
                                       TRUE,
-                                      nullptr);
+                                      NULL);
 
       if(gssresp) {
         free(_gssresp.value);
-        gssresp = nullptr;
+        gssresp = NULL;
       }
 
       if(GSS_ERROR(maj)) {
@@ -261,7 +261,7 @@ krb5_auth(void *app_data, struct connectdata *conn)
           break;
         }
 
-        if(Curl_GetFTPResponse(&nread, conn, nullptr)) {
+        if(Curl_GetFTPResponse(&nread, conn, NULL)) {
           ret = -1;
           break;
         }

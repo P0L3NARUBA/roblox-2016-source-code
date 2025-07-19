@@ -560,7 +560,7 @@ namespace StudioUtilities
 		// Now lock the datamodel (after MessageBox)
 		RBX::DataModel::LegacyLock lock(pDataModel, RBX::DataModelJob::Write);
 		
-		shared_ptr<RBX::Workspace> spWorkspace = shared_from(pDataModel ? pDataModel->getWorkspace() : nullptr);
+		shared_ptr<RBX::Workspace> spWorkspace = shared_from(pDataModel ? pDataModel->getWorkspace() : NULL);
 		if(!spWorkspace)
 			throw std::runtime_error("Can't insert at this time");
 		
@@ -587,14 +587,14 @@ namespace StudioUtilities
 		}
 		catch (std::exception&)
 		{
-			std::for_each(instances.begin(), instances.end(), boost::bind(&RBX::Instance::setParent, _1, (RBX::Instance*) nullptr));
+			std::for_each(instances.begin(), instances.end(), boost::bind(&RBX::Instance::setParent, _1, (RBX::Instance*) NULL));
 			throw;
 		}
 	}
 
 	void insertScript(boost::shared_ptr<RBX::DataModel> pDataModel, const QString &fileName)
 	{
-		shared_ptr<RBX::Workspace> spWorkspace = shared_from(pDataModel ? pDataModel->getWorkspace() : nullptr);
+		shared_ptr<RBX::Workspace> spWorkspace = shared_from(pDataModel ? pDataModel->getWorkspace() : NULL);
 		if(!pDataModel || !spWorkspace)
 			throw std::runtime_error("Script cannot be inserted at this time");
 

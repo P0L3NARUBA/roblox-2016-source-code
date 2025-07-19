@@ -21,7 +21,7 @@ const Cell& Grid::getVoxelLikelyThisChunk(const SpatialRegion::Id& id,
 		chunkPtr = &chunk;
 	} else {
 		chunkPtr = chunkMap.find(coordChunkId);
-		if (chunkPtr == nullptr) {
+		if (chunkPtr == NULL) {
 			return Constants::kUniqueEmptyCellRepresentation;
 		}
 	}
@@ -35,7 +35,7 @@ void Grid::fillLocalAreaInfo(const Vector3int16& globalCoord,
 		
 	SpatialRegion::Id mainChunkId = SpatialRegion::regionContainingVoxel(globalCoord);
 	const Chunk* mainChunkPtr = chunkMap.find(mainChunkId);
-	if (mainChunkPtr == nullptr) {
+	if (mainChunkPtr == NULL) {
 		RBXASSERT(false);
 		return;
 	}

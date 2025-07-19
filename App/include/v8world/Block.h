@@ -62,7 +62,7 @@ namespace RBX {
 		void updateBulletCollisionData();
 
 	public:
-		Block() : vertices(nullptr) {}
+		Block() : vertices(NULL) {}
 
 		~Block() {}
 

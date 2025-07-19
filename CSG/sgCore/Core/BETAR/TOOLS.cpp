@@ -9,7 +9,7 @@ UINT Message(UINT uiBtns, LPSTR lpFormat, ...)
 
 		wvsprintf(buf, lpFormat, (LPSTR)(&lpFormat+1));
 		MessageBeep(uiBtns ? uiBtns : MB_ICONEXCLAMATION);
-		return (UINT) MessageBox(nullptr,
+		return (UINT) MessageBox(NULL,
 														 buf,
 														 "oo",
 														 uiBtns ? uiBtns : MB_OK|MB_ICONEXCLAMATION);*/return 0;
@@ -24,7 +24,7 @@ int
 Error(LPSTR msg)
 {
 /*	MessageBeep(0);
-	return MessageBox(nullptr, msg, GetSystemName(), MB_OK);*/return 0;
+	return MessageBox(NULL, msg, GetSystemName(), MB_OK);*/return 0;
 } 
 
 ////////////////////////////////////////////////////////////////
@@ -75,7 +75,7 @@ char *	GetOemIDS(unsigned int	id)
 {
 //	LoadString(hInstLD, id, ids, 250);
 //	AnsiToOem(ids, ids);
-	return nullptr;
+	return NULL;
 }
 
 //

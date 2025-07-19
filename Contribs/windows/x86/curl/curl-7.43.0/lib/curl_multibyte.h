@@ -54,7 +54,7 @@ char *Curl_convert_wchar_to_UTF8(const wchar_t *str_w);
  * When building without UNICODE defined, this macros
  * Curl_convert_UTF8_to_tchar() and Curl_convert_tchar_to_UTF8()
  * return the pointer received as argument. Curl_unicodefree() does
- * no actual free'ing of this pointer it is simply set to nullptr.
+ * no actual free'ing of this pointer it is simply set to NULL.
  */
 
 #ifdef UNICODE
@@ -62,7 +62,7 @@ char *Curl_convert_wchar_to_UTF8(const wchar_t *str_w);
 #define Curl_convert_UTF8_to_tchar(ptr) Curl_convert_UTF8_to_wchar((ptr))
 #define Curl_convert_tchar_to_UTF8(ptr) Curl_convert_wchar_to_UTF8((ptr))
 #define Curl_unicodefree(ptr) \
-  do {if((ptr)) {free((ptr)); (ptr) = nullptr;}} WHILE_FALSE
+  do {if((ptr)) {free((ptr)); (ptr) = NULL;}} WHILE_FALSE
 
 typedef union {
   unsigned short       *tchar_ptr;
@@ -76,7 +76,7 @@ typedef union {
 #define Curl_convert_UTF8_to_tchar(ptr) (ptr)
 #define Curl_convert_tchar_to_UTF8(ptr) (ptr)
 #define Curl_unicodefree(ptr) \
-  do {(ptr) = nullptr;} WHILE_FALSE
+  do {(ptr) = NULL;} WHILE_FALSE
 
 typedef union {
   char                *tchar_ptr;

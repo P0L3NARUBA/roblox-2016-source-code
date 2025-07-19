@@ -90,7 +90,7 @@ public:
 
        @param recoverable If true, the system will attempt to allocate again
        if the callback returns true.  If false, malloc is going to return 
-       nullptr and this invocation is just to notify the application.
+       NULL and this invocation is just to notify the application.
 
        @return Return true to force malloc to attempt allocation again if the
        error was recoverable.
@@ -350,11 +350,11 @@ public:
 
     /**
      When System::malloc fails to allocate memory because the system is
-     out of memory, it invokes this handler (if it is not nullptr).
+     out of memory, it invokes this handler (if it is not NULL).
      The argument to the callback is the amount of memory that malloc
      was trying to allocate when it ran out.  If the callback returns
      true, System::malloc will attempt to allocate the memory again.
-     If the callback returns false, then System::malloc will return nullptr.
+     If the callback returns false, then System::malloc will return NULL.
 
      You can use outOfMemoryCallback to free data structures or to 
      register the failure.
@@ -366,12 +366,12 @@ public:
     /** Set an environment variable for the current process */
     static void setEnv(const std::string& name, const std::string& value);
 	
-    /** Get an environment variable for the current process.  Returns nullptr if the variable doesn't exist. */
+    /** Get an environment variable for the current process.  Returns NULL if the variable doesn't exist. */
     static const char* getEnv(const std::string& name);
 
     /**
      Prints a human-readable description of this machine
-     to the text output stream.  Either argument may be nullptr.
+     to the text output stream.  Either argument may be NULL.
      */
     static void describeSystem(
         class TextOutput& t);

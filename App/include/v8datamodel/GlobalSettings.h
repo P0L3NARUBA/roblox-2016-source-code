@@ -65,7 +65,7 @@ namespace RBX {
 		protected:
 			bool askAddChild(const Instance* instance) const override
 			{
-				return dynamic_cast<const Item*>(instance)!=nullptr;
+				return dynamic_cast<const Item*>(instance)!=NULL;
 			}
 		};
 
@@ -93,7 +93,7 @@ namespace RBX {
 		protected:
 			bool askAddChild(const Instance* instance) const override
 			{
-				return dynamic_cast<const Item*>(instance)!=nullptr;
+				return dynamic_cast<const Item*>(instance)!=NULL;
 			}
 		};
 
@@ -124,7 +124,7 @@ namespace RBX {
 		}
 		~GlobalAdvancedSettingsItem()
 		{
-			sing = nullptr;
+			sing = NULL;
 		}
 
 	public:
@@ -148,7 +148,7 @@ namespace RBX {
 	};
 		
 	template<class Class, const char* const & sClassName>
-	GlobalAdvancedSettingsItem<Class, sClassName>* GlobalAdvancedSettingsItem<Class, sClassName>::sing = nullptr;
+	GlobalAdvancedSettingsItem<Class, sClassName>* GlobalAdvancedSettingsItem<Class, sClassName>::sing = NULL;
 
 	template<class Class, const char* const & sClassName>
 	class GlobalBasicSettingsItem
@@ -167,7 +167,7 @@ namespace RBX {
 		}
 		~GlobalBasicSettingsItem()
 		{
-			sing = nullptr;
+			sing = NULL;
 		}
 
 
@@ -195,6 +195,6 @@ namespace RBX {
 	};
 		
 	template<class Class, const char* const & sClassName>
-	GlobalBasicSettingsItem<Class, sClassName>* GlobalBasicSettingsItem<Class, sClassName>::sing = nullptr;
+	GlobalBasicSettingsItem<Class, sClassName>* GlobalBasicSettingsItem<Class, sClassName>::sing = NULL;
 
 } // namespace

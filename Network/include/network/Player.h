@@ -250,13 +250,13 @@ namespace Network {
 			if (shared_ptr<SpawnLocation> shared_respawnLocation = respawnLocation.lock())
 				return shared_respawnLocation.get();
 			else 
-				return nullptr;
+				return NULL;
 		}
 		SpawnLocation* getDangerousRespawnLocation() const {
 			if (shared_ptr<SpawnLocation> shared_respawnLocation = respawnLocation.lock())
 				return shared_respawnLocation.get();
 			else 
-				return nullptr;
+				return NULL;
 		}
 		void setRespawnLocation(SpawnLocation* value);
 

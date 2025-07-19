@@ -60,8 +60,8 @@ void* operator new(size_t size)
 	// No use of std::new_handler because it cannot be done in portable
 	// and thread-safe way
 	//
-	// We throw std::bad_alloc() when scalable_malloc returns nullptr
-	//(we return nullptr if it is a no-throw implementation)
+	// We throw std::bad_alloc() when scalable_malloc returns NULL
+	//(we return NULL if it is a no-throw implementation)
 	if (void* ptr = scalable_malloc(size > 0 ? size : 1))
         return ptr;
 	if (RBX::roblox_allocator::crashOnAllocationFailure)
@@ -78,7 +78,7 @@ void* operator new(size_t size, const std::nothrow_t&) throw ()
 {
     if (void* ptr = scalable_malloc(size > 0 ? size : 1))
         return ptr;
-    return nullptr;
+    return NULL;
 }
 
 void* operator new[](size_t size, const std::nothrow_t&) throw ( )

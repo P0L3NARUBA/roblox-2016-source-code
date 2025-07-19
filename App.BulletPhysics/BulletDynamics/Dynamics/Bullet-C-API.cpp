@@ -360,7 +360,7 @@ double plNearestPoints(float p1[3], float p2[3], float p3[3], float q1[3], float
 	static btGjkEpaPenetrationDepthSolver Solver0;
 	static btMinkowskiPenetrationDepthSolver Solver1;
 		
-	btConvexPenetrationDepthSolver* Solver = nullptr;
+	btConvexPenetrationDepthSolver* Solver = NULL;
 	
 	Solver = &Solver1;	
 		

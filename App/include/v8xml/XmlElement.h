@@ -28,7 +28,7 @@ typedef RBX::Name XmlTag;
 //
 // "nil" means "don't change your current value
 // 
-// for an IDREF "null" means "set your value to nullptr"
+// for an IDREF "null" means "set your value to NULL"
 extern const RBX::Name& value_IDREF_null;
 extern const RBX::Name& value_IDREF_nil;
 
@@ -233,12 +233,12 @@ namespace RBX
 
 	public:
 		Parent()
-			:first(nullptr)
-			,last(nullptr)
+			:first(NULL)
+			,last(NULL)
 		{}
 
 		void pushBackChild(ChildClass* child) {
-			if (last==nullptr)
+			if (last==NULL)
 				first = child;
 			else
 				last->setNextSibling(child);
@@ -246,7 +246,7 @@ namespace RBX
 		}
 
 		void pushFrontChild(ChildClass* child) {
-			if (first==nullptr)
+			if (first==NULL)
 				last = child;
 			else
 				child->setNextSibling(first);
@@ -261,7 +261,7 @@ namespace RBX
 			if (first==child)
 				first = child->nextSibling();
 			else {
-				for (ChildClass* sibling = first; sibling!=nullptr; sibling = sibling->nextSibling()) {
+				for (ChildClass* sibling = first; sibling!=NULL; sibling = sibling->nextSibling()) {
 					if (sibling->nextSibling()==child) {
 						sibling->setNextSibling(child->nextSibling());
 						if (child==last)
@@ -270,7 +270,7 @@ namespace RBX
 					}
 				}
 			}
-			child->setNextSibling(nullptr);
+			child->setNextSibling(NULL);
 		}
 
 		ChildClass* firstChild() { return first; }
@@ -285,7 +285,7 @@ namespace RBX
 	private:
 		SiblingClass* next;	// "right sibling"
 	protected:
-		Sibling():next(nullptr) {}
+		Sibling():next(NULL) {}
 		Sibling(SiblingClass* nextSibling):next(nextSibling) {}
 	public:
 		const SiblingClass* nextSibling() const { return next; }
@@ -383,13 +383,13 @@ public:
 	XmlAttribute* findAttribute(const XmlTag& _tag);
 	inline bool findAttributeValue(const XmlTag& _tag, const RBX::Name*& value) const {
 		const XmlAttribute* attribute = findAttribute(_tag);
-		if (attribute==nullptr)
+		if (attribute==NULL)
 			return false;
 		return attribute->getValue(value);
 	}
 	inline bool findAttributeValue(const XmlTag& _tag, std::string& value) const {
 		const XmlAttribute* attribute = findAttribute(_tag);
-		if (attribute==nullptr)
+		if (attribute==NULL)
 			return false;
 		return attribute->getValue(value);
 	}

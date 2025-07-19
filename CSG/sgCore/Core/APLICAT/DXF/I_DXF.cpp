@@ -144,7 +144,7 @@ ex:
 			first = TRUE;
 			if (!begin_rw(&faces, 0)) goto err;
 			for	(i = 0; i < faces.num_elem; i++) {
-				if ((face = (FACE4*)get_next_elem(&faces)) == nullptr) goto err;
+				if ((face = (FACE4*)get_next_elem(&faces)) == NULL) goto err;
 				if (face->flag) {
 					if (first) {
 						color = face->color;
@@ -254,7 +254,7 @@ del:
 	hobj = blk.listh.hhead;
 	while (hobj) {
 		get_next_item(hobj, &hnext);
-		o_free(hobj, nullptr);
+		o_free(hobj, NULL);
 		hobj = hnext;
 	}
 	goto err;

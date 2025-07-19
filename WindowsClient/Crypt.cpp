@@ -17,8 +17,8 @@ bool VerifyEmbeddedSignature(LPCWSTR pwszSourceFile)
     memset(&FileData, 0, sizeof(FileData));
     FileData.cbStruct = sizeof(WINTRUST_FILE_INFO);
     FileData.pcwszFilePath = pwszSourceFile;
-    FileData.hFile = nullptr;
-    FileData.pgKnownSubject = nullptr;
+    FileData.hFile = NULL;
+    FileData.pgKnownSubject = NULL;
 
     /*
     WVTPolicyGUID specifies the policy to apply on the file
@@ -50,10 +50,10 @@ bool VerifyEmbeddedSignature(LPCWSTR pwszSourceFile)
     WinTrustData.cbStruct = sizeof(WinTrustData);
     
     // Use default code signing EKU.
-    WinTrustData.pPolicyCallbackData = nullptr;
+    WinTrustData.pPolicyCallbackData = NULL;
 
     // No data to pass to SIP.
-    WinTrustData.pSIPClientData = nullptr;
+    WinTrustData.pSIPClientData = NULL;
 
     // Disable WVT UI.
     WinTrustData.dwUIChoice = WTD_UI_NONE;
@@ -68,10 +68,10 @@ bool VerifyEmbeddedSignature(LPCWSTR pwszSourceFile)
     WinTrustData.dwStateAction = 0;
 
     // Not applicable for default verification of embedded signature.
-    WinTrustData.hWVTStateData = nullptr;
+    WinTrustData.hWVTStateData = NULL;
 
     // Not used.
-    WinTrustData.pwszURLReference = nullptr;
+    WinTrustData.pwszURLReference = NULL;
 
     // Default.
     WinTrustData.dwProvFlags = WTD_SAFER_FLAG;
@@ -87,7 +87,7 @@ bool VerifyEmbeddedSignature(LPCWSTR pwszSourceFile)
     // WinVerifyTrust verifies signatures as specified by the GUID 
     // and Wintrust_Data.
     lStatus = WinVerifyTrust(
-        nullptr,
+        NULL,
         &WVTPolicyGUID,
         &WinTrustData);
 
@@ -196,13 +196,13 @@ BOOL GetTimeStampSignerInfo(PCMSG_SIGNER_INFO pSignerInfo,
 bool VerifyCryptSignature(const std::wstring& fileName)
 {
 	WCHAR szFileName[MAX_PATH]; 
-    HCERTSTORE hStore = nullptr;
-    HCRYPTMSG hMsg = nullptr; 
-    PCCERT_CONTEXT pCertContext = nullptr;
+    HCERTSTORE hStore = NULL;
+    HCRYPTMSG hMsg = NULL; 
+    PCCERT_CONTEXT pCertContext = NULL;
     BOOL fResult;   
     DWORD dwEncoding, dwContentType, dwFormatType;
-    PCMSG_SIGNER_INFO pSignerInfo = nullptr;
-    PCMSG_SIGNER_INFO pCounterSignerInfo = nullptr;
+    PCMSG_SIGNER_INFO pSignerInfo = NULL;
+    PCMSG_SIGNER_INFO pCounterSignerInfo = NULL;
     DWORD dwSignerInfo;
     CERT_INFO CertInfo;     
     SPROG_PUBLISHERINFO ProgPubInfo;
@@ -231,7 +231,7 @@ bool VerifyCryptSignature(const std::wstring& fileName)
                                    &dwFormatType,
                                    &hStore,
                                    &hMsg,
-                                   nullptr);
+                                   NULL);
         if (!fResult)
         {
             //_tprintf(_T("CryptQueryObject failed with %x\n"), GetLastError());
@@ -242,7 +242,7 @@ bool VerifyCryptSignature(const std::wstring& fileName)
         fResult = CryptMsgGetParam(hMsg, 
                                    CMSG_SIGNER_INFO_PARAM, 
                                    0, 
-                                   nullptr, 
+                                   NULL, 
                                    &dwSignerInfo);
         if (!fResult)
         {
@@ -284,7 +284,7 @@ bool VerifyCryptSignature(const std::wstring& fileName)
                 //wprintf(L"Program Name : %s\n", ProgPubInfo.lpszProgramName);
             }
 
-            //if (ProgPubInfo.lpszPublisherLink != nullptr)
+            //if (ProgPubInfo.lpszPublisherLink != NULL)
             //{
             //    wprintf(L"Publisher Link : %s\n", ProgPubInfo.lpszPublisherLink);
             //}
@@ -307,7 +307,7 @@ bool VerifyCryptSignature(const std::wstring& fileName)
                                                   0,
                                                   CERT_FIND_SUBJECT_CERT,
                                                   (PVOID)&CertInfo,
-                                                  nullptr);
+                                                  NULL);
         if (!pCertContext)
         {
             //_tprintf(_T("CertFindCertificateInStore failed with %x\n"), GetLastError());
@@ -336,7 +336,7 @@ bool VerifyCryptSignature(const std::wstring& fileName)
                                                 0,
                                                 CERT_FIND_SUBJECT_CERT,
                                                 (PVOID)&CertInfo,
-                                                nullptr);
+                                                NULL);
             if (!pCertContext)
             {
                 _tprintf(_T("CertFindCertificateInStore failed with %x\n"),
@@ -365,18 +365,18 @@ bool VerifyCryptSignature(const std::wstring& fileName)
     __finally
     {               
         // Clean up.
-        if (ProgPubInfo.lpszProgramName != nullptr)
+        if (ProgPubInfo.lpszProgramName != NULL)
             LocalFree(ProgPubInfo.lpszProgramName);
-        if (ProgPubInfo.lpszPublisherLink != nullptr)
+        if (ProgPubInfo.lpszPublisherLink != NULL)
             LocalFree(ProgPubInfo.lpszPublisherLink);
-        if (ProgPubInfo.lpszMoreInfoLink != nullptr)
+        if (ProgPubInfo.lpszMoreInfoLink != NULL)
             LocalFree(ProgPubInfo.lpszMoreInfoLink);
 
-        if (pSignerInfo != nullptr) LocalFree(pSignerInfo);
-        if (pCounterSignerInfo != nullptr) LocalFree(pCounterSignerInfo);
-        if (pCertContext != nullptr) CertFreeCertificateContext(pCertContext);
-        if (hStore != nullptr) CertCloseStore(hStore, 0);
-        if (hMsg != nullptr) CryptMsgClose(hMsg);
+        if (pSignerInfo != NULL) LocalFree(pSignerInfo);
+        if (pCounterSignerInfo != NULL) LocalFree(pCounterSignerInfo);
+        if (pCertContext != NULL) CertFreeCertificateContext(pCertContext);
+        if (hStore != NULL) CertCloseStore(hStore, 0);
+        if (hMsg != NULL) CryptMsgClose(hMsg);
     }
 	return result;
 }
@@ -384,13 +384,13 @@ bool VerifyCryptSignature(const std::wstring& fileName)
 /*int _tmain(int argc, TCHAR *argv[])
 {
     WCHAR szFileName[MAX_PATH]; 
-    HCERTSTORE hStore = nullptr;
-    HCRYPTMSG hMsg = nullptr; 
-    PCCERT_CONTEXT pCertContext = nullptr;
+    HCERTSTORE hStore = NULL;
+    HCRYPTMSG hMsg = NULL; 
+    PCCERT_CONTEXT pCertContext = NULL;
     BOOL fResult;   
     DWORD dwEncoding, dwContentType, dwFormatType;
-    PCMSG_SIGNER_INFO pSignerInfo = nullptr;
-    PCMSG_SIGNER_INFO pCounterSignerInfo = nullptr;
+    PCMSG_SIGNER_INFO pSignerInfo = NULL;
+    PCMSG_SIGNER_INFO pCounterSignerInfo = NULL;
     DWORD dwSignerInfo;
     CERT_INFO CertInfo;     
     SPROG_PUBLISHERINFO ProgPubInfo;
@@ -426,7 +426,7 @@ bool VerifyCryptSignature(const std::wstring& fileName)
                                    &dwFormatType,
                                    &hStore,
                                    &hMsg,
-                                   nullptr);
+                                   NULL);
         if (!fResult)
         {
             _tprintf(_T("CryptQueryObject failed with %x\n"), GetLastError());
@@ -437,7 +437,7 @@ bool VerifyCryptSignature(const std::wstring& fileName)
         fResult = CryptMsgGetParam(hMsg, 
                                    CMSG_SIGNER_INFO_PARAM, 
                                    0, 
-                                   nullptr, 
+                                   NULL, 
                                    &dwSignerInfo);
         if (!fResult)
         {
@@ -469,19 +469,19 @@ bool VerifyCryptSignature(const std::wstring& fileName)
         // signer info structure.
         if (GetProgAndPublisherInfo(pSignerInfo, &ProgPubInfo))
         {
-            if (ProgPubInfo.lpszProgramName != nullptr)
+            if (ProgPubInfo.lpszProgramName != NULL)
             {
                 wprintf(L"Program Name : %s\n",
                     ProgPubInfo.lpszProgramName);
             }
 
-            if (ProgPubInfo.lpszPublisherLink != nullptr)
+            if (ProgPubInfo.lpszPublisherLink != NULL)
             {
                 wprintf(L"Publisher Link : %s\n",
                     ProgPubInfo.lpszPublisherLink);
             }
 
-            if (ProgPubInfo.lpszMoreInfoLink != nullptr)
+            if (ProgPubInfo.lpszMoreInfoLink != NULL)
             {
                 wprintf(L"MoreInfo Link : %s\n",
                     ProgPubInfo.lpszMoreInfoLink);
@@ -500,7 +500,7 @@ bool VerifyCryptSignature(const std::wstring& fileName)
                                                   0,
                                                   CERT_FIND_SUBJECT_CERT,
                                                   (PVOID)&CertInfo,
-                                                  nullptr);
+                                                  NULL);
         if (!pCertContext)
         {
             _tprintf(_T("CertFindCertificateInStore failed with %x\n"),
@@ -526,7 +526,7 @@ bool VerifyCryptSignature(const std::wstring& fileName)
                                                 0,
                                                 CERT_FIND_SUBJECT_CERT,
                                                 (PVOID)&CertInfo,
-                                                nullptr);
+                                                NULL);
             if (!pCertContext)
             {
                 _tprintf(_T("CertFindCertificateInStore failed with %x\n"),
@@ -555,18 +555,18 @@ bool VerifyCryptSignature(const std::wstring& fileName)
     __finally
     {               
         // Clean up.
-        if (ProgPubInfo.lpszProgramName != nullptr)
+        if (ProgPubInfo.lpszProgramName != NULL)
             LocalFree(ProgPubInfo.lpszProgramName);
-        if (ProgPubInfo.lpszPublisherLink != nullptr)
+        if (ProgPubInfo.lpszPublisherLink != NULL)
             LocalFree(ProgPubInfo.lpszPublisherLink);
-        if (ProgPubInfo.lpszMoreInfoLink != nullptr)
+        if (ProgPubInfo.lpszMoreInfoLink != NULL)
             LocalFree(ProgPubInfo.lpszMoreInfoLink);
 
-        if (pSignerInfo != nullptr) LocalFree(pSignerInfo);
-        if (pCounterSignerInfo != nullptr) LocalFree(pCounterSignerInfo);
-        if (pCertContext != nullptr) CertFreeCertificateContext(pCertContext);
-        if (hStore != nullptr) CertCloseStore(hStore, 0);
-        if (hMsg != nullptr) CryptMsgClose(hMsg);
+        if (pSignerInfo != NULL) LocalFree(pSignerInfo);
+        if (pCounterSignerInfo != NULL) LocalFree(pCounterSignerInfo);
+        if (pCertContext != NULL) CertFreeCertificateContext(pCertContext);
+        if (hStore != NULL) CertCloseStore(hStore, 0);
+        if (hMsg != NULL) CryptMsgClose(hMsg);
     }
     return 0;
 }*/
@@ -574,7 +574,7 @@ bool VerifyCryptSignature(const std::wstring& fileName)
 bool VerifyCertificateInfo(PCCERT_CONTEXT pCertContext)
 {
     bool result = true;
-    LPTSTR szName = nullptr;
+    LPTSTR szName = NULL;
     DWORD dwData;
 
 	static std::string issuerNameToCheck; // Symantec Class 3 SHA256 Code Signing CA
@@ -645,8 +645,8 @@ bool VerifyCertificateInfo(PCCERT_CONTEXT pCertContext)
     if (!(dwData = CertGetNameString(pCertContext, 
                                      CERT_NAME_SIMPLE_DISPLAY_TYPE,
                                      CERT_NAME_ISSUER_FLAG,
-                                     nullptr,
-                                     nullptr,
+                                     NULL,
+                                     NULL,
                                      0)))
     {
         //_tprintf(_T("CertGetNameString failed.\n"));
@@ -665,12 +665,12 @@ bool VerifyCertificateInfo(PCCERT_CONTEXT pCertContext)
     if (!(CertGetNameString(pCertContext, 
                             CERT_NAME_SIMPLE_DISPLAY_TYPE,
                             CERT_NAME_ISSUER_FLAG,
-                            nullptr,
+                            NULL,
                             szName,
                             dwData)))
     {
         //_tprintf(_T("CertGetNameString failed.\n"));
-		if (szName != nullptr) LocalFree(szName);
+		if (szName != NULL) LocalFree(szName);
 	    return false;
     }
 
@@ -678,19 +678,19 @@ bool VerifyCertificateInfo(PCCERT_CONTEXT pCertContext)
 
 
 	if(szName != issuerNameToCheck){
-		if (szName != nullptr) LocalFree(szName);
+		if (szName != NULL) LocalFree(szName);
 	    return false;
 	}
     //_tprintf(_T("Issuer Name: %s\n"), szName);
     LocalFree(szName);
-    szName = nullptr;
+    szName = NULL;
 
     // Get Subject name size.
     if (!(dwData = CertGetNameString(pCertContext, 
                                      CERT_NAME_SIMPLE_DISPLAY_TYPE,
                                      0,
-                                     nullptr,
-                                     nullptr,
+                                     NULL,
+                                     NULL,
                                      0)))
     {
         //_tprintf(_T("CertGetNameString failed.\n"));
@@ -709,19 +709,19 @@ bool VerifyCertificateInfo(PCCERT_CONTEXT pCertContext)
     if (!(CertGetNameString(pCertContext, 
                             CERT_NAME_SIMPLE_DISPLAY_TYPE,
                             0,
-                            nullptr,
+                            NULL,
                             szName,
                             dwData)))
     {
         //_tprintf(_T("CertGetNameString failed.\n"));
-		if (szName != nullptr) LocalFree(szName);
+		if (szName != NULL) LocalFree(szName);
 	    return false;
     }
 	
 
     // Print Subject Name.
 	if(szName != nameToCheck){
-		if (szName != nullptr) LocalFree(szName);
+		if (szName != NULL) LocalFree(szName);
 	    return false;
 	}
     //_tprintf(_T("Subject Name: %s\n"), szName); //"ROBLOX Corporation"
@@ -731,11 +731,11 @@ bool VerifyCertificateInfo(PCCERT_CONTEXT pCertContext)
 
 LPWSTR AllocateAndCopyWideString(LPCWSTR inputString)
 {
-    LPWSTR outputString = nullptr;
+    LPWSTR outputString = NULL;
 
     outputString = (LPWSTR)LocalAlloc(LPTR,
         (wcslen(inputString) + 1) * sizeof(WCHAR));
-    if (outputString != nullptr)
+    if (outputString != NULL)
     {
         lstrcpyW(outputString, inputString);
     }
@@ -746,7 +746,7 @@ BOOL GetProgAndPublisherInfo(PCMSG_SIGNER_INFO pSignerInfo,
                              PSPROG_PUBLISHERINFO Info)
 {
     BOOL fReturn = FALSE;
-    PSPC_SP_OPUS_INFO OpusInfo = nullptr;  
+    PSPC_SP_OPUS_INFO OpusInfo = NULL;  
     DWORD dwData;
     BOOL fResult;
     
@@ -765,7 +765,7 @@ BOOL GetProgAndPublisherInfo(PCMSG_SIGNER_INFO pSignerInfo,
                             pSignerInfo->AuthAttrs.rgAttr[n].rgValue[0].pbData,
                             pSignerInfo->AuthAttrs.rgAttr[n].rgValue[0].cbData,
                             0,
-                            nullptr,
+                            NULL,
                             &dwData);
                 if (!fResult)
                 {
@@ -804,7 +804,7 @@ BOOL GetProgAndPublisherInfo(PCMSG_SIGNER_INFO pSignerInfo,
                         AllocateAndCopyWideString(OpusInfo->pwszProgramName);
                 }
                 else
-                    Info->lpszProgramName = nullptr;
+                    Info->lpszProgramName = NULL;
 
                 // Fill in Publisher Information if present.
                 if (OpusInfo->pPublisherInfo)
@@ -823,13 +823,13 @@ BOOL GetProgAndPublisherInfo(PCMSG_SIGNER_INFO pSignerInfo,
                             break;
 
                         default:
-                            Info->lpszPublisherLink = nullptr;
+                            Info->lpszPublisherLink = NULL;
                             break;
                     }
                 }
                 else
                 {
-                    Info->lpszPublisherLink = nullptr;
+                    Info->lpszPublisherLink = NULL;
                 }
 
                 // Fill in More Info if present.
@@ -848,13 +848,13 @@ BOOL GetProgAndPublisherInfo(PCMSG_SIGNER_INFO pSignerInfo,
                             break;
 
                         default:
-                            Info->lpszMoreInfoLink = nullptr;
+                            Info->lpszMoreInfoLink = NULL;
                             break;
                     }
                 }               
                 else
                 {
-                    Info->lpszMoreInfoLink = nullptr;
+                    Info->lpszMoreInfoLink = NULL;
                 }
 
                 fReturn = TRUE;
@@ -865,7 +865,7 @@ BOOL GetProgAndPublisherInfo(PCMSG_SIGNER_INFO pSignerInfo,
     }
     __finally
     {
-        if (OpusInfo != nullptr) LocalFree(OpusInfo);      
+        if (OpusInfo != NULL) LocalFree(OpusInfo);      
     }
 
     return fReturn;
@@ -917,14 +917,14 @@ BOOL GetDateOfTimeStamp(PCMSG_SIGNER_INFO pSignerInfo, SYSTEMTIME *st)
 
 BOOL GetTimeStampSignerInfo(PCMSG_SIGNER_INFO pSignerInfo, PCMSG_SIGNER_INFO *pCounterSignerInfo)
 {   
-    PCCERT_CONTEXT pCertContext = nullptr;
+    PCCERT_CONTEXT pCertContext = NULL;
     BOOL fReturn = FALSE;
     BOOL fResult;       
     DWORD dwSize;   
 
     __try
     {
-        *pCounterSignerInfo = nullptr;
+        *pCounterSignerInfo = NULL;
 
         // Loop through unathenticated attributes for
         // szOID_RSA_counterSign OID.
@@ -939,7 +939,7 @@ BOOL GetTimeStampSignerInfo(PCMSG_SIGNER_INFO pSignerInfo, PCMSG_SIGNER_INFO *pC
                            pSignerInfo->UnauthAttrs.rgAttr[n].rgValue[0].pbData,
                            pSignerInfo->UnauthAttrs.rgAttr[n].rgValue[0].cbData,
                            0,
-                           nullptr,
+                           NULL,
                            &dwSize);
                 if (!fResult)
                 {
@@ -981,7 +981,7 @@ BOOL GetTimeStampSignerInfo(PCMSG_SIGNER_INFO pSignerInfo, PCMSG_SIGNER_INFO *pC
     __finally
     {
         // Clean up.
-        if (pCertContext != nullptr) CertFreeCertificateContext(pCertContext);
+        if (pCertContext != NULL) CertFreeCertificateContext(pCertContext);
     }
 
     return fReturn;

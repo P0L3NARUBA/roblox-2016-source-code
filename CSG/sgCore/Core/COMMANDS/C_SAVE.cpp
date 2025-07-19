@@ -17,7 +17,7 @@ bool  BakFlag = FALSE;
 		Code = sg_save_model(FileName, SelFlag, &Count, /*pFileProp,*/ m_gcs_ucs, m_ucs_gcs,
 									userData,userDataSize);
 	else      	               
-		Code = sg_save_model(FileName, SelFlag, &Count, /*pFileProp,*/ nullptr, nullptr,
+		Code = sg_save_model(FileName, SelFlag, &Count, /*pFileProp,*/ NULL, NULL,
 									userData,userDataSize);
 
   if(!Code){  

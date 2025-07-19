@@ -54,7 +54,7 @@ Use IsElevated() to determine whether the current process is elevated or not.
 Parameters:
 
 pbElevated
-	[out] [optional] Pointer to a BOOL variable that, if non-nullptr, receives the result.
+	[out] [optional] Pointer to a BOOL variable that, if non-NULL, receives the result.
 
 	The possible values are:
 
@@ -103,7 +103,7 @@ class VistaAPIs
 
 public:
 	VistaAPIs()
-		:getKnownFolderPath(nullptr)
+		:getKnownFolderPath(NULL)
 	{
 		gShell32DLLInst = LoadLibrary(TEXT("Shell32.dll"));
 		if(gShell32DLLInst)
@@ -120,7 +120,7 @@ public:
 
 	HRESULT SHGetKnownFolderPath(const GUID& rfid, DWORD dwFlags, HANDLE hToken, PWSTR *ppszPath)
 	{
-		if (getKnownFolderPath==nullptr)
+		if (getKnownFolderPath==NULL)
 			return E_NOTIMPL; 
 		return getKnownFolderPath(rfid, dwFlags, hToken, ppszPath);
 	}

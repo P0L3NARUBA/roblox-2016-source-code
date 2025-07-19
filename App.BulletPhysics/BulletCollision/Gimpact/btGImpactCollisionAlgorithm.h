@@ -77,15 +77,15 @@ protected:
 		{
 			m_convex_algorithm->~btCollisionAlgorithm();
 			m_dispatcher->freeCollisionAlgorithm( m_convex_algorithm);
-			m_convex_algorithm = nullptr;
+			m_convex_algorithm = NULL;
 		}
 	}
 
 	SIMD_FORCE_INLINE void destroyContactManifolds()
 	{
-		if(m_manifoldPtr == nullptr) return;
+		if(m_manifoldPtr == NULL) return;
 		m_dispatcher->releaseManifold(m_manifoldPtr);
-		m_manifoldPtr = nullptr;
+		m_manifoldPtr = NULL;
 	}
 
 	SIMD_FORCE_INLINE void clearCache()

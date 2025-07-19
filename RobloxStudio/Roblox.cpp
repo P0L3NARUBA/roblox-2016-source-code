@@ -267,7 +267,7 @@ void Roblox::globalShutdown()
 void Roblox::sendAppEvent(void *pClosure)
 {
 	RBX::CEvent *waitEvent = ((RBX::FunctionMarshaller::Closure *) pClosure)->waitEvent;
-	bool waitFlag = (waitEvent == nullptr);
+	bool waitFlag = (waitEvent == NULL);
 	
 	Q_EMIT Roblox::Instance().marshallAppEvent(pClosure, waitFlag);
 	

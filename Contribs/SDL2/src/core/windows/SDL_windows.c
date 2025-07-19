@@ -39,8 +39,8 @@ WIN_SetErrorFromHRESULT(const char *prefix, HRESULT hr)
 {
     TCHAR buffer[1024];
     char *message;
-    FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, nullptr, hr, 0,
-                  buffer, SDL_arraysize(buffer), nullptr);
+    FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, hr, 0,
+                  buffer, SDL_arraysize(buffer), NULL);
     message = WIN_StringToUTF8(buffer);
     SDL_SetError("%s%s%s", prefix ? prefix : "", prefix ? ": " : "", message);
     SDL_free(message);
@@ -70,9 +70,9 @@ WIN_CoInitialize(void)
     */
     return S_OK;
 #else
-    HRESULT hr = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
+    HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
     if (hr == RPC_E_CHANGED_MODE) {
-        hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+        hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
     }
 
     /* S_FALSE means success, but someone else already initialized. */

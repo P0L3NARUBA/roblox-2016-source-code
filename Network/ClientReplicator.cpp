@@ -151,7 +151,7 @@ namespace RBX { namespace Network {
         void doScans(unsigned int scanMask)
         {
 #if defined(_WIN32) && !defined(_NOOPT) && !defined(_DEBUG)
-            VMProtectBeginMutation(nullptr);
+            VMProtectBeginMutation(NULL);
             bool isCeDetectedLocal = false;
             DataModel* dataModel = DataModel::get(clientReplicator.get());
             if (scanMask & kCeDll)
@@ -185,7 +185,7 @@ namespace RBX { namespace Network {
             }
 #endif
             VMProtectEnd();
-            VMProtectBeginVirtualization(nullptr);
+            VMProtectBeginVirtualization(NULL);
             if(ceDetected || isCeDetectedLocal)
             {
                 dataModel->addHackFlag(HATE_CHEATENGINE_OLD);
@@ -278,7 +278,7 @@ namespace RBX { namespace Network {
 
 		virtual TaskScheduler::StepResult stepDataModelJob(const Stats& stats) 
 		{
-			VMProtectBeginMutation(nullptr);
+			VMProtectBeginMutation(NULL);
             bool isHsceHashFail = false;
             bool isLuaLockFail = false;
             bool isHsceUnitFail = false;
@@ -340,7 +340,7 @@ namespace RBX { namespace Network {
             isHsceUnitFail = (hsceFakeHumanoidState->checkComputeEvent() != HUMAN::HumanoidState::kCorrectCheckValue);
 
 			VMProtectEnd();
-            VMProtectBeginVirtualization(nullptr);
+            VMProtectBeginVirtualization(NULL);
             if (codeChanged)
             {
                 RBX::Security::setHackFlagVmp<LINE_RAND4>(RBX::Security::hackFlag1, HATE_MEMORY_HASH_CHANGED);
@@ -445,7 +445,7 @@ namespace RBX { namespace Network {
 
 		virtual TaskScheduler::StepResult stepDataModelJob(const Stats& stats) 
 		{
-			VMProtectBeginMutation(nullptr);
+			VMProtectBeginMutation(NULL);
             bool isBadTextSection = false;
             bool isBadVmpSection = false;
             bool isBadRdataSection = false;
@@ -503,7 +503,7 @@ namespace RBX { namespace Network {
                 }
             }
 			VMProtectEnd();
-            VMProtectBeginVirtualization(nullptr);
+            VMProtectBeginVirtualization(NULL);
             if (isBadTextSection)
             {
                 RBX::Security::setHackFlagVmp<LINE_RAND4>(RBX::Security::hackFlag4, HATE_NEW_AV_CHECK);
@@ -658,7 +658,7 @@ bool ClientReplicator::isLegalSendProperty(Instance* instance, const Reflection:
 		{
 			if (LuaSourceContainer* lsc = Instance::fastDynamicCast<LuaSourceContainer>(instance))
 			{
-				return lsc->getCurrentEditor() == nullptr;
+				return lsc->getCurrentEditor() == NULL;
 			}
 			else
 			{
@@ -1776,7 +1776,7 @@ void ClientReplicator::streamOutPartHelper(const Guid::Data& data,
 	if (shared_ptr<JointInstance> jointInstance =
 			Instance::fastSharedDynamicCast<JointInstance>(descendant)) {
 
-		const Reflection::RefPropertyDescriptor* refPropDescriptor = nullptr;
+		const Reflection::RefPropertyDescriptor* refPropDescriptor = NULL;
 		if (jointInstance->getPart0() == part) {
 			refPropDescriptor = &JointInstance::prop_Part0;
 		} else if (jointInstance->getPart1() == part) {
@@ -1787,10 +1787,10 @@ void ClientReplicator::streamOutPartHelper(const Guid::Data& data,
 
 		// HACK: re-use the "removingInstance" functionality to suppress
 		// replication of events and property changes while we set the joint's
-		// part reference (to the streamed out part) to nullptr.
+		// part reference (to the streamed out part) to NULL.
 		{
 			RBX::ScopedAssign<Instance*> assign(removingInstance, jointInstance.get());
-			refPropDescriptor->setRefValue(jointInstance.get(), nullptr);
+			refPropDescriptor->setRefValue(jointInstance.get(), NULL);
 		}
 
 		addPendingRef(refPropDescriptor, jointInstance, data);
@@ -1807,14 +1807,14 @@ void ClientReplicator::streamOutAutoJointHelper(std::vector<shared_ptr<PartInsta
         PartInstance* partInstance0 = jointInstance->getPart0();
         PartInstance* partInstance1 = jointInstance->getPart1();
 
-        if (partInstance0 == nullptr && partInstance1 == nullptr)
+        if (partInstance0 == NULL && partInstance1 == NULL)
             return;
         for (std::vector<shared_ptr<PartInstance> >::iterator iter = pendingRemovalParts.begin(); iter != pendingRemovalParts.end(); iter++)
         {
             shared_ptr<PartInstance> pendingRemovalPart = *iter;
             if (pendingRemovalPart)
             {
-                const Reflection::RefPropertyDescriptor* refPropDescriptor = nullptr;
+                const Reflection::RefPropertyDescriptor* refPropDescriptor = NULL;
                 Guid::Data data;
                 if (partInstance0 == pendingRemovalPart.get())
                 {
@@ -1832,7 +1832,7 @@ void ClientReplicator::streamOutAutoJointHelper(std::vector<shared_ptr<PartInsta
                 }
                 {
                     RBX::ScopedAssign<Instance*> assign(removingInstance, jointInstance.get());
-                    refPropDescriptor->setRefValue(jointInstance.get(), nullptr);
+                    refPropDescriptor->setRefValue(jointInstance.get(), NULL);
                 }
                 addPendingRef(refPropDescriptor, jointInstance, data);
             }
@@ -1914,7 +1914,7 @@ void ClientReplicator::streamOutInstance(Instance* instance, bool deleteImmediat
     CPUPROFILER_STEP(RBX::Network::NetworkProfiler::PROFILER_streamOutPart);
 
 	// Normally removingInstance is set after the replicator sees the
-	// setParent(nullptr) property change event. Set it before hand to
+	// setParent(NULL) property change event. Set it before hand to
 	// suppress any associated events and property changes. This makes the
 	// removal local (not replicated).
 
@@ -1924,7 +1924,7 @@ void ClientReplicator::streamOutInstance(Instance* instance, bool deleteImmediat
     if (deleteImmediately)
     {
 	    RBX::ScopedAssign<Instance*> assign(removingInstance, instance);
-	    instance->setParent(nullptr);
+	    instance->setParent(NULL);
     }
 
     CPUPROFILER_STEP(RBX::Network::NetworkProfiler::PROFILER_streamOutPart);
@@ -2290,7 +2290,7 @@ bool ClientReplicator::ProcessOutdatedChangedProperty(RakNet::BitStream& inBitst
         return false;
     }
     bool skipProperty = false;
-    if (propertyDescriptor == nullptr)
+    if (propertyDescriptor == NULL)
     {
         // we don't have the property definition locally, let's skip the property
         skipProperty = true;
@@ -2324,7 +2324,7 @@ bool ClientReplicator::ProcessOutdatedChangedProperty(RakNet::BitStream& inBitst
     {
         const Name* className = &Name::getNullName();
 
-        if (instance) // instance could be nullptr because the legacy client might not recognize the class and have not created the instance
+        if (instance) // instance could be NULL because the legacy client might not recognize the class and have not created the instance
         {
             className = &instance->getClassName();
         }
@@ -2414,7 +2414,7 @@ bool ClientReplicator::ProcessOutdatedProperties(RakNet::BitStream& inBitstream,
                                         valueArray->push_back(PropValuePair(property.getDescriptor(), value));
                                 }
                                 else
-                                    readPropertiesInternal(property, inBitstream, useDictionary, preventBounceBack, nullptr);
+                                    readPropertiesInternal(property, inBitstream, useDictionary, preventBounceBack, NULL);
                             }
                             break;
                         }
@@ -2449,7 +2449,7 @@ bool ClientReplicator::ProcessOutdatedInstance(RakNet::BitStream& inBitstream, b
         if (classDescriptor && classDescriptor->name.toString() == "VehicleSeat")
         {
             StandardOut::singleton()->printf(RBX::MESSAGE_INFO, "Simulating class adding on %s", classDescriptor->name.c_str());
-            classDescriptor = nullptr;
+            classDescriptor = NULL;
         }
     }
 #endif
@@ -2458,11 +2458,11 @@ bool ClientReplicator::ProcessOutdatedInstance(RakNet::BitStream& inBitstream, b
     {
         if (classDescriptor && classDescriptor->name.toString() == "TheNewClass")
         {
-            classDescriptor = nullptr;
+            classDescriptor = NULL;
         }
     }
 
-    if (classDescriptor == nullptr)
+    if (classDescriptor == NULL)
     {
         // we don't have the class definition locally, let's read through the instance creation message and do nothing
         ReflectionClassMap::const_iterator classIter = serverClasses.begin();
@@ -2557,7 +2557,7 @@ bool ClientReplicator::ProcessOutdatedEventInvocation(RakNet::BitStream& inBitst
     }
 
     bool skipEvent = false;
-    if (eventDescriptor == nullptr)
+    if (eventDescriptor == NULL)
     {
         // we don't have the event definition locally, let's skip it
         skipEvent = true;

@@ -18,7 +18,7 @@ Seated::Seated(Humanoid* humanoid, StateType priorState) : Named<HumanoidState, 
 
 Seated::~Seated()
 {
-	getHumanoid()->setSeatPart(nullptr);
+	getHumanoid()->setSeatPart(NULL);
 	getHumanoid()->setSit(false);
 	getHumanoid()->doneSittingSignal();
 }

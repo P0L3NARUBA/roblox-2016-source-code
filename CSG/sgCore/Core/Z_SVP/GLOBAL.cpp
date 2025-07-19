@@ -1,7 +1,7 @@
 #include "../sg.h"
 
 //      
-lpSTATIC_DATA static_data = nullptr;	//    
+lpSTATIC_DATA static_data = NULL;	//    
 
 short				sg_m_num_meridians = 24;	// -  
 

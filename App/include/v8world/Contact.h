@@ -150,7 +150,7 @@ namespace RBX {
 	public:
 		BallBallContact(Primitive* p0, Primitive* p1)
 			: Contact(p0, p1)
-			, ballBallConnector(nullptr)
+			, ballBallConnector(NULL)
 		{}
 
 		~BallBallContact() {RBXASSERT(!ballBallConnector);}
@@ -189,7 +189,7 @@ namespace RBX {
 	public:
 		BallBlockContact(Primitive* p0, Primitive* p1)
 			: Contact(p0, p1)
-			, ballBlockConnector(nullptr)
+			, ballBlockConnector(NULL)
 		{}
 
 		~BallBlockContact() {RBXASSERT(!ballBlockConnector);}

@@ -40,7 +40,7 @@ typedef bool (*AssertionHook)(
 /** 
   Allows customization of the global function invoked when a debugAssert fails.
   The initial value is RBX::_internal::_handleDebugAssert_.  RBX will invoke
-  rawBreak if the hook returns true.  If nullptr, assertions are not handled.
+  rawBreak if the hook returns true.  If NULL, assertions are not handled.
 */
 void setAssertionHook(AssertionHook hook);
 

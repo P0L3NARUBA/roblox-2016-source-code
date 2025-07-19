@@ -122,9 +122,9 @@ namespace Graphics
 
         for (unsigned i = 0; i < vertArray.size(); ++i)
         {
-            model.vertices[i].pos = vertArray[i].pos + toWorldSpace;
-            model.vertices[i].normal = vertArray[i].normal;
-            model.vertices[i].uv = vertArray[i].uv;
+            model.vertices[i].Position = vertArray[i].pos + toWorldSpace;
+            model.vertices[i].UV = vertArray[i].uv;
+            model.vertices[i].Normal = vertArray[i].normal;
         }
 
         // create indices, they are simple quads
@@ -150,9 +150,9 @@ namespace Graphics
 
         for (unsigned i = 0; i < vertices.size(); ++i)
         {
-            model.vertices[i].pos = Voxel::cellSpaceToWorldSpace(vertices[i].position);
-            model.vertices[i].normal = (Vector3(vertices[i].normal.r, vertices[i].normal.g, vertices[i].normal.b) - Vector3(127.0)) / 127.0;
-            model.vertices[i].uv = Vector2(0, 0);
+            model.vertices[i].Position = Voxel::cellSpaceToWorldSpace(vertices[i].position);
+            model.vertices[i].UV = Vector2(0, 0);
+            model.vertices[i].Normal = (Vector3(vertices[i].normal.r, vertices[i].normal.g, vertices[i].normal.b) - Vector3(127.0)) / 127.0;
         }
 
         model.indices.assign(indices.begin(), indices.end());
@@ -284,7 +284,7 @@ namespace Graphics
 		GeometryGenerator count;
 		Humanoid* humanoid = SceneUpdater::getHumanoid(part);
         HumanoidIdentifier humanoidIdentifier(humanoid);
-        const HumanoidIdentifier* hi = humanoidIdentifier.humanoid ? &humanoidIdentifier : nullptr;
+        const HumanoidIdentifier* hi = humanoidIdentifier.humanoid ? &humanoidIdentifier : NULL;
 
 		// Material flags
 		bool ignoreDecals = false;
@@ -332,7 +332,7 @@ namespace Graphics
             options.flags &= ~GeometryGenerator::Flag_RandomizeBlockAppearance; 
 
 			// MODEL
-			models.push_back(Model(partName, count.getVertexCount(), count.getIndexCount(), nullptr));
+			models.push_back(Model(partName, count.getVertexCount(), count.getIndexCount(), NULL));
 			Model& model = models.back();
 
 			GeometryGenerator generator(&model.vertices[0], &model.indices[0], 0);
@@ -355,19 +355,19 @@ namespace Graphics
                 }
             }
 
-			Color4uint8 vertColor = model.vertices[0].color;
+			Color4uint8 vertColor = model.vertices[0].Color;
 			if (visualEngine->getDevice()->getCaps().colorOrderBGR)
 			{
                 std::swap(vertColor.r, vertColor.b);
 			}
 
-            Vector2int16 plasticSpecular = MaterialGenerator::getSpecular(PLASTIC_MATERIAL);
+            Vector2int16 plasticSpecular = Vector2int16(0, 0);//MaterialGenerator::getSpecular(PLASTIC_MATERIAL);
 			static const float div255 = 1.0f / 255.0f;
 			bool mergeByMat = visualEngine->getSettings()->getObjExportMergeByMaterial();
-            float specularIntensity = (mergeByMat ? plasticSpecular.x : model.vertices[0].extra.g) * div255;
-			float specularPower = (mergeByMat ? plasticSpecular.y : model.vertices[0].extra.b);
+            /*float specularIntensity = (mergeByMat ? plasticSpecular.x : model.vertices[0].extra.g) * div255;
+			float specularPower = (mergeByMat ? plasticSpecular.y : model.vertices[0].extra.b);*/
 
-            model.material = getMutualMaterial(ExporterMaterial(matName, vertColor, specularIntensity, specularPower, tex));
+            model.material = getMutualMaterial(ExporterMaterial(matName, vertColor, 0.0f, 0.0f, tex));
 
 			// TEXTURES 
 			// We want to hashmap textures so we dont save the same textures on disc
@@ -383,7 +383,7 @@ namespace Graphics
 			    for (unsigned i = 0; i < model.vertices.size(); ++i)
 			    {
 					static const float offset = 0.02f;
-					model.vertices[i].pos += model.vertices[i].normal * offset;
+					model.vertices[i].Position += model.vertices[i].Normal * offset;
 			    }
 		}
 	}
@@ -392,7 +392,7 @@ namespace Graphics
 	{
 		if (PartInstance* part = Instance::fastDynamicCast<PartInstance>(instance))
 		{
-			processPart(part, nullptr);
+			processPart(part, NULL);
 
 			if ((part->getCookie() & PartCookie::HAS_DECALS) && part->getChildren())
 			{
@@ -461,11 +461,11 @@ namespace Graphics
         if (models.empty())
             return AABox::zero();
 
-        AABox aabb = AABox((*models.begin()).vertices[0].pos);
+        AABox aabb = AABox((*models.begin()).vertices[0].Position);
         for (Models::iterator it = models.begin(); it != models.end(); ++it)
         {
             for (unsigned i = 0; i < it->vertices.size(); ++i)
-                aabb.merge(it->vertices[i].pos);
+                aabb.merge(it->vertices[i].Position);
         }
 
         return aabb;
@@ -577,7 +577,7 @@ namespace Graphics
                 {
                     const Model* model = mat.models[i];                    
                     for (unsigned i = 0; i < model->vertices.size(); ++i)
-                        exportVector(strStream, "v", model->vertices[i].pos);
+                        exportVector(strStream, "v", model->vertices[i].Position);
                     strStream << "\n";
                 }
                 // Normals
@@ -585,7 +585,7 @@ namespace Graphics
                 {
                     const Model* model = mat.models[i];
                     for (unsigned i = 0; i < model->vertices.size(); ++i)
-                        exportVector(strStream, "vn", model->vertices[i].normal);
+                        exportVector(strStream, "vn", model->vertices[i].Normal);
                     strStream << "\n";
                 }
                 // UVs
@@ -593,7 +593,7 @@ namespace Graphics
                 {
                     const Model* model = mat.models[i];
                     for (unsigned i = 0; i < model->vertices.size(); ++i)
-                        exportVector(strStream, "vt", Vector2(model->vertices[i].uv.x, 1.0f - model->vertices[i].uv.y));
+                        exportVector(strStream, "vt", Vector2(model->vertices[i].UV.x, 1.0f - model->vertices[i].UV.y));
                     strStream << "\n";
                 }
         
@@ -620,17 +620,17 @@ namespace Graphics
 
                 // Verts
                 for (unsigned i = 0; i < it->vertices.size(); ++i)
-                    exportVector(strStream, "v", it->vertices[i].pos);
+                    exportVector(strStream, "v", it->vertices[i].Position);
                 strStream << "\n";
 
                 // Normals
                 for (unsigned i = 0; i < it->vertices.size(); ++i)
-                    exportVector(strStream, "vn", it->vertices[i].normal);
+                    exportVector(strStream, "vn", it->vertices[i].Normal);
                 strStream << "\n";
 
                 // UVs
                 for (unsigned i = 0; i < it->vertices.size(); ++i)
-                    exportVector(strStream, "vt", Vector2(it->vertices[i].uv.x, 1.0f - it->vertices[i].uv.y));
+                    exportVector(strStream, "vt", Vector2(it->vertices[i].UV.x, 1.0f - it->vertices[i].UV.y));
                 strStream << "\n";
 
                 // Material (just reference)

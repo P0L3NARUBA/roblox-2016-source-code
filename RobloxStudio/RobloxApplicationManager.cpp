@@ -28,7 +28,7 @@ const char* kDeleteChildProcessesMsg  = "rbxDeleteChildProcesses";
 const char* kChildProcessesDeletedMsg = "rbxChildProcessesDeleted";
 
 RobloxApplicationManager::RobloxApplicationManager()
-: childProcessHandler(nullptr)
+: childProcessHandler(NULL)
 {
 	sharedMemory.setKey("QT_ROBLOX_STUDIO");
 }
@@ -185,7 +185,7 @@ bool RobloxApplicationManager::hasLocalServer()
 
 ChildProcessHandler::ChildProcessHandler(QObject* parent)
 : QObject(parent)
-, m_pLocalServer(nullptr)
+, m_pLocalServer(NULL)
 {
 }
 
@@ -227,12 +227,12 @@ void ChildProcessHandler::startLocalServer()
 }
 
 bool ChildProcessHandler::hasLocalServer()
-{  return m_pLocalServer != nullptr; }
+{  return m_pLocalServer != NULL; }
 
 void ChildProcessHandler::cleanupChildProcesses(int timeout)
 {
 	// first cleanup players launched from this instance of studio
-	QProcess* childProcess = nullptr;
+	QProcess* childProcess = NULL;
 	for (int ii = 0; ii < playerProcesses.size(); ++ii) 
 	{
 		childProcess = playerProcesses.at(ii);

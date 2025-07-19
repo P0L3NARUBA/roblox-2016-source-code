@@ -10,13 +10,13 @@ BOOL rev_mesh(hOBJ hobject, sgFloat fi, BOOL zu, int	type, lpMATR matr,
 	MESHDD      	mdd;
 	VDIM					list_vdim, add_vdim;
 	lpVDIM				vdim;
-	lpNPW       	np = nullptr;
+	lpNPW       	np = NULL;
 	NP_STR				str;
 	MNODE					point;
   MATR					matr1;
 
  	c_num_np = -32767;
-	*hrez			= nullptr;
+	*hrez			= NULL;
 	if ( !np_init_list(&c_list_str) ) return FALSE;
 
 	// VDIM      
@@ -25,14 +25,14 @@ BOOL rev_mesh(hOBJ hobject, sgFloat fi, BOOL zu, int	type, lpMATR matr,
 //      
 //      
 //	hobject = list_vdim.hhead;   //  
-//	while( hobject != nullptr ){      //     
+//	while( hobject != NULL ){      //     
 		if( !create_contour_appr(&list_vdim, hobject, &closed)) goto err;
 //		get_next_item_z( SEL_LIST, hobject, &hobject ); // c  
 //	}
 
 	if (!begin_rw(&list_vdim, 0)) goto err;
 	for (i = 0; i < list_vdim.num_elem; i++) {//    
-		if ((vdim = (lpVDIM)get_next_elem(&list_vdim)) == nullptr) goto err;
+		if ((vdim = (lpVDIM)get_next_elem(&list_vdim)) == NULL) goto err;
 //  
 		for (i1=0; i1 < vdim->num_elem; i1++){
 			read_elem(vdim, i1,  &point);
@@ -50,7 +50,7 @@ BOOL rev_mesh(hOBJ hobject, sgFloat fi, BOOL zu, int	type, lpMATR matr,
 		}
 
 //   
-		if ( (np = creat_np_mem(TNPW,MAXNOV,MAXNOE,MAXNOC, MAXNOF, MAXNOE)) == nullptr)  goto err1;
+		if ( (np = creat_np_mem(TNPW,MAXNOV,MAXNOE,MAXNOC, MAXNOF, MAXNOE)) == NULL)  goto err1;
 
 		np_init((lpNP)np);
 		np->ident = c_num_np++;
@@ -99,7 +99,7 @@ BOOL rev_mesh(hOBJ hobject, sgFloat fi, BOOL zu, int	type, lpMATR matr,
 	if (!begin_rw(&list_vdim, 0)) goto err11;
 	for (i = 0; i < list_vdim.num_elem; i++) {//    
 		if( !init_vdim( &mdd.vdim, sizeof(MNODE) )) goto err11;
-		if ((vdim = (lpVDIM)get_next_elem(&list_vdim)) == nullptr) goto err11;
+		if ((vdim = (lpVDIM)get_next_elem(&list_vdim)) == NULL) goto err11;
 //   
 		if( create_revolute_body( &mdd, vdim, fi ) != TRUE ) goto err12;
 		if (!(np_mesh4p(&c_list_str,&c_num_np,&mdd,0.))) goto err12;
@@ -117,14 +117,14 @@ err1:
 	free_np_mem(&np);
 err:
 	free_list_vdim(&list_vdim);
-	np_end_of_put(&c_list_str,NP_CANCEL,0,nullptr);
+	np_end_of_put(&c_list_str,NP_CANCEL,0,NULL);
 	return FALSE;
 //-----------------------------------------------------------
 err12:
 	free_vdim(&mdd.vdim);
 err11:
 	free_list_vdim(&list_vdim);
-	np_end_of_put(&c_list_str,NP_CANCEL,0,nullptr);
+	np_end_of_put(&c_list_str,NP_CANCEL,0,NULL);
 	return FALSE;
 //-----------------------------------------------------------
 }
@@ -153,7 +153,7 @@ static  BOOL create_revolute_body( lpMESHDD g, lpVDIM vdim, sgFloat fi )
 
 	if (!begin_rw(vdim, 0)) goto err;
 	for (num_elem = 0; num_elem < vdim->num_elem; num_elem++) { //    
-		if ( (node = (lpMNODE)get_next_elem(vdim)) == nullptr) goto err1;
+		if ( (node = (lpMNODE)get_next_elem(vdim)) == NULL) goto err1;
 
 		//
 		mask = 0;

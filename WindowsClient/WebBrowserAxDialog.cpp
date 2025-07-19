@@ -154,7 +154,7 @@ HRESULT WebBrowserAxDialog::FilterDataObject(IDataObject *pDO, IDataObject **ppD
 
 HRESULT WebBrowserAxDialog::GetTypeInfoCount(UINT* pctinfo)
 {
-	if (pctinfo == nullptr)
+	if (pctinfo == NULL)
 		return E_POINTER;
 
 	*pctinfo = 1;
@@ -198,7 +198,7 @@ HRESULT WebBrowserAxDialog::Invoke(DISPID dispIdMember, REFIID riid, LCID lcid, 
 	{
 		if (dispIdMember == 1)
 		{
-			ShellExecuteW(nullptr, L"open", RBX::FileSystem::getUserDirectory(true, RBX::DirVideo).native().c_str(), nullptr, nullptr, SW_SHOWNORMAL);
+			ShellExecuteW(NULL, L"open", RBX::FileSystem::getUserDirectory(true, RBX::DirVideo).native().c_str(), NULL, NULL, SW_SHOWNORMAL);
 		}
 		else if (dispIdMember == 2)
 		{
@@ -214,7 +214,7 @@ HRESULT WebBrowserAxDialog::Invoke(DISPID dispIdMember, REFIID riid, LCID lcid, 
 		}
 		else if (dispIdMember == 3)
 		{
-			ShellExecuteW(nullptr, L"open", RBX::FileSystem::getUserDirectory(true, RBX::DirPicture).native().c_str(), nullptr, nullptr, SW_SHOWNORMAL);
+			ShellExecuteW(NULL, L"open", RBX::FileSystem::getUserDirectory(true, RBX::DirPicture).native().c_str(), NULL, NULL, SW_SHOWNORMAL);
 		}
 		else if (dispIdMember == 4)
 		{
@@ -229,7 +229,7 @@ static void PostImageFinished(std::string *response, std::exception *ex, weak_pt
 {
 	if(shared_ptr<RBX::DataModel> dataModel = weakDataModel.lock())
 	{
-		if ((ex == nullptr) && (response->compare("ok") == 0))
+		if ((ex == NULL) && (response->compare("ok") == 0))
 		{
 			dataModel->submitTask(boost::bind(&RBX::DataModel::ShowMessage, weak_ptr<RBX::DataModel>(dataModel), 1, "Image uploaded to Facebook", 2), RBX::DataModelJob::Write);
 		}
@@ -440,13 +440,13 @@ LRESULT WebBrowserAxDialog::OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam
 {
 	CenterWindow();
 
-	m_hIcon = ::LoadIcon(GetModuleHandle(nullptr), MAKEINTRESOURCE(IDI_WINDOW_ICON));
+	m_hIcon = ::LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_WINDOW_ICON));
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	m_events.SetParent(this);
 
-	SHDocVw::IWebBrowserAppPtr pWebBrowser = nullptr;
+	SHDocVw::IWebBrowserAppPtr pWebBrowser = NULL;
 	HRESULT hr = GetDlgControl(IDC_EXPLORER1, __uuidof(SHDocVw::IWebBrowserAppPtr), (void**)&pWebBrowser);
 
 	if (SUCCEEDED(hr)) {
@@ -477,7 +477,7 @@ LRESULT WebBrowserAxDialog::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOO
 
 HRESULT __stdcall DWebBrowserEventsImpl::QueryInterface(REFIID riid, LPVOID* ppv)
 {
-	*ppv = nullptr;
+	*ppv = NULL;
 
 	if (IID_IUnknown == riid || __uuidof(SHDocVw::DWebBrowserEventsPtr) == riid)
 	{
@@ -527,11 +527,11 @@ HRESULT __stdcall DWebBrowserEventsImpl::Invoke(DISPID dispIdMember, REFIID riid
 	// proces OnBeforeNavigate
 	if (dispIdMember == DISPID_BEFORENAVIGATE)
 	{
-		BeforeNavigate(_bstr_t(pDispParams->rgvarg[5].bstrVal), 0, _bstr_t(pDispParams->rgvarg[3].bstrVal), nullptr, _bstr_t(""), nullptr);
+		BeforeNavigate(_bstr_t(pDispParams->rgvarg[5].bstrVal), 0, _bstr_t(pDispParams->rgvarg[3].bstrVal), NULL, _bstr_t(""), NULL);
 	}
 	if (dispIdMember == DISPID_BEFORENAVIGATE2) 
 	{
-		BeforeNavigate2(_bstr_t(pDispParams->rgvarg[5].bstrVal), 0, _bstr_t(pDispParams->rgvarg[3].bstrVal), nullptr, _bstr_t(""), nullptr);
+		BeforeNavigate2(_bstr_t(pDispParams->rgvarg[5].bstrVal), 0, _bstr_t(pDispParams->rgvarg[3].bstrVal), NULL, _bstr_t(""), NULL);
 	}
 	else if (dispIdMember == DISPID_NAVIGATECOMPLETE)
 	{
@@ -561,7 +561,7 @@ HRESULT DWebBrowserEventsImpl::BeforeNavigate2(_bstr_t URL, long Flags, _bstr_t 
 
 HRESULT DWebBrowserEventsImpl::NavigateComplete(_bstr_t URL) 
 { 
-	SHDocVw::IWebBrowserAppPtr pWebBrowser = nullptr;
+	SHDocVw::IWebBrowserAppPtr pWebBrowser = NULL;
 	HRESULT hr = m_cpParent->GetDlgControl(IDC_EXPLORER1, __uuidof(SHDocVw::IWebBrowserAppPtr), (void**)&pWebBrowser);
 
 	CComPtr<IDispatch> spDoc;

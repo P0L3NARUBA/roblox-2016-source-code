@@ -621,8 +621,8 @@
                          FT_Memory        memory )
   {
     border->memory = memory;
-    border->points = nullptr;
-    border->tags   = nullptr;
+    border->points = NULL;
+    border->tags   = NULL;
 
     border->num_points = 0;
     border->max_points = 0;
@@ -801,7 +801,7 @@
   {
     FT_Error    error;           /* assigned in FT_NEW */
     FT_Memory   memory;
-    FT_Stroker  stroker = nullptr;
+    FT_Stroker  stroker = NULL;
 
 
     if ( !library )
@@ -881,7 +881,7 @@
       ft_stroke_border_done( &stroker->borders[0] );
       ft_stroke_border_done( &stroker->borders[1] );
 
-      stroker->library = nullptr;
+      stroker->library = NULL;
       FT_FREE( stroker );
     }
   }
@@ -2303,7 +2303,7 @@
                    FT_Bool      destroy )
   {
     FT_Error  error = FT_ERR( Invalid_Argument );
-    FT_Glyph  glyph = nullptr;
+    FT_Glyph  glyph = NULL;
 
     /* for FT_OUTLINE_GLYPH_CLASS_GET (in PIC mode) */
     FT_Library  library = stroker->library;
@@ -2364,10 +2364,10 @@
 
   Fail:
     FT_Done_Glyph( glyph );
-    glyph = nullptr;
+    glyph = NULL;
 
     if ( !destroy )
-      *pglyph = nullptr;
+      *pglyph = NULL;
 
   Exit:
     return error;
@@ -2383,7 +2383,7 @@
                          FT_Bool      destroy )
   {
     FT_Error  error = FT_ERR( Invalid_Argument );
-    FT_Glyph  glyph = nullptr;
+    FT_Glyph  glyph = NULL;
 
     /* for FT_OUTLINE_GLYPH_CLASS_GET (in PIC mode) */
     FT_Library  library = stroker->library;
@@ -2455,10 +2455,10 @@
 
   Fail:
     FT_Done_Glyph( glyph );
-    glyph = nullptr;
+    glyph = NULL;
 
     if ( !destroy )
-      *pglyph = nullptr;
+      *pglyph = NULL;
 
   Exit:
     return error;

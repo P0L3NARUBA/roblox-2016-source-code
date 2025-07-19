@@ -161,23 +161,23 @@ bool RBX::vmProtectedDetectCheatEngineIcon()
 	SelectObject(hBmpFileDC,hOldBitmap);
 
 	bool result = false;
-	LPVOID				pBuf=nullptr;
+	LPVOID				pBuf=NULL;
 	BITMAPINFO			bmpInfo;
 	//BITMAPFILEHEADER	bmpFileHeader;
-	HDC hdc=GetDC(nullptr);
+	HDC hdc=GetDC(NULL);
 
 	do
 	{
 		ZeroMemory(&bmpInfo,sizeof(BITMAPINFO));
 		bmpInfo.bmiHeader.biSize=sizeof(BITMAPINFOHEADER);
-		GetDIBits(hdc,hBmpFileBitmap,0,0,nullptr,&bmpInfo,DIB_RGB_COLORS);
+		GetDIBits(hdc,hBmpFileBitmap,0,0,NULL,&bmpInfo,DIB_RGB_COLORS);
 
 		if(bmpInfo.bmiHeader.biSizeImage<=0)
 			bmpInfo.bmiHeader.biSizeImage=bmpInfo.bmiHeader.biWidth*abs(bmpInfo.bmiHeader.biHeight)*(bmpInfo.bmiHeader.biBitCount+7)/8;
 
-		if((pBuf=malloc(bmpInfo.bmiHeader.biSizeImage))==nullptr)
+		if((pBuf=malloc(bmpInfo.bmiHeader.biSizeImage))==NULL)
 		{
-			//MessageBox(nullptr,_T("Unable to Allocate Bitmap Memory"),_T("Error"),MB_OK|MB_ICONERROR);
+			//MessageBox(NULL,_T("Unable to Allocate Bitmap Memory"),_T("Error"),MB_OK|MB_ICONERROR);
 			break;
 		}
 
@@ -220,7 +220,7 @@ bool RBX::vmProtectedDetectCheatEngineIcon()
 	} while (false);
 
 	if(hdc)
-		ReleaseDC(nullptr,hdc);
+		ReleaseDC(NULL,hdc);
 
 	if(pBuf)
 		free(pBuf);
@@ -450,7 +450,7 @@ bool HwndScanner::detectFakeAttach() const
     return false;
 }
 
-FileScanner::FileScanner() : baseTime(std::time(nullptr))
+FileScanner::FileScanner() : baseTime(std::time(NULL))
 {
     char folderName[MAX_PATH+1];
     DWORD errCode = GetTempPath(sizeof(folderName), folderName);
@@ -564,13 +564,13 @@ HANDLE setupCeLogWatcher()
 
     // First, try to find the folder based on the CE registry entry
     CryptStrings::decodeInto(tmpString, kCeReg, kCeRegKey, sizeof(kCeReg));
-    passCode = RegOpenKeyEx(HKEY_CURRENT_USER,(char*)(tmpString), nullptr, KEY_READ, &hKey);
+    passCode = RegOpenKeyEx(HKEY_CURRENT_USER,(char*)(tmpString), NULL, KEY_READ, &hKey);
     memset(tmpString,0,sizeof(tmpString));
     if (passCode == ERROR_SUCCESS)
     {
         DWORD cbSize = sizeof(folderName);
         CryptStrings::decodeInto(tmpString, kCeScanfolder, kCeScanfolderKey, sizeof(kCeScanfolder));
-        passCode = RegQueryValueEx(hKey, (char*)(tmpString), nullptr, nullptr, (unsigned char*)(folderName), &cbSize);
+        passCode = RegQueryValueEx(hKey, (char*)(tmpString), NULL, NULL, (unsigned char*)(folderName), &cbSize);
         memset(tmpString,0,sizeof(tmpString));
 
         if (passCode == ERROR_SUCCESS && cbSize && folderName[0] != '\\')
@@ -604,7 +604,7 @@ HANDLE setupCeLogWatcher()
         HANDLE ceLogWatchHandle = FindFirstChangeNotification(ceLogPath.string().c_str(), true, FILE_NOTIFY_CHANGE_LAST_WRITE);
         if (ceLogWatchHandle != INVALID_HANDLE_VALUE)
         {
-            ceLogWatcher = CreateThread(nullptr, 64*1024, &watchCeLogDir, ceLogWatchHandle, 0, nullptr);
+            ceLogWatcher = CreateThread(NULL, 64*1024, &watchCeLogDir, ceLogWatchHandle, 0, NULL);
         }
     }
     VMProtectEnd();
@@ -692,7 +692,7 @@ namespace RBX
         HMODULE detected = GetModuleHandle(reinterpret_cast<const char*>(argString));
         memset(argString, 0, sizeof(argString));
         VMProtectEnd();
-        return (detected != nullptr);
+        return (detected != NULL);
     }
 
     namespace CryptStrings
@@ -738,9 +738,9 @@ namespace RBX
 
     DbvmCanary::DbvmCanary()
     {
-        VMProtectBeginMutation(nullptr);
-        canaryCage = CreateMutex(nullptr, TRUE, nullptr);
-        canaryHandle = CreateThread(nullptr,nullptr,reinterpret_cast<LPTHREAD_START_ROUTINE>(canary),&canaryCage,CREATE_SUSPENDED,nullptr);
+        VMProtectBeginMutation(NULL);
+        canaryCage = CreateMutex(NULL, TRUE, NULL);
+        canaryHandle = CreateThread(NULL,NULL,reinterpret_cast<LPTHREAD_START_ROUTINE>(canary),&canaryCage,CREATE_SUSPENDED,NULL);
         ctx.ContextFlags = CONTEXT_DEBUG_REGISTERS;
         ctx.Dr7 = 0x11110100;
         ctx.Dr6 = 0xF;
@@ -756,7 +756,7 @@ namespace RBX
 
     void DbvmCanary::checkAndLocalUpdate()
     {
-        VMProtectBeginMutation(nullptr);
+        VMProtectBeginMutation(NULL);
         bool isBadHash = false;
         CONTEXT nextCtx;
         nextCtx.ContextFlags = CONTEXT_DEBUG_REGISTERS;
@@ -772,7 +772,7 @@ namespace RBX
         ctx.Dr3 = (hashValue+3) % 4096;
         hashValue = hashDbgRegs(ctx);
         VMProtectEnd();
-        VMProtectBeginVirtualization(nullptr);
+        VMProtectBeginVirtualization(NULL);
         if (isBadHash)
         {
             Tokens::simpleToken |= HATE_CHEATENGINE_OLD;
@@ -783,7 +783,7 @@ namespace RBX
 
     void DbvmCanary::kernelUpdate()
     {
-        VMProtectBeginMutation(nullptr);
+        VMProtectBeginMutation(NULL);
         SetThreadContext(canaryHandle, &ctx);
         VMProtectEnd();
     }

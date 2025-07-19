@@ -9,12 +9,12 @@ BOOL   bOemModelFlag = FALSE;
 VERSION_MODEL ver_load = (VERSION_MODEL)(LAST_VERSION - 1);
 APPL_NUMBER   appl_number_load  = APPL_SG;        //  
 short		      appl_version_load = 0; 							//   
-hOBJ          hhold_load        = nullptr;
+hOBJ          hhold_load        = NULL;
 char          flg_list_load     = 0;              //   
 
 static BOOL          the_are_extern_block = FALSE; //    
 static int           num_brep_prev = 0;
-static lpOBJTYPE     pTypesTable = nullptr;
+static lpOBJTYPE     pTypesTable = NULL;
 static lpVDIM vd_ident;
 
 
@@ -146,7 +146,7 @@ BOOL o_load_list(lpBUFFER_DAT bd,lpLISTH listh, NUM_LIST list_zudina,
 
 	/*for (i=0; i<num_field; i++ ) { //   
 		if ( load_data(bd,sizeof(len),&len) != sizeof(len))	goto err;
-		if ( load_data(bd,len,nullptr) != len)	goto err;
+		if ( load_data(bd,len,NULL) != len)	goto err;
 	}*/
 
 	/*if (load_data(bd,sizeof(file_unit),&file_unit) != sizeof(file_unit))
@@ -219,7 +219,7 @@ BOOL o_load_list(lpBUFFER_DAT bd,lpLISTH listh, NUM_LIST list_zudina,
 			}
 			blk_level++;
 			listh_save = *listh;
-			result = SGLoadModel(blk.name, &blk.min, &blk.max, /*nullptr,*/ nullptr,
+			result = SGLoadModel(blk.name, &blk.min, &blk.max, /*NULL,*/ NULL,
 													 &blk.listh);
 			*listh = listh_save;
 			blk_level--;
@@ -347,7 +347,7 @@ lpIDENT_V     lpid;
 WORD          i, len16;
 ULONG         len;
 UCHAR         l1;
-UCHAR         *text = nullptr;
+UCHAR         *text = NULL;
 char          *value;
 char          font_name[MAXFILE + MAXEXT + 1];
 BOOL          flag_difftype;
@@ -386,7 +386,7 @@ short         errcode;
 			if(load_data(bd, sizeof(l1), &l1)   != sizeof(l1))   return FALSE;
 			if(!l1) break;
       if(!load_attr_data_len32(bd, &len)) return FALSE;
-   		if((value = (char*)SGMalloc(len)) == nullptr){
+   		if((value = (char*)SGMalloc(len)) == NULL){
 				attr_handler_err(AT_HEAP);
 				return FALSE;
 			}
@@ -414,7 +414,7 @@ short         errcode;
 	//    
 	if(load_data(bd, sizeof(len16), &len16) != sizeof(len16)) return FALSE;
 	if(!len16) goto met_font;
-	if((irec = (RECORD_ITEM*)SGMalloc(len16)) == nullptr) {
+	if((irec = (RECORD_ITEM*)SGMalloc(len16)) == NULL) {
 		attr_handler_err(AT_HEAP);
 		return FALSE;
 	}
@@ -426,10 +426,10 @@ short         errcode;
 		if(load_data(bd, len, irec) != len) goto err;
 		//   
 		for(i = 0; i < rec.num; i++){
-			if((lpid = (long*)get_elem(vd_ident, irec[i].attr - 1)) == nullptr) attr_exit();
+			if((lpid = (long*)get_elem(vd_ident, irec[i].attr - 1)) == NULL) attr_exit();
 			irec[i].attr = *lpid;
 			if(irec[i].item){
-				if((lpid = (long*)get_elem(vd_ident, irec[i].item - 1)) == nullptr) attr_exit();
+				if((lpid = (long*)get_elem(vd_ident, irec[i].item - 1)) == NULL) attr_exit();
 				irec[i].item = *lpid;
 			}
 		}
@@ -454,14 +454,14 @@ met_font:
 	while(TRUE){
 		if(!load_attr_data_len32(bd, &len)) goto err1;
 		if(!len) break;
-		if((text = (UCHAR*)SGMalloc(len)) == nullptr){
+		if((text = (UCHAR*)SGMalloc(len)) == NULL){
 			attr_handler_err(AT_HEAP);
 			return FALSE;
 		}
 		if(load_data(bd, len, text) != len) goto err1;
 		test_attr_value_to_oem(ATTR_TEXT, (char*)text, len);
 		if(!(idft = add_ft_value(FTTEXT, text, len))) goto err1;
-		SGFree(text); text = nullptr;
+		SGFree(text); text = NULL;
 		if(!add_elem(vd_ident, &idft)) goto err1;
 	}
 	return TRUE;
@@ -573,7 +573,7 @@ BOOL  load_one_block(lpBUFFER_DAT bd)
 			break;
 		}
 		blk_level++;
-		result = SGLoadModel(blk.name, &blk.min, &blk.max, nullptr, nullptr,
+		result = SGLoadModel(blk.name, &blk.min, &blk.max, NULL, NULL,
 												 &blk.listh);
 		blk_level--;
 		if (!result) return FALSE;
@@ -597,7 +597,7 @@ BOOL o_load_obj(lpBUFFER_DAT bd,hOBJ * hobj)
 	int				   offset;
   short		     tmp_short;
 
-	*hobj = nullptr;
+	*hobj = NULL;
 
 	load_type_g = (OSCAN_COD(**)(lpBUFFER_DAT bd, hOBJ hobj))GetMethodArray(OMT_LOAD);
 
@@ -610,13 +610,13 @@ BOOL o_load_obj(lpBUFFER_DAT bd,hOBJ * hobj)
 		return FALSE;
 //			return TRUE;   ????
 	}
-	if ( (*hobj = o_alloc(type)) == nullptr ) goto m;
+	if ( (*hobj = o_alloc(type)) == NULL ) goto m;
 	init_scan(&sc);
 	sc.user_pre_scan	= load_pre_scan;
 	sc.data		        = bd;
 	oscod = o_scan(*hobj, &sc);
 	if ( oscod == OSFALSE) {
-		o_free(*hobj, nullptr);
+		o_free(*hobj, NULL);
 		*hobj = 0;
 		goto m;
 	}
@@ -628,7 +628,7 @@ m:
 static OSCAN_COD load_pre_scan(hOBJ hobj,lpSCAN_CONTROL lpsc)
 {
 	lpOBJ					obj;
-	hCSG					hcsg = nullptr;
+	hCSG					hcsg = NULL;
 	lpBUFFER_DAT	bd = (BUFFER_DAT*)lpsc->data;
 	IDENT_V				irec = 0;
 
@@ -753,14 +753,14 @@ OSCAN_COD  spline_load  ( lpBUFFER_DAT bd, hOBJ hobj)
 				goto err;
 
   len=g->nump * sizeof(DA_POINT);
-	if ((g->hpoint = SGMalloc(len)) == nullptr) goto errs;
+	if ((g->hpoint = SGMalloc(len)) == NULL) goto errs;
 	p = (void*)g->hpoint;
 	if (load_data(bd,len,p) != len) goto errs;
 
 	if (g->numd > 0) {
 		if (g->type & SPLY_CUB) {	//   DOS-
 			len = g->numd * sizeof(SNODE);
-			if (load_data(bd,len,nullptr) != len) goto errs;
+			if (load_data(bd,len,NULL) != len) goto errs;
 			g->numd = 0;
 			g->degree = 2;
 			g->type &= ~SPLY_CUB;
@@ -768,7 +768,7 @@ OSCAN_COD  spline_load  ( lpBUFFER_DAT bd, hOBJ hobj)
 			g->hderivates = 0;
 		} else {
 			len = g->numd * sizeof(SNODE);
-			if ((g->hderivates = SGMalloc(len)) == nullptr) goto errs;
+			if ((g->hderivates = SGMalloc(len)) == NULL) goto errs;
 			d = (void*)g->hderivates;
 			if (load_data(bd,len,d) != len) goto errs;
 		}
@@ -776,7 +776,7 @@ OSCAN_COD  spline_load  ( lpBUFFER_DAT bd, hOBJ hobj)
 
 	if ( ver_load >= WINDOWS_V405 && g->numu > 0){    //zzz
 		len = g->numu * sizeof(sgFloat);
-		if ((g->hvector = SGMalloc(len)) == nullptr) goto errs;
+		if ((g->hvector = SGMalloc(len)) == NULL) goto errs;
 		u = (void*)g->hvector;
 		if (load_data(bd,len,u) != len) goto errs;
 	} else g->hvector=0;
@@ -813,7 +813,7 @@ OSCAN_COD  frame_load  ( lpBUFFER_DAT bd, hOBJ hobj)
 			goto err;
 	if( load_data(bd,sizeof(g->max),&g->max) != sizeof(g->max) )
 			goto err;
-	if( load_data(bd,22,nullptr) != 22 ) 
+	if( load_data(bd,22,NULL) != 22 ) 
 			goto err;
 
 //	len = geo_size[obj->type];
@@ -872,7 +872,7 @@ OSCAN_COD  path_load   ( lpBUFFER_DAT bd, hOBJ hobj )
 	for (i=0; i<num_obj; i++) {
 		hhold_load = hobj;
 		cod = o_load_obj(bd,&hobjn);
-		hhold_load = nullptr;
+		hhold_load = NULL;
 		if ( !cod ) return OSFALSE;
 		attach_item_tail(&listh,hobjn);
 	}
@@ -913,7 +913,7 @@ OSCAN_COD  brep_load   ( lpBUFFER_DAT bd, hOBJ hobj )
 		if ( flg_list_load )  { //   
 			p->num += num_brep_prev;
 		}
-		if ((lplnp = (LNP*)get_elem(&vd_brep, p->num)) == nullptr) return OSFALSE;
+		if ((lplnp = (LNP*)get_elem(&vd_brep, p->num)) == NULL) return OSFALSE;
 		lplnp->count++;
 	} else {
 		lnp.hcsg = obj->hcsg;
@@ -921,7 +921,7 @@ OSCAN_COD  brep_load   ( lpBUFFER_DAT bd, hOBJ hobj )
 		lnp.num_np = create_primitive_np((BREPKIND)lnp.kind,&lnp.listh,(sgFloat *) csg->data);
 		if ( !lnp.num_np ) goto err;
 		if ( !put_np_brep(&lnp,&p->num) ) goto err1;
-		obj->hcsg = nullptr;
+		obj->hcsg = NULL;
 	}
 	return OSSKIP;
 err:
@@ -955,7 +955,7 @@ OSCAN_COD  group_load ( lpBUFFER_DAT bd, hOBJ hobj )
 	for (i=0; i<num_obj; i++) {
 		hhold_load = hobj;
 		cod = o_load_obj(bd,&hobjn);
-		hhold_load = nullptr;
+		hhold_load = NULL;
 		if ( !cod ) return OSFALSE;
 		attach_item_tail(&listh,hobjn);
 	}
@@ -985,7 +985,7 @@ OSCAN_COD  insert_load   ( lpBUFFER_DAT bd, hOBJ hobj )
 		p->num += num_blk_prev;
 	}
 	num_blk = p->num;
-	if ((blk = (IBLOCK*)get_elem(&vd_blocks, num_blk)) == nullptr) return OSFALSE;
+	if ((blk = (IBLOCK*)get_elem(&vd_blocks, num_blk)) == NULL) return OSFALSE;
 	blk->count++;
 	return OSSKIP;
 err:
@@ -1142,7 +1142,7 @@ static BOOL load_surf(lpBUFFER_DAT bd, lpVLD vld)
   hBuf = SGMalloc(size);
   if (!hBuf) return FALSE;
 
-  if ((lpBuf = (void*)hBuf) == nullptr) { SGFree(hBuf); return FALSE; }
+  if ((lpBuf = (void*)hBuf) == NULL) { SGFree(hBuf); return FALSE; }
 
   size = sizeof(D_POINT) * surf.numpu * surf.numpv;
 	if ( load_data(bd, size, lpBuf) != size) goto err;

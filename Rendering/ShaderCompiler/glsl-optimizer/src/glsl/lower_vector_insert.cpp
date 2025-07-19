@@ -55,7 +55,7 @@ public:
 void
 vector_insert_visitor::handle_rvalue(ir_rvalue **rv)
 {
-   if (*rv == nullptr || (*rv)->ir_type != ir_type_expression)
+   if (*rv == NULL || (*rv)->ir_type != ir_type_expression)
       return;
 
    ir_expression *const expr = (ir_expression *) *rv;
@@ -66,7 +66,7 @@ vector_insert_visitor::handle_rvalue(ir_rvalue **rv)
    factory.mem_ctx = ralloc_parent(expr);
 
    ir_constant *const idx = expr->operands[2]->constant_expression_value();
-   if (idx != nullptr) {
+   if (idx != NULL) {
       /* Replace (vector_insert (vec) (scalar) (index)) with a dereference of
        * a new temporary.  The new temporary gets assigned as
        *
@@ -117,7 +117,7 @@ vector_insert_visitor::handle_rvalue(ir_rvalue **rv)
 
          factory.emit(assign(cmp_result,
                              equal(expr->operands[2]->clone(factory.mem_ctx,
-                                                            nullptr),
+                                                            NULL),
                                    cmp_index)));
 
          factory.emit(if_tree(cmp_result,

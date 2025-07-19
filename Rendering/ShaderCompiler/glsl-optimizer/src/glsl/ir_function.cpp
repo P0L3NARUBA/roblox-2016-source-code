@@ -260,13 +260,13 @@ choose_best_inexact_overload(_mesa_glsl_parse_state *state,
                              int num_matches)
 {
    if (num_matches == 0)
-      return nullptr;
+      return NULL;
 
    if (num_matches == 1)
       return *matches;
 
    /* Without GLSL 4.0 / ARB_gpu_shader5, there is no overload resolution
-    * among multiple inexact matches. Note that state may be nullptr here if
+    * among multiple inexact matches. Note that state may be NULL here if
     * called from the linker; in that case we assume everything supported in
     * any GLSL version is available. */
    if (!state || state->is_version(400, 0) || state->ARB_gpu_shader5_enable) {
@@ -276,7 +276,7 @@ choose_best_inexact_overload(_mesa_glsl_parse_state *state,
       }
    }
 
-   return nullptr;   /* no best candidate */
+   return NULL;   /* no best candidate */
 }
 
 
@@ -296,9 +296,9 @@ ir_function::matching_signature(_mesa_glsl_parse_state *state,
                                 bool allow_builtins,
                                 bool *is_exact)
 {
-   ir_function_signature **inexact_matches = nullptr;
+   ir_function_signature **inexact_matches = NULL;
    ir_function_signature **inexact_matches_temp;
-   ir_function_signature *match = nullptr;
+   ir_function_signature *match = NULL;
    int num_inexact_matches = 0;
 
    /* From page 42 (page 49 of the PDF) of the GLSL 1.20 spec:
@@ -327,10 +327,10 @@ ir_function::matching_signature(_mesa_glsl_parse_state *state,
                realloc(inexact_matches,
                        sizeof(*inexact_matches) *
                        (num_inexact_matches + 1));
-         if (inexact_matches_temp == nullptr) {
+         if (inexact_matches_temp == NULL) {
             _mesa_error_no_memory(__func__);
             free(inexact_matches);
-            return nullptr;
+            return NULL;
          }
          inexact_matches = inexact_matches_temp;
          inexact_matches[num_inexact_matches++] = sig;
@@ -339,14 +339,14 @@ ir_function::matching_signature(_mesa_glsl_parse_state *state,
 	 continue;
       default:
 	 assert(false);
-	 return nullptr;
+	 return NULL;
       }
    }
 
    /* There is no exact match (we would have returned it by now).  If there
     * are multiple inexact matches, the call is ambiguous, which is an error.
     *
-    * FINISHME: Report a decent error.  Returning nullptr will likely result in
+    * FINISHME: Report a decent error.  Returning NULL will likely result in
     * FINISHME: a "no matching signature" error; it should report that the
     * FINISHME: call is ambiguous.  But reporting errors from here is hard.
     */
@@ -397,5 +397,5 @@ ir_function::exact_matching_signature(_mesa_glsl_parse_state *state,
       if (parameter_lists_match_exact(&sig->parameters, actual_parameters))
 	 return sig;
    }
-   return nullptr;
+   return NULL;
 }

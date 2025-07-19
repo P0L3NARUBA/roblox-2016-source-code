@@ -76,7 +76,7 @@ public:
    qual(q),
    precision(prec),
    arraySize(as),
-   suppressedBy(nullptr),
+   suppressedBy(NULL),
    name(n),
    baseName((bn=="")?bn:bn+"_")
    {

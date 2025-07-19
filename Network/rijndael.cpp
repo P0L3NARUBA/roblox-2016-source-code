@@ -496,7 +496,7 @@ int makeKey(keyInstance *key, BYTE direction, int keyByteLen, char *keyMaterial)
 	int i;
 	int keyLen = keyByteLen*8;
 	
-	if (key == nullptr) {
+	if (key == NULL) {
 		return BAD_KEY_INSTANCE;
 	}
 
@@ -543,7 +543,7 @@ int cipherInit(cipherInstance *cipher, BYTE mode, char *IV)
 	}
 	
 
-	if (IV != nullptr) {
+	if (IV != NULL) {
  		for(i = 0; i < 16; i++) cipher->IV[i] = IV[i];
 	}
 	else
@@ -564,8 +564,8 @@ int blockEncrypt(cipherInstance *cipher,
 	word8 block[16], iv[4][4];
 	int inputLen = inputByteLen*8;
 
-	if (cipher == nullptr ||
-		key == nullptr ||
+	if (cipher == NULL ||
+		key == NULL ||
 		key->direction == DIR_DECRYPT) {
 		return BAD_CIPHER_STATE;
 	}
@@ -659,8 +659,8 @@ int blockDecrypt(cipherInstance *cipher,
 	word8 block[16], iv[4][4];
 	int inputLen = inputByteLen*8;
 
-	if (cipher == nullptr ||
-		key == nullptr ||
+	if (cipher == NULL ||
+		key == NULL ||
 		(cipher->mode != MODE_CFB1 && key->direction == DIR_ENCRYPT)) {
 		return BAD_CIPHER_STATE;
 	}
@@ -781,8 +781,8 @@ int cipherUpdateRounds(cipherInstance *cipher,
 	int j;
 	word8 block[4][4];
 
-	if (cipher == nullptr ||
-		key == nullptr) {
+	if (cipher == NULL ||
+		key == NULL) {
 		return BAD_CIPHER_STATE;
 	}
 

@@ -128,7 +128,7 @@ void FunctionMarshaller::Submit(boost::function<void()> job)
 {
 	Closure *pClosure = new Closure;
 	pClosure->f = new boost::function<void()>(job);
-	pClosure->waitEvent = nullptr;
+	pClosure->waitEvent = NULL;
 	Roblox::postAppEvent(pClosure);
 }
 

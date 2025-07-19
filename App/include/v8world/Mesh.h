@@ -64,8 +64,8 @@ namespace RBX {
 		public:
 			Edge(size_t id, const Vertex* v0, const Vertex* v1)
 				: id(id)
-				, forward(nullptr)
-				, backward(nullptr)
+				, forward(NULL)
+				, backward(NULL)
 			{
 				vertex[0] = v0;
 				vertex[1] = v1;

@@ -109,7 +109,7 @@ namespace rbx
 				// Move the value over to its new home
 				v = *value;
 				valuePool.destroy(value);
-				value = nullptr;
+				value = NULL;
 
 				leaf = "";
 			}

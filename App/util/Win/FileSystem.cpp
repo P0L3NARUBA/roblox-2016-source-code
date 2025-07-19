@@ -56,13 +56,13 @@ boost::filesystem::path getUserDirectory(bool create, FileSystemDir dir, const c
 	switch (dir)
 	{
 		case DirAppData:
-			hr = SHGetFolderPathAndSubDirW(nullptr, CSIDL_LOCAL_APPDATA | flags, nullptr, SHGFP_TYPE_CURRENT, robloxDir.native().c_str(), pathBuffer);
+			hr = SHGetFolderPathAndSubDirW(NULL, CSIDL_LOCAL_APPDATA | flags, NULL, SHGFP_TYPE_CURRENT, robloxDir.native().c_str(), pathBuffer);
 			break;
 		case DirPicture:
-			hr = SHGetFolderPathAndSubDirW(nullptr, CSIDL_MYPICTURES | flags, nullptr, SHGFP_TYPE_CURRENT, robloxDir.native().c_str(), pathBuffer);
+			hr = SHGetFolderPathAndSubDirW(NULL, CSIDL_MYPICTURES | flags, NULL, SHGFP_TYPE_CURRENT, robloxDir.native().c_str(), pathBuffer);
 			break;
 		case DirVideo:
-			hr = SHGetFolderPathAndSubDirW(nullptr, CSIDL_MYVIDEO | flags, nullptr, SHGFP_TYPE_CURRENT, robloxDir.native().c_str(), pathBuffer);
+			hr = SHGetFolderPathAndSubDirW(NULL, CSIDL_MYVIDEO | flags, NULL, SHGFP_TYPE_CURRENT, robloxDir.native().c_str(), pathBuffer);
 			break;
 		default:
 			RBXASSERT(false);
@@ -73,7 +73,7 @@ boost::filesystem::path getUserDirectory(bool create, FileSystemDir dir, const c
 	if ((hr!=S_OK) && (dir == DirAppData))
     {
 		// Try this one:
-		hr = SHGetFolderPathAndSubDirW(nullptr, CSIDL_COMMON_APPDATA | flags, nullptr, SHGFP_TYPE_CURRENT, robloxDir.native().c_str(), pathBuffer);
+		hr = SHGetFolderPathAndSubDirW(NULL, CSIDL_COMMON_APPDATA | flags, NULL, SHGFP_TYPE_CURRENT, robloxDir.native().c_str(), pathBuffer);
     }
 
 	if (hr==S_OK)

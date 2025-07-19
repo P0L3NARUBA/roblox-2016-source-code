@@ -53,7 +53,7 @@ __declspec(code_seg(".zero")) bool getSectionInfo(const SectionPtrVector& sectio
     {
         if (strncmp(reinterpret_cast<const char*>(sections[i]->Name), name, kPeSectionNameLimit) == 0) // 
         {
-            baseAddr = sections[i]->VirtualAddress + reinterpret_cast<size_t>(GetModuleHandle(nullptr));
+            baseAddr = sections[i]->VirtualAddress + reinterpret_cast<size_t>(GetModuleHandle(NULL));
             size = sections[i]->Misc.VirtualSize; // Virtual size ignores file alignment padding.
             return true;
         }
@@ -63,8 +63,8 @@ __declspec(code_seg(".zero")) bool getSectionInfo(const SectionPtrVector& sectio
 
 __declspec(code_seg(".zero")) int getSections(void* pImageBase, SectionPtrVector& sections)
 {
-    IMAGE_DOS_HEADER *pDosHdr = nullptr;
-    IMAGE_SECTION_HEADER *pSection = nullptr;
+    IMAGE_DOS_HEADER *pDosHdr = NULL;
+    IMAGE_SECTION_HEADER *pSection = NULL;
 
     // Get DOS header
     pDosHdr = reinterpret_cast<IMAGE_DOS_HEADER*>(pImageBase);
@@ -248,7 +248,7 @@ __declspec(code_seg(".zero")) bool getImportThunkSection(const SectionPtrVector&
         if (strncmp(reinterpret_cast<const char*>(sections[i]->Name), ".rdata", 7) == 0)
         {
             rdataVa = sections[i]->PointerToRawData;
-            rdataRva = sections[i]->VirtualAddress + reinterpret_cast<uintptr_t>(GetModuleHandle(nullptr));
+            rdataRva = sections[i]->VirtualAddress + reinterpret_cast<uintptr_t>(GetModuleHandle(NULL));
             rdataSize = sections[i]->SizeOfRawData;
             break;
         }
@@ -256,7 +256,7 @@ __declspec(code_seg(".zero")) bool getImportThunkSection(const SectionPtrVector&
 
     // need to open the _original_ file (not the one modified by VMProtect)
     TCHAR name[MAX_PATH]; // assumed to be RobloxPlayerBeta.exe
-    GetModuleFileName(GetModuleHandle(nullptr), name, sizeof(name)/sizeof(TCHAR));
+    GetModuleFileName(GetModuleHandle(NULL), name, sizeof(name)/sizeof(TCHAR));
     std::string pathName(name);
     std::stringstream modifiedName;
     if (pathName.substr(pathName.size()-7) != "Raw.exe")
@@ -422,7 +422,7 @@ __declspec(code_seg(".zero")) bool createUpdatedExe(HANDLE hChild)
 {
     // get section info
     SectionPtrVector procSections;
-    getSections(GetModuleHandleA(nullptr), procSections);
+    getSections(GetModuleHandleA(NULL), procSections);
     uintptr_t textBase;
     size_t textSize;
     if (!getSectionInfo(procSections, ".text", textBase, textSize))
@@ -502,7 +502,7 @@ __declspec(code_seg(".zero")) bool createUpdatedExe(HANDLE hChild)
 
     // read exe file into RAM
     TCHAR name[MAX_PATH];
-    GetModuleFileName(GetModuleHandle(nullptr), name, sizeof(name)/sizeof(TCHAR));
+    GetModuleFileName(GetModuleHandle(NULL), name, sizeof(name)/sizeof(TCHAR));
     std::vector<char> fileBuffer;
     int fileSize = readFile(name, fileBuffer);
     if (0 == fileSize)
@@ -523,12 +523,12 @@ __declspec(code_seg(".zero")) bool createUpdatedExe(HANDLE hChild)
         if (strncmp(reinterpret_cast<const char*>(fileSections[i]->Name), ".rdata", 7) == 0)
         {
             rdataFileBase = reinterpret_cast<uintptr_t>(fileSections[i]->PointerToRawData + &fileBuffer[0]);
-            rdataFileRva = fileSections[i]->VirtualAddress + reinterpret_cast<size_t>(GetModuleHandle(nullptr));
+            rdataFileRva = fileSections[i]->VirtualAddress + reinterpret_cast<size_t>(GetModuleHandle(NULL));
         }
         else if (strncmp(reinterpret_cast<const char*>(fileSections[i]->Name), ".text", 6) == 0)
         {
             textFileBase = reinterpret_cast<uintptr_t>(fileSections[i]->PointerToRawData + &fileBuffer[0]);
-            textFileRva = fileSections[i]->VirtualAddress + reinterpret_cast<size_t>(GetModuleHandle(nullptr));
+            textFileRva = fileSections[i]->VirtualAddress + reinterpret_cast<size_t>(GetModuleHandle(NULL));
         }
     }
     FASTLOG1(FLog::Zero, "rdata filebase = 0x%08X", rdataFileBase);
@@ -671,7 +671,7 @@ namespace RBX { namespace Security {
 __declspec(code_seg(".zero")) bool patchMain()
 {
     TCHAR name[MAX_PATH];
-    GetModuleFileName(GetModuleHandle(nullptr), name, sizeof(name)/sizeof(TCHAR));
+    GetModuleFileName(GetModuleHandle(NULL), name, sizeof(name)/sizeof(TCHAR));
     FASTLOG1(FLog::Zero, "exe = %s", name);
 
     char* cli = " -w 10558381 ";
@@ -688,12 +688,12 @@ __declspec(code_seg(".zero")) bool patchMain()
         ZeroMemory( &childInfo, sizeof(childInfo) );
         if (!CreateProcess(name, 
             cli, 
-            nullptr, 
-            nullptr, 
+            NULL, 
+            NULL, 
             false, 
             CREATE_SUSPENDED, 
-            nullptr, 
-            nullptr, 
+            NULL, 
+            NULL, 
             &startInfo, 
             &childInfo)) 
         {

@@ -1,6 +1,6 @@
 #include "../sg.h"
 
-lpNPW	c_np_top = nullptr, c_np_bottom = nullptr;
+lpNPW	c_np_top = NULL, c_np_bottom = NULL;
 static BOOL write_cover( lpNPW np, lpMNODE node, AP_TYPE stat );
 static BOOL form_np( lpNPW np );
 //**********************************************************
@@ -18,7 +18,7 @@ BOOL pipe_mesh(lpLISTH listh_cross, lpVDIM vdim_path, BOOL type_path, OSTATUS st
 	BOOL				cod;
 
 	c_num_np	= -32767;
-	*hrez 		= nullptr;
+	*hrez 		= NULL;
 	if ( !np_init_list(&c_list_str) ) return FALSE;
 
 	if( !(status1 & ST_CLOSE) && ZU )
@@ -35,14 +35,14 @@ BOOL pipe_mesh(lpLISTH listh_cross, lpVDIM vdim_path, BOOL type_path, OSTATUS st
 	if( ZU ) //  
 	{
 		if ( (c_np_bottom = creat_np_mem(TNPW,MAXNOV,MAXNOE,MAXNOC, MAXNOF,
-																		 MAXNOE)) == nullptr)  goto err1;
+																		 MAXNOE)) == NULL)  goto err1;
 		np_init((lpNP)c_np_bottom);
 		c_np_bottom->ident = c_num_np++;
 	}
 
 	hobject = listh_cross->hhead;  //  
 
-	while( hobject != nullptr )      //     
+	while( hobject != NULL )      //     
 	{
 		o_hcunit( m_all );            // 
 		//      
@@ -110,7 +110,7 @@ err1:
 	free_np_mem(&c_np_top);
 	free_np_mem(&c_np_bottom);
 //	free_vdim(vdim_path);
-	np_end_of_put(&c_list_str,NP_CANCEL,0,nullptr);
+	np_end_of_put(&c_list_str,NP_CANCEL,0,NULL);
 	return FALSE;
 }
 
@@ -134,10 +134,10 @@ BOOL create_pipe( lpMESHDD g, hOBJ cross, lpVDIM vdim_path, MATR m_all,
 	}
 	//       .   
 	if (ZU) {
-		if ( (next = (lpMNODE)get_elem(&vdim_cross, 0)) == nullptr) goto err;
+		if ( (next = (lpMNODE)get_elem(&vdim_cross, 0)) == NULL) goto err;
 		next->num = bstat;
 		if ( (next =
-				(lpMNODE)get_elem(&vdim_cross, vdim_cross.num_elem - 1)) == nullptr) goto err;
+				(lpMNODE)get_elem(&vdim_cross, vdim_cross.num_elem - 1)) == NULL) goto err;
 		next->num = estat;
 	}
 /*	if ( vdim_cross.num_elem > MAXINT ) {
@@ -149,11 +149,11 @@ BOOL create_pipe( lpMESHDD g, hOBJ cross, lpVDIM vdim_path, MATR m_all,
 
 //             
 	if (!begin_rw(vdim_path, 0)) goto err;
-	if ( (previos = (lpMNODE)get_next_elem(vdim_path)) == nullptr) goto err1;
+	if ( (previos = (lpMNODE)get_next_elem(vdim_path)) == NULL) goto err1;
 	o_hcncrd( m_all, &previos->p, &previos->p);
 
 //             
-	if ( (current = (lpMNODE)get_next_elem(vdim_path)) == nullptr) goto err1;
+	if ( (current = (lpMNODE)get_next_elem(vdim_path)) == NULL) goto err1;
 	o_hcncrd( m_all, &current->p, &current->p);
 
 //    (   )
@@ -164,7 +164,7 @@ BOOL create_pipe( lpMESHDD g, hOBJ cross, lpVDIM vdim_path, MATR m_all,
 //     
 	for (i = 2; i < vdim_path->num_elem; i++)
 	{
-		if ( (next = (lpMNODE)get_next_elem(vdim_path)) == nullptr) goto err1;
+		if ( (next = (lpMNODE)get_next_elem(vdim_path)) == NULL) goto err1;
 //       
 		o_hcncrd( m_all, &next->p, &next->p);
 
@@ -232,7 +232,7 @@ BOOL put_unclosed_path( short j, lpMESHDD g,
 	{
 		if (!begin_rw(vdim_cross, 0)) return FALSE;
 		for (i = 0; i < vdim_cross->num_elem; i++) {
-			if ( (lpnode = (lpMNODE)get_next_elem(vdim_cross)) == nullptr) goto err;
+			if ( (lpnode = (lpMNODE)get_next_elem(vdim_cross)) == NULL) goto err;
 			node = *lpnode;
 			mask = (short)CONSTR_U;
 			if (!(node.num & AP_CONSTR)) mask |= CONSTR_V;
@@ -289,7 +289,7 @@ BOOL put_closed_path(  lpMESHDD g,
 	R = g->vdim.num_elem;
 	if (!begin_rw(&g->vdim, 0)) return FALSE;
 	for (i = 0; i <vdim_cross->num_elem; i++) {//   .
-		if ( (node = (lpMNODE)get_next_elem(&g->vdim)) == nullptr) return FALSE;
+		if ( (node = (lpMNODE)get_next_elem(&g->vdim)) == NULL) return FALSE;
 		if ( !add_elem(&g->vdim, node)) return FALSE;
 		if( i==0 && ZU ) write_cover( c_np_top,  node, bstat );
 		if( i==vdim_cross->num_elem-1 && ZU ) write_cover( c_np_bottom, node, estat );
@@ -341,7 +341,7 @@ BOOL write_cross_section( lpMESHDD g, short mask, lpVDIM vdim_cross,
 
 	if (!begin_rw(vdim_cross, 0)) return FALSE;
 	for (i = 0; i < vdim_cross->num_elem; i++) {//   .
-		if ( (node_c = (lpMNODE)get_next_elem(vdim_cross)) == nullptr) goto err;
+		if ( (node_c = (lpMNODE)get_next_elem(vdim_cross)) == NULL) goto err;
 		t = ( D - dskalar_product( v2, &node_c->p ))/R;
 		node.p.x = node_c->p.x = node_c->p.x + v1->x*t;
 		node.p.y = node_c->p.y = node_c->p.y + v1->y*t;

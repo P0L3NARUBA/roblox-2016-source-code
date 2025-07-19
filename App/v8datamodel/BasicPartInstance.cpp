@@ -85,7 +85,7 @@ void FormFactorPart::setFormFactorUi(FormFactor value)
 
 
 
-const EnumPropDescriptor<BasicPartInstance, BasicPartInstance::LegacyPartType> prop_shapXml("shap", category_BasicPart, nullptr, &BasicPartInstance::setLegacyPartTypeXml, PropertyDescriptor::LEGACY); // Used to prepare for TA14264
+const EnumPropDescriptor<BasicPartInstance, BasicPartInstance::LegacyPartType> prop_shapXml("shap", category_BasicPart, NULL, &BasicPartInstance::setLegacyPartTypeXml, PropertyDescriptor::LEGACY); // Used to prepare for TA14264
 const EnumPropDescriptor<BasicPartInstance, BasicPartInstance::LegacyPartType> BasicPartInstance::prop_shapeXml("shape", category_BasicPart, &BasicPartInstance::getLegacyPartType, &BasicPartInstance::setLegacyPartTypeXml, PropertyDescriptor::STREAMING);
 static const EnumPropDescriptor<BasicPartInstance, BasicPartInstance::LegacyPartType> prop_shapeUi("Shape", category_BasicPart , &BasicPartInstance::getLegacyPartType, &BasicPartInstance::setLegacyPartTypeUi, PropertyDescriptor::UI);
 

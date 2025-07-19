@@ -109,7 +109,7 @@ SDL_UseAltivecPrefetch()
     u_int64_t result = 0;
     size_t typeSize = sizeof(result);
 
-    if (sysctlbyname(key, &result, &typeSize, nullptr, 0) == 0 && result > 0) {
+    if (sysctlbyname(key, &result, &typeSize, NULL, 0) == 0 && result > 0) {
         return SDL_TRUE;
     } else {
         return SDL_FALSE;
@@ -208,14 +208,14 @@ SDL_ChooseBlitFunc(Uint32 src_format, Uint32 dst_format, int flags,
         /* We found the best one! */
         return entries[i].func;
     }
-    return nullptr;
+    return NULL;
 }
 
 /* Figure out which of many blit routines to set up on a surface */
 int
 SDL_CalculateBlit(SDL_Surface * surface)
 {
-    SDL_BlitFunc blit = nullptr;
+    SDL_BlitFunc blit = NULL;
     SDL_BlitMap *map = surface->map;
     SDL_Surface *dst = map->dst;
 
@@ -250,7 +250,7 @@ SDL_CalculateBlit(SDL_Surface * surface)
     } else {
         blit = SDL_CalculateBlitN(surface);
     }
-    if (blit == nullptr) {
+    if (blit == NULL) {
         Uint32 src_format = surface->format->format;
         Uint32 dst_format = dst->format->format;
 
@@ -259,7 +259,7 @@ SDL_CalculateBlit(SDL_Surface * surface)
                                SDL_GeneratedBlitFuncTable);
     }
 #ifndef TEST_SLOW_BLIT
-    if (blit == nullptr)
+    if (blit == NULL)
 #endif
     {
         Uint32 src_format = surface->format->format;
@@ -275,7 +275,7 @@ SDL_CalculateBlit(SDL_Surface * surface)
     map->data = blit;
 
     /* Make sure we have a blit function */
-    if (blit == nullptr) {
+    if (blit == NULL) {
         SDL_InvalidateMap(map);
         return SDL_SetError("Blit combination not supported");
     }

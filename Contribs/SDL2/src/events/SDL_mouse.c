@@ -132,7 +132,7 @@ SDL_SetMouseFocus(SDL_Window * window)
     }
 
     /* Update cursor visibility */
-    SDL_SetCursor(nullptr);
+    SDL_SetCursor(NULL);
 }
 
 /* Check to see if we need to synthesize focus events */
@@ -169,7 +169,7 @@ SDL_UpdateMouseFocus(SDL_Window * window, int x, int y, Uint32 buttonstate)
             printf("Mouse left window, synthesizing move & focus lost event\n");
 #endif
             SDL_PrivateSendMouseMotion(window, mouse->mouseID, 0, x, y);
-            SDL_SetMouseFocus(nullptr);
+            SDL_SetMouseFocus(NULL);
         }
         return SDL_FALSE;
     }
@@ -310,7 +310,7 @@ static SDL_MouseClickState *GetMouseClickState(SDL_Mouse *mouse, Uint8 button)
         int i, count = button + 1;
         SDL_MouseClickState *clickstate = (SDL_MouseClickState *)SDL_realloc(mouse->clickstate, count * sizeof(*mouse->clickstate));
         if (!clickstate) {
-            return nullptr;
+            return NULL;
         }
         mouse->clickstate = clickstate;
 
@@ -497,7 +497,7 @@ SDL_GetGlobalMouseState(int *x, int *y)
     SDL_Mouse *mouse = SDL_GetMouse();
     int tmpx, tmpy;
 
-    /* make sure these are never nullptr for the backend implementations... */
+    /* make sure these are never NULL for the backend implementations... */
     if (!x) {
         x = &tmpx;
     }
@@ -520,11 +520,11 @@ SDL_WarpMouseInWindow(SDL_Window * window, int x, int y)
 {
     SDL_Mouse *mouse = SDL_GetMouse();
 
-    if (window == nullptr) {
+    if (window == NULL) {
         window = mouse->focus;
     }
 
-    if (window == nullptr) {
+    if (window == NULL) {
         return;
     }
 
@@ -611,7 +611,7 @@ SDL_SetRelativeMouseMode(SDL_bool enabled)
     SDL_FlushEvent(SDL_MOUSEMOTION);
 
     /* Update cursor visibility */
-    SDL_SetCursor(nullptr);
+    SDL_SetCursor(NULL);
 
     return 0;
 }
@@ -650,7 +650,7 @@ SDL_CaptureMouse(SDL_bool enabled)
         }
         focusWindow->flags |= SDL_WINDOW_MOUSE_CAPTURE;
     } else {
-        if (mouse->CaptureMouse(nullptr) == -1) {
+        if (mouse->CaptureMouse(NULL) == -1) {
             return -1;  /* CaptureMouse() should call SetError */
         }
         focusWindow->flags &= ~SDL_WINDOW_MOUSE_CAPTURE;
@@ -682,7 +682,7 @@ SDL_CreateCursor(const Uint8 * data, const Uint8 * mask,
                                    0x000000FF,
                                    0xFF000000);
     if (!surface) {
-        return nullptr;
+        return NULL;
     }
     for (y = 0; y < h; ++y) {
         pixel = (Uint32 *) ((Uint8 *) surface->pixels + y * surface->pitch);
@@ -712,30 +712,30 @@ SDL_Cursor *
 SDL_CreateColorCursor(SDL_Surface *surface, int hot_x, int hot_y)
 {
     SDL_Mouse *mouse = SDL_GetMouse();
-    SDL_Surface *temp = nullptr;
+    SDL_Surface *temp = NULL;
     SDL_Cursor *cursor;
 
     if (!surface) {
-        SDL_SetError("Passed nullptr cursor surface");
-        return nullptr;
+        SDL_SetError("Passed NULL cursor surface");
+        return NULL;
     }
 
     if (!mouse->CreateCursor) {
         SDL_SetError("Cursors are not currently supported");
-        return nullptr;
+        return NULL;
     }
 
     /* Sanity check the hot spot */
     if ((hot_x < 0) || (hot_y < 0) ||
         (hot_x >= surface->w) || (hot_y >= surface->h)) {
         SDL_SetError("Cursor hot spot doesn't lie within cursor");
-        return nullptr;
+        return NULL;
     }
 
     if (surface->format->format != SDL_PIXELFORMAT_ARGB8888) {
         temp = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_ARGB8888, 0);
         if (!temp) {
-            return nullptr;
+            return NULL;
         }
         surface = temp;
     }
@@ -759,7 +759,7 @@ SDL_CreateSystemCursor(SDL_SystemCursor id)
 
     if (!mouse->CreateSystemCursor) {
         SDL_SetError("CreateSystemCursor is not currently supported");
-        return nullptr;
+        return NULL;
     }
 
     cursor = mouse->CreateSystemCursor(id);
@@ -771,7 +771,7 @@ SDL_CreateSystemCursor(SDL_SystemCursor id)
     return cursor;
 }
 
-/* SDL_SetCursor(nullptr) can be used to force the cursor redraw,
+/* SDL_SetCursor(NULL) can be used to force the cursor redraw,
    if this is desired for any reason.  This is used when setting
    the video mode and when the SDL window gains the mouse focus.
  */
@@ -810,7 +810,7 @@ SDL_SetCursor(SDL_Cursor * cursor)
         }
     } else {
         if (mouse->ShowCursor) {
-            mouse->ShowCursor(nullptr);
+            mouse->ShowCursor(NULL);
         }
     }
 }
@@ -821,7 +821,7 @@ SDL_GetCursor(void)
     SDL_Mouse *mouse = SDL_GetMouse();
 
     if (!mouse) {
-        return nullptr;
+        return NULL;
     }
     return mouse->cur_cursor;
 }
@@ -832,7 +832,7 @@ SDL_GetDefaultCursor(void)
     SDL_Mouse *mouse = SDL_GetMouse();
 
     if (!mouse) {
-        return nullptr;
+        return NULL;
     }
     return mouse->def_cursor;
 }
@@ -854,7 +854,7 @@ SDL_FreeCursor(SDL_Cursor * cursor)
         SDL_SetCursor(mouse->def_cursor);
     }
 
-    for (prev = nullptr, curr = mouse->cursors; curr;
+    for (prev = NULL, curr = mouse->cursors; curr;
          prev = curr, curr = curr->next) {
         if (curr == cursor) {
             if (prev) {
@@ -889,7 +889,7 @@ SDL_ShowCursor(int toggle)
             mouse->cursor_shown = SDL_FALSE;
         }
         if (mouse->cursor_shown != shown) {
-            SDL_SetCursor(nullptr);
+            SDL_SetCursor(NULL);
         }
     }
     return shown;

@@ -80,7 +80,7 @@ GetJoystickName(int index, const char *szRegKey)
        see if there is a joystick for the current
        index (1-16) listed in the registry
      */
-    char *name = nullptr;
+    char *name = NULL;
     HKEY hTopKey;
     HKEY hKey;
     DWORD regsize;
@@ -98,7 +98,7 @@ GetJoystickName(int index, const char *szRegKey)
         regresult = RegOpenKeyExA(hTopKey, regkey, 0, KEY_READ, &hKey);
     }
     if (regresult != ERROR_SUCCESS) {
-        return nullptr;
+        return NULL;
     }
 
     /* find the registry key name for the joystick's properties */
@@ -110,7 +110,7 @@ GetJoystickName(int index, const char *szRegKey)
     RegCloseKey(hKey);
 
     if (regresult != ERROR_SUCCESS) {
-        return nullptr;
+        return NULL;
     }
 
     /* open that registry key */
@@ -118,13 +118,13 @@ GetJoystickName(int index, const char *szRegKey)
                  regname);
     regresult = RegOpenKeyExA(hTopKey, regkey, 0, KEY_READ, &hKey);
     if (regresult != ERROR_SUCCESS) {
-        return nullptr;
+        return NULL;
     }
 
     /* find the size for the OEM name text */
     regsize = sizeof(regvalue);
     regresult =
-        RegQueryValueExA(hKey, REGSTR_VAL_JOYOEMNAME, 0, 0, nullptr, &regsize);
+        RegQueryValueExA(hKey, REGSTR_VAL_JOYOEMNAME, 0, 0, NULL, &regsize);
     if (regresult == ERROR_SUCCESS) {
         /* allocate enough memory for the OEM name text ... */
         name = (char *) SDL_malloc(regsize);
@@ -158,7 +158,7 @@ SDL_SYS_JoystickInit(void)
     /* Reset the joystick ID & name mapping tables */
     for (i = 0; i < MAX_JOYSTICKS; ++i) {
         SYS_JoystickID[i] = 0;
-        SYS_JoystickName[i] = nullptr;
+        SYS_JoystickName[i] = NULL;
     }
 
     /* Loop over all potential joystick devices */
@@ -196,7 +196,7 @@ void SDL_SYS_JoystickDetect()
 const char *
 SDL_SYS_JoystickNameForDeviceIndex(int device_index)
 {
-    if (SYS_JoystickName[device_index] != nullptr) {
+    if (SYS_JoystickName[device_index] != NULL) {
         return (SYS_JoystickName[device_index]);
     } else {
         return (SYS_Joystick[device_index].szPname);
@@ -242,7 +242,7 @@ SDL_SYS_JoystickOpen(SDL_Joystick * joystick, int device_index)
     joystick->instance_id = device_index;
     joystick->hwdata =
         (struct joystick_hwdata *) SDL_malloc(sizeof(*joystick->hwdata));
-    if (joystick->hwdata == nullptr) {
+    if (joystick->hwdata == NULL) {
         return SDL_OutOfMemory();
     }
     SDL_memset(joystick->hwdata, 0, sizeof(*joystick->hwdata));
@@ -393,7 +393,7 @@ SDL_SYS_JoystickQuit(void)
     int i;
     for (i = 0; i < MAX_JOYSTICKS; i++) {
         SDL_free(SYS_JoystickName[i]);
-        SYS_JoystickName[i] = nullptr;
+        SYS_JoystickName[i] = NULL;
     }
 }
 

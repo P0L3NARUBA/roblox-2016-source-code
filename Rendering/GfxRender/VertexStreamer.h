@@ -3,6 +3,7 @@
 #include "Util/G3DCore.h"
 
 #include "GfxCore/Geometry.h"
+#include "Vertex.h"
 
 namespace RBX
 {

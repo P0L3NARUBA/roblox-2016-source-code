@@ -14,7 +14,7 @@ sgCFont::~sgCFont()
 	{
 		SGFree(m_handle);
 	}
-	m_handle = nullptr;
+	m_handle = NULL;
 	m_length = 0;
 	m_id = 0;
 }
@@ -26,10 +26,10 @@ const SG_FONT_DATA* const sgCFont::GetFontData() const
 		if (m_id==0)
 		{
 			assert(0);
-			return nullptr;
+			return NULL;
 		}
 		if(0 ==(m_handle = alloc_and_get_ft_value(m_id, &m_length))) 
-			return nullptr;
+			return NULL;
 	}
 	
 	return reinterpret_cast<SG_FONT_DATA*>(m_handle);
@@ -38,7 +38,7 @@ const SG_FONT_DATA* const sgCFont::GetFontData() const
 sgCFont*    sgCFont::LoadFont(const char* path, char* comment, short commentLength)
 {
 	ULONG lenF;
-	lpFONT font=nullptr;
+	lpFONT font=NULL;
 	short errcode=-1;
 
 	char       drive [MAXDRIVE];
@@ -49,10 +49,10 @@ sgCFont*    sgCFont::LoadFont(const char* path, char* comment, short commentLeng
 	fnsplit(path, drive, dir, file, ext);
 
 	if ((strlen(file)+strlen(ext))>15)
-		return nullptr;
+		return NULL;
 	
 	if(0 ==(font = load_font(const_cast<char*>(path),&lenF,comment,commentLength, &errcode))) 
-		return nullptr;
+		return NULL;
 	
 	sgCFont* resF = new sgCFont(font,lenF,0);
 

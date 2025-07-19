@@ -5,11 +5,11 @@ BOOL faced_mesh(lpLISTH listh_path, hOBJ *hrez ){
 	BOOL				cod;
 	BOOL        closed;
 	hOBJ        hobject;
-	lpNPW       np = nullptr;
+	lpNPW       np = NULL;
 	VDIM				list_vdim, add_vdim;
 
 	c_num_np	= -32767;
-	*hrez			= nullptr;
+	*hrez			= NULL;
 
 	if ( !np_init_list(&c_list_str) )	return FALSE;
 
@@ -18,14 +18,14 @@ BOOL faced_mesh(lpLISTH listh_path, hOBJ *hrez ){
 
 //      
 	hobject = listh_path->hhead;   //  
-	while( hobject != nullptr ){      //     
+	while( hobject != NULL ){      //     
 		if( !create_contour_appr(&list_vdim, hobject, &closed)) goto err;
 		get_next_item_z( SEL_LIST, hobject, &hobject ); // c  
 	}
 
 //   
 	if ( (np = creat_np_mem(TNPW,MAXNOV,MAXNOE,MAXNOC, MAXNOF,
-													MAXNOE)) == nullptr)  goto err1;
+													MAXNOE)) == NULL)  goto err1;
 	np_init((lpNP)np);
 	np->ident= c_num_np++;
 
@@ -65,7 +65,7 @@ err1:
 	free_np_mem(&np);
 err:
 	free_list_vdim(&list_vdim);
-	np_end_of_put(&c_list_str,NP_CANCEL,0,nullptr);
+	np_end_of_put(&c_list_str,NP_CANCEL,0,NULL);
 	return FALSE;
 }
 

@@ -9,14 +9,14 @@ BOOL check_del(lpNP_STR str)
 	NP_BIT_FACE *bf;
 	NP_STR      str_n;
 	short         ident,edge,face,index;
-	short *   mem_ident;//nb  = nullptr;
+	short *   mem_ident;//nb  = NULL;
 
 	
 
 	if ( !(b_as(npa)) ) return FALSE;
 	if ( !(b_fa(npa)) ) return FALSE;
 
-	if ( (mem_ident = (short*)SGMalloc(sizeof(npa->ident)*(npa->noe))) == nullptr)
+	if ( (mem_ident = (short*)SGMalloc(sizeof(npa->ident)*(npa->noe))) == NULL)
 		return FALSE;
 
 	

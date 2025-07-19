@@ -7,7 +7,7 @@ using namespace RBX;
 using namespace RBX::Reflection;
 
 CallbackDescriptor::CallbackDescriptor(ClassDescriptor& classDescriptor, const char* name, Attributes attributes, Security::Permissions security, bool async)
-	: MemberDescriptor(classDescriptor, name, nullptr, attributes, security)
+	: MemberDescriptor(classDescriptor, name, NULL, attributes, security)
     , async(async)
 {
 	// TODO: This could be moved up into MemberDescriptor if it were templated...

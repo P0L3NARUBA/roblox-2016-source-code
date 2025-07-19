@@ -75,7 +75,7 @@ hOBJ create_insert_by_name(char * name, lpMATR m)
 {
 	int num = 0;
 
-  if ( !find_block(name,&num) ) { handler_err(ERR_NUM_BLOCK); return nullptr; }
+  if ( !find_block(name,&num) ) { handler_err(ERR_NUM_BLOCK); return NULL; }
 	return create_insert_by_number(num,m);
 }
 hOBJ create_insert_by_number(int num, lpMATR m)
@@ -86,7 +86,7 @@ hOBJ create_insert_by_number(int num, lpMATR m)
 	lpIBLOCK lpblk;
   IDENT_V  irec;
 
-	if ( ( hobj = o_alloc(OINSERT)) == nullptr ) return nullptr;
+	if ( ( hobj = o_alloc(OINSERT)) == NULL ) return NULL;
 	obj = (lpOBJ)hobj;
 	g = (lpGEO_INSERT)obj->geo_data;
 	memcpy(g->matr,m,sizeof(g->matr));
@@ -99,8 +99,8 @@ hOBJ create_insert_by_number(int num, lpMATR m)
   if(irec) modify_record_count(irec, 1);
   return hobj;
 err:
-  o_free(hobj,nullptr);
-  return nullptr;
+  o_free(hobj,NULL);
+  return NULL;
 }
 /*-----------------12/04/95 17:03-------------------
     
@@ -150,7 +150,7 @@ void free_block(lpIBLOCK blk)
 //    fc_id_mark(hobj, UC_FREE);   //     o_model.h
 		if ( free_extern_obj_blk_data)
 			free_extern_obj_blk_data(hobj);
-    o_free(hobj,nullptr);
+    o_free(hobj,NULL);
     hobj = hobjtmp;
   }
   init_listh(&blk->listh);

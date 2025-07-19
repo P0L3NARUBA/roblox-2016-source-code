@@ -22,7 +22,7 @@ sgCBox* sgCBox::Create(sgFloat sizeX, sgFloat sizeY, sgFloat sizeZ)
 	if (sizeX<eps_d ||
 		sizeY<eps_d ||
 		sizeZ<eps_d)
-		return nullptr;
+		return NULL;
 	sgFloat par[3];
 	par[0] = sizeX;
 	par[1] = sizeY;

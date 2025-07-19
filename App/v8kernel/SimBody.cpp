@@ -171,7 +171,7 @@ void SimBody::step()
 	RBXASSERT_VERY_FAST(!Math::isNanInfDenormVector3(pv.velocity.linear));
 	RBXASSERT_VERY_FAST(!Math::isNanInfDenormVector3(pv.velocity.rotational));
 
-	body->pv = (body->cofm == nullptr) ? pv : getOwnerPV();			// NUKE THIS WHEN ALL SET
+	body->pv = (body->cofm == NULL) ? pv : getOwnerPV();			// NUKE THIS WHEN ALL SET
 	body->advanceStateIndex();
 }
 
@@ -200,7 +200,7 @@ void SimBody::stepVelocity()
 
 	RBXASSERT_VERY_FAST(!Math::isNanInfDenormVector3(pv.velocity.linear));
 	RBXASSERT_VERY_FAST(!Math::isNanInfDenormVector3(pv.velocity.rotational));
-	body->pv.velocity = (body->cofm == nullptr) ? pv.velocity : getOwnerPV().velocity; // NUKE THIS WHEN ALL SET
+	body->pv.velocity = (body->cofm == NULL) ? pv.velocity : getOwnerPV().velocity; // NUKE THIS WHEN ALL SET
 	body->advanceStateIndex();
 }
 
@@ -228,7 +228,7 @@ void SimBody::applyImpulse(const Vector3& _impulse, const Vector3& worldPos)
 	RBXASSERT_VERY_FAST(!Math::isNanInfDenormVector3(pv.velocity.linear));
 	RBXASSERT_VERY_FAST(!Math::isNanInfDenormVector3(pv.velocity.rotational));
 	
-	body->pv.velocity = (body->cofm == nullptr) ? pv.velocity : getOwnerPV().velocity; // NUKE THIS WHEN ALL SET
+	body->pv.velocity = (body->cofm == NULL) ? pv.velocity : getOwnerPV().velocity; // NUKE THIS WHEN ALL SET
 	body->advanceStateIndex();
 }
 
@@ -251,7 +251,7 @@ void SimBody::stepPosition()
 	RBXASSERT_VERY_FAST(!Math::isNanInfDenormVector3(pv.position.translation));
 	RBXASSERT_FISHING(!Math::isNanInfDenormVector3(qOrientation.imag()));
 	RBXASSERT_VERY_FAST(!Math::isNanInfDenormMatrix3(pv.position.rotation));
-	body->pv = (body->cofm == nullptr) ? pv : getOwnerPV();			// NUKE THIS WHEN ALL SET
+	body->pv = (body->cofm == NULL) ? pv : getOwnerPV();			// NUKE THIS WHEN ALL SET
 	body->advanceStateIndex();
 }
 
@@ -278,7 +278,7 @@ void SimBody::stepFreeFall()
 	pv.velocity.rotational += denormalSmall;
 	pv.velocity.linear += denormalSmall;
 
-	body->pv = (body->cofm == nullptr) ? pv : getOwnerPV();			// NUKE THIS WHEN ALL SET
+	body->pv = (body->cofm == NULL) ? pv : getOwnerPV();			// NUKE THIS WHEN ALL SET
 	body->advanceStateIndex();
 }
 
@@ -294,7 +294,7 @@ void SimBody::updateFromSolver( const Vector3& newPosition, const Matrix3& newOr
     clearForceAccumulators();
     clearImpulseAccumulators();
 
-    body->pv = (body->cofm == nullptr) ? pv : getOwnerPV();
+    body->pv = (body->cofm == NULL) ? pv : getOwnerPV();
     body->advanceStateIndex();
 
     dirty = true;

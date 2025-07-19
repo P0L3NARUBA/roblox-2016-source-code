@@ -383,7 +383,7 @@ namespace Network {
 		{
 			bool client = clientIsPresent(context);
 			bool server = serverIsPresent(context);
-			bool localPlayer = (findConstLocalPlayer(context) != nullptr);
+			bool localPlayer = (findConstLocalPlayer(context) != NULL);
 			bool dPhysics = getDistributedPhysicsEnabled();
 
 			RBXASSERT(!(server && (client || localPlayer)));
@@ -399,7 +399,7 @@ namespace Network {
 		{
 			bool client = clientIsPresent(context);
 			bool server = serverIsPresent(context);
-			bool localPlayer = ( findConstLocalPlayer(context) != nullptr);
+			bool localPlayer = ( findConstLocalPlayer(context) != NULL);
 			bool dPhysics = getDistributedPhysicsEnabled();
 
 			RBXASSERT(!(server && (client || localPlayer)));;

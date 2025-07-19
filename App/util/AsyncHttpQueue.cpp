@@ -76,7 +76,7 @@ void AsyncHttpQueue::resetStatsItem(ServiceProvider* provider)
 {
 	if (statsItem)
 	{
-		statsItem->setParent(nullptr);
+		statsItem->setParent(NULL);
 		statsItem.reset();
 	}
 
@@ -179,7 +179,7 @@ static void InvokeAsyncCallback(AsyncHttpQueue::RequestCallback func, AsyncHttpQ
 		func(result, &ss, response, exception);
 	}
 	else{
-		func(result, nullptr, response, exception);
+		func(result, NULL, response, exception);
 	}
 }
 
@@ -188,7 +188,7 @@ void AsyncHttpQueue::dispatchGenericCallback(boost::function<void(DataModel*)> t
 	switch(jobType)
 	{
 	case AsyncHttpQueue::AsyncInline:
-		theCallback(nullptr);
+		theCallback(NULL);
 		return;
 	case AsyncHttpQueue::AsyncNone:
 		if(instance){

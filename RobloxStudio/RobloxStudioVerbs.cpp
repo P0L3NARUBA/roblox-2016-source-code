@@ -235,7 +235,7 @@ public:
 				ungroupedItems.push_back(wInstance->getChild(j));
 			}
 			wInstance->promoteChildren();
-			wInstance->setParent(nullptr);
+			wInstance->setParent(NULL);
 			didSomething = true;
 		}
 	}
@@ -655,7 +655,7 @@ void DuplicateSelectionVerb::doIt(RBX::IDataState*)
 
 	if (RBX::AdvArrowTool::advCollisionCheckMode && pvInstances.size() > 0)
 	{
-		RBX::MegaDragger megaDragger(nullptr, pvInstances, dataModel->getWorkspace());
+		RBX::MegaDragger megaDragger(NULL, pvInstances, dataModel->getWorkspace());
 		megaDragger.startDragging();
 		megaDragger.safeMoveNoDrop(RBX::Vector3(0.0f, 0.0f, 0.0f));
 		megaDragger.finishDragging();
@@ -921,7 +921,7 @@ PublishToRobloxAsVerb::PublishToRobloxAsVerb(RBX::VerbContainer* pVerbContainer,
 : Verb(pVerbContainer, "PublishToRobloxAsVerb")
 , m_pDataModel(dynamic_cast<RBX::DataModel*>(pVerbContainer))
 , m_pMainWindow(mainWnd)
-, m_dlg(nullptr)
+, m_dlg(NULL)
 {
 }
 
@@ -1064,7 +1064,7 @@ PublishSelectionToRobloxVerb::PublishSelectionToRobloxVerb(RBX::VerbContainer* p
 : Verb(pVerbContainer, "PublishSelectionToRobloxVerb")
 , m_pDataModel(dynamic_cast<RBX::DataModel*>(pVerbContainer))
 , m_pMainWindow(mainWnd)
-, m_dlg(nullptr)
+, m_dlg(NULL)
 {
 }
 
@@ -1205,7 +1205,7 @@ void CreateNewLinkedSourceVerb::doIt(IDataState*)
 	ScriptPickerDialog::CompletedState state;
 	QString newName;
 	ScriptPickerDialog dialog;
-	dialog.runModal(nullptr, QString::fromStdString(instanceName), &state, &newName);
+	dialog.runModal(NULL, QString::fromStdString(instanceName), &state, &newName);
 
 	if (state != ScriptPickerDialog::Completed)
 	{
@@ -1316,7 +1316,7 @@ PublishAsPluginVerb::PublishAsPluginVerb(RBX::VerbContainer* pVerbContainer, Rob
 	: Verb(pVerbContainer, "PublishAsPluginVerb")
 	, m_pDataModel(dynamic_cast<RBX::DataModel*>(pVerbContainer))
 	, m_pMainWindow(mainWnd)
-	, m_dlg(nullptr)
+	, m_dlg(NULL)
 {
 }
 
@@ -1438,7 +1438,7 @@ void StartServerAndPlayerVerb::launchStudioInstances(RBX::VerbContainer *pVerbCo
 		{
 			for (int ii = 1; ii <= numPlayers; ++ii)
 			{
-				pVerb->doIt(nullptr);
+				pVerb->doIt(NULL);
 				if (ii < numPlayers)
 					QtUtilities::sleep(1000);
 			}
@@ -1523,7 +1523,7 @@ void PairRbxDevVerb::doIt(RBX::IDataState* dataState)
 {
     if (!dialog)
     {
-        shared_ptr<PairRbxDeviceDialog> newDialog( new PairRbxDeviceDialog(nullptr) );
+        shared_ptr<PairRbxDeviceDialog> newDialog( new PairRbxDeviceDialog(NULL) );
         dialog = newDialog;
     }
 
@@ -1540,7 +1540,7 @@ ManageEmulationDevVerb::ManageEmulationDevVerb(RBX::VerbContainer* pVerbContaine
 
 void ManageEmulationDevVerb::doIt(RBX::IDataState* dataState)
 {
-	ManageEmulationDeviceDialog dialog(nullptr);
+	ManageEmulationDeviceDialog dialog(NULL);
 	dialog.exec();
 }
 
@@ -1786,7 +1786,7 @@ void Toggle3DGridVerb::doIt(RBX::IDataState*)
 bool Toggle3DGridVerb::isEnabled() const
 {
 	RBX::Network::Player* pLocalPlayer = RBX::Network::Players::findLocalPlayer(m_pDataModel);
-	return RobloxIDEDoc::getIsCloudEditSession() || (pLocalPlayer == nullptr);
+	return RobloxIDEDoc::getIsCloudEditSession() || (pLocalPlayer == NULL);
 }
 
 bool Toggle3DGridVerb::isChecked() const
@@ -2019,7 +2019,7 @@ void ScreenshotVerb::PostImageFinished(std::string *pResponse, std::exception *p
 {
 	if(shared_ptr<RBX::DataModel> spDataModel = pWeakDataModel.lock())
 	{
-		if ((pException == nullptr) && (pResponse->compare("ok") == 0))
+		if ((pException == NULL) && (pResponse->compare("ok") == 0))
 		{
 			showMessage(spDataModel, "Image uploaded to Facebook");
 		}
@@ -2170,7 +2170,7 @@ void RecordToggleVerb::uploadVideo()
 void RecordToggleVerb::action()
 {
 	//RBX::StandardOut::singleton()->printf(RBX::MESSAGE_INFO,  "Starting vid. rec. helper thread");
-	CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
+	CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
 	while(!m_bStop)
 	{
 		m_jobWait.Wait();
@@ -2413,7 +2413,7 @@ void InsertAdvancedObjectViewVerb::doIt( RBX::IDataState* dataState )
 
 bool InsertAdvancedObjectViewVerb::isEnabled() const
 {
-	return RobloxDocManager::Instance().getPlayDoc() != nullptr;
+	return RobloxDocManager::Instance().getPlayDoc() != NULL;
 }
 
 bool InsertAdvancedObjectViewVerb::isChecked() const
@@ -2582,7 +2582,7 @@ void OpenToolBoxWithOptionsVerb::doIt(RBX::IDataState* dataState)
 
 bool OpenToolBoxWithOptionsVerb::isEnabled()
 {
-	return RobloxDocManager::Instance().getPlayDoc() != nullptr;
+	return RobloxDocManager::Instance().getPlayDoc() != NULL;
 }
 
 void OpenToolBoxWithOptionsVerb::handleDockVisibilityChanged(bool isVisible)
@@ -2642,7 +2642,7 @@ void InsertBasicObjectVerb::doIt(RBX::IDataState* dataState)
 
 bool InsertBasicObjectVerb::isEnabled()
 {
-	return RobloxDocManager::Instance().getPlayDoc() != nullptr;
+	return RobloxDocManager::Instance().getPlayDoc() != NULL;
 }
 
 JointCreationModeVerb::JointCreationModeVerb(RBX::DataModel* dataModel)

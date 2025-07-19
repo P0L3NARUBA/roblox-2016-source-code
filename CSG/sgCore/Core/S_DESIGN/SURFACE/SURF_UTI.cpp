@@ -23,10 +23,10 @@ if(geo_surf->type & (NSURF_NURBS)){
 		surf_dat->knots.m=surf_dat->P.m=geo_surf->numpv;
 
 //    
-		if((surf_dat->u = (sgFloat*)SGMalloc(geo_surf->numpu*sizeof(sgFloat))) == nullptr) goto err;
+		if((surf_dat->u = (sgFloat*)SGMalloc(geo_surf->numpu*sizeof(sgFloat))) == NULL) goto err;
 		surf_dat->allocSizeFor_u = geo_surf->numpu;
 
-		if((surf_dat->v = (sgFloat*)SGMalloc(geo_surf->numpv*sizeof(sgFloat))) == nullptr) goto err;
+		if((surf_dat->v = (sgFloat*)SGMalloc(geo_surf->numpv*sizeof(sgFloat))) == NULL) goto err;
 		surf_dat->allocSizeFor_v = geo_surf->numpv;
 
 //------------------------------------------------------------------------------
@@ -77,11 +77,11 @@ met4:
 // ---------------->>>>>>>>>    <<<<<<<<<<-------------
 //    
 		surf_dat->num_u = geo_surf->numpu+geo_surf->degreeu+1;
-		if((surf_dat->U = (sgFloat*)SGMalloc(surf_dat->num_u*sizeof(sgFloat))) == nullptr) goto err;
+		if((surf_dat->U = (sgFloat*)SGMalloc(surf_dat->num_u*sizeof(sgFloat))) == NULL) goto err;
 		surf_dat->allocSizeFor_U = surf_dat->num_u;
 
 		surf_dat->num_v = geo_surf->numpv+geo_surf->degreev+1;
-		if((surf_dat->V = (sgFloat*)SGMalloc(surf_dat->num_v*sizeof(sgFloat))) == nullptr) goto err;
+		if((surf_dat->V = (sgFloat*)SGMalloc(surf_dat->num_v*sizeof(sgFloat))) == NULL) goto err;
 		surf_dat->allocSizeFor_V = surf_dat->num_v;
 
 		memcpy(surf_dat->U, geo_surf->hparam, surf_dat->num_u*sizeof(sgFloat));
@@ -168,11 +168,11 @@ if( sdtype & SURF_GEO ){ // ,
 		if( !init_vdim( &surf_dat->P.vdim, sizeof(W_NODE)) ) goto err; //  -
 
 		k = 2*(num_point_u+p+1);
-		if((surf_dat->U = (sgFloat*)SGMalloc(k*sizeof(sgFloat))) == nullptr) goto err;
+		if((surf_dat->U = (sgFloat*)SGMalloc(k*sizeof(sgFloat))) == NULL) goto err;
 		surf_dat->allocSizeFor_U = k;
 
 		k = 2*(num_point_v+q+1);
-		if((surf_dat->V = (sgFloat*)SGMalloc(k*sizeof(sgFloat))) == nullptr) goto err;
+		if((surf_dat->V = (sgFloat*)SGMalloc(k*sizeof(sgFloat))) == NULL) goto err;
 		surf_dat->allocSizeFor_V = k;
 	}else{//
 	}
@@ -186,9 +186,9 @@ if( sdtype & SURF_GEO ){ // ,
   surf_dat->orient = 0;
 
 // Surface parameter in u, v direction
-	if( (surf_dat->u = (sgFloat*)SGMalloc((num_point_u)*sizeof(sgFloat))) == nullptr ) goto err;
+	if( (surf_dat->u = (sgFloat*)SGMalloc((num_point_u)*sizeof(sgFloat))) == NULL ) goto err;
 	surf_dat->allocSizeFor_u = num_point_u;
-	if( (surf_dat->v = (sgFloat*)SGMalloc((num_point_v)*sizeof(sgFloat))) == nullptr ) goto err;
+	if( (surf_dat->v = (sgFloat*)SGMalloc((num_point_v)*sizeof(sgFloat))) == NULL ) goto err;
 	surf_dat->allocSizeFor_v = num_point_v;
 
 	if( surf_dat->knots.n > 2 && surf_dat->knots.m > 2 ){
@@ -236,13 +236,13 @@ BOOL create_geo_surf(lpSURF_DAT surf_dat, lpGEO_SURFACE geo_surf){
 	if( surf_dat->sdtype & SURF_APPR ){ //
 		if( surf_dat->P.n < surf_dat->degree_p+1 ||
 				surf_dat->P.m < surf_dat->degree_q+1 	){
-			put_message(SURF_EMPTY_DATA, nullptr, 0);
+			put_message(SURF_EMPTY_DATA, NULL, 0);
 			return FALSE;
 		}
   } else {
 		if( surf_dat->knots.m < surf_dat->degree_p+1 ||
 				surf_dat->knots.n < surf_dat->degree_q+1 	){
-			put_message(SURF_EMPTY_DATA, nullptr, 0);
+			put_message(SURF_EMPTY_DATA, NULL, 0);
 			return FALSE;
 		}
   }
@@ -269,10 +269,10 @@ BOOL create_geo_surf(lpSURF_DAT surf_dat, lpGEO_SURFACE geo_surf){
     geo_surf->numd=k;
 // ---------------->>>>>>>>>   <<<<<<<<<<--------------------------
 		if((geo_surf->hpoint =
-				SGMalloc(k*sizeof(D_POINT))) == nullptr) return FALSE;
+				SGMalloc(k*sizeof(D_POINT))) == NULL) return FALSE;
     p = (lpD_POINT)geo_surf->hpoint;
 	 	if((geo_surf->hderivates =
-				SGMalloc(k*sizeof(SNODE))) == nullptr)	return FALSE;
+				SGMalloc(k*sizeof(SNODE))) == NULL)	return FALSE;
     d = (lpSNODE)geo_surf->hderivates;
 
 // 
@@ -288,7 +288,7 @@ BOOL create_geo_surf(lpSURF_DAT surf_dat, lpGEO_SURFACE geo_surf){
 
 // ---------------->>>>>>>>>    <<<<<<<<<<-------------
 		k=surf_dat->num_u+surf_dat->num_v;
-		if((geo_surf->hparam = SGMalloc(k*sizeof(sgFloat))) == nullptr) return FALSE;
+		if((geo_surf->hparam = SGMalloc(k*sizeof(sgFloat))) == NULL) return FALSE;
 		u = (sgFloat*)geo_surf->hparam;
 		for( i=0; i<surf_dat->num_u; i++ ) memcpy( &u[i], &surf_dat->U[i], sizeof(sgFloat));
     for( i=0; i<surf_dat->num_v; i++ ) memcpy( &u[i+surf_dat->num_u], &surf_dat->V[i], sizeof(sgFloat));
@@ -319,7 +319,7 @@ W_NODE		 node;
 int tmp_int;
 
 	if(surf_dat->sdtype & SURF_GEO) {
-		put_message(SURF_INTERNAL_ERROR, nullptr, 0);
+		put_message(SURF_INTERNAL_ERROR, NULL, 0);
 		return FALSE;
 	}
 	if(geo_surf->type & (NSURF_NURBS)){
@@ -485,7 +485,7 @@ void free_vdim_hobj( lpVDIM rib_curve ){
 short  i=0;
 hOBJ hobj;
 
-	while( read_elem( rib_curve, i++, &hobj) ) o_free(hobj, nullptr);
+	while( read_elem( rib_curve, i++, &hobj) ) o_free(hobj, NULL);
 	free_vdim( rib_curve );
 }
 

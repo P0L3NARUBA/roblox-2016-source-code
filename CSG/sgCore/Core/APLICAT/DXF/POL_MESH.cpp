@@ -4,7 +4,7 @@ static BOOL write_sloy(lpD_POINT v1, lpD_POINT v2, int num, lpTRI_BIAND trb);
 
 BOOL poly_mesh(short m, short flag, short color, lpLISTH listh)
 {
-	D_POINT 		*sl = nullptr; 
+	D_POINT 		*sl = NULL; 
 	D_POINT 		*v1;
 	D_POINT 		*v2;
 	short      		count;      
@@ -18,22 +18,22 @@ BOOL poly_mesh(short m, short flag, short color, lpLISTH listh)
 
 	if (flag & 32) m1 = m + 1;	
 	else           m1 = m;
-	if ((v1 = (D_POINT*)SGMalloc(m1 * sizeof(D_POINT))) == nullptr) {
+	if ((v1 = (D_POINT*)SGMalloc(m1 * sizeof(D_POINT))) == NULL) {
 skip1:
-		put_message(NOT_ENOUGH_HEAP, nullptr, 0);
+		put_message(NOT_ENOUGH_HEAP, NULL, 0);
 		return skip_vertex();
 	}
-	if ((v2 = (D_POINT*)SGMalloc(m1 * sizeof(D_POINT))) == nullptr) {
+	if ((v2 = (D_POINT*)SGMalloc(m1 * sizeof(D_POINT))) == NULL) {
 skip2:
 		SGFree(v1);
- //nb 		v1 = nullptr;
+ //nb 		v1 = NULL;
 		goto skip1;
 	}
 	if (flag & 1) {	
-		if ((sl =(D_POINT*)SGMalloc(m1 * sizeof(D_POINT))) == nullptr) {
+		if ((sl =(D_POINT*)SGMalloc(m1 * sizeof(D_POINT))) == NULL) {
 //nb skip3:
 			SGFree(v2);
- //nb 			v2 = nullptr;
+ //nb 			v2 = NULL;
 			goto skip2;
 		}
 	}
@@ -89,9 +89,9 @@ skip2:
 		}
 		goto fat_err;	
 	}
-	if (v1) SGFree(v1); //nb v1 = nullptr;
-	if (v2) SGFree(v2); //nb v2 = nullptr;
-	if (sl) SGFree(sl); //nb sl = nullptr;
+	if (v1) SGFree(v1); //nb v1 = NULL;
+	if (v2) SGFree(v2); //nb v2 = NULL;
+	if (sl) SGFree(sl); //nb sl = NULL;
 	save_obj_attrib = obj_attrib;
 	obj_attrib.color = (BYTE)color;
 	obj_attrib.flg_transp	= TRUE;
@@ -105,9 +105,9 @@ fat_err:
 	obj_attrib.flg_transp	= TRUE;
 	/*nb ret = */end_tri_biand(&trb, listh);
 	obj_attrib = save_obj_attrib;
-	if (v1) SGFree(v1); //nb v1 = nullptr;
-	if (v2) SGFree(v2); //nb v2 = nullptr;
-	if (sl) SGFree(sl); //nb sl = nullptr;
+	if (v1) SGFree(v1); //nb v1 = NULL;
+	if (v2) SGFree(v2); //nb v2 = NULL;
+	if (sl) SGFree(sl); //nb sl = NULL;
 	skip_vertex();
 	return FALSE;
 }

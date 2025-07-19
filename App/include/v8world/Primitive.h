@@ -77,7 +77,7 @@ namespace RBX {
 			return list[i].other;
 		}
 
-		Edge* getFirst() const		{return (list.size() > 0) ? list[0].edge : nullptr;}
+		Edge* getFirst() const		{return (list.size() > 0) ? list[0].edge : NULL;}
 
 		Edge* getNext(const Primitive* p, Edge* e) const;
 

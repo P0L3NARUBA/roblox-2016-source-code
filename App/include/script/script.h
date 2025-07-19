@@ -90,7 +90,7 @@ namespace RBX
 		bool isDisabled() const { return disabled; }
 		static const Reflection::PropDescriptor<BaseScript, bool> prop_Disabled;
 
-		virtual Code requestCode(ScriptInformationProvider* scriptInfoProvider=nullptr);
+		virtual Code requestCode(ScriptInformationProvider* scriptInfoProvider=NULL);
 
 		virtual void extraErrorReporting(lua_State *thread) {}
 
@@ -131,7 +131,7 @@ namespace RBX
 
 		bool isCodeEmbedded() const { return getScriptId().isNull(); }
 
-		/*override*/ Code requestCode(ScriptInformationProvider* scriptInfoProvider=nullptr);
+		/*override*/ Code requestCode(ScriptInformationProvider* scriptInfoProvider=NULL);
 
 		/*override*/ const std::string& requestHash() const;
 

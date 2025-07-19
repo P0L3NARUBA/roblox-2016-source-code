@@ -423,7 +423,7 @@ void TestService::onScriptFailed(int runCount, const char* message, const char* 
 bool TestService::askForbidChild( const Instance* instance ) const
 {
 	// Only allow script
-	return (dynamic_cast<const Script*>(instance) == nullptr);
+	return (dynamic_cast<const Script*>(instance) == NULL);
 }
 
 void TestService::setConfiguration()

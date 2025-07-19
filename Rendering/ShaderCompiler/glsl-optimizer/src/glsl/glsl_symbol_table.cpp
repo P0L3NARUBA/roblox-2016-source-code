@@ -47,7 +47,7 @@ public:
          return false;
       }
 
-      if (*dest != nullptr) {
+      if (*dest != NULL) {
          return false;
       } else {
          *dest = i;
@@ -66,7 +66,7 @@ public:
          return ibo;
       default:
          assert(!"Unsupported interface variable mode!");
-         return nullptr;
+         return NULL;
       }
    }
 
@@ -98,7 +98,7 @@ glsl_symbol_table::glsl_symbol_table()
 {
    this->separate_function_namespace = false;
    this->table = _mesa_symbol_table_ctor();
-   this->mem_ctx = ralloc_context(nullptr);
+   this->mem_ctx = ralloc_context(NULL);
 }
 
 glsl_symbol_table::~glsl_symbol_table()
@@ -133,7 +133,7 @@ bool glsl_symbol_table::add_variable(ir_variable *v)
 	 /* If there's already an existing function (not a constructor!) in
 	  * the current scope, just update the existing entry to include 'v'.
 	  */
-	 if (existing->v == nullptr && existing->t == nullptr) {
+	 if (existing->v == NULL && existing->t == NULL) {
 	    existing->v = v;
 	    return true;
 	 }
@@ -143,7 +143,7 @@ bool glsl_symbol_table::add_variable(ir_variable *v)
 	  * the new variable declaration would shadow the function.
 	  */
 	 symbol_table_entry *entry = new(mem_ctx) symbol_table_entry(v);
-	 if (existing != nullptr)
+	 if (existing != NULL)
 	    entry->f = existing->f;
 	 int added = _mesa_symbol_table_add_symbol(table, -1, v->name, entry);
 	 assert(added == 0);
@@ -169,7 +169,7 @@ bool glsl_symbol_table::add_interface(const char *name, const glsl_type *i,
 {
    assert(i->is_interface());
    symbol_table_entry *entry = get_entry(name);
-   if (entry == nullptr) {
+   if (entry == NULL) {
       symbol_table_entry *entry =
          new(mem_ctx) symbol_table_entry(i, mode);
       bool add_interface_symbol_result =
@@ -186,7 +186,7 @@ bool glsl_symbol_table::add_function(ir_function *f)
    if (this->separate_function_namespace && name_declared_this_scope(f->name)) {
       /* In 1.10, functions and variables have separate namespaces. */
       symbol_table_entry *existing = get_entry(f->name);
-      if ((existing->f == nullptr) && (existing->t == nullptr)) {
+      if ((existing->f == NULL) && (existing->t == NULL)) {
 	 existing->f = f;
 	 return true;
       }
@@ -206,26 +206,26 @@ void glsl_symbol_table::add_global_function(ir_function *f)
 ir_variable *glsl_symbol_table::get_variable(const char *name)
 {
    symbol_table_entry *entry = get_entry(name);
-   return entry != nullptr ? entry->v : nullptr;
+   return entry != NULL ? entry->v : NULL;
 }
 
 const glsl_type *glsl_symbol_table::get_type(const char *name)
 {
    symbol_table_entry *entry = get_entry(name);
-   return entry != nullptr ? entry->t : nullptr;
+   return entry != NULL ? entry->t : NULL;
 }
 
 const glsl_type *glsl_symbol_table::get_interface(const char *name,
                                                   enum ir_variable_mode mode)
 {
    symbol_table_entry *entry = get_entry(name);
-   return entry != nullptr ? entry->get_interface(mode) : nullptr;
+   return entry != NULL ? entry->get_interface(mode) : NULL;
 }
 
 ir_function *glsl_symbol_table::get_function(const char *name)
 {
    symbol_table_entry *entry = get_entry(name);
-   return entry != nullptr ? entry->f : nullptr;
+   return entry != NULL ? entry->f : NULL;
 }
 
 symbol_table_entry *glsl_symbol_table::get_entry(const char *name)
@@ -241,10 +241,10 @@ glsl_symbol_table::disable_variable(const char *name)
     * that would be difficult.  Fortunately, since this is only used for
     * built-in variables, it won't be possible for the shader to re-introduce
     * the variable later, so all we really need to do is to make sure that
-    * further attempts to access it using get_variable() will return nullptr.
+    * further attempts to access it using get_variable() will return NULL.
     */
    symbol_table_entry *entry = get_entry(name);
-   if (entry != nullptr) {
-      entry->v = nullptr;
+   if (entry != NULL) {
+      entry->v = NULL;
    }
 }

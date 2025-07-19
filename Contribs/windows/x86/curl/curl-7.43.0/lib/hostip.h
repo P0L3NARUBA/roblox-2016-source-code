@@ -58,7 +58,7 @@ struct connectdata;
  * Global DNS cache is general badness. Do not use. This will be removed in
  * a future version. Use the share interface instead!
  *
- * Returns a struct curl_hash pointer on success, nullptr on failure.
+ * Returns a struct curl_hash pointer on success, NULL on failure.
  */
 struct curl_hash *Curl_global_host_cache_init(void);
 void Curl_global_host_cache_dtor(void);
@@ -173,7 +173,7 @@ const char *Curl_printable_address(const Curl_addrinfo *ip,
 /*
  * Curl_fetch_addr() fetches a 'Curl_dns_entry' already in the DNS cache.
  *
- * Returns the Curl_dns_entry entry pointer or nullptr if not in the cache.
+ * Returns the Curl_dns_entry entry pointer or NULL if not in the cache.
  *
  * The returned data *MUST* be "unlocked" with Curl_resolv_unlock() after
  * use, or we'll leak memory!
@@ -185,7 +185,7 @@ Curl_fetch_addr(struct connectdata *conn,
 /*
  * Curl_cache_addr() stores a 'Curl_addrinfo' struct in the DNS cache.
  *
- * Returns the Curl_dns_entry entry pointer or nullptr if the storage failed.
+ * Returns the Curl_dns_entry entry pointer or NULL if the storage failed.
  */
 struct Curl_dns_entry *
 Curl_cache_addr(struct SessionHandle *data, Curl_addrinfo *addr,

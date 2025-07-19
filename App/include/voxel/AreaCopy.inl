@@ -171,7 +171,7 @@ bool AreaCopy<XDim, YDim, ZDim>::Chunk::getIsAllEmpty() const {
 template<unsigned int XDim, unsigned int YDim, unsigned int ZDim>
 typename AreaCopy<XDim, YDim, ZDim>::Region AreaCopy<XDim, YDim, ZDim>::getRegion(
 		const Vector3int16& minCoords, const Vector3int16& maxCoords) const {
-	return Region(storage.getIsAllEmpty() ? nullptr : &storage, minCoords, maxCoords);
+	return Region(storage.getIsAllEmpty() ? NULL : &storage, minCoords, maxCoords);
 }
 
 template<unsigned int XDim, unsigned int YDim, unsigned int ZDim>

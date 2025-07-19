@@ -46,7 +46,7 @@ TODO:
 #include "service.h"
 
 #ifndef WSDL2H_IMPORT_PATH
-#define WSDL2H_IMPORT_PATH (nullptr)
+#define WSDL2H_IMPORT_PATH (NULL)
 #endif
 
 #ifndef WSDL_TYPEMAP_FILE
@@ -78,13 +78,13 @@ int _flag = 0,
 
 int infiles = 0;
 char *infile[MAXINFILES],
-     *outfile = nullptr,
-     *proxy_host = nullptr;
+     *outfile = NULL,
+     *proxy_host = NULL;
 extern const char
      *mapfile = WSDL_TYPEMAP_FILE,
      *import_path = WSDL2H_IMPORT_PATH,
-     *cwd_path = nullptr,
-     *cppnamespace = nullptr;
+     *cwd_path = NULL,
+     *cppnamespace = NULL;
 
 int proxy_port = 8080;
 
@@ -94,7 +94,7 @@ SetOfString exturis;
 
 extern struct Namespace namespaces[];
 
-const char *service_prefix = nullptr;
+const char *service_prefix = NULL;
 const char *schema_prefix = "ns";
 
 char elementformat[]       = "    %-35s  %-30s";
@@ -309,7 +309,7 @@ static void options(int argc, char **argv)
 	      proxy_host = s;
 	      s = strchr(proxy_host, ':');
 	      if (s)
-	      { proxy_port = soap_strtol(s + 1, nullptr, 10);
+	      { proxy_port = soap_strtol(s + 1, NULL, 10);
 	        *s = '\0';
 	      }
 	    }
@@ -442,5 +442,5 @@ struct Namespace namespaces[] =
   {"dime", "http://schemas.xmlsoap.org/ws/2002/04/dime/wsdl/", "http://schemas.xmlsoap.org/ws/*/dime/wsdl/"},
   {"wsdl", "http://schemas.xmlsoap.org/wsdl/"},
   {"gwsdl", "http://www.gridforum.org/namespaces/2003/03/gridWSDLExtensions"},
-  {nullptr, nullptr}
+  {NULL, NULL}
 };

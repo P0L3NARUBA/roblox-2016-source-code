@@ -312,7 +312,7 @@ ir_call::accept(ir_hierarchical_visitor *v)
    if (s != visit_continue)
       return (s == visit_continue_with_parent) ? visit_continue : s;
 
-   if (this->return_deref != nullptr) {
+   if (this->return_deref != NULL) {
       v->in_assignee = true;
       s = this->return_deref->accept(v);
       v->in_assignee = false;
@@ -353,7 +353,7 @@ ir_discard::accept(ir_hierarchical_visitor *v)
    if (s != visit_continue)
       return (s == visit_continue_with_parent) ? visit_continue : s;
 
-   if (this->condition != nullptr) {
+   if (this->condition != NULL) {
       s = this->condition->accept(v);
       if (s != visit_continue)
 	 return (s == visit_continue_with_parent) ? visit_continue : s;

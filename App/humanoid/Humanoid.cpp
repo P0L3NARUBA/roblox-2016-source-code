@@ -116,8 +116,8 @@ static const Reflection::PropDescriptor<Humanoid, float> propHipHeight("HipHeigh
 // SCRIPTING
 static Reflection::BoundFuncDesc<Humanoid, void(Vector3, bool)>    moveFunction(&Humanoid::move, "Move", "moveDirection","relativeToCamera", false, Security::None);
 
-static const Reflection::RefPropDescriptor<Humanoid, PartInstance> propSeatPart("SeatPart", "Control", &Humanoid::getSeatPart, nullptr, Reflection::PropertyDescriptor::SCRIPTING);
-static const Reflection::PropDescriptor<Humanoid, Vector3> propLuaMoveDirection("MoveDirection", "Control", &Humanoid::getLuaMoveDirection, nullptr, Reflection::PropertyDescriptor::SCRIPTING);
+static const Reflection::RefPropDescriptor<Humanoid, PartInstance> propSeatPart("SeatPart", "Control", &Humanoid::getSeatPart, NULL, Reflection::PropertyDescriptor::SCRIPTING);
+static const Reflection::PropDescriptor<Humanoid, Vector3> propLuaMoveDirection("MoveDirection", "Control", &Humanoid::getLuaMoveDirection, NULL, Reflection::PropertyDescriptor::SCRIPTING);
 static const Reflection::RefPropDescriptor<Humanoid, PartInstance> propWalkToPart("WalkToPart", "Control", &Humanoid::getWalkToPart, &Humanoid::setWalkToPart, Reflection::PropertyDescriptor::SCRIPTING);
 static const Reflection::PropDescriptor<Humanoid, Vector3> propWalkToPoint("WalkToPoint", "Control", &Humanoid::getWalkToPoint, &Humanoid::setWalkToPoint, Reflection::PropertyDescriptor::SCRIPTING);
 static const Reflection::PropDescriptor<Humanoid, Vector3> propTargetPoint("TargetPoint", "Control", &Humanoid::getTargetPoint, &Humanoid::setTargetPointLocal, Reflection::PropertyDescriptor::SCRIPTING);
@@ -301,7 +301,7 @@ static const std::string& getAppendageString(size_t appendage, bool R15)
 }
 
 Humanoid::Humanoid()
-:world(nullptr)
+:world(NULL)
 , torsoArrived(false)
 , localSimulating(false)
 , ownedByLocalPlayer(false)
@@ -367,7 +367,7 @@ Humanoid::Humanoid()
 Humanoid::~Humanoid()
 {
 	RBXASSERT(!currentState.get());
-	RBXASSERT(world==nullptr);
+	RBXASSERT(world==NULL);
 	FASTLOG1(FLog::ISteppedLifetime, "Humanoid destroyed - %p", this);
 }
 
@@ -437,7 +437,7 @@ bool Humanoid::removeCustomStatus(std::string name)
 	if(StatusInstance* status = getStatusFast()){
 		if(Instance* instance = status->findFirstChildByName(name))
 		{
-			instance->setParent(nullptr);
+			instance->setParent(NULL);
 			return true;
 		}
 
@@ -529,7 +529,7 @@ void Humanoid::onServiceProvider(ServiceProvider* oldProvider, ServiceProvider* 
 
 bool Humanoid::getDead() const
 {
-	if (this->world != nullptr) {
+	if (this->world != NULL) {
 		RBXASSERT(currentState.get());
 		return (currentState->getStateType() == RBX::HUMAN::DEAD);
 	}
@@ -650,7 +650,7 @@ const Humanoid* Humanoid::getConstLocalHumanoidFromContext(const Instance* conte
 		return modelIsConstCharacter(character);
 	}
 	else {
-		return nullptr;
+		return NULL;
 	}
 }
 
@@ -660,7 +660,7 @@ Humanoid* Humanoid::getLocalHumanoidFromContext(Instance* context)
 		return modelIsCharacter(character);
 	}
 	else {
-		return nullptr;
+		return NULL;
 	}
 }
 
@@ -681,7 +681,7 @@ const PartInstance* Humanoid::getConstHeadFromCharacter(const ModelInstance* cha
 {
 	return (character) 
 				? Instance::fastDynamicCast<PartInstance>(character->findConstFirstChildByName("Head"))
-				: nullptr;
+				: NULL;
 }
 
 PartInstance* Humanoid::getHeadFromCharacter(ModelInstance* character)
@@ -699,7 +699,7 @@ Weld* Humanoid::getGrip(Instance* character)
 			return Instance::fastDynamicCast<Weld>(right_arm->findFirstChildByName("RightGrip"));
 		}
 	}
-	return nullptr;
+	return NULL;
 }
 
 shared_ptr<JointInstance> newJoint(bool animated)
@@ -768,7 +768,7 @@ static void createJoint(const std::string& jointName, Attachment& parentAttachme
 
 void Humanoid::buildJointsFromAttachments(PartInstance* part, std::vector<PartInstance*>& characterParts)
 {
-	if (part == nullptr)
+	if (part == NULL)
 	{
 		return;
 	}
@@ -857,7 +857,7 @@ void Humanoid::buildJoints(RBX::DataModel* dm)
 			{
 				PartInstance *pRoot = getTorsoSlow();
 
-				if (pRoot != nullptr)
+				if (pRoot != NULL)
 				{
 					shared_ptr<JointInstance> rootJoint = newJoint(true);
 					rootJoint->setName("RootJoint");
@@ -926,35 +926,35 @@ void Humanoid::buildJoints(RBX::DataModel* dm)
 bool Humanoid::askSetParent(const Instance* instance) const {
 	// Humanoids must be children of a ModelInstance
 	// TODO: If we refactor Humanoind to BE a ModelInstance then this code can be removed
-	return Instance::fastDynamicCast<ModelInstance>(instance)!=nullptr;
+	return Instance::fastDynamicCast<ModelInstance>(instance)!=NULL;
 }
 
 const Humanoid* Humanoid::constHumanoidFromBodyPart(const Instance* bodyPart)
 {
-	return bodyPart ? modelIsConstCharacter(bodyPart->getParent()) : nullptr;
+	return bodyPart ? modelIsConstCharacter(bodyPart->getParent()) : NULL;
 }
 
 const Humanoid* Humanoid::constHumanoidFromDescendant(const Instance* bodyPart)
 {
 	if (bodyPart) {
 		const Instance *pParent = bodyPart->getParent();
-		if (pParent != nullptr)
+		if (pParent != NULL)
 		{
 			const Humanoid *pHumanoid = modelIsConstCharacter(pParent);
-			if (pHumanoid != nullptr)
+			if (pHumanoid != NULL)
 				return pHumanoid;
 			else
 				return constHumanoidFromDescendant(pParent);
 		} 
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 
 Humanoid* Humanoid::humanoidFromBodyPart(Instance* bodyPart)
 {
-//	return bodyPart ? modelIsCharacter(bodyPart->getParent()) : nullptr;
+//	return bodyPart ? modelIsCharacter(bodyPart->getParent()) : NULL;
 	return const_cast<Humanoid*>(constHumanoidFromBodyPart(bodyPart));
 }
 
@@ -981,7 +981,7 @@ const ModelInstance* Humanoid::getConstCharacterFromHumanoid(const Humanoid* hum
 			return m;
 		}
 	}
-	return nullptr;
+	return NULL;
 }
 
 ModelInstance* Humanoid::getCharacterFromHumanoid(Humanoid* humanoid)
@@ -1677,7 +1677,7 @@ CoordinateFrame Humanoid::getRightArmGrip() const
 	if (getUseR15())
 	{
 			Attachment *answer = Tool::findFirstAttachmentByNameRecursive(getParent(), "RightGripAttachment");
-			if (answer != nullptr)
+			if (answer != NULL)
 			{
 				return answer->getFrameInPart();
 			} else {
@@ -1708,12 +1708,12 @@ void Humanoid::setCachePointerByType(AppendageType appendage, PartInstance *part
 void Humanoid::updateBaseInstance()
 {
 	Body* body = getRootBodyFast();
-	SimBody* simBody = body ? body->getRootSimBody() : nullptr;
+	SimBody* simBody = body ? body->getRootSimBody() : NULL;
 
 	if (simBody && simBody->getHumanoidConnectorCount() > 0	)
 		return;
 
-	if (appendageCache[TORSO] == nullptr) 
+	if (appendageCache[TORSO] == NULL) 
 	{
 		baseInstance = appendageCache[VISIBLE_TORSO];
 	} 
@@ -1821,13 +1821,13 @@ JointInstance* Humanoid::getRightShoulder()
 	PartInstance* temp = getVisibleTorsoSlow();
 
 	return temp ? rbx_static_cast<JointInstance*>(temp->findFirstChildByName("Right Shoulder"))
-				: nullptr;
+				: NULL;
 }
 
 Joint* Humanoid::getNeck()
 {
 	PartInstance* foundHead = getHeadSlow();
-	PartInstance* foundTorso = nullptr;
+	PartInstance* foundTorso = NULL;
 
 	foundTorso = getVisibleTorsoSlow();
 
@@ -1835,19 +1835,19 @@ Joint* Humanoid::getNeck()
 		hadNeck = true;										// this humanoid once had a neck
 		return Primitive::getJoint(foundHead->getPartPrimitive(), foundTorso->getPartPrimitive());
 	}
-	return nullptr;
+	return NULL;
 }
 
 Primitive* Humanoid::getTorsoPrimitiveFast()
 {
 	PartInstance* answer = baseInstance.get();
-	return answer ? answer->getPartPrimitive() : nullptr;
+	return answer ? answer->getPartPrimitive() : NULL;
 }
 
 Body* Humanoid::getRootBodyFast()
 {
 	Body* torsoBody = getTorsoBodyFast();
-	return torsoBody ? torsoBody->getRoot() : nullptr;
+	return torsoBody ? torsoBody->getRoot() : NULL;
 }
 
 
@@ -1927,7 +1927,7 @@ static void fireHumanoidChangedRec(Instance* parent)
 
 void Humanoid::updateSiblingPropertyListener(shared_ptr<PartInstance> sibling)
 {
-	if (sibling != nullptr) 
+	if (sibling != NULL) 
 	{
 		// hook up property change notifications
 		siblingMap.erase(sibling);
@@ -1942,7 +1942,7 @@ void Humanoid::onEvent_ChildModified(shared_ptr<Instance> child)
 {
 	PartInstance *pChild = Instance::fastDynamicCast<PartInstance>(child.get());
 
-	if (pChild != nullptr) 
+	if (pChild != NULL) 
 	{
 		// see if this is a humanoid part
 		for (int i = TORSO; i < APPENDAGE_COUNT; i++) 
@@ -1955,7 +1955,7 @@ void Humanoid::onEvent_ChildModified(shared_ptr<Instance> child)
 				} 
 				else 
 				{
-					setCachePointerByType((AppendageType) i, nullptr);
+					setCachePointerByType((AppendageType) i, NULL);
 				}
 				break;
 			}
@@ -1971,13 +1971,13 @@ void Humanoid::onEvent_SiblingPropertyChanged(const RBX::Reflection::PropertyDes
 	{
 		Instance *pParent = getParent();
 
-		if (pParent != nullptr)
+		if (pParent != NULL)
 		{
 			// update all cache entries
 			for (int i = TORSO; i < APPENDAGE_COUNT; i++)
 			{
 				// remove any old map for this part in case it changes due to the name change
-				if (appendageCache[i] != nullptr)
+				if (appendageCache[i] != NULL)
 					siblingMap.erase(appendageCache[i]);
 				appendageCache[i] = Instance::fastSharedDynamicCast<PartInstance>(shared_from(pParent->findFirstChildByName(getAppendageString(i, getUseR15()))));
 				updateSiblingPropertyListener(appendageCache[i]);
@@ -1994,7 +1994,7 @@ void Humanoid::onAncestorChanged(const AncestorChanged& event)
 
 	if (event.child == this) 
 	{
-		if (event.newParent == nullptr) 
+		if (event.newParent == NULL) 
 		{
 			// clear all cache entries
 			for (int i = TORSO; i < APPENDAGE_COUNT; i++)
@@ -2029,8 +2029,8 @@ void Humanoid::onAncestorChanged(const AncestorChanged& event)
 
 	if (world != newWorld) 
 	{
-		if (world != nullptr) {				// HACK - currentState destructor looks at world
-			RBXASSERT(newWorld == nullptr);
+		if (world != NULL) {				// HACK - currentState destructor looks at world
+			RBXASSERT(newWorld == NULL);
 
 			ownedByLocalPlayer = false;
 			onCFrameChangedConnection.disconnect();
@@ -2038,15 +2038,15 @@ void Humanoid::onAncestorChanged(const AncestorChanged& event)
 			currentState.reset();	
 			if (!waitingForTorso()) 
 			{
-				setPrimitive(0, nullptr);
-				setPrimitive(1, nullptr);
+				setPrimitive(0, NULL);
+				setPrimitive(1, NULL);
 				world->removeJoint(this);
 			}
 		}
 
 		world = newWorld;
 
-		if (world != nullptr) {
+		if (world != NULL) {
 			CheckTorso();
 			currentState.reset(HUMAN::HumanoidState::defaultState(this));		// not balanced with the reset see below
 			onLocalHumanoidEnteringWorkspace();
@@ -2093,7 +2093,7 @@ void Humanoid::onLocalHumanoidEnteringWorkspace()
 void Humanoid::updateLocalSimulating()
 {
 	PartInstance* torso = this->getTorsoSlow();
-	Assembly* assembly = torso ? torso->getPartPrimitive()->getAssembly() : nullptr;
+	Assembly* assembly = torso ? torso->getPartPrimitive()->getAssembly() : NULL;
 	bool movingAssembly = assembly ? !assembly->computeIsGrounded() : false;
 
 	if (!assembly) {
@@ -2213,7 +2213,7 @@ void Humanoid::renderMultiplayer(Adorn* adorn, const RBX::Camera& camera)
 	float localHumanoidDistance = 0.0f;
 	float localNameDisplayDistance = defaultDisplayDistance;
 	float localHealthDisplayDistance = defaultDisplayDistance;
-	Humanoid* localHumanoid = nullptr;
+	Humanoid* localHumanoid = NULL;
 
 	if ((localHumanoid = Humanoid::getLocalHumanoidFromContext(this)))
 	{
@@ -2297,7 +2297,7 @@ void Humanoid::renderMultiplayer(Adorn* adorn, const RBX::Camera& camera)
 
 		G3D::Color3 nameTagColor;
 		Teams *teams = ServiceProvider::find<Teams>(this);
-		if(teams != nullptr)
+		if(teams != NULL)
 			nameTagColor = teams->getTeamColorForHumanoid(this);
 		else
 			nameTagColor = G3D::Color3::white();
@@ -2801,7 +2801,7 @@ void Humanoid::getParts(std::vector<PartInstance*>& parts) const
 
 const CoordinateFrame Humanoid::getRenderLocation()
 {
-	PartInstance* foundHead = nullptr;
+	PartInstance* foundHead = NULL;
 
 	if (getDead())
 	{
@@ -2864,7 +2864,7 @@ static void setLocalTransparencyModifierDecendants(shared_ptr<RBX::Instance> des
 	PartInstance *part = Instance::fastDynamicCast<PartInstance>(descendant.get());
 	if (part) 
 	{
-		if (Instance::fastDynamicCast<Tool>(part->getParent()) == nullptr)
+		if (Instance::fastDynamicCast<Tool>(part->getParent()) == NULL)
 			part->setLocalTransparencyModifier(transparencyModifier); // don't ever make tools transparent.
 	} 
 	else if (Decal* d = Instance::fastDynamicCast<Decal>(descendant.get()))
@@ -2912,7 +2912,7 @@ void Humanoid::tellCursorOver(float cursorOffset) const
 
 	for (size_t i = 0; i < primitives.size(); ++i) {
 		PartInstance* part = PartInstance::fromPrimitive(primitives[i]);
-		if (Instance::fastDynamicCast<Tool>(part->getParent()) == nullptr)
+		if (Instance::fastDynamicCast<Tool>(part->getParent()) == NULL)
 		{
 			part->setLocalTransparencyModifier(localTransparencyModifier); // don't ever make tools transparent.
 		}
@@ -3106,7 +3106,7 @@ bool Humanoid::computeNearlyTouched()
 {
 	// This will not detect close-by objects accelerated from zero to high speed
 	PartInstance* part = getVisibleTorsoSlow();
-	Primitive* prim = part ? part->getPartPrimitive() : nullptr;
+	Primitive* prim = part ? part->getPartPrimitive() : NULL;
 	if ( prim )
 	{
 		int nearCount = 0;
@@ -3196,7 +3196,7 @@ bool foundShortestDistanceFromCornerToObject(PartInstance* floorPart, Humanoid* 
 	bool foundShorterDelta = false;
 	World* characterWorld = charHumanoid->getWorld();
 
-	if ( characterWorld == nullptr )
+	if ( characterWorld == NULL )
 		return false;
 
 	RBX::ContactManager* contactManager = characterWorld->getContactManager();
@@ -3283,11 +3283,11 @@ Vector3 Humanoid::getSimulatedFrictionVelocityOffset(PartInstance* floorPart, Ve
 	if (floorPrim && (getCurrentFloorFilterPhase() >= Assembly::NoSim_SendIfSim) && floorPrim->getWorld())
 	{
         Assembly* floorAssy = floorPrim->getAssembly();
-        Primitive* floorRootPrim = nullptr;
+        Primitive* floorRootPrim = NULL;
 		if (floorAssy)
 		{
             floorRootPrim = floorAssy->getAssemblyPrimitive();
-			if (floorRootPrim == nullptr)
+			if (floorRootPrim == NULL)
 			{
 				return Vector3(0,0,0);
 			}
@@ -3338,7 +3338,7 @@ void Humanoid::updateNetworkFloorPosition(PartInstance* floorPart, CoordinateFra
 	if (floorPart && getWorld() && rootHumanBody && validateNetworkUpdateDistance(floorPart, previousFloorPosition, netDt))
 	{
 		Primitive* floorPrimitive = floorPart->getPartPrimitive();
-		if (floorPrimitive->getWorld() == nullptr)
+		if (floorPrimitive->getWorld() == NULL)
 			return;
 		
 		Vector3 charPosInObjectSpace = previousFloorPosition.pointToObjectSpace(rootHumanBody->getCoordinateFrame().translation);
@@ -3452,13 +3452,13 @@ bool Humanoid::primitiveIsLastFloor(Primitive* prim)
 {
 	shared_ptr<PartInstance> savedFloorPart = getLastFloor();
 
-	Assembly* savedFloorAssembly = nullptr;
+	Assembly* savedFloorAssembly = NULL;
 	if (savedFloorPart && savedFloorPart->getPartPrimitive())
 	{
 		savedFloorAssembly = savedFloorPart->getPartPrimitive()->getAssembly();
 	}
 
-	Assembly* checkPrimAssembly = nullptr;
+	Assembly* checkPrimAssembly = NULL;
 	if (prim)
 	{
 		checkPrimAssembly = prim->getAssembly();

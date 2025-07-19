@@ -103,13 +103,13 @@ void ReleaseAssert(int channel, const char* msg);
 // This macro will cause a crash. Usually you don't call it directly. Use RBXASSERT instead
 #define RBX_CRASH_ASSERT(expr) \
 		((void) (!!(expr) || \
-		((RBX::_internal::_debugHook != nullptr) && (RBX::_internal::_debugHook(#expr, __FILE__, __LINE__))) || \
+		((RBX::_internal::_debugHook != NULL) && (RBX::_internal::_debugHook(#expr, __FILE__, __LINE__))) || \
 		(RBX::Debugable::doCrash(#expr), 0)))
 
 // This macro will just log an assert string, if we will run into crash log with the assert information will be sent to us
 #define RBX_LOG_ASSERT(expr) \
 	((void) (FLog::Asserts && (!!(expr) || \
-	((RBX::_internal::_debugHook != nullptr) && (RBX::_internal::_debugHook(#expr, __FILE__, __LINE__))) || \
+	((RBX::_internal::_debugHook != NULL) && (RBX::_internal::_debugHook(#expr, __FILE__, __LINE__))) || \
 	(ReleaseAssert(FLog::Asserts,#expr " file: " __FILE__ " line: " TOSTRING(__LINE__)), 0))))
 
 
@@ -141,7 +141,7 @@ void ReleaseAssert(int channel, const char* msg);
 	#elif (defined(_DEBUG) && defined(_WIN32))		// Windows Debug
 		#define RBXASSERT(expr) \
 			((void) (!!(expr) || \
-			((RBX::_internal::_debugHook != nullptr) && (RBX::_internal::_debugHook(#expr, __FILE__, __LINE__))) || \
+			((RBX::_internal::_debugHook != NULL) && (RBX::_internal::_debugHook(#expr, __FILE__, __LINE__))) || \
 			(_ASSERTE(expr), 0)))
 		#define RBXASSERTENABLED
 	#else											// All Platform Release

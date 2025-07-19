@@ -24,7 +24,7 @@ BOOL arc_geo_cond_gcs(lpD_POINT  p,
 									    lpGEO_ARC  outgeo){   
 BOOL wflag = FALSE;
 short  num   = 0;
-  return arc_geo_cond(p, norm, TRUE, outtype, outgeo, &num, nullptr, &wflag);
+  return arc_geo_cond(p, norm, TRUE, outtype, outgeo, &num, NULL, &wflag);
 }
 
 BOOL arc_geo_cond(lpD_POINT  p,       
@@ -257,7 +257,7 @@ met_create: //
 			}
 			else if(common_ctype&CND_NEAR){  //    
 				if(!arc_p_p_p(ib, ie, ic, pg, pp,
-				              (common_ctype&CND_TANG) ? gcond.type : nullptr,
+				              (common_ctype&CND_TANG) ? gcond.type : NULL,
 				              arc_negativ, outgeo))
 					return FALSE;
 				if(gcsflag) goto met_arc;
@@ -280,7 +280,7 @@ met_create: //
 			}
 			else if(ctype&CND_RADIUS){ //  
         if(!arc_p_p_r(ib, ie, gcond.scal[0], pg, pp,
-											(common_ctype&CND_TANG) ? gcond.type : nullptr,
+											(common_ctype&CND_TANG) ? gcond.type : NULL,
 											arc_negativ, outgeo)){
 					geoflag = oldgeoflag;
 					return FALSE;

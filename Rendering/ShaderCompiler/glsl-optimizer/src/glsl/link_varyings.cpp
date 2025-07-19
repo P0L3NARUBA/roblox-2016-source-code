@@ -155,11 +155,11 @@ cross_validate_front_and_back_color(struct gl_shader_program *prog,
                                     gl_shader_stage consumer_stage,
                                     gl_shader_stage producer_stage)
 {
-   if (front_color != nullptr && front_color->data.assigned)
+   if (front_color != NULL && front_color->data.assigned)
       cross_validate_types_and_qualifiers(prog, input, front_color,
                                           consumer_stage, producer_stage);
 
-   if (back_color != nullptr && back_color->data.assigned)
+   if (back_color != NULL && back_color->data.assigned)
       cross_validate_types_and_qualifiers(prog, input, back_color,
                                           consumer_stage, producer_stage);
 }
@@ -172,14 +172,14 @@ cross_validate_outputs_to_inputs(struct gl_shader_program *prog,
 				 gl_shader *producer, gl_shader *consumer)
 {
    glsl_symbol_table parameters;
-   ir_variable *explicit_locations[MAX_VARYING] = { nullptr, };
+   ir_variable *explicit_locations[MAX_VARYING] = { NULL, };
 
    /* Find all shader outputs in the "producer" stage.
     */
    foreach_in_list(ir_instruction, node, producer->ir) {
       ir_variable *const var = node->as_variable();
 
-      if ((var == nullptr) || (var->data.mode != ir_var_shader_out))
+      if ((var == NULL) || (var->data.mode != ir_var_shader_out))
 	 continue;
 
       if (!var->data.explicit_location
@@ -191,7 +191,7 @@ cross_validate_outputs_to_inputs(struct gl_shader_program *prog,
           */
          const unsigned idx = var->data.location - VARYING_SLOT_VAR0;
 
-         if (explicit_locations[idx] != nullptr) {
+         if (explicit_locations[idx] != NULL) {
             linker_error(prog,
                          "%s shader has multiple outputs explicitly "
                          "assigned to location %d\n",
@@ -216,7 +216,7 @@ cross_validate_outputs_to_inputs(struct gl_shader_program *prog,
    foreach_in_list(ir_instruction, node, consumer->ir) {
       ir_variable *const input = node->as_variable();
 
-      if ((input == nullptr) || (input->data.mode != ir_var_shader_in))
+      if ((input == NULL) || (input->data.mode != ir_var_shader_in))
 	 continue;
 
       if (strcmp(input->name, "gl_Color") == 0 && input->data.used) {
@@ -245,12 +245,12 @@ cross_validate_outputs_to_inputs(struct gl_shader_program *prog,
           * names of the variables.  Instead, we care only about the
           * explicitly assigned location.
           */
-         ir_variable *output = nullptr;
+         ir_variable *output = NULL;
          if (input->data.explicit_location
              && input->data.location >= VARYING_SLOT_VAR0) {
             output = explicit_locations[input->data.location - VARYING_SLOT_VAR0];
 
-            if (output == nullptr) {
+            if (output == NULL) {
                linker_error(prog,
                             "%s shader input `%s' with explicit location "
                             "has no matching output\n",
@@ -261,7 +261,7 @@ cross_validate_outputs_to_inputs(struct gl_shader_program *prog,
             output = parameters.get_variable(input->name);
          }
 
-         if (output != nullptr) {
+         if (output != NULL) {
             cross_validate_types_and_qualifiers(prog, input, output,
                                                 consumer->Stage, producer->Stage);
          }
@@ -291,7 +291,7 @@ tfeedback_decl::init(struct gl_context *ctx, const void *mem_ctx,
    this->is_clip_distance_mesa = false;
    this->skip_components = 0;
    this->next_buffer_separator = false;
-   this->matched_candidate = nullptr;
+   this->matched_candidate = NULL;
    this->stream_id = 0;
 
    if (ctx->Extensions.ARB_transform_feedback3) {
@@ -319,7 +319,7 @@ tfeedback_decl::init(struct gl_context *ctx, const void *mem_ctx,
    const char *base_name_end;
    long subscript = parse_program_resource_name(input, &base_name_end);
    this->var_name = ralloc_strndup(mem_ctx, input, base_name_end - input);
-   if (this->var_name == nullptr) {
+   if (this->var_name == NULL) {
       _mesa_error_no_memory(__func__);
       return;
    }
@@ -800,7 +800,7 @@ varying_matches::~varying_matches()
  * Record the given producer/consumer variable pair in the list of variables
  * that should later be assigned locations.
  *
- * It is permissible for \c consumer_var to be nullptr (this happens if a
+ * It is permissible for \c consumer_var to be NULL (this happens if a
  * variable is output by the producer and consumed by transform feedback, but
  * not consumed by the consumer).
  *
@@ -815,7 +815,7 @@ varying_matches::~varying_matches()
 void
 varying_matches::record(ir_variable *producer_var, ir_variable *consumer_var)
 {
-   assert(producer_var != nullptr || consumer_var != nullptr);
+   assert(producer_var != NULL || consumer_var != NULL);
 
    if ((producer_var && !producer_var->data.is_unmatched_generic_inout)
        || (consumer_var && !consumer_var->data.is_unmatched_generic_inout)) {
@@ -826,7 +826,7 @@ varying_matches::record(ir_variable *producer_var, ir_variable *consumer_var)
       return;
    }
 
-   if ((consumer_var == nullptr && producer_var->type->contains_integer()) ||
+   if ((consumer_var == NULL && producer_var->type->contains_integer()) ||
        !consumer_is_fs) {
       /* Since this varying is not being consumed by the fragment shader, its
        * interpolation type varying cannot possibly affect rendering.  Also,
@@ -854,7 +854,7 @@ varying_matches::record(ir_variable *producer_var, ir_variable *consumer_var)
                  sizeof(*this->matches) * this->matches_capacity);
    }
 
-   const ir_variable *const var = (producer_var != nullptr)
+   const ir_variable *const var = (producer_var != NULL)
       ? producer_var : consumer_var;
 
    this->matches[this->num_matches].packing_class
@@ -1054,7 +1054,7 @@ public:
                                  hash_table *tfeedback_candidates)
       : mem_ctx(mem_ctx),
         tfeedback_candidates(tfeedback_candidates),
-        toplevel_var(nullptr),
+        toplevel_var(NULL),
         varying_floats(0)
    {
    }
@@ -1128,7 +1128,7 @@ populate_consumer_input_sets(void *mem_ctx, exec_list *ir,
    foreach_in_list(ir_instruction, node, ir) {
       ir_variable *const input_var = node->as_variable();
 
-      if ((input_var != nullptr) && (input_var->data.mode == ir_var_shader_in)) {
+      if ((input_var != NULL) && (input_var->data.mode == ir_var_shader_in)) {
          if (input_var->type->is_interface())
             return false;
 
@@ -1151,7 +1151,7 @@ populate_consumer_input_sets(void *mem_ctx, exec_list *ir,
              */
             consumer_inputs_with_locations[input_var->data.location] =
                input_var;
-         } else if (input_var->get_interface_type() != nullptr) {
+         } else if (input_var->get_interface_type() != NULL) {
             char *const iface_field_name =
                ralloc_asprintf(mem_ctx, "%s.%s",
                                input_var->get_interface_type()->name,
@@ -1185,7 +1185,7 @@ get_matching_input(void *mem_ctx,
 
    if (output_var->data.explicit_location) {
       input_var = consumer_inputs_with_locations[output_var->data.location];
-   } else if (output_var->get_interface_type() != nullptr) {
+   } else if (output_var->get_interface_type() != NULL) {
       char *const iface_field_name =
          ralloc_asprintf(mem_ctx, "%s.%s",
                          output_var->get_interface_type()->name,
@@ -1198,8 +1198,8 @@ get_matching_input(void *mem_ctx,
          (ir_variable *) hash_table_find(consumer_inputs, output_var->name);
    }
 
-   return (input_var == nullptr || input_var->data.mode != ir_var_shader_in)
-      ? nullptr : input_var;
+   return (input_var == NULL || input_var->data.mode != ir_var_shader_in)
+      ? NULL : input_var;
 }
 
 }
@@ -1234,7 +1234,7 @@ canonicalize_shader_io(exec_list *ir, enum ir_variable_mode io_mode)
    foreach_in_list(ir_instruction, node, ir) {
       ir_variable *const var = node->as_variable();
 
-      if (var == nullptr || var->data.mode != io_mode)
+      if (var == NULL || var->data.mode != io_mode)
          continue;
 
       /* If we have already encountered more I/O variables that could
@@ -1284,7 +1284,7 @@ canonicalize_shader_io(exec_list *ir, enum ir_variable_mode io_mode)
  *        number of input vertices it accepts.  Otherwise zero.
  *
  * When num_tfeedback_decls is nonzero, it is permissible for the consumer to
- * be nullptr.  In this case, varying locations are assigned solely based on the
+ * be NULL.  In this case, varying locations are assigned solely based on the
  * requirements of transform feedback.
  */
 bool
@@ -1305,7 +1305,7 @@ assign_varying_locations(struct gl_context *ctx,
    hash_table *consumer_interface_inputs
       = hash_table_ctor(0, hash_table_string_hash, hash_table_string_compare);
    ir_variable *consumer_inputs_with_locations[VARYING_SLOT_MAX] = {
-      nullptr,
+      NULL,
    };
 
    /* Operate in a total of four passes.
@@ -1346,7 +1346,7 @@ assign_varying_locations(struct gl_context *ctx,
       foreach_in_list(ir_instruction, node, producer->ir) {
          ir_variable *const output_var = node->as_variable();
 
-         if ((output_var == nullptr) ||
+         if ((output_var == NULL) ||
              (output_var->data.mode != ir_var_shader_out))
             continue;
 
@@ -1367,7 +1367,7 @@ assign_varying_locations(struct gl_context *ctx,
           * input) to the set.  If this is a separable program and there is no
           * consumer stage, add the output.
           */
-         if (input_var || (prog->SeparateShader && consumer == nullptr)) {
+         if (input_var || (prog->SeparateShader && consumer == NULL)) {
             matches.record(output_var, input_var);
          }
 
@@ -1389,11 +1389,11 @@ assign_varying_locations(struct gl_context *ctx,
       foreach_in_list(ir_instruction, node, consumer->ir) {
          ir_variable *const input_var = node->as_variable();
 
-         if ((input_var == nullptr) ||
+         if ((input_var == NULL) ||
              (input_var->data.mode != ir_var_shader_in))
             continue;
 
-         matches.record(nullptr, input_var);
+         matches.record(NULL, input_var);
       }
    }
 
@@ -1404,7 +1404,7 @@ assign_varying_locations(struct gl_context *ctx,
       const tfeedback_candidate *matched_candidate
          = tfeedback_decls[i].find_candidate(prog, tfeedback_candidates);
 
-      if (matched_candidate == nullptr) {
+      if (matched_candidate == NULL) {
          hash_table_dtor(tfeedback_candidates);
          hash_table_dtor(consumer_inputs);
          hash_table_dtor(consumer_interface_inputs);
@@ -1412,7 +1412,7 @@ assign_varying_locations(struct gl_context *ctx,
       }
 
       if (matched_candidate->toplevel_var->data.is_unmatched_generic_inout)
-         matches.record(matched_candidate->toplevel_var, nullptr);
+         matches.record(matched_candidate->toplevel_var, NULL);
    }
 
    const unsigned slots_used = matches.assign_locations();

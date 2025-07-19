@@ -1387,12 +1387,12 @@ namespace RBX
 			: visualEngine(visualEngine)
 			, useShaders(false)
 			, ignoreWaterUpdatesForTesting(false)
-			, storage(nullptr)
+			, storage(NULL)
 		{
 			RBXASSERT(part->getPartType() == MEGACLUSTER_PART);
 			partInstance = part;
 
-			RBXASSERT(partInstance->getGfxPart() == nullptr);
+			RBXASSERT(partInstance->getGfxPart() == NULL);
 			partInstance->setGfxPart(this);
 
 			MegaClusterInstance* mci = boost::polymorphic_downcast<MegaClusterInstance*>(part.get());
@@ -1464,7 +1464,7 @@ namespace RBX
 				FASTLOG2(FLog::TerrainCellListener, "MegaCluster: disconnecting %p from storage %p", this, storage);
 				storage->disconnectListener(this);
 
-				storage = nullptr;
+				storage = NULL;
 			}
 		}
 
@@ -1679,7 +1679,7 @@ namespace RBX
 
 			*outQuads = quads;
 
-			if (quads == 0) return nullptr;
+			if (quads == 0) return NULL;
 
 			shared_ptr<VertexBuffer> vbuf;
 
@@ -1722,7 +1722,7 @@ namespace RBX
 
 			*outQuads = quads;
 
-			if (quads == 0) return nullptr;
+			if (quads == 0) return NULL;
 
 			shared_ptr<VertexBuffer> vbuf;
 
@@ -1863,7 +1863,7 @@ namespace RBX
 				technique.setTexture(5, lightGrid->getLookupTexture(), SamplerState(SamplerState::Filter_Point, SamplerState::Address_Clamp));
 			}
 
-			technique.setTexture(6, sceneManager->getShadowMap(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+			//technique.setTexture(6, sceneManager->getShadowMap(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 		}
 
 		const shared_ptr<Material>& MegaCluster::getSolidMaterial()

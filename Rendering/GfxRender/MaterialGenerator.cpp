@@ -33,7 +33,7 @@
 
 FASTFLAGVARIABLE(RenderMaterialsOnMobile, true)
 FASTFLAGVARIABLE(ForceWangTiles, false)
-FASTFLAG(GlowEnabled)
+//FASTFLAG(GlowEnabled)
 
 namespace RBX
 {
@@ -405,64 +405,150 @@ namespace RBX
 			return std::make_pair(texture, cfg.second);
 		}
 
-		static const char* getMaterialName(PartMaterial material)
-		{
-			switch (material)
-			{
-			case PLASTIC_MATERIAL: return "Plastic";
-			case SMOOTH_PLASTIC_MATERIAL: return "Smooth Plastic";
-			case NEON_MATERIAL: return "Neon";
-			case WOOD_MATERIAL: return "Wood";
-			case WOODPLANKS_MATERIAL: return "Wood Planks";
-			case MARBLE_MATERIAL: return "Marble";
-			case SLATE_MATERIAL: return "Slate";
-			case CONCRETE_MATERIAL: return "Concrete";
-			case GRANITE_MATERIAL: return "Granite";
-			case BRICK_MATERIAL: return "Brick";
-			case PEBBLE_MATERIAL: return "Pebble";
-			case RUST_MATERIAL: return "Rust";
-			case DIAMONDPLATE_MATERIAL: return "Diamond plate";
-			case FOIL_MATERIAL: return "Aluminum";
-			case METAL_MATERIAL: return "Metal";
-			case GRASS_MATERIAL: return "Grass";
-			case SAND_MATERIAL: return "Sand";
-			case FABRIC_MATERIAL: return "Fabric";
-			case ICE_MATERIAL: return "Ice";
-			case COBBLESTONE_MATERIAL: return "Cobblestone";
+		static const char* getMaterialName(PartMaterial material) {
+			switch (material) {
+			case ASPHALT_MATERIAL:			return "Asphalt";
+			case BASALT_MATERIAL:			return "Basalt";
+			case BRICK_MATERIAL:			return "Brick";
+			case CARDBOARD_MATERIAL:		return "Cardboard";
+			case CARPET_MATERIAL:			return "Carpet";
+			case CERAMIC_TILES_MATERIAL:	return "Ceramic Tiles";
+			case CLAY_ROOF_TILES_MATERIAL:	return "Clay Roof Tiles";
+			case COBBLESTONE_MATERIAL:		return "Cobblestone";
+			case CONCRETE_MATERIAL:			return "Concrete";
+			case CRACKED_LAVA_MATERIAL:		return "Cracked Lava";
+			case DIAMONDPLATE_MATERIAL:		return "Diamond Plate";
+			case FABRIC_MATERIAL:			return "Fabric";
+			case FOIL_MATERIAL:				return "Foil";
+			case GLACIER_MATERIAL:			return "Glacier";
+			case GRANITE_MATERIAL:			return "Granite";
+			case GRASS_MATERIAL:			return "Grass";
+			case GROUND_MATERIAL:			return "Ground";
+			case ICE_MATERIAL:				return "Ice";
+			case LEAFY_GRASS_MATERIAL:		return "Leafy Grass";
+			case LEATHER_MATERIAL:			return "Leather";
+			case LIMESTONE_MATERIAL:		return "Limestone";
+			case MARBLE_MATERIAL:			return "Marble";
+			case METAL_MATERIAL:			return "Metal";
+			case MUD_MATERIAL:				return "Mud";
+			case NEON_MATERIAL:				return "Neon";
+			case PAVEMENT_MATERIAL:			return "Pavement";
+			case PEBBLE_MATERIAL:			return "Pebble";
+			case PLASTER_MATERIAL:			return "Plaster";
+			case PLASTIC_MATERIAL:			return "Plastic";
+			case ROCK_MATERIAL:				return "Rock";
+			case ROOF_SHINGLES_MATERIAL:	return "Roof Shingles";
+			case RUBBER_MATERIAL:			return "Rubber";
+			case RUST_MATERIAL:				return "Rust";
+			case SALT_MATERIAL:				return "Salt";
+			case SAND_MATERIAL:				return "Sand";
+			case SANDSTONE_MATERIAL:		return "Sandstone";
+			case SLATE_MATERIAL:			return "Slate";
+			case SMOOTH_PLASTIC_MATERIAL:	return "Smooth Plastic";
+			case SNOW_MATERIAL:				return "Snow";
+			case WOOD_MATERIAL:				return "Wood";
+			case WOODPLANKS_MATERIAL:		return "Wood Planks";
 
 			default:
 				RBXASSERT(false);
-				return "Plastic";
+
+				return "Smooth Plastic";
 			}
 		};
 
-		int MaterialGenerator::getMaterialId(PartMaterial material)
-		{
+		int MaterialGenerator::getMaterialId(PartMaterial material) {
 			switch (material) {
-			case PLASTIC_MATERIAL:		return 1;
-			case WOOD_MATERIAL:			return 2;
-			case WOODPLANKS_MATERIAL:	return 3;
-			case MARBLE_MATERIAL:		return 4;
-			case SLATE_MATERIAL:		return 5;
-			case CONCRETE_MATERIAL:		return 6;
-			case GRANITE_MATERIAL:		return 7;
-			case BRICK_MATERIAL:		return 8;
-			case PEBBLE_MATERIAL:		return 9;
-			case COBBLESTONE_MATERIAL:	return 10;
-			case RUST_MATERIAL:			return 11;
-			case DIAMONDPLATE_MATERIAL:	return 12;
-			case FOIL_MATERIAL:			return 13;
-			case METAL_MATERIAL:		return 14;
-			case GRASS_MATERIAL:		return 15;
-			case SAND_MATERIAL:			return 16;
-			case FABRIC_MATERIAL:		return 17;
-			case ICE_MATERIAL:			return 18;
+			case ASPHALT_MATERIAL:			return 1;
+			case BASALT_MATERIAL:			return 2;
+			case BRICK_MATERIAL:			return 3;
+			case CARDBOARD_MATERIAL:		return 4;
+			case CARPET_MATERIAL:			return 5;
+			case CERAMIC_TILES_MATERIAL:	return 6;
+			case CLAY_ROOF_TILES_MATERIAL:	return 7;
+			case COBBLESTONE_MATERIAL:		return 8;
+			case CONCRETE_MATERIAL:			return 9;
+			case CRACKED_LAVA_MATERIAL:		return 10;
+			case DIAMONDPLATE_MATERIAL:		return 11;
+			case FABRIC_MATERIAL:			return 12;
+			case FOIL_MATERIAL:				return 13;
+			case GLACIER_MATERIAL:			return 14;
+			case GRANITE_MATERIAL:			return 15;
+			case GRASS_MATERIAL:			return 16;
+			case GROUND_MATERIAL:			return 17;
+			case ICE_MATERIAL:				return 18;
+			case LEAFY_GRASS_MATERIAL:		return 19;
+			case LEATHER_MATERIAL:			return 20;
+			case LIMESTONE_MATERIAL:		return 21;
+			case MARBLE_MATERIAL:			return 22;
+			case METAL_MATERIAL:			return 23;
+			case MUD_MATERIAL:				return 24;
+			case PAVEMENT_MATERIAL:			return 25;
+			case PEBBLE_MATERIAL:			return 26;
+			case PLASTER_MATERIAL:			return 27;
+			case PLASTIC_MATERIAL:			return 28;
+			case ROCK_MATERIAL:				return 29;
+			case ROOF_SHINGLES_MATERIAL:	return 30;
+			case RUBBER_MATERIAL:			return 31;
+			case RUST_MATERIAL:				return 32;
+			case SALT_MATERIAL:				return 33;
+			case SAND_MATERIAL:				return 34;
+			case SANDSTONE_MATERIAL:		return 35;
+			case SLATE_MATERIAL:			return 36;
+			case SNOW_MATERIAL:				return 37;
+			case WOOD_MATERIAL:				return 38;
+			case WOODPLANKS_MATERIAL:		return 39;
 
-			default:					return 0;
+			default:						return 0;
 			}
 		}
 
-		static Vector4 getLQMatFarTilingFactor(PartMaterial material)
+		static PartMaterial getMaterialFromId(int materialId) {
+			switch (materialId) {
+			case 1:	 return ASPHALT_MATERIAL;
+			case 2:	 return BASALT_MATERIAL;
+			case 3:	 return BRICK_MATERIAL;
+			case 4:	 return CARDBOARD_MATERIAL;
+			case 5:	 return CARPET_MATERIAL;
+			case 6:	 return CERAMIC_TILES_MATERIAL;
+			case 7:	 return CLAY_ROOF_TILES_MATERIAL;
+			case 8:	 return COBBLESTONE_MATERIAL;
+			case 9:	 return CONCRETE_MATERIAL;
+			case 10: return CRACKED_LAVA_MATERIAL;
+			case 11: return DIAMONDPLATE_MATERIAL;
+			case 12: return FABRIC_MATERIAL;
+			case 13: return FOIL_MATERIAL;
+			case 14: return GLACIER_MATERIAL;
+			case 15: return GRANITE_MATERIAL;
+			case 16: return GRASS_MATERIAL;
+			case 17: return GROUND_MATERIAL;
+			case 18: return ICE_MATERIAL;
+			case 19: return LEAFY_GRASS_MATERIAL;
+			case 20: return LEATHER_MATERIAL;
+			case 21: return LIMESTONE_MATERIAL;
+			case 22: return MARBLE_MATERIAL;
+			case 23: return METAL_MATERIAL;
+			case 24: return MUD_MATERIAL;
+			case 25: return PAVEMENT_MATERIAL;
+			case 26: return PEBBLE_MATERIAL;
+			case 27: return PLASTER_MATERIAL;
+			case 28: return PLASTIC_MATERIAL;
+			case 29: return ROCK_MATERIAL;
+			case 30: return ROOF_SHINGLES_MATERIAL;
+			case 31: return RUBBER_MATERIAL;
+			case 32: return RUST_MATERIAL;
+			case 33: return SALT_MATERIAL;
+			case 34: return SAND_MATERIAL;
+			case 35: return SANDSTONE_MATERIAL;
+			case 36: return SLATE_MATERIAL;
+			case 37: return SNOW_MATERIAL;
+			case 38: return WOOD_MATERIAL;
+			case 39: return WOODPLANKS_MATERIAL;
+
+			default: return SMOOTH_PLASTIC_MATERIAL;
+			}
+		}
+
+		/*static Vector4 getLQMatFarTilingFactor(PartMaterial material)
 		{
 			switch (material)
 			{
@@ -481,14 +567,14 @@ namespace RBX
 			default:
 				return Vector4(1, 1, 1, 1);
 			}
-		}
+		}*/
 
 		static PartInstance* getHumanoidFocusPart(const HumanoidIdentifier& hi)
 		{
 			if (hi.torso) return hi.torso;
 			if (hi.head) return hi.head;
 
-			return nullptr;
+			return NULL;
 		}
 
 		static bool forceFlatPlastic(DataModelMesh* specialShape)
@@ -517,75 +603,79 @@ namespace RBX
 			technique.setRasterizerState(RasterizerState::Cull_Front);
 		}
 
-		static void setupTechnique(Technique& technique, unsigned int flags, bool hasGlow = false)
-		{
-			/* BLENDING and Glow
-			   We use alpha channel of render target to save the intensity of glow. This way our post-process glow can work even with semi-transparent
-			   objects occluding glowing objects. 0 = full glow, 1 = no glow (it is easier to implement it like this)
-			   So simply glowing objects add to the glow and non glowing remove the glow. We archive that by separate alpha blend.
-
-			   Note: NEON shader output 1 - fog.a * src.alpha (fog.a = 0 -> full fog and vice versa). Its pretty
-
-			   Glow-Opaque
-				- alpha = src.alpha // simply full glow darkened by alpha.
-			   Glow-Transparent
-				- alpha = dst * src.alpha // decreases alpha value that is in FB by proportionaly to the alpha of glowing object
-			   Non Glow-Opaque
-				- alpha = src.a = 1
-			   Non Glow-Transparent
-				- alpha = src.alpha * (1 - dst.alpha) + dst // imagine this as dst + lerp(src.alpha, 0, dst.alpha). Higher values of src.alpha decreases glow intensity more then smaller ones.
-			 */
-
-			if (flags & MaterialGenerator::Flag_Transparent)
-			{
-				if (FFlag::GlowEnabled)
-				{
-					if (hasGlow) // this is regular alpha blend. Src.a is just inverted for reasons explained in comment couple lines above.
-						technique.setBlendState(BlendState(BlendState::Factor_InvSrcAlpha, BlendState::Factor_SrcAlpha, BlendState::Factor_Zero, BlendState::Factor_SrcAlpha));
-					else
-						technique.setBlendState(BlendState(BlendState::Factor_SrcAlpha, BlendState::Factor_InvSrcAlpha, BlendState::Factor_InvDstAlpha, BlendState::Factor_One));
-				}
-				else
-					technique.setBlendState(BlendState::Mode_AlphaBlend);
-
+		static void setupTechnique(Technique& technique, unsigned int flags, bool hasGlow = false) {
+			if (flags & MaterialGenerator::Flag_Transparent) {
+				technique.setBlendState(BlendState::Mode_AlphaBlend);
 
 				technique.setDepthState(DepthState(DepthState::Function_GreaterEqual, false));
 			}
-			else if (FFlag::GlowEnabled && hasGlow)
-			{
-				technique.setBlendState(BlendState(BlendState::Factor_One, BlendState::Factor_Zero, BlendState::Factor_One, BlendState::Factor_Zero));
+			else {
+				technique.setBlendState(BlendState::Mode_None);
+
+				technique.setDepthState(DepthState(DepthState::Function_GreaterEqual, true));
 			}
 
-			if (flags & (MaterialGenerator::Flag_ForceDecal | MaterialGenerator::Flag_ForceDecalTexture))
-				technique.setRasterizerState(RasterizerState(RasterizerState::Cull_Back, -16));
+			/*if (flags & (MaterialGenerator::Flag_ForceDecal | MaterialGenerator::Flag_ForceDecalTexture))
+				technique.setRasterizerState(RasterizerState(RasterizerState::Cull_Back, -16));*/
 
+			technique.setRasterizerState(RasterizerState(RasterizerState::Cull_Back, 0));
 		}
 
-		static void setupPlasticTextures(VisualEngine* visualEngine, Technique& technique)
-		{
-			TextureManager* tm = visualEngine->getTextureManager();
-			technique.setTexture(5, tm->load(ContentId("rbxasset://textures/plastic/diffuse.dds"), TextureManager::Fallback_Gray), SamplerState::Filter_Anisotropic);
-			technique.setTexture(6, tm->load(ContentId("rbxasset://textures/plastic/normal.dds"), TextureManager::Fallback_NormalMap), SamplerState::Filter_Anisotropic);
-			technique.setTexture(8, tm->load(ContentId("rbxasset://textures/plastic/normaldetail" + kTextureExtension), TextureManager::Fallback_NormalMap), SamplerState::Filter_Linear);
+		static void copyTextureToArray(Texture* targetTexture, Texture* sourceTexture, int materialId = 0u) {
+			for (unsigned int i = 0; i < sourceTexture->getMipLevels(); ++i) {
+				void* data = nullptr;
+
+				sourceTexture->download(0, i, data, 0u);
+
+				targetTexture->upload(materialId, i, TextureRegion(0u, 0u, 1024u, 1024u), data, sizeof(data));
+			}
+
+			targetTexture->commitChanges();
 		}
 
-		static void setupSmoothPlasticTextures(VisualEngine* visualEngine, Technique& technique)
-		{
+		void MaterialGenerator::setupSmoothPlasticTextures(VisualEngine* visualEngine, Technique& technique) {
 			TextureManager* tm = visualEngine->getTextureManager();
 
-			technique.setTexture(5, tm->getFallbackTexture(TextureManager::Fallback_White), SamplerState::Filter_Linear);
+			/*technique.setTexture(10, tm->getFallbackTexture(TextureManager::Fallback_White), SamplerState::Filter_Anisotropic);
+			technique.setTexture(11, tm->getFallbackTexture(TextureManager::Fallback_BlackTransparent), SamplerState::Filter_Anisotropic);
+			technique.setTexture(12, tm->getFallbackTexture(TextureManager::Fallback_BlackTransparent), SamplerState::Filter_Anisotropic);
+
+			technique.setTexture(13, tm->getFallbackTexture(TextureManager::Fallback_NormalMap), SamplerState::Filter_Anisotropic);
+			technique.setTexture(14, tm->getFallbackTexture(TextureManager::Fallback_Gray), SamplerState::Filter_Anisotropic);
+
+			technique.setTexture(15, tm->getFallbackTexture(TextureManager::Fallback_BlackTransparent), SamplerState::Filter_Anisotropic);
+			technique.setTexture(16, tm->getFallbackTexture(TextureManager::Fallback_BlackTransparent), SamplerState::Filter_Anisotropic);*/
 		}
 
-		static void setupComplexMaterialTextures(VisualEngine* visualEngine, Technique& technique, const std::string& materialName)
-		{
+		void MaterialGenerator::setupComplexMaterialTextures(VisualEngine* visualEngine, Technique& technique, const std::string& materialName, int materialId, const std::string& materialVariant) {
 			TextureManager* tm = visualEngine->getTextureManager();
-			std::string texturePath = "rbxasset://textures/" + materialName + "/";
+
+			std::string texturePath = "rbxasset://textures/" + materialVariant + "/" + materialName + "/";
 
 			safeToLower(texturePath);
+			texturePath.erase(remove(texturePath.begin(), texturePath.end(), ' '), texturePath.end());
 
-			technique.setTexture(5, tm->load(ContentId(texturePath + "diffuse" + kTextureExtension), TextureManager::Fallback_White), SamplerState::Filter_Anisotropic);
-			technique.setTexture(6, tm->load(ContentId(texturePath + "normal" + kTextureExtension), TextureManager::Fallback_NormalMap), SamplerState::Filter_Anisotropic);
-			technique.setTexture(7, tm->load(ContentId(texturePath + "specular" + kTextureExtension), TextureManager::Fallback_Black), SamplerState::Filter_Anisotropic);
+			copyTextureToArray(albedoTextures.getTexture().get(), tm->load(ContentId(texturePath + "color" + kTextureExtension), TextureManager::Fallback_White).getTexture().get(), materialId);
+
+			/*Texture* albedoTexture = tm->load(ContentId(texturePath + "color" + kTextureExtension), TextureManager::Fallback_White).getTexture().get();
+
+			for (unsigned int i = 0; albedoTexture->getMipLevels(); ++i) {
+				void* data;
+
+				albedoTexture->download(0, i, data);
+
+				albedoTextures.getTexture().get()->upload(materialId, i, TextureRegion(0u, 0u, 1024u, 1024u), data, sizeof(data));
+			}*/
+
+			/*technique.setTexture(10, tm->load(ContentId(texturePath + "color" + kTextureExtension), TextureManager::Fallback_White), SamplerState::Filter_Anisotropic);
+			technique.setTexture(11, tm->load(ContentId(texturePath + "roughness" + kTextureExtension), TextureManager::Fallback_BlackTransparent), SamplerState::Filter_Anisotropic);
+			technique.setTexture(12, tm->load(ContentId(texturePath + "emissive" + kTextureExtension), TextureManager::Fallback_BlackTransparent), SamplerState::Filter_Anisotropic);
+
+			technique.setTexture(13, tm->load(ContentId(texturePath + "normal" + kTextureExtension), TextureManager::Fallback_NormalMap), SamplerState::Filter_Anisotropic);
+			technique.setTexture(14, tm->load(ContentId(texturePath + "height" + kTextureExtension), TextureManager::Fallback_Gray), SamplerState::Filter_Anisotropic);
+
+			technique.setTexture(15, tm->load(ContentId(texturePath + "clearcoatA" + kTextureExtension), TextureManager::Fallback_BlackTransparent), SamplerState::Filter_Anisotropic);
+			technique.setTexture(16, tm->load(ContentId(texturePath + "clearcoatB" + kTextureExtension), TextureManager::Fallback_BlackTransparent), SamplerState::Filter_Anisotropic);*/
 
 			/*if (wangTileTex)
 				technique.setTexture(8, *wangTileTex, SamplerState::Filter_Point);
@@ -593,7 +683,19 @@ namespace RBX
 				technique.setTexture(8, tm->load(ContentId(texturePath + "normaldetail" + kTextureExtension), TextureManager::Fallback_NormalMap), SamplerState::Filter_Anisotropic);*/
 		}
 
-		static void setupLQMaterialTextures(VisualEngine* visualEngine, Technique& technique, const std::string& materialName)
+		void MaterialGenerator::assignMaterialTextures(VisualEngine* visualEngine, Technique& technique) const {
+			technique.setTexture(10, albedoTextures, SamplerState::Filter_Anisotropic);
+			technique.setTexture(11, emissiveTextures, SamplerState::Filter_Anisotropic);
+			technique.setTexture(12, matValueTextures, SamplerState::Filter_Anisotropic);
+
+			technique.setTexture(13, normalTextures, SamplerState::Filter_Anisotropic);
+			technique.setTexture(14, heightTextures, SamplerState::Filter_Anisotropic);
+
+			technique.setTexture(15, clearcoatATextures, SamplerState::Filter_Anisotropic);
+			technique.setTexture(16, clearcoatBTextures, SamplerState::Filter_Anisotropic);
+		}
+
+		/*static void setupLQMaterialTextures(VisualEngine* visualEngine, Technique& technique, const std::string& materialName)
 		{
 			TextureManager* tm = visualEngine->getTextureManager();
 			std::string texturePath = "rbxasset://textures/" + materialName + "/";
@@ -602,12 +704,11 @@ namespace RBX
 
 			technique.setTexture(5, tm->load(ContentId(texturePath + "diffuse" + kTextureExtension), TextureManager::Fallback_White), SamplerState::Filter_Linear);
 
-			/*if (wangTileTex)
-				technique.setTexture(8, *wangTileTex, SamplerState::Filter_Point);*/
-		}
+			if (wangTileTex)
+				technique.setTexture(8, *wangTileTex, SamplerState::Filter_Point);
+		}*/
 
-		static void setupCommonTextures(VisualEngine* visualEngine, Technique& technique)
-		{
+		static void setupCommonTextures(VisualEngine* visualEngine, Technique& technique) {
 			TextureManager* tm = visualEngine->getTextureManager();
 			SceneManager* sceneManager = visualEngine->getSceneManager();
 
@@ -615,30 +716,47 @@ namespace RBX
 			technique.setTexture(0, sceneManager->getShadowMapAtlas(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 			technique.setTexture(1, sceneManager->getShadowMapArray(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 
-			/* Area Light LTCs */
-			technique.setTexture(2, tm->load(ContentId("rbxasset://textures/ltc1LUT" + kTextureExtension), TextureManager::Fallback_None), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
-			technique.setTexture(3, tm->load(ContentId("rbxasset://textures/ltc2LUT" + kTextureExtension), TextureManager::Fallback_None), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
-
 			/* Environment BRDF */
-			technique.setTexture(4, tm->load(ContentId("rbxasset://textures/brdfLUT" + kTextureExtension), TextureManager::Fallback_None), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+			technique.setTexture(2, tm->load(ContentId("rbxasset://textures/brdfLUT" + kTextureExtension), TextureManager::Fallback_None), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+
+			/* Area Light LTCs */
+			technique.setTexture(3, tm->load(ContentId("rbxasset://textures/ltc1LUT" + kTextureExtension), TextureManager::Fallback_None), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+			technique.setTexture(4, tm->load(ContentId("rbxasset://textures/ltc2LUT" + kTextureExtension), TextureManager::Fallback_None), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 
 			/* Ambient Occlusion */
 			technique.setTexture(5, sceneManager->getAmbientOcclusion(), SamplerState(SamplerState::Filter_Point, SamplerState::Address_Clamp));
 
 			/* Cubemaps */
 			technique.setTexture(6, sceneManager->getEnvMap()->getOutdoorTexture(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Wrap));
-			technique.setTexture(7, sceneManager->getEnvMap()->getIndoorATexture(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Wrap));
-			technique.setTexture(8, sceneManager->getEnvMap()->getIndoorBTexture(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Wrap));
+			technique.setTexture(7, sceneManager->getEnvMap()->getIndoorTextures(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Wrap));
 		}
 
-		static void setupMaterialTextures(VisualEngine* ve, Technique& technique, PartMaterial renderMaterial, const std::string& materialName)
-		{
-			if (renderMaterial == PLASTIC_MATERIAL)
-				setupPlasticTextures(ve, technique);
-			else if (renderMaterial == SMOOTH_PLASTIC_MATERIAL || renderMaterial == NEON_MATERIAL)
+		void MaterialGenerator::setupMaterialTextures(VisualEngine* ve, Technique& technique, PartMaterial renderMaterial) {
+			if (renderMaterial == SMOOTH_PLASTIC_MATERIAL)
 				setupSmoothPlasticTextures(ve, technique);
+			else if (renderMaterial == PLASTIC_MATERIAL)
+				setupComplexMaterialTextures(ve, technique, getMaterialName(renderMaterial), getMaterialId(renderMaterial), "global");
 			else
-				setupComplexMaterialTextures(ve, technique, materialName);
+				setupComplexMaterialTextures(ve, technique, getMaterialName(renderMaterial), getMaterialId(renderMaterial), "modern");
+		}
+
+		void MaterialGenerator::createTextureArrays(VisualEngine* visualEngine) {
+			if (albedoTextures.getStatus() == TextureRef::Status_Null) {
+				Device* device = visualEngine->getDevice();
+
+				albedoTextures = device->createTexture(Texture::Type_2D_Array, Texture::Format_BC7_sRGB, 1024u, 1024u, 48u, 11u, Texture::Usage_Static);
+				emissiveTextures = device->createTexture(Texture::Type_2D_Array, Texture::Format_BC7_sRGB, 1024u, 1024u, 48u, 11u, Texture::Usage_Static);
+				matValueTextures = device->createTexture(Texture::Type_2D_Array, Texture::Format_BC7, 1024u, 1024u, 48u, 11u, Texture::Usage_Static);
+
+				normalTextures = device->createTexture(Texture::Type_2D_Array, Texture::Format_BC7, 1024u, 1024u, 48u, 11u, Texture::Usage_Static);
+				heightTextures = device->createTexture(Texture::Type_2D_Array, Texture::Format_BC4, 512u, 512u, 48u, 10u, Texture::Usage_Static);
+
+				clearcoatATextures = device->createTexture(Texture::Type_2D_Array, Texture::Format_BC7_sRGB, 1024u, 1024u, 48u, 11u, Texture::Usage_Static);
+				clearcoatBTextures = device->createTexture(Texture::Type_2D_Array, Texture::Format_BC7, 1024u, 1024u, 48u, 11u, Texture::Usage_Static);
+
+				for (int i = 0; i == 39; ++i)
+					globalMaterialData.Materials[i] = getParameters(getMaterialFromId(i));
+			}
 		}
 
 		MaterialGenerator::TexturedMaterialCache::TexturedMaterialCache()
@@ -648,8 +766,9 @@ namespace RBX
 
 		MaterialGenerator::MaterialGenerator(VisualEngine* visualEngine)
 			: visualEngine(visualEngine)
-			, compositCache(nullptr, TextureCompositor::JobHandle())
+			, compositCache(NULL, TextureCompositor::JobHandle())
 		{
+			createTextureArrays(visualEngine);
 			//wangTilesTex = visualEngine->getTextureManager()->load(ContentId("rbxasset://textures/wangIndex.dds"), TextureManager::Fallback_Black);
 		}
 
@@ -666,7 +785,19 @@ namespace RBX
 
 			std::string vertexSkinning = (flags & Flag_Skinned) ? "Skinned" : "Static";
 
-			if ((flags & (Flag_Transparent | Flag_ForceDecal | Flag_ForceDecalTexture)) == 0)
+			if (shared_ptr<ShaderProgram> program = visualEngine->getShaderManager()->getProgram("BasicMaterialVS", "RegularLOD0FS")) {
+				Technique technique(program, 0);
+
+				setupTechnique(technique, flags);
+
+				setupCommonTextures(visualEngine, technique);
+				setupSmoothPlasticTextures(visualEngine, technique);
+				assignMaterialTextures(visualEngine, technique);
+
+				material->addTechnique(technique);
+			}
+
+			/*if ((flags & (Flag_Transparent | Flag_ForceDecal | Flag_ForceDecalTexture)) == 0)
 				if (shared_ptr<ShaderProgram> program = visualEngine->getShaderManager()->getProgram("Default" + vertexSkinning + "HQVS", "DefaultHQGBufferFS"))
 				{
 					Technique technique(program, 0);
@@ -676,7 +807,7 @@ namespace RBX
 					technique.setTexture(0, TextureRef(), SamplerState::Filter_Linear);
 
 					setupCommonTextures(visualEngine, technique);
-					setupSmoothPlasticTextures(visualEngine, technique);
+					//setupSmoothPlasticTextures(visualEngine, technique);
 
 					material->addTechnique(technique);
 				}
@@ -690,7 +821,7 @@ namespace RBX
 				technique.setTexture(0, TextureRef(), SamplerState::Filter_Linear);
 
 				setupCommonTextures(visualEngine, technique);
-				setupSmoothPlasticTextures(visualEngine, technique);
+				//setupSmoothPlasticTextures(visualEngine, technique);
 
 				material->addTechnique(technique);
 			}
@@ -704,7 +835,7 @@ namespace RBX
 				technique.setTexture(0, TextureRef(), SamplerState::Filter_Linear);
 
 				setupCommonTextures(visualEngine, technique);
-				setupSmoothPlasticTextures(visualEngine, technique);
+				//setupSmoothPlasticTextures(visualEngine, technique);
 
 				material->addTechnique(technique);
 			}
@@ -716,7 +847,7 @@ namespace RBX
 				setupShadowDepthTechnique(technique);
 
 				material->addTechnique(technique);
-			}
+			}*/
 
 			// Fast cache fill
 			baseMaterialCache[cacheKey] = material;
@@ -724,8 +855,7 @@ namespace RBX
 			return material;
 		}
 
-		shared_ptr<Material> MaterialGenerator::createRenderMaterial(unsigned int flags, PartMaterial renderMaterial, bool reflectance)
-		{
+		shared_ptr<Material> MaterialGenerator::createRenderMaterial(unsigned int flags, PartMaterial renderMaterial) {
 			int materialId = getMaterialId(renderMaterial);
 			if (materialId < 0) return shared_ptr<Material>();
 
@@ -744,19 +874,55 @@ namespace RBX
 
 			TextureManager* tm = visualEngine->getTextureManager();
 
-			std::string materialName = getMaterialName(renderMaterial);
-
-			bool hasGlow = renderMaterial == NEON_MATERIAL;
-
-			std::string materialNameReflectance = materialName + (reflectance ? "Reflection" : "");
+			//std::string materialName = getMaterialName(renderMaterial);
 
 			std::string vertexSkinning = (flags & Flag_Skinned) ? "Skinned" : "Static";
-			std::string vertexShader =
-				(renderMaterial == SMOOTH_PLASTIC_MATERIAL || renderMaterial == NEON_MATERIAL)
-				? "Default" + vertexSkinning + "HQVS"
-				: "Default" + vertexSkinning + "SurfaceHQVS";
+			std::string vertexShader = (renderMaterial == NEON_MATERIAL || renderMaterial == SMOOTH_PLASTIC_MATERIAL) ? "BasicMaterialVS" : "MaterialVS";
 
-			if ((flags & Flag_Transparent) == 0)
+			if (renderMaterial == NEON_MATERIAL) {
+				if (shared_ptr<ShaderProgram> program = visualEngine->getShaderManager()->getProgram(vertexShader, "NeonFS")) {
+					Technique technique(program, 0);
+
+					setupTechnique(technique, flags, true);
+
+					material->addTechnique(technique);
+				}
+			}
+			else if (renderMaterial == SMOOTH_PLASTIC_MATERIAL) {
+				if (shared_ptr<ShaderProgram> program = visualEngine->getShaderManager()->getProgram("BasicMaterialVS", "RegularLOD0FS")) {
+					Technique technique(program, 0);
+
+					setupTechnique(technique, flags);
+
+					setupCommonTextures(visualEngine, technique);
+					setupSmoothPlasticTextures(visualEngine, technique);
+					assignMaterialTextures(visualEngine, technique);
+
+					material->addTechnique(technique);
+				}
+			}
+			else {
+				if (shared_ptr<ShaderProgram> program = visualEngine->getShaderManager()->getProgram(vertexShader, "RegularLOD0FS")) {
+					Technique technique(program, 0);
+
+					setupTechnique(technique, flags);
+
+					setupCommonTextures(visualEngine, technique);
+					setupMaterialTextures(visualEngine, technique, renderMaterial);
+					assignMaterialTextures(visualEngine, technique);
+
+					material->addTechnique(technique);
+				}
+				else if (shared_ptr<ShaderProgram> program = visualEngine->getShaderManager()->getProgram("BasicMaterialVS", "FallbackFS")) {
+					Technique technique(program, 0);
+
+					setupTechnique(technique, flags);
+
+					material->addTechnique(technique);
+				}
+			}
+
+			/*if ((flags & Flag_Transparent) == 0)
 				if (shared_ptr<ShaderProgram> program = visualEngine->getShaderManager()->getProgram(vertexShader, "Default" + materialNameReflectance + "HQGBufferFS"))
 				{
 					Technique technique(program, 0);
@@ -838,7 +1004,7 @@ namespace RBX
 				setupShadowDepthTechnique(technique);
 
 				material->addTechnique(technique);
-			}
+			}*/
 
 			// Fast cache fill
 			renderMaterialCache[materialId][cacheKey] = material;
@@ -899,25 +1065,14 @@ namespace RBX
 
 			unsigned int features = renderMaterial == NEON_MATERIAL ? RenderQueue::Features_Glow : 0;
 
-			// Reflectance is only supported for plastic
-			if ((renderMaterial == SMOOTH_PLASTIC_MATERIAL || renderMaterial == PLASTIC_MATERIAL) && part->getReflectance() > 0.015f)
-			{
-				return Result(createRenderMaterial(flags, actualRenderMaterial, true), 0, features);
-			}
-			else
-			{
-				return Result(createRenderMaterial(flags, actualRenderMaterial, false), (flags & Flag_Transparent) ? 0 : Result_PlasticLOD, features);
-			}
+			return Result(createRenderMaterial(flags, actualRenderMaterial), (flags & Flag_Transparent) ? 0 : Result_PlasticLOD, features);
 		}
 
-		MaterialGenerator::Result MaterialGenerator::createMaterialForPart(PartInstance* part, const HumanoidIdentifier* hi, unsigned int flags)
-		{
-			if (hi && (flags & Flag_UseCompositTexture))
-			{
+		MaterialGenerator::Result MaterialGenerator::createMaterialForPart(PartInstance* part, const HumanoidIdentifier* hi, unsigned int flags) {
+			if (hi && (flags & Flag_UseCompositTexture)) {
 				std::pair<std::pair<TextureRef, TextureCompositor::JobHandle>, G3D::Vector4> htp = createHumanoidTexture(visualEngine, part, *hi, flags, compositCache);
 
-				if (htp.first.first.getTexture())
-				{
+				if (htp.first.first.getTexture()) {
 					shared_ptr<Material> material = createTexturedMaterial(htp.first.first, visualEngine->getTextureCompositor()->getTextureId(htp.first.second), flags);
 
 					// attach focus part to texture to make sure texture has an appropriate priority
@@ -929,8 +1084,7 @@ namespace RBX
 
 			DataModelMesh* specialShape = getSpecialShape(part);
 
-			if (FileMesh* fileMesh = getFileMesh(specialShape))
-			{
+			if (FileMesh* fileMesh = getFileMesh(specialShape)) {
 				const TextureId& textureId = fileMesh->getTextureId();
 
 				TextureRef texture = textureId.isNull() ? TextureRef() : visualEngine->getTextureManager()->load(textureId, TextureManager::Fallback_Gray, fileMesh->getFullName() + ".TextureId");
@@ -940,7 +1094,7 @@ namespace RBX
 					: createDefaultMaterial(part, flags, SMOOTH_PLASTIC_MATERIAL);
 			}
 
-			if ((flags & Flag_DisableMaterialsAndStuds) != 0 || (specialShape != nullptr && forceFlatPlastic(specialShape)))
+			if ((flags & Flag_DisableMaterialsAndStuds) != 0 || (specialShape != NULL && forceFlatPlastic(specialShape)))
 				return createDefaultMaterial(part, flags, SMOOTH_PLASTIC_MATERIAL);
 			else
 				return createDefaultMaterial(part, flags, part->getRenderMaterial());
@@ -959,8 +1113,7 @@ namespace RBX
 
 		MaterialGenerator::Result MaterialGenerator::createMaterial(PartInstance* part, Decal* decal, const HumanoidIdentifier* hi, unsigned int flags)
 		{
-			if (decal)
-			{
+			if (decal) {
 				if (decal->isA<DecalTexture>())
 					return createMaterialForDecal(decal, flags | Flag_ForceDecalTexture);
 				else
@@ -972,13 +1125,12 @@ namespace RBX
 
 		void MaterialGenerator::invalidateCompositCache()
 		{
-			compositCache = std::make_pair(static_cast<Humanoid*>(nullptr), TextureCompositor::JobHandle());
+			compositCache = std::make_pair(static_cast<Humanoid*>(NULL), TextureCompositor::JobHandle());
 		}
 
 		void MaterialGenerator::garbageCollectIncremental()
 		{
-			for (unsigned int i = 0; i < ARRAYSIZE(texturedMaterialCache); ++i)
-			{
+			for (unsigned int i = 0; i < ARRAYSIZE(texturedMaterialCache); ++i) {
 				TexturedMaterialCache& cache = texturedMaterialCache[i];
 
 				// To catch up with allocation rate we need to visit the number of allocated elements since last run plus a small constant
@@ -1019,35 +1171,312 @@ namespace RBX
 			}
 		}
 
-		Vector2int16 MaterialGenerator::getSpecular(PartMaterial material)
-		{
-			switch (material)
-			{
-			case PLASTIC_MATERIAL: return Vector2int16(102, 9);
-			case SMOOTH_PLASTIC_MATERIAL: return Vector2int16(191, 81);
-			case NEON_MATERIAL: return Vector2int16(191, 81);
-			case WOOD_MATERIAL: return Vector2int16(64, 32);
-			case WOODPLANKS_MATERIAL: return Vector2int16(71, 53);
-			case MARBLE_MATERIAL: return Vector2int16(179, 54);
-			case SLATE_MATERIAL: return Vector2int16(36, 20);
-			case CONCRETE_MATERIAL: return Vector2int16(38, 22);
-			case GRANITE_MATERIAL: return Vector2int16(48, 24);
-			case BRICK_MATERIAL: return Vector2int16(33, 44);
-			case PEBBLE_MATERIAL: return Vector2int16(18, 22);
-			case COBBLESTONE_MATERIAL: return Vector2int16(54, 22);
-			case RUST_MATERIAL: return Vector2int16(89, 103);
-			case DIAMONDPLATE_MATERIAL: return Vector2int16(230, 160);
-			case FOIL_MATERIAL: return Vector2int16(238, 240);
-			case METAL_MATERIAL: return Vector2int16(204, 120);
-			case GRASS_MATERIAL: return Vector2int16(43, 18);
-			case SAND_MATERIAL: return Vector2int16(18, 6);
-			case FABRIC_MATERIAL: return Vector2int16(8, 16);
-			case ICE_MATERIAL: return Vector2int16(255, 190);
+		MaterialData MaterialGenerator::getParameters(PartMaterial material) {
+			MaterialData data;
 
-			default:
-				RBXASSERT(0); // You missed new material
-				return Vector2int16(0, 50);
+			switch (material) {
+			case ASPHALT_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, 1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.635f, 0.0f, 0.05f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
 			}
+			case BASALT_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, 1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.5f, 0.0f, 1.0f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case BRICK_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, 1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.6f, 0.0f, 0.05f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case CARDBOARD_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, -1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.5f, 0.0f, -1.0f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case CARPET_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, -1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.53f, 0.0f, -1.0f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case CERAMIC_TILES_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, -1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.5f, 0.0f, -1.0f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case CLAY_ROOF_TILES_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, -1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.6f, 0.0f, -1.0f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case COBBLESTONE_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, 1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.5f, 0.0f, 0.05f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case CONCRETE_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, -1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.63f, 0.0f, -1.0f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case CRACKED_LAVA_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, 1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 1.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.5f, 5.0f, 0.1f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case DIAMONDPLATE_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 1.0f, 1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(2.5f, 0.0f, 0.01f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case FABRIC_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, -1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.53f, 0.0f, -1.0f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case FOIL_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 1.0f, 1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.2f, 0.0f, 0.1f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case GLACIER_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, 1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.31f, 0.0f, 0.125f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case GRANITE_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, -1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 0.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.65f, 0.0f, -1.0f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case GRASS_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, 1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 0.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.5f, 0.0f, 0.05f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case GROUND_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, 1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.5f, 0.0f, 0.025f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case ICE_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, 1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.31f, 0.0f, 0.1f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case LEAFY_GRASS_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, 1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.5f, 0.0f, 0.1f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case LEATHER_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, -1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.48f, 0.0f, -1.0f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case LIMESTONE_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, 1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.53f, 0.0f, 0.1f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case MARBLE_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, -1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.5f, 0.0f, -1.0f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case METAL_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 1.0f, -1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(2.5f, 0.0f, -1.0f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case MUD_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, 1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.5f, 0.0f, 0.125f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case PAVEMENT_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, 1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.6f, 0.0f, 0.05f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case PEBBLE_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, -1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.6f, 0.0f, -1.0f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case PLASTER_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, -1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.5f, 0.0f, -1.0f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case ROCK_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, 1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.5f, 0.0f, 0.25f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case ROOF_SHINGLES_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, -1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.6f, 0.0f, -1.0f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case RUBBER_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, -1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.52f, 0.0f, -1.0f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case RUST_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, -1.0f, -1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.55f, 0.0f, -1.0f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case SALT_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, 1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.53f, 0.0f, 0.1f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case SAND_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, 1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.52f, 0.0f, 0.1f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case SANDSTONE_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, 1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.65f, 0.0f, 0.25f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case SLATE_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, 1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.64f, 0.0f, 0.125f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case SNOW_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, 1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.31f, 0.0f, 0.125f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case WOOD_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, -1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.5f, 0.0f, -1.0f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case WOODPLANKS_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, -1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.65f, 0.0f, -1.0f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case PLASTIC_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(0.6f, 0.0f, -1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(0.0f, 1.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.46f, 0.0f, -1.0f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case SMOOTH_PLASTIC_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(0.4f, 0.0f, -1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.46f, 0.0f, -1.0f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			case NEON_MATERIAL: {
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(0.0f, 0.0f, -1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(0.0f, 0.0f, -1.0f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			default: {
+				RBXASSERT(false); // Missed a material, or it isn't valid
+
+				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(0.4f, 0.0f, -1.0f, 0.0f);
+				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.46f, 0.0f, -1.0f, 0.0f);
+
+				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			}
+
+			if (data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset.z > 0.0)
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset.z *= getTiling(material);
+
+			return data;
 		}
 
 		unsigned int MaterialGenerator::createFlags(bool skinned, RBX::PartInstance* part, const HumanoidIdentifier* hi, bool& ignoreDecalsOut)
@@ -1093,32 +1522,50 @@ namespace RBX
 			return materialFlags;
 		}
 
-		float MaterialGenerator::getTiling(PartMaterial material)
-		{
-			switch (material)
-			{
-			case PLASTIC_MATERIAL: return 1.0f;
-			case SMOOTH_PLASTIC_MATERIAL: return 1.0f;
-			case NEON_MATERIAL: return 1.0f;
-			case WOOD_MATERIAL: return 0.2f;
-			case WOODPLANKS_MATERIAL: return 0.2f;
-			case MARBLE_MATERIAL: return 0.1f;
-			case SLATE_MATERIAL: return 0.1f;
-			case CONCRETE_MATERIAL: return 0.15f;
-			case GRANITE_MATERIAL: return 0.1f;
-			case BRICK_MATERIAL: return 0.125f;
-			case PEBBLE_MATERIAL: return 0.1f;
-			case RUST_MATERIAL: return 0.1f;
-			case DIAMONDPLATE_MATERIAL: return 0.2f;
-			case FOIL_MATERIAL: return 0.1f;
-			case METAL_MATERIAL: return 0.2f;
-			case GRASS_MATERIAL: return 0.15f;
-			case SAND_MATERIAL: return 0.1f;
-			case FABRIC_MATERIAL: return 0.15f;
-			case ICE_MATERIAL: return 0.1f;
-			case COBBLESTONE_MATERIAL: return 0.2f;
+		float MaterialGenerator::getTiling(PartMaterial material) {
+			switch (material) {
+			case ASPHALT_MATERIAL:			return 1.0f;
+			case BASALT_MATERIAL:			return 1.0f;
+			case BRICK_MATERIAL:			return 0.125f;
+			case CARDBOARD_MATERIAL:		return 1.0f;
+			case CARPET_MATERIAL:			return 1.0f;
+			case CERAMIC_TILES_MATERIAL:	return 1.0f;
+			case CLAY_ROOF_TILES_MATERIAL:	return 1.0f;
+			case COBBLESTONE_MATERIAL:		return 0.2f;
+			case CONCRETE_MATERIAL:			return 0.15f;
+			case CRACKED_LAVA_MATERIAL:		return 1.0f;
+			case DIAMONDPLATE_MATERIAL:		return 0.2f;
+			case FABRIC_MATERIAL:			return 0.15f;
+			case FOIL_MATERIAL:				return 0.1f;
+			case GLACIER_MATERIAL:			return 1.0f;
+			case GRANITE_MATERIAL:			return 0.1f;
+			case GRASS_MATERIAL:			return 0.15f;
+			case GROUND_MATERIAL:			return 1.0f;
+			case ICE_MATERIAL:				return 0.1f;
+			case LEAFY_GRASS_MATERIAL:		return 1.0f;
+			case LEATHER_MATERIAL:			return 1.0f;
+			case LIMESTONE_MATERIAL:		return 1.0f;
+			case MARBLE_MATERIAL:			return 0.1f;
+			case METAL_MATERIAL:			return 1.0f;
+			case MUD_MATERIAL:				return 1.0f;
+			case PAVEMENT_MATERIAL:			return 1.0f;
+			case PEBBLE_MATERIAL:			return 0.1f;
+			case PLASTER_MATERIAL:			return 1.0f;
+			case PLASTIC_MATERIAL:			return 1.0f;
+			case ROCK_MATERIAL:				return 1.0f;
+			case ROOF_SHINGLES_MATERIAL:	return 1.0f;
+			case RUBBER_MATERIAL:			return 1.0f;
+			case RUST_MATERIAL:				return 0.1f;
+			case SALT_MATERIAL:				return 1.0f;
+			case SAND_MATERIAL:				return 0.1f;
+			case SANDSTONE_MATERIAL:		return 1.0f;
+			case SLATE_MATERIAL:			return 0.1f;
+			case SNOW_MATERIAL:				return 1.0f;
+			case WOOD_MATERIAL:				return 0.2f;
+			case WOODPLANKS_MATERIAL:		return 0.2f;
+
 			default:
-				RBXASSERT(0); // You missed new material
+				RBXASSERT(0); // Missed a new material, or it isn't valid
 				return 1.0f;
 			}
 		}

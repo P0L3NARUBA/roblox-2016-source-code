@@ -32,7 +32,7 @@ void print_float (std::stringstream& out, float f)
 	char tmp[64];
 	sprintf(tmp, "%.7g", f);
 
-	char* posE = nullptr;
+	char* posE = NULL;
 	posE = strchr(tmp, 'e');
 	if (!posE)
 		posE = strchr(tmp, 'E');
@@ -41,7 +41,7 @@ void print_float (std::stringstream& out, float f)
 	// While gcc would print something like 1.0e+07, MSVC will print 1.0e+007 -
 	// only for exponential notation, it seems, will add one extra useless zero. Let's try to remove
 	// that so compiler output matches.
-	if (posE != nullptr)
+	if (posE != NULL)
 	{
 		if((posE[1] == '+' || posE[1] == '-') && posE[2] == '0')
 		{
@@ -58,7 +58,7 @@ void print_float (std::stringstream& out, float f)
 	out << tmp;
 
 	// need to append ".0"?
-	if (!strchr(tmp,'.') && (posE == nullptr))
+	if (!strchr(tmp,'.') && (posE == NULL))
 		out << ".0";
 }
 
@@ -340,7 +340,7 @@ TGlslOutputTraverser::TGlslOutputTraverser(TInfoSink& i, std::vector<GlslFunctio
 , m_UsePrecision(Hlsl2Glsl_VersionUsesPrecision(version))
 , m_ArrayInitWorkaround(!!(options & ETranslateOpEmitGLSL120ArrayInitWorkaround))
 {
-	m_LastLineOutput.file = nullptr;
+	m_LastLineOutput.file = NULL;
 	m_LastLineOutput.line = -1;
 	visitSymbol = traverseSymbol;
 	visitConstant = traverseConstant;
@@ -353,7 +353,7 @@ TGlslOutputTraverser::TGlslOutputTraverser(TInfoSink& i, std::vector<GlslFunctio
 	visitDeclaration = traverseDeclaration;
 	
 	TSourceLoc oneSourceLoc;
-	oneSourceLoc.file=nullptr;
+	oneSourceLoc.file=NULL;
 	oneSourceLoc.line=1;
 
 	// Add a fake "global" function for declarations & initializers happening
@@ -398,7 +398,7 @@ void TGlslOutputTraverser::traverseArrayDeclarationWithInit(TIntermDeclaration* 
 		TIntermSymbol* sym = assign->getLeft()->getAsSymbolNode();
 		TNodeArray& init = assign->getRight()->getAsAggregate()->getNodes();
 		
-		writeType(*out, symbol_type, nullptr, this->m_UsePrecision ? decl->getPrecision() : EbpUndefined);
+		writeType(*out, symbol_type, NULL, this->m_UsePrecision ? decl->getPrecision() : EbpUndefined);
 		(*out) << " " << sym->getSymbol() << "[" << type.getArraySize() << "]";
 		current->endStatement();
 
@@ -419,7 +419,7 @@ void TGlslOutputTraverser::traverseArrayDeclarationWithInit(TIntermDeclaration* 
 
 			bool diffTypes = (symbol_type != init_type);
 			if (diffTypes) {
-				writeType (*out, symbol_type, nullptr, EbpUndefined);
+				writeType (*out, symbol_type, NULL, EbpUndefined);
 				(*out) << "(";
 			}
 			init[i]->traverse(this);
@@ -455,7 +455,7 @@ void TGlslOutputTraverser::traverseArrayDeclarationWithInit(TIntermDeclaration* 
 		if (type.getBasicType() == EbtStruct)
 			(*out) << type.getTypeName();
 		else
-			writeType(*out, symbol_type, nullptr, this->m_UsePrecision ? decl->getPrecision() : EbpUndefined);
+			writeType(*out, symbol_type, NULL, this->m_UsePrecision ? decl->getPrecision() : EbpUndefined);
 		
 		if (type.isArray())
 			(*out) << "[" << type.getArraySize() << "]";
@@ -506,7 +506,7 @@ bool TGlslOutputTraverser::traverseDeclaration(bool preVisit, TIntermDeclaration
 	else
 	{
 		EGlslSymbolType symbol_type = translateType(decl->getTypePointer());
-		writeType(out, symbol_type, nullptr, goit->m_UsePrecision ? decl->getPrecision() : EbpUndefined);
+		writeType(out, symbol_type, NULL, goit->m_UsePrecision ? decl->getPrecision() : EbpUndefined);
 	}
 
 	out << " ";
@@ -1895,7 +1895,7 @@ GlslStruct *TGlslOutputTraverser::createStructFromType (TType *type)
                                              EqtNone,
                                              prec,
                                              it->type->isArray() ? it->type->getArraySize() : 0,
-                                            (it->type->getBasicType() == EbtStruct) ? createStructFromType(it->type) : nullptr,
+                                            (it->type->getBasicType() == EbtStruct) ? createStructFromType(it->type) : NULL,
                                              structName);
          s->addMember(*m);
 		 delete m;

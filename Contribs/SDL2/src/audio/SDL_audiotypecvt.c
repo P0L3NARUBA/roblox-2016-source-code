@@ -2286,7 +2286,7 @@ const SDL_AudioTypeFilters sdl_audio_type_filters[] =
     { AUDIO_F32MSB, AUDIO_S32MSB, SDL_Convert_F32MSB_to_S32MSB },
     { AUDIO_F32MSB, AUDIO_F32LSB, SDL_Convert_F32MSB_to_F32LSB },
 #endif  /* !NO_CONVERTERS */
-    { 0, 0, nullptr }
+    { 0, 0, NULL }
 };
 
 
@@ -16005,7 +16005,7 @@ const SDL_AudioRateFilters sdl_audio_rate_filters[] =
     { AUDIO_F32MSB, 8, 1, 4, SDL_Upsample_F32MSB_8c_x4 },
 #endif  /* !LESS_RESAMPLERS */
 #endif  /* !NO_RESAMPLERS */
-    { 0, 0, 0, 0, nullptr }
+    { 0, 0, 0, 0, NULL }
 };
 
 /* 390 converters generated. */

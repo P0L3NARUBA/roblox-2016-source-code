@@ -39,12 +39,12 @@ char ZLIB_INTERNAL *gz_strwinerror (error)
     DWORD lasterr = GetLastError();
     DWORD chars = FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM
         | FORMAT_MESSAGE_ALLOCATE_BUFFER,
-        nullptr,
+        NULL,
         error,
         0, /* Default language */
         (LPVOID)&msgbuf,
         0,
-        nullptr);
+        NULL);
     if (chars != 0) {
         /* If there is an \r\n appended, zap it.  */
         if (chars >= 2
@@ -82,7 +82,7 @@ local void gz_reset(state)
         state->how = LOOK;          /* look for gzip header */
     }
     state->seek = 0;                /* no seek request pending */
-    gz_error(state, Z_OK, nullptr);    /* clear error */
+    gz_error(state, Z_OK, NULL);    /* clear error */
     state->x.pos = 0;               /* no uncompressed data yet */
     state->strm.avail_in = 0;       /* no input data yet */
 }
@@ -104,16 +104,16 @@ local gzFile gz_open(path, fd, mode)
 #endif
 
     /* check input */
-    if (path == nullptr)
-        return nullptr;
+    if (path == NULL)
+        return NULL;
 
     /* allocate gzFile structure to return */
     state = (gz_statep)malloc(sizeof(gz_state));
-    if (state == nullptr)
-        return nullptr;
+    if (state == NULL)
+        return NULL;
     state->size = 0;            /* no buffers allocated yet */
     state->want = GZBUFSIZE;    /* requested buffer size */
-    state->msg = nullptr;          /* no error message yet */
+    state->msg = NULL;          /* no error message yet */
 
     /* interpret mode */
     state->mode = GZ_NONE;
@@ -138,7 +138,7 @@ local gzFile gz_open(path, fd, mode)
 #endif
             case '+':       /* can't read and write at the same time */
                 free(state);
-                return nullptr;
+                return NULL;
             case 'b':       /* ignore -- will request binary anyway */
                 break;
 #ifdef O_CLOEXEC
@@ -175,14 +175,14 @@ local gzFile gz_open(path, fd, mode)
     /* must provide an "r", "w", or "a" */
     if (state->mode == GZ_NONE) {
         free(state);
-        return nullptr;
+        return NULL;
     }
 
     /* can't force transparent read */
     if (state->mode == GZ_READ) {
         if (state->direct) {
             free(state);
-            return nullptr;
+            return NULL;
         }
         state->direct = 1;      /* for empty file */
     }
@@ -190,7 +190,7 @@ local gzFile gz_open(path, fd, mode)
     /* save the path name for error messages */
 #ifdef _WIN32
     if (fd == -2) {
-        len = wcstombs(nullptr, path, 0);
+        len = wcstombs(NULL, path, 0);
         if (len == (size_t)-1)
             len = 0;
     }
@@ -198,9 +198,9 @@ local gzFile gz_open(path, fd, mode)
 #endif
         len = strlen((const char *)path);
     state->path = (char *)malloc(len + 1);
-    if (state->path == nullptr) {
+    if (state->path == NULL) {
         free(state);
-        return nullptr;
+        return NULL;
     }
 #ifdef _WIN32
     if (fd == -2)
@@ -246,7 +246,7 @@ local gzFile gz_open(path, fd, mode)
     if (state->fd == -1) {
         free(state->path);
         free(state);
-        return nullptr;
+        return NULL;
     }
     if (state->mode == GZ_APPEND)
         state->mode = GZ_WRITE;         /* simplify later checks */
@@ -288,8 +288,8 @@ gzFile ZEXPORT gzdopen(fd, mode)
     char *path;         /* identifier for error messages */
     gzFile gz;
 
-    if (fd == -1 || (path = (char *)malloc(7 + 3 * sizeof(int))) == nullptr)
-        return nullptr;
+    if (fd == -1 || (path = (char *)malloc(7 + 3 * sizeof(int))) == NULL)
+        return NULL;
 #if !defined(NO_snprintf) && !defined(NO_vsnprintf)
     snprintf(path, 7 + 3 * sizeof(int), "<fd:%d>", fd); /* for debugging */
 #else
@@ -318,7 +318,7 @@ int ZEXPORT gzbuffer(file, size)
     gz_statep state;
 
     /* get internal structure and check integrity */
-    if (file == nullptr)
+    if (file == NULL)
         return -1;
     state = (gz_statep)file;
     if (state->mode != GZ_READ && state->mode != GZ_WRITE)
@@ -342,7 +342,7 @@ int ZEXPORT gzrewind(file)
     gz_statep state;
 
     /* get internal structure */
-    if (file == nullptr)
+    if (file == NULL)
         return -1;
     state = (gz_statep)file;
 
@@ -369,7 +369,7 @@ z_off64_t ZEXPORT gzseek64(file, offset, whence)
     gz_statep state;
 
     /* get internal structure and check integrity */
-    if (file == nullptr)
+    if (file == NULL)
         return -1;
     state = (gz_statep)file;
     if (state->mode != GZ_READ && state->mode != GZ_WRITE)
@@ -400,7 +400,7 @@ z_off64_t ZEXPORT gzseek64(file, offset, whence)
         state->eof = 0;
         state->past = 0;
         state->seek = 0;
-        gz_error(state, Z_OK, nullptr);
+        gz_error(state, Z_OK, NULL);
         state->strm.avail_in = 0;
         state->x.pos += offset;
         return state->x.pos;
@@ -454,7 +454,7 @@ z_off64_t ZEXPORT gztell64(file)
     gz_statep state;
 
     /* get internal structure and check integrity */
-    if (file == nullptr)
+    if (file == NULL)
         return -1;
     state = (gz_statep)file;
     if (state->mode != GZ_READ && state->mode != GZ_WRITE)
@@ -482,7 +482,7 @@ z_off64_t ZEXPORT gzoffset64(file)
     gz_statep state;
 
     /* get internal structure and check integrity */
-    if (file == nullptr)
+    if (file == NULL)
         return -1;
     state = (gz_statep)file;
     if (state->mode != GZ_READ && state->mode != GZ_WRITE)
@@ -514,7 +514,7 @@ int ZEXPORT gzeof(file)
     gz_statep state;
 
     /* get internal structure and check integrity */
-    if (file == nullptr)
+    if (file == NULL)
         return 0;
     state = (gz_statep)file;
     if (state->mode != GZ_READ && state->mode != GZ_WRITE)
@@ -532,17 +532,17 @@ const char * ZEXPORT gzerror(file, errnum)
     gz_statep state;
 
     /* get internal structure and check integrity */
-    if (file == nullptr)
-        return nullptr;
+    if (file == NULL)
+        return NULL;
     state = (gz_statep)file;
     if (state->mode != GZ_READ && state->mode != GZ_WRITE)
-        return nullptr;
+        return NULL;
 
     /* return error information */
-    if (errnum != nullptr)
+    if (errnum != NULL)
         *errnum = state->err;
     return state->err == Z_MEM_ERROR ? "out of memory" :
-                                       (state->msg == nullptr ? "" : state->msg);
+                                       (state->msg == NULL ? "" : state->msg);
 }
 
 /* -- see zlib.h -- */
@@ -552,7 +552,7 @@ void ZEXPORT gzclearerr(file)
     gz_statep state;
 
     /* get internal structure and check integrity */
-    if (file == nullptr)
+    if (file == NULL)
         return;
     state = (gz_statep)file;
     if (state->mode != GZ_READ && state->mode != GZ_WRITE)
@@ -563,7 +563,7 @@ void ZEXPORT gzclearerr(file)
         state->eof = 0;
         state->past = 0;
     }
-    gz_error(state, Z_OK, nullptr);
+    gz_error(state, Z_OK, NULL);
 }
 
 /* Create an error message in allocated memory and set state->err and
@@ -578,10 +578,10 @@ void ZLIB_INTERNAL gz_error(state, err, msg)
     const char *msg;
 {
     /* free previously allocated message and clear */
-    if (state->msg != nullptr) {
+    if (state->msg != NULL) {
         if (state->err != Z_MEM_ERROR)
             free(state->msg);
-        state->msg = nullptr;
+        state->msg = NULL;
     }
 
     /* if fatal, set state->x.have to 0 so that the gzgetc() macro fails */
@@ -590,7 +590,7 @@ void ZLIB_INTERNAL gz_error(state, err, msg)
 
     /* set error code, and if no message, then done */
     state->err = err;
-    if (msg == nullptr)
+    if (msg == NULL)
         return;
 
     /* for an out of memory error, return literal string when requested */
@@ -599,7 +599,7 @@ void ZLIB_INTERNAL gz_error(state, err, msg)
 
     /* construct error message with path */
     if ((state->msg = (char *)malloc(strlen(state->path) + strlen(msg) + 3)) ==
-            nullptr) {
+            NULL) {
         state->err = Z_MEM_ERROR;
         return;
     }

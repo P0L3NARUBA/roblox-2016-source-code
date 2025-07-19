@@ -32,7 +32,7 @@ EnlargedUnsignedDivide (
     )
 {
         // return remainder if necessary
-        if (Remainder != nullptr)
+        if (Remainder != NULL)
                 *Remainder = (ULONG)(LLtoU64(Dividend) % Divisor);
         return (ULONG)(LLtoU64(Dividend) / Divisor);
 }
@@ -66,7 +66,7 @@ label:
 // --- CAMEvent -----------------------
 CAMEvent::CAMEvent(BOOL fManualReset)
 {
-    m_hEvent = CreateEvent(nullptr, fManualReset, FALSE, nullptr);
+    m_hEvent = CreateEvent(NULL, fManualReset, FALSE, NULL);
 }
 
 CAMEvent::~CAMEvent()
@@ -102,7 +102,7 @@ BOOL CAMMsgEvent::WaitMsg(DWORD dwTimeout)
         dwWait = MsgWaitForMultipleObjects(1,&m_hEvent,FALSE, dwWaitTime, QS_SENDMESSAGE);
         if (dwWait == WAIT_OBJECT_0 + 1) {
 	    MSG Message;
-            PeekMessage(&Message,nullptr,0,0,PM_NOREMOVE);
+            PeekMessage(&Message,NULL,0,0,PM_NOREMOVE);
 
 	    // If we have an explicit length of time to wait calculate
 	    // the next wake up point - which might be now.
@@ -130,7 +130,7 @@ BOOL CAMMsgEvent::WaitMsg(DWORD dwTimeout)
 CAMThread::CAMThread()
     : m_EventSend(TRUE)     // must be manual-reset for CheckRequest()
 {
-    m_hThread = nullptr;
+    m_hThread = NULL;
 }
 
 CAMThread::~CAMThread() {
@@ -171,7 +171,7 @@ CAMThread::Create()
     }
 
     m_hThread = CreateThread(
-		    nullptr,
+		    NULL,
 		    0,
 		    CAMThread::InitialThreadProc,
 		    this,
@@ -291,7 +291,7 @@ HRESULT CAMThread::CoInitializeHelper()
 // queue when the thread exited
 CMsgThread::~CMsgThread()
 {
-    if (m_hThread != nullptr) {
+    if (m_hThread != NULL) {
         WaitForSingleObject(m_hThread, INFINITE);
         EXECUTE_ASSERT(CloseHandle(m_hThread));
     }
@@ -303,7 +303,7 @@ CMsgThread::~CMsgThread()
     }
     m_ThreadQueue.RemoveAll();
 
-    if (m_hSem != nullptr) {
+    if (m_hSem != NULL) {
         EXECUTE_ASSERT(CloseHandle(m_hSem));
     }
 }
@@ -312,14 +312,14 @@ BOOL
 CMsgThread::CreateThread(
     )
 {
-    m_hSem = CreateSemaphore(nullptr, 0, 0x7FFFFFFF, nullptr);
-    if (m_hSem == nullptr) {
+    m_hSem = CreateSemaphore(NULL, 0, 0x7FFFFFFF, NULL);
+    if (m_hSem == NULL) {
         return FALSE;
     }
 
-    m_hThread = ::CreateThread(nullptr, 0, DefaultThreadProc,
+    m_hThread = ::CreateThread(NULL, 0, DefaultThreadProc,
 			       (LPVOID)this, 0, &m_ThreadId);
-    return m_hThread != nullptr;
+    return m_hThread != NULL;
 }
 
 
@@ -338,7 +338,7 @@ CMsgThread::DefaultThreadProc(
     LRESULT lResult;
 
     // !!!
-    CoInitialize(nullptr);
+    CoInitialize(NULL);
 
     // allow a derived class to handle thread startup
     lpThis->OnThreadInit();
@@ -361,14 +361,14 @@ CMsgThread::DefaultThreadProc(
 void
 CMsgThread::GetThreadMsg(CMsg *msg)
 {
-    CMsg * pmsg = nullptr;
+    CMsg * pmsg = NULL;
 
     // keep trying until a message appears
     while (TRUE) {
         {
             CAutoLock lck(&m_Lock);
             pmsg = m_ThreadQueue.RemoveHead();
-            if (pmsg == nullptr) {
+            if (pmsg == NULL) {
                 m_lWaiting++;
             } else {
                 break;
@@ -488,7 +488,7 @@ int WINAPIV wsprintfWInternal(LPWSTR wszOut, LPCWSTR pszFmt, ...)
 
     va_list va;
     va_start(va, pszFmt);
-    WideCharToMultiByte(GetACP(), 0, pszFmt, -1, fmt, 256, nullptr, nullptr);
+    WideCharToMultiByte(GetACP(), 0, pszFmt, -1, fmt, 256, NULL, NULL);
     i = wvsprintfA(ach, fmt, va);
     va_end(va);
 
@@ -577,7 +577,7 @@ void * memchrInternal(const void *pv, int c, size_t sz)
 	    return (void *) pb;
 	pb++;
     }
-    return nullptr;
+    return NULL;
 }
 #endif
 
@@ -785,7 +785,7 @@ LONGLONG WINAPI llMulDiv(LONGLONG a, LONGLONG b, LONGLONG c, LONGLONG d)
         uliResult.LowPart = EnlargedUnsignedDivide(
                                  p[0],
                                  dwDivisor,
-                                 nullptr);
+                                 NULL);
 #endif
         return bSign ? -(LONGLONG)uliResult.QuadPart :
                         (LONGLONG)uliResult.QuadPart;
@@ -929,7 +929,7 @@ LONGLONG WINAPI Int64x32Div32(LONGLONG a, LONG b, LONG c, LONG d)
     uliResult.LowPart = EnlargedUnsignedDivide(
                              p0,
                              dwDivisor,
-                             nullptr);
+                             NULL);
     return bSign ? -(LONGLONG)uliResult.QuadPart :
                     (LONGLONG)uliResult.QuadPart;
 }
@@ -1034,7 +1034,7 @@ STDAPI WriteBSTR(BSTR *pstrDest, LPCWSTR szSrc)
 
 STDAPI FreeBSTR(BSTR* pstr)
 {
-    if( *pstr == nullptr ) return S_FALSE;
+    if( *pstr == NULL ) return S_FALSE;
     SysFreeString( *pstr );
     return NOERROR;
 }
@@ -1043,7 +1043,7 @@ STDAPI FreeBSTR(BSTR* pstr)
 // Return a wide string - allocating memory for it
 // Returns:
 //    S_OK          - no error
-//    E_POINTER     - ppszReturn == nullptr
+//    E_POINTER     - ppszReturn == NULL
 //    E_OUTOFMEMORY - can't allocate memory for returned string
 STDAPI AMGetWideString(LPCWSTR psz, LPWSTR *ppszReturn)
 {
@@ -1051,7 +1051,7 @@ STDAPI AMGetWideString(LPCWSTR psz, LPWSTR *ppszReturn)
     ValidateReadWritePtr(ppszReturn, sizeof(LPWSTR));
     DWORD nameLen = sizeof(WCHAR) * (lstrlenW(psz)+1);
     *ppszReturn = (LPWSTR)CoTaskMemAlloc(nameLen);
-    if (*ppszReturn == nullptr) {
+    if (*ppszReturn == NULL) {
        return E_OUTOFMEMORY;
     }
     CopyMemory(*ppszReturn, psz, nameLen);
@@ -1082,7 +1082,7 @@ DWORD WINAPI WaitDispatchingMessages(
         dwStart = GetTickCount();
     }
     for (; ; ) {
-        DWORD nCount = nullptr != hEvent ? 2 : 1;
+        DWORD nCount = NULL != hEvent ? 2 : 1;
 
         //  Minimize the chance of actually dispatching any messages
         //  by seeing if we can lock immediately.
@@ -1100,19 +1100,19 @@ DWORD WINAPI WaitDispatchingMessages(
                              hObjects,
                              FALSE,
                              dwTimeOut,
-                             hwnd == nullptr ? QS_SENDMESSAGE :
+                             hwnd == NULL ? QS_SENDMESSAGE :
                                             QS_SENDMESSAGE + QS_POSTMESSAGE);
         if (dwResult == WAIT_OBJECT_0 + nCount ||
             dwResult == WAIT_TIMEOUT && dwTimeOut != dwWait) {
             MSG msg;
-            if (hwnd != nullptr) {
+            if (hwnd != NULL) {
                 while (PeekMessage(&msg, hwnd, uMsg, uMsg, PM_REMOVE)) {
                     DispatchMessage(&msg);
                 }
             }
             // Do this anyway - the previous peek doesn't flush out the
             // messages
-            PeekMessage(&msg, nullptr, 0, 0, PM_NOREMOVE);
+            PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE);
 
             if (dwWait != INFINITE && dwWait != 0) {
                 DWORD dwNow = GetTickCount();
@@ -1172,7 +1172,7 @@ HRESULT AmGetLastErrorToHResult()
 
 IUnknown* QzAtlComPtrAssign(IUnknown** pp, IUnknown* lp)
 {
-    if (lp != nullptr)
+    if (lp != NULL)
         lp->AddRef();
     if (*pp)
         (*pp)->Release();

@@ -199,7 +199,7 @@ SDL_BlendFillRect(SDL_Surface * dst, const SDL_Rect * rect,
     SDL_Rect clipped;
 
     if (!dst) {
-        return SDL_SetError("Passed nullptr destination surface");
+        return SDL_SetError("Passed NULL destination surface");
     }
 
     /* This function doesn't work on surfaces < 8 bpp */
@@ -207,7 +207,7 @@ SDL_BlendFillRect(SDL_Surface * dst, const SDL_Rect * rect,
         return SDL_SetError("SDL_BlendFillRect(): Unsupported surface format");
     }
 
-    /* If 'rect' == nullptr, then fill the whole surface */
+    /* If 'rect' == NULL, then fill the whole surface */
     if (rect) {
         /* Perform clipping */
         if (!SDL_IntersectRect(rect, &dst->clip_rect, &clipped)) {
@@ -266,11 +266,11 @@ SDL_BlendFillRects(SDL_Surface * dst, const SDL_Rect * rects, int count,
     SDL_Rect rect;
     int i;
     int (*func)(SDL_Surface * dst, const SDL_Rect * rect,
-                SDL_BlendMode blendMode, Uint8 r, Uint8 g, Uint8 b, Uint8 a) = nullptr;
+                SDL_BlendMode blendMode, Uint8 r, Uint8 g, Uint8 b, Uint8 a) = NULL;
     int status = 0;
 
     if (!dst) {
-        return SDL_SetError("Passed nullptr destination surface");
+        return SDL_SetError("Passed NULL destination surface");
     }
 
     /* This function doesn't work on surfaces < 8 bpp */

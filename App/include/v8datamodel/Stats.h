@@ -82,7 +82,7 @@ namespace RBX {
 		protected:
 			bool askAddChild(const Instance* instance) const
 			{
-				return Instance::fastDynamicCast<Item>(instance)!=nullptr;
+				return Instance::fastDynamicCast<Item>(instance)!=NULL;
 			}
 
 		};
@@ -189,7 +189,7 @@ namespace RBX {
 		protected:
 			bool askAddChild(const Instance* instance) const
 			{
-				return Instance::fastDynamicCast<Item>(instance)!=nullptr;
+				return Instance::fastDynamicCast<Item>(instance)!=NULL;
 			}
 			/*override*/ void onServiceProvider(ServiceProvider* oldProvider, ServiceProvider* newProvider);
 

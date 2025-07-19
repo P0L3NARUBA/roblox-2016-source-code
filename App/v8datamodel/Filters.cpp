@@ -32,7 +32,7 @@ HitTestFilter::Result FilterInvisibleNonColliding::filterResult(const RBX::Primi
 	if (FFlag::UseFixedTransparencyNonCollidableBehaviour)
 	{
 		const ClickDetector *cd = (const_cast<PartInstance*>(testPart))->findFirstChildOfType<ClickDetector>();
-		if (cd == nullptr && (testPart->getTransparencyXml() > .95f) && (!testPart->getCanCollide()) )
+		if (cd == NULL && (testPart->getTransparencyXml() > .95f) && (!testPart->getCanCollide()) )
 			return HitTestFilter::IGNORE_PRIM;
 	}
 	else
@@ -65,7 +65,7 @@ PartByLocalCharacter::PartByLocalCharacter(Instance* root)
 
 HitTestFilter::Result PartByLocalCharacter::filterResult(const Primitive* testMe) const
 {
-	if ((character != nullptr) && (head != nullptr)) 
+	if ((character != NULL) && (head != NULL)) 
 	{
 		const PartInstance* testPart = PartInstance::fromConstPrimitive(testMe);
 
@@ -150,7 +150,7 @@ HitTestFilter::Result FilterCharacterOcclusion::filterResult(const RBX::Primitiv
 	if (	((testMe->getCoordinateFrame().translation.y < headHeight) && !testMe->hasAutoJoints() && testMe->getConstAssembly() && testMe->getConstAssembly()->getAssemblyIsMovingState())
 		||	(!testPart->getCanCollide())
 		||	(testPart->getTransparencyXml() > .95f)
-		||  (Humanoid::constHumanoidFromBodyPart(testPart) != nullptr)
+		||  (Humanoid::constHumanoidFromBodyPart(testPart) != NULL)
 		||  (testPart->getDragging())
 		)
 	{
@@ -164,7 +164,7 @@ HitTestFilter::Result FilterHumanoidParts::filterResult(const RBX::Primitive* te
 {
 	const PartInstance* testPart = PartInstance::fromConstPrimitive(testMe);
 
-	return Humanoid::constHumanoidFromBodyPart(testPart) != nullptr ?
+	return Humanoid::constHumanoidFromBodyPart(testPart) != NULL ?
 			HitTestFilter::IGNORE_PRIM : HitTestFilter::INCLUDE_PRIM;
 }
 
@@ -178,7 +178,7 @@ HitTestFilter::Result FilterHumanoidNameOcclusion::filterResult(const RBX::Primi
 	const PartInstance* testPart = PartInstance::fromConstPrimitive(testMe);
 	const Humanoid *pHumanoid = Humanoid::constHumanoidFromDescendant(testPart);
 
-	if (pHumanoid != nullptr) 
+	if (pHumanoid != NULL) 
 	{
 		if (pHumanoid == inst.get() && testPart == pHumanoid->getHeadSlow())
 		{

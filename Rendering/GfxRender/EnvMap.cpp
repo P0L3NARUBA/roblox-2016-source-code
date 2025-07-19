@@ -17,14 +17,16 @@
 
 static const float MATH_PI = 3.14159265359f;
 
-static const int outdoorCubemapSize = 1024;
-static const int indoorCubemapSize = 512;
+static const unsigned int outdoorCubemapSize = 1024u;
+static const unsigned int indoorCubemapSize = 512u;
+
+static const unsigned int indoorCubemapCount = 4u;
+static const unsigned int indoorCubemapTextureCount = 6u * indoorCubemapCount;
 
 namespace RBX {
 	namespace Graphics {
 
-		EnvMap::EnvMap(VisualEngine* ve) : Resource(ve->getDevice())
-		{
+		EnvMap::EnvMap(VisualEngine* ve) : Resource(ve->getDevice()) {
 			dirtyState = VeryDirty;
 			updateStep = 0;
 			visualEngine = ve;
@@ -33,24 +35,24 @@ namespace RBX {
 			envmapLastTimeOfDay = 0;
 			setDebugName("Global envmap");
 
-			outdoorTexture = device->createTexture(Texture::Type_Cube, Texture::Format_BC6UF, outdoorCubemapSize, outdoorCubemapSize, 1, 6, Texture::Usage_Renderbuffer);
-			indoorATexture = device->createTexture(Texture::Type_Cube, Texture::Format_RGBA16F, indoorCubemapSize, indoorCubemapSize, 1, 6, Texture::Usage_Renderbuffer);
-			indoorBTexture = device->createTexture(Texture::Type_Cube, Texture::Format_RGBA16F, indoorCubemapSize, indoorCubemapSize, 1, 6, Texture::Usage_Renderbuffer);
+			outdoorTexture = device->createTexture(Texture::Type_Cube, Texture::Format_R11G11B10f, outdoorCubemapSize, outdoorCubemapSize, 1u, 6u, Texture::Usage_Renderbuffer);
+			indoorTextures = device->createTexture(Texture::Type_Cube_Array, Texture::Format_RGBA16f, indoorCubemapSize, indoorCubemapSize, indoorCubemapCount, 6u, Texture::Usage_Renderbuffer);
 
-			for (int i = 0; i < 6; ++i) {
-				shared_ptr<Renderbuffer> outrb = outdoorTexture.getTexture()->getRenderbuffer(i, 0);
-				shared_ptr<Renderbuffer> inArb = indoorATexture.getTexture()->getRenderbuffer(i, 0);
-				shared_ptr<Renderbuffer> inBrb = indoorBTexture.getTexture()->getRenderbuffer(i, 0);
+			for (unsigned int i = 0u; i < 6u; ++i) {
+				shared_ptr<Renderbuffer> outrb = outdoorTexture.getTexture()->getRenderbuffer(i, 0u);
 
 				outFaces[i] = device->createFramebuffer(outrb);
-				inAFaces[i] = device->createFramebuffer(inArb);
-				inBFaces[i] = device->createFramebuffer(inBrb);
 			}
+
+			/*for (unsigned int i = 0u; i < indoorCubemapTextureCount; ++i) {
+				shared_ptr<Renderbuffer> inrb = indoorTextures.getTexture()->getRenderbuffer(i, 0u);
+
+				inFaces[i] = device->createFramebuffer(inrb);
+			}*/
 		}
 
 		EnvMap::~EnvMap()
 		{
-
 		}
 
 		static Matrix4 lookat(Vector3 dir, Vector3 up, float rh = 1.0f)
@@ -68,15 +70,12 @@ namespace RBX {
 		static const double kEnvmapRealtimePeriod = 30;
 
 
-		void EnvMap::update(DeviceContext* context, double gameTime)
-		{
+		void EnvMap::update(DeviceContext* context, double gameTime) {
 			// prepare the envmap
-			if (outdoorTexture.getTexture())
-			{
+			if (outdoorTexture.getTexture()) {
 				double realTime = RBX::Time::nowFastSec();
 
-				if (fabs(envmapLastTimeOfDay - gameTime) > kEnvmapGameTimePeriod || fabs(envmapLastRealTime - realTime) > kEnvmapRealtimePeriod || visualEngine->getSettings()->getEagerBulkExecution())
-				{
+				if (visualEngine->getSettings()->getEagerBulkExecution() || fabs(envmapLastTimeOfDay - gameTime) > kEnvmapGameTimePeriod || fabs(envmapLastRealTime - realTime) > kEnvmapRealtimePeriod) {
 					envmapLastTimeOfDay = gameTime;
 					envmapLastRealTime = realTime;
 
@@ -157,16 +156,16 @@ namespace RBX {
 			}
 			*/
 
-			if (!outdoorTexture.getTexture())
-				return;
+			/*if (!outdoorTexture.getTexture())
+				return;*/
 
 			for (int i = 0; i < 6; ++i)
-				renderFace(context, i);
+				renderOutdoorFace(context, i);
 
 			//texture.getTexture()->generateMipmaps();
 		}
 
-		void EnvMap::renderFace(DeviceContext* context, int face)
+		void EnvMap::renderOutdoorFace(DeviceContext* context, int face)
 		{
 			PIX_SCOPE(context, "EnvMap/update", 0);
 

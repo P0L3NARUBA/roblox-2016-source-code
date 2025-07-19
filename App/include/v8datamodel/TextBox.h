@@ -125,7 +125,7 @@ namespace RBX
 		void captureFocus();
 		void externalReleaseFocus(const char* externalReleaseText, bool enterPressed, const shared_ptr<InputObject>& inputThatCausedFocusLoss);
 		void releaseFocusLua();
-		void releaseFocus(bool enterPressed, const shared_ptr<InputObject>& inputThatCausedFocusLoss, Instance* contextLocalCharacter=nullptr );
+		void releaseFocus(bool enterPressed, const shared_ptr<InputObject>& inputThatCausedFocusLoss, Instance* contextLocalCharacter=NULL );
 		bool getFocused();
 
 		void onPropertyChanged(const Reflection::PropertyDescriptor& descriptor);

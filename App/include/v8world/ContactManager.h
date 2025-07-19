@@ -80,8 +80,8 @@ namespace RBX {
 								bool& stopped) const;
 
 		Primitive* getFastHit(	const RbxRay& worldRay,						// implies distance as well
-								const G3D::Array<const Primitive*>& ignorePrim,	// set to nullptr to not use	
-								const HitTestFilter* filter,				// set to nullptr to not use
+								const G3D::Array<const Primitive*>& ignorePrim,	// set to NULL to not use	
+								const HitTestFilter* filter,				// set to NULL to not use
 								Vector3& hitPointWorld,
 								bool& stopped,
 								bool terrainCellsAreCubes,
@@ -123,10 +123,10 @@ namespace RBX {
 		//
 		ContactManagerSpatialHash* getSpatialHash() {return spatialHash;}
 
-		// Returns nullptr on no hit
+		// Returns NULL on no hit
 		Primitive* getHit(	const RbxRay& worldRay, 
-							const std::vector<const Primitive*>* ignorePrim,		// set to nullptr to not use	
-							const HitTestFilter* filter,							// set to nullptr to not use
+							const std::vector<const Primitive*>* ignorePrim,		// set to NULL to not use	
+							const HitTestFilter* filter,							// set to NULL to not use
                             Vector3& hitPointWorld,
 							bool terrainCellsAreCubes = false,
                             bool ignoreWater = false,
@@ -193,8 +193,8 @@ namespace RBX {
 		/////////////////////////////////////////////
 		// LEGACY
 		Primitive* getHitLegacy(	const RbxRay& originDirection, 
-									const Primitive* ignorePrim,			// set to nullptr to not use	
-									const HitTestFilter* filter,	// set to nullptr to not use
+									const Primitive* ignorePrim,			// set to NULL to not use	
+									const HitTestFilter* filter,	// set to NULL to not use
 									Vector3& hitPointWorld,
 									float& distanceToHit,
 									const float& maxSearchDepth,

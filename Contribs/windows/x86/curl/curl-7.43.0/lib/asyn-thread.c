@@ -219,7 +219,7 @@ int init_thread_sync_data(struct thread_data * td,
 #endif
 
   tsd->mtx = malloc(sizeof(curl_mutex_t));
-  if(tsd->mtx == nullptr)
+  if(tsd->mtx == NULL)
     goto err_exit;
 
   Curl_mutex_init(tsd->mtx);
@@ -248,9 +248,9 @@ static int getaddrinfo_complete(struct connectdata *conn)
 
   rc = Curl_addrinfo_callback(conn, tsd->sock_error, tsd->res);
   /* The tsd->res structure has been copied to async.dns and perhaps the DNS
-     cache.  Set our copy to nullptr so destroy_thread_sync_data doesn't free it.
+     cache.  Set our copy to NULL so destroy_thread_sync_data doesn't free it.
   */
-  tsd->res = nullptr;
+  tsd->res = NULL;
 
   return rc;
 }
@@ -361,10 +361,10 @@ static void destroy_async_data (struct Curl_async *async)
       free(async->os_specific);
     }
   }
-  async->os_specific = nullptr;
+  async->os_specific = NULL;
 
   free(async->hostname);
-  async->hostname = nullptr;
+  async->hostname = NULL;
 }
 
 /*
@@ -387,7 +387,7 @@ static bool init_resolve_thread (struct connectdata *conn,
   conn->async.port = port;
   conn->async.done = FALSE;
   conn->async.status = 0;
-  conn->async.dns = nullptr;
+  conn->async.dns = NULL;
   td->thread_hnd = curl_thread_t_null;
 
   if(!init_thread_sync_data(td, hostname, port, hints))
@@ -452,7 +452,7 @@ static CURLcode resolver_error(struct connectdata *conn)
  * waits for a resolve to finish. This function should be avoided since using
  * this risk getting the multi interface to "hang".
  *
- * If 'entry' is non-nullptr, make it point to the resolved dns entry
+ * If 'entry' is non-NULL, make it point to the resolved dns entry
  *
  * This is the version for resolves-in-a-thread.
  */
@@ -499,7 +499,7 @@ CURLcode Curl_resolver_is_resolved(struct connectdata *conn,
   struct thread_data   *td = (struct thread_data*) conn->async.os_specific;
   int done = 0;
 
-  *entry = nullptr;
+  *entry = NULL;
 
   if(!td) {
     DEBUGASSERT(td);
@@ -572,9 +572,9 @@ Curl_addrinfo *Curl_resolver_getaddrinfo(struct connectdata *conn,
     return Curl_ip2addr(AF_INET, &in, hostname, port);
 
   /* fire up a new resolver thread! */
-  if(init_resolve_thread(conn, hostname, port, nullptr)) {
+  if(init_resolve_thread(conn, hostname, port, NULL)) {
     *waitp = 1; /* expect asynchronous response */
-    return nullptr;
+    return NULL;
   }
 
   /* fall-back to blocking version */
@@ -644,7 +644,7 @@ Curl_addrinfo *Curl_resolver_getaddrinfo(struct connectdata *conn,
   /* fire up a new resolver thread! */
   if(init_resolve_thread(conn, hostname, port, &hints)) {
     *waitp = 1; /* expect asynchronous response */
-    return nullptr;
+    return NULL;
   }
 
   /* fall-back to blocking version */
@@ -655,7 +655,7 @@ Curl_addrinfo *Curl_resolver_getaddrinfo(struct connectdata *conn,
   if(error) {
     infof(conn->data, "getaddrinfo() failed for %s:%d; %s\n",
           hostname, port, Curl_strerror(conn, SOCKERRNO));
-    return nullptr;
+    return NULL;
   }
   return res;
 }

@@ -83,7 +83,7 @@ bool Curl_nss_false_start(void);
 #define curlssl_shutdown(x,y) ((void)x, (void)y, 1)
 #define curlssl_set_engine(x,y) ((void)x, (void)y, CURLE_NOT_BUILT_IN)
 #define curlssl_set_engine_default(x) ((void)x, CURLE_NOT_BUILT_IN)
-#define curlssl_engines_list(x) ((void)x, (struct curl_slist *)nullptr)
+#define curlssl_engines_list(x) ((void)x, (struct curl_slist *)NULL)
 #define curlssl_version Curl_nss_version
 #define curlssl_check_cxn(x) Curl_nss_check_cxn(x)
 #define curlssl_data_pending(x,y) ((void)x, (void)y, 0)

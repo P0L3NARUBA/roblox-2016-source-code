@@ -45,32 +45,32 @@ SDL_CreateRGBSurface(Uint32 flags,
     format = SDL_MasksToPixelFormatEnum(depth, Rmask, Gmask, Bmask, Amask);
     if (format == SDL_PIXELFORMAT_UNKNOWN) {
         SDL_SetError("Unknown pixel format");
-        return nullptr;
+        return NULL;
     }
 
     /* Allocate the surface */
     surface = (SDL_Surface *) SDL_calloc(1, sizeof(*surface));
-    if (surface == nullptr) {
+    if (surface == NULL) {
         SDL_OutOfMemory();
-        return nullptr;
+        return NULL;
     }
 
     surface->format = SDL_AllocFormat(format);
     if (!surface->format) {
         SDL_FreeSurface(surface);
-        return nullptr;
+        return NULL;
     }
     surface->w = width;
     surface->h = height;
     surface->pitch = SDL_CalculatePitch(surface);
-    SDL_SetClipRect(surface, nullptr);
+    SDL_SetClipRect(surface, NULL);
 
     if (SDL_ISPIXELFORMAT_INDEXED(surface->format->format)) {
         SDL_Palette *palette =
             SDL_AllocPalette((1 << surface->format->BitsPerPixel));
         if (!palette) {
             SDL_FreeSurface(surface);
-            return nullptr;
+            return NULL;
         }
         if (palette->ncolors == 2) {
             /* Create a black and white bitmap palette */
@@ -91,7 +91,7 @@ SDL_CreateRGBSurface(Uint32 flags,
         if (!surface->pixels) {
             SDL_FreeSurface(surface);
             SDL_OutOfMemory();
-            return nullptr;
+            return NULL;
         }
         /* This is important for bitmaps */
         SDL_memset(surface->pixels, 0, surface->h * surface->pitch);
@@ -101,7 +101,7 @@ SDL_CreateRGBSurface(Uint32 flags,
     surface->map = SDL_AllocBlitMap();
     if (!surface->map) {
         SDL_FreeSurface(surface);
-        return nullptr;
+        return NULL;
     }
 
     /* By default surface with an alpha mask are set up for blending */
@@ -127,13 +127,13 @@ SDL_CreateRGBSurfaceFrom(void *pixels,
 
     surface =
         SDL_CreateRGBSurface(0, 0, 0, depth, Rmask, Gmask, Bmask, Amask);
-    if (surface != nullptr) {
+    if (surface != NULL) {
         surface->flags |= SDL_PREALLOC;
         surface->pixels = pixels;
         surface->w = width;
         surface->h = height;
         surface->pitch = pitch;
-        SDL_SetClipRect(surface, nullptr);
+        SDL_SetClipRect(surface, NULL);
     }
     return surface;
 }
@@ -142,7 +142,7 @@ int
 SDL_SetSurfacePalette(SDL_Surface * surface, SDL_Palette * palette)
 {
     if (!surface) {
-        return SDL_SetError("SDL_SetSurfacePalette() passed a nullptr surface");
+        return SDL_SetError("SDL_SetSurfacePalette() passed a NULL surface");
     }
     if (SDL_SetPixelFormatPalette(surface->format, palette) < 0) {
         return -1;
@@ -528,14 +528,14 @@ SDL_UpperBlit(SDL_Surface * src, const SDL_Rect * srcrect,
 
     /* Make sure the surfaces aren't locked */
     if (!src || !dst) {
-        return SDL_SetError("SDL_UpperBlit: passed a nullptr surface");
+        return SDL_SetError("SDL_UpperBlit: passed a NULL surface");
     }
     if (src->locked || dst->locked) {
         return SDL_SetError("Surfaces must not be locked during blit");
     }
 
-    /* If the destination rectangle is nullptr, use the entire dest surface */
-    if (dstrect == nullptr) {
+    /* If the destination rectangle is NULL, use the entire dest surface */
+    if (dstrect == NULL) {
         fulldst.x = fulldst.y = 0;
         fulldst.w = dst->w;
         fulldst.h = dst->h;
@@ -631,13 +631,13 @@ SDL_UpperBlitScaled(SDL_Surface * src, const SDL_Rect * srcrect,
 
     /* Make sure the surfaces aren't locked */
     if (!src || !dst) {
-        return SDL_SetError("SDL_UpperBlitScaled: passed a nullptr surface");
+        return SDL_SetError("SDL_UpperBlitScaled: passed a NULL surface");
     }
     if (src->locked || dst->locked) {
         return SDL_SetError("Surfaces must not be locked during blit");
     }
 
-    if (nullptr == srcrect) {
+    if (NULL == srcrect) {
         src_w = src->w;
         src_h = src->h;
     } else {
@@ -645,7 +645,7 @@ SDL_UpperBlitScaled(SDL_Surface * src, const SDL_Rect * srcrect,
         src_h = srcrect->h;
     }
 
-    if (nullptr == dstrect) {
+    if (NULL == dstrect) {
         dst_w = dst->w;
         dst_h = dst->h;
     } else {
@@ -661,7 +661,7 @@ SDL_UpperBlitScaled(SDL_Surface * src, const SDL_Rect * srcrect,
     scaling_w = (double)dst_w / src_w;
     scaling_h = (double)dst_h / src_h;
 
-    if (nullptr == dstrect) {
+    if (NULL == dstrect) {
         dst_x0 = 0;
         dst_y0 = 0;
         dst_x1 = dst_w - 1;
@@ -673,7 +673,7 @@ SDL_UpperBlitScaled(SDL_Surface * src, const SDL_Rect * srcrect,
         dst_y1 = dst_y0 + dst_h - 1;
     }
 
-    if (nullptr == srcrect) {
+    if (NULL == srcrect) {
         src_x0 = 0;
         src_y0 = 0;
         src_x1 = src_w - 1;
@@ -848,7 +848,7 @@ SDL_ConvertSurface(SDL_Surface * surface, const SDL_PixelFormat * format,
     SDL_Rect bounds;
 
     /* Check for empty destination palette! (results in empty image) */
-    if (format->palette != nullptr) {
+    if (format->palette != NULL) {
         int i;
         for (i = 0; i < format->palette->ncolors; ++i) {
             if ((format->palette->colors[i].r != 0xFF) ||
@@ -858,7 +858,7 @@ SDL_ConvertSurface(SDL_Surface * surface, const SDL_PixelFormat * format,
         }
         if (i == format->palette->ncolors) {
             SDL_SetError("Empty destination palette");
-            return (nullptr);
+            return (NULL);
         }
     }
 
@@ -867,8 +867,8 @@ SDL_ConvertSurface(SDL_Surface * surface, const SDL_PixelFormat * format,
                                    format->BitsPerPixel, format->Rmask,
                                    format->Gmask, format->Bmask,
                                    format->Amask);
-    if (convert == nullptr) {
-        return (nullptr);
+    if (convert == NULL) {
+        return (NULL);
     }
 
     /* Copy the palette if any */
@@ -967,7 +967,7 @@ SDL_ConvertSurfaceFormat(SDL_Surface * surface, Uint32 pixel_format,
                          Uint32 flags)
 {
     SDL_PixelFormat *fmt;
-    SDL_Surface *convert = nullptr;
+    SDL_Surface *convert = NULL;
 
     fmt = SDL_AllocFormat(pixel_format);
     if (fmt) {
@@ -1001,7 +1001,7 @@ SDL_CreateSurfaceOnStack(int width, int height, Uint32 pixel_format,
     surface->h = height;
     surface->pitch = pitch;
     /* We don't actually need to set up the clip rect for our purposes */
-    /* SDL_SetClipRect(surface, nullptr); */
+    /* SDL_SetClipRect(surface, NULL); */
 
     /* Allocate an empty mapping */
     SDL_zerop(blitmap);
@@ -1115,7 +1115,7 @@ int SDL_ConvertPixels(int width, int height,
 void
 SDL_FreeSurface(SDL_Surface * surface)
 {
-    if (surface == nullptr) {
+    if (surface == NULL) {
         return;
     }
     if (surface->flags & SDL_DONTFREE) {
@@ -1131,13 +1131,13 @@ SDL_FreeSurface(SDL_Surface * surface)
         SDL_UnRLESurface(surface, 0);
     }
     if (surface->format) {
-        SDL_SetSurfacePalette(surface, nullptr);
+        SDL_SetSurfacePalette(surface, NULL);
         SDL_FreeFormat(surface->format);
-        surface->format = nullptr;
+        surface->format = NULL;
     }
-    if (surface->map != nullptr) {
+    if (surface->map != NULL) {
         SDL_FreeBlitMap(surface->map);
-        surface->map = nullptr;
+        surface->map = NULL;
     }
     if (!(surface->flags & SDL_PREALLOC)) {
         SDL_free(surface->pixels);

@@ -228,10 +228,10 @@ static CURLcode ldap_connecting(struct connectdata *conn, bool *done)
 {
   ldapconninfo *li = conn->proto.generic;
   struct SessionHandle *data = conn->data;
-  LDAPMessage *msg = nullptr;
+  LDAPMessage *msg = NULL;
   struct timeval tv = {0, 1}, *tvp;
   int rc, err;
-  char *info = nullptr;
+  char *info = NULL;
 
 #ifdef USE_SSL
   if(conn->handler->flags & PROTOPT_SSL) {
@@ -268,12 +268,12 @@ retry:
       passwd.bv_len = strlen(passwd.bv_val);
     }
     else {
-      binddn = nullptr;
-      passwd.bv_val = nullptr;
+      binddn = NULL;
+      passwd.bv_val = NULL;
       passwd.bv_len = 0;
     }
     rc = ldap_sasl_bind(li->ld, binddn, LDAP_SASL_SIMPLE, &passwd,
-                        nullptr, nullptr, &li->msgid);
+                        NULL, NULL, &li->msgid);
     if(rc)
       return CURLE_LDAP_CANNOT_BIND;
     li->didbind = TRUE;
@@ -291,7 +291,7 @@ retry:
     return CURLE_OK;
   }
 
-  rc = ldap_parse_result(li->ld, msg, &err, nullptr, &info, nullptr, nullptr, 1);
+  rc = ldap_parse_result(li->ld, msg, &err, NULL, &info, NULL, NULL, 1);
   if(rc) {
     failf(data, "LDAP local: bind ldap_parse_result %s", ldap_err2string(rc));
     return CURLE_LDAP_CANNOT_BIND;
@@ -304,7 +304,7 @@ retry:
     if(proto == LDAP_VERSION3) {
       if(info) {
         ldap_memfree(info);
-        info = nullptr;
+        info = NULL;
       }
       proto = LDAP_VERSION2;
       ldap_set_option(li->ld, LDAP_OPT_PROTOCOL_VERSION, &proto);
@@ -336,10 +336,10 @@ static CURLcode ldap_disconnect(struct connectdata *conn, bool dead_connection)
 
   if(li) {
     if(li->ld) {
-      ldap_unbind_ext(li->ld, nullptr, nullptr);
-      li->ld = nullptr;
+      ldap_unbind_ext(li->ld, NULL, NULL);
+      li->ld = NULL;
     }
-    conn->proto.generic = nullptr;
+    conn->proto.generic = NULL;
     free(li);
   }
   return CURLE_OK;
@@ -351,7 +351,7 @@ static CURLcode ldap_do(struct connectdata *conn, bool *done)
   ldapreqinfo *lr;
   CURLcode status = CURLE_OK;
   int rc = 0;
-  LDAPURLDesc *ludp = nullptr;
+  LDAPURLDesc *ludp = NULL;
   int msgid;
   struct SessionHandle *data=conn->data;
 
@@ -374,7 +374,7 @@ static CURLcode ldap_do(struct connectdata *conn, bool *done)
 
   rc = ldap_search_ext(li->ld, ludp->lud_dn, ludp->lud_scope,
                        ludp->lud_filter, ludp->lud_attrs, 0,
-                       nullptr, nullptr, nullptr, 0, &msgid);
+                       NULL, NULL, NULL, 0, &msgid);
   ldap_free_urldesc(ludp);
   if(rc != LDAP_SUCCESS) {
     failf(data, "LDAP local: ldap_search_ext %s", ldap_err2string(rc));
@@ -385,7 +385,7 @@ static CURLcode ldap_do(struct connectdata *conn, bool *done)
     return CURLE_OUT_OF_MEMORY;
   lr->msgid = msgid;
   data->req.protop = lr;
-  Curl_setup_transfer(conn, FIRSTSOCKET, -1, FALSE, nullptr, -1, nullptr);
+  Curl_setup_transfer(conn, FIRSTSOCKET, -1, FALSE, NULL, -1, NULL);
   *done = TRUE;
   return CURLE_OK;
 }
@@ -402,10 +402,10 @@ static CURLcode ldap_done(struct connectdata *conn, CURLcode res,
     /* if there was a search in progress, abandon it */
     if(lr->msgid) {
       ldapconninfo *li = conn->proto.generic;
-      ldap_abandon_ext(li->ld, lr->msgid, nullptr, nullptr);
+      ldap_abandon_ext(li->ld, lr->msgid, NULL, NULL);
       lr->msgid = 0;
     }
-    conn->data->req.protop = nullptr;
+    conn->data->req.protop = NULL;
     free(lr);
   }
 
@@ -419,9 +419,9 @@ static ssize_t ldap_recv(struct connectdata *conn, int sockindex, char *buf,
   struct SessionHandle *data = conn->data;
   ldapreqinfo *lr = data->req.protop;
   int rc, ret;
-  LDAPMessage *msg = nullptr;
+  LDAPMessage *msg = NULL;
   LDAPMessage *ent;
-  BerElement *ber = nullptr;
+  BerElement *ber = NULL;
   struct timeval tv = {0, 1};
 
   (void)len;
@@ -450,8 +450,8 @@ static ssize_t ldap_recv(struct connectdata *conn, int sockindex, char *buf,
     msgtype = ldap_msgtype(ent);
     if(msgtype == LDAP_RES_SEARCH_RESULT) {
       int code;
-      char *info = nullptr;
-      rc = ldap_parse_result(li->ld, ent, &code, nullptr, &info, nullptr, nullptr, 0);
+      char *info = NULL;
+      rc = ldap_parse_result(li->ld, ent, &code, NULL, &info, NULL, NULL, 0);
       if(rc) {
         failf(data, "LDAP local: search ldap_parse_result %s",
               ldap_err2string(rc));
@@ -504,14 +504,14 @@ static ssize_t ldap_recv(struct connectdata *conn, int sockindex, char *buf,
       rc = ldap_get_attribute_ber(li->ld, ent, ber, &bv, bvp)) {
       int i;
 
-      if(bv.bv_val == nullptr) break;
+      if(bv.bv_val == NULL) break;
 
       if(bv.bv_len > 7 && !strncmp(bv.bv_val + bv.bv_len - 7, ";binary", 7))
         binary = 1;
       else
         binary = 0;
 
-      for(i=0; bvals[i].bv_val != nullptr; i++) {
+      for(i=0; bvals[i].bv_val != NULL; i++) {
         int binval = 0;
         *err = Curl_client_write(conn, CLIENTWRITE_BODY, (char *)"\t", 1);
         if(*err)
@@ -543,7 +543,7 @@ static ssize_t ldap_recv(struct connectdata *conn, int sockindex, char *buf,
           }
         }
         if(binary || binval) {
-          char *val_b64 = nullptr;
+          char *val_b64 = NULL;
           size_t val_b64_sz = 0;
           /* Binary value, encode to base64. */
           CURLcode error = Curl_base64_encode(data,
@@ -617,7 +617,7 @@ ldapsb_tls_setup(Sockbuf_IO_Desc *sbiod, void *arg)
 static int
 ldapsb_tls_remove(Sockbuf_IO_Desc *sbiod)
 {
-  sbiod->sbiod_pvt = nullptr;
+  sbiod->sbiod_pvt = NULL;
   return 0;
 }
 

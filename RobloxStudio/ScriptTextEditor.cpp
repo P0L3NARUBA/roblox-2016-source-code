@@ -58,11 +58,11 @@ ScriptTextEditor::ScriptTextEditor(
     RobloxMainWindow* pMainWindow)
     : QPlainTextEdit(pMainWindow),
       m_pScriptDoc(pScriptDoc),
-      m_pSyntaxHighlighter(nullptr),
-      m_pSideWidget(nullptr),
-      m_pCheckSyntaxThread(nullptr),
-	  m_pFindThread(nullptr),
-      m_pCheckSyntaxTimer(nullptr),
+      m_pSyntaxHighlighter(NULL),
+      m_pSideWidget(NULL),
+      m_pCheckSyntaxThread(NULL),
+	  m_pFindThread(NULL),
+      m_pCheckSyntaxTimer(NULL),
       m_errorLine(-1),
       m_pMainWindow(pMainWindow),
 	  currentWikiSearchSelection(),
@@ -102,7 +102,7 @@ ScriptTextEditor::ScriptTextEditor(
 	// listen for changes to the editor settings
     m_PropertyChangedConnection = AuthoringSettings::singleton().propertyChangedSignal.connect(
         boost::bind(&ScriptTextEditor::onPropertyChanged,this,_1));
-    onPropertyChanged(nullptr);
+    onPropertyChanged(NULL);
 
     m_ContextMenu = new QMenu(this);
     {
@@ -150,7 +150,7 @@ ScriptTextEditor::~ScriptTextEditor()
     if (m_pCheckSyntaxThread)
 	{
         delete m_pCheckSyntaxThread;
-		m_pCheckSyntaxThread = nullptr;
+		m_pCheckSyntaxThread = NULL;
 	}
 
 	delete m_pWikiSearchTimer;
@@ -2354,7 +2354,7 @@ void CheckSyntaxThread::doWork()
 {
 	shared_ptr<RBX::DataModel> dm = m_pDocument->getDataModel();
 
-	void* resultPtr = nullptr;
+	void* resultPtr = NULL;
 
 	{
 		RBX::DataModel::LegacyLock l(dm.get(), RBX::DataModelJob::Write);

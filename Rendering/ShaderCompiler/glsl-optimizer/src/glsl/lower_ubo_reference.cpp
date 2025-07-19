@@ -162,10 +162,10 @@ static const char *
 interface_field_name(void *mem_ctx, char *base_name, ir_dereference *d,
                      ir_rvalue **nonconst_block_index)
 {
-   ir_rvalue *previous_index = nullptr;
-   *nonconst_block_index = nullptr;
+   ir_rvalue *previous_index = NULL;
+   *nonconst_block_index = NULL;
 
-   while (d != nullptr) {
+   while (d != NULL) {
       switch (d->ir_type) {
       case ir_type_dereference_variable: {
          ir_dereference_variable *v = (ir_dereference_variable *) d;
@@ -213,7 +213,7 @@ interface_field_name(void *mem_ctx, char *base_name, ir_dereference *d,
    }
 
    assert(!"Should not get here.");
-   return nullptr;
+   return NULL;
 }
 
 void
@@ -237,7 +237,7 @@ lower_ubo_reference_visitor::handle_rvalue(ir_rvalue **rvalue)
       interface_field_name(mem_ctx, (char *) var->get_interface_type()->name,
                            deref, &nonconst_block_index);
 
-   this->uniform_block = nullptr;
+   this->uniform_block = NULL;
    for (unsigned i = 0; i < shader->NumUniformBlocks; i++) {
       if (strcmp(field_name, shader->UniformBlocks[i].Name) == 0) {
 
@@ -274,7 +274,7 @@ lower_ubo_reference_visitor::handle_rvalue(ir_rvalue **rvalue)
       switch (deref->ir_type) {
       case ir_type_dereference_variable: {
 	 const_offset += ubo_var->Offset;
-	 deref = nullptr;
+	 deref = NULL;
 	 break;
       }
 
@@ -317,7 +317,7 @@ lower_ubo_reference_visitor::handle_rvalue(ir_rvalue **rvalue)
             array_index = i2u(array_index);
 
 	 ir_constant *const_index =
-            array_index->constant_expression_value(nullptr);
+            array_index->constant_expression_value(NULL);
 	 if (const_index) {
 	    const_offset += array_stride * const_index->value.u[0];
 	 } else {
@@ -384,7 +384,7 @@ lower_ubo_reference_visitor::handle_rvalue(ir_rvalue **rvalue)
       }
       default:
 	 assert(!"not reached");
-	 deref = nullptr;
+	 deref = NULL;
 	 break;
       }
    }
@@ -415,7 +415,7 @@ ir_expression *
 lower_ubo_reference_visitor::ubo_load(const glsl_type *type,
 				      ir_rvalue *offset)
 {
-   ir_rvalue *block_ref = this->uniform_block->clone(mem_ctx, nullptr);
+   ir_rvalue *block_ref = this->uniform_block->clone(mem_ctx, NULL);
    return new(mem_ctx)
       ir_expression(ir_binop_ubo_load,
                     type,
@@ -445,7 +445,7 @@ lower_ubo_reference_visitor::emit_ubo_loads(ir_dereference *deref,
 	 const struct glsl_struct_field *field =
 	    &deref->type->fields.structure[i];
 	 ir_dereference *field_deref =
-	    new(mem_ctx) ir_dereference_record(deref->clone(mem_ctx, nullptr),
+	    new(mem_ctx) ir_dereference_record(deref->clone(mem_ctx, NULL),
 					       field->name);
 
 	 field_offset =
@@ -468,7 +468,7 @@ lower_ubo_reference_visitor::emit_ubo_loads(ir_dereference *deref,
       for (unsigned i = 0; i < deref->type->length; i++) {
 	 ir_constant *element = new(mem_ctx) ir_constant(i);
 	 ir_dereference *element_deref =
-	    new(mem_ctx) ir_dereference_array(deref->clone(mem_ctx, nullptr),
+	    new(mem_ctx) ir_dereference_array(deref->clone(mem_ctx, NULL),
 					      element);
 	 emit_ubo_loads(element_deref, base_offset,
 			deref_offset + i * array_stride,
@@ -481,7 +481,7 @@ lower_ubo_reference_visitor::emit_ubo_loads(ir_dereference *deref,
       for (unsigned i = 0; i < deref->type->matrix_columns; i++) {
 	 ir_constant *col = new(mem_ctx) ir_constant(i);
 	 ir_dereference *col_deref =
-	    new(mem_ctx) ir_dereference_array(deref->clone(mem_ctx, nullptr),
+	    new(mem_ctx) ir_dereference_array(deref->clone(mem_ctx, NULL),
 					      col);
 
          if (row_major) {
@@ -507,7 +507,7 @@ lower_ubo_reference_visitor::emit_ubo_loads(ir_dereference *deref,
    if (!row_major) {
       ir_rvalue *offset = add(base_offset,
 			      new(mem_ctx) ir_constant(deref_offset));
-      base_ir->insert_before(assign(deref->clone(mem_ctx, nullptr),
+      base_ir->insert_before(assign(deref->clone(mem_ctx, NULL),
 				    ubo_load(deref->type, offset)));
    } else {
       /* We're dereffing a column out of a row-major matrix, so we
@@ -526,7 +526,7 @@ lower_ubo_reference_visitor::emit_ubo_loads(ir_dereference *deref,
 	    add(base_offset,
 		new(mem_ctx) ir_constant(deref_offset + i * matrix_stride));
 
-	 base_ir->insert_before(assign(deref->clone(mem_ctx, nullptr),
+	 base_ir->insert_before(assign(deref->clone(mem_ctx, NULL),
 				       ubo_load(glsl_type::float_type,
 						chan_offset),
 				       (1U << i)));

@@ -56,7 +56,7 @@ public:
 static bool
 is_break(ir_instruction *ir)
 {
-   return ir != nullptr && ir->ir_type == ir_type_loop_jump
+   return ir != NULL && ir->ir_type == ir_type_loop_jump
 		     && ((ir_loop_jump *) ir)->is_break();
 }
 
@@ -223,7 +223,7 @@ loop_unroll_visitor::complex_unroll(ir_loop *ir, int iterations,
       clone_ir_list(mem_ctx, &copy_list, &ir->body_instructions);
 
       ir_if *ir_if = ((ir_instruction *) copy_list.get_tail())->as_if();
-      assert(ir_if != nullptr);
+      assert(ir_if != NULL);
 
       ir_to_replace->insert_before(&copy_list);
       ir_to_replace->remove();
@@ -287,15 +287,15 @@ loop_unroll_visitor::visit_leave(ir_loop *ir)
    /* If we've entered a loop that hasn't been analyzed, something really,
     * really bad has happened.
     */
-   if (ls == nullptr) {
-      assert(ls != nullptr);
+   if (ls == NULL) {
+      assert(ls != NULL);
       return visit_continue;
    }
 
    /* Don't try to unroll loops where the number of iterations is not known
     * at compile-time.
     */
-   if (ls->limiting_terminator == nullptr)
+   if (ls->limiting_terminator == NULL)
       return visit_continue;
 
    iterations = ls->limiting_terminator->iterations;
@@ -333,7 +333,7 @@ loop_unroll_visitor::visit_leave(ir_loop *ir)
    }
 
    ir_instruction *last_ir = (ir_instruction *) ir->body_instructions.get_tail();
-   assert(last_ir != nullptr);
+   assert(last_ir != NULL);
 
    if (is_break(last_ir)) {
       /* If the only loop-jump is a break at the end of the loop, the loop
@@ -356,7 +356,7 @@ loop_unroll_visitor::visit_leave(ir_loop *ir)
          continue;
 
       ir_if *ir_if = cur_ir->as_if();
-      if (ir_if != nullptr) {
+      if (ir_if != NULL) {
          /* Determine which if-statement branch, if any, ends with a
           * break.  The branch that did *not* have the break will get a
           * temporary continue inserted in each iteration of the loop

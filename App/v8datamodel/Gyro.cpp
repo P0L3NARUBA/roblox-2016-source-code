@@ -49,14 +49,14 @@ void RBX::registerBodyMovers()
 using namespace RBX;
 
 BodyMover::BodyMover(const char* name)
-	: world(nullptr)
+	: world(NULL)
 {
 	setName(name);
 }
 
 BodyMover::~BodyMover()
 {
-	RBXASSERT(world==nullptr);
+	RBXASSERT(world==NULL);
 	RBXASSERT(!part.lock());
 }
 
@@ -137,7 +137,7 @@ Body* BodyMover::getEngineBody()
 	}
 	else {
 		RBXASSERT(0);
-		return nullptr;
+		return NULL;
 	}
 }
 
@@ -147,7 +147,7 @@ Body* BodyMover::getEngineBody()
 bool BodyMover::duplicateBodyMoverExists(Primitive* p0, Primitive* p1)
 {
 	int pairId = 0;
-	Joint* joint = nullptr;
+	Joint* joint = NULL;
 	do
 	{
 		joint = Primitive::getJoint(p0, p1, pairId);
@@ -167,41 +167,41 @@ void BodyMover::onAncestorChanged(const AncestorChanged& event)
 {
 	Super::onAncestorChanged(event);		// Note - moved this to first
 
-	PartInstance* partInstance = nullptr;
-	World* newWorld = nullptr;
+	PartInstance* partInstance = NULL;
+	World* newWorld = NULL;
 
 	// 1. Update Part
 	if (event.child==this) {
 		// Immediate parent of the BodyMover changed
 		partInstance = Instance::fastDynamicCast<PartInstance>(event.newParent);
-		if (partInstance != nullptr) {     // getEngineBody() need part during removeJoint()
+		if (partInstance != NULL) {     // getEngineBody() need part during removeJoint()
 			part = shared_from<PartInstance>(partInstance);
-			newWorld = part.lock() ? Workspace::getWorldIfInWorkspace(this) : nullptr;
+			newWorld = part.lock() ? Workspace::getWorldIfInWorkspace(this) : NULL;
 		}
 	} else
-		newWorld = part.lock() ? Workspace::getWorldIfInWorkspace(this) : nullptr;
+		newWorld = part.lock() ? Workspace::getWorldIfInWorkspace(this) : NULL;
 
-	if (world == newWorld && world != nullptr)
+	if (world == newWorld && world != NULL)
 	{
 		if (this->inPipeline()) {
 			world->removeJoint(this);
 		}
 	}
 
-	if (world != nullptr && newWorld == nullptr) {
-		RBXASSERT(world != nullptr); 
+	if (world != NULL && newWorld == NULL) {
+		RBXASSERT(world != NULL); 
 		if (this->inPipeline()) {
 			if (world) {						// TODO - remove this test after a while - asserting now for safety
 				world->removeJoint(this);
 			}
 		}
-		this->setPrimitive(0, nullptr);
-		this->setPrimitive(1, nullptr);
+		this->setPrimitive(0, NULL);
+		this->setPrimitive(1, NULL);
 	}
 
 	world = newWorld;
 
-	if (newWorld != nullptr)
+	if (newWorld != NULL)
 	{
 		RBXASSERT(!this->inPipeline());
 		Primitive* p0 = part.lock()->getPartPrimitive();
@@ -216,7 +216,7 @@ void BodyMover::onAncestorChanged(const AncestorChanged& event)
 		}
 	}
 
-	if (event.child==this && partInstance == nullptr)			// immediate parent changed to nullptr
+	if (event.child==this && partInstance == NULL)			// immediate parent changed to NULL
 		part = shared_from<PartInstance>(partInstance);  
 }
 
@@ -484,10 +484,10 @@ void BodyGyro::putInKernel(Kernel* _kernel)
     {
         Body* b0 = getPrimitive(0)->getBody();
         Body* b1 = getPrimitive(1)->getBody();
-        if( angularVelocityConstraint != nullptr && ( angularVelocityConstraint->getBodyA()->getUID() != b0->getUID() || angularVelocityConstraint->getBodyB()->getUID() != b1->getUID() ) )
+        if( angularVelocityConstraint != NULL && ( angularVelocityConstraint->getBodyA()->getUID() != b0->getUID() || angularVelocityConstraint->getBodyB()->getUID() != b1->getUID() ) )
         {
             delete angularVelocityConstraint;
-            angularVelocityConstraint = nullptr;
+            angularVelocityConstraint = NULL;
         }
         update();
         _kernel->pgsSolver.addConstraint( angularVelocityConstraint );
@@ -509,7 +509,7 @@ void BodyGyro::removeFromKernel()
 
 void BodyGyro::update()
 {
-    if (FFlag::PGSUsesConstraintBasedBodyMovers && angularVelocityConstraint == nullptr)
+    if (FFlag::PGSUsesConstraintBasedBodyMovers && angularVelocityConstraint == NULL)
     {
         Body* b0 = getPrimitive(0)->getBody();
         Body* b1 = getPrimitive(1)->getBody();
@@ -529,7 +529,7 @@ void BodyGyro::computeForceImpl(	bool throttling,
 	torque = computeBalanceTorque(body, root);
 	torque += computeOrientationTorque(body, root);
 
-    if(FFlag::PGSUsesConstraintBasedBodyMovers && world && world->getUsingPGSSolver() && angularVelocityConstraint != nullptr)
+    if(FFlag::PGSUsesConstraintBasedBodyMovers && world && world->getUsingPGSSolver() && angularVelocityConstraint != NULL)
     {
         Vector3 torqueBody = body->getCoordinateFrame().vectorToObjectSpace( torque );
         Vector3 velBody = body->getCoordinateFrame().vectorToObjectSpace( body->getVelocity().rotational );
@@ -812,10 +812,10 @@ void BodyPosition::putInKernel(Kernel* _kernel)
         Body* b0 = getPrimitive(0)->getBody();
         Body* b1 = getPrimitive(1)->getBody();
 
-        if( spring != nullptr && ( spring->getBodyA()->getUID() != b0->getUID() || spring->getBodyB()->getUID() != b1->getUID() ) )
+        if( spring != NULL && ( spring->getBodyA()->getUID() != b0->getUID() || spring->getBodyB()->getUID() != b1->getUID() ) )
         {
             delete spring;
-            spring = nullptr;
+            spring = NULL;
         }
         update();
         _kernel->pgsSolver.addConstraint(spring);
@@ -953,7 +953,7 @@ BodyVelocity::BodyVelocity(void)
 	,kP(1250.0)
 	,maxForce(4000.0f, 4000.0f, 4000.0f)
 	,velocity(Vector3(0, 2.0f, 0))
-    ,linearVelocity(nullptr)
+    ,linearVelocity(NULL)
 {
 }
 
@@ -965,10 +965,10 @@ void BodyVelocity::putInKernel(Kernel* _kernel)
     {
         Body* b0 = getPrimitive(0)->getBody();
         Body* b1 = getPrimitive(1)->getBody();
-        if( linearVelocity != nullptr && ( linearVelocity->getBodyA()->getUID() != b0->getUID() || linearVelocity->getBodyB()->getUID() != b1->getUID() ) )
+        if( linearVelocity != NULL && ( linearVelocity->getBodyA()->getUID() != b0->getUID() || linearVelocity->getBodyB()->getUID() != b1->getUID() ) )
         {
             delete linearVelocity;
-            linearVelocity = nullptr;
+            linearVelocity = NULL;
         }
         update();
         _kernel->pgsSolver.addConstraint( linearVelocity );
@@ -990,7 +990,7 @@ void BodyVelocity::removeFromKernel()
 
 void BodyVelocity::update()
 {
-    if (FFlag::PGSUsesConstraintBasedBodyMovers && linearVelocity == nullptr)
+    if (FFlag::PGSUsesConstraintBasedBodyMovers && linearVelocity == NULL)
     {
         Body* b0 = getPrimitive(0)->getBody();
         Body* b1 = getPrimitive(1)->getBody();
@@ -1074,7 +1074,7 @@ BodyAngularVelocity::BodyAngularVelocity(void)
 	,kP(1250.0)
 	,maxTorque(4000.0f, 4000.0f, 4000.0f)
 	,angularvelocity(Vector3(0, 2.0f, 0))
-    ,angularVelocityConstraint(nullptr)
+    ,angularVelocityConstraint(NULL)
 {
 }
 
@@ -1087,10 +1087,10 @@ void BodyAngularVelocity::putInKernel(Kernel* _kernel)
     {
         Body* b0 = getPrimitive(0)->getBody();
         Body* b1 = getPrimitive(1)->getBody();
-        if( angularVelocityConstraint != nullptr && ( angularVelocityConstraint->getBodyA()->getUID() != b0->getUID() || angularVelocityConstraint->getBodyB()->getUID() != b1->getUID() ) )
+        if( angularVelocityConstraint != NULL && ( angularVelocityConstraint->getBodyA()->getUID() != b0->getUID() || angularVelocityConstraint->getBodyB()->getUID() != b1->getUID() ) )
         {
             delete angularVelocityConstraint;
-            angularVelocityConstraint = nullptr;
+            angularVelocityConstraint = NULL;
         }
         update();
         _kernel->pgsSolver.addConstraint( angularVelocityConstraint );
@@ -1112,7 +1112,7 @@ void BodyAngularVelocity::removeFromKernel()
 
 void BodyAngularVelocity::update()
 {
-    if (FFlag::PGSUsesConstraintBasedBodyMovers && angularVelocityConstraint == nullptr)
+    if (FFlag::PGSUsesConstraintBasedBodyMovers && angularVelocityConstraint == NULL)
     {
         Body* b0 = getPrimitive(0)->getBody();
         Body* b1 = getPrimitive(1)->getBody();

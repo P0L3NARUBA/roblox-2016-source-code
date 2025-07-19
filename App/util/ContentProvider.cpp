@@ -63,7 +63,7 @@ DYNAMIC_FASTFLAG(UrlReconstructToAssetGame)
 using namespace boost::posix_time;
 
 #ifdef _WIN32
-#define APPLOG(message) do { if (appLog != nullptr) {RBX::mutex::scoped_lock lock(*appLogLock); appLog->writeEntry(RBX::Log::Information, message); } } while(0)
+#define APPLOG(message) do { if (appLog != NULL) {RBX::mutex::scoped_lock lock(*appLogLock); appLog->writeEntry(RBX::Log::Information, message); } } while(0)
 #else
 #define APPLOG(message) {}
 #endif
@@ -93,8 +93,8 @@ namespace RBX {
 
 	const char* const sContentProvider = "ContentProvider";
 
-	Log *ContentProvider::appLog = nullptr;
-	RBX::mutex *ContentProvider::appLogLock = nullptr;
+	Log *ContentProvider::appLog = NULL;
+	RBX::mutex *ContentProvider::appLogLock = NULL;
     boost::mutex ContentProvider::preloadContentBlockingMutex;
 
 	float ContentProvider::PRIORITY_MFC = 0;
@@ -113,14 +113,14 @@ namespace RBX {
 
     REFLECTION_BEGIN();
 	static Reflection::BoundFuncDesc<ContentProvider, void(std::string)> func_setBaseUrl( &ContentProvider::setBaseUrl, "SetBaseUrl", "url", Security::LocalUser);
-	Reflection::PropDescriptor<ContentProvider, std::string> ContentProvider::desc_baseUrl("BaseUrl", category_Data, &ContentProvider::getBaseUrl, nullptr);
+	Reflection::PropDescriptor<ContentProvider, std::string> ContentProvider::desc_baseUrl("BaseUrl", category_Data, &ContentProvider::getBaseUrl, NULL);
 	static Reflection::BoundFuncDesc<ContentProvider, void(std::string)> func_setAssetUrl( &ContentProvider::setBaseUrl, "SetAssetUrl", "url", Security::LocalUser);
 	static Reflection::BoundFuncDesc<ContentProvider, void(int)> func_setThreadPool( &ContentProvider::setThreadPool, "SetThreadPool", "count", Security::LocalUser);
 	static Reflection::BoundFuncDesc<ContentProvider, void(int)> func_setCacheSize( &ContentProvider::setCacheSize, "SetCacheSize", "count", Security::LocalUser);
 	static Reflection::BoundFuncDesc<ContentProvider, void(ContentId)> func_preload( &ContentProvider::preloadContent, "Preload", "contentId", Security::None);
 	static Reflection::BoundYieldFuncDesc<ContentProvider, void(shared_ptr<const Reflection::ValueArray>)> func_preloadAsync( &ContentProvider::preloadContentBlockingList, "PreloadAsync", "contentIdList", Security::None);
 
-	static Reflection::PropDescriptor<ContentProvider, int> desc_requestQueueSize("RequestQueueSize", category_Data, &ContentProvider::getRequestQueueSize, nullptr);
+	static Reflection::PropDescriptor<ContentProvider, int> desc_requestQueueSize("RequestQueueSize", category_Data, &ContentProvider::getRequestQueueSize, NULL);
     REFLECTION_END();
 
 	const std::string& ContentProvider::getBaseUrl() const
@@ -226,7 +226,7 @@ namespace RBX {
 	}
 	
 	ContentProvider::ContentProvider()
-		: afm(nullptr)
+		: afm(NULL)
 	{
 		setName(sContentProvider);
 
@@ -446,13 +446,13 @@ namespace RBX {
 		if (DFFlag::ImageFailedToLoadContext) 
 		{
 			AsyncHttpQueue::RequestCallback callback =  boost::bind(&ContentProvider::preloadContentResultCallback, this, _1, id);
-			AsyncHttpQueue::RequestResult requestResult = privateLoadContent(id, AsyncHttpRequest, INT_MAX, nullptr, &callback);
+			AsyncHttpQueue::RequestResult requestResult = privateLoadContent(id, AsyncHttpRequest, INT_MAX, NULL, &callback);
 			if (requestResult != AsyncHttpQueue::Waiting)
 				preloadContentResultCallback(requestResult, id);
 		}
 		else
 		{
-			privateLoadContent(id, AsyncHttpRequest, INT_MAX, nullptr, nullptr);
+			privateLoadContent(id, AsyncHttpRequest, INT_MAX, NULL, NULL);
 		}
 	}
 	
@@ -501,7 +501,7 @@ namespace RBX {
 				Reflection::Variant v = (*pList)[i];
 				ContentId id = v.get<RBX::ContentId>();
 				AsyncHttpQueue::RequestCallback callback =  boost::bind(&ContentProvider::preloadContentBlockingListHelper, this, _1, resumeFunction, errorFunction, pRequest, id);
-				AsyncHttpQueue::RequestResult requestResult = privateLoadContent(id, AsyncHttpRequest, INT_MAX, nullptr, &callback);
+				AsyncHttpQueue::RequestResult requestResult = privateLoadContent(id, AsyncHttpRequest, INT_MAX, NULL, &callback);
 				if (requestResult != AsyncHttpQueue::Waiting)
 					preloadContentBlockingListHelper(requestResult, resumeFunction, errorFunction, pRequest, id);
 			}
@@ -556,7 +556,7 @@ namespace RBX {
 		const std::string &expectedType)
 	{
 		ContentId activeId = id;
-		RBXASSERT(this!=nullptr);
+		RBXASSERT(this!=NULL);
 
 		CachedContent item;
 
@@ -600,12 +600,12 @@ namespace RBX {
 
 	shared_ptr<const std::string> ContentProvider::requestContentString(const RBX::ContentId& id, float priority)
 	{
-		RBXASSERT(this!=nullptr);
+		RBXASSERT(this!=NULL);
 		APPLOG("ContentProvider::requestContentString - enter");
 		RBX::ContentId activeId = id;
 
 		CachedContent item;
-		if (AsyncHttpQueue::Succeeded != privateLoadContent(activeId, AsyncHttpRequest, priority, &item, nullptr))
+		if (AsyncHttpQueue::Succeeded != privateLoadContent(activeId, AsyncHttpRequest, priority, &item, NULL))
 			return shared_ptr<const std::string>();
 
 		if (!item.data)
@@ -640,11 +640,11 @@ namespace RBX {
 	bool ContentProvider::blockingLoadContent(ContentId id, CachedContent* result, const std::string& expectedType)
 	{
 		APPLOG(RBX::format("ContentProvider::requestContentString %s", id.c_str()).c_str());
-		return privateLoadContent(id, SyncHttpRequest, -1, result, nullptr, AsyncHttpQueue::AsyncInline, expectedType) == AsyncHttpQueue::Succeeded;
+		return privateLoadContent(id, SyncHttpRequest, -1, result, NULL, AsyncHttpQueue::AsyncInline, expectedType) == AsyncHttpQueue::Succeeded;
 	}
 	bool ContentProvider::isContentLoaded(ContentId id)
 	{
-		return privateLoadContent(id, NoHttpRequest, -1, nullptr, nullptr) == AsyncHttpQueue::Succeeded;
+		return privateLoadContent(id, NoHttpRequest, -1, NULL, NULL) == AsyncHttpQueue::Succeeded;
 	}
 
 	AsyncHttpQueue::RequestResult ContentProvider::privateLoadContent(RBX::ContentId& id, RequestType httpRequestType, float priority, CachedContent* result, AsyncHttpQueue::RequestCallback* callback, AsyncHttpQueue::ResultJob jobType, const std::string& expectedType)

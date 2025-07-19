@@ -14,12 +14,12 @@ extern short orient;
 
 BOOL casted_mesh( lpLISTH list_path, sgFloat H, sgFloat alfa, hOBJ *hrez){
 	MESHDD      mdd;
-	lpNPW       np = nullptr;
+	lpNPW       np = NULL;
 	BOOL				cod;
 	hOBJ        hobject;
 
 	c_num_np	= -32767;
-	*hrez			= nullptr;
+	*hrez			= NULL;
 	if ( !np_init_list(&c_list_str) ) return FALSE;
 //--------------------------------------------------------------
 	hobject = list_path->hhead;   //  
@@ -31,11 +31,11 @@ BOOL casted_mesh( lpLISTH list_path, sgFloat H, sgFloat alfa, hOBJ *hrez){
 //--------------------------------------------------------------
 //   
 	if ((np = creat_np_mem(TNPW,MAXNOV,MAXNOE,MAXNOC, MAXNOF,
-													MAXNOE)) == nullptr)  goto err1;
+													MAXNOE)) == NULL)  goto err1;
 	np_init((lpNP)np);
 
 	hobject = list_path->hhead;   //  
-	while( hobject != nullptr ){      //     
+	while( hobject != NULL ){      //     
 //      
 		if( create_casted_body( &mdd, hobject, H, alfa ) != TRUE ) goto err1;
 //  
@@ -73,7 +73,7 @@ BOOL casted_mesh( lpLISTH list_path, sgFloat H, sgFloat alfa, hOBJ *hrez){
 err1:
 	free_np_mem(&np);
 	free_vdim(&mdd.vdim);
-	np_end_of_put(&c_list_str,NP_CANCEL,0,nullptr);
+	np_end_of_put(&c_list_str,NP_CANCEL,0,NULL);
 	return FALSE;
 }
 
@@ -98,13 +98,13 @@ static BOOL create_casted_body( lpMESHDD g, hOBJ hpath, sgFloat H,
 	g->m = (short)vdim.num_elem;
 	read_elem( &vdim, g->m-2, &previous );
 	if (!begin_rw(&vdim, 0)) goto err;
-	if ((lpnode = (lpMNODE)get_next_elem(&vdim)) == nullptr) goto err1;
+	if ((lpnode = (lpMNODE)get_next_elem(&vdim)) == NULL) goto err1;
 	current = *lpnode;
 	first = current;
 	for (i = 1; i < vdim.num_elem; i++) {//    
 		if( i == vdim.num_elem-1 ) next = first;
 		else {
-			if ((lpnode = (lpMNODE)get_next_elem(&vdim)) == nullptr) goto err1;
+			if ((lpnode = (lpMNODE)get_next_elem(&vdim)) == NULL) goto err1;
 			next = *lpnode;
 		}
 
@@ -199,9 +199,9 @@ static sgFloat sq( lpD_POINT v1, lpD_POINT v2, lpD_POINT v3 ){
 }
 
 static BOOL  check_top_bottom_cast( hOBJ hobject, sgFloat H, sgFloat alfa ){
-//	lpVDIM		vdim=nullptr;
+//	lpVDIM		vdim=NULL;
 
- /*	while( hobject != nullptr ){      //     
+ /*	while( hobject != NULL ){      //     
 		init_vdim(vdim,sizeof(MNODE));
 		if (!apr_path( vdim, hobject )) goto err1;
 //  

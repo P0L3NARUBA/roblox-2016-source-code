@@ -8,9 +8,9 @@ namespace RBX {
 
 
 IndexedMesh::IndexedMesh() 
-: lower(nullptr)
-, upper(nullptr)
-, computedUpper(nullptr)
+: lower(NULL)
+, upper(NULL)
+, computedUpper(NULL)
 {}
 
 
@@ -47,10 +47,10 @@ void IndexedMesh::setUpper(IndexedMesh* newUpper)
 	if (newUpper != getUpper())
 	{
 		IndexedMesh* oldUpper = upper;
-		upper = nullptr;
+		upper = NULL;
 
 		if (oldUpper) {
-			oldUpper->setLower(nullptr);
+			oldUpper->setLower(NULL);
 		}
 
 		upper = newUpper;
@@ -73,7 +73,7 @@ void IndexedMesh::setLower(IndexedMesh* newLower)
 		if (lower)			// pull out of the chain - I have no lower, so am out of commission!
 		{
 			IndexedMesh* oldParent = getIndexedMeshParent();		// 1.  Pull out of the chain - parent to null
-			setIndexedTreeParent(nullptr);								// 2.  Sew children to the old parent
+			setIndexedTreeParent(NULL);								// 2.  Sew children to the old parent
 			while (numChildren() > 0) {
 				IndexedMesh* backChild = getTypedChild<IndexedMesh>(numChildren() - 1);
 				RBXASSERT(backChild->getTypedParent<IndexedMesh>() == this);
@@ -146,7 +146,7 @@ void IndexedMesh::attachChildren(IndexedMesh* lowerChild)
 void IndexedMesh::severeChildren(IndexedMesh* lowerChild)
 {
 	if (lowerChild->getUpper()) {
-		lowerChild->getUpper()->setIndexedTreeParent(nullptr);
+		lowerChild->getUpper()->setIndexedTreeParent(NULL);
 	}
 	else {
 		for (int i = 0; i < lowerChild->numChildren(); ++i) {
@@ -165,7 +165,7 @@ const IndexedMesh* IndexedMesh::computeParentFromLower() const
 		}
 		lowerParent = lowerParent->getTypedParent<IndexedMesh>();
 	}
-	return nullptr;
+	return NULL;
 }
 
 const IndexedMesh* IndexedMesh::getConstIndexedMeshParent() const
@@ -190,7 +190,7 @@ const IndexedMesh* IndexedMesh::computeConstUpper(const IndexedMesh* lower)
 		return computeConstUpper(lowerParent);
 	}
 	else {
-		return nullptr;
+		return NULL;
 	}
 }
 

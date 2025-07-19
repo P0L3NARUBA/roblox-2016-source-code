@@ -4,12 +4,12 @@
 #include <list>
 #include <vector>
 
-static    CommandsGroup*    current_undo_redo_group = nullptr;
+static    CommandsGroup*    current_undo_redo_group = NULL;
 
 static    std::list<CommandsGroup*>    undo_list;
 static    std::list<CommandsGroup*>    redo_list;
 
-sgCScene*  scene=nullptr;
+sgCScene*  scene=NULL;
 
 class  SceneObjectsList : public IObjectsList
 {
@@ -20,8 +20,8 @@ public:
 	};
 	virtual  sgCObject*  GetHead()	const
 	{
-		if (objects.hhead==nullptr)
-			return nullptr;
+		if (objects.hhead==NULL)
+			return NULL;
 		return ((lpOBJ)objects.hhead)->extendedClass;
 	};
 	virtual  sgCObject*  GetNext(sgCObject* c_obj) const
@@ -29,14 +29,14 @@ public:
 		hOBJ hobj,hnext;
 		hobj = GetObjectHandle(c_obj);
 		get_next_item_z(OBJ_LIST,hobj, &hnext);  //  
-		if (hnext==nullptr)
-			return nullptr;
+		if (hnext==NULL)
+			return NULL;
 		return ((lpOBJ)hnext)->extendedClass;
 	};
 	virtual  sgCObject*  GetTail()	const
 	{
-		if (objects.htail==nullptr)
-			return nullptr;
+		if (objects.htail==NULL)
+			return NULL;
 		return ((lpOBJ)objects.htail)->extendedClass;
 	};
 	virtual  sgCObject*  GetPrev(sgCObject* c_obj) const
@@ -44,8 +44,8 @@ public:
 		hOBJ hobj,hprev;
 		hobj = GetObjectHandle(c_obj);
 		get_prev_item_z(OBJ_LIST,hobj, &hprev);  //  
-		if (hprev==nullptr)
-			return nullptr;
+		if (hprev==NULL)
+			return NULL;
 		return ((lpOBJ)hprev)->extendedClass;
 	}
 };
@@ -60,8 +60,8 @@ public:
 	};
 	virtual  sgCObject*  GetHead()	const
 	{
-		if (selected.hhead==nullptr)
-			return nullptr;
+		if (selected.hhead==NULL)
+			return NULL;
 		return ((lpOBJ)selected.hhead)->extendedClass;
 	};
 	virtual  sgCObject*  GetNext(sgCObject* c_obj) const
@@ -69,14 +69,14 @@ public:
 		hOBJ hobj,hnext;
 		hobj = GetObjectHandle(c_obj);
 		get_next_item_z(SEL_LIST, hobj, &hnext);
-		if (hnext==nullptr)
-			return nullptr;
+		if (hnext==NULL)
+			return NULL;
 		return ((lpOBJ)hnext)->extendedClass;
 	};
 	virtual  sgCObject*  GetTail()	const
 	{
-		if (selected.htail==nullptr)
-			return nullptr;
+		if (selected.htail==NULL)
+			return NULL;
 		return ((lpOBJ)selected.htail)->extendedClass;
 	};
 	virtual  sgCObject*  GetPrev(sgCObject* c_obj) const
@@ -84,15 +84,15 @@ public:
 		hOBJ hobj,hprev;
 		hobj = GetObjectHandle(c_obj);
 		get_prev_item_z(SEL_LIST,hobj, &hprev);  //  
-		if (hprev==nullptr)
-			return nullptr;
+		if (hprev==NULL)
+			return NULL;
 		return ((lpOBJ)hprev)->extendedClass;
 	}
 };
 
 sgCScene* sgCScene::GetScene()
 {
-	if(scene==nullptr)
+	if(scene==NULL)
 		scene = new sgCScene;
 	return scene;
 }
@@ -110,7 +110,7 @@ sgCScene::~sgCScene()
 	if (temp_font)
 	{
 		delete temp_font;
-		temp_font = nullptr;
+		temp_font = NULL;
 	}
 }
 
@@ -174,7 +174,7 @@ void sgCScene::DetachObject(sgCObject* obj)
 /************************************************************************/
 bool sgCScene::StartUndoGroup()
 {
-	if (current_undo_redo_group!=nullptr)
+	if (current_undo_redo_group!=NULL)
 	{
 		assert(0);
 		return false;
@@ -185,7 +185,7 @@ bool sgCScene::StartUndoGroup()
 
 bool sgCScene::EndUndoGroup()
 {
-	if (current_undo_redo_group==nullptr)
+	if (current_undo_redo_group==NULL)
 	{
 		assert(0);
 		return false;
@@ -194,7 +194,7 @@ bool sgCScene::EndUndoGroup()
 	current_undo_redo_group->ChangeOrder();
 	undo_list.push_back(current_undo_redo_group);
 
-	current_undo_redo_group = nullptr;
+	current_undo_redo_group = NULL;
 
 	std::list<CommandsGroup*>::iterator Iter;
 
@@ -271,7 +271,7 @@ void sgCScene::Clear()
 	if (temp_font)
 	{
 		delete temp_font;
-		temp_font = nullptr;
+		temp_font = NULL;
 	}
 
 	hOBJ  hobj, hnext;
@@ -287,11 +287,11 @@ void sgCScene::Clear()
 	for (std::list<sgCObject*>::iterator i = detached_objects.begin(), 
 				j = detached_objects.end(); i != j; ++i)
 	{
-		if ((*i)->GetParent()!=nullptr)
+		if ((*i)->GetParent()!=NULL)
 		{
 			assert(0);
 		}
-		o_free(GetObjectHandle(*i), nullptr);
+		o_free(GetObjectHandle(*i), NULL);
 	}
 	detached_objects.clear();
 
@@ -363,10 +363,10 @@ bool sgCObject::ApplyTempMatrix()
 
 sgCGroup*  sgCGroup::CreateGroup(sgCObject** objcts, int cnt)
 {
-	if (objcts==nullptr || cnt==0)
+	if (objcts==NULL || cnt==0)
 	{
 		assert(0);
-		return nullptr;
+		return NULL;
 	}
 
 	hOBJ		/*hobj,*/ hgroup;
@@ -381,14 +381,14 @@ sgCGroup*  sgCGroup::CreateGroup(sgCObject** objcts, int cnt)
 	for (int i=0;i<cnt;i++)
 	{
 		if ((((lpOBJ)GetObjectHandle(objcts[i]))->isAttachedToScene)!=allAttached)
-			return nullptr;
+			return NULL;
 	}
 
 	//  
 	memset(&group,0,sizeof(GEO_GROUP));
 	o_hcunit(group.matr);
-	if ((hgroup = create_simple_obj_loc(OGROUP, &group)) == nullptr) 
-		return nullptr;
+	if ((hgroup = create_simple_obj_loc(OGROUP, &group)) == NULL) 
+		return NULL;
 	for (int i=0;i<cnt;i++)
 	{
 		assert(objcts[i]);
@@ -422,7 +422,7 @@ sgCGroup*  sgCGroup::CreateGroup(sgCObject** objcts, int cnt)
 		UR_ELEMENT   tmp_UR;
 		tmp_UR.obj = hgroup;
 		tmp_UR.op_type = CREATE_GROUP;
-		tmp_UR.matrix = nullptr;
+		tmp_UR.matrix = NULL;
 		tmp_UR.m_children.reserve(cnt);
 		for (int i=0;i<cnt;i++)
 			tmp_UR.m_children.push_back(GetObjectHandle(objcts[i]));
@@ -469,7 +469,7 @@ sgCGroup*  sgCGroup::CreateGroup(sgCObject** objcts, int cnt)
 
 bool   sgCGroup::BreakGroup(sgCObject** objcts)
 {
-	if (objcts==nullptr)
+	if (objcts==NULL)
 	{
 		assert(0);
 		return false;
@@ -484,8 +484,8 @@ bool   sgCGroup::BreakGroup(sgCObject** objcts)
 	{
 		//   
 		obj = (lpOBJ)hobj;
-		obj->hhold = nullptr;
-		hOBJ nextObj = nullptr;
+		obj->hhold = NULL;
+		hOBJ nextObj = NULL;
 		get_next_item_z(OBJ_LIST, hobj, &nextObj);
 		detach_item_z(OBJ_LIST, &geo.listh, hobj);
 		if (obj->extendedClass)
@@ -503,7 +503,7 @@ bool   sgCGroup::BreakGroup(sgCObject** objcts)
 		UR_ELEMENT   tmp_UR;
 		tmp_UR.obj = GetObjectHandle(this);
 		tmp_UR.op_type = BREAK_GROUP;
-		tmp_UR.matrix = nullptr;
+		tmp_UR.matrix = NULL;
 		tmp_UR.m_children.reserve(obj_cnt);
 		for (int i=0;i<obj_cnt;i++)
 			tmp_UR.m_children.push_back(GetObjectHandle(objcts[i]));
@@ -549,10 +549,10 @@ bool   sgCGroup::BreakGroup(sgCObject** objcts)
 
 sgCContour*  sgCContour::CreateContour(sgCObject** objcts, int cnt)
 {
-	if (objcts==nullptr || cnt<2)
+	if (objcts==NULL || cnt<2)
 	{
 		assert(0);
-		return nullptr;
+		return NULL;
 	}
 
 	bool        allAttached = false;
@@ -563,11 +563,11 @@ sgCContour*  sgCContour::CreateContour(sgCObject** objcts, int cnt)
 	for (int i=0;i<cnt;i++)
 	{
 		if ((((lpOBJ)GetObjectHandle(objcts[i]))->isAttachedToScene)!=allAttached)
-			return nullptr;
+			return NULL;
 	}
 
 	if (!sgCContour::TopologySort(objcts,cnt))
-		return nullptr;
+		return NULL;
 
 	GEO_PATH		geo_path;
 	LISTH			listh;
@@ -620,12 +620,12 @@ sgCContour*  sgCContour::CreateContour(sgCObject** objcts, int cnt)
 		else      
 			obj->status &= ~ST_FLAT;
 	}
-	//if (!set_flat_on_path(hpath, nullptr)) assert(0);
+	//if (!set_flat_on_path(hpath, NULL)) assert(0);
 	OSCAN_COD		cod;
-	if ((cod = test_self_cross_path(hpath,nullptr)) == OSFALSE)
+	if ((cod = test_self_cross_path(hpath,NULL)) == OSFALSE)
 	{
 		/*assert(0);
-		return nullptr;*/
+		return NULL;*/
 		obj->status &= ~ST_SIMPLE;
 	}
 	if (cod == OSTRUE) {
@@ -658,7 +658,7 @@ sgCContour*  sgCContour::CreateContour(sgCObject** objcts, int cnt)
 		UR_ELEMENT   tmp_UR;
 		tmp_UR.obj = hpath;
 		tmp_UR.op_type = CREATE_GROUP;
-		tmp_UR.matrix = nullptr;
+		tmp_UR.matrix = NULL;
 		tmp_UR.m_children.reserve(cnt);
 		for (int i=0;i<cnt;i++)
 			tmp_UR.m_children.push_back(GetObjectHandle(objcts[i]));
@@ -706,7 +706,7 @@ sgCContour*  sgCContour::CreateContour(sgCObject** objcts, int cnt)
 
 bool   sgCContour::BreakContour(sgCObject** objcts)
 {
-	if (objcts==nullptr)
+	if (objcts==NULL)
 	{
 		assert(0);
 		global_sg_error = SG_ER_BAD_ARGUMENT_NULL_POINTER;
@@ -722,8 +722,8 @@ bool   sgCContour::BreakContour(sgCObject** objcts)
 	{
 		//   
 		obj = (lpOBJ)hobj;
-		obj->hhold = nullptr;
-		hOBJ nextObj = nullptr;
+		obj->hhold = NULL;
+		hOBJ nextObj = NULL;
 		get_next_item_z(OBJ_LIST, hobj, &nextObj);
 		detach_item_z(OBJ_LIST, &geo.listh, hobj);
 		if (obj->extendedClass)
@@ -741,7 +741,7 @@ bool   sgCContour::BreakContour(sgCObject** objcts)
 		UR_ELEMENT   tmp_UR;
 		tmp_UR.obj = GetObjectHandle(this);
 		tmp_UR.op_type = BREAK_GROUP;
-		tmp_UR.matrix = nullptr;
+		tmp_UR.matrix = NULL;
 		tmp_UR.m_children.reserve(obj_cnt);
 		for (int i=0;i<obj_cnt;i++)
 			tmp_UR.m_children.push_back(GetObjectHandle(objcts[i]));

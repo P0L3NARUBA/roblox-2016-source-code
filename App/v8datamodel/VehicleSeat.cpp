@@ -26,14 +26,14 @@ namespace RBX {
 
 REFLECTION_BEGIN();
 static const Reflection::PropDescriptor<VehicleSeat, bool> propDisabled("Disabled", "Control", &VehicleSeat::getDisabled, &VehicleSeat::setDisabled);
-static const Reflection::RefPropDescriptor<VehicleSeat, Humanoid> propOccupant("Occupant", "Control", &VehicleSeat::getOccupant, nullptr, Reflection::PropertyDescriptor::SCRIPTING);
+static const Reflection::RefPropDescriptor<VehicleSeat, Humanoid> propOccupant("Occupant", "Control", &VehicleSeat::getOccupant, NULL, Reflection::PropertyDescriptor::SCRIPTING);
 static const Reflection::PropDescriptor<VehicleSeat, int> propThrottle("Throttle", "Control", &VehicleSeat::getThrottle, &VehicleSeat::setThrottle);
 static const Reflection::PropDescriptor<VehicleSeat, int> propSteer("Steer", "Control", &VehicleSeat::getSteer, &VehicleSeat::setSteer);
 static const Reflection::PropDescriptor<VehicleSeat, float> propMaxSpeed("MaxSpeed", "Control", &VehicleSeat::getMaxSpeed, &VehicleSeat::setMaxSpeed);
 static const Reflection::PropDescriptor<VehicleSeat, float> propTurnSpeed("TurnSpeed", "Control", &VehicleSeat::getTurnSpeed, &VehicleSeat::setTurnSpeed);
 static const Reflection::PropDescriptor<VehicleSeat, float> propTorque("Torque", "Control", &VehicleSeat::getTorque, &VehicleSeat::setTorque);
 static const Reflection::PropDescriptor<VehicleSeat, bool> propEnableHud("HeadsUpDisplay", "Control", &VehicleSeat::getEnableHud, &VehicleSeat::setEnableHud);
-static const Reflection::PropDescriptor<VehicleSeat, int> propNumHinges("AreHingesDetected", "Control", &VehicleSeat::getNumHinges, nullptr, Reflection::PropertyDescriptor::UI);
+static const Reflection::PropDescriptor<VehicleSeat, int> propNumHinges("AreHingesDetected", "Control", &VehicleSeat::getNumHinges, NULL, Reflection::PropertyDescriptor::UI);
 static Reflection::RemoteEventDesc<VehicleSeat, void(shared_ptr<Instance>)> event_createSeatWeld(&VehicleSeat::createSeatWeldSignal, "RemoteCreateSeatWeld", "humanoid", Security::None, Reflection::RemoteEventCommon::REPLICATE_ONLY,	Reflection::RemoteEventCommon::CLIENT_SERVER);
 static Reflection::RemoteEventDesc<VehicleSeat, void()> event_destroySeatWeld(&VehicleSeat::destroySeatWeldSignal, "RemoteDestroySeatWeld", Security::None, Reflection::RemoteEventCommon::REPLICATE_ONLY, Reflection::RemoteEventCommon::CLIENT_SERVER);
 REFLECTION_END();
@@ -41,7 +41,7 @@ REFLECTION_END();
 const char* const sVehicleSeat = "VehicleSeat";
 
 VehicleSeat::VehicleSeat() 
-: world(nullptr)
+: world(NULL)
 , throttle(0)
 , steer(0)
 , maxSpeed(25.0)
@@ -51,8 +51,8 @@ VehicleSeat::VehicleSeat()
 {
 	setName(sVehicleSeat);
 	setDisabled(false);
-	RBXASSERT(Edge::getPrimitive(0) == nullptr);
-	RBXASSERT(Edge::getPrimitive(1) == nullptr);
+	RBXASSERT(Edge::getPrimitive(0) == NULL);
+	RBXASSERT(Edge::getPrimitive(1) == NULL);
 
 	createSeatWeldSignal.connect(boost::bind(static_cast<void (VehicleSeat::*)(shared_ptr<Instance>)>(&VehicleSeat::createSeatWeldInternal), this, _1));
 	destroySeatWeldSignal.connect(boost::bind(&VehicleSeat::findAndDestroySeatWeldInternal, this));
@@ -61,9 +61,9 @@ VehicleSeat::VehicleSeat()
 
 VehicleSeat::~VehicleSeat() 
 {
-	RBXASSERT(world == nullptr);
-	RBXASSERT(Edge::getPrimitive(0) == nullptr);
-	RBXASSERT(Edge::getPrimitive(1) == nullptr);
+	RBXASSERT(world == NULL);
+	RBXASSERT(Edge::getPrimitive(0) == NULL);
+	RBXASSERT(Edge::getPrimitive(1) == NULL);
 }
 
 bool VehicleSeat::shouldRender2d() const
@@ -180,10 +180,10 @@ void VehicleSeat::onAncestorChanged(const AncestorChanged& event)
 	if (newWorld != world) 
 	{
 		if (world) {
-			RBXASSERT(newWorld == nullptr);
+			RBXASSERT(newWorld == NULL);
 			world->removeJoint(this);
-			setPrimitive(0, nullptr);
-			setPrimitive(1, nullptr);
+			setPrimitive(0, NULL);
+			setPrimitive(1, NULL);
 		}
 
 		world = newWorld;

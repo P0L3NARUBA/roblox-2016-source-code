@@ -51,11 +51,11 @@ SDL_PromptAssertion(const SDL_assert_data *data, void *userdata);
  * We keep all triggered assertions in a singly-linked list so we can
  *  generate a report later.
  */
-static SDL_assert_data *triggered_assertions = nullptr;
+static SDL_assert_data *triggered_assertions = NULL;
 
-static SDL_mutex *assertion_mutex = nullptr;
+static SDL_mutex *assertion_mutex = NULL;
 static SDL_AssertionHandler assertion_handler = SDL_PromptAssertion;
-static void *assertion_userdata = nullptr;
+static void *assertion_userdata = NULL;
 
 #ifdef __GNUC__
 static void
@@ -89,11 +89,11 @@ static void SDL_GenerateAssertionReport(void)
     const SDL_assert_data *item = triggered_assertions;
 
     /* only do this if the app hasn't assigned an assertion handler. */
-    if ((item != nullptr) && (assertion_handler != SDL_PromptAssertion)) {
+    if ((item != NULL) && (assertion_handler != SDL_PromptAssertion)) {
         debug_print("\n\nSDL assertion report.\n");
         debug_print("All SDL assertions between last init/quit:\n\n");
 
-        while (item != nullptr) {
+        while (item != NULL) {
             debug_print(
                 "'%s'\n"
                 "    * %s (%s:%d)\n"
@@ -170,7 +170,7 @@ SDL_PromptAssertion(const SDL_assert_data *data, void *userdata)
 
     /* let env. variable override, so unit tests won't block in a GUI. */
     envr = SDL_getenv("SDL_ASSERT");
-    if (envr != nullptr) {
+    if (envr != NULL) {
         SDL_stack_free(message);
 
         if (SDL_strcmp(envr, "abort") == 0) {
@@ -196,7 +196,7 @@ SDL_PromptAssertion(const SDL_assert_data *data, void *userdata)
         } else {
             /* !!! FIXME: ungrab the input if we're not fullscreen? */
             /* No need to mess with the window */
-            window = nullptr;
+            window = NULL;
         }
     }
 
@@ -224,7 +224,7 @@ SDL_PromptAssertion(const SDL_assert_data *data, void *userdata)
             char buf[32];
             fprintf(stderr, "Abort/Break/Retry/Ignore/AlwaysIgnore? [abriA] : ");
             fflush(stderr);
-            if (fgets(buf, sizeof (buf), stdin) == nullptr) {
+            if (fgets(buf, sizeof (buf), stdin) == NULL) {
                 break;
             }
 
@@ -268,9 +268,9 @@ SDL_ReportAssertion(SDL_assert_data *data, const char *func, const char *file,
     SDL_assert_state state = SDL_ASSERTION_IGNORE;
 
     SDL_AtomicLock(&spinlock);
-    if (assertion_mutex == nullptr) { /* never called SDL_Init()? */
+    if (assertion_mutex == NULL) { /* never called SDL_Init()? */
         assertion_mutex = SDL_CreateMutex();
-        if (assertion_mutex == nullptr) {
+        if (assertion_mutex == NULL) {
             SDL_AtomicUnlock(&spinlock);
             return SDL_ASSERTION_IGNORE;   /* oh well, I guess. */
         }
@@ -332,20 +332,20 @@ SDL_ReportAssertion(SDL_assert_data *data, const char *func, const char *file,
 void SDL_AssertionsQuit(void)
 {
     SDL_GenerateAssertionReport();
-    if (assertion_mutex != nullptr) {
+    if (assertion_mutex != NULL) {
         SDL_DestroyMutex(assertion_mutex);
-        assertion_mutex = nullptr;
+        assertion_mutex = NULL;
     }
 }
 
 void SDL_SetAssertionHandler(SDL_AssertionHandler handler, void *userdata)
 {
-    if (handler != nullptr) {
+    if (handler != NULL) {
         assertion_handler = handler;
         assertion_userdata = userdata;
     } else {
         assertion_handler = SDL_PromptAssertion;
-        assertion_userdata = nullptr;
+        assertion_userdata = NULL;
     }
 }
 
@@ -356,16 +356,16 @@ const SDL_assert_data *SDL_GetAssertionReport(void)
 
 void SDL_ResetAssertionReport(void)
 {
-    SDL_assert_data *next = nullptr;
+    SDL_assert_data *next = NULL;
     SDL_assert_data *item;
-    for (item = triggered_assertions; item != nullptr; item = next) {
+    for (item = triggered_assertions; item != NULL; item = next) {
         next = (SDL_assert_data *) item->next;
         item->always_ignore = SDL_FALSE;
         item->trigger_count = 0;
-        item->next = nullptr;
+        item->next = NULL;
     }
 
-    triggered_assertions = nullptr;
+    triggered_assertions = NULL;
 }
 
 SDL_AssertionHandler SDL_GetDefaultAssertionHandler(void)
@@ -375,7 +375,7 @@ SDL_AssertionHandler SDL_GetDefaultAssertionHandler(void)
 
 SDL_AssertionHandler SDL_GetAssertionHandler(void **userdata)
 {
-    if (userdata != nullptr) {
+    if (userdata != NULL) {
         *userdata = assertion_userdata;
     }
     return assertion_handler;

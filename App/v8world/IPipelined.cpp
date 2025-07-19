@@ -55,7 +55,7 @@ void IPipelined::removeFromPipeline(IStage* stage)
 	RBXASSERT(stage);
 	RBXASSERT(currentStage);
 	RBXASSERT(currentStage == stage);
-	currentStage = nullptr;
+	currentStage = NULL;
 }
 
 

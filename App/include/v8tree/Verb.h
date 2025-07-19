@@ -73,9 +73,9 @@ class BoundVerb : public Verb
 public:
 	BoundVerb(VerbContainer* container, const char* name,
 		boost::function<void(VerbContainer*)> doItFunction,
-		boost::function<bool(VerbContainer*)> isEnabledFunction = nullptr,
-		boost::function<bool(VerbContainer*)> isCheckedFunction = nullptr,
-		boost::function<std::string(VerbContainer*)> getTextFunction = nullptr)
+		boost::function<bool(VerbContainer*)> isEnabledFunction = NULL,
+		boost::function<bool(VerbContainer*)> isCheckedFunction = NULL,
+		boost::function<std::string(VerbContainer*)> getTextFunction = NULL)
 		: Verb(container, name)
 		, doItFunction(doItFunction)
 		, isEnabledFunction(isEnabledFunction)

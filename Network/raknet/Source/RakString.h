@@ -142,9 +142,9 @@ public:
 	/// Erase characters out of the string at index for count
 	void Erase(unsigned int index, unsigned int count);
 
-	/// Set the first instance of c with a nullptr terminator
+	/// Set the first instance of c with a NULL terminator
 	void TerminateAtFirstCharacter(char c);
-	/// Set the last instance of c with a nullptr terminator
+	/// Set the last instance of c with a NULL terminator
 	void TerminateAtLastCharacter(char c);
 	
 	/// Remove all instances of c

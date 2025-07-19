@@ -119,7 +119,7 @@ namespace {
 TIntermTyped* TParseContext::add_binary(TOperator op, TIntermTyped* a, TIntermTyped* b, TSourceLoc line, const char* name, bool boolResult)
 {
 	TIntermTyped* res = ir_add_binary_math(op, a, b, line, *this);
-	if (res == nullptr)
+	if (res == NULL)
 	{
 		binaryOpError(line, name, a->getCompleteString(), b->getCompleteString());
 		recover();
@@ -1258,7 +1258,7 @@ bool TParseContext::executeInitializer(TSourceLoc line, TString& identifier, con
 			variable->getType().setStruct(type.getStruct());
 		
 		initializer = addConstructor(agg, &variable->getType(), getConstructorOp(variable->getType()), 0, agg->getLine());
-		if ( initializer == nullptr )
+		if ( initializer == NULL )
 			return true;
 		
 		type = variable->getType();

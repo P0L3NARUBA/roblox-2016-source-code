@@ -57,13 +57,13 @@ skip_whitespace(const char *&src, char *&symbol_buffer)
 static s_expression *
 read_atom(void *ctx, const char *&src, char *&symbol_buffer)
 {
-   s_expression *expr = nullptr;
+   s_expression *expr = NULL;
 
    skip_whitespace(src, symbol_buffer);
 
    size_t n = strcspn(src, "( \v\t\r\n);");
    if (n == 0)
-      return nullptr; // no atom
+      return NULL; // no atom
 
    // Check for the special symbol '+INF', which means +Infinity.  Note: C99
    // requires strtof to parse '+INF' as +Infinity, but we still support some
@@ -72,10 +72,10 @@ read_atom(void *ctx, const char *&src, char *&symbol_buffer)
       expr = new(ctx) s_float(std::numeric_limits<float>::infinity());
    } else {
       // Check if the atom is a number.
-      char *float_end = nullptr;
+      char *float_end = NULL;
       float f = glsl_strtof(src, &float_end);
       if (float_end != src) {
-         char *int_end = nullptr;
+         char *int_end = NULL;
          int i = strtol(src, &int_end, 10);
          // If strtof matched more characters, it must have a decimal part
          if (float_end > int_end)
@@ -99,7 +99,7 @@ static s_expression *
 __read_expression(void *ctx, const char *&src, char *&symbol_buffer)
 {
    s_expression *atom = read_atom(ctx, src, symbol_buffer);
-   if (atom != nullptr)
+   if (atom != NULL)
       return atom;
 
    skip_whitespace(src, symbol_buffer);
@@ -110,25 +110,25 @@ __read_expression(void *ctx, const char *&src, char *&symbol_buffer)
       s_list *list = new(ctx) s_list;
       s_expression *expr;
 
-      while ((expr = __read_expression(ctx, src, symbol_buffer)) != nullptr) {
+      while ((expr = __read_expression(ctx, src, symbol_buffer)) != NULL) {
 	 list->subexpressions.push_tail(expr);
       }
       skip_whitespace(src, symbol_buffer);
       if (src[0] != ')') {
 	 printf("Unclosed expression (check your parenthesis).\n");
-	 return nullptr;
+	 return NULL;
       }
       ++src;
       ++symbol_buffer;
       return list;
    }
-   return nullptr;
+   return NULL;
 }
 
 s_expression *
 s_expression::read_expression(void *ctx, const char *&src)
 {
-   assert(src != nullptr);
+   assert(src != NULL);
 
    /* When we encounter a Symbol, we need to save a nul-terminated copy of
     * the string.  However, ralloc_strndup'ing every individual Symbol is
@@ -184,7 +184,7 @@ s_pattern::match(s_expression *expr)
    case INT:    if (expr->is_int())    *p_int    = (s_int *)    expr; break;
    case STRING:
       s_symbol *sym = SX_AS_SYMBOL(expr);
-      if (sym != nullptr && strcmp(sym->value(), literal) == 0)
+      if (sym != NULL && strcmp(sym->value(), literal) == 0)
 	 return true;
       return false;
    };
@@ -196,7 +196,7 @@ bool
 s_match(s_expression *top, unsigned n, s_pattern *pattern, bool partial)
 {
    s_list *list = SX_AS_LIST(top);
-   if (list == nullptr)
+   if (list == NULL)
       return false;
 
    unsigned i = 0;
@@ -204,7 +204,7 @@ s_match(s_expression *top, unsigned n, s_pattern *pattern, bool partial)
       if (i >= n)
 	 return partial; /* More actual items than the pattern expected */
 
-      if (expr == nullptr || !pattern[i].match(expr))
+      if (expr == NULL || !pattern[i].match(expr))
 	 return false;
 
       i++;

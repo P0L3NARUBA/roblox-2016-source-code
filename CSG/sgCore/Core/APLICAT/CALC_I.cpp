@@ -31,7 +31,7 @@ void Calculate_Group_M_In( lpLISTH group,
 	for( i=0; i<X_NUM; i++ ) value[i] = 0.;
 	object = group->hhead;  // list begining
 	j=0;
-	while( object != nullptr ){      // while objects exist into list
+	while( object != NULL ){      // while objects exist into list
 // calculate characteristics for one object
 		Calculate_M_In( object, Density[j], M_to_UNIT, flag, value_object );
 // summary characteristics for objects to obtain common charact.

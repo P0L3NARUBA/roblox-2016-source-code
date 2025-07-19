@@ -125,7 +125,7 @@ tcpkeepalive(struct SessionHandle *data,
     KEEPALIVE_FACTOR(optval);
     vals.keepaliveinterval = optval;
     if(WSAIoctl(sockfd, SIO_KEEPALIVE_VALS, (LPVOID) &vals, sizeof(vals),
-                nullptr, 0, &dummy, nullptr, nullptr) != 0) {
+                NULL, 0, &dummy, NULL, NULL) != 0) {
       infof(data, "Failed to set SIO_KEEPALIVE_VALS on fd %d: %d\n",
             (int)sockfd, WSAGetLastError());
     }
@@ -172,7 +172,7 @@ singleipconnect(struct connectdata *conn,
  * The start time is stored in progress.t_startsingle - as set with
  * Curl_pgrsTime(..., TIMER_STARTSINGLE);
  *
- * If 'nowp' is non-nullptr, it points to the current time.
+ * If 'nowp' is non-NULL, it points to the current time.
  * 'duringconnect' is FALSE if not during a connect, as then of course the
  * connect timeout is not taken into account!
  *
@@ -248,7 +248,7 @@ static CURLcode bindlocal(struct connectdata *conn,
   struct sockaddr_in6 *si6 = (struct sockaddr_in6 *)&sa;
 #endif
 
-  struct Curl_dns_entry *h=nullptr;
+  struct Curl_dns_entry *h=NULL;
   unsigned short port = data->set.localport; /* use this port number, 0 for
                                                 "random" */
   /* how many port numbers to try to bind to, increasing one at a time */
@@ -551,7 +551,7 @@ static CURLcode trynextip(struct connectdata *conn,
   conn->tempsock[tempindex] = CURL_SOCKET_BAD;
 
   if(sockindex == FIRSTSOCKET) {
-    Curl_addrinfo *ai = nullptr;
+    Curl_addrinfo *ai = NULL;
     int family = AF_UNSPEC;
 
     if(conn->tempaddr[tempindex]) {
@@ -609,12 +609,12 @@ static bool getaddressinfo(struct sockaddr* sa, char* addr,
                            long* port)
 {
   unsigned short us_port;
-  struct sockaddr_in* si = nullptr;
+  struct sockaddr_in* si = NULL;
 #ifdef ENABLE_IPV6
-  struct sockaddr_in6* si6 = nullptr;
+  struct sockaddr_in6* si6 = NULL;
 #endif
 #if defined(HAVE_SYS_UN_H) && defined(AF_UNIX)
-  struct sockaddr_un* su = nullptr;
+  struct sockaddr_un* su = NULL;
 #endif
 
   switch (sa->sa_family) {
@@ -757,7 +757,7 @@ CURLcode Curl_is_connected(struct connectdata *conn,
     /* Call this function once now, and ignore the results. We do this to
        "clear" the error state on the socket so that we can later read it
        reliably. This is reported necessary on the MPE/iX operating system. */
-    (void)verifyconnect(conn->tempsock[i], nullptr);
+    (void)verifyconnect(conn->tempsock[i], NULL);
 #endif
 
     /* check socket for connect */
@@ -771,7 +771,7 @@ CURLcode Curl_is_connected(struct connectdata *conn,
       }
 
       /* should we try another protocol family? */
-      if(i == 0 && conn->tempaddr[1] == nullptr &&
+      if(i == 0 && conn->tempaddr[1] == NULL &&
          curlx_tvdiff(now, conn->connecttime) >= HAPPY_EYEBALLS_TIMEOUT) {
         trynextip(conn, sockindex, 1);
       }
@@ -826,7 +826,7 @@ CURLcode Curl_is_connected(struct connectdata *conn,
         infof(data, "connect to %s port %ld failed: %s\n",
               ipaddress, conn->port, Curl_strerror(conn, error));
 
-        conn->timeoutms_per_addr = conn->tempaddr[i]->ai_next == nullptr ?
+        conn->timeoutms_per_addr = conn->tempaddr[i]->ai_next == NULL ?
                                    allow : allow / 2;
 
         status = trynextip(conn, sockindex, i);
@@ -843,7 +843,7 @@ CURLcode Curl_is_connected(struct connectdata *conn,
 
     /* if the first address family runs out of addresses to try before
        the happy eyeball timeout, go ahead and try the next family now */
-    if(conn->tempaddr[1] == nullptr) {
+    if(conn->tempaddr[1] == NULL) {
       result = trynextip(conn, sockindex, 1);
       if(!result)
         return result;
@@ -1149,14 +1149,14 @@ CURLcode Curl_connecthost(struct connectdata *conn,  /* context */
 
   conn->num_addr = Curl_num_addresses(remotehost->addr);
   conn->tempaddr[0] = remotehost->addr;
-  conn->tempaddr[1] = nullptr;
+  conn->tempaddr[1] = NULL;
   conn->tempsock[0] = CURL_SOCKET_BAD;
   conn->tempsock[1] = CURL_SOCKET_BAD;
   Curl_expire(conn->data, HAPPY_EYEBALLS_TIMEOUT);
 
   /* Max time for the next connection attempt */
   conn->timeoutms_per_addr =
-    conn->tempaddr[0]->ai_next == nullptr ? timeout_ms : timeout_ms / 2;
+    conn->tempaddr[0]->ai_next == NULL ? timeout_ms : timeout_ms / 2;
 
   /* start connecting to first IP */
   while(conn->tempaddr[0]) {
@@ -1221,7 +1221,7 @@ curl_socket_t Curl_getconnectinfo(struct SessionHandle *data,
                            &data->multi->conn_cache, &find, conn_is_conn);
 
     if(!find.found) {
-      data->state.lastconnect = nullptr;
+      data->state.lastconnect = NULL;
       return CURL_SOCKET_BAD;
     }
 
@@ -1257,7 +1257,7 @@ curl_socket_t Curl_getconnectinfo(struct SessionHandle *data,
 /*
  * Close a socket.
  *
- * 'conn' can be nullptr, beware!
+ * 'conn' can be NULL, beware!
  */
 int Curl_closesocket(struct connectdata *conn,
                       curl_socket_t sock)
@@ -1287,7 +1287,7 @@ int Curl_closesocket(struct connectdata *conn,
 /*
  * Create a socket based on info from 'conn' and 'ai'.
  *
- * 'addr' should be a pointer to the correct struct to get data back, or nullptr.
+ * 'addr' should be a pointer to the correct struct to get data back, or NULL.
  * 'sockfd' must be a pointer to a socket descriptor.
  *
  * If the open socket callback is set, used that!

@@ -5,7 +5,6 @@
 #include "SceneManager.h"
 #include "ShaderManager.h"
 #include "TextureManager.h"
-#include "Vertex.h"
 
 #include "Util.h"
 
@@ -188,11 +187,11 @@ void VertexStreamer::renderInternal(DeviceContext* context, CoordinateSpace coor
     context->setDepthState(DepthState(coordinateSpace == CS_WorldSpace ? DepthState::Function_GreaterEqual : DepthState::Function_Always, false));
 
     // Only required for FFP
-    context->setWorldTransforms4x3(nullptr, 0);
+    context->setWorldTransforms4x3(NULL, 0);
 
     stats.passChanges++;
 
-    Texture* currentTexture = nullptr;
+    Texture* currentTexture = NULL;
 	
 	int arraySize = coordinateSpace == CS_WorldSpaceNoDepth ? worldSpaceZDepthLayers[renderIndex].size() : chunks[coordinateSpace].size();
 	for (int i = 0; i < arraySize; ++i)
@@ -239,7 +238,7 @@ VertexStreamer::VertexChunk* VertexStreamer::prepareChunk(const shared_ptr<Textu
     unsigned int vertexStart = vertexData.size();
 
 	if (vertexStart + vertexCount > kVertexBufferMaxCount)
-        return nullptr;
+        return NULL;
 
     const shared_ptr<Texture>& actualTexture = ignoreTexture ? visualEngine->getTextureManager()->getFallbackTexture(TextureManager::Fallback_White) : texture;
     G3D::Array<VertexChunk>& orderedChunks = chunks[coordinateSpace];

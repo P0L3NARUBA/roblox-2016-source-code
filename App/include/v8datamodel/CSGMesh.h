@@ -7,8 +7,7 @@
 #include "G3D/Vector2.h"
 #include "G3D/Vector3.h"
 #include "G3D/Vector4.h"
-#include "G3D/Color4uint8.h"
-#include "G3D/Color3uint8.h"
+#include "G3D/Color4.h"
 #include "G3D/CoordinateFrame.h"
 
 #include "rbx/Debug.h"
@@ -17,111 +16,111 @@
 namespace RBX
 {
 
-class CSGVertex
-{
-public:
-	G3D::Vector3 pos;
-	G3D::Vector3 normal;
-	G3D::Color4uint8 color;
-	G3D::Color4uint8 extra; // red = uv generation type
-	G3D::Vector2 uv;
-	G3D::Vector2 uvStuds;
-    G3D::Vector2 uvDecal;
+	class CSGVertex
+	{
+	public:
+		G3D::Vector3 Position;
+		G3D::Vector2 UV;
+		G3D::Color4 Color;
+		//G3D::Color4uint8 extra; // red = uv generation type
+		//G3D::Vector2 uvStuds;
+		//G3D::Vector2 UVDecal;
 
-	G3D::Vector3 tangent;
-	G3D::Vector4 edgeDistances;
+		G3D::Vector3 Normal;
+		G3D::Vector3 Tangent;
+		//G3D::Vector4 edgeDistances;
 
-    enum UVGenerationType
-    {
-        NO_UV_GENERATION = 0,
-        UV_BOX_X,
-        UV_BOX_Y,
-        UV_BOX_Z,
-        UV_BOX_X_NEG,
-        UV_BOX_Y_NEG,
-        UV_BOX_Z_NEG
-    };
+		enum UVGenerationType
+		{
+			NO_UV_GENERATION = 0,
+			UV_BOX_X,
+			UV_BOX_Y,
+			UV_BOX_Z,
+			UV_BOX_X_NEG,
+			UV_BOX_Y_NEG,
+			UV_BOX_Z_NEG
+		};
 
 
-	CSGVertex(){;}
+		CSGVertex() { ; }
 
-    G3D::Vector2 generateUv(const Vector3& pos) const;
-    void generateUv();
-};
-    
-class CSGMesh
-{
-public:
-	CSGMesh();
-    virtual ~CSGMesh();
+		G3D::Vector2 generateUv(const Vector3& pos) const;
+		void generateUv();
+	};
 
-    virtual CSGMesh* clone() const;
+	class CSGMesh
+	{
+	public:
+		CSGMesh();
+		virtual ~CSGMesh();
 
-    const std::vector<CSGVertex>& getVertices() const { return vertices; }
-    const std::vector<unsigned int>& getIndices() const { return indices; }
+		virtual CSGMesh* clone() const;
 
-    const std::vector<unsigned>& getIndexRemap(unsigned idx) const { RBXASSERT(idx < 6); return decalIndexRemap[idx]; }
-    const std::vector<unsigned>& getVertexRemap(unsigned idx) const { RBXASSERT(idx < 6); return decalVertexRemap[idx];}
+		const std::vector<CSGVertex>& getVertices() const { return vertices; }
+		const std::vector<unsigned int>& getIndices() const { return indices; }
 
-    std::string createHash(const std::string salt = "") const;
+		const std::vector<unsigned>& getIndexRemap(unsigned idx) const { RBXASSERT(idx < 6); return decalIndexRemap[idx]; }
+		const std::vector<unsigned>& getVertexRemap(unsigned idx) const { RBXASSERT(idx < 6); return decalVertexRemap[idx]; }
 
-    bool isBadMesh() const { return badMesh; }
-    virtual bool isValid() const { return true; }
+		std::string createHash(const std::string salt = "") const;
 
-    void set(const std::vector<CSGVertex>& vertices, const std::vector<unsigned int>& indices);
-    void clearMesh();
+		bool isBadMesh() const { return badMesh; }
+		virtual bool isValid() const { return true; }
 
-    virtual void translate( const G3D::Vector3& translation ) {}
+		void set(const std::vector<CSGVertex>& vertices, const std::vector<unsigned int>& indices);
+		void clearMesh();
 
-    virtual void applyCoordinateFrame(G3D::CoordinateFrame cFrame) {}
-    virtual void applyTranslation(const G3D::Vector3& trans) {}
-    virtual void applyColor(const G3D::Vector3& color) {}
-    virtual void applyScale(const G3D::Vector3& size) {}
-    virtual void triangulate() {}
-    virtual bool newTriangulate() { return true;}
-    virtual void weldMesh(bool positionOnly = false) {}
+		virtual void translate(const G3D::Vector3& translation) {}
 
-    virtual void buildBRep() {}
-    
-    virtual bool unionMesh(const CSGMesh* a, const CSGMesh* b) { return false; }
-    virtual bool intersectMesh(const CSGMesh* a, const CSGMesh* b) { return false; }
-    virtual bool subractMesh(const CSGMesh* a, const CSGMesh* b) { return false; }
+		virtual void applyCoordinateFrame(G3D::CoordinateFrame cFrame) {}
+		virtual void applyTranslation(const G3D::Vector3& trans) {}
+		virtual void applyColor(const G3D::Vector3& color) {}
+		virtual void applyScale(const G3D::Vector3& size) {}
+		virtual void triangulate() {}
+		virtual bool newTriangulate() { return true; }
+		virtual void weldMesh(bool positionOnly = false) {}
 
-	bool isNotEmpty() const;
+		virtual void buildBRep() {}
 
-	std::string toBinaryString() const;
-	std::string toBinaryStringForPhysics() const;
-	bool fromBinaryString(const std::string& str);
-    virtual std::string getBRepBinaryString() const { return ""; }
-    virtual void setBRepFromBinaryString(const std::string& str) {}
+		virtual bool unionMesh(const CSGMesh* a, const CSGMesh* b) { return false; }
+		virtual bool intersectMesh(const CSGMesh* a, const CSGMesh* b) { return false; }
+		virtual bool subractMesh(const CSGMesh* a, const CSGMesh* b) { return false; }
 
-    virtual size_t clusterVertices( float resolution ) { return 0; }
-    virtual bool makeHalfEdges( std::vector< int>& vertexEdges ) { return true; }
+		bool isNotEmpty() const;
 
-    virtual G3D::Vector3 extentsCenter() { G3D::Vector3 v; return v; }
-    virtual G3D::Vector3 extentsSize() { G3D::Vector3 v; return v; }
+		std::string toBinaryString() const;
+		std::string toBinaryStringForPhysics() const;
+		bool fromBinaryString(const std::string& str);
+		virtual std::string getBRepBinaryString() const { return ""; }
+		virtual void setBRepFromBinaryString(const std::string& str) {}
 
-    void computeDecalRemap();
+		virtual size_t clusterVertices(float resolution) { return 0; }
+		virtual bool makeHalfEdges(std::vector< int>& vertexEdges) { return true; }
 
-protected:
-    int version;
-    int brepVersion;
-    bool badMesh;
+		virtual G3D::Vector3 extentsCenter() { G3D::Vector3 v; return v; }
+		virtual G3D::Vector3 extentsSize() { G3D::Vector3 v; return v; }
 
-    std::vector<CSGVertex> vertices;
-	std::vector<unsigned int> indices;
+		void computeDecalRemap();
 
-    std::vector<unsigned> decalVertexRemap[6];
-    std::vector<unsigned> decalIndexRemap[6];
-};
+	protected:
+		int version;
+		int brepVersion;
+		bool badMesh;
 
-class CSGMeshFactory
-{
-public:
-    virtual CSGMesh* createMesh();
-    
-    static CSGMeshFactory* singleton();
-    static void set(CSGMeshFactory* factory);
-};
+		std::vector<CSGVertex> vertices;
+		std::vector<unsigned int> indices;
+
+		std::vector<unsigned> decalVertexRemap[6];
+		std::vector<unsigned> decalIndexRemap[6];
+	};
+
+	class CSGMeshFactory
+	{
+	public:
+		virtual CSGMesh* createMesh();
+
+		static CSGMeshFactory* singleton();
+		static void set(CSGMeshFactory* factory);
+	};
 
 }

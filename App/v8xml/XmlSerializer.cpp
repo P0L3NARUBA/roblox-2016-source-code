@@ -463,12 +463,12 @@ std::auto_ptr<XmlElement> TextXmlParser::parse()
 		else
 			currentTag = readTag();		// finds the text between "<" and ">" inclusive
 
-		XmlElement* currentElement = elements.empty() ? nullptr : elements.top();
+		XmlElement* currentElement = elements.empty() ? NULL : elements.top();
 		
 		if (isCloseTag(currentTag.c_str())) {
 
 			// no open tag
-			if (currentElement == nullptr)
+			if (currentElement == NULL)
 				throw RBX::runtime_error("TextXmlParser::parse - Got close tag %s without open tag.", currentTag.c_str());
 
 			// pop up the previous open tag
@@ -476,7 +476,7 @@ std::auto_ptr<XmlElement> TextXmlParser::parse()
 
 	        if (elements.empty()) {
 				// document processing is over
-				RBXASSERT(currentElement!=nullptr);
+				RBXASSERT(currentElement!=NULL);
 				return std::auto_ptr<XmlElement>(currentElement);
 			} 
 		} 
@@ -490,7 +490,7 @@ std::auto_ptr<XmlElement> TextXmlParser::parse()
 			{
 				XmlAttribute* xsinil = newElement->findAttribute(name_xsinil);
 				bool val; //Note: 'nil' is already define on OSX
-				if (xsinil!=nullptr && xsinil->getValue(val) && val)
+				if (xsinil!=NULL && xsinil->getValue(val) && val)
 				{
 					// no data
 				}
@@ -541,7 +541,7 @@ std::auto_ptr<XmlElement> TextXmlParser::parse()
 	
 	        // add new element as a child element of
 	        // the current element
-	        if (currentElement != nullptr)
+	        if (currentElement != NULL)
 				currentElement->addChild(newElement);
 
 			if (endsWithClose(currentTag))
@@ -597,7 +597,7 @@ void TextXmlWriter::serializeNode(const XmlElement* xmlNode, int depth)
 
 		writeOpenTag(xmlNode, depth);
 
-		if (xmlNode->findAttribute(name_xsinil)!=nullptr)
+		if (xmlNode->findAttribute(name_xsinil)!=NULL)
 		{
 			// Just write out the tag and nothing inside
 			return;
@@ -630,7 +630,7 @@ void TextXmlWriter::serialize(const XmlElement* xmlNode, int depth)
 
 		const XmlElement* child = xmlNode->firstChild();
 
-		if (child!=nullptr) {
+		if (child!=NULL) {
 			do {
 				stream << '\n';
 				serialize(child, depth+1);

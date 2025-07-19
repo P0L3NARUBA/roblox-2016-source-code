@@ -13,7 +13,7 @@ namespace RBX
 	{
 		friend class BaseScript;
 	protected:
-		// If script should run - pass back the IScriptOwner who should run it, otherwise nullptr
+		// If script should run - pass back the IScriptOwner who should run it, otherwise NULL
 		virtual bool scriptShouldRun(BaseScript* script) = 0;
 	};
 

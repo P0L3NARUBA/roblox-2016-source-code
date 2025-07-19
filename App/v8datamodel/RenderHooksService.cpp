@@ -34,7 +34,7 @@ namespace RBX
 
 
 	RenderHooksService::RenderHooksService() :
-		wndHooks(nullptr)
+		wndHooks(NULL)
 	{
 		setName(sRenderHooksService);
 		memset(&metrics, 0, sizeof(metrics));

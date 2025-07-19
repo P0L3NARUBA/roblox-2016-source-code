@@ -52,7 +52,7 @@ bool TreeStage::validateTree(SpanningNode* root)
 	Joint* joint = rbx_static_cast<Joint*>(primitive->getEdgeToParent());
 	Primitive* parent = primitive->getTypedParent<Primitive>();
 
-	Clump* parentClump = parent ? parent->getClump() : nullptr;
+	Clump* parentClump = parent ? parent->getClump() : NULL;
 	Clump* childClump = primitive->getClump();
 	Assembly* childAssembly = primitive->getAssembly();
 	Mechanism* childMechanism = primitive->getMechanism();
@@ -69,10 +69,10 @@ bool TreeStage::validateTree(SpanningNode* root)
 
 	RBXASSERT(isRigid == (parentClump == childClump));
 	RBXASSERT(isRigid == (!Clump::isClumpRootPrimitive(primitive)));
-	RBXASSERT(isRigid == (primitive->getTypedUpper<Clump>() == nullptr));
+	RBXASSERT(isRigid == (primitive->getTypedUpper<Clump>() == NULL));
 	RBXASSERT(isKinematic == (!Assembly::isAssemblyRootPrimitive(primitive)));
 	RBXASSERT(isGround == (Mechanism::isMechanismRootPrimitive(primitive)));
-	RBXASSERT(isKinematic || (primitive->getBody()->getParent() == nullptr));
+	RBXASSERT(isKinematic || (primitive->getBody()->getParent() == NULL));
 	RBXASSERT(!isKinematic  || (primitive->getBody()->getParent() == parent->getBody()));
 
 	for (int i = 0; i < primitive->numChildren(); ++i)
@@ -151,10 +151,10 @@ void TreeStage::onSpanningEdgeAdded(SpanningEdge* edge)
 	Primitive* child = rbx_static_cast<Primitive*>(edge->getChildSpanningNode());
 
 	RBXASSERT(chainToGround(child));
-	RBXASSERT(child->getBody()->getParent() == nullptr);
+	RBXASSERT(child->getBody()->getParent() == NULL);
 	RBXASSERT(!child->getTypedUpper<Clump>());
-	RBXASSERT(isGroundJoint == (parent == nullptr));	
-	RBXASSERT(isGroundJoint == (child->getTypedParent<Primitive>() == nullptr));
+	RBXASSERT(isGroundJoint == (parent == NULL));	
+	RBXASSERT(isGroundJoint == (child->getTypedParent<Primitive>() == NULL));
 
 	if (parent)
 	{
@@ -163,13 +163,13 @@ void TreeStage::onSpanningEdgeAdded(SpanningEdge* edge)
 
 	if (RigidJoint::isRigidJoint(joint)) {						// RIGID JOINT - same clump
 		RigidJoint* r = rbx_static_cast<RigidJoint*>(joint);
-		child->getBody()->setParent(parent ? parent->getBody() : nullptr);
+		child->getBody()->setParent(parent ? parent->getBody() : NULL);
 		child->getBody()->setMeInParent(r->getChildInParent(parent, child));
 	}
 	else {
 #ifdef _DEBUG
-		Clump* parentClump = parent ? parent->getClump() : nullptr;
-		RBXASSERT(isGroundJoint == (parentClump == nullptr));
+		Clump* parentClump = parent ? parent->getClump() : NULL;
+		RBXASSERT(isGroundJoint == (parentClump == NULL));
 #endif
 		Clump* childClump = new Clump();
 		child->setUpper(childClump);
@@ -187,8 +187,8 @@ void TreeStage::onSpanningEdgeAdded(SpanningEdge* edge)
 		}
 		else {
 #ifdef _DEBUG
-			Assembly* parentAssembly = parent ? parent->getAssembly() : nullptr;
-			RBXASSERT(isGroundJoint == (parentAssembly == nullptr));
+			Assembly* parentAssembly = parent ? parent->getAssembly() : NULL;
+			RBXASSERT(isGroundJoint == (parentAssembly == NULL));
 #endif
 			Assembly* childAssembly = new Assembly();
 			childClump->setUpper(childAssembly);
@@ -198,7 +198,7 @@ void TreeStage::onSpanningEdgeAdded(SpanningEdge* edge)
 			else {
 				Mechanism* childMechanism = new Mechanism();	// Ground Joint - new mechanism
 				childAssembly->setUpper(childMechanism);
-				RBXASSERT(childMechanism->getIndexedMeshParent() == nullptr);
+				RBXASSERT(childMechanism->getIndexedMeshParent() == NULL);
 
 				dirtyMechanism(childMechanism);
 			}
@@ -254,7 +254,7 @@ void TreeStage::onSpanningEdgeRemoved(SpanningEdge* edge, SpanningNode* childNod
 	Primitive* parentPrim = rbx_static_cast<Primitive*>(edge->otherNode(childNode));
 	RBXASSERT_SLOW(chainToGround(parentPrim));
 	RBXASSERT_SLOW(!chainToGround(childPrim));
-	RBXASSERT(Joint::isKinematicJoint(joint) == (childPrim->getBody()->getParent() != nullptr));
+	RBXASSERT(Joint::isKinematicJoint(joint) == (childPrim->getBody()->getParent() != NULL));
 #endif
 
 	if (RigidJoint::isRigidJoint(joint)) 
@@ -285,7 +285,7 @@ void TreeStage::onSpanningEdgeRemoved(SpanningEdge* edge, SpanningNode* childNod
 		RBXASSERT(0);
 	}
 
-	childPrim->getBody()->setParent(nullptr);
+	childPrim->getBody()->setParent(NULL);
 
 	sendClumpChangedMessage(childPrim);
 
@@ -342,7 +342,7 @@ void TreeStage::dirtyMechanism(Mechanism* m)
 void TreeStage::destroyClump(Primitive* p)
 {
 	Clump* c = p->getClump();
-	p->setUpper(nullptr);
+	p->setUpper(NULL);
 	delete c;
 }
 
@@ -351,8 +351,8 @@ void TreeStage::destroyAssembly(Primitive* p)
 	Assembly* a = p->getAssembly();
 	Clump* c = p->getClump();
 
-	c->setUpper(nullptr);
-	p->setUpper(nullptr);
+	c->setUpper(NULL);
+	p->setUpper(NULL);
 
 	delete c;
 	delete a;
@@ -367,9 +367,9 @@ void TreeStage::destroyMechanism(Primitive* p)
 	removeFromPipeline(m);
 	dirtyMechanisms.erase(m);
 
-	a->setUpper(nullptr);
-	c->setUpper(nullptr);
-	p->setUpper(nullptr);
+	a->setUpper(NULL);
+	c->setUpper(NULL);
+	p->setUpper(NULL);
 
 	delete a;
 	delete c;

@@ -82,7 +82,7 @@ void RobloxReportView::addCategoryItem(RobloxCategoryItem* pItem)
 
 RobloxCategoryItem* RobloxReportView::findCategoryItem(const QString& category)
 {
-	RobloxCategoryItem* pCategoryItem = nullptr;
+	RobloxCategoryItem* pCategoryItem = NULL;
 	QList<QTreeWidgetItem*> items = findItems(category, Qt::MatchExactly);
 	if(items.count())
 		pCategoryItem = dynamic_cast<RobloxCategoryItem*>(items[0]);
@@ -162,6 +162,6 @@ void RobloxReportView::drawBranches(QPainter * painter, const QRect & rect, cons
 bool RobloxReportView::isCategoryItem(const QModelIndex &index)
 {
 	RobloxCategoryItem* pCategoryItem = dynamic_cast<RobloxCategoryItem*>(itemFromIndex(index));
-	return (pCategoryItem != nullptr);
+	return (pCategoryItem != NULL);
 }
 

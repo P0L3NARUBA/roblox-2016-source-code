@@ -67,7 +67,7 @@ hash_table_ctor(unsigned num_buckets, hash_func_t hash,
 
     ht = malloc(sizeof(*ht) + ((num_buckets - 1) 
 				     * sizeof(ht->buckets[0])));
-    if (ht != nullptr) {
+    if (ht != NULL) {
         ht->hash = hash;
         ht->compare = compare;
         ht->num_buckets = num_buckets;
@@ -125,7 +125,7 @@ get_node(struct hash_table *ht, const void *key)
        }
     }
 
-    return nullptr;
+    return NULL;
 }
 
 void *
@@ -133,7 +133,7 @@ hash_table_find(struct hash_table *ht, const void *key)
 {
    struct hash_node *hn = get_node(ht, key);
 
-   return (hn == nullptr) ? nullptr : hn->data;
+   return (hn == NULL) ? NULL : hn->data;
 }
 
 void
@@ -144,7 +144,7 @@ hash_table_insert(struct hash_table *ht, void *data, const void *key)
     struct hash_node *node;
 
     node = calloc(1, sizeof(*node));
-    if (node == nullptr) {
+    if (node == NULL) {
        _mesa_error_no_memory(__func__);
        return;
     }
@@ -173,7 +173,7 @@ hash_table_replace(struct hash_table *ht, void *data, const void *key)
     }
 
     hn = calloc(1, sizeof(*hn));
-    if (hn == nullptr) {
+    if (hn == NULL) {
        _mesa_error_no_memory(__func__);
        return false;
     }
@@ -189,7 +189,7 @@ void
 hash_table_remove(struct hash_table *ht, const void *key)
 {
    struct node *node = (struct node *) get_node(ht, key);
-   if (node != nullptr) {
+   if (node != NULL) {
       remove_from_list(node);
       free(node);
       return;

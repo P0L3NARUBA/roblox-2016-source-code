@@ -64,12 +64,12 @@ namespace RBX {
 		RbxRay getUnitMouseRay(const shared_ptr<InputObject>& inputObject) const;
 		RbxRay getSearchRay(const shared_ptr<InputObject>& inputObject) const;
 
-		static PartInstance* getPart(Workspace* workspace, const shared_ptr<InputObject>& inputObject, const HitTestFilter* filter = nullptr, Vector3& hitWorld = ignoreVector3);
+		static PartInstance* getPart(Workspace* workspace, const shared_ptr<InputObject>& inputObject, const HitTestFilter* filter = NULL, Vector3& hitWorld = ignoreVector3);
 		PartInstance* getUnlockedPart(const shared_ptr<InputObject>& inputObject, Vector3& hitWorld = ignoreVector3);
-		static PartInstance* getPartByLocalCharacter(Workspace* workspace, const shared_ptr<InputObject>& inputObject, const HitTestFilter* filter = nullptr, Vector3& hitWorld = ignoreVector3);
+		static PartInstance* getPartByLocalCharacter(Workspace* workspace, const shared_ptr<InputObject>& inputObject, const HitTestFilter* filter = NULL, Vector3& hitWorld = ignoreVector3);
 		PartInstance* getUnlockedPartByLocalCharacter(const shared_ptr<InputObject>& inputObject, Vector3& hitWorld = ignoreVector3);
 
-		static Surface getSurface(Workspace* workspace, const shared_ptr<InputObject>& inputObject, const HitTestFilter* filter = nullptr);
+		static Surface getSurface(Workspace* workspace, const shared_ptr<InputObject>& inputObject, const HitTestFilter* filter = NULL);
 		static Surface getSurface(Workspace* workspace, const shared_ptr<InputObject>& inputObject, const HitTestFilter* filter, PartInstance* &part, int& surfaceId);
 
 		// Override these - the implementations

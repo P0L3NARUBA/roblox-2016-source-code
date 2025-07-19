@@ -115,7 +115,7 @@ namespace RBX
 		if(bodyPart==leftArm) return leftArmMesh;
 		if(bodyPart==rightArm) return rightArmMesh;
 		if(bodyPart==torso) return torsoMesh;
-		return nullptr;
+		return NULL;
 	}
 
     HumanoidIdentifier::BodyPartType HumanoidIdentifier::getBodyPartType(RBX::PartInstance* bodyPart) const

@@ -15,13 +15,13 @@ BOOL cinema_end(lpNP_STR_LIST c_list_str, hOBJ *hobj)
 hOBJ make_group(lpLISTH listh, BOOL one)
 {
 	hOBJ        hobj, hobj1;
-	lpOBJ       obj;//nb      = nullptr;
+	lpOBJ       obj;//nb      = NULL;
 	lpGEO_GROUP group;
 	D_POINT			min, max;
 
-//nb	hobj = nullptr;
+//nb	hobj = NULL;
 	if (listh->num > 1 || !one ) {
-		if ( ( hobj = o_alloc(OGROUP)) == nullptr) goto err;
+		if ( ( hobj = o_alloc(OGROUP)) == NULL) goto err;
 
 		//     
 		hobj1 = listh->hhead;
@@ -43,9 +43,9 @@ hOBJ make_group(lpLISTH listh, BOOL one)
 	}
 	return hobj;
 err:
-	while ((hobj1 = listh->hhead) != nullptr) {
+	while ((hobj1 = listh->hhead) != NULL) {
 		o_free(hobj1, listh);
 	}
-	if (hobj) o_free(hobj, nullptr);
-	return nullptr;
+	if (hobj) o_free(hobj, NULL);
+	return NULL;
 }

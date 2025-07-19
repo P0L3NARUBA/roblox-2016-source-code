@@ -73,13 +73,13 @@ static void matchConnectors(World* world, btManifoldArray& manifoldArray, Bullet
             }
             else
             {
-                pt.m_userPersistentData = nullptr;
+                pt.m_userPersistentData = NULL;
             }
         }
     }
     
     // Remove old connectors
-    Kernel* kernel = nullptr;
+    Kernel* kernel = NULL;
 
     for (size_t i = 0; i < connectors.size(); )
     {
@@ -185,7 +185,7 @@ static bool areContactPointsCloserThan(const btManifoldArray& manifoldArray, flo
 
 static void removeConnectorsFromKernel(World* world, BulletConnectorArray& connectors)
 {
-	Kernel* kernel = nullptr;
+	Kernel* kernel = NULL;
 
 	for (size_t i = 0; i < connectors.size(); ++i)
     {
@@ -199,7 +199,7 @@ static void removeConnectorsFromKernel(World* world, BulletConnectorArray& conne
 
 static void putConnectorsInKernel(World* world, BulletConnectorArray& connectors)
 {
-    Kernel* kernel = nullptr;
+    Kernel* kernel = NULL;
 
 	for (size_t i = 0; i < connectors.size(); ++i)
     {
@@ -247,7 +247,7 @@ static void clearCache(btManifoldArray& manifoldArray)
 BulletContact::BulletContact(World* world, Primitive* p0, Primitive* p1)
 : Contact(p0, p1)
 , world(world)
-, algorithm(nullptr)
+, algorithm(NULL)
 {
 }
 
@@ -321,7 +321,7 @@ bool BulletContact::computeIsColliding(float overlapIgnored)
 BulletCellContact::BulletCellContact(World* world, Primitive* p0, Primitive* p1, const Vector3int32& feature, const shared_ptr<btCollisionShape>& cellShape)
 : CellContact(p0, p1, feature)
 , world(world)
-, algorithm(nullptr)
+, algorithm(NULL)
 , cellShape(cellShape)
 {
     btTransform identity;

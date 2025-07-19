@@ -157,7 +157,7 @@ typedef Uint16 SDL_AudioFormat;
  *  Stereo samples are stored in a LRLRLR ordering.
  *
  *  You can choose to avoid callbacks and use SDL_QueueAudio() instead, if
- *  you like. Just open your audio device with a nullptr callback.
+ *  you like. Just open your audio device with a NULL callback.
  */
 typedef void (SDLCALL * SDL_AudioCallback) (void *userdata, Uint8 * stream,
                                             int len);
@@ -174,8 +174,8 @@ typedef struct SDL_AudioSpec
     Uint16 samples;             /**< Audio buffer size in samples (power of 2) */
     Uint16 padding;             /**< Necessary for some compile environments */
     Uint32 size;                /**< Audio buffer size in bytes (calculated) */
-    SDL_AudioCallback callback; /**< Callback that feeds the audio device (nullptr to use SDL_QueueAudio()). */
-    void *userdata;             /**< Userdata passed to callback (ignored for nullptr callbacks). */
+    SDL_AudioCallback callback; /**< Callback that feeds the audio device (NULL to use SDL_QueueAudio()). */
+    void *userdata;             /**< Userdata passed to callback (ignored for NULL callbacks). */
 } SDL_AudioSpec;
 
 
@@ -239,7 +239,7 @@ extern DECLSPEC void SDLCALL SDL_AudioQuit(void);
 /* @} */
 
 /**
- *  This function returns the name of the current audio driver, or nullptr
+ *  This function returns the name of the current audio driver, or NULL
  *  if no driver has been initialized.
  */
 extern DECLSPEC const char *SDLCALL SDL_GetCurrentAudioDriver(void);
@@ -247,7 +247,7 @@ extern DECLSPEC const char *SDLCALL SDL_GetCurrentAudioDriver(void);
 /**
  *  This function opens the audio device with the desired parameters, and
  *  returns 0 if successful, placing the actual hardware parameters in the
- *  structure pointed to by \c obtained.  If \c obtained is nullptr, the audio
+ *  structure pointed to by \c obtained.  If \c obtained is NULL, the audio
  *  data passed to the callback function will be guaranteed to be in the
  *  requested format, and will be automatically converted to the hardware
  *  audio format if necessary.  This function returns -1 if it failed
@@ -276,11 +276,11 @@ extern DECLSPEC const char *SDLCALL SDL_GetCurrentAudioDriver(void);
  *      to the audio buffer, and the length in bytes of the audio buffer.
  *      This function usually runs in a separate thread, and so you should
  *      protect data structures that it accesses by calling SDL_LockAudio()
- *      and SDL_UnlockAudio() in your code. Alternately, you may pass a nullptr
+ *      and SDL_UnlockAudio() in your code. Alternately, you may pass a NULL
  *      pointer here, and call SDL_QueueAudio() with some frequency, to queue
  *      more audio samples to be played.
  *    - \c desired->userdata is passed as the first parameter to your callback
- *      function. If you passed a nullptr callback, this value is ignored.
+ *      function. If you passed a NULL callback, this value is ignored.
  *
  *  The audio device starts out playing silence when it's opened, and should
  *  be enabled for playing by calling \c SDL_PauseAudio(0) when you are ready
@@ -311,7 +311,7 @@ typedef Uint32 SDL_AudioDeviceID;
  *  still allow a specific host to be specified to SDL_OpenAudioDevice().
  *
  *  In many common cases, when this function returns a value <= 0, it can still
- *  successfully open the default device (nullptr for first argument of
+ *  successfully open the default device (NULL for first argument of
  *  SDL_OpenAudioDevice()).
  */
 extern DECLSPEC int SDLCALL SDL_GetNumAudioDevices(int iscapture);
@@ -334,7 +334,7 @@ extern DECLSPEC const char *SDLCALL SDL_GetAudioDeviceName(int index,
 
 
 /**
- *  Open a specific audio device. Passing in a device name of nullptr requests
+ *  Open a specific audio device. Passing in a device name of NULL requests
  *  the most reasonable default (and is equivalent to calling SDL_OpenAudio()).
  *
  *  The device name is a UTF-8 string reported by SDL_GetAudioDeviceName(), but
@@ -407,7 +407,7 @@ extern DECLSPEC void SDLCALL SDL_PauseAudioDevice(SDL_AudioDeviceID dev,
  *  You need to free the audio buffer with SDL_FreeWAV() when you are
  *  done with it.
  *
- *  This function returns nullptr and sets the SDL error message if the
+ *  This function returns NULL and sets the SDL error message if the
  *  wave file cannot be opened, uses an unknown data format, or is
  *  corrupt.  Currently raw and MS-ADPCM WAVE files are supported.
  */

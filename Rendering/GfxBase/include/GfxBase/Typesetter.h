@@ -51,7 +51,7 @@ namespace  RBX {
 			const std::string&  s,
 			float size,
 			const Vector2& availableSpace = Vector2::zero(),
-			bool* textFits = nullptr
+			bool* textFits = NULL
 			) const = 0;
 
         virtual void loadResources(RBX::Graphics::TextureManager* textureManager, RBX::Graphics::TextureAtlas* glyphAtlas) = 0;

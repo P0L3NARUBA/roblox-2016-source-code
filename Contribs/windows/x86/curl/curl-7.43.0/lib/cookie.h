@@ -87,9 +87,9 @@ void Curl_cookie_clearall(struct CookieInfo *cookies);
 void Curl_cookie_clearsess(struct CookieInfo *cookies);
 
 #if defined(CURL_DISABLE_HTTP) || defined(CURL_DISABLE_COOKIES)
-#define Curl_cookie_list(x) nullptr
+#define Curl_cookie_list(x) NULL
 #define Curl_cookie_loadfiles(x) Curl_nop_stmt
-#define Curl_cookie_init(x,y,z,w) nullptr
+#define Curl_cookie_init(x,y,z,w) NULL
 #define Curl_cookie_cleanup(x) Curl_nop_stmt
 #define Curl_flush_cookies(x,y) Curl_nop_stmt
 #else

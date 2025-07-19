@@ -42,7 +42,7 @@ short create_primitive_np(BREPKIND kind,lpLISTH listh, sgFloat  *par)
 
 hOBJ create_primitive_obj(BREPKIND kind, sgFloat  *par)
 {
-	hOBJ      		hbrep     	= nullptr;
+	hOBJ      		hbrep     	= NULL;
 	lpOBJ	    	  brep;
 	lpGEO_BREP  	lpgeobrep;
 	lpCSG       	csg;
@@ -55,50 +55,50 @@ hOBJ create_primitive_obj(BREPKIND kind, sgFloat  *par)
 	lnp.kind = kind;
 	switch (kind) {
 		case BOX:
-			if ( !(lnp.num_np = create_box_np(&lnp.listh, par))) return nullptr;
+			if ( !(lnp.num_np = create_box_np(&lnp.listh, par))) return NULL;
 //			lnp.num_np = 0;
 			size = sizeof(sgFloat)*3;
 			minP.x = minP.y = minP.z = 0.;
 			maxP.x = par[0];	maxP.y = par[1];	maxP.z = par[2];
 			break;
 		case SPHERE:
-			if ( !(lnp.num_np = create_sph_np(&lnp.listh, par))) return nullptr;
+			if ( !(lnp.num_np = create_sph_np(&lnp.listh, par))) return NULL;
 			size = sizeof(sgFloat)*3;
 			minP.x = minP.y = minP.z = - par[0];
 			maxP.x = maxP.y = maxP.z = 	par[0];
 			break;
 		case CYL:
-			if ( !(lnp.num_np = create_cyl_np(&lnp.listh, par, FALSE))) return nullptr;
+			if ( !(lnp.num_np = create_cyl_np(&lnp.listh, par, FALSE))) return NULL;
 			size = sizeof(sgFloat)*3;
 			minP.x = minP.y = - par[0];	minP.z = 0.;
 			maxP.x = maxP.y = 	par[0];	maxP.z = par[1];
 			break;
 		case CONE:
-			if ( !(lnp.num_np = create_cone_np(&lnp.listh, par, FALSE))) return nullptr;
+			if ( !(lnp.num_np = create_cone_np(&lnp.listh, par, FALSE))) return NULL;
 			size = sizeof(sgFloat)*4;
 			minP.x = minP.y = - max(par[0],par[1]);		minP.z = 0;
 			maxP.x = maxP.y = max(par[0],par[1]);			maxP.z = par[2];
 			break;
 		case TOR:
-			if ( !(lnp.num_np = create_tor_np(&lnp.listh, par))) return nullptr;
+			if ( !(lnp.num_np = create_tor_np(&lnp.listh, par))) return NULL;
 			size = sizeof(sgFloat)*4;
 			minP.x = minP.y = - (par[0] + par[1]);		minP.z = - par[1];
 			maxP.x = maxP.y = 		par[0] + par[1];		maxP.z = par[1];
 			break;
 		case PRISM:
-			if ( !(lnp.num_np = create_cyl_np(&lnp.listh, par, TRUE))) return nullptr;
+			if ( !(lnp.num_np = create_cyl_np(&lnp.listh, par, TRUE))) return NULL;
 			size = sizeof(sgFloat)*3;
 			minP.x = minP.y = - par[0];	minP.z = 0.;
 			maxP.x = maxP.y = 	par[0];	maxP.z = par[1];
 			break;
 		case PYRAMID:
-			if ( !(lnp.num_np = create_cone_np(&lnp.listh, par, TRUE))) return nullptr;
+			if ( !(lnp.num_np = create_cone_np(&lnp.listh, par, TRUE))) return NULL;
 			size = sizeof(sgFloat)*4;
 			minP.x = minP.y = - max(par[0],par[1]);		minP.z = 0;
 			maxP.x = maxP.y = max(par[0],par[1]);			maxP.z = par[2];
 			break;
 		case ELIPSOID:
-			if ( !(lnp.num_np = create_elipsoid_np(&lnp.listh, par))) return nullptr;
+			if ( !(lnp.num_np = create_elipsoid_np(&lnp.listh, par))) return NULL;
 			size = sizeof(sgFloat)*5;
 			minP.x = - par[0];
 			maxP.x = 	par[0];
@@ -108,7 +108,7 @@ hOBJ create_primitive_obj(BREPKIND kind, sgFloat  *par)
 			maxP.z = 	par[2];
 			break;
 		case SPHERIC_BAND:
-			if ( !(lnp.num_np = create_spheric_band_np(&lnp.listh, par))) return nullptr;
+			if ( !(lnp.num_np = create_spheric_band_np(&lnp.listh, par))) return NULL;
 			size = sizeof(sgFloat)*5;
 			if (par[1] * par[2] <= eps_n) c = par[0];
 			else {
@@ -128,12 +128,12 @@ hOBJ create_primitive_obj(BREPKIND kind, sgFloat  *par)
 	}
 
 //  
-	if ( (lnp.hcsg = SGMalloc(size+2) ) == nullptr ) goto err;
+	if ( (lnp.hcsg = SGMalloc(size+2) ) == NULL ) goto err;
 	csg = (lpCSG)lnp.hcsg;
 	csg->size = size;
 	memcpy(csg->data,par,size);
 
-	if ( ( hbrep = o_alloc(OBREP)) == nullptr)	goto err;
+	if ( ( hbrep = o_alloc(OBREP)) == NULL)	goto err;
 	brep = (lpOBJ)hbrep;
 
 	lpgeobrep = (lpGEO_BREP)brep->geo_data;
@@ -148,6 +148,6 @@ hOBJ create_primitive_obj(BREPKIND kind, sgFloat  *par)
 err:
   free_item_list(&lnp.listh);
 	if ( lnp.hcsg ) 	SGFree(lnp.hcsg);
-	if ( hbrep ) 	o_free(hbrep,nullptr);
-	return nullptr;
+	if ( hbrep ) 	o_free(hbrep,NULL);
+	return NULL;
 }

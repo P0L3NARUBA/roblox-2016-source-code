@@ -8,7 +8,7 @@ lpD_POINT center_of_hobj(hOBJ hobj, OBJTYPE type,
 GEO_OBJ   geo;
 
   if(!true_geo_info(hobj, &type, &geo))
-		return nullptr;
+		return NULL;
   return center_of_geo_obj(type, &geo, vp, p);
 }
 

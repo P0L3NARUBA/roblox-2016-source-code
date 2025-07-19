@@ -53,7 +53,7 @@ static BOOL add_dummy_edge(lpNPW np, short face)
 	D_POINT			point1, point2;
 	BOOL				rt = TRUE;
 
-	if ((loops = (LOOP_DATA*)SGMalloc(sizeof(LOOP_DATA)*(np->noc))) == nullptr) return FALSE;
+	if ((loops = (LOOP_DATA*)SGMalloc(sizeof(LOOP_DATA)*(np->noc))) == NULL) return FALSE;
 
 	axis = check_defc(&(np->p[face].v));
 	w = (lpDA_POINT)np->v;
@@ -117,7 +117,7 @@ static BOOL add_dummy_edge(lpNPW np, short face)
 	np->c[out_loop].nc = 0;
 
 end:
-	if (loops) { SGFree(loops); /*loops = nullptr; */}
+	if (loops) { SGFree(loops); /*loops = NULL; */}
 	return rt;
 }
 

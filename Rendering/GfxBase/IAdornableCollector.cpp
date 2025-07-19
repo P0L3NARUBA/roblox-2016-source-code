@@ -94,7 +94,7 @@ void IAdornableCollector::onRenderableDescendantAdded(IAdornable* iR)
 	RBXASSERT(iR->index2d == -1);
 	RBXASSERT(iR->index3d == -1);
 	RBXASSERT(iR->index3dSorted == -1);
-	RBXASSERT(iR->bucket == nullptr);
+	RBXASSERT(iR->bucket == NULL);
 
 	iR->bucket = this;
 
@@ -128,7 +128,7 @@ void IAdornableCollector::onRenderableDescendantRemoving(IAdornable* iR)
 		renderable3dSorteds.fastRemove(iR);
 	}
 
-	iR->bucket = nullptr;
+	iR->bucket = NULL;
 
 	RBXASSERT(iR->index2d == -1);
 	RBXASSERT(iR->index3d == -1);

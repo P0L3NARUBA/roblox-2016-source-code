@@ -265,14 +265,14 @@ void StatsCommand::doIt(IDataState* dataState)
 bool StatsCommand::isEnabled() const
 {
 	GuiRoot* guiRoot = dataModel->getGuiRoot();
-	return Instance::fastDynamicCast<TopMenuBar>(guiRoot->findFirstChildByName("StatsHud1"))!=nullptr;
+	return Instance::fastDynamicCast<TopMenuBar>(guiRoot->findFirstChildByName("StatsHud1"))!=NULL;
 }
 
 bool StatsCommand::isChecked() const
 {
 	GuiRoot* guiRoot = dataModel->getGuiRoot();
 	const TopMenuBar* statsMenu = Instance::fastDynamicCast<TopMenuBar>(guiRoot->findFirstChildByName("StatsHud1"));
-	return statsMenu!=nullptr && statsMenu->isVisible();
+	return statsMenu!=NULL && statsMenu->isVisible();
 }
 
 
@@ -290,14 +290,14 @@ void RenderStatsCommand::doIt(IDataState* dataState)
 bool RenderStatsCommand::isEnabled() const
 {
 	GuiRoot* guiRoot = dataModel->getGuiRoot();
-	return Instance::fastDynamicCast<TopMenuBar>(guiRoot->findFirstChildByName("StatsHud1"))!=nullptr;
+	return Instance::fastDynamicCast<TopMenuBar>(guiRoot->findFirstChildByName("StatsHud1"))!=NULL;
 }
 
 bool RenderStatsCommand::isChecked() const
 {
 	GuiRoot* guiRoot = dataModel->getGuiRoot();
 	const TopMenuBar* statsMenu = Instance::fastDynamicCast<TopMenuBar>(guiRoot->findFirstChildByName("RenderStats"));
-	return statsMenu!=nullptr && statsMenu->isVisible();
+	return statsMenu!=NULL && statsMenu->isVisible();
 }
 
 
@@ -314,14 +314,14 @@ void SummaryStatsCommand::doIt(IDataState* dataState)
 bool SummaryStatsCommand::isEnabled() const
 {
 	GuiRoot* guiRoot = dataModel->getGuiRoot();
-	return Instance::fastDynamicCast<TopMenuBar>(guiRoot->findFirstChildByName("SummaryStats"))!=nullptr;
+	return Instance::fastDynamicCast<TopMenuBar>(guiRoot->findFirstChildByName("SummaryStats"))!=NULL;
 }
 
 bool SummaryStatsCommand::isChecked() const
 {
 	GuiRoot* guiRoot = dataModel->getGuiRoot();
 	const TopMenuBar* statsMenu = Instance::fastDynamicCast<TopMenuBar>(guiRoot->findFirstChildByName("SummaryStats"));
-	return statsMenu!=nullptr && statsMenu->isVisible();
+	return statsMenu!=NULL && statsMenu->isVisible();
 }
 
 
@@ -338,14 +338,14 @@ void CustomStatsCommand::doIt(IDataState* dataState)
 bool CustomStatsCommand::isEnabled() const
 {
 	GuiRoot* guiRoot = dataModel->getGuiRoot();
-	return Instance::fastDynamicCast<TopMenuBar>(guiRoot->findFirstChildByName("CustomStats"))!=nullptr;
+	return Instance::fastDynamicCast<TopMenuBar>(guiRoot->findFirstChildByName("CustomStats"))!=NULL;
 }
 
 bool CustomStatsCommand::isChecked() const
 {
 	GuiRoot* guiRoot = dataModel->getGuiRoot();
 	const TopMenuBar* statsMenu = Instance::fastDynamicCast<TopMenuBar>(guiRoot->findFirstChildByName("CustomStats"));
-	return statsMenu!=nullptr && statsMenu->isVisible();
+	return statsMenu!=NULL && statsMenu->isVisible();
 }
 
 
@@ -364,14 +364,14 @@ void NetworkStatsCommand::doIt(IDataState* dataState)
 bool NetworkStatsCommand::isEnabled() const
 {
 	GuiRoot* guiRoot = dataModel->getGuiRoot();
-	return Instance::fastDynamicCast<TopMenuBar>(guiRoot->findFirstChildByName("NetworkStats"))!=nullptr;
+	return Instance::fastDynamicCast<TopMenuBar>(guiRoot->findFirstChildByName("NetworkStats"))!=NULL;
 }
 
 bool NetworkStatsCommand::isChecked() const
 {
 	GuiRoot* guiRoot = dataModel->getGuiRoot();
 	const TopMenuBar* statsMenu = Instance::fastDynamicCast<TopMenuBar>(guiRoot->findFirstChildByName("NetworkStats"));
-	return statsMenu!=nullptr && statsMenu->isVisible();
+	return statsMenu!=NULL && statsMenu->isVisible();
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -389,19 +389,19 @@ void PhysicsStatsCommand::doIt(IDataState* dataState)
 bool PhysicsStatsCommand::isEnabled() const
 {
 	GuiRoot* guiRoot = dataModel->getGuiRoot();
-	return Instance::fastDynamicCast<TopMenuBar>(guiRoot->findFirstChildByName("PhysicsStats")) != nullptr ||
-        Instance::fastDynamicCast<TopMenuBar>(guiRoot->findFirstChildByName("PhysicsStats2")) != nullptr;
+	return Instance::fastDynamicCast<TopMenuBar>(guiRoot->findFirstChildByName("PhysicsStats")) != NULL ||
+        Instance::fastDynamicCast<TopMenuBar>(guiRoot->findFirstChildByName("PhysicsStats2")) != NULL;
 }
 
 bool PhysicsStatsCommand::isChecked() const
 {
 	GuiRoot* guiRoot = dataModel->getGuiRoot();
 	const TopMenuBar* statsMenu = Instance::fastDynamicCast<TopMenuBar>(guiRoot->findFirstChildByName("PhysicsStats"));
-	if ( statsMenu != nullptr && statsMenu->isVisible() )
+	if ( statsMenu != NULL && statsMenu->isVisible() )
         return true;
 
     statsMenu = Instance::fastDynamicCast<TopMenuBar>(guiRoot->findFirstChildByName("PhysicsStats2"));
-    if ( statsMenu != nullptr && statsMenu->isVisible() )
+    if ( statsMenu != NULL && statsMenu->isVisible() )
         return true;
 
     return false;
@@ -541,7 +541,7 @@ EditSelectionVerb::EditSelectionVerb(VerbContainer* container, std::string name,
 ,workspace(shared_from(ServiceProvider::find<Workspace>(dataModel)))
 ,selection(dataModel)
 {
-	RBXASSERT(workspace!=nullptr);
+	RBXASSERT(workspace!=NULL);
 }
 
 EditSelectionVerb::~EditSelectionVerb()
@@ -636,7 +636,7 @@ bool SelectChildrenVerb::isEnabled() const
 		return false;
 
 	FilteredSelection<Instance>* selection = ServiceProvider::find<FilteredSelection<Instance> >(dataModel);
-	return selection && selection->find_if(hasChildren)!=nullptr;
+	return selection && selection->find_if(hasChildren)!=NULL;
 }
 
 void SelectChildrenVerb::doIt(IDataState *dataState)
@@ -745,7 +745,7 @@ void DeleteBase::doIt(IDataState* dataState)
 				{
 					if (!iPtr->fastDynamicCast<Workspace>() && !iPtr->fastDynamicCast<Network::Players>() && !dynamic_cast<Service*>(iPtr)
 						&& (!isCloudEdit || !iPtr->fastDynamicCast<Network::Player>())) {
-						instance->setParent(nullptr);
+						instance->setParent(NULL);
 						//if camera is getting deleted then create new camera here itself (instead of Workspace::onHeartbeat) to correctly record change history
 						if (iPtr->fastDynamicCast<RBX::Camera>())
 							dataModel->getWorkspace()->replenishCamera();
@@ -771,7 +771,7 @@ void RotateAxisCommand::rotateAboutAxis(const G3D::Matrix3& rotMatrix, const std
 		return;
 	}
 	else {
-		MegaDragger megaDragger(nullptr, selectedInstances, workspace.get());
+		MegaDragger megaDragger(NULL, selectedInstances, workspace.get());
 		megaDragger.startDragging();
 		megaDragger.safeRotate(rotMatrix);
 		megaDragger.finishDragging();
@@ -825,7 +825,7 @@ void MoveUpSelectionVerb::doIt(IDataState* dataState)
 	FilteredSelection<PVInstance>* sel = ServiceProvider::create< FilteredSelection<PVInstance> >(dataModel);
 
 	if (sel->size()>0) {
-		MegaDragger megaDragger(nullptr, sel->items(), workspace.get());
+		MegaDragger megaDragger(NULL, sel->items(), workspace.get());
 		megaDragger.startDragging();
 		megaDragger.safeMoveNoDrop(Vector3(0.0f, moveUpHeight, 0.0f));
 		megaDragger.finishDragging();
@@ -850,7 +850,7 @@ void MoveDownSelectionVerb::doIt(IDataState* dataState)
 	FilteredSelection<PVInstance>* sel = ServiceProvider::create< FilteredSelection<PVInstance> >(dataModel);
 
 	if (sel->size()>0) {
-		MegaDragger megaDragger(nullptr, sel->items(), workspace.get());
+		MegaDragger megaDragger(NULL, sel->items(), workspace.get());
 		megaDragger.startDragging();
 		megaDragger.safeMoveNoDrop(Vector3(0.0f, -1.2f, 0.0f));
 		megaDragger.finishDragging();
@@ -894,7 +894,7 @@ const Camera* CameraVerb::getCamera() const
 
 void CameraVerb::doIt(IDataState* dataState)
 {
-	RBXASSERT(dataState!=nullptr);
+	RBXASSERT(dataState!=NULL);
 
 	dataState->setDirty(true);
 }

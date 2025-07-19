@@ -49,7 +49,7 @@ A commercial use license is available from Genivia, Inc., contact@genivia.com
 #include "soapcpp2.h"
 
 #ifndef SOAPCPP2_IMPORT_PATH
-#define SOAPCPP2_IMPORT_PATH (nullptr)
+#define SOAPCPP2_IMPORT_PATH (NULL)
 #endif
 
 extern void init();
@@ -167,7 +167,7 @@ infile	header file to parse (or stdin)\n\
 					case 'I':
 						a++;
 						g = 0;
-						s = nullptr;
+						s = NULL;
 						if (*a)
 							s = a;
 						else if (i < argc && argv[++i])
@@ -220,9 +220,9 @@ infile	header file to parse (or stdin)\n\
 						a++;
 						g = 0;
 						if (*a)
-							prefix = ns_cname(a, nullptr);
+							prefix = ns_cname(a, NULL);
 						else if (i < argc && argv[++i])
-							prefix = ns_cname(argv[i], nullptr);
+							prefix = ns_cname(argv[i], NULL);
 						else
 							execerror("Option -p requires an output file name prefix");
 						break;
@@ -230,9 +230,9 @@ infile	header file to parse (or stdin)\n\
 						a++;
 						g = 0;
 						if (*a)
-							namespaceid = ns_cname(a, nullptr);
+							namespaceid = ns_cname(a, NULL);
 						else if (i < argc && argv[++i])
-							namespaceid = ns_cname(argv[i], nullptr);
+							namespaceid = ns_cname(argv[i], NULL);
 						else
 							execerror("Option -q requires a namespace name");
 						break;

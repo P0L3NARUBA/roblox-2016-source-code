@@ -101,7 +101,7 @@ void zcp_set_status(lpZCUT cut, IDENT_V idp, UCHAR status)
 {
 lpZCP p;
 
-	if( (p = (ZCP *)get_elem(&cut->vdl, idp - 1))== nullptr )  zc_exit();
+	if( (p = (ZCP *)get_elem(&cut->vdl, idp - 1))== NULL )  zc_exit();
 	p->status = status;
 }
 
@@ -129,7 +129,7 @@ IDENT_V zcp_get_first_path_in_face(lpZCUT cut, IDENT_V idf)
 lpZCP    f;
 IDENT_V  idp;
 
-	if( (f = (ZCP *)get_elem(&cut->vdl, idf - 1)) == nullptr ) zc_exit();
+	if( (f = (ZCP *)get_elem(&cut->vdl, idf - 1)) == NULL ) zc_exit();
   idp = f->listh.head;
   return idp;
 }
@@ -153,7 +153,7 @@ IDENT_V zcv_get_first_point(lpZCUT cut, IDENT_V idp, void* v, sgFloat* k)
 lpZCP    p;
 IDENT_V  id;
 
-	if( (p = (ZCP *)get_elem(&cut->vdl, idp - 1)) == nullptr )   zc_exit();
+	if( (p = (ZCP *)get_elem(&cut->vdl, idp - 1)) == NULL )   zc_exit();
 	id = p->listh.head;
 	if(id) zcv_get_point(cut, id, v, k);
 	return id;
@@ -199,7 +199,7 @@ IDENT_V zcv_get_point(lpZCUT cut, IDENT_V idv, void* v, sgFloat* k)
 lpZCV vi;
 
 	if(idv){
-		if( (vi = (ZCV *)get_elem(&cut->vdv, idv - 1)) == nullptr ) zc_exit();
+		if( (vi = (ZCV *)get_elem(&cut->vdv, idv - 1)) == NULL ) zc_exit();
 		memcpy(v, &vi->v, sizeof(D_PLPOINT));
 		*k = vi->k;
 		idv = vi->list.next;
@@ -212,7 +212,7 @@ void zcv_overwrite_point(lpZCUT cut, IDENT_V idv, void* v, sgFloat k)
 	lpZCV vi;
 
 	if(idv){
-		if( (vi = (ZCV *)get_elem(&cut->vdv, idv - 1)) == nullptr ) zc_exit();
+		if( (vi = (ZCV *)get_elem(&cut->vdv, idv - 1)) == NULL ) zc_exit();
 		memcpy(&vi->v, v, sizeof(D_PLPOINT));
 		vi->k = k;
 	}

@@ -619,7 +619,7 @@ extern DECLSPEC void SDLCALL SDL_FlushEvents(Uint32 minType, Uint32 maxType);
  *
  *  \return 1 if there are any pending events, or 0 if there are none available.
  *
- *  \param event If not nullptr, the next event is removed from the queue and
+ *  \param event If not NULL, the next event is removed from the queue and
  *               stored in that area.
  */
 extern DECLSPEC int SDLCALL SDL_PollEvent(SDL_Event * event);
@@ -629,7 +629,7 @@ extern DECLSPEC int SDLCALL SDL_PollEvent(SDL_Event * event);
  *
  *  \return 1, or 0 if there was an error while waiting for events.
  *
- *  \param event If not nullptr, the next event is removed from the queue and
+ *  \param event If not NULL, the next event is removed from the queue and
  *               stored in that area.
  */
 extern DECLSPEC int SDLCALL SDL_WaitEvent(SDL_Event * event);
@@ -640,7 +640,7 @@ extern DECLSPEC int SDLCALL SDL_WaitEvent(SDL_Event * event);
  *
  *  \return 1, or 0 if there was an error while waiting for events.
  *
- *  \param event If not nullptr, the next event is removed from the queue and
+ *  \param event If not NULL, the next event is removed from the queue and
  *               stored in that area.
  *  \param timeout The timeout (in milliseconds) to wait for next event.
  */

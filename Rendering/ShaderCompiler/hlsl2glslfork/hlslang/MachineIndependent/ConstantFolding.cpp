@@ -8,19 +8,19 @@
 
 // Limited constant folding functionality; we mostly want it for array sizes
 // with constant expressions.
-// Returns the node to keep using, or nullptr.
+// Returns the node to keep using, or NULL.
 
 
 TIntermConstant* FoldBinaryConstantExpression(TOperator op, TIntermConstant* nodeA, TIntermConstant* nodeB)
 {
 	if (!nodeA || !nodeB)
-		return nullptr;
+		return NULL;
 	if (nodeA->getType() != nodeB->getType())
-		return nullptr;
+		return NULL;
 	
 	// for now, only support integers and floats
 	if (nodeA->getBasicType() != EbtInt && nodeA->getBasicType() != EbtFloat)
-		return nullptr;
+		return NULL;
 		
 	
 	TIntermConstant* newNode = new TIntermConstant(nodeA->getType());
@@ -39,7 +39,7 @@ TIntermConstant* FoldBinaryConstantExpression(TOperator op, TIntermConstant* nod
 		newNode->setValue(i, nodeA->getValue(i).asInt oper nodeB->getValue(i).asInt); \
 	else { \
 		delete newNode; \
-		return nullptr; \
+		return NULL; \
 	}
 
 #define DO_FOLD_OP_ZERO(oper) \
@@ -65,7 +65,7 @@ TIntermConstant* FoldBinaryConstantExpression(TOperator op, TIntermConstant* nod
 			else
 			{
 				delete newNode;
-				return nullptr;
+				return NULL;
 			}
 			break;
 		case EOpRightShift: DO_FOLD_OP_INT(>>); break;
@@ -75,7 +75,7 @@ TIntermConstant* FoldBinaryConstantExpression(TOperator op, TIntermConstant* nod
 		case EOpExclusiveOr: DO_FOLD_OP_INT(^); break;
 		default:
 			delete newNode;
-			return nullptr;
+			return NULL;
 	}
 	newNode->setLine(nodeA->getLine());
 	delete nodeA;
@@ -87,11 +87,11 @@ TIntermConstant* FoldBinaryConstantExpression(TOperator op, TIntermConstant* nod
 TIntermConstant* FoldUnaryConstantExpression(TOperator op, TIntermConstant* node)
 {
 	if (!node)
-		return nullptr;
+		return NULL;
 	
 	// for now, only support integers and floats
 	if (node->getBasicType() != EbtInt && node->getBasicType() != EbtFloat)
-		return nullptr;
+		return NULL;
 	
 	TIntermConstant* newNode = new TIntermConstant(node->getType());
 	switch (op)
@@ -110,7 +110,7 @@ TIntermConstant* FoldUnaryConstantExpression(TOperator op, TIntermConstant* node
 			break;
 		default:
 			delete newNode;
-			return nullptr;
+			return NULL;
 	}
 	newNode->setLine(node->getLine());
 	delete node;

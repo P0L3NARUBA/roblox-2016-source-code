@@ -188,7 +188,7 @@ struct ftp_parselist_data *Curl_ftp_parselist_data_alloc(void)
 void Curl_ftp_parselist_data_free(struct ftp_parselist_data **pl_data)
 {
   free(*pl_data);
-  *pl_data = nullptr;
+  *pl_data = NULL;
 }
 
 
@@ -270,8 +270,8 @@ static void PL_ERROR(struct connectdata *conn, CURLcode err)
   struct ftp_wc_tmpdata *tmpdata = conn->data->wildcard.tmp;
   struct ftp_parselist_data *parser = tmpdata->parser;
   if(parser->file_data)
-    Curl_fileinfo_dtor(nullptr, parser->file_data);
-  parser->file_data = nullptr;
+    Curl_fileinfo_dtor(NULL, parser->file_data);
+  parser->file_data = NULL;
   parser->error = err;
 }
 
@@ -309,14 +309,14 @@ static CURLcode ftp_pl_insert_finfo(struct connectdata *conn,
   char *str = finfo->b_data;
   finfo->filename       = str + parser->offsets.filename;
   finfo->strings.group  = parser->offsets.group ?
-                          str + parser->offsets.group : nullptr;
+                          str + parser->offsets.group : NULL;
   finfo->strings.perm   = parser->offsets.perm ?
-                          str + parser->offsets.perm : nullptr;
+                          str + parser->offsets.perm : NULL;
   finfo->strings.target = parser->offsets.symlink_target ?
-                          str + parser->offsets.symlink_target : nullptr;
+                          str + parser->offsets.symlink_target : NULL;
   finfo->strings.time   = str + parser->offsets.time;
   finfo->strings.user   = parser->offsets.user ?
-                          str + parser->offsets.user : nullptr;
+                          str + parser->offsets.user : NULL;
 
   /* get correct fnmatch callback */
   compare = conn->data->set.fnmatch;
@@ -338,16 +338,16 @@ static CURLcode ftp_pl_insert_finfo(struct connectdata *conn,
 
   if(add) {
     if(!Curl_llist_insert_next(llist, llist->tail, finfo)) {
-      Curl_fileinfo_dtor(nullptr, finfo);
-      tmpdata->parser->file_data = nullptr;
+      Curl_fileinfo_dtor(NULL, finfo);
+      tmpdata->parser->file_data = NULL;
       return CURLE_OUT_OF_MEMORY;
     }
   }
   else {
-    Curl_fileinfo_dtor(nullptr, finfo);
+    Curl_fileinfo_dtor(NULL, finfo);
   }
 
-  tmpdata->parser->file_data = nullptr;
+  tmpdata->parser->file_data = NULL;
   return CURLE_OK;
 }
 
@@ -409,8 +409,8 @@ size_t Curl_ftp_parselist(char *buffer, size_t size, size_t nmemb,
         finfo->b_data = tmp;
       }
       else {
-        Curl_fileinfo_dtor(nullptr, parser->file_data);
-        parser->file_data = nullptr;
+        Curl_fileinfo_dtor(NULL, parser->file_data);
+        parser->file_data = NULL;
         parser->error = CURLE_OUT_OF_MEMORY;
         PL_ERROR(conn, CURLE_OUT_OF_MEMORY);
         return bufflen;

@@ -54,7 +54,7 @@ namespace RBX
 	{
 		if(partInstance)
 		{
-			partInstance->setGfxPart(nullptr);
+			partInstance->setGfxPart(NULL);
 		}
 
 		for(size_t i = 0; i < connections.size(); ++i)

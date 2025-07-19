@@ -81,7 +81,7 @@ void DataModel::internalSave(ContentId contentId)
 {
 	RBXASSERT(isInitialized);    //  Show to David or Erik - threading issue
 	std::string assetId = contentId.toString().substr(contentId.toString().find("assetid=") + std::string("assetid=").length());
-	time_t startTime = time(nullptr);
+	time_t startTime = time(NULL);
 	ReportStatisticWithMessage(GetBaseURL(),"SaveLevel Begin","","assetId",assetId.c_str());
 	std::stringstream stream;
     std::string response;
@@ -97,7 +97,7 @@ void DataModel::internalSave(ContentId contentId)
 
         saveRequest.post(*stream, Http::kContentTypeDefaultUnspecified, true, response);
 
-		time_t endTime = time(nullptr);
+		time_t endTime = time(NULL);
 		std::stringstream message;
 		message << "double" << "\t" << "size" << "\t" << stream->tellp()/1000 << "\n";
 		message << "double" << "\t" << "time" << "\t" << (endTime - startTime) / 30 << "\n";
@@ -110,7 +110,7 @@ void DataModel::internalSave(ContentId contentId)
 	}
 	catch(std::exception&)
 	{
-		time_t endTime = time(nullptr);
+		time_t endTime = time(NULL);
 		std::string logFile = "";
 		{
 			dataModelReportingData.clear();

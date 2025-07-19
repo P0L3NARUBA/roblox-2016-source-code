@@ -14,11 +14,11 @@ BOOL extrud_mesh(lpLISTH listh_path, short type,
 	VDIM				list_vdim, add_vdim;
 	lpVDIM			vdim;
 	MESHDD      mdd;
-	lpNPW       np = nullptr;
+	lpNPW       np = NULL;
 	NP_STR			str;
 
 	c_num_np	= -32767;
-	*hrez			= nullptr;
+	*hrez			= NULL;
 
 	if( !np_init_list(&c_list_str) ) return FALSE;
 
@@ -27,7 +27,7 @@ BOOL extrud_mesh(lpLISTH listh_path, short type,
 
 //      
 	hobject = listh_path->hhead;   //  
-	while( hobject != nullptr ){      //     
+	while( hobject != NULL ){      //     
 		if( !create_contour_appr(&list_vdim, hobject, &closed)) goto err;
 		get_next_item_z( SEL_LIST, hobject, &hobject ); // c  
 	}
@@ -37,7 +37,7 @@ BOOL extrud_mesh(lpLISTH listh_path, short type,
 
 //   
 		if ((np = creat_np_mem(TNPW,MAXNOV,MAXNOE,MAXNOC, MAXNOF,
-														MAXNOE)) == nullptr)  goto err;
+														MAXNOE)) == NULL)  goto err;
 		np_init((lpNP)np);
 		np->ident = c_num_np++;
 
@@ -82,7 +82,7 @@ BOOL extrud_mesh(lpLISTH listh_path, short type,
 	if (!begin_rw(&list_vdim, 0)) goto err11;
 	for (i = 0; i < list_vdim.num_elem; i++) {//    
 		if( !init_vdim( &mdd.vdim, sizeof(MNODE) )) goto err11;
-		if ((vdim = (lpVDIM)get_next_elem(&list_vdim)) == nullptr) goto err11;
+		if ((vdim = (lpVDIM)get_next_elem(&list_vdim)) == NULL) goto err11;
 //   
 		if( create_extruded_body( &mdd, vdim, matr ) != TRUE ) goto err12;
 		if (!(np_mesh4p(&c_list_str,&c_num_np,&mdd,0.))) goto err12;
@@ -99,14 +99,14 @@ err1:
 	free_np_mem(&np);
 err:
 	free_list_vdim(&list_vdim);
-	np_end_of_put(&c_list_str,NP_CANCEL,0,nullptr);
+	np_end_of_put(&c_list_str,NP_CANCEL,0,NULL);
 	return FALSE;
 //-----------------------------------------------------------
 err12:
 	free_vdim(&mdd.vdim);
 err11:
 	free_list_vdim(&list_vdim);
-	np_end_of_put(&c_list_str,NP_CANCEL,0,nullptr);
+	np_end_of_put(&c_list_str,NP_CANCEL,0,NULL);
 	return FALSE;
 //-----------------------------------------------------------
 }
@@ -121,7 +121,7 @@ static BOOL create_extruded_body( lpMESHDD g, lpVDIM vdim, lpMATR matr ){
 
 	if (!begin_rw(vdim, 0)) return FALSE;
 	for (i = 0; i < vdim->num_elem; i++) {//    
-		if ((node = (lpMNODE)get_next_elem(vdim)) == nullptr) goto err;
+		if ((node = (lpMNODE)get_next_elem(vdim)) == NULL) goto err;
 
 //
 		mask = 0;

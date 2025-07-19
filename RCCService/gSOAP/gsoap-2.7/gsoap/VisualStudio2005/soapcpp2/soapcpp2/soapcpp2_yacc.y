@@ -97,14 +97,14 @@ Table	*classtable = (Table*)0,
 	*booltable = (Table*)0,
 	*templatetable = (Table*)0;
 
-char	*namespaceid = nullptr;
+char	*namespaceid = NULL;
 int	transient = 0;
 int	permission = 0;
 int	custom_header = 1;
 int	custom_fault = 1;
-Pragma	*pragmas = nullptr;
-Tnode	*qname = nullptr;
-Tnode	*xml = nullptr;
+Pragma	*pragmas = NULL;
+Tnode	*qname = NULL;
+Tnode	*xml = NULL;
 
 /* function prototypes for support routine section */
 static Entry	*undefined(Symbol*);
@@ -263,7 +263,7 @@ pragma	: PRAGMA	{ if ($1[1] >= 'a' && $1[1] <= 'z')
 				*pp = (Pragma*)emalloc(sizeof(Pragma));
 				(*pp)->pragma = (char*)emalloc(strlen($1)+1);
 				strcpy((*pp)->pragma, $1);
-				(*pp)->next = nullptr;
+				(*pp)->next = NULL;
 			  }
 			  else if ((i = atoi($1+2)) > 0)
 				yylineno = i;
@@ -838,7 +838,7 @@ type	: VOID		{ $$ = mkvoid(); }
 	| TEMPLATE '<' tname id '>' CLASS id
 			{ if (!(p = entry(templatetable, $7)))
 			  {	p = enter(templatetable, $7);
-			  	p->info.typ = mktemplate(nullptr, $7);
+			  	p->info.typ = mktemplate(NULL, $7);
 			  	$7->token = TYPE;
 			  }
 			  $$ = p->info.typ;
@@ -1221,20 +1221,20 @@ base	: PROTECTED base{ $$ = $2; }
 s2	: /* empty */	{ if (transient == -2)
 			  	transient = 0;
 			  permission = 0;
-			  enterscope(mktable(nullptr), 0);
-			  sp->entry = nullptr;
+			  enterscope(mktable(NULL), 0);
+			  sp->entry = NULL;
 			}
 	;
 s3	: /* empty */	{ if (transient == -2)
 			  	transient = 0;
 			  permission = 0;
-			  enterscope(mktable(nullptr), 0);
-			  sp->entry = nullptr;
+			  enterscope(mktable(NULL), 0);
+			  sp->entry = NULL;
 			  sp->grow = False;
 			}
 	;
-s4	: /* empty */	{ enterscope(mktable(nullptr), 0);
-			  sp->entry = nullptr;
+s4	: /* empty */	{ enterscope(mktable(NULL), 0);
+			  sp->entry = NULL;
 			  sp->mask = True;
 			  sp->val = 1;
 			}
@@ -1245,8 +1245,8 @@ s5	: /* empty */	{ }
 s6	: /* empty */	{ if (sp->table->level == INTERNAL)
 			  	transient |= 1;
 			  permission = 0;
-			  enterscope(mktable(nullptr), 0);
-			  sp->entry = nullptr;
+			  enterscope(mktable(NULL), 0);
+			  sp->entry = NULL;
 			  sp->table->level = PARAM;
 			}
 	;
@@ -1355,7 +1355,7 @@ occurs	: patt
 			  $$.pattern = $1;
 			}
 	;
-patt	: /* empty */	{ $$ = nullptr; }
+patt	: /* empty */	{ $$ = NULL; }
 	| STR		{ $$ = $1; }
 	;
 cint	: LNG		{ $$ = $1; }
@@ -1678,7 +1678,7 @@ add_fault(Table *gt)
 { Table *t;
   Entry *p1, *p2, *p3, *p4;
   Symbol *s1, *s2, *s3, *s4;
-  imported = nullptr;
+  imported = NULL;
   s1 = lookup("SOAP_ENV__Code");
   p1 = entry(classtable, s1);
   if (!p1 || !p1->info.typ->ref)
@@ -1737,7 +1737,7 @@ add_fault(Table *gt)
   s3 = lookup("SOAP_ENV__Fault");
   p3 = entry(classtable, s3);
   if (!p3 || !p3->info.typ->ref)
-  { t = mktable(nullptr);
+  { t = mktable(NULL);
     if (!p3)
       p3 = enter(classtable, s3);
     p3->info.typ = mkstruct(t, 9*4);
@@ -1776,7 +1776,7 @@ static void
 add_soap()
 { Symbol *s = lookup("soap");
   p = enter(classtable, s);
-  p->info.typ = mkstruct(nullptr, 0);
+  p->info.typ = mkstruct(NULL, 0);
   p->info.typ->transient = -2;
   p->info.typ->id = s;
 }
@@ -1802,7 +1802,7 @@ add_header(Table *gt)
 { Table *t;
   Entry *p;
   Symbol *s = lookup("SOAP_ENV__Header");
-  imported = nullptr;
+  imported = NULL;
   p = entry(classtable, s);
   if (!p || !p->info.typ->ref)
   { t = mktable((Table*)0);

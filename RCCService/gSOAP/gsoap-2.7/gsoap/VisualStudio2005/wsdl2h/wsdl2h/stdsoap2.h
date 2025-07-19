@@ -1325,7 +1325,7 @@ class soap_multipart_iterator
     { return *content; }
   soap_multipart_iterator &operator++()
     { content = soap_next_multipart(content); return *this; }
-  soap_multipart_iterator() : content(nullptr)
+  soap_multipart_iterator() : content(NULL)
     { }
   soap_multipart_iterator(struct soap_multipart *p) : content(p)
     { }
@@ -1349,7 +1349,7 @@ struct soap_dime
   soap_multipart_iterator begin()
     { soap_multipart_iterator iter(list); return iter; };
   soap_multipart_iterator end()
-    { soap_multipart_iterator iter(nullptr); return iter; };
+    { soap_multipart_iterator iter(NULL); return iter; };
 #endif
 };
 #endif
@@ -1364,7 +1364,7 @@ struct soap_mime
   soap_multipart_iterator begin()
     { soap_multipart_iterator iter(list); return iter; };
   soap_multipart_iterator end()
-    { soap_multipart_iterator iter(nullptr); return iter; };
+    { soap_multipart_iterator iter(NULL); return iter; };
 #endif
 };
 #endif
@@ -1547,7 +1547,7 @@ struct SOAP_STD_API soap
   const char *dime_id_format;	/* user-definable format string for integer DIME id (<SOAP_TAGLEN chars) */
   const char *http_version;	/* HTTP version used "1.0" or "1.1" */
   const char *http_content;	/* optional custom response content type (with SOAP_FILE) */
-  const char *encodingStyle;	/* default = nullptr which means that SOAP encoding is used */
+  const char *encodingStyle;	/* default = NULL which means that SOAP encoding is used */
   const char *actor;		/* SOAP-ENV:actor or role attribute value */
   int recv_timeout;		/* when > 0, gives socket recv timeout in seconds, < 0 in usec */
   int send_timeout;		/* when > 0, gives socket send timeout in seconds, < 0 in usec */
@@ -1823,7 +1823,7 @@ soap_wchar soap_get1(struct soap*);
 
 #define soap_revget1(soap) ((soap)->bufidx--)
 #define soap_unget(soap, c) ((soap)->ahead = c)
-#define soap_register_plugin(soap, plugin) soap_register_plugin_arg(soap, plugin, nullptr)
+#define soap_register_plugin(soap, plugin) soap_register_plugin_arg(soap, plugin, NULL)
 #define soap_imode(soap, n) ((soap)->mode = (soap)->imode = (n))
 #define soap_set_imode(soap, n) ((soap)->imode |= (n))
 #define soap_clr_imode(soap, n) ((soap)->imode &= ~(n))
@@ -1832,7 +1832,7 @@ soap_wchar soap_get1(struct soap*);
 #define soap_clr_omode(soap, n) ((soap)->omode &= ~(n))
 #define soap_set_mode(soap, n) ((soap)->imode |= (n), (soap)->omode |= (n))
 #define soap_clr_mode(soap, n) ((soap)->imode &= ~(n), (soap)->omode &= ~(n))
-#define soap_destroy(soap) soap_delete((soap), nullptr)
+#define soap_destroy(soap) soap_delete((soap), NULL)
 
 #ifdef HAVE_STRRCHR
 # define soap_strrchr(s, t) strrchr(s, t)

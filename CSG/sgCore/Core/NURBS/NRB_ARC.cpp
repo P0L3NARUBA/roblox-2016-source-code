@@ -44,7 +44,7 @@ BOOL transform_to_NURBS(hOBJ hobj, hOBJ *hobj_new){
 
 //----------------->>>>
 //create new hobj
-	if((*hobj_new = o_alloc(OSPLINE)) == nullptr) return FALSE;
+	if((*hobj_new = o_alloc(OSPLINE)) == NULL) return FALSE;
 	obj=(lpOBJ)(*hobj_new);
 
 	obj1=(lpOBJ)hobj;
@@ -152,7 +152,7 @@ short i;
 
 	sply->numU=6;
 	sply->nump=sply->numk=3;
-  parameter_free_APPR( sply->nump-1, 2, sply->P, sply->u, nullptr );
+  parameter_free_APPR( sply->nump-1, 2, sply->P, sply->u, NULL );
 }
 
 //----------------------------------------------------------------->>>>>>>>>>>>>
@@ -303,7 +303,7 @@ GEO_LINE gline1, gline2;
 			sply_dat->U[7] = sply_dat->U[8] = 0.75;
 			break;
 	}
-  parameter_free_APPR( sply_dat->nump-1, 2, sply_dat->P, sply_dat->u, nullptr );
+  parameter_free_APPR( sply_dat->nump-1, 2, sply_dat->P, sply_dat->u, NULL );
 	return TRUE;
 }
 
@@ -378,7 +378,7 @@ static void create_NURBS_circle( lpSPLY_DAT sply, sgFloat *center, sgFloat *ort1
    }
 
    sply->nump=sply->numk=7;
-   parameter_free_APPR( sply->nump-1, 2, sply->P, sply->u, nullptr );
+   parameter_free_APPR( sply->nump-1, 2, sply->P, sply->u, NULL );
 }
 //-------------------------------------------->>>>>>>>>>>>>
 
@@ -399,7 +399,7 @@ lpGEO_SPLINE gspline;
 		if( !unpack_geo_sply( gspline, &data->sply_dat)) return OSFALSE;
 		if( data->sply_dat.sdtype & SPL_INT ) if( !change_INT_APPR(&data->sply_dat) ) return OSFALSE;
 		if(	lpsc->status & ST_DIRECT) if( !Reorient_Spline(&data->sply_dat) ) return OSFALSE;
-//		parameter_free_APPR( data->sply_dat.nump-1, 2, data->sply_dat.P, data->sply_dat.u, nullptr );
+//		parameter_free_APPR( data->sply_dat.nump-1, 2, data->sply_dat.P, data->sply_dat.u, NULL );
 		data->first=FALSE;
 		return OSTRUE;
 	}else{
@@ -407,7 +407,7 @@ lpGEO_SPLINE gspline;
 		if( !begin_use_sply(gspline, &sply_dat)) return OSFALSE;
 		if( sply_dat.sdtype & SPL_INT )	if( !change_INT_APPR(&sply_dat) ) goto err;
 		if(	lpsc->status & ST_DIRECT)    if( !Reorient_Spline(&sply_dat) ) goto err;
-		parameter_free_APPR( data->sply_dat.nump-1, 2, data->sply_dat.P, data->sply_dat.u, nullptr );
+		parameter_free_APPR( data->sply_dat.nump-1, 2, data->sply_dat.P, data->sply_dat.u, NULL );
 
 		if( !Two_Spline_Union_Dat(&sply_dat, &data->sply_dat, &sply_tmp)) goto err1;
 		free_sply_dat(&data->sply_dat);

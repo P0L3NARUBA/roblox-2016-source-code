@@ -84,7 +84,7 @@ public:
     }
 
     /** If a value that is EqualsFunc to @a member is present, returns a pointer to the 
-        version stored in the data structure, otherwise returns nullptr.
+        version stored in the data structure, otherwise returns NULL.
      */
     const T* getPointer(const T& member) const {
         return memberTable.getKeyPointer(member);

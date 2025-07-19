@@ -122,7 +122,7 @@ protected:
 
 	struct Model
 	{
-		std::vector<GeometryGenerator::Vertex>	vertices;
+		std::vector<Vertex>						vertices;
 		std::vector<unsigned short>				indices;
 		std::string								name;
 		const ExporterMaterial* 				material;

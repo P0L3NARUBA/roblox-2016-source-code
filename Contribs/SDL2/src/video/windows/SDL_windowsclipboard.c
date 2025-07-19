@@ -44,7 +44,7 @@ GetWindowHandle(_THIS)
     if (window) {
         return ((SDL_WindowData *) window->driverdata)->hwnd;
     }
-    return nullptr;
+    return NULL;
 }
 
 int
@@ -109,7 +109,7 @@ WIN_GetClipboardText(_THIS)
 {
     char *text;
 
-    text = nullptr;
+    text = NULL;
     if (IsClipboardFormatAvailable(TEXT_FORMAT) &&
         OpenClipboard(GetWindowHandle(_this))) {
         HANDLE hMem;

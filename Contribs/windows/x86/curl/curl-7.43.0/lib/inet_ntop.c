@@ -65,7 +65,7 @@ static char *inet_ntop4 (const unsigned char *src, char *dst, size_t size)
   len = strlen(tmp);
   if(len == 0 || len >= size) {
     SET_ERRNO(ENOSPC);
-    return (nullptr);
+    return (NULL);
   }
   strcpy(dst, tmp);
   return dst;
@@ -144,7 +144,7 @@ static char *inet_ntop6 (const unsigned char *src, char *dst, size_t size)
         (best.len == 6 || (best.len == 5 && words[5] == 0xffff))) {
       if(!inet_ntop4(src+12, tp, sizeof(tmp) - (tp - tmp))) {
         SET_ERRNO(ENOSPC);
-        return (nullptr);
+        return (NULL);
       }
       tp += strlen(tp);
       break;
@@ -162,7 +162,7 @@ static char *inet_ntop6 (const unsigned char *src, char *dst, size_t size)
    */
   if((size_t)(tp - tmp) > size) {
     SET_ERRNO(ENOSPC);
-    return (nullptr);
+    return (NULL);
   }
   strcpy(dst, tmp);
   return dst;
@@ -173,13 +173,13 @@ static char *inet_ntop6 (const unsigned char *src, char *dst, size_t size)
  * Convert a network format address to presentation format.
  *
  * Returns pointer to presentation format address (`buf').
- * Returns nullptr on error and errno set with the specific
+ * Returns NULL on error and errno set with the specific
  * error, EAFNOSUPPORT or ENOSPC.
  *
  * On Windows we store the error in the thread errno, not
  * in the winsock error code. This is to avoid losing the
  * actual last winsock error. So use macro ERRNO to fetch the
- * errno this function sets when returning nullptr, not SOCKERRNO.
+ * errno this function sets when returning NULL, not SOCKERRNO.
  */
 char *Curl_inet_ntop(int af, const void *src, char *buf, size_t size)
 {
@@ -192,7 +192,7 @@ char *Curl_inet_ntop(int af, const void *src, char *buf, size_t size)
 #endif
   default:
     SET_ERRNO(EAFNOSUPPORT);
-    return nullptr;
+    return NULL;
   }
 }
 #endif  /* HAVE_INET_NTOP */

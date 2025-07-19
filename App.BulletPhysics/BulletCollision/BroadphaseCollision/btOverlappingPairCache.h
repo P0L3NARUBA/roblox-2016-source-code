@@ -250,7 +250,7 @@ private:
 
 		if ( index == BT_NULL_PAIR )
 		{
-			return nullptr;
+			return NULL;
 		}
 
 		btAssert(index < m_overlappingPairArray.size());

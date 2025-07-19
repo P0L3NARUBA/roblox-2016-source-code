@@ -87,7 +87,7 @@ cls:
 					o_hcncrd(dxfg->ocs_gcs, &next, &line.v2);
 					if (!dpoint_eq(&line.v1, &line.v2, eps_d)) {
 						if ( !cr_add_obj(OLINE, color, (lpGEO_SIMPLE)&line,
-														 &listh, nullptr, FALSE)) goto err;
+														 &listh, NULL, FALSE)) goto err;
 					}
 				} else {
 					if (!dpoint_eq(&prev, &next, eps_d)) {
@@ -130,7 +130,7 @@ cls:
 						o_hcncrd(pl_gcs, &arc.ve, &arc.ve);
 						arc.n = *v;
 						if ( !cr_add_obj(OARC, color, (lpGEO_SIMPLE)&arc,
-														 &listh, nullptr, FALSE)) goto err;
+														 &listh, NULL, FALSE)) goto err;
 						
 						if (save_tang4 < 0) {
 							hobj = listh.htail;
@@ -180,7 +180,7 @@ cls:
 		} else step = 1;
 		spline.nump = nump;
 		spline.numd = 0;
-		if ((spline.hpoint = SGMalloc(sizeof(D_POINT)*nump)) == nullptr) goto err;
+		if ((spline.hpoint = SGMalloc(sizeof(D_POINT)*nump)) == NULL) goto err;
 		spline.hderivates = 0;
 		if (!begin_rw(&vdim, 0)) {
 err4:
@@ -189,7 +189,7 @@ err4:
 		}
 		point = (lpD_POINT)spline.hpoint;
 		for (i = 0, j = 0, k = 0; i < vdim.num_elem; i++) {
-			if ((pnt = (D_POINT*)get_next_elem(&vdim)) == nullptr) {
+			if ((pnt = (D_POINT*)get_next_elem(&vdim)) == NULL) {
 				end_rw(&vdim);
 				goto err4;
 			}

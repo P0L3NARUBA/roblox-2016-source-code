@@ -30,7 +30,7 @@ short b_fa_lab1(lpNPW np)
 					else {
 						mt = b_face_label(mt);
 						if (mt != bf->met) {
-							put_message(LAB_ERR,nullptr,0);
+							put_message(LAB_ERR,NULL,0);
 							return (0);
 						}
 					}

@@ -77,7 +77,7 @@ hash_table_var_hash(const void *key)
 
 output_read_remover::output_read_remover()
 {
-   mem_ctx = ralloc_context(nullptr);
+   mem_ctx = ralloc_context(NULL);
    replacements =
       hash_table_ctor(0, hash_table_var_hash, hash_table_pointer_compare);
 }
@@ -97,7 +97,7 @@ output_read_remover::visit(ir_dereference_variable *ir)
    ir_variable *temp = (ir_variable *) hash_table_find(replacements, ir->var);
 
    /* If we don't have an existing temporary, create one. */
-   if (temp == nullptr) {
+   if (temp == NULL) {
       void *var_ctx = ralloc_parent(ir->var);
       temp = new(var_ctx) ir_variable(ir->var->type, ir->var->name,
                                       ir_var_temporary, (glsl_precision)ir->var->data.precision);

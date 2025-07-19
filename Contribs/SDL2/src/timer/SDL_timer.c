@@ -81,7 +81,7 @@ SDL_AddTimerInternal(SDL_TimerData *data, SDL_Timer *timer)
 {
     SDL_Timer *prev, *curr;
 
-    prev = nullptr;
+    prev = NULL;
     for (curr = data->timers; curr; prev = curr, curr = curr->next) {
         if ((Sint32)(timer->scheduled-curr->scheduled) < 0) {
             break;
@@ -103,8 +103,8 @@ SDL_TimerThread(void *_data)
     SDL_TimerData *data = (SDL_TimerData *)_data;
     SDL_Timer *pending;
     SDL_Timer *current;
-    SDL_Timer *freelist_head = nullptr;
-    SDL_Timer *freelist_tail = nullptr;
+    SDL_Timer *freelist_head = NULL;
+    SDL_Timer *freelist_tail = NULL;
     Uint32 tick, now, interval, delay;
 
     /* Threaded timer loop:
@@ -118,7 +118,7 @@ SDL_TimerThread(void *_data)
         {
             /* Get any timers ready to be queued */
             pending = data->pending;
-            data->pending = nullptr;
+            data->pending = NULL;
 
             /* Make any unused timer structures available */
             if (freelist_head) {
@@ -134,8 +134,8 @@ SDL_TimerThread(void *_data)
             pending = pending->next;
             SDL_AddTimerInternal(data, current);
         }
-        freelist_head = nullptr;
-        freelist_tail = nullptr;
+        freelist_head = NULL;
+        freelist_tail = NULL;
 
         /* Check to see if we're still running, after maintenance */
         if (!data->active) {
@@ -225,9 +225,9 @@ SDL_TimerInit(void)
 #if defined(__WIN32__) && !defined(HAVE_LIBC)
 #undef SDL_CreateThread
 #if SDL_DYNAMIC_API
-        data->thread = SDL_CreateThread_REAL(SDL_TimerThread, name, data, nullptr, nullptr);
+        data->thread = SDL_CreateThread_REAL(SDL_TimerThread, name, data, NULL, NULL);
 #else
-        data->thread = SDL_CreateThread(SDL_TimerThread, name, data, nullptr, nullptr);
+        data->thread = SDL_CreateThread(SDL_TimerThread, name, data, NULL, NULL);
 #endif
 #else
         data->thread = SDL_CreateThread(SDL_TimerThread, name, data);
@@ -255,12 +255,12 @@ SDL_TimerQuit(void)
         /* Shutdown the timer thread */
         if (data->thread) {
             SDL_SemPost(data->sem);
-            SDL_WaitThread(data->thread, nullptr);
-            data->thread = nullptr;
+            SDL_WaitThread(data->thread, NULL);
+            data->thread = NULL;
         }
 
         SDL_DestroySemaphore(data->sem);
-        data->sem = nullptr;
+        data->sem = NULL;
 
         /* Clean up the timer entries */
         while (data->timers) {
@@ -280,7 +280,7 @@ SDL_TimerQuit(void)
         }
 
         SDL_DestroyMutex(data->timermap_lock);
-        data->timermap_lock = nullptr;
+        data->timermap_lock = NULL;
     }
 }
 
@@ -363,7 +363,7 @@ SDL_RemoveTimer(SDL_TimerID id)
 
     /* Find the timer */
     SDL_LockMutex(data->timermap_lock);
-    prev = nullptr;
+    prev = NULL;
     for (entry = data->timermap; entry; prev = entry, entry = entry->next) {
         if (entry->timerID == id) {
             if (prev) {

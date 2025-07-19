@@ -114,7 +114,7 @@ namespace RBX {
 			// be set to an example of an Id that is both inside these extents
 			// and inside the container.
 			template<class Container>
-			bool intersectsContainer(const Container& container, Id* optionalFoundId = nullptr) const {
+			bool intersectsContainer(const Container& container, Id* optionalFoundId = NULL) const {
 				const Vector3int32& extentsMin = low.value();
 				const Vector3int32& extentsMax = high.value();
 				Vector3int32 counter;

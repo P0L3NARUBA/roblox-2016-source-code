@@ -259,7 +259,7 @@ void GameBasicSettings::setTouchCameraMovementMode(TouchCameraMovementMode setti
 
 	if(touchCameraMovementMode != setting)
 	{
-		const char *label = nullptr;
+		const char *label = NULL;
 		switch (setting) {
 			case TOUCH_CAMERA_MOVEMENT_MODE_DEFAULT:
 			case TOUCH_CAMERA_MOVEMENT_MODE_FOLLOW:
@@ -301,7 +301,7 @@ void GameBasicSettings::setComputerCameraMovementMode(ComputerCameraMovementMode
 
 	if(computerCameraMovementMode != setting)
 	{
-		const char *label = nullptr;
+		const char *label = NULL;
 		switch (setting) {
 			case COMPUTER_CAMERA_MOVEMENT_MODE_FOLLOW:
 				label = "ComputerCameraMoveModeFollow";
@@ -343,7 +343,7 @@ void GameBasicSettings::setTouchMovementMode(TouchMovementMode setting)
 
 	if(touchMoveMode != setting)
 	{
-		const char *label = nullptr;
+		const char *label = NULL;
 		switch (setting) {
 			case TOUCH_MOVEMENT_MODE_DEFAULT:
 			case TOUCH_MOVEMENT_MODE_THUMBSTICK:
@@ -391,7 +391,7 @@ void GameBasicSettings::setComputerMovementMode(ComputerMovementMode setting)
 
 	if(computerMoveMode != setting)
 	{
-		const char *label = nullptr;
+		const char *label = NULL;
 		switch (setting) {
 			case COMPUTER_MOVEMENT_MODE_DEFAULT:
 			case COMPUTER_MOVEMENT_MODE_KBD_MOUSE:
@@ -617,8 +617,8 @@ void GameBasicSettings::reset()
 
 void GameBasicSettings::recordSettingsInGA(bool touchEnabled) const
 {
-	const char *CameraMovement = nullptr;
-	const char *CharacterMovement = nullptr;
+	const char *CameraMovement = NULL;
+	const char *CharacterMovement = NULL;
 
 	if (touchEnabled) {
 		switch (touchCameraMovementMode) {

@@ -21,7 +21,7 @@ namespace RBX {
     static Reflection::BoundFuncDesc<Pages, shared_ptr<const Reflection::ValueArray>(void)> func_getCurrentPage
     (&Pages::getCurrentPage, "GetCurrentPage", Security::None);
     static Reflection::PropDescriptor<Pages, bool> prop_isFinished
-    ("IsFinished", category_Data, &Pages::isFinished, nullptr, Reflection::PropertyDescriptor::UI);
+    ("IsFinished", category_Data, &Pages::isFinished, NULL, Reflection::PropertyDescriptor::UI);
 
     static Reflection::BoundYieldFuncDesc<Pages, void(void)> func_advanceToNextPageAsync (&Pages::advanceToNextPageAsync, "AdvanceToNextPageAsync", Security::None);
     REFLECTION_END();
@@ -103,7 +103,7 @@ namespace RBX {
 		shared_ptr<const Reflection::ValueTable> result;
 		std::string status;
 
-		if (!LuaWebService::parseWebJSONResponseHelper(&response, nullptr, result, status))
+		if (!LuaWebService::parseWebJSONResponseHelper(&response, NULL, result, status))
 		{
 			StandardOut::singleton()->print(MESSAGE_ERROR, status);
 			errorFunction(status);
@@ -322,7 +322,7 @@ bool findLocalFile(const std::string& url, std::string* filename)
 bool LuaWebService::parseWebJSONResponseHelper(std::string* response, std::exception* exception, 
 										   shared_ptr<const Reflection::ValueTable>& result, std::string& status)
 {
-	if (response == nullptr)
+	if (response == NULL)
 	{
 		status = exception ? exception->what() : "Request Failed";
 		return false;

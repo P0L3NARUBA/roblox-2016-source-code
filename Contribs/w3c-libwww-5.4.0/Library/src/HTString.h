@@ -34,10 +34,10 @@ Sample Code Library.
 
 These two functions are dynamic versions of strcpy and
 strcat. They use malloc for allocating space for
-the string. If StrAllocCopy is called with a non-nullptr dest,
+the string. If StrAllocCopy is called with a non-NULL dest,
 then this is freed before the new value is assigned so that only the
 last string created has to be freed by the user. If
-StrAllocCat is called with a nullptr pointer as destination then
+StrAllocCat is called with a NULL pointer as destination then
 it is equivalent to StrAllocCopy. 
 */
 
@@ -60,7 +60,7 @@ extern char * StrAllocMCat (char ** dest, ...);
 
 /*
 
-The last argument MUST be nullptr as we otherwise don't know when the argument
+The last argument MUST be NULL as we otherwise don't know when the argument
 list stops.
 .
   Case-insensitive String Comparison
@@ -103,7 +103,7 @@ Arguments are:
 
 
 Returns empty string ("") if perfect match, pointer to part matched by wildcard
-if any, or nullptr if no match. This is basically the same as YES if match,
+if any, or NULL if no match. This is basically the same as YES if match,
 else NO.
 */
 

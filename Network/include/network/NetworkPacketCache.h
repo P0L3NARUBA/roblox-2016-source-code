@@ -63,7 +63,7 @@ namespace RBX {
 			void onRemovedAssembly(shared_ptr<Instance> assembly);
 			void addPart(PartInstance& part);
 
-			boost::unique_lock<boost::shared_mutex> debugLock(boost::upgrade_lock<boost::shared_mutex>* upgradeLock = nullptr);
+			boost::unique_lock<boost::shared_mutex> debugLock(boost::upgrade_lock<boost::shared_mutex>* upgradeLock = NULL);
 		};
 
 

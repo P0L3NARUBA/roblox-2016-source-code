@@ -10,7 +10,7 @@ short create_cone_np(lpLISTH listh, sgFloat  *par, BOOL constr)
 	sgFloat      r,z,alfa,d_alfa;
 	MESHDD      mdd;
 	MNODE       node;
-	lpNPW       np = nullptr;
+	lpNPW       np = NULL;
 	sgFloat      k_i, step_i;
 
 	c_num_np = -32767;
@@ -50,7 +50,7 @@ short create_cone_np(lpLISTH listh, sgFloat  *par, BOOL constr)
 
 //   
 	if ((np = creat_np_mem(TNPW,MAXNOV,MAXNOE,MAXNOC, MAXNOF,
-													MAXNOE)) == nullptr)  goto err1;
+													MAXNOE)) == NULL)  goto err1;
 	np_init((lpNP)np);
 	if ( r1 > eps_d ) {
 		np_face(np, r1, n, 0.,&c_num_np);							  //  
@@ -76,6 +76,6 @@ err1:
 	free_np_mem(&np);
 err:
 	free_vdim(&mdd.vdim);
-	np_end_of_put(&c_list_str,NP_CANCEL,0,nullptr);
+	np_end_of_put(&c_list_str,NP_CANCEL,0,NULL);
 	return 0;
 }

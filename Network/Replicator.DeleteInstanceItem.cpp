@@ -44,7 +44,7 @@ bool Replicator::DeleteInstanceItem::write(RakNet::BitStream& bitStream) {
 	if (!id.valid)
 		RBX::StandardOut::singleton()->printf(
 		RBX::MESSAGE_SENSITIVE, 
-		"Replication: ~nullptr >> %s",						// remove player always on right 
+		"Replication: ~NULL >> %s",						// remove player always on right 
 		RakNetAddressToString(replicator.remotePlayerId).c_str());
 	else
 	{

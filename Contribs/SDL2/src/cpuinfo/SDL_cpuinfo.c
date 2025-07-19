@@ -283,7 +283,7 @@ CPU_haveAltiVec(void)
 #endif
     int hasVectorUnit = 0;
     size_t length = sizeof(hasVectorUnit);
-    int error = sysctl(selectors, 2, &hasVectorUnit, &length, nullptr, 0);
+    int error = sysctl(selectors, 2, &hasVectorUnit, &length, NULL, 0);
     if (0 == error)
         altivec = (hasVectorUnit != 0);
 #elif SDL_ALTIVEC_BLITTERS && HAVE_SETJMP
@@ -431,7 +431,7 @@ SDL_GetCPUCount(void)
 #ifdef HAVE_SYSCTLBYNAME
         if (SDL_CPUCount <= 0) {
             size_t size = sizeof(SDL_CPUCount);
-            sysctlbyname("hw.ncpu", &SDL_CPUCount, &size, nullptr, 0);
+            sysctlbyname("hw.ncpu", &SDL_CPUCount, &size, NULL, 0);
         }
 #endif
 #ifdef __WIN32__
@@ -748,7 +748,7 @@ SDL_GetSystemRAM(void)
             Uint64 memsize = 0;
             size_t len = sizeof(memsize);
             
-            if (sysctl(mib, 2, &memsize, &len, nullptr, 0) == 0) {
+            if (sysctl(mib, 2, &memsize, &len, NULL, 0) == 0) {
                 SDL_SystemRAM = (int)(memsize / (1024*1024));
             }
         }

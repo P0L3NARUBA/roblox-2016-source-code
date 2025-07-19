@@ -104,7 +104,7 @@ static int entropy_func_mutex(void *data, unsigned char *output, size_t len)
 #ifdef POLARSSL_DEBUG
 static void polarssl_debug(void *context, int level, const char *line)
 {
-  struct SessionHandle *data = nullptr;
+  struct SessionHandle *data = NULL;
 
   if(!context)
     return;
@@ -140,7 +140,7 @@ polarssl_connect_step1(struct connectdata *conn,
 #else
   struct in_addr addr;
 #endif
-  void *old_session = nullptr;
+  void *old_session = NULL;
   size_t old_session_size = 0;
   char errorbuf[128];
   errorbuf[0]=0;
@@ -368,7 +368,7 @@ polarssl_connect_step1(struct connectdata *conn,
     protocols[cur++] = ALPN_HTTP_1_1;
     infof(data, "ALPN, offering %s\n", ALPN_HTTP_1_1);
 
-    protocols[cur] = nullptr;
+    protocols[cur] = NULL;
 
     ssl_set_alpn_protocols(&connssl->ssl, protocols);
   }
@@ -457,7 +457,7 @@ polarssl_connect_step2(struct connectdata *conn,
   if(data->set.ssl_enable_alpn) {
     const char *next_protocol = ssl_get_alpn_protocol(&connssl->ssl);
 
-    if(next_protocol != nullptr) {
+    if(next_protocol != NULL) {
       infof(data, "ALPN, server accepted to use %s\n", next_protocol);
 
 #ifdef USE_NGHTTP2
@@ -489,14 +489,14 @@ polarssl_connect_step3(struct connectdata *conn,
   CURLcode result = CURLE_OK;
   struct ssl_connect_data *connssl = &conn->ssl[sockindex];
   struct SessionHandle *data = conn->data;
-  void *old_ssl_sessionid = nullptr;
+  void *old_ssl_sessionid = NULL;
   ssl_session *our_ssl_sessionid = &conn->ssl[sockindex].ssn;
   bool incache;
 
   DEBUGASSERT(ssl_connect_3 == connssl->connecting_state);
 
   /* Save the current session data for possible re-use */
-  incache = !(Curl_ssl_getsessionid(conn, &old_ssl_sessionid, nullptr));
+  incache = !(Curl_ssl_getsessionid(conn, &old_ssl_sessionid, NULL));
   if(incache) {
     if(old_ssl_sessionid != our_ssl_sessionid) {
       infof(data, "old SSL session ID is stale, removing\n");
@@ -619,7 +619,7 @@ polarssl_connect_common(struct connectdata *conn,
 
   if(ssl_connect_1 == connssl->connecting_state) {
     /* Find out how much more time we're allowed */
-    timeout_ms = Curl_timeleft(data, nullptr, TRUE);
+    timeout_ms = Curl_timeleft(data, NULL, TRUE);
 
     if(timeout_ms < 0) {
       /* no need to continue if time already is up */
@@ -637,7 +637,7 @@ polarssl_connect_common(struct connectdata *conn,
         ssl_connect_2_writing == connssl->connecting_state) {
 
     /* check allowed time left */
-    timeout_ms = Curl_timeleft(data, nullptr, TRUE);
+    timeout_ms = Curl_timeleft(data, NULL, TRUE);
 
     if(timeout_ms < 0) {
       /* no need to continue if time already is up */

@@ -22,8 +22,8 @@ public:
     ~CMediaType();
     CMediaType();
     CMediaType(const GUID * majortype);
-    CMediaType(const AM_MEDIA_TYPE&, HRESULT* phr = nullptr);
-    CMediaType(const CMediaType&, HRESULT* phr = nullptr);
+    CMediaType(const AM_MEDIA_TYPE&, HRESULT* phr = NULL);
+    CMediaType(const CMediaType&, HRESULT* phr = NULL);
 
     CMediaType& operator=(const CMediaType&);
     CMediaType& operator=(const AM_MEDIA_TYPE&);

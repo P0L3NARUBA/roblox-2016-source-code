@@ -44,7 +44,7 @@ namespace RBX
 					if (strncmp(name, entries[i].name, sizeof(entries[i].name)) == 0)
 						return &entries[i];
 
-				return nullptr;
+				return NULL;
 			}
 		};
 
@@ -281,7 +281,7 @@ namespace RBX
 			}
 
 			FASTLOGS(FLog::Graphics, "Loaded shaders from folder %s", sourceFolder);
-			FASTLOG3(FLog::Graphics, "Compiled %d VS, %d FS, %d CS, and %d GS in %d ms", vertexShaders.size(), fragmentShaders.size(), computeShaders.size(), geometryShaders.size(), static_cast<int>(timer.delta().msec()));
+			FASTLOG3(FLog::Graphics, "Compiled %d VS and %d FS in %d ms", vertexShaders.size(), fragmentShaders.size(), static_cast<int>(timer.delta().msec()));
 		}
 
 		shared_ptr<ShaderProgram> ShaderManager::getProgram(const std::string& vsName, const std::string& gsName, const std::string& fsName)

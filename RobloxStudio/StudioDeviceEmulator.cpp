@@ -205,7 +205,7 @@ void StudioDeviceEmulator::addDevice(EmulationDevice device, bool isInitPopulati
 	if (!m_deviceMenu || !mainWindow)
 		return;
 
-	QAction* addEmulationAction = nullptr;
+	QAction* addEmulationAction = NULL;
 
 	if (!isInitPopulation)
 	{
@@ -266,5 +266,5 @@ QAction* StudioDeviceEmulator::getActionFromDevice(const EmulationDevice& device
 		if (*iter == device)
 			return iter.key();
 
-	return nullptr;
+	return NULL;
 }

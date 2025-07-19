@@ -69,7 +69,7 @@ GuiResponse GuiItem::processNonFocus(const shared_ptr<InputObject>& event)
 {
 	for (size_t i = 0; i < numChildren(); ++i) {
 		if (GuiItem* item = getGuiItem(i)) {
-			if (item != focus.get() && item != nullptr) {
+			if (item != focus.get() && item != NULL) {
 				GuiResponse itemResponse = item->process(event);
 				if (itemResponse.wasSunk()) 
 				{
@@ -116,7 +116,7 @@ GuiResponse GuiItem::process(const shared_ptr<InputObject>& event)
 		}
 	}
 
-	RBXASSERT(focus == nullptr);
+	RBXASSERT(focus == NULL);
 	return processNonFocus(event);
 }
 
@@ -614,7 +614,7 @@ GuiResponse UnifiedWidget::processShown_OutOfTitle(const shared_ptr<InputObject>
 				GuiResponse answer = GuiItem::process(event);
 
 				if (!answer.wasSunk()) {
-					RBXASSERT(getFocus() == nullptr);
+					RBXASSERT(getFocus() == NULL);
 					setMenuState(NOTHING);
 				}
 

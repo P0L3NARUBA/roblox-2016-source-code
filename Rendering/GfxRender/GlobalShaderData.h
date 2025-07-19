@@ -12,7 +12,7 @@ namespace RBX
 
 		struct GlobalShaderData {
 			/* Camera */
-			Matrix4 ViewProjection;
+			Matrix4 ViewProjection[2];
 			Vector4 ViewRight;
 			Vector4 ViewUp;
 			Vector4 ViewDirection;
@@ -46,16 +46,38 @@ namespace RBX
 		};
 
 		struct MaterialData {
-			Vector4 AlbedoEnabled_RoughnessOverride_MetalnessOverride_EmissionOverride; // -1 means use textures, anything 0 - 1 is an override
-			Vector4 ClearcoatEnabled_NormalMapEnabled_AmbientOcclusionEnabled_ParallaxEnabled;
-			Vector2 padding;
+			Vector4 RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused; // -1.0 means use textures/disabled, anything above 0.0 is an override
+			Vector4 AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode;
+			Vector4 IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset; // Index of Refraction does not apply to metallic materials
 
-			Vector2 CCFactorOverride_CCRoughnessOverride;
-			Vector4 CCTintOverride_CCNormalsEnabled;
+			Vector4 CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused;
 		};
+
+		/* Albedo modes:
+		0 - No albedo map
+		1 - Albedo alpha defines transparency
+		2 - Albedo alpha defines overlay
+		3 - Albedo alpha defines tinting */
+
+		/* Emission modes:
+		0 - No emission
+		1 - Inherit color from base color
+		2 - Inherit color from base color and albedo
+		3 - Inherit color from dedicated map */
 
 		struct GlobalMaterialData {
 			MaterialData Materials[256];
+
+			static void define(Device* device);
+		};
+
+		struct CubemapInfo {
+			Matrix4 OrientedBoundingBox;
+			Vector4 Position_Size; // Size of -1.0 means box mode, while anything above 0.0 means sphere mode
+		};
+
+		struct CubemapsInfo {
+			std::vector<CubemapInfo> Cubemap;
 
 			static void define(Device* device);
 		};
@@ -83,7 +105,7 @@ namespace RBX
 			Vector2 Type_unused;
 			Vector2 ShadowsColored;
 		};
-		
+
 		struct GlobalLightList {
 			std::vector<GPULight> LightList;
 

@@ -55,7 +55,7 @@ namespace SystemUtil
         DISPLAY_DEVICE displayDevice;
         ZeroMemory(&displayDevice, sizeof(displayDevice));
         displayDevice.cb = sizeof(displayDevice);
-        EnumDisplayDevices(nullptr, 0, &displayDevice, 0);
+        EnumDisplayDevices(NULL, 0, &displayDevice, 0);
         
         return std::string(displayDevice.DeviceString);
     }
@@ -64,16 +64,16 @@ namespace SystemUtil
     static DWORD GetDirecXVideoMemorySize() 
     {
         DWORD totalVidSize = 0;
-        HRESULT hr = CoInitialize(nullptr);
+        HRESULT hr = CoInitialize(NULL);
 
         if (FAILED(hr))
         {
             FASTLOG1(FLog::DXVideoMemory, "DXVRAM: CoInitialize returned %x", hr);
         }
 
-        IDirectDraw2* ddraw = nullptr;
+        IDirectDraw2* ddraw = NULL;
 
-        if ( FAILED(hr = CoCreateInstance( CLSID_DirectDraw, nullptr, CLSCTX_INPROC_SERVER, IID_IDirectDraw2, reinterpret_cast<LPVOID*>(&ddraw))) )
+        if ( FAILED(hr = CoCreateInstance( CLSID_DirectDraw, NULL, CLSCTX_INPROC_SERVER, IID_IDirectDraw2, reinterpret_cast<LPVOID*>(&ddraw))) )
         {
             FASTLOG1(FLog::DXVideoMemory, "DXVRAM: CoCreateInstance returned %x", hr);
         }

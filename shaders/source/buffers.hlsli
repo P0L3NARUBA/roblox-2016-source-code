@@ -2,7 +2,7 @@
 #define GLOBALS_GUARD
 
 cbuffer Globals : register(b0) {
-    float4x4 ViewProjection;
+    float4x4 ViewProjection[2];
     float4 ViewRight;
     float4 ViewUp;
     float4 ViewDirection;
@@ -37,17 +37,28 @@ cbuffer Processing : register(b0) {
 #define MATERIAL_GUARD
 
 struct MaterialData {
-    float4 AlbedoEnabled_RoughnessOverride_MetalnessOverride_EmissionOverride;
-	float4 ClearcoatEnabled_NormalMapEnabled_AmbientOcclusionEnabled_ParallaxEnabled;
-    float2 padding;
+    float4 RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused;
+	float4 ClearcoatEnabled_AlbedoMode_NormalMapEnabled_EmissiveMode;
+    float4 IndexOfRefraction_EmissiveFactor_ParallaxFactor_ParallaxOffset;
     
-	float2 CCFactorOverride_CCRoughnessOverride;
-	float4 CCTintOverride_CCNormalsEnabled;
+	float4 CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused;
 };
 
 cbuffer MaterialData : register(b1) {
     MaterialData MaterialsData[1024];
 };
+
+#endif
+
+#if defined(CUBEMAP_PARALLAX) && !defined(CUBEMAP_PARALLAX_GUARD)
+#define CUBEMAP_PARALLAX_GUARD
+
+struct CubemapInfo {
+	float4x4 OrientedBoundingBox;
+	float4 Position_Size;
+};
+
+StructuredBuffer<CubemapInfo> CubemapsInfo : register(t29);
 
 #endif
 

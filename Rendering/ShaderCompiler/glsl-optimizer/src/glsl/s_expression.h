@@ -30,9 +30,9 @@
 #include "strtod.h"
 #include "list.h"
 
-/* Type-safe downcasting macros (also safe to pass nullptr) */
+/* Type-safe downcasting macros (also safe to pass NULL) */
 #define SX_AS_(t,x) ((x) && ((s_expression*) x)->is_##t()) ? ((s_##t*) (x)) \
-                                                           : nullptr
+                                                           : NULL
 #define SX_AS_LIST(x)   SX_AS_(list, x)
 #define SX_AS_SYMBOL(x) SX_AS_(symbol, x)
 #define SX_AS_NUMBER(x) SX_AS_(number, x)

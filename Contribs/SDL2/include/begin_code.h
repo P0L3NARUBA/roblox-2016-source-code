@@ -136,11 +136,11 @@
 
 /* Apparently this is needed by several Windows compilers */
 #if !defined(__MACH__)
-#ifndef nullptr
+#ifndef NULL
 #ifdef __cplusplus
-#define nullptr 0
+#define NULL 0
 #else
-#define nullptr ((void *)0)
+#define NULL ((void *)0)
 #endif
-#endif /* nullptr */
+#endif /* NULL */
 #endif /* ! Mac OS X - breaks precompiled headers */

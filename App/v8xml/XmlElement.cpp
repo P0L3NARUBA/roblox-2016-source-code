@@ -102,34 +102,34 @@ const XmlTag& tag_xsinoNamespaceSchemaLocation = Name::declare("xsi:noNamespaceS
 bool XmlElement::isXsiNil() const {
 	const XmlAttribute* xnil = findAttribute(name_xsinil);
 	bool isNil;
-	return xnil!=nullptr && xnil->getValue(isNil) && isNil;
+	return xnil!=NULL && xnil->getValue(isNil) && isNil;
 }
 
 const XmlElement* XmlElement::findFirstChildByTag(const XmlTag& _tag) const {
-	for (const XmlElement* child = firstChild(); child!=nullptr; child = child->nextSibling())
+	for (const XmlElement* child = firstChild(); child!=NULL; child = child->nextSibling())
 		if (child->getTag()==_tag)
 			return child;
-	return nullptr;
+	return NULL;
 }
 const XmlElement* XmlElement::findNextChildWithSameTag(const XmlElement* node) const {
-	for (const XmlElement* child = node->nextSibling(); child!=nullptr; child = child->nextSibling())
+	for (const XmlElement* child = node->nextSibling(); child!=NULL; child = child->nextSibling())
 		if (child->getTag()==node->getTag())
 			return child;
-	return nullptr;
+	return NULL;
 }
 
 const XmlAttribute* XmlElement::findAttribute(const XmlTag& _tag) const {
-	for (const XmlAttribute* attribute = getFirstAttribute(); attribute!=nullptr; attribute = getNextAttribute(attribute))
+	for (const XmlAttribute* attribute = getFirstAttribute(); attribute!=NULL; attribute = getNextAttribute(attribute))
 		if (attribute->getTag()==_tag)
 			return attribute;
-	return nullptr;
+	return NULL;
 }
 
 XmlAttribute* XmlElement::findAttribute(const XmlTag& _tag) {
-	for (XmlAttribute* attribute = getFirstAttribute(); attribute!=nullptr; attribute = getNextAttribute(attribute))
+	for (XmlAttribute* attribute = getFirstAttribute(); attribute!=NULL; attribute = getNextAttribute(attribute))
 		if (attribute->getTag()==_tag)
 			return attribute;
-	return nullptr;
+	return NULL;
 }
 
 void XmlNameValuePair::clearValue() const {
@@ -372,16 +372,16 @@ bool XmlNameValuePair::getValue(RBX::InstanceHandle &value) const {
 	
 	if (valueType==NAME && *nameValue==value_IDREF_null) {
 		clearValue();
-		handleValue = new RBX::InstanceHandle(nullptr);
+		handleValue = new RBX::InstanceHandle(NULL);
 		valueType = HANDLE;
 	} else if (valueType==STRING && value_IDREF_null==*stringValue) {
 		clearValue();
-		handleValue = new RBX::InstanceHandle(nullptr);
+		handleValue = new RBX::InstanceHandle(NULL);
 		valueType = HANDLE;
 	} else if (valueType==STRING && *stringValue=="") {
 		// legacy files didn't use the "null" keyword
 		clearValue();
-		handleValue = new RBX::InstanceHandle(nullptr);
+		handleValue = new RBX::InstanceHandle(NULL);
 		valueType = HANDLE;
 	}
 
@@ -427,13 +427,13 @@ std::string XmlNameValuePair::toString(XmlWriter* writer) const
 		return nameValue->toString();
 
 	case HANDLE:
-		if (handleValue->getTarget()==nullptr)
+		if (handleValue->getTarget()==NULL)
 			return value_IDREF_null.toString();
 		else {
 			shared_ptr<Reflection::DescribedBase> base = handleValue->getTarget();
 			const std::string* lastId = base->getXmlId();
 				
-			if (lastId == nullptr || !writer->isValidId(*lastId, *handleValue))
+			if (lastId == NULL || !writer->isValidId(*lastId, *handleValue))
 			{
 				std::string newId;
 				Guid::generateRBXGUID(newId);
@@ -442,7 +442,7 @@ std::string XmlNameValuePair::toString(XmlWriter* writer) const
 				// set the id back into the object in case we serialize again before loading
 				base->setXmlId(newId);
 				lastId = base->getXmlId();
-				RBXASSERT(lastId != nullptr);
+				RBXASSERT(lastId != NULL);
 			}
 				
 			writer->recordId(*lastId, *handleValue);

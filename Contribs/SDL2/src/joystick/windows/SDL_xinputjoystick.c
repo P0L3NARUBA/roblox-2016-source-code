@@ -111,7 +111,7 @@ GetXInputName(const Uint8 userid, BYTE SubType)
 static void
 AddXInputDevice(const Uint8 userid, BYTE SubType, JoyStick_DeviceData **pContext)
 {
-    JoyStick_DeviceData *pPrevJoystick = nullptr;
+    JoyStick_DeviceData *pPrevJoystick = NULL;
     JoyStick_DeviceData *pNewJoystick = *pContext;
 
     if (SDL_XInputUseOldJoystickMapping() && SubType != XINPUT_DEVSUBTYPE_GAMEPAD)
@@ -202,7 +202,7 @@ SDL_XINPUT_JoystickOpen(SDL_Joystick * joystick, JoyStick_DeviceData *joystickde
 
     if (XINPUTGETCAPABILITIES(userId, XINPUT_FLAG_GAMEPAD, &capabilities) != ERROR_SUCCESS) {
         SDL_free(joystick->hwdata);
-        joystick->hwdata = nullptr;
+        joystick->hwdata = NULL;
         return SDL_SetError("Failed to obtain XInput device capabilities. Device disconnected?");
     }
     SDL_zero(state);

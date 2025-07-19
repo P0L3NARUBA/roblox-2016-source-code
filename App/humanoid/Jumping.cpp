@@ -163,7 +163,7 @@ shared_ptr<PartInstance> Jumping::tryCeiling(const RbxRay& ray, float maxDistanc
 	Vector3 hitPoint;
 
 	Primitive* floorPrim = humanoid->getWorld()->getContactManager()->getHitLegacy(	ray, 
-																					nullptr, 
+																					NULL, 
 																					this, 
 																					hitPoint, 
 																					distance, 

@@ -90,7 +90,7 @@ bool DocDockManager::setCurrentDoc(IRobloxDoc& doc)
 /**
  * Gets the current dock widget that has focus.
  * 
- * @return doc if has focus, nullptr if not found or does not have focus
+ * @return doc if has focus, NULL if not found or does not have focus
  */
 IRobloxDoc* DocDockManager::getCurrentDoc() const
 {
@@ -104,7 +104,7 @@ IRobloxDoc* DocDockManager::getCurrentDoc() const
         ++iter;
     }
 
-    return nullptr;
+    return NULL;
 }
 
 /**

@@ -249,7 +249,7 @@ static const struct Curl_handler * const protocols[] = {
   &Curl_handler_rtmpts,
 #endif
 
-  (struct Curl_handler *) nullptr
+  (struct Curl_handler *) NULL
 };
 
 /*
@@ -288,12 +288,12 @@ void Curl_freeset(struct SessionHandle *data)
     Curl_safefree(data->change.referer);
     data->change.referer_alloc = FALSE;
   }
-  data->change.referer = nullptr;
+  data->change.referer = NULL;
   if(data->change.url_alloc) {
     Curl_safefree(data->change.url);
     data->change.url_alloc = FALSE;
   }
-  data->change.url = nullptr;
+  data->change.url = NULL;
 }
 
 static CURLcode setstropt(char **charp, char *s)
@@ -318,23 +318,23 @@ static CURLcode setstropt(char **charp, char *s)
 static CURLcode setstropt_userpwd(char *option, char **userp, char **passwdp)
 {
   CURLcode result = CURLE_OK;
-  char *user = nullptr;
-  char *passwd = nullptr;
+  char *user = NULL;
+  char *passwd = NULL;
 
-  /* Parse the login details if specified. It not then we treat nullptr as a hint
+  /* Parse the login details if specified. It not then we treat NULL as a hint
      to clear the existing data */
   if(option) {
     result = parse_login_details(option, strlen(option),
-                                 (userp ? &user : nullptr),
-                                 (passwdp ? &passwd : nullptr),
-                                 nullptr);
+                                 (userp ? &user : NULL),
+                                 (passwdp ? &passwd : NULL),
+                                 NULL);
   }
 
   if(!result) {
     /* Store the username part of option if required */
     if(userp) {
       if(!user && option && option[0] == ':') {
-        /* Allocate an empty string instead of returning nullptr as user name */
+        /* Allocate an empty string instead of returning NULL as user name */
         user = strdup("");
         if(!user)
           result = CURLE_OUT_OF_MEMORY;
@@ -422,8 +422,8 @@ CURLcode Curl_close(struct SessionHandle *data)
      /normally/ done by curl_multi_remove_handle() but this is "just in
      case" */
   if(data->state.timeoutlist) {
-    Curl_llist_destroy(data->state.timeoutlist, nullptr);
-    data->state.timeoutlist = nullptr;
+    Curl_llist_destroy(data->state.timeoutlist, NULL);
+    data->state.timeoutlist = NULL;
   }
 
   data->magic = 0; /* force a clear AFTER the possibly enforced removal from
@@ -435,7 +435,7 @@ CURLcode Curl_close(struct SessionHandle *data)
 
   /* Free the pathbuffer */
   Curl_safefree(data->state.pathbuffer);
-  data->state.path = nullptr;
+  data->state.path = NULL;
 
   /* freed here just in case DONE wasn't called */
   Curl_free_request_state(data);
@@ -448,19 +448,19 @@ CURLcode Curl_close(struct SessionHandle *data)
 
   /* Cleanup possible redirect junk */
   free(data->req.newurl);
-  data->req.newurl = nullptr;
+  data->req.newurl = NULL;
 
   if(data->change.referer_alloc) {
     Curl_safefree(data->change.referer);
     data->change.referer_alloc = FALSE;
   }
-  data->change.referer = nullptr;
+  data->change.referer = NULL;
 
   if(data->change.url_alloc) {
     Curl_safefree(data->change.url);
     data->change.url_alloc = FALSE;
   }
-  data->change.url = nullptr;
+  data->change.url = NULL;
 
   Curl_safefree(data->state.headerbuff);
 
@@ -665,13 +665,13 @@ CURLcode Curl_open(struct SessionHandle **curl)
     Curl_convert_init(data);
 
     /* most recent connection is not yet defined */
-    data->state.lastconnect = nullptr;
+    data->state.lastconnect = NULL;
 
     data->progress.flags |= PGRS_HIDE;
     data->state.current_speed = -1; /* init to negative == impossible */
 
     data->wildcard.state = CURLWC_INIT;
-    data->wildcard.filelist = nullptr;
+    data->wildcard.filelist = NULL;
     data->set.fnmatch = ZERO_NULL;
     data->set.maxconnects = DEFAULT_CONNCACHE_SIZE; /* for easy handles */
   }
@@ -681,7 +681,7 @@ CURLcode Curl_open(struct SessionHandle **curl)
     free(data->state.headerbuff);
     Curl_freeset(data);
     free(data);
-    data = nullptr;
+    data = NULL;
   }
   else
     *curl = data;
@@ -925,7 +925,7 @@ CURLcode Curl_setopt(struct SessionHandle *data, CURLoption option,
      *
      * If the encoding is set to "" we use an Accept-Encoding header that
      * encompasses all the encodings we support.
-     * If the encoding is set to nullptr we don't send an Accept-Encoding header
+     * If the encoding is set to NULL we don't send an Accept-Encoding header
      * and ignore an received Content-Encoding header.
      *
      */
@@ -993,7 +993,7 @@ CURLcode Curl_setopt(struct SessionHandle *data, CURLoption option,
 
   case CURLOPT_COPYPOSTFIELDS:
     /*
-     * A string with POST data. Makes curl HTTP POST. Even if it is nullptr.
+     * A string with POST data. Makes curl HTTP POST. Even if it is NULL.
      * If needed, CURLOPT_POSTFIELDSIZE must have been set prior to
      *  CURLOPT_COPYPOSTFIELDS and not altered later.
      */
@@ -1013,7 +1013,7 @@ CURLcode Curl_setopt(struct SessionHandle *data, CURLoption option,
       else {
         char * p;
 
-        (void) setstropt(&data->set.str[STRING_COPYPOSTFIELDS], nullptr);
+        (void) setstropt(&data->set.str[STRING_COPYPOSTFIELDS], NULL);
 
         /* Allocate even when size == 0. This satisfies the need of possible
            later address compare to detect the COPYPOSTFIELDS mode, and
@@ -1044,7 +1044,7 @@ CURLcode Curl_setopt(struct SessionHandle *data, CURLoption option,
      */
     data->set.postfields = va_arg(param, void *);
     /* Release old copied data. */
-    (void) setstropt(&data->set.str[STRING_COPYPOSTFIELDS], nullptr);
+    (void) setstropt(&data->set.str[STRING_COPYPOSTFIELDS], NULL);
     data->set.httpreq = HTTPREQ_POST;
     break;
 
@@ -1058,8 +1058,8 @@ CURLcode Curl_setopt(struct SessionHandle *data, CURLoption option,
     if(data->set.postfieldsize < bigsize &&
        data->set.postfields == data->set.str[STRING_COPYPOSTFIELDS]) {
       /* Previous CURLOPT_COPYPOSTFIELDS is no longer valid. */
-      (void) setstropt(&data->set.str[STRING_COPYPOSTFIELDS], nullptr);
-      data->set.postfields = nullptr;
+      (void) setstropt(&data->set.str[STRING_COPYPOSTFIELDS], NULL);
+      data->set.postfields = NULL;
     }
 
     data->set.postfieldsize = bigsize;
@@ -1075,8 +1075,8 @@ CURLcode Curl_setopt(struct SessionHandle *data, CURLoption option,
     if(data->set.postfieldsize < bigsize &&
        data->set.postfields == data->set.str[STRING_COPYPOSTFIELDS]) {
       /* Previous CURLOPT_COPYPOSTFIELDS is no longer valid. */
-      (void) setstropt(&data->set.str[STRING_COPYPOSTFIELDS], nullptr);
-      data->set.postfields = nullptr;
+      (void) setstropt(&data->set.str[STRING_COPYPOSTFIELDS], NULL);
+      data->set.postfields = NULL;
     }
 
     data->set.postfieldsize = bigsize;
@@ -1126,9 +1126,9 @@ CURLcode Curl_setopt(struct SessionHandle *data, CURLoption option,
      * Since CURLOPT_HTTPHEADER was the only way to set HTTP headers for a
      * long time we remain doing it this way until CURLOPT_PROXYHEADER is
      * used. As soon as this option has been used, if set to anything but
-     * nullptr, custom headers for proxies are only picked from this list.
+     * NULL, custom headers for proxies are only picked from this list.
      *
-     * Set this option to nullptr to restore the previous behavior.
+     * Set this option to NULL to restore the previous behavior.
      */
     data->set.proxyheaders = va_arg(param, struct curl_slist *);
     break;
@@ -1169,7 +1169,7 @@ CURLcode Curl_setopt(struct SessionHandle *data, CURLoption option,
       cl = curl_slist_append(data->change.cookielist, argptr);
       if(!cl) {
         curl_slist_free_all(data->change.cookielist);
-        data->change.cookielist = nullptr;
+        data->change.cookielist = NULL;
         return CURLE_OUT_OF_MEMORY;
       }
       data->change.cookielist = cl; /* store the list for later use */
@@ -1189,7 +1189,7 @@ CURLcode Curl_setopt(struct SessionHandle *data, CURLoption option,
      * Activate the cookie parser. This may or may not already
      * have been made.
      */
-    newcookies = Curl_cookie_init(data, nullptr, data->cookies,
+    newcookies = Curl_cookie_init(data, NULL, data->cookies,
                                   data->set.cookiesession);
     if(!newcookies)
       result = CURLE_OUT_OF_MEMORY;
@@ -1219,7 +1219,7 @@ CURLcode Curl_setopt(struct SessionHandle *data, CURLoption option,
   case CURLOPT_COOKIELIST:
     argptr = va_arg(param, char *);
 
-    if(argptr == nullptr)
+    if(argptr == NULL)
       break;
 
     if(Curl_raw_equal(argptr, "ALL")) {
@@ -1246,7 +1246,7 @@ CURLcode Curl_setopt(struct SessionHandle *data, CURLoption option,
     else {
       if(!data->cookies)
         /* if cookie engine was not running, activate it */
-        data->cookies = Curl_cookie_init(data, nullptr, nullptr, TRUE);
+        data->cookies = Curl_cookie_init(data, NULL, NULL, TRUE);
 
       argptr = strdup(argptr);
       if(!argptr || !data->cookies) {
@@ -1258,11 +1258,11 @@ CURLcode Curl_setopt(struct SessionHandle *data, CURLoption option,
 
         if(checkprefix("Set-Cookie:", argptr))
           /* HTTP Header format line */
-          Curl_cookie_add(data, data->cookies, TRUE, argptr + 11, nullptr, nullptr);
+          Curl_cookie_add(data, data->cookies, TRUE, argptr + 11, NULL, NULL);
 
         else
           /* Netscape format line */
-          Curl_cookie_add(data, data->cookies, FALSE, argptr, nullptr, nullptr);
+          Curl_cookie_add(data, data->cookies, FALSE, argptr, NULL, NULL);
 
         Curl_share_unlock(data, CURL_LOCK_DATA_COOKIE);
         free(argptr);
@@ -1442,7 +1442,7 @@ CURLcode Curl_setopt(struct SessionHandle *data, CURLoption option,
      * If the proxy is set to "" we explicitly say that we don't want to use a
      * proxy (even though there might be environment variables saying so).
      *
-     * Setting it to nullptr, means no proxy but allows the environment variables
+     * Setting it to NULL, means no proxy but allows the environment variables
      * to decide for us.
      */
     result = setstropt(&data->set.str[STRING_PROXY],
@@ -1535,7 +1535,7 @@ CURLcode Curl_setopt(struct SessionHandle *data, CURLoption option,
      */
     result = setstropt(&data->set.str[STRING_FTPPORT],
                        va_arg(param, char *));
-    data->set.ftp_use_port = (nullptr != data->set.str[STRING_FTPPORT]) ?
+    data->set.ftp_use_port = (NULL != data->set.str[STRING_FTPPORT]) ?
                              TRUE:FALSE;
     break;
 
@@ -1742,7 +1742,7 @@ CURLcode Curl_setopt(struct SessionHandle *data, CURLoption option,
     if(data->set.fprogress)
       data->progress.callback = TRUE; /* no longer internal */
     else
-      data->progress.callback = FALSE; /* nullptr enforces internal */
+      data->progress.callback = FALSE; /* NULL enforces internal */
     break;
 
   case CURLOPT_XFERINFOFUNCTION:
@@ -1753,7 +1753,7 @@ CURLcode Curl_setopt(struct SessionHandle *data, CURLoption option,
     if(data->set.fxferinfo)
       data->progress.callback = TRUE; /* no longer internal */
     else
-      data->progress.callback = FALSE; /* nullptr enforces internal */
+      data->progress.callback = FALSE; /* NULL enforces internal */
 
     break;
 
@@ -1821,7 +1821,7 @@ CURLcode Curl_setopt(struct SessionHandle *data, CURLoption option,
      */
     data->set.fdebug = va_arg(param, curl_debug_callback);
     /*
-     * if the callback provided is nullptr, it'll use the default callback
+     * if the callback provided is NULL, it'll use the default callback
      */
     break;
   case CURLOPT_DEBUGDATA:
@@ -1853,7 +1853,7 @@ CURLcode Curl_setopt(struct SessionHandle *data, CURLoption option,
     data->set.fwrite_func = va_arg(param, curl_write_callback);
     if(!data->set.fwrite_func) {
       data->set.is_fwrite_set = 0;
-      /* When set to nullptr, reset to our internal default function */
+      /* When set to NULL, reset to our internal default function */
       data->set.fwrite_func = (curl_write_callback)fwrite;
     }
     else
@@ -1866,7 +1866,7 @@ CURLcode Curl_setopt(struct SessionHandle *data, CURLoption option,
     data->set.fread_func = va_arg(param, curl_read_callback);
     if(!data->set.fread_func) {
       data->set.is_fread_set = 0;
-      /* When set to nullptr, reset to our internal default function */
+      /* When set to NULL, reset to our internal default function */
       data->set.fread_func = (curl_read_callback)fread;
     }
     else
@@ -1874,13 +1874,13 @@ CURLcode Curl_setopt(struct SessionHandle *data, CURLoption option,
     break;
   case CURLOPT_SEEKFUNCTION:
     /*
-     * Seek callback. Might be nullptr.
+     * Seek callback. Might be NULL.
      */
     data->set.seek_func = va_arg(param, curl_seek_callback);
     break;
   case CURLOPT_SEEKDATA:
     /*
-     * Seek control callback. Might be nullptr.
+     * Seek control callback. Might be NULL.
      */
     data->set.seek_client = va_arg(param, void *);
     break;
@@ -1904,13 +1904,13 @@ CURLcode Curl_setopt(struct SessionHandle *data, CURLoption option,
     break;
   case CURLOPT_IOCTLFUNCTION:
     /*
-     * I/O control callback. Might be nullptr.
+     * I/O control callback. Might be NULL.
      */
     data->set.ioctl_func = va_arg(param, curl_ioctl_callback);
     break;
   case CURLOPT_IOCTLDATA:
     /*
-     * I/O control data pointer. Might be nullptr.
+     * I/O control data pointer. Might be NULL.
      */
     data->set.ioctl_client = va_arg(param, void *);
     break;
@@ -1997,7 +1997,7 @@ CURLcode Curl_setopt(struct SessionHandle *data, CURLoption option,
      */
     result = setstropt(&data->set.str[STRING_KRB_LEVEL],
                        va_arg(param, char *));
-    data->set.krb = (nullptr != data->set.str[STRING_KRB_LEVEL])?TRUE:FALSE;
+    data->set.krb = (NULL != data->set.str[STRING_KRB_LEVEL])?TRUE:FALSE;
     break;
   case CURLOPT_GSSAPI_DELEGATION:
     /*
@@ -2160,22 +2160,22 @@ CURLcode Curl_setopt(struct SessionHandle *data, CURLoption option,
       Curl_share_lock(data, CURL_LOCK_DATA_SHARE, CURL_LOCK_ACCESS_SINGLE);
 
       if(data->dns.hostcachetype == HCACHE_SHARED) {
-        data->dns.hostcache = nullptr;
+        data->dns.hostcache = NULL;
         data->dns.hostcachetype = HCACHE_NONE;
       }
 
 #if !defined(CURL_DISABLE_HTTP) && !defined(CURL_DISABLE_COOKIES)
       if(data->share->cookies == data->cookies)
-        data->cookies = nullptr;
+        data->cookies = NULL;
 #endif
 
       if(data->share->sslsession == data->state.session)
-        data->state.session = nullptr;
+        data->state.session = NULL;
 
       data->share->dirty--;
 
       Curl_share_unlock(data, CURL_LOCK_DATA_SHARE);
-      data->share = nullptr;
+      data->share = NULL;
     }
 
     /* use new share if it set */
@@ -2295,7 +2295,7 @@ CURLcode Curl_setopt(struct SessionHandle *data, CURLoption option,
 
   case CURLOPT_SOCKOPTDATA:
     /*
-     * socket callback data pointer. Might be nullptr.
+     * socket callback data pointer. Might be NULL.
      */
     data->set.sockopt_client = va_arg(param, void *);
     break;
@@ -2310,7 +2310,7 @@ CURLcode Curl_setopt(struct SessionHandle *data, CURLoption option,
 
   case CURLOPT_OPENSOCKETDATA:
     /*
-     * socket callback data pointer. Might be nullptr.
+     * socket callback data pointer. Might be NULL.
      */
     data->set.opensocket_client = va_arg(param, void *);
     break;
@@ -2325,7 +2325,7 @@ CURLcode Curl_setopt(struct SessionHandle *data, CURLoption option,
 
   case CURLOPT_CLOSESOCKETDATA:
     /*
-     * socket callback data pointer. Might be nullptr.
+     * socket callback data pointer. Might be NULL.
      */
     data->set.closesocket_client = va_arg(param, void *);
     break;
@@ -2373,7 +2373,7 @@ CURLcode Curl_setopt(struct SessionHandle *data, CURLoption option,
     break;
 
   case CURLOPT_SSH_KEYFUNCTION:
-    /* setting to nullptr is fine since the ssh.c functions themselves will
+    /* setting to NULL is fine since the ssh.c functions themselves will
        then rever to use the internal default */
     data->set.ssh_keyfunc = va_arg(param, curl_sshkeycallback);
     break;
@@ -2710,11 +2710,11 @@ static void conn_free(struct connectdata *conn)
   Curl_safefree(conn->proxy.rawalloc); /* proxy name buffer */
   Curl_safefree(conn->master_buffer);
 
-  Curl_llist_destroy(conn->send_pipe, nullptr);
-  Curl_llist_destroy(conn->recv_pipe, nullptr);
+  Curl_llist_destroy(conn->send_pipe, NULL);
+  Curl_llist_destroy(conn->recv_pipe, NULL);
 
-  conn->send_pipe = nullptr;
-  conn->recv_pipe = nullptr;
+  conn->send_pipe = NULL;
+  conn->recv_pipe = NULL;
 
   Curl_safefree(conn->localdev);
   Curl_free_ssl_config(&conn->ssl_config);
@@ -2744,9 +2744,9 @@ CURLcode Curl_disconnect(struct connectdata *conn, bool dead_connection)
     return CURLE_OK;
   }
 
-  if(conn->dns_entry != nullptr) {
+  if(conn->dns_entry != NULL) {
     Curl_resolv_unlock(data, conn->dns_entry);
-    conn->dns_entry = nullptr;
+    conn->dns_entry = NULL;
   }
 
   Curl_hostcache_prune(data); /* kill old DNS cache entries */
@@ -2846,7 +2846,7 @@ int Curl_removeHandleFromPipeline(struct SessionHandle *handle,
   curr = pipeline->head;
   while(curr) {
     if(curr->ptr == handle) {
-      Curl_llist_remove(pipeline, curr, nullptr);
+      Curl_llist_remove(pipeline, curr, NULL);
       return 1; /* we removed a handle */
     }
     curr = curr->next;
@@ -2876,7 +2876,7 @@ static struct SessionHandle* gethandleathead(struct curl_llist *pipeline)
     return (struct SessionHandle *) curr->ptr;
   }
 
-  return nullptr;
+  return NULL;
 }
 
 /* remove the specified connection from all (possible) pipelines and related
@@ -2917,7 +2917,7 @@ static void signalPipeClose(struct curl_llist *pipeline, bool pipe_broke)
     if(pipe_broke)
       data->state.pipe_broke = TRUE;
     Curl_multi_handlePipeBreak(data);
-    Curl_llist_remove(pipeline, curr, nullptr);
+    Curl_llist_remove(pipeline, curr, NULL);
     curr = next;
   }
 }
@@ -2926,7 +2926,7 @@ static void signalPipeClose(struct curl_llist *pipeline, bool pipe_broke)
  * This function finds the connection in the connection
  * cache that has been unused for the longest time.
  *
- * Returns the pointer to the oldest idle connection, or nullptr if none was
+ * Returns the pointer to the oldest idle connection, or NULL if none was
  * found.
  */
 static struct connectdata *
@@ -2939,7 +2939,7 @@ find_oldest_idle_connection(struct SessionHandle *data)
   long highscore=-1;
   long score;
   struct timeval now;
-  struct connectdata *conn_candidate = nullptr;
+  struct connectdata *conn_candidate = NULL;
   struct connectbundle *bundle;
 
   now = Curl_tvnow();
@@ -2978,7 +2978,7 @@ find_oldest_idle_connection(struct SessionHandle *data)
  * This function finds the connection in the connection
  * bundle that has been unused for the longest time.
  *
- * Returns the pointer to the oldest idle connection, or nullptr if none was
+ * Returns the pointer to the oldest idle connection, or NULL if none was
  * found.
  */
 static struct connectdata *
@@ -2989,7 +2989,7 @@ find_oldest_idle_connection_in_bundle(struct SessionHandle *data,
   long highscore=-1;
   long score;
   struct timeval now;
-  struct connectdata *conn_candidate = nullptr;
+  struct connectdata *conn_candidate = NULL;
   struct connectdata *conn;
 
   (void)data;
@@ -3425,7 +3425,7 @@ ConnectionDone(struct SessionHandle *data, struct connectdata *conn)
   size_t maxconnects =
     (data->multi->maxconnects < 0) ? data->multi->num_easy * 4:
     data->multi->maxconnects;
-  struct connectdata *conn_candidate = nullptr;
+  struct connectdata *conn_candidate = NULL;
 
   /* Mark the current connection as 'unused' */
   conn->inuse = FALSE;
@@ -3638,7 +3638,7 @@ static bool tld_check_name(struct SessionHandle *data,
                            const char *ace_hostname)
 {
   size_t err_pos;
-  char *uc_name = nullptr;
+  char *uc_name = NULL;
   int rc;
 #ifndef CURL_DISABLE_VERBOSE_STRINGS
   const char *tld_errmsg = "<no msg>";
@@ -3651,7 +3651,7 @@ static bool tld_check_name(struct SessionHandle *data,
   if(rc != IDNA_SUCCESS)
     return FALSE;
 
-  rc = tld_check_lz(uc_name, &err_pos, nullptr);
+  rc = tld_check_lz(uc_name, &err_pos, NULL);
 #ifndef CURL_DISABLE_VERBOSE_STRINGS
 #ifdef HAVE_TLD_STRERROR
   if(rc != TLD_SUCCESS)
@@ -3704,7 +3704,7 @@ static void fix_hostname(struct SessionHandle *data,
    * Check name for non-ASCII and convert hostname to ACE form.
    *************************************************************/
   if(stringprep_check_version(LIBIDN_REQUIRED_VERSION)) {
-    char *ace_hostname = nullptr;
+    char *ace_hostname = NULL;
     int rc = idna_to_ascii_lz(host->name, &ace_hostname, 0);
     infof (data, "Input domain encoded as `%s'\n",
            stringprep_locale_charset ());
@@ -3725,7 +3725,7 @@ static void fix_hostname(struct SessionHandle *data,
   /*************************************************************
    * Check name for non-ASCII and convert hostname to ACE form.
    *************************************************************/
-    char *ace_hostname = nullptr;
+    char *ace_hostname = NULL;
     int rc = curl_win32_idn_to_ascii(host->name, &ace_hostname);
     if(rc == 0)
       infof(data, "Failed to convert %s to ACE;\n",
@@ -3755,10 +3755,10 @@ static struct connectdata *allocate_conn(struct SessionHandle *data)
 {
   struct connectdata *conn = calloc(1, sizeof(struct connectdata));
   if(!conn)
-    return nullptr;
+    return NULL;
 
   conn->handler = &Curl_handler_dummy;  /* Be sure we have a handler defined
-                                           already from start to avoid nullptr
+                                           already from start to avoid NULL
                                            situations and checks */
 
   /* and we setup a few fields in case we end up actually using this struct */
@@ -3801,12 +3801,12 @@ static struct connectdata *allocate_conn(struct SessionHandle *data)
                           (conn->proxytype == CURLPROXY_HTTP ||
                            conn->proxytype == CURLPROXY_HTTP_1_0))?TRUE:FALSE;
   conn->bits.proxy_user_passwd =
-    (nullptr != data->set.str[STRING_PROXYUSERNAME])?TRUE:FALSE;
+    (NULL != data->set.str[STRING_PROXYUSERNAME])?TRUE:FALSE;
   conn->bits.tunnel_proxy = data->set.tunnel_thru_httpproxy;
 
 #endif /* CURL_DISABLE_PROXY */
 
-  conn->bits.user_passwd = (nullptr != data->set.str[STRING_USERNAME])?TRUE:FALSE;
+  conn->bits.user_passwd = (NULL != data->set.str[STRING_USERNAME])?TRUE:FALSE;
   conn->bits.ftp_use_epsv = data->set.ftp_use_epsv;
   conn->bits.ftp_use_eprt = data->set.ftp_use_eprt;
 
@@ -3819,8 +3819,8 @@ static struct connectdata *allocate_conn(struct SessionHandle *data)
     defined(NTLM_WB_ENABLED)
   conn->ntlm_auth_hlpr_socket = CURL_SOCKET_BAD;
   conn->ntlm_auth_hlpr_pid = 0;
-  conn->challenge_header = nullptr;
-  conn->response_header = nullptr;
+  conn->challenge_header = NULL;
+  conn->response_header = NULL;
 #endif
 
   if(Curl_pipeline_wanted(data->multi, CURLPIPE_HTTP1) &&
@@ -3858,16 +3858,16 @@ static struct connectdata *allocate_conn(struct SessionHandle *data)
   return conn;
   error:
 
-  Curl_llist_destroy(conn->send_pipe, nullptr);
-  Curl_llist_destroy(conn->recv_pipe, nullptr);
+  Curl_llist_destroy(conn->send_pipe, NULL);
+  Curl_llist_destroy(conn->recv_pipe, NULL);
 
-  conn->send_pipe = nullptr;
-  conn->recv_pipe = nullptr;
+  conn->send_pipe = NULL;
+  conn->recv_pipe = NULL;
 
   free(conn->master_buffer);
   free(conn->localdev);
   free(conn);
-  return nullptr;
+  return NULL;
 }
 
 static CURLcode findprotocol(struct SessionHandle *data,
@@ -3880,7 +3880,7 @@ static CURLcode findprotocol(struct SessionHandle *data,
   /* Scan protocol handler table and match against 'protostr' to set a few
      variables based on the URL. Now that the handler may be changed later
      when the protocol specific setup function is called. */
-  for(pp = protocols; (p = *pp) != nullptr; pp++) {
+  for(pp = protocols; (p = *pp) != NULL; pp++) {
     if(Curl_raw_equal(p->scheme, protostr)) {
       /* Protocol found in table. Check if allowed */
       if(!(data->set.allowed_protocols & p->protocol))
@@ -4387,7 +4387,7 @@ static bool check_noproxy(const char* name, const char* no_proxy)
 
     for(tok_start = 0; tok_start < no_proxy_len; tok_start = tok_end + 1) {
       while(tok_start < no_proxy_len &&
-            strchr(separator, no_proxy[tok_start]) != nullptr) {
+            strchr(separator, no_proxy[tok_start]) != NULL) {
         /* Look for the beginning of the token. */
         ++tok_start;
       }
@@ -4396,7 +4396,7 @@ static bool check_noproxy(const char* name, const char* no_proxy)
         break; /* It was all trailing separator chars, no more tokens. */
 
       for(tok_end = tok_start; tok_end < no_proxy_len &&
-            strchr(separator, no_proxy[tok_end]) == nullptr; ++tok_end)
+            strchr(separator, no_proxy[tok_end]) == NULL; ++tok_end)
         /* Look for the end of the token. */
         ;
 
@@ -4430,11 +4430,11 @@ static bool check_noproxy(const char* name, const char* no_proxy)
 /****************************************************************
 * Detect what (if any) proxy to use. Remember that this selects a host
 * name and is not limited to HTTP proxies only.
-* The returned pointer must be freed by the caller (unless nullptr)
+* The returned pointer must be freed by the caller (unless NULL)
 ****************************************************************/
 static char *detect_proxy(struct connectdata *conn)
 {
-  char *proxy = nullptr;
+  char *proxy = NULL;
 
 #ifndef CURL_DISABLE_HTTP
   /* If proxy was not specified, we check for default proxy environment
@@ -4454,7 +4454,7 @@ static char *detect_proxy(struct connectdata *conn)
    * For compatibility, the all-uppercase versions of these variables are
    * checked if the lowercase versions don't exist.
    */
-  char *no_proxy=nullptr;
+  char *no_proxy=NULL;
   char proxy_env[128];
 
   no_proxy=curl_getenv("no_proxy");
@@ -4554,11 +4554,11 @@ static CURLcode parse_proxy(struct SessionHandle *data,
   /* Is there a username and password given in this proxy url? */
   atsign = strchr(proxyptr, '@');
   if(atsign) {
-    char *proxyuser = nullptr;
-    char *proxypasswd = nullptr;
+    char *proxyuser = NULL;
+    char *proxypasswd = NULL;
     CURLcode result =
       parse_login_details(proxyptr, atsign - proxyptr,
-                          &proxyuser, &proxypasswd, nullptr);
+                          &proxyuser, &proxypasswd, NULL);
     if(!result) {
       /* found user and password, rip them out.  note that we are
          unescaping them, as there is otherwise no way to have a
@@ -4566,7 +4566,7 @@ static CURLcode parse_proxy(struct SessionHandle *data,
          them. */
       Curl_safefree(conn->proxyuser);
       if(proxyuser && strlen(proxyuser) < MAX_CURL_USER_LENGTH)
-        conn->proxyuser = curl_easy_unescape(data, proxyuser, 0, nullptr);
+        conn->proxyuser = curl_easy_unescape(data, proxyuser, 0, NULL);
       else
         conn->proxyuser = strdup("");
 
@@ -4575,7 +4575,7 @@ static CURLcode parse_proxy(struct SessionHandle *data,
       else {
         Curl_safefree(conn->proxypasswd);
         if(proxypasswd && strlen(proxypasswd) < MAX_CURL_PASSWORD_LENGTH)
-          conn->proxypasswd = curl_easy_unescape(data, proxypasswd, 0, nullptr);
+          conn->proxypasswd = curl_easy_unescape(data, proxypasswd, 0, NULL);
         else
           conn->proxypasswd = strdup("");
 
@@ -4634,7 +4634,7 @@ static CURLcode parse_proxy(struct SessionHandle *data,
     *prox_portno = 0x0; /* cut off number from host name */
     prox_portno ++;
     /* now set the local port number */
-    conn->port = strtol(prox_portno, nullptr, 10);
+    conn->port = strtol(prox_portno, NULL, 10);
   }
   else {
     if(proxyptr[0]=='/')
@@ -4674,22 +4674,22 @@ static CURLcode parse_proxy_auth(struct SessionHandle *data,
   char proxyuser[MAX_CURL_USER_LENGTH]="";
   char proxypasswd[MAX_CURL_PASSWORD_LENGTH]="";
 
-  if(data->set.str[STRING_PROXYUSERNAME] != nullptr) {
+  if(data->set.str[STRING_PROXYUSERNAME] != NULL) {
     strncpy(proxyuser, data->set.str[STRING_PROXYUSERNAME],
             MAX_CURL_USER_LENGTH);
     proxyuser[MAX_CURL_USER_LENGTH-1] = '\0';   /*To be on safe side*/
   }
-  if(data->set.str[STRING_PROXYPASSWORD] != nullptr) {
+  if(data->set.str[STRING_PROXYPASSWORD] != NULL) {
     strncpy(proxypasswd, data->set.str[STRING_PROXYPASSWORD],
             MAX_CURL_PASSWORD_LENGTH);
     proxypasswd[MAX_CURL_PASSWORD_LENGTH-1] = '\0'; /*To be on safe side*/
   }
 
-  conn->proxyuser = curl_easy_unescape(data, proxyuser, 0, nullptr);
+  conn->proxyuser = curl_easy_unescape(data, proxyuser, 0, NULL);
   if(!conn->proxyuser)
     return CURLE_OUT_OF_MEMORY;
 
-  conn->proxypasswd = curl_easy_unescape(data, proxypasswd, 0, nullptr);
+  conn->proxypasswd = curl_easy_unescape(data, proxypasswd, 0, NULL);
   if(!conn->proxypasswd)
     return CURLE_OUT_OF_MEMORY;
 
@@ -4718,9 +4718,9 @@ static CURLcode parse_url_login(struct SessionHandle *data,
                                 char **user, char **passwd, char **options)
 {
   CURLcode result = CURLE_OK;
-  char *userp = nullptr;
-  char *passwdp = nullptr;
-  char *optionsp = nullptr;
+  char *userp = NULL;
+  char *passwdp = NULL;
+  char *optionsp = NULL;
 
   /* At this point, we're hoping all the other special cases have
    * been taken care of, so conn->host.name is at most
@@ -4767,7 +4767,7 @@ static CURLcode parse_url_login(struct SessionHandle *data,
     conn->bits.user_passwd = TRUE; /* enable user+password */
 
     /* Decode the user */
-    newname = curl_easy_unescape(data, userp, 0, nullptr);
+    newname = curl_easy_unescape(data, userp, 0, NULL);
     if(!newname) {
       result = CURLE_OUT_OF_MEMORY;
       goto out;
@@ -4779,7 +4779,7 @@ static CURLcode parse_url_login(struct SessionHandle *data,
 
   if(passwdp) {
     /* We have a password in the URL so decode it */
-    char *newpasswd = curl_easy_unescape(data, passwdp, 0, nullptr);
+    char *newpasswd = curl_easy_unescape(data, passwdp, 0, NULL);
     if(!newpasswd) {
       result = CURLE_OUT_OF_MEMORY;
       goto out;
@@ -4791,7 +4791,7 @@ static CURLcode parse_url_login(struct SessionHandle *data,
 
   if(optionsp) {
     /* We have an options list in the URL so decode it */
-    char *newoptions = curl_easy_unescape(data, optionsp, 0, nullptr);
+    char *newoptions = curl_easy_unescape(data, optionsp, 0, NULL);
     if(!newoptions) {
       result = CURLE_OUT_OF_MEMORY;
       goto out;
@@ -4845,11 +4845,11 @@ static CURLcode parse_login_details(const char *login, const size_t len,
                                     char **optionsp)
 {
   CURLcode result = CURLE_OK;
-  char *ubuf = nullptr;
-  char *pbuf = nullptr;
-  char *obuf = nullptr;
-  const char *psep = nullptr;
-  const char *osep = nullptr;
+  char *ubuf = NULL;
+  char *pbuf = NULL;
+  char *obuf = NULL;
+  const char *psep = NULL;
+  const char *osep = NULL;
   size_t ulen;
   size_t plen;
   size_t olen;
@@ -4860,7 +4860,7 @@ static CURLcode parse_login_details(const char *login, const size_t len,
 
     /* Within the constraint of the login string */
     if(psep >= login + len)
-      psep = nullptr;
+      psep = NULL;
   }
 
   /* Attempt to find the options separator */
@@ -4869,7 +4869,7 @@ static CURLcode parse_login_details(const char *login, const size_t len,
 
     /* Within the constraint of the login string */
     if(osep >= login + len)
-      osep = nullptr;
+      osep = NULL;
   }
 
   /* Calculate the portion lengths */
@@ -4972,7 +4972,7 @@ static CURLcode parse_remote_port(struct SessionHandle *data,
     if(portptr) {
       *portptr++ = '\0'; /* zero terminate, killing the bracket */
       if(':' != *portptr)
-        portptr = nullptr; /* no port number available */
+        portptr = NULL; /* no port number available */
     }
   }
   else {
@@ -5127,7 +5127,7 @@ static CURLcode set_login(struct connectdata *conn,
     if(conn->user)
       conn->passwd = strdup(CURL_DEFAULT_PASSWORD);
     else
-      conn->passwd = nullptr;
+      conn->passwd = NULL;
 
     /* This is the default password, so DON'T set conn->bits.user_passwd */
   }
@@ -5139,7 +5139,7 @@ static CURLcode set_login(struct connectdata *conn,
     if(conn->user)
       conn->passwd = strdup(passwd);
     else
-      conn->passwd = nullptr;
+      conn->passwd = NULL;
   }
 
   if(!conn->user || !conn->passwd)
@@ -5164,7 +5164,7 @@ static CURLcode resolve_server(struct SessionHandle *data,
                                bool *async)
 {
   CURLcode result=CURLE_OK;
-  long timeout_ms = Curl_timeleft(data, nullptr, TRUE);
+  long timeout_ms = Curl_timeleft(data, NULL, TRUE);
 
   /*************************************************************
    * Resolve the name of the server or proxy
@@ -5193,7 +5193,7 @@ static CURLcode resolve_server(struct SessionHandle *data,
       hostaddr = calloc(1, sizeof(struct Curl_dns_entry));
       if(!hostaddr)
         result = CURLE_OUT_OF_MEMORY;
-      else if((hostaddr->addr = Curl_unix2addr(path)) != nullptr)
+      else if((hostaddr->addr = Curl_unix2addr(path)) != NULL)
         hostaddr->inuse++;
       else {
         /* Long paths are not supported for now */
@@ -5204,7 +5204,7 @@ static CURLcode resolve_server(struct SessionHandle *data,
         else
           result = CURLE_OUT_OF_MEMORY;
         free(hostaddr);
-        hostaddr = nullptr;
+        hostaddr = NULL;
       }
     }
     else
@@ -5251,7 +5251,7 @@ static CURLcode resolve_server(struct SessionHandle *data,
         /* don't return yet, we need to clean up the timeout first */
       }
     }
-    DEBUGASSERT(conn->dns_entry == nullptr);
+    DEBUGASSERT(conn->dns_entry == NULL);
     conn->dns_entry = hostaddr;
   }
 
@@ -5283,8 +5283,8 @@ static void reuse_conn(struct connectdata *old_conn,
     Curl_safefree(conn->passwd);
     conn->user = old_conn->user;
     conn->passwd = old_conn->passwd;
-    old_conn->user = nullptr;
-    old_conn->passwd = nullptr;
+    old_conn->user = NULL;
+    old_conn->passwd = NULL;
   }
 
   conn->bits.proxy_user_passwd = old_conn->bits.proxy_user_passwd;
@@ -5294,8 +5294,8 @@ static void reuse_conn(struct connectdata *old_conn,
     Curl_safefree(conn->proxypasswd);
     conn->proxyuser = old_conn->proxyuser;
     conn->proxypasswd = old_conn->proxypasswd;
-    old_conn->proxyuser = nullptr;
-    old_conn->proxypasswd = nullptr;
+    old_conn->proxyuser = NULL;
+    old_conn->proxypasswd = NULL;
   }
 
   /* host can change, when doing keepalive with a proxy or if the case is
@@ -5315,11 +5315,11 @@ static void reuse_conn(struct connectdata *old_conn,
   Curl_safefree(old_conn->proxypasswd);
   Curl_safefree(old_conn->localdev);
 
-  Curl_llist_destroy(old_conn->send_pipe, nullptr);
-  Curl_llist_destroy(old_conn->recv_pipe, nullptr);
+  Curl_llist_destroy(old_conn->send_pipe, NULL);
+  Curl_llist_destroy(old_conn->recv_pipe, NULL);
 
-  old_conn->send_pipe = nullptr;
-  old_conn->recv_pipe = nullptr;
+  old_conn->send_pipe = NULL;
+  old_conn->recv_pipe = NULL;
 
   Curl_safefree(old_conn->master_buffer);
 }
@@ -5346,13 +5346,13 @@ static CURLcode create_conn(struct SessionHandle *data,
 {
   CURLcode result = CURLE_OK;
   struct connectdata *conn;
-  struct connectdata *conn_temp = nullptr;
+  struct connectdata *conn_temp = NULL;
   size_t urllen;
-  char *user = nullptr;
-  char *passwd = nullptr;
-  char *options = nullptr;
+  char *user = NULL;
+  char *passwd = NULL;
+  char *options = NULL;
   bool reuse;
-  char *proxy = nullptr;
+  char *proxy = NULL;
   bool prot_missing = FALSE;
   bool connections_available = TRUE;
   bool force_reuse = FALSE;
@@ -5407,19 +5407,19 @@ static CURLcode create_conn(struct SessionHandle *data,
    */
 
   Curl_safefree(data->state.pathbuffer);
-  data->state.path = nullptr;
+  data->state.path = NULL;
 
   data->state.pathbuffer = malloc(urllen+2);
-  if(nullptr == data->state.pathbuffer) {
+  if(NULL == data->state.pathbuffer) {
     result = CURLE_OUT_OF_MEMORY; /* really bad error */
     goto out;
   }
   data->state.path = data->state.pathbuffer;
 
   conn->host.rawalloc = malloc(urllen+2);
-  if(nullptr == conn->host.rawalloc) {
+  if(NULL == conn->host.rawalloc) {
     Curl_safefree(data->state.pathbuffer);
-    data->state.path = nullptr;
+    data->state.path = NULL;
     result = CURLE_OUT_OF_MEMORY;
     goto out;
   }
@@ -5507,7 +5507,7 @@ static CURLcode create_conn(struct SessionHandle *data,
   if(data->set.str[STRING_PROXY]) {
     proxy = strdup(data->set.str[STRING_PROXY]);
     /* if global proxy is set, this is it */
-    if(nullptr == proxy) {
+    if(NULL == proxy) {
       failf(data, "memory shortage");
       result = CURLE_OUT_OF_MEMORY;
       goto out;
@@ -5517,7 +5517,7 @@ static CURLcode create_conn(struct SessionHandle *data,
   if(data->set.str[STRING_NOPROXY] &&
      check_noproxy(conn->host.name, data->set.str[STRING_NOPROXY])) {
     free(proxy);  /* proxy is in exception list */
-    proxy = nullptr;
+    proxy = NULL;
   }
   else if(!proxy)
     proxy = detect_proxy(conn);
@@ -5525,14 +5525,14 @@ static CURLcode create_conn(struct SessionHandle *data,
 #ifdef USE_UNIX_SOCKETS
   if(proxy && data->set.str[STRING_UNIX_SOCKET_PATH]) {
     free(proxy);  /* Unix domain sockets cannot be proxied, so disable it */
-    proxy = nullptr;
+    proxy = NULL;
   }
 #endif
 
   if(proxy && (!*proxy || (conn->handler->flags & PROTOPT_NONETWORK))) {
     free(proxy);  /* Don't bother with an empty proxy string or if the
                      protocol doesn't work with network */
-    proxy = nullptr;
+    proxy = NULL;
   }
 
   /***********************************************************************
@@ -5544,7 +5544,7 @@ static CURLcode create_conn(struct SessionHandle *data,
     result = parse_proxy(data, conn, proxy);
 
     free(proxy); /* parse_proxy copies the proxy string */
-    proxy = nullptr;
+    proxy = NULL;
 
     if(result)
       goto out;
@@ -5646,8 +5646,8 @@ static CURLcode create_conn(struct SessionHandle *data,
         goto out;
       }
 
-      Curl_setup_transfer(conn, -1, -1, FALSE, nullptr, /* no download */
-                          -1, nullptr); /* no upload */
+      Curl_setup_transfer(conn, -1, -1, FALSE, NULL, /* no download */
+                          -1, NULL); /* no upload */
     }
 
     /* since we skip do_init() */
@@ -5744,7 +5744,7 @@ static CURLcode create_conn(struct SessionHandle *data,
     /* We have decided that we want a new connection. However, we may not
        be able to do that if we have reached the limit of how many
        connections we are allowed to open. */
-    struct connectbundle *bundle = nullptr;
+    struct connectbundle *bundle = NULL;
 
     if(waitpipe)
       /* There is a connection that *might* become usable for pipelining
@@ -5795,7 +5795,7 @@ static CURLcode create_conn(struct SessionHandle *data,
       infof(data, "No connections available.\n");
 
       conn_free(conn);
-      *in_connect = nullptr;
+      *in_connect = NULL;
 
       result = CURLE_NO_CONNECTION_AVAILABLE;
       goto out;
@@ -5940,7 +5940,7 @@ CURLcode Curl_setup_conn(struct connectdata *conn,
    * a file).
    */
 
-  if((data->set.out)->_handle == nullptr) {
+  if((data->set.out)->_handle == NULL) {
     _fsetmode(stdout, "b");
   }
 #endif
@@ -5974,7 +5974,7 @@ CURLcode Curl_connect(struct SessionHandle *data,
   }
 
   if(result == CURLE_NO_CONNECTION_AVAILABLE) {
-    *in_connect = nullptr;
+    *in_connect = NULL;
     return result;
   }
 
@@ -5982,7 +5982,7 @@ CURLcode Curl_connect(struct SessionHandle *data,
     /* We're not allowed to return failure with memory left allocated
        in the connectdata struct, free those here */
     Curl_disconnect(*in_connect, FALSE); /* close the connection */
-    *in_connect = nullptr;           /* return a nullptr */
+    *in_connect = NULL;           /* return a NULL */
   }
 
   return result;
@@ -6012,9 +6012,9 @@ CURLcode Curl_done(struct connectdata **connp,
 
   /* Cleanup possible redirect junk */
   free(data->req.newurl);
-  data->req.newurl = nullptr;
+  data->req.newurl = NULL;
   free(data->req.location);
-  data->req.location = nullptr;
+  data->req.location = NULL;
 
   switch(status) {
   case CURLE_ABORTED_BY_CALLBACK:
@@ -6052,13 +6052,13 @@ CURLcode Curl_done(struct connectdata **connp,
 
   if(conn->dns_entry) {
     Curl_resolv_unlock(data, conn->dns_entry); /* done with this */
-    conn->dns_entry = nullptr;
+    conn->dns_entry = NULL;
   }
 
   /* if the transfer was completed in a paused state there can be buffered
      data left to write and then kill */
   free(data->state.tempwrite);
-  data->state.tempwrite = nullptr;
+  data->state.tempwrite = NULL;
 
   /* if data->set.reuse_forbid is TRUE, it means the libcurl client has
      forced us to close this connection. This is ignored for requests taking
@@ -6099,10 +6099,10 @@ CURLcode Curl_done(struct connectdata **connp,
             conn->bits.httpproxy?conn->proxy.dispname:conn->host.dispname);
     }
     else
-      data->state.lastconnect = nullptr;
+      data->state.lastconnect = NULL;
   }
 
-  *connp = nullptr; /* to make the caller of this function better detect that
+  *connp = NULL; /* to make the caller of this function better detect that
                     this was either closed or handed over to the connection
                     cache here, and therefore cannot be used from this point on
                  */

@@ -37,8 +37,8 @@ namespace RBX {
 		virtual ~Edge() {
 			RBXASSERT(index0 == -1);
 			RBXASSERT(index1 == -1);
-			RBXASSERT(prim0 == nullptr);
-			RBXASSERT(prim1 == nullptr);
+			RBXASSERT(prim0 == NULL);
+			RBXASSERT(prim1 == NULL);
 			index0 = -1;
 			index1 = -1;
 			prim0 = static_cast<Primitive*>(Debugable::badMemory());
@@ -59,8 +59,8 @@ namespace RBX {
 		template<class Type>
 		Type* fastCast(EdgeType edgeType) {
 			bool match = (this->getEdgeType() == edgeType);
-			RBXASSERT_VERY_FAST(match == (dynamic_cast<Type*>(this) != nullptr));
-			return match ? static_cast<Type*>(this) : nullptr;
+			RBXASSERT_VERY_FAST(match == (dynamic_cast<Type*>(this) != NULL));
+			return match ? static_cast<Type*>(this) : NULL;
 		}
 
 		Primitive* getPrimitive(int i) {
@@ -74,7 +74,7 @@ namespace RBX {
 		}
 
 		Primitive* otherPrimitive(const Primitive* p) {return (p == prim0) ? prim1 : prim0;}
-		RBX::Graphics::CullableSceneNode* otherPrimitive(const RBX::Graphics::CullableSceneNode* p) { RBXASSERT(nullptr); return nullptr;}
+		RBX::Graphics::CullableSceneNode* otherPrimitive(const RBX::Graphics::CullableSceneNode* p) { RBXASSERT(NULL); return NULL;}
 		
 		const Primitive* otherConstPrimitive(const Primitive* p) const {return (p == prim0) ? prim1 : prim0;}
 

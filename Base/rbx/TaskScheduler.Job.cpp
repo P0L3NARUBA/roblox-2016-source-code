@@ -91,7 +91,7 @@ TaskScheduler::Job::Job(const char* name, shared_ptr<TaskScheduler::Arbiter> arb
 	:name(name)
 	,sharedArbiter(arbiter)
 	,weakArbiter(boost::weak_ptr<Arbiter>())
-	,baldArbiter(nullptr)
+	,baldArbiter(NULL)
 	,state(Unknown)
 	,sleepRate(lerpJob)
 	,dutyCycle(lerpJob, 8)

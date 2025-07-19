@@ -86,7 +86,7 @@ struct ScanRegion
     // if they change the value to something else, it would crash.
     static ScanRegion getScanRegion(const char* moduleName, const char* RegionName);
 
-    ScanRegion() : startingAddress(nullptr), size(0){}
+    ScanRegion() : startingAddress(NULL), size(0){}
     ScanRegion(const ScanRegion &initValue) : startingAddress(initValue.startingAddress), size(initValue.size){}
     ScanRegion(char* startingAddress, unsigned int size) : startingAddress(startingAddress), size(size) {}
 };
@@ -100,13 +100,13 @@ struct ScanRegionTest : ScanRegion
     bool useHashAddrSizeInStructHash;
 
     ScanRegionTest() : ScanRegion(),
-        hashState(nullptr),
+        hashState(NULL),
         lastHashValue(0),
         closeHash(false),
         useHashValueInStructHash(true),
         useHashAddrSizeInStructHash(true) {}
     ScanRegionTest(ScanRegion initValue) : ScanRegion(initValue), 
-        hashState(nullptr),
+        hashState(NULL),
         lastHashValue(0),
         closeHash(false),
         useHashValueInStructHash(true),
@@ -237,7 +237,7 @@ public:
         uintptr_t pfn = ntQvmAsUint;
         if (checkCaller(pfn, ntQvmCallHash))
         {
-            result = reinterpret_cast<NtQvmPfn>(pfn)(thisProcess, addr, 0, info, cb, nullptr);
+            result = reinterpret_cast<NtQvmPfn>(pfn)(thisProcess, addr, 0, info, cb, NULL);
         }
         pfn = 0;
         return result;

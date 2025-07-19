@@ -27,7 +27,7 @@ namespace RBX
 
 	void BuoyancyContact::removeAllConnectorsFromKernel()
 	{
-		Kernel* kernel = nullptr;
+		Kernel* kernel = NULL;
 		for (size_t i = 0; i < connectors.size(); ++i) {
 			if (connectors[i]->isInKernel()) {
 				kernel = kernel ? kernel : getKernel();		// small optimization - getKernel walks the IPipelines
@@ -99,8 +99,8 @@ namespace RBX
 		Contact(p0, p1),
 		radius(floaterPrim->getRadius()),
 		fullSurfaceArea(0.0f),
-        voxelGrid(nullptr),
-        smoothGrid(nullptr)
+        voxelGrid(NULL),
+        smoothGrid(NULL)
 	{
 		updateBuoyancyFloatingForce();
 		MegaClusterInstance* mci = boost::polymorphic_downcast<MegaClusterInstance*>(p0->getOwner());
@@ -360,7 +360,7 @@ namespace RBX
 	BuoyancyContact* BuoyancyContact::create( Primitive* p0, Primitive *p1 )
 	{
 		Geometry::GeometryType geoType = BuoyancyContact::determineGeometricType(p1);
-		BuoyancyContact* contact = nullptr;
+		BuoyancyContact* contact = NULL;
 		
 		switch( geoType )
 		{

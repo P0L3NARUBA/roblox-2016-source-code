@@ -56,8 +56,8 @@ static Reflection::BoundFuncDesc<Plugin, void(shared_ptr<RBX::Instance>, int)>	f
 static Reflection::BoundFuncDesc<PluginManager, void(std::string) > func_exportPlace(&PluginManager::exportPlace, "ExportPlace", "filePath", "", Security::Plugin);
 static Reflection::BoundFuncDesc<PluginManager, void(std::string) > func_exportSelection(&PluginManager::exportSelection, "ExportSelection", "filePath", "", Security::Plugin);
 
-static Reflection::PropDescriptor<Plugin, bool> prop_CollisionActive("CollisionEnabled", category_Data, &Plugin::isCollisionOn, nullptr, Reflection::PropertyDescriptor::UI);
-static Reflection::PropDescriptor<Plugin, float> prop_GridSize("GridSize", category_Data, &Plugin::getGridSize, nullptr, Reflection::PropertyDescriptor::UI);
+static Reflection::PropDescriptor<Plugin, bool> prop_CollisionActive("CollisionEnabled", category_Data, &Plugin::isCollisionOn, NULL, Reflection::PropertyDescriptor::UI);
+static Reflection::PropDescriptor<Plugin, float> prop_GridSize("GridSize", category_Data, &Plugin::getGridSize, NULL, Reflection::PropertyDescriptor::UI);
 static Reflection::BoundFuncDesc<Plugin, AdvArrowTool::JointCreationMode(void)> func_getJoinMode(&Plugin::getJoinMode, "GetJoinMode", Security::Plugin);
 REFLECTION_END();
 
@@ -67,7 +67,7 @@ namespace
 		shared_ptr<Instance> descendant)
 	{
 		shared_ptr<Script> script = Instance::fastSharedDynamicCast<Script>(descendant);
-		if (script != nullptr && !script->isDisabled())
+		if (script != NULL && !script->isDisabled())
 		{
 			std::map<std::string, shared_ptr<Instance> > extraGlobals;
 			extraGlobals["script"] = script;
@@ -147,9 +147,9 @@ void Button::processIconLoaded(ContentId contentId, AsyncHttpQueue::RequestResul
 }
 
 Toolbar::Toolbar()
-	: host(nullptr)
-	, dataModel(nullptr)
-	, id(nullptr)
+	: host(NULL)
+	, dataModel(NULL)
+	, id(NULL)
 	, isDeleted(false)
 {
 }
@@ -212,7 +212,7 @@ Button *Toolbar::getButton(void *id)
 		return i->second.get();
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 void Toolbar::reset()
@@ -340,7 +340,7 @@ void Plugin::openScriptDoc(shared_ptr<RBX::Instance> script, int lineNumber)
 
 // PluginManager
 PluginManager::PluginManager()
-	: currentDataModel(nullptr)
+	: currentDataModel(NULL)
 {
 }
 
@@ -433,7 +433,7 @@ void PluginManager::deletePlugins(DataModel *dataModel)
 	RBX::Plugin *activePlugin = getActivePlugin(dataModel);
 	if (activePlugin) 
 	{
-		activate(nullptr, dataModel);
+		activate(NULL, dataModel);
 	}
 
 	deleteStudioUI(dataModel);
@@ -459,20 +459,20 @@ Plugin *PluginManager::getActivePlugin(DataModel *dataModel)
 	} 
 	else
 	{
-		return nullptr;
+		return NULL;
 	}
 }
 
 
 void PluginManager::DeactivatePlugins()
 {
-	activate(nullptr, currentDataModel);
+	activate(NULL, currentDataModel);
 	allPluginsDeactivatedSignal();
 }
 
 void PluginManager::activate(Plugin *plugin, DataModel *dataModel)
 {
-	if (plugin != nullptr)
+	if (plugin != NULL)
 	{
 		stateIter iter = state.find(plugin->getDataModel());
 		RBXASSERT(iter != state.end());
@@ -499,7 +499,7 @@ void PluginManager::activate(Plugin *plugin, DataModel *dataModel)
 			stateIter iter = state.find(dataModel);
 			if (iter != state.end())
 			{
-				iter->second.active = nullptr;
+				iter->second.active = NULL;
 			} 
 
 			active->setActive(false);
@@ -533,7 +533,7 @@ void PluginManager::StateDataEntry::fireButtonClick(void *id)
 {
 	for (toolbarsIter i = toolbars.begin();i != toolbars.end(); i++)
 	{
-		if (i->second.get() == nullptr)
+		if (i->second.get() == NULL)
 		{
 			continue;
 		}

@@ -297,23 +297,23 @@ struct LuaProfiler
 
         const char* func = stringCache.getCall(ar->name, ar->namewhat, ar->source, ar->linedefined);
 
-        FLog::FastLogS(FLog::LuaProfiler, func, nullptr);
+        FLog::FastLogS(FLog::LuaProfiler, func, NULL);
     }
 
     void hookRet(lua_State* L, lua_Debug* ar)
     {
-        FLog::FastLogS(FLog::LuaProfiler, "LUARET", nullptr);
+        FLog::FastLogS(FLog::LuaProfiler, "LUARET", NULL);
     }
 
     LuaProfiler(lua_State* L, int nargs)
     {
-        RBXASSERT(instance == nullptr);
+        RBXASSERT(instance == NULL);
         instance = this;
 
         std::string startPos = getResumePosition(L, nargs);
         const char* startPosString = stringCache.getBegin(startPos);
 
-        FLog::FastLogS(FLog::LuaProfiler, startPosString, nullptr);
+        FLog::FastLogS(FLog::LuaProfiler, startPosString, NULL);
 
         if (startPos == "(resume)")
         {
@@ -334,20 +334,20 @@ struct LuaProfiler
             }
 
             for (size_t i = stack.size(); i > 0; --i)
-                FLog::FastLogS(FLog::LuaProfiler, stack[i - 1], nullptr);
+                FLog::FastLogS(FLog::LuaProfiler, stack[i - 1], NULL);
         }
     }
 
     ~LuaProfiler()
     {
-        FLog::FastLogS(FLog::LuaProfiler, "LUAEND", nullptr);
+        FLog::FastLogS(FLog::LuaProfiler, "LUAEND", NULL);
 
         RBXASSERT(instance == this);
-        instance = nullptr;
+        instance = NULL;
     }
 };
 
-LuaProfiler* LuaProfiler::instance = nullptr;
+LuaProfiler* LuaProfiler::instance = NULL;
 LuaProfiler::StringCache LuaProfiler::stringCache;
 
 static rbx::atomic<int> contextCount;
@@ -619,7 +619,7 @@ bool ScriptContext::openState(size_t idx)
 		allocator.reset(new RBX::LuaAllocator(FLog::UseLuaMemoryPool != 0));
 
 	lua_State* globalState = lua_newstate(LuaAllocator::alloc, allocator.get());
-	if (globalState==nullptr)
+	if (globalState==NULL)
 		throw std::runtime_error("Failed to create Lua state");
 
 	contextCount++;
@@ -990,7 +990,7 @@ void ScriptContext::closeStates(bool resettingSimulation)
 		if (iter->state)
 		{
 			closeState(iter->state);
-            iter->state = nullptr;
+            iter->state = NULL;
 		}
 	}
 
@@ -1309,7 +1309,7 @@ lua_State* ScriptContext::getGlobalState(lua_State* thread)
         if (iter->state && iter->state->l_G == thread->l_G)
             return iter->state;
 
-    return nullptr;
+    return NULL;
 }
 
 static size_t pushNoArguments(lua_State* thread)
@@ -1324,7 +1324,7 @@ void ScriptContext::executeInNewThread(RBX::Security::Identities identity, const
 		script,
 		name, 
 		boost::bind(&pushNoArguments, _1),
-		nullptr,
+		NULL,
 		Scripts::Continuations()
 		);
 }
@@ -1387,9 +1387,9 @@ void ScriptContext::executeInNewThreadWithExtraGlobals(
 		script,
 		name,
 		boost::bind(&pushNoArguments, _1),
-		nullptr,
+		NULL,
 		Scripts::Continuations(),
-		nullptr,
+		NULL,
 		&extraGlobals);
 	VMProtectEnd();
 }
@@ -1810,7 +1810,7 @@ int ScriptContext::ypcall(lua_State *thread)
 			continuations.success = boost::bind(&ScriptContext::on_ypcall_success, &sc, WeakThreadRef(thread), _1);
 			continuations.error = boost::bind(&ScriptContext::on_ypcall_failure, &sc, WeakThreadRef(thread), _1);
 
-			RBXASSERT(RobloxExtraSpace::get(safeFunctor)->continuations.get() == nullptr);
+			RBXASSERT(RobloxExtraSpace::get(safeFunctor)->continuations.get() == NULL);
 			RobloxExtraSpace::get(safeFunctor)->continuations.reset(new Lua::Continuations(continuations));
 
 			//Capture the yield
@@ -1928,7 +1928,7 @@ int ScriptContext::loadLibrary(lua_State *L)
         boost::bind(&LibraryBridge::saveLibraryResult, _1, _2, libraryName),
         Scripts::Continuations(),
         getGlobalState(L),
-        nullptr,
+        NULL,
         modkey);
 
     // Libraries can't use yielding in the definition so it must be immediately available
@@ -2111,7 +2111,7 @@ void ScriptContext::reloadModuleScriptInternal(lua_State* globalState, shared_pt
     {
         // Because we're using the global state to spawn a thread, we no longer need to handle
         // yield capturing.
-        RBXASSERT(RobloxExtraSpace::get(reloadThread)->continuations == nullptr);
+        RBXASSERT(RobloxExtraSpace::get(reloadThread)->continuations == NULL);
         Lua::Continuations continuations;
         continuations.success = boost::bind(&ScriptContext::reloadModuleScriptSuccessContinuation, moduleScript, _1, oldResultIndex);
         continuations.error = boost::bind(&ScriptContext::reloadModuleScriptErrorContinuation,
@@ -2275,7 +2275,7 @@ void ScriptContext::startRunningModuleScript(Security::Identities identity, lua_
 	}
 	else if (luaResumeState == Yield)
 	{
-		RBXASSERT(RobloxExtraSpace::get(thread)->continuations == nullptr);
+		RBXASSERT(RobloxExtraSpace::get(thread)->continuations == NULL);
 		Lua::Continuations continuations;
 		continuations.success = boost::bind(&requireModuleScriptSuccessContinuation, moduleScript, _1);
 		continuations.error = boost::bind(&ScriptContext::requireModuleScriptErrorContinuation,
@@ -2416,7 +2416,7 @@ int ScriptContext::requireModuleScriptFromAssetId(lua_State* L, int assetId)
 	}
 	else if (info.state == AssetModuleInfo::Fetched)
 	{
-		RBXASSERT(info.module != nullptr);
+		RBXASSERT(info.module != NULL);
 		return requireModuleScriptFromInstance(L, info.module);
 	}
 	else
@@ -2555,7 +2555,7 @@ int ScriptContext::doPrint(lua_State *L, const RBX::MessageType& messageType)
 		lua_pushvalue(L, i);   /* value to print */
 		lua_call(L, 1, 1);
 		const char* s = lua_tostring(L, -1);  /* get result */
-		if (s == nullptr)
+		if (s == NULL)
 			throw std::runtime_error(LUA_QL("tostring") " must return a string to " LUA_QL("print"));
 		message += s;
 		if (i>1) fputs("\t", stdout);
@@ -2710,7 +2710,7 @@ void ScriptContext::onServiceProvider(ServiceProvider* oldProvider, ServiceProvi
 	}
 
 	if (statsItem) {
-		statsItem->setParent(nullptr);
+		statsItem->setParent(NULL);
 		statsItem.reset();
 	}
 
@@ -2775,7 +2775,7 @@ void ScriptContext::onChangedScriptEnabled(const Reflection::PropertyDescriptor&
 
 bool ScriptContext::scriptShouldRun(BaseScript* script)
 {
-	return Instance::fastDynamicCast<CoreScript>(script) != nullptr;
+	return Instance::fastDynamicCast<CoreScript>(script) != NULL;
 }
 
 void ScriptContext::setAdminScriptPath(const std::string& newPath)
@@ -2994,7 +2994,7 @@ void ScriptContext::reportError(lua_State* thread)
 	DataModel* dm = DataModel::get(this);
 
 	bool reportingStack = DFInt::LuaExceptionPlaceFilter && (DFInt::LuaExceptionPlaceFilter == dm->getPlaceIDOrZeroInStudio());
-	printCallStack(thread, reportingStack ? &exceptionStack : nullptr);
+	printCallStack(thread, reportingStack ? &exceptionStack : NULL);
 
 	Stats::StatsService* stats = ServiceProvider::find<Stats::StatsService>(dm);
 	if(stats && reportingStack)
@@ -3154,7 +3154,7 @@ void ScriptContext::startScript(ScriptStart scriptStart)
 	RBXASSERT(script->getRootAncestor() == getRootAncestor());
 	RBXASSERT(scripts.find(script.get()) != scripts.end());
 
-	if (scriptsDisabled && Instance::fastDynamicCast<CoreScript>(script.get()) == nullptr)
+	if (scriptsDisabled && Instance::fastDynamicCast<CoreScript>(script.get()) == NULL)
 	{
 		pendingScripts.push_back(scriptStart);
 		return;
@@ -3196,7 +3196,7 @@ void ScriptContext::startScript(ScriptStart scriptStart)
 		RBXASSERT_BALLANCED_LUA_STACK(globalState);
 
 		lua_State* thread = lua_newthread(globalState);
-		if (thread==nullptr)
+		if (thread==NULL)
 			throw RBX::runtime_error("Unable to create a new thread for %s", script->getName().c_str());
 
 		bool profile = false;

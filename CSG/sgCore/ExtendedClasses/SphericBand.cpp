@@ -28,7 +28,7 @@ sgCSphericBand* sgCSphericBand::Create(sgFloat radius, sgFloat beg_koef,
     end_koef>1 ||
     end_koef<-1 ||
     end_koef<=beg_koef)
-    return nullptr;
+    return NULL;
 
   sgFloat par[5];
 

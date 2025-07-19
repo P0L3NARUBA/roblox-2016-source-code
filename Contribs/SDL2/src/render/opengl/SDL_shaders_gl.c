@@ -69,7 +69,7 @@ struct GL_ShaderContext
 static const char *shader_source[NUM_SHADERS][2] =
 {
     /* SHADER_NONE */
-    { nullptr, nullptr },
+    { NULL, NULL },
 
     /* SHADER_SOLID */
     {
@@ -275,7 +275,7 @@ CompileShader(GL_ShaderContext *ctx, GLhandleARB shader, const char *defines, co
     sources[0] = defines;
     sources[1] = source;
 
-    ctx->glShaderSourceARB(shader, SDL_arraysize(sources), sources, nullptr);
+    ctx->glShaderSourceARB(shader, SDL_arraysize(sources), sources, NULL);
     ctx->glCompileShaderARB(shader);
     ctx->glGetObjectParameterivARB(shader, GL_OBJECT_COMPILE_STATUS_ARB, &status);
     if (status == 0) {
@@ -284,7 +284,7 @@ CompileShader(GL_ShaderContext *ctx, GLhandleARB shader, const char *defines, co
 
         ctx->glGetObjectParameterivARB(shader, GL_OBJECT_INFO_LOG_LENGTH_ARB, &length);
         info = SDL_stack_alloc(char, length+1);
-        ctx->glGetInfoLogARB(shader, length, nullptr, info);
+        ctx->glGetInfoLogARB(shader, length, NULL, info);
         SDL_LogError(SDL_LOG_CATEGORY_RENDER,
             "Failed to compile shader:\n%s%s\n%s", defines, source, info);
 #ifdef DEBUG_SHADERS
@@ -377,7 +377,7 @@ GL_CreateShaderContext()
 
     ctx = (GL_ShaderContext *)SDL_calloc(1, sizeof(*ctx));
     if (!ctx) {
-        return nullptr;
+        return NULL;
     }
 
     if (!SDL_GL_ExtensionSupported("GL_ARB_texture_non_power_of_two") &&
@@ -426,14 +426,14 @@ GL_CreateShaderContext()
 
     if (!shaders_supported) {
         SDL_free(ctx);
-        return nullptr;
+        return NULL;
     }
 
     /* Compile all the shaders */
     for (i = 0; i < NUM_SHADERS; ++i) {
         if (!CompileShaderProgram(ctx, i, &ctx->shaders[i])) {
             GL_DestroyShaderContext(ctx);
-            return nullptr;
+            return NULL;
         }
     }
 

@@ -35,9 +35,9 @@ short 	num;
 
 //number of inserting points = p-s+r-1;
 	*nump_new=nump+r;
-	if( (*U_new = (sgFloat*)SGMalloc( ( num + r )*sizeof(sgFloat) ) ) == nullptr ) return FALSE;
-	if( (*P_new = (W_NODE *)SGMalloc( ( *nump_new )*sizeof(W_NODE) ) ) == nullptr ) return FALSE;
-	if( (*u_new = (sgFloat*)SGMalloc( ( *nump_new )*sizeof(sgFloat) ) ) == nullptr ) return FALSE;
+	if( (*U_new = (sgFloat*)SGMalloc( ( num + r )*sizeof(sgFloat) ) ) == NULL ) return FALSE;
+	if( (*P_new = (W_NODE *)SGMalloc( ( *nump_new )*sizeof(W_NODE) ) ) == NULL ) return FALSE;
+	if( (*u_new = (sgFloat*)SGMalloc( ( *nump_new )*sizeof(sgFloat) ) ) == NULL ) return FALSE;
 
 //insert nessesary number of knots
 	NURBS_Knot_Ins( nump, p, U, P, u, t, k, s, r, *U_new, *P_new, *u_new );
@@ -66,8 +66,8 @@ short  	 i, j, mp, jjj, jj, L;//, number_t;
 sgFloat   alpha, *uu;
 lpW_NODE PP;
 
-	if( (PP = (lpW_NODE)SGMalloc((d+1)*sizeof(W_NODE))) == nullptr ) return FALSE;
-	if( (uu = (sgFloat*)SGMalloc((d+1)*sizeof(sgFloat))) == nullptr ) goto err;
+	if( (PP = (lpW_NODE)SGMalloc((d+1)*sizeof(W_NODE))) == NULL ) return FALSE;
+	if( (uu = (sgFloat*)SGMalloc((d+1)*sizeof(sgFloat))) == NULL ) goto err;
 	mp = nump + d + 1;
 
 //create new knot vector
@@ -205,7 +205,7 @@ short				first, last;
 sgFloat	  alphai, alphaj;
 W_NODE	 	*point, p;
 
-	if( (point = SGMalloc((*nump)*sizeof(W_NODE))) == nullptr ) return 0;
+	if( (point = SGMalloc((*nump)*sizeof(W_NODE))) == NULL ) return 0;
 	for( i=0; i<*nump; i++ )	point[i]=P[i];
 
 //	memset(point, 0, nump*sizeof(W_NODE));
@@ -270,11 +270,11 @@ BOOL Increase_Composite_Curve_Degree(lpW_NODE P_new1, lpW_NODE *P_new2,
 																			short nump_new1, short *nump_new2,
                                       short degree, short add){
 short			j, k, j1, j2, nump;
-sgFloat		*u1=nullptr, *u2=nullptr;
-lpW_NODE  beze1/*=nullptr*/, beze2=nullptr;
+sgFloat		*u1=NULL, *u2=NULL;
+lpW_NODE  beze1/*=NULL*/, beze2=NULL;
 
-	if( (*P_new2 = (W_NODE *)SGMalloc( ( 2*nump_new1)*sizeof(W_NODE) ) ) == nullptr ) return FALSE;
-	if( (*u_new2 = (sgFloat*)SGMalloc( ( 2*nump_new1)*sizeof(sgFloat) ) ) == nullptr ) return FALSE;
+	if( (*P_new2 = (W_NODE *)SGMalloc( ( 2*nump_new1)*sizeof(W_NODE) ) ) == NULL ) return FALSE;
+	if( (*u_new2 = (sgFloat*)SGMalloc( ( 2*nump_new1)*sizeof(sgFloat) ) ) == NULL ) return FALSE;
 
 	j1=j2=0;
 	while( j2<nump_new1-1 ){
@@ -283,10 +283,10 @@ lpW_NODE  beze1/*=nullptr*/, beze2=nullptr;
 		j2=j;
 		nump=j2-j1+1;
 
-		if( (beze1 = (W_NODE *)SGMalloc( nump*sizeof(W_NODE) ) ) == nullptr ) goto err;
-		if( (u1    = (sgFloat*)SGMalloc( nump*sizeof(sgFloat) ) ) == nullptr ) goto err;
-		if( (beze2 = (W_NODE *)SGMalloc( ( nump+add)*sizeof(W_NODE) ) ) == nullptr ) goto err;
-    if( (u2    = (sgFloat*)SGMalloc( (nump+add)*sizeof(sgFloat) ) ) == nullptr ) goto err;
+		if( (beze1 = (W_NODE *)SGMalloc( nump*sizeof(W_NODE) ) ) == NULL ) goto err;
+		if( (u1    = (sgFloat*)SGMalloc( nump*sizeof(sgFloat) ) ) == NULL ) goto err;
+		if( (beze2 = (W_NODE *)SGMalloc( ( nump+add)*sizeof(W_NODE) ) ) == NULL ) goto err;
+    if( (u2    = (sgFloat*)SGMalloc( (nump+add)*sizeof(sgFloat) ) ) == NULL ) goto err;
 
 		for( j=j1, k=0; j<=j2; j++, k++ ) {	beze1[k]=P_new1[j]; u1[k]=u_new1[j]; }
 
@@ -303,10 +303,10 @@ lpW_NODE  beze1/*=nullptr*/, beze2=nullptr;
     }
 //		if( j2==nump_new1-1) (*P_new2)[(*nump_new2)++]=beze1[nump-1];
 
-		SGFree( beze1 ); /*beze1=nullptr;*/
-    SGFree( u1 );    u1   =nullptr;
-		SGFree( beze2 ); beze2=nullptr;
-    SGFree( u2 );    u2   =nullptr;
+		SGFree( beze1 ); /*beze1=NULL;*/
+    SGFree( u1 );    u1   =NULL;
+		SGFree( beze2 ); beze2=NULL;
+    SGFree( u2 );    u2   =NULL;
 		j1=j2+1;
 	}
 

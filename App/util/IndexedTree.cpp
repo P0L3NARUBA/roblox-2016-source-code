@@ -8,7 +8,7 @@ namespace RBX {
 
 
 IndexedTree::IndexedTree()
-: parent(nullptr)
+: parent(NULL)
 , index(-1)
 {
 }

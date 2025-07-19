@@ -217,7 +217,7 @@ BinaryInput::BinaryInput(
     m_alreadyRead(0),
     m_length(0),
     m_bufferLength(0),
-    m_buffer(nullptr),
+    m_buffer(NULL),
     m_pos(0),
     m_freeBuffer(true) {
 
@@ -246,7 +246,7 @@ BinaryInput::~BinaryInput() {
     if (m_freeBuffer) {
         free(m_buffer); // was: alignedFree()
     }
-    m_buffer = nullptr;
+    m_buffer = NULL;
 }
 
 
@@ -299,7 +299,7 @@ std::string BinaryInput::readString() {
         }
     }
 
-    // Consume nullptr
+    // Consume NULL
     ++n;
 
     return readString(n);

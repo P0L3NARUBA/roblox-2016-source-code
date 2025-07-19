@@ -208,7 +208,7 @@ namespace RBX
 		static const ICreator* getCreator(const Name& name)
 		{
 			std::map<const Name*, const ICreator*>::iterator iter = getCreators().find(&name);
-			return (iter!=getCreators().end()) ? iter->second : nullptr;
+			return (iter!=getCreators().end()) ? iter->second : NULL;
 		}
 
 	private:
@@ -364,8 +364,8 @@ namespace RBX
 		};
 		
 		static bool isNullClassName() { 
-			RBXASSERT(className().empty() == (sClassName==nullptr));
-			return sClassName==nullptr; 
+			RBXASSERT(className().empty() == (sClassName==NULL));
+			return sClassName==NULL; 
 		};
 		const RBX::Name& getClassName() const {
 			return className();

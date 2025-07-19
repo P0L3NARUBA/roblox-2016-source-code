@@ -18,7 +18,7 @@ Random& Random::common() {
     return r;
 }
 
-Random::Random(void* x) : state(nullptr){
+Random::Random(void* x) : state(NULL){
     (void)x;
 }
 
@@ -36,7 +36,7 @@ Random::Random(uint32 seed){
 
 Random::~Random() {
     delete[] state;
-    state = nullptr;
+    state = NULL;
 }
 
 
