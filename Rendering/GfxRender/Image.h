@@ -6,64 +6,67 @@
 #include <vector>
 #include <boost/scoped_array.hpp>
 
+enum DXGI_FORMAT;
+enum D3D10_RESOURCE_DIMENSION;
+
 namespace RBX
 {
-namespace Graphics
-{
-
-class Image
-{
-public:
-    enum LoadFlags
+	namespace Graphics
 	{
-        Load_DecodeDXT = 1 << 0,
-        Load_RoundToPOT = 1 << 1,
-        Load_OutputBGR = 1 << 2,
-		Load_ForceFullMipChain = 1 << 3
-	};
 
-    struct LoadResult
-    {
-        shared_ptr<Image> image;
-        ImageInfo info;
+		class Image
+		{
+		public:
+			enum LoadFlags
+			{
+				Load_DecodeDXT = 1 << 0,
+				Load_RoundToPOT = 1 << 1,
+				Load_OutputBGR = 1 << 2,
+				Load_ForceFullMipChain = 1 << 3
+			};
 
-        LoadResult(const shared_ptr<Image>& image, const ImageInfo& info);
-    };
+			struct LoadResult
+			{
+				shared_ptr<Image> image;
+				ImageInfo info;
 
-	static LoadResult load(std::istream& stream, unsigned int maxTextureSize, unsigned int flags);
-	static void decodeDXT(unsigned char* target, const unsigned char* source, unsigned int width, unsigned int height, unsigned int depth, Texture::Format format);
+				LoadResult(const shared_ptr<Image>& image, const ImageInfo& info);
+			};
 
-    Image(Texture::Type type, Texture::Format format, unsigned int width, unsigned int height, unsigned int depth, unsigned int mipLevels);
-    ~Image();
+			static LoadResult load(std::istream& stream, unsigned int maxTextureSize, unsigned int flags);
+			static void decodeDXT(unsigned char* target, const unsigned char* source, unsigned int width, unsigned int height, unsigned int depth, Texture::Format format);
 
-    void saveDDS(std::ostream& stream);
+			Image(Texture::Type type, Texture::Format format, unsigned int width, unsigned int height, unsigned int depth, unsigned int mipLevels);
+			~Image();
 
-    unsigned char* getMipData(unsigned int index, unsigned int level);
-    const unsigned char* getMipData(unsigned int index, unsigned int level) const;
+			void saveDDS(std::ostream& stream);
 
-	Texture::Type getType() const { return type; }
-	Texture::Format getFormat() const { return format; }
+			unsigned char* getMipData(unsigned int index, unsigned int level);
+			const unsigned char* getMipData(unsigned int index, unsigned int level) const;
 
-	unsigned int getWidth() const { return width; }
-	unsigned int getHeight() const { return height; }
-	unsigned int getDepth() const { return depth; }
+			Texture::Type getType() const { return type; }
+			Texture::Format getFormat() const { return format; }
 
-	unsigned int getMipLevels() const { return mipLevels; }
+			unsigned int getWidth() const { return width; }
+			unsigned int getHeight() const { return height; }
+			unsigned int getDepth() const { return depth; }
 
-private:
-    Texture::Type type;
-    Texture::Format format;
+			unsigned int getMipLevels() const { return mipLevels; }
 
-    unsigned int width;
-    unsigned int height;
-    unsigned int depth;
-    unsigned int mipLevels;
+		private:
+			Texture::Type type;
+			Texture::Format format;
 
-    std::vector<unsigned int> mipOffsets;
+			unsigned int width;
+			unsigned int height;
+			unsigned int depth;
+			unsigned int mipLevels;
 
-    boost::scoped_array<unsigned char> data;
-    size_t dataSize;
-};
+			std::vector<unsigned int> mipOffsets;
 
-}
+			boost::scoped_array<unsigned char> data;
+			size_t dataSize;
+		};
+
+	}
 }

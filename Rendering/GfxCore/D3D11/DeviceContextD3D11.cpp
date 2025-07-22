@@ -273,7 +273,7 @@ namespace RBX
 
 			immediateContext11->Unmap(instancedModelMatrixesBuffer, 0);
 
-			immediateContext11->PSSetShaderResources(31, 1, &instancedModelMatrixesResource);
+			immediateContext11->VSSetShaderResources(30, 1, &instancedModelMatrixesResource);
 		}
 
 		void DeviceContextD3D11::updateGlobalLightList(const void* data, size_t dataSize) {

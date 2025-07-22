@@ -1,19 +1,19 @@
 [
-    { "name": "AdornAALineVS"          , "source": "adorn.hlsl", "target": "vs_5_1", "entrypoint": "AdornAALineVS"},
-    { "name": "AdornAALineFS"          , "source": "adorn.hlsl", "target": "ps_5_1", "entrypoint": "AdornAALinePS" },
-    { "name": "AdornVS"                , "source": "adorn.hlsl", "target": "vs_5_1", "entrypoint": "AdornVS" },
-    { "name": "AdornSelfLitVS"         , "source": "adorn.hlsl", "target": "vs_5_1", "entrypoint": "AdornSelfLitVS" },
-    { "name": "AdornSelfLitHighlightVS", "source": "adorn.hlsl", "target": "vs_5_1", "entrypoint": "AdornSelfLitHighlightVS" },
-    { "name": "AdornLightingVS"        , "source": "adorn.hlsl", "target": "vs_5_1", "entrypoint": "AdornVS", "defines": "PIN_LIGHTING" },
-    { "name": "AdornFS"                , "source": "adorn.hlsl", "target": "ps_5_1", "entrypoint": "AdornPS" },
-    { "name": "AdornOutlineVS"         , "source": "adorn.hlsl", "target": "vs_5_1", "entrypoint": "AdornOutlineVS"},
-    { "name": "AdornOutlineFS"         , "source": "adorn.hlsl", "target": "ps_5_1", "entrypoint": "AdornOutlinePS" },
+    { "name": "AdornAALineVS"          , "source": "screenspace.hlsl", "target": "vs_5_1", "entrypoint": "PassThroughVS"},
+    { "name": "AdornAALineFS"          , "source": "default.hlsl", "target": "ps_5_1", "entrypoint": "BlankPS" },
+    { "name": "AdornVS"                , "source": "screenspace.hlsl", "target": "vs_5_1", "entrypoint": "PassThroughVS" },
+    { "name": "AdornSelfLitVS"         , "source": "screenspace.hlsl", "target": "vs_5_1", "entrypoint": "PassThroughVS" },
+    { "name": "AdornSelfLitHighlightVS", "source": "screenspace.hlsl", "target": "vs_5_1", "entrypoint": "PassThroughVS" },
+    { "name": "AdornLightingVS"        , "source": "screenspace.hlsl", "target": "vs_5_1", "entrypoint": "PassThroughVS", "defines": "PIN_LIGHTING" },
+    { "name": "AdornFS"                , "source": "default.hlsl", "target": "ps_5_1", "entrypoint": "BlankPS" },
+    { "name": "AdornOutlineVS"         , "source": "screenspace.hlsl", "target": "vs_5_1", "entrypoint": "PassThroughVS"},
+    { "name": "AdornOutlineFS"         , "source": "default.hlsl", "target": "ps_5_1", "entrypoint": "BlankPS" },
    
     { "name": "DepthOnlyVS"    , "source": "default.hlsl", "target": "vs_5_1", "entrypoint": "DepthOnlyVS" },
     { "name": "BasicMaterialVS", "source": "default.hlsl", "target": "vs_5_1", "entrypoint": "BasicMaterialVS" },
     { "name": "MaterialVS"     , "source": "default.hlsl", "target": "vs_5_1", "entrypoint": "MaterialVS" },
     { "name": "DepthOnlyFS"    , "source": "default.hlsl", "target": "ps_5_1", "entrypoint": "BlankPS" },
-    { "name": "FallbackFS"     , "source": "default.hlsl", "target": "ps_5_1", "entrypoint": "FallbackPS" },
+    { "name": "FallbackFS"     , "source": "default.hlsl", "target": "ps_5_1", "entrypoint": "DefaultPS" },
 
     { "name": "RegularLOD0FS", "source": "material.hlsl", "target": "ps_5_1", "entrypoint": "MaterialPS", "defines": "PIXEL_LIGHTS AREA_LIGHTS HQ_DIFFUSE" },
     { "name": "OrganicLOD0FS", "source": "material.hlsl", "target": "ps_5_1", "entrypoint": "MaterialPS", "defines": "PIXEL_LIGHTS AREA_LIGHTS HQ_DIFFUSE ORGANIC" },
@@ -26,28 +26,28 @@
 
     { "name": "NeonFS", "source": "neon.hlsl", "target": "ps_5_1", "entrypoint": "NeonPS" },
 
-    { "name": "ParticleVS", "source": "particle.hlsl", "target": "vs_5_1", "entrypoint": "ParticleVS" },
-	{ "name": "ParticleFS", "source": "particle.hlsl", "target": "ps_5_1", "entrypoint": "ParticlePS" },
+    { "name": "ParticleVS", "source": "screenspace.hlsl", "target": "vs_5_1", "entrypoint": "PassThroughVS" },
+	{ "name": "ParticleFS", "source": "default.hlsl", "target": "ps_5_1", "entrypoint": "BlankPS" },
 
     { "name": "SkyVS"    , "source": "sky.hlsl", "target": "vs_5_1", "entrypoint": "SkyVS" },
     { "name": "SkyFS"    , "source": "sky.hlsl", "target": "ps_5_1", "entrypoint": "SkyPS" },
     { "name": "SkyFaceFS", "source": "sky.hlsl", "target": "ps_5_1", "entrypoint": "SkyFacePS", "defines": "SINGLE_FACE" },
 
-    { "name": "TexCompVS"   , "source": "texcomp.hlsl", "target": "vs_5_1", "entrypoint": "TexCompVS" },
-    { "name": "TexCompFS"   , "source": "texcomp.hlsl", "target": "ps_5_1", "entrypoint": "TexCompPS" },
-    { "name": "TexCompPMAFS", "source": "texcomp.hlsl", "target": "ps_5_1", "entrypoint": "TexCompPMAPS" },
+    { "name": "TexCompVS"   , "source": "screenspace.hlsl", "target": "vs_5_1", "entrypoint": "PassThroughVS" },
+    { "name": "TexCompFS"   , "source": "default.hlsl", "target": "ps_5_1", "entrypoint": "BlankPS" },
+    { "name": "TexCompPMAFS", "source": "default.hlsl", "target": "ps_5_1", "entrypoint": "BlankPS" },
 
-    { "name": "UIVS"   , "source": "ui.hlsl", "target": "vs_5_1", "entrypoint": "UIVS" },
-    { "name": "UIFogVS", "source": "ui.hlsl", "target": "vs_5_1", "entrypoint": "UIVS", "defines": "PIN_FOG" },
-    { "name": "UIFS"   , "source": "ui.hlsl", "target": "ps_5_1", "entrypoint": "UIPS" },
-    { "name": "UIFogFS", "source": "ui.hlsl", "target": "ps_5_1", "entrypoint": "UIPS", "defines": "PIN_FOG" },
+    { "name": "UIVS"   , "source": "screenspace.hlsl", "target": "vs_5_1", "entrypoint": "PassThroughVS" },
+    { "name": "UIFogVS", "source": "screenspace.hlsl", "target": "vs_5_1", "entrypoint": "PassThroughVS", "defines": "PIN_FOG" },
+    { "name": "UIFS"   , "source": "default.hlsl", "target": "ps_5_1", "entrypoint": "BlankPS" },
+    { "name": "UIFogFS", "source": "default.hlsl", "target": "ps_5_1", "entrypoint": "BlankPS", "defines": "PIN_FOG" },
 
     { "name": "PassThroughVS", "source": "screenspace.hlsl", "target": "vs_5_1", "entrypoint": "PassThroughVS"},
     { "name": "PassThroughFS", "source": "screenspace.hlsl", "target": "ps_5_1", "entrypoint": "PassThroughPS"},
 
-    { "name": "Blur3FS", "source": "screenspace.hlsl", "target": "ps_5_1", "entrypoint": "blur3_ps", "exclude": "glsles" },
-    { "name": "Blur5FS", "source": "screenspace.hlsl", "target": "ps_5_1", "entrypoint": "blur5_ps", "exclude": "glsles" },
-    { "name": "Blur7FS", "source": "screenspace.hlsl", "target": "ps_5_1", "entrypoint": "blur7_ps", "exclude": "glsles" },
+    { "name": "Blur3FS", "source": "default.hlsl", "target": "ps_5_1", "entrypoint": "BlankPS", "exclude": "glsles" },
+    { "name": "Blur5FS", "source": "default.hlsl", "target": "ps_5_1", "entrypoint": "BlankPS", "exclude": "glsles" },
+    { "name": "Blur7FS", "source": "default.hlsl", "target": "ps_5_1", "entrypoint": "BlankPS", "exclude": "glsles" },
 
     { "name": "TonemapFS"                    , "source": "tonemapping.hlsl", "target": "ps_5_1", "entrypoint": "TonemappingPS", "exclude": "glsles" },
     { "name": "TonemapColorCorrectionFS"     , "source": "tonemapping.hlsl", "target": "ps_5_1", "entrypoint": "TonemappingPS", "defines": "COLOR_CORRECTION", "exclude": "glsles" },
@@ -58,6 +58,6 @@
     { "name": "BloomDownsampleFS"       , "source": "bloom.hlsl", "target": "ps_5_1", "entrypoint": "BloomDownsamplePS", "exclude": "glsles" },
     { "name": "BloomUpsampleFS"         , "source": "bloom.hlsl", "target": "ps_5_1", "entrypoint": "BloomUpsamplePS", "exclude": "glsles" },
 
-    { "name": "ProfilerVS", "source": "profiler.hlsl", "target": "vs_5_1", "entrypoint": "ProfilerVS" },
-    { "name": "ProfilerFS", "source": "profiler.hlsl", "target": "ps_5_1", "entrypoint": "ProfilerPS" }
+    { "name": "ProfilerVS", "source": "screenspace.hlsl", "target": "vs_5_1", "entrypoint": "PassThroughVS" },
+    { "name": "ProfilerFS", "source": "default.hlsl", "target": "ps_5_1", "entrypoint": "BlankPS" }
 ]

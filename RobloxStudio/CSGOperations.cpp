@@ -7,6 +7,7 @@
 #include "V8DataModel/CSGDictionaryService.h"
 #include "V8Xml/SerializerBinary.h"
 #include "../Rendering/GfxRender/GeometryGenerator.h"
+#include "../Rendering/GfxRender/Vertex.h"
 #include "V8Datamodel/SpecialMesh.h"
 #include "v8DataModel/Workspace.h"
 #include "v8DataModel/DataModel.h"
@@ -259,7 +260,7 @@ bool RBX::CSGOperations::recalculateMesh(shared_ptr<PartOperation> partOperation
 
 bool RBX::CSGOperations::createPartMesh(PartInstance* part, CSGMesh* modelData)
 {
-	std::vector<Graphics::Vertex> vertices;
+	std::vector<Graphics::InstancedMaterialVertex> vertices;
 	std::vector<unsigned short> indices;
 
 	std::vector<CSGVertex> meshVertices;

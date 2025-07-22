@@ -1,5 +1,6 @@
-#define EPSILON 0.0001
-#define PI 3.14159
+#define PI ( 3.14159 )
+#define EPSILON ( 0.0001 )
+#define INV_EPSILON ( 1.0 - EPSILON )
 
 #ifndef EXCLUDE_COMMON
 #define EXCLUDE_COMMON
@@ -40,8 +41,8 @@ struct MaterialAppData /* size 60 */ {
     float3 Position  : POSITION;    // size 12, offset 0
     float2 UV        : TEXCOORD;    // size 8, offset 12
     float4 Color     : COLOR;       // size 16, offset 20
-    float3 Tangent   : TANGENT;     // size 12, offset 36
-    float3 Normal    : NORMAL;      // size 12, offset 48
+    float3 Normal    : NORMAL;      // size 12, offset 36
+    float3 Tangent   : TANGENT;     // size 12, offset 48
 };
 
 struct InstancedBasicAppData /* size 44 */ {

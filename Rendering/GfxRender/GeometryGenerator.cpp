@@ -175,14 +175,14 @@ namespace RBX
 #else
 		inline
 #endif
-			void fillVertex(
-				Vertex& r,
-				const Vector3& Position,
-				const Vector2& UV,
-				const Color4& Color,
-				const Vector3& Normal,
-				const Vector3& Tangent = Vector3(),
-				int MaterialID = 0)
+		void fillVertex(
+			InstancedMaterialVertex& r,
+			const Vector3& Position,
+			const Vector2& UV,
+			const Color4& Color,
+			const Vector3& Normal,
+			const Vector3& Tangent = Vector3(),
+			int MaterialID = 0)
 		{
 			r.Position = Position;
 			r.UV = UV;
@@ -352,7 +352,7 @@ namespace RBX
 			Color4 color = getBaseColor(part, decal, specialShape, options);
 
 			/*Color4uint8 diffuse = getBaseColor(part, decal, specialShape, options);
-			
+
 			Color4uint8 color =
 				(isBlock && (options.flags & GeometryGenerator::Flag_RandomizeBlockAppearance))
 				? Color4uint8(
@@ -487,7 +487,7 @@ namespace RBX
 			int randomU = (randomSeed >> 3) & 63;
 			int randomV = (randomSeed >> 9) & 63;
 
-			if (material == BRICK_MATERIAL || material == WOODPLANKS_MATERIAL)
+			if (material == BRICK_MATERIAL || material == PAVEMENT_MATERIAL || material == CERAMIC_TILES_MATERIAL || material == WOODPLANKS_MATERIAL)
 			{
 				// We want the stud-aligned bricks to roughly match between parts, so we're only shifting the tiling in 1 stud increments
 				return Vector2(randomU, randomV);
@@ -596,7 +596,7 @@ namespace RBX
 			Vector3 scale = getMeshScale(part, specialShape, humanoidIdentifier);
 
 			const CoordinateFrame& cframe = options.cframe;
-			Vertex* vertices = mVertices;
+			InstancedMaterialVertex* vertices = mVertices;
 			Vector3 offset = specialShape ? specialShape->getOffset() : Vector3::zero();
 
 			SpecialShape* shape = Instance::fastDynamicCast<SpecialShape>(specialShape);
@@ -611,7 +611,7 @@ namespace RBX
 
 				for (size_t i = 0; i < vertexCount; ++i)
 				{
-					Vertex& v = vertices[vertexOffset + i];
+					InstancedMaterialVertex& v = vertices[vertexOffset + i];
 					const FileMeshVertexNormalTexture3d& sv = data->vnts[i];
 
 					float headY = (sv.vy > 0) ? (sv.vy * scale.x + headCylinderExtents) : (sv.vy * scale.x - headCylinderExtents);
@@ -631,7 +631,7 @@ namespace RBX
 			{
 				for (size_t i = 0; i < vertexCount; ++i)
 				{
-					Vertex& v = vertices[vertexOffset + i];
+					InstancedMaterialVertex& v = vertices[vertexOffset + i];
 					const FileMeshVertexNormalTexture3d& sv = data->vnts[i];
 
 					Vector3 Position;
@@ -735,7 +735,7 @@ namespace RBX
 			//Color4uint8 extra = getExtra(part, options);
 
 			PartMaterial renderMaterial = part->getRenderMaterial();
-			
+
 			int materialId = MaterialGenerator::getMaterialId(renderMaterial);
 
 			float radius = primaryDimension / 2;
@@ -811,7 +811,7 @@ namespace RBX
 
 			unsigned vertexCounter = 0;
 			unsigned faceCounter = 0;
-			Vertex* vertices = mVertices;
+			InstancedMaterialVertex* vertices = mVertices;
 			unsigned short* indices = mIndices;
 
 			struct CAPDESC
@@ -1106,7 +1106,7 @@ namespace RBX
 			};
 
 			unsigned faceCounter = 0;
-			Vertex* vertices = mVertices;
+			InstancedMaterialVertex* vertices = mVertices;
 			unsigned short* indices = mIndices;
 			Vector3 scale = size * (radius / primaryDimension);
 
@@ -1335,7 +1335,7 @@ namespace RBX
 				 axisZ, -axisX, -axisX,
 			};
 
-			Vertex* vertices = mVertices;
+			InstancedMaterialVertex* vertices = mVertices;
 			unsigned short* indices = mIndices;
 
 			if (decal)
@@ -1473,7 +1473,7 @@ namespace RBX
 				};
 
 				const FACEDESC* facesDesc = corner ? cornerWedgeFacesDesc : wedgeFacesDesc;
-				
+
 				unsigned faceCounter = 0;
 
 				Vector2 uvs[4];
@@ -1574,8 +1574,8 @@ namespace RBX
 							nextEdge0.x += wdesc.studOffset0 * TESSELATION_PIECE;
 							nextEdge1.y += wdesc.studOffset0 * TESSELATION_PIECE;
 						}
-						fillVertex(vertices[vertexOffset + faceCounter * 4 + 0], start0 +     offset0, uvs[0] * surfaceTiling, color, normals[face], tangents[face], materialId);
-						fillVertex(vertices[vertexOffset + faceCounter * 4 + 1], start1 +     offset1, uvs[1] * surfaceTiling, color, normals[face], tangents[face], materialId);
+						fillVertex(vertices[vertexOffset + faceCounter * 4 + 0], start0 + offset0, uvs[0] * surfaceTiling, color, normals[face], tangents[face], materialId);
+						fillVertex(vertices[vertexOffset + faceCounter * 4 + 1], start1 + offset1, uvs[1] * surfaceTiling, color, normals[face], tangents[face], materialId);
 						fillVertex(vertices[vertexOffset + faceCounter * 4 + 2], start0 + nextOffset0, uvs[2] * surfaceTiling, color, normals[face], tangents[face], materialId);
 						fillVertex(vertices[vertexOffset + faceCounter * 4 + 3], start1 + nextOffset1, uvs[3] * surfaceTiling, color, normals[face], tangents[face], materialId);
 
@@ -1635,10 +1635,10 @@ namespace RBX
 						Vector2 uvStuds2 = Vector2(uvStuds[2].x, studsAtlasInfo.offsetY + texMultiplier * studsAtlasInfo.scaleY);
 						Vector2 uvStuds3 = Vector2(uvStuds[3].x, studsAtlasInfo.offsetY + texMultiplier * studsAtlasInfo.scaleY);
 
-						fillVertex(vertices[vertexOffset + faceCounter * 4 + 0], start0 + offset0,   uvs[0] * surfaceTiling, color, normals[face], tangents[face], materialId);
-						fillVertex(vertices[vertexOffset + faceCounter * 4 + 1], start1 + offset1,   uvs[1] * surfaceTiling, color, normals[face], tangents[face], materialId);
-						fillVertex(vertices[vertexOffset + faceCounter * 4 + 2], corners[desc.end0], uv2    * surfaceTiling, color, normals[face], tangents[face], materialId);
-						fillVertex(vertices[vertexOffset + faceCounter * 4 + 3], corners[desc.end1], uv3    * surfaceTiling, color, normals[face], tangents[face], materialId);
+						fillVertex(vertices[vertexOffset + faceCounter * 4 + 0], start0 + offset0, uvs[0] * surfaceTiling, color, normals[face], tangents[face], materialId);
+						fillVertex(vertices[vertexOffset + faceCounter * 4 + 1], start1 + offset1, uvs[1] * surfaceTiling, color, normals[face], tangents[face], materialId);
+						fillVertex(vertices[vertexOffset + faceCounter * 4 + 2], corners[desc.end0], uv2 * surfaceTiling, color, normals[face], tangents[face], materialId);
+						fillVertex(vertices[vertexOffset + faceCounter * 4 + 3], corners[desc.end1], uv3 * surfaceTiling, color, normals[face], tangents[face], materialId);
 
 						fillQuadIndices(&indices[indexOffset + faceCounter * 6], vertexOffset + faceCounter * 4, 0, 1, 2, 3);
 						faceCounter++;
@@ -1760,7 +1760,7 @@ namespace RBX
 				 axisZ, -axisX, -axisX,
 			};
 
-			Vertex* vertices = mVertices;
+			InstancedMaterialVertex* vertices = mVertices;
 			unsigned short* indices = mIndices;
 
 			if (decal)
@@ -1860,8 +1860,8 @@ namespace RBX
 
 						Vector4 nextEdgeOffset = edgeOffset + Vector4(0, 0, TESSELATION_PIECE, -TESSELATION_PIECE);
 
-						fillVertex(vertices[vertexOffset + faceCounter * 4 + 0], start0 +     offset, uvs[0] * surfaceTiling, color, normals[face], tangents[face], materialId);
-						fillVertex(vertices[vertexOffset + faceCounter * 4 + 1], start1 +     offset, uvs[1] * surfaceTiling, color, normals[face], tangents[face], materialId);
+						fillVertex(vertices[vertexOffset + faceCounter * 4 + 0], start0 + offset, uvs[0] * surfaceTiling, color, normals[face], tangents[face], materialId);
+						fillVertex(vertices[vertexOffset + faceCounter * 4 + 1], start1 + offset, uvs[1] * surfaceTiling, color, normals[face], tangents[face], materialId);
 						fillVertex(vertices[vertexOffset + faceCounter * 4 + 2], start0 + nextOffset, uvs[2] * surfaceTiling, color, normals[face], tangents[face], materialId);
 						fillVertex(vertices[vertexOffset + faceCounter * 4 + 3], start1 + nextOffset, uvs[3] * surfaceTiling, color, normals[face], tangents[face], materialId);
 
@@ -1955,7 +1955,7 @@ namespace RBX
 				 Vector3(0, 0, 1), -Vector3(1, 0, 0), -Vector3(1, 0, 0),
 			};
 
-			Vertex* vertices = mVertices;
+			InstancedMaterialVertex* vertices = mVertices;
 			unsigned short* indices = mIndices;
 
 			static const FACEDESC facesDesc[] =
@@ -2036,7 +2036,7 @@ namespace RBX
 
 		struct TrussQuadBuilder
 		{
-			Vertex* vertices;
+			InstancedMaterialVertex* vertices;
 			unsigned short* indices;
 			unsigned int vertexOffset;
 			unsigned int indexOffset;
@@ -2050,7 +2050,7 @@ namespace RBX
 			Vector2 surfaceOffset;
 			float surfaceTiling;
 
-			TrussQuadBuilder(Vertex* vertices, unsigned short* indices, unsigned int vertexOffset, unsigned int indexOffset, Vector3* bboxMin, Vector3* bboxMax, const Vector3& size, PartInstance* part, const GeometryGenerator::Options& options, unsigned int randomSeed)
+			TrussQuadBuilder(InstancedMaterialVertex* vertices, unsigned short* indices, unsigned int vertexOffset, unsigned int indexOffset, Vector3* bboxMin, Vector3* bboxMax, const Vector3& size, PartInstance* part, const GeometryGenerator::Options& options, unsigned int randomSeed)
 			{
 				this->vertices = vertices;
 				this->indices = indices;
@@ -2347,7 +2347,7 @@ namespace RBX
 		{
 		}
 
-		GeometryGenerator::GeometryGenerator(Vertex* vertices, unsigned short* indices, unsigned int vertexOffset)
+		GeometryGenerator::GeometryGenerator(InstancedMaterialVertex* vertices, unsigned short* indices, unsigned int vertexOffset)
 			: mVertices(vertices)
 			, mIndices(indices)
 			, mVertexCount(vertexOffset)
@@ -2545,7 +2545,7 @@ namespace RBX
 
 			if (!mVertices) return;
 
-			Vertex* vertices = mVertices;
+			InstancedMaterialVertex* vertices = mVertices;
 			unsigned short* indices = mIndices;
 
 			Vector3 size = part->getPartSizeXml();
@@ -2767,7 +2767,7 @@ namespace RBX
 
 			if (!mVertices) return;
 
-			Vertex* vertices = mVertices;
+			InstancedMaterialVertex* vertices = mVertices;
 			unsigned short* indices = mIndices;
 
 			Vector3 axisX = Vector3(cframe.rotation[0][0], cframe.rotation[1][0], cframe.rotation[2][0]);
@@ -2862,7 +2862,7 @@ namespace RBX
 			if (!mVertices) return;
 
 
-			Vertex* vertices = mVertices;
+			InstancedMaterialVertex* vertices = mVertices;
 			unsigned short* indices = mIndices;
 
 			//const RBX::Color4uint8& extra = getExtra(part, options);

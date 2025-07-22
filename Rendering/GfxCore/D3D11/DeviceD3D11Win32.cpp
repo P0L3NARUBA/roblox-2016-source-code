@@ -50,7 +50,7 @@ namespace Graphics
 
         unsigned deviceCreationFlags = FFlag::DebugD3D11DebugMode ? D3D11_CREATE_DEVICE_DEBUG : 0;
 
-        D3D_FEATURE_LEVEL requestedFeatureLevel = D3D_FEATURE_LEVEL_11_0;
+        D3D_FEATURE_LEVEL requestedFeatureLevel = D3D_FEATURE_LEVEL_11_1;
 
         D3D_FEATURE_LEVEL featureLevelOut;
 
@@ -78,7 +78,7 @@ namespace Graphics
         if (FAILED(hr))
             throw RBX::runtime_error("Unable to create D3D device: %x", hr);
 
-        shaderProfile = featureLevelOut == D3D_FEATURE_LEVEL_11_0 ? shaderProfile_DX11 : shaderProfile_DX11_level_9_3;
+        shaderProfile = shaderProfile_DX11;
 
         HMODULE shaderCompiler = ShaderProgramD3D11::loadShaderCompilerDLL();
         if (!shaderCompiler)

@@ -1,16 +1,16 @@
 #include "common.hlsli"
 
-TEX_DECLARE2D(Main, 0);
-
 BasicVertexOutput PassThroughVS( BasicAppData IN ) {
     BasicVertexOutput OUT;
 	
     OUT.UV = IN.UV;
 	OUT.Color = IN.Color;
-    OUT.Position = IN.Position;
+    OUT.Position = float4(IN.Position, 1.0);
 
     return OUT;
 }
+
+TEX_DECLARE2D(float4, Main, 0);
 
 float4 PassThroughPS( BasicVertexOutput IN ) : SV_TARGET {
 	return MainTexture.Sample(MainSampler, IN.UV) * IN.Color;

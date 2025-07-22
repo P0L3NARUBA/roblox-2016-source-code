@@ -655,7 +655,7 @@ namespace RBX
 			safeToLower(texturePath);
 			texturePath.erase(remove(texturePath.begin(), texturePath.end(), ' '), texturePath.end());
 
-			copyTextureToArray(albedoTextures.getTexture().get(), tm->load(ContentId(texturePath + "color" + kTextureExtension), TextureManager::Fallback_White).getTexture().get(), materialId);
+			//copyTextureToArray(albedoTextures.getTexture().get(), tm->load(ContentId(texturePath + "color" + kTextureExtension), TextureManager::Fallback_White).getTexture().get(), materialId);
 
 			/*Texture* albedoTexture = tm->load(ContentId(texturePath + "color" + kTextureExtension), TextureManager::Fallback_White).getTexture().get();
 
@@ -1063,9 +1063,9 @@ namespace RBX
 			}
 #endif
 
-			unsigned int features = renderMaterial == NEON_MATERIAL ? RenderQueue::Features_Glow : 0;
+			unsigned int features = 0; //renderMaterial == NEON_MATERIAL ? RenderQueue::Features_Glow : 0;
 
-			return Result(createRenderMaterial(flags, actualRenderMaterial), (flags & Flag_Transparent) ? 0 : Result_PlasticLOD, features);
+			return Result(createRenderMaterial(flags, actualRenderMaterial), 0 /*(flags & Flag_Transparent) ? 0 : Result_PlasticLOD*/, features);
 		}
 
 		MaterialGenerator::Result MaterialGenerator::createMaterialForPart(PartInstance* part, const HumanoidIdentifier* hi, unsigned int flags) {

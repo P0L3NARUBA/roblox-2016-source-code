@@ -86,7 +86,7 @@ namespace Graphics
 		static Resources fetchResources(PartInstance* part, const HumanoidIdentifier* hi, unsigned int flags, AsyncResult* asyncResult);
 		
 		GeometryGenerator();
-		GeometryGenerator(Vertex* vertices, unsigned short* indices, unsigned int vertexOffset = 0);
+		GeometryGenerator(InstancedMaterialVertex* vertices, unsigned short* indices, unsigned int vertexOffset = 0);
 		
 		void	reset();
 		void	resetBounds();
@@ -113,7 +113,7 @@ namespace Graphics
 	private:
 		Vector3 mBboxMin, mBboxMax;
 
-		Vertex* mVertices;
+		InstancedMaterialVertex* mVertices;
 		unsigned short* mIndices;
 		
 		unsigned int mVertexCount;

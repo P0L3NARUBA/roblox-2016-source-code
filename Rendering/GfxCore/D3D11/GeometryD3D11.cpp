@@ -267,13 +267,14 @@ namespace RBX
 				}
 			}
 
-			//(*programCache)->uploadConstantBuffers();
+			(*programCache)->uploadConstantBuffers();
 
 			context11->IASetPrimitiveTopology(gGeometryPrimitiveD3D11[primitive]);
 
 			if (indexBuffer) {
 				context11->DrawIndexed(count, offset, baseVertexIndex);
-			} else {
+			}
+			else {
 				context11->Draw(count, offset);
 			}
 		}

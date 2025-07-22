@@ -8,6 +8,7 @@
 #include "SceneManager.h"
 #include "Util.h"
 #include "EnvMap.h"
+#include "Vertex.h"
 
 #include "GfxCore/Geometry.h"
 #include "GfxCore/Device.h"
@@ -66,27 +67,33 @@ namespace RBX
 
 		struct SkyVertex
 		{
-			Vector3 position;
-			Vector3 texcoord;
+			Vector3 Position;
+			Vector3 Texcoord;
 		};
 
-		static GeometryBatch* createQuad(Device* device, const shared_ptr<VertexLayout>& layout)
-		{
-			SkyVertex vertices[] =
-			{
-				{ Vector3(-1, -1, 0), Vector3(0, 1, 0) },
-				{ Vector3(-1, +1, 0), Vector3(0, 0, 0) },
-				{ Vector3(+1, -1, 0), Vector3(1, 1, 0) },
-				{ Vector3(+1, +1, 0), Vector3(1, 0, 0) },
+		static shared_ptr<Geometry> createCube(Device* device) {
+			std::vector<VertexLayout::Element> elements;
+			elements.push_back(VertexLayout::Element(0, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
+			elements.push_back(VertexLayout::Element(0, 12u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture));
+
+			shared_ptr<VertexLayout> layout = device->createVertexLayout(elements);
+
+			// TODO: Fill out cube vertexes
+			SkyVertex vertices[36] = {
+				{ Vector3( 1.0f, -1.0f, -1.0f), Vector3( 1.0f, -1.0f, -1.0f) }, /* 3 - - */
+				{ Vector3(-1.0f, -1.0f, -1.0f), Vector3(-1.0f, -1.0f, -1.0f) }, /* - - - */
+				{ Vector3(-1.0f,  1.0f, -1.0f), Vector3( 1.0f, -1.0f, -1.0f) }, /* 2 - 1 */
+
+				{ Vector3(-1.0f,  1.0f, -1.0f), Vector3(-1.0f,  1.0f, -1.0f) }, /* 1 - 2 */
+				{ Vector3( 1.0f,  1.0f, -1.0f), Vector3( 1.0f,  1.0f, -1.0f) }, /* - - - */
+				{ Vector3( 1.0f, -1.0f, -1.0f), Vector3( 1.0f, -1.0f, -1.0f) }, /* - - 3 */
 			};
 
 			shared_ptr<VertexBuffer> vb = device->createVertexBuffer(sizeof(SkyVertex), ARRAYSIZE(vertices), GeometryBuffer::Usage_Static);
 
 			vb->upload(0, vertices, sizeof(vertices));
 
-			shared_ptr<Geometry> geometry = device->createGeometry(layout, vb, shared_ptr<IndexBuffer>());
-
-			return new GeometryBatch(geometry, Geometry::Primitive_TriangleStrip, 4, 4);
+			return device->createGeometry(layout, vb, shared_ptr<IndexBuffer>());
 		}
 
 		void Sky::StarData::resize(Sky* sky, unsigned int count, bool dynamic)
@@ -116,14 +123,16 @@ namespace RBX
 			, starTwinkleCounter(0)
 			, readyState(false)
 		{
-			std::vector<VertexLayout::Element> elements;
+			/*std::vector<VertexLayout::Element> elements;
 			elements.push_back(VertexLayout::Element(0, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
 			elements.push_back(VertexLayout::Element(0, 12u, VertexLayout::Format_Float2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture));
 			elements.push_back(VertexLayout::Element(0, 20u, VertexLayout::Format_Float4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Color));
 
 			layout = visualEngine->getDevice()->createVertexLayout(elements);
 
-			quad.reset(createQuad(visualEngine->getDevice(), layout));
+			quad.reset(createQuad(visualEngine->getDevice(), layout));*/
+
+			cube.reset(new GeometryBatch(createCube(visualEngine->getDevice()), Geometry::Primitive_Triangles, 36, 36));
 
 			// preload default skybox so that we can show it even while fetching custom skies over HTTP
 			if (!FFlag::DebugRenderDownloadAssets)
@@ -146,7 +155,7 @@ namespace RBX
 			drawSunMoon = drawCelestialBodies;
 
 			sunPosition = (lighting.physicallyCorrect ? lighting.trueSunPosition : lighting.sunPosition);
-			sunColor = Color3(lighting.emissiveScale * .8f * G3D::clamp((sunPosition.y + 0.1f) * 10.0f, 0.f, 1.f));
+			sunColor = Color3(lighting.emissiveScale * 0.8f * G3D::clamp((sunPosition.y + 0.1f) * 10.0f, 0.f, 1.f));
 
 			moonPosition = (lighting.physicallyCorrect ? lighting.trueMoonPosition : lighting.moonPosition);
 			moonColor = Color3(G3D::min((1.0f - lighting.skyAmbient[1]) + 0.1f, 1.0f));
@@ -206,73 +215,63 @@ namespace RBX
 			starTwinkleCounter++;
 		}
 
-		void Sky::RenderSkyboxEnvMap(DeviceContext* context, int face)
-		{
+		void Sky::RenderSkyboxEnvMap(DeviceContext* context, unsigned int face, unsigned int size) {
 			RBXPROFILER_SCOPE("Render", "Sky Environment Map");
 			RBXPROFILER_SCOPE("GPU", "Sky Environment Map");
 			PIX_SCOPE(context, "Sky");
 
-			Texture* texture = skyBox[face].getTexture().get();
-			std::string namefs = (true) ? "PassThroughPS" : "SkyFacePS";
-
-			if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", namefs.c_str(), BlendState::Mode_None, texture->getWidth(), texture->getHeight()))
-			{
-				context->bindTexture(0, texture, SamplerState(SamplerState::Filter_Point, SamplerState::Address_Wrap));
+			if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "SkyFacePS", BlendState::Mode_None, size, size)) {
+				context->bindTexture(0, skyBox[face].getTexture().get(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 
 				ScreenSpaceEffect::renderFullscreenEnd(context, visualEngine);
 			}
 		}
 
-		void Sky::render(DeviceContext* context, const RenderCamera& camera, bool drawStars)
-		{
+		void Sky::render(DeviceContext* context, const RenderCamera& camera, Texture* texture, bool drawStars) {
 			RBXPROFILER_SCOPE("Render", "Sky");
 			RBXPROFILER_SCOPE("GPU", "Sky");
 			PIX_SCOPE(context, "Sky");
 
 			// Update load-in-progress
-			if (starTwinkleCounter >= kStarTwinkleRate)
-			{
+			if (starTwinkleCounter >= kStarTwinkleRate) {
 				starTwinkleCounter = 0;
 
 				if (starLight != Brightness_None && !starsTwinkle.stars.empty())
 					updateStarsTwinkle();
 			}
 
-			shared_ptr<ShaderProgram> program = visualEngine->getShaderManager()->getProgramOrFFP("SkyVS", "SkyFS");
+			shared_ptr<ShaderProgram> program = visualEngine->getShaderManager()->getProgram("SkyVS", "SkyFS");
 
-			if (program)
-			{
-				int colorHandle = program->getConstantHandle("Color");
-				int color2Handle = program->getConstantHandle("Color2");
+			if (program) {
+				//int colorHandle = program->getConstantHandle("Color");
+				//int color2Handle = program->getConstantHandle("Color2");
 
 				context->bindProgram(program.get());
 
 				context->setRasterizerState(RasterizerState::Cull_None);
 				context->setDepthState(DepthState(DepthState::Function_GreaterEqual, false));
+				context->setBlendState(BlendState::Mode_None);
 
-				// Render sky surface, if loaded
-				if (1)
-				{
-					context->setBlendState(BlendState::Mode_None);
+				context->bindTexture(0, texture, SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Wrap));
 
-					for (int i = 0; i < 6; ++i)
-					{
-						PIX_SCOPE(context, "Skybox face %d", i);
-						float adjustAngle = (i == NORM_Y) ? G3D::pif() / 2 : (i == NORM_Y_NEG) ? -G3D::pif() / 2 : 0;
-						Matrix3 rotation = Matrix3::fromAxisAngle(Vector3(0, 1, 0), adjustAngle) * Matrix3::fromDiagonal(Vector3(-1, 1, 1)) * normalIdToMatrix3(static_cast<NormalId>(i));
-						Matrix4 transform(rotation * Matrix3::fromDiagonal(Vector3(kSkySize)), camera.getPosition() + rotation.column(2) * kSkySize);
+				context->draw(*cube);
 
-						context->bindTexture(0, skyBox[i].getTexture().get() ? skyBox[i].getTexture().get() : visualEngine->getTextureManager()->getFallbackTexture(TextureManager::Fallback_White).get(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+				/*for (int i = 0; i < 6; ++i) {
+					PIX_SCOPE(context, "Skybox face %d", i);
+					float adjustAngle = (i == NORM_Y) ? G3D::pif() / 2 : (i == NORM_Y_NEG) ? -G3D::pif() / 2 : 0;
+					Matrix3 rotation = Matrix3::fromAxisAngle(Vector3(0, 1, 0), adjustAngle) * Matrix3::fromDiagonal(Vector3(-1, 1, 1)) * normalIdToMatrix3(static_cast<NormalId>(i));
+					Matrix4 transform(rotation * Matrix3::fromDiagonal(Vector3(kSkySize)), camera.getPosition() + rotation.column(2) * kSkySize);
 
-						float colorData[] = { skyColor.r, skyColor.g, skyColor.b, 1 };
-						float color2Data[] = { skyColor2.r, skyColor2.g, skyColor2.b, 1 };
-						context->setConstant(colorHandle, colorData, 1);
-						context->setConstant(color2Handle, color2Data, 1);
+					context->bindTexture(0, skyBox[i].getTexture().get() ? skyBox[i].getTexture().get() : visualEngine->getTextureManager()->getFallbackTexture(TextureManager::Fallback_White).get(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 
-						context->setWorldTransforms4x3(transform[0], 1);
-						context->draw(*quad);
-					}
-				}
+					float colorData[] = { skyColor.r, skyColor.g, skyColor.b, 1 };
+					float color2Data[] = { skyColor2.r, skyColor2.g, skyColor2.b, 1 };
+					context->setConstant(colorHandle, colorData, 1);
+					context->setConstant(color2Handle, color2Data, 1);
+
+					context->setWorldTransforms4x3(transform[0], 1);
+					context->draw(*quad);
+				}*/
 
 				// Render stars
 				/*if (drawStars && starLight != Brightness_None && (starsNormal.batch || starsTwinkle.batch))
@@ -298,7 +297,7 @@ namespace RBX
 				}*/
 
 				// Render sun/moon
-				if (drawSunMoon)
+				/*if (drawSunMoon)
 				{
 					PIX_SCOPE(context, "Sun");
 					context->setBlendState(BlendState::Mode_Additive);
@@ -312,8 +311,8 @@ namespace RBX
 
 					context->setWorldTransforms4x3(sunTransform[0], 1);
 					context->draw(*quad);
-					/*context->draw(*quad);
-					context->draw(*quad);*/
+					//context->draw(*quad);
+					//context->draw(*quad);
 
 					PIX_MARKER(context, "Moon");
 					context->setBlendState(BlendState::Mode_AlphaBlend);
@@ -326,7 +325,7 @@ namespace RBX
 
 					context->setWorldTransforms4x3(moonTransform[0], 1);
 					context->draw(*quad);
-				}
+				}*/
 			}
 		}
 
@@ -427,7 +426,7 @@ namespace RBX
 
 			for (unsigned int i = 0; i < data.stars.size(); ++i)
 			{
-				vertices[i].position = data.stars[i].position;
+				vertices[i].Position = data.stars[i].position;
 
 				float intensity = data.stars[i].intensity;
 
@@ -474,7 +473,7 @@ namespace RBX
 
 			for (unsigned int i = 0; i < data.stars.size(); ++i)
 			{
-				vertices[i].position = data.stars[i].position;
+				vertices[i].Position = data.stars[i].position;
 
 				float randomBrightness = G3D::uniformRandom(0.3f, 1.7f);
 				float brightfactor = (starLight == Brightness_Dimmer) ? 0.5f : 1.f;

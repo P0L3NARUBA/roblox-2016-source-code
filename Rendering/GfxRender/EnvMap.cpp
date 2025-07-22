@@ -159,13 +159,13 @@ namespace RBX {
 			/*if (!outdoorTexture.getTexture())
 				return;*/
 
-			for (int i = 0; i < 6; ++i)
+			for (unsigned int i = 0u; i < 6u; ++i)
 				renderOutdoorFace(context, i);
 
 			//texture.getTexture()->generateMipmaps();
 		}
 
-		void EnvMap::renderOutdoorFace(DeviceContext* context, int face)
+		void EnvMap::renderOutdoorFace(DeviceContext* context, unsigned int face)
 		{
 			PIX_SCOPE(context, "EnvMap/update", 0);
 
@@ -192,8 +192,8 @@ namespace RBX {
 				PIX_SCOPE(context, "Outdoor Environment Map face %d", face);
 
 				context->bindFramebuffer(outFaces[face].get());
-
-				visualEngine->getSceneManager()->getSky()->RenderSkyboxEnvMap(context, face);
+				
+				visualEngine->getSceneManager()->getSky()->RenderSkyboxEnvMap(context, face, outdoorCubemapSize);
 				// add more stuff to render to envmap 
 			}
 		}

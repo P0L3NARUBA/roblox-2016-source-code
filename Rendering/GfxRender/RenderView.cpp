@@ -49,6 +49,7 @@
 #include "LightGrid.h"
 #include "MaterialGenerator.h"
 #include "GeometryGenerator.h"
+//#include "Vertex.h"
 
 #if !defined(RBX_PLATFORM_DURANGO)
 #include "ObjectExporter.h"
@@ -1541,7 +1542,7 @@ namespace RBX
 
 			float topShiftBase = (topColorShift.r + topColorShift.g + topColorShift.b) * 0.3333f;
 			Color3 topAdjustment = topColorShift - Color3(topShiftBase, topShiftBase, topShiftBase);
-			
+
 			float bottomShiftBase = (bottomColorShift.r + bottomColorShift.g + bottomColorShift.b) * 0.3333f;
 			Color3 bottomAdjustment = bottomColorShift - Color3(bottomShiftBase, bottomShiftBase, bottomShiftBase);*/
 

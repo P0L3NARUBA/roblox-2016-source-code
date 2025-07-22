@@ -3,9 +3,9 @@
 #include "buffers.hlsli"
 #include "common.hlsli"
 
-TEX_DECLARE2D(Main, 0);
+TEX_DECLARE2D(float4, Main, 0);
 #ifdef BLOOM
-TEX_DECLARE2D(Bloom, 1);
+TEX_DECLARE2D(float4, Bloom, 1);
 #endif
 
 float3 ReinhardSimple(float3 x) {
@@ -49,7 +49,7 @@ float3 ColorCorrection(inout float3 color) {
 
 float4 TonemappingPS( BasicVertexOutput IN ) : SV_TARGET {
 	#ifdef BLOOM
-	float3 color = lerp(MainTexture.Sample(MainSampler, IN.UV).rgb, BloomTexture.Sample(BloomSampler, IN.UV).rgb, Params1.w);
+	float3 color = lerp(MainTexture.Sample(MainSampler, IN.UV).rgb, BloomTexture.Sample(BloomSampler, IN.UV).rgb, Parameters1.w);
 	#else
 	float3 color = MainTexture.Sample(MainSampler, IN.UV).rgb;
 	#endif

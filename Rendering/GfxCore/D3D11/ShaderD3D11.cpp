@@ -55,8 +55,7 @@ namespace RBX
 #endif
 		}
 
-		static void extractCbuffers(Device* device, const std::vector<char>& bytecode, std::vector<shared_ptr<CBufferD3D11>>& cbuffers, unsigned globalSize, unsigned int* outSamplerMask)
-		{
+		static void extractCbuffers(Device* device, const std::vector<char>& bytecode, std::vector<shared_ptr<CBufferD3D11>>& cbuffers, unsigned globalSize, unsigned int* outSamplerMask) {
 			TypeD3DReflect D3DReflect = loadShaderReflector();
 			RBXASSERT(D3DReflect);
 
@@ -76,22 +75,17 @@ namespace RBX
 				HRESULT hr = shaderReflection11->GetResourceBindingDesc(i, &desc);
 				RBXASSERT(SUCCEEDED(hr));
 
-				if (desc.Type == D3D_SIT_TEXTURE)
-				{
+				if (desc.Type == D3D_SIT_TEXTURE) {
 					samplerMask |= 1 << desc.BindPoint;
 				}
-				else if (desc.Type == D3D_SIT_CBUFFER)
-				{
+				else if (desc.Type == D3D_SIT_CBUFFER) {
 					ID3D11ShaderReflectionConstantBuffer* cb = shaderReflection11->GetConstantBufferByName(desc.Name);
 
 					D3D11_SHADER_BUFFER_DESC cbDesc;
 					cb->GetDesc(&cbDesc);
 
-					if (cbDesc.Type == D3D11_CT_CBUFFER)
-					{
-
-						if (desc.BindPoint == 0)
-						{
+					if (cbDesc.Type == D3D11_CT_CBUFFER) {
+						/*if (desc.BindPoint == 0) {
 							bool isGlobals = strcmp(cbDesc.Name, "Globals") == 0;
 
 							if (!isGlobals)
@@ -101,12 +95,11 @@ namespace RBX
 								throw std::runtime_error("D3D11 Shader compilation: Globals CBuffer size is not the same as defined CBuffer size");
 
 							continue; // globals are same for all the shaders globally in deviceContext, so we want to skip it here
-						}
+						}*/
 
 						std::vector<UniformD3D11> uniforms;
 
-						for (unsigned varId = 0; varId < cbDesc.Variables; ++varId)
-						{
+						for (unsigned varId = 0; varId < cbDesc.Variables; ++varId) {
 							ID3D11ShaderReflectionVariable* var = cb->GetVariableByIndex(varId);
 
 							D3D11_SHADER_VARIABLE_DESC varDesc;
@@ -169,7 +162,7 @@ namespace RBX
 				}
 			}*/
 
-			ID3D11VertexShader* vertexShader = NULL;
+			ID3D11VertexShader* vertexShader = nullptr;
 			HRESULT hr = device11->CreateVertexShader(bytecode.data(), bytecode.size(), NULL, &vertexShader);
 			RBXASSERT(SUCCEEDED(hr));
 
@@ -183,7 +176,7 @@ namespace RBX
 			/*extractCbuffers(device, bytecode, cbuffers, context->getGlobalDataSize(), &samplerMask);
 			uniformsCBuffer = findCBuffer(cbuffers, "$Globals");*/
 
-			ID3D11PixelShader* pixelShader = NULL;
+			ID3D11PixelShader* pixelShader = nullptr;
 			HRESULT hr = device11->CreatePixelShader(bytecode.data(), bytecode.size(), NULL, &pixelShader);
 			RBXASSERT(SUCCEEDED(hr));
 
@@ -692,15 +685,15 @@ namespace RBX
 		{
 			TypeD3DCompile D3DCompile = loadShaderCompiler();
 			RBXASSERT(D3DCompile);
-			
-			unsigned int flags = D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR;
+
+			unsigned int flags = D3DCOMPILE_PACK_MATRIX_ROW_MAJOR;
 
 			std::string realTarget;
 			translateShaderProfile(target, device11->getShaderProfile(), realTarget);
 
-			ID3DBlob* bytecode = NULL;
-			ID3DBlob* messages = NULL;
-			HRESULT hr = D3DCompile(source.c_str(), source.length(), entrypoint.c_str(), NULL, NULL, entrypoint.c_str(), realTarget.c_str(), flags, 0, &bytecode, &messages);
+			ID3DBlob* bytecode = nullptr;
+			ID3DBlob* messages = nullptr;
+			HRESULT hr = D3DCompile(source.c_str(), source.length(), entrypoint.c_str(), nullptr, nullptr, entrypoint.c_str(), realTarget.c_str(), flags, 0, &bytecode, &messages);
 
 			return consumeData<char>(hr, bytecode, messages);
 		}
@@ -711,7 +704,7 @@ namespace RBX
 			static HMODULE compiler;
 
 			if (!compiler)
-				compiler = LoadLibraryA("D3DCompiler_47.dll");
+				compiler = LoadLibraryA("d3dcompiler_47.dll");
 
 			return compiler;
 		}
@@ -781,7 +774,7 @@ namespace RBX
 			VertexShaderD3D11* vs = static_cast<VertexShaderD3D11*>(vertexShader.get());
 			FragmentShaderD3D11* fs = static_cast<FragmentShaderD3D11*>(fragmentShader.get());
 
-			for (auto& cb : vs->getCBuffers())
+			/*for (auto& cb : vs->getCBuffers())
 			{
 				ID3D11Buffer* buffer = cb->getObject();
 				context11->VSSetConstantBuffers(cb->getRegisterId(), 1, &buffer);
@@ -791,10 +784,10 @@ namespace RBX
 			{
 				ID3D11Buffer* buffer = cb->getObject();
 				context11->PSSetConstantBuffers(cb->getRegisterId(), 1, &buffer);
-			}
+			}*/
 
-			context11->VSSetShader(vs->getObject(), NULL, 0);
-			context11->PSSetShader(fs->getObject(), NULL, 0);
+			context11->VSSetShader(vs->getObject(), nullptr, 0);
+			context11->PSSetShader(fs->getObject(), nullptr, 0);
 		}
 	}
 }

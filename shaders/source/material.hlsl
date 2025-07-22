@@ -40,9 +40,9 @@ float4 MaterialPS(MaterialVertexOutput IN) : SV_TARGET {
     float3 UVW = float3(IN.UV, MaterialIndex);
     float IOR = MaterialParametersC.x;
 
-    if (MaterialParametersC.z > 0.0) {
+    /*if (MaterialParametersC.z > 0.0) {
         UVW.xy = ParallaxOcclusionMapping(HeightMapTexture, HeightMapSampler, UVW, ViewDirection, MaterialParametersC.z, MaterialParametersC.w);
-    }
+    }*/
 
     float4 Albedo = IN.Color;
 
@@ -85,14 +85,6 @@ float4 MaterialPS(MaterialVertexOutput IN) : SV_TARGET {
 	float NDV = saturate(uNDV * 0.5 + 0.5); // Multiply-add is a single instruction so we do this instead of (+ 1.0) / 2.0
     float3 Reflect = reflect(-ViewDirection, Normal);
 
-    float3 TotalLight = float3(0.0, 0.0, 0.0);
-
-    if (any(KeyColor_KeyShadowDistance.rgb > TotalLight)) {
-        float3 SunDirection = -KeyDirection_unused.xyz;
-
-        TotalLight += Lighting(1.0, 1.0, Normal, SunDirection, ViewDirection, NDV, 1.0, Albedo.rgb, Roughness, Metalness, IOR);
-    }
-
     float AmbientDiffuseFactor = AmbientColor_EnvDiffuse.w * Metalness;
     float AmbientSpecularFactor = OutdoorAmbientColor_EnvSpecular.w;
     float OutdoorContribution = 1.0; // Not sure how this is going to work with indoor/outdoor cubemapping. Manual indoor defining, maybe?
@@ -100,8 +92,6 @@ float4 MaterialPS(MaterialVertexOutput IN) : SV_TARGET {
     float3 AmbientContribution = OutdoorAmbientColor_EnvSpecular.rgb;
 
 	if (AmbientDiffuseFactor + AmbientSpecularFactor > 0.0) {
-		float3 Fresnel = Fresnel(NDV, F0ToIOR(Albedo.rgb), float3(0.0, 0.0, 0.0), IOR, Metalness);
-
 		if (AmbientDiffuseFactor > 0.0) {
 			float3 OutdoorDiffuse = OutdoorCubemapTexture.SampleLevel(OutdoorCubemapSampler, Normal, MAX_REFLECTION_LOD);
 			float4 IndoorDiffuse  = IndoorCubemapsTexture.SampleLevel(IndoorCubemapsSampler, float4(Normal, 0.0), MAX_REFLECTION_LOD);
@@ -115,7 +105,8 @@ float4 MaterialPS(MaterialVertexOutput IN) : SV_TARGET {
 
 		if (AmbientSpecularFactor > 0.0) {
 			float2 envBRDF = EnvironmentBRDFTexture.Sample(EnvironmentBRDFSampler, float2(Roughness, saturate(uNDV))).xy;
-			float3 BRDF = (Fresnel * envBRDF.x + envBRDF.y);
+		    float3 F = Fresnel(NDV, F0ToIOR(Albedo.rgb), float3(0.0, 0.0, 0.0), IOR, Metalness);
+			float3 BRDF = (F * envBRDF.x + envBRDF.y);
 
             float EnvRoughness = Roughness * MAX_REFLECTION_LOD;
 
@@ -127,6 +118,14 @@ float4 MaterialPS(MaterialVertexOutput IN) : SV_TARGET {
 			AmbientContribution += (OutdoorSpecular * SkylightContribution + IndoorSpecular.rgb * (1.0 - SkylightContribution)) * BRDF * AmbientSpecularFactor;
 		}
 	}
+
+    float3 TotalLight = float3(0.0, 0.0, 0.0);
+
+    if (any(KeyColor_KeyShadowDistance.rgb > TotalLight)) {
+        float3 SunDirection = -KeyDirection_unused.xyz;
+
+        TotalLight += Lighting(1.0, 1.0, Normal, SunDirection, ViewDirection, NDV, 1.0, Albedo.rgb, Roughness, Metalness, IOR);
+    }
 
     TotalLight += AmbientContribution * LocalAO + AmbientColor_EnvDiffuse.rgb * (1.0 - LocalAO);
 

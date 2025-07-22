@@ -7,84 +7,84 @@
 
 namespace RBX
 {
-namespace Graphics
-{
+	namespace Graphics
+	{
 
-class VertexShader: public Resource
-{
-public:
-    ~VertexShader();
+		class VertexShader : public Resource
+		{
+		public:
+			~VertexShader();
 
-    virtual void reloadBytecode(const std::vector<char>& bytecode) = 0;
+			virtual void reloadBytecode(const std::vector<char>& bytecode) = 0;
 
-protected:
-	VertexShader(Device* device);
-};
+		protected:
+			VertexShader(Device* device);
+		};
 
-class FragmentShader: public Resource
-{
-public:
-    ~FragmentShader();
+		class FragmentShader : public Resource
+		{
+		public:
+			~FragmentShader();
 
-    virtual void reloadBytecode(const std::vector<char>& bytecode) = 0;
+			virtual void reloadBytecode(const std::vector<char>& bytecode) = 0;
 
-protected:
-	FragmentShader(Device* device);
-};
+		protected:
+			FragmentShader(Device* device);
+		};
 
-class ComputeShader : public Resource
-{
-public:
-    ~ComputeShader();
+		class ComputeShader : public Resource
+		{
+		public:
+			~ComputeShader();
 
-    virtual void reloadBytecode(const std::vector<char>& bytecode) = 0;
+			virtual void reloadBytecode(const std::vector<char>& bytecode) = 0;
 
-protected:
-    ComputeShader(Device* device);
-};
+		protected:
+			ComputeShader(Device* device);
+		};
 
-class GeometryShader : public Resource
-{
-public:
-    ~GeometryShader();
+		class GeometryShader : public Resource
+		{
+		public:
+			~GeometryShader();
 
-    virtual void reloadBytecode(const std::vector<char>& bytecode) = 0;
+			virtual void reloadBytecode(const std::vector<char>& bytecode) = 0;
 
-protected:
-    GeometryShader(Device* device);
-};
+		protected:
+			GeometryShader(Device* device);
+		};
 
-class ShaderProgram: public Resource
-{
-public:
-    ~ShaderProgram();
+		class ShaderProgram : public Resource
+		{
+		public:
+			~ShaderProgram();
 
-    virtual int getConstantHandle(const char* name) const = 0;
+			virtual int getConstantHandle(const char* name) const = 0;
 
-    virtual unsigned int getMaxWorldTransforms() const = 0;
-    virtual unsigned int getSamplerMask() const = 0;
+			virtual unsigned int getMaxWorldTransforms() const = 0;
+			virtual unsigned int getSamplerMask() const = 0;
 
-    static void dumpToFLog(const std::string& text, int channel);
+			static void dumpToFLog(const std::string& text, int channel);
 
-protected:
-    ShaderProgram(Device* device, const shared_ptr<VertexShader>& vertexShader, const shared_ptr<GeometryShader>& geometryShader, const shared_ptr<FragmentShader>& fragmentShader);
-	ShaderProgram(Device* device, const shared_ptr<VertexShader>& vertexShader, const shared_ptr<FragmentShader>& fragmentShader);
-    ShaderProgram(Device* device, const shared_ptr<ComputeShader>& computeShader);
+		protected:
+			ShaderProgram(Device* device, const shared_ptr<VertexShader>& vertexShader, const shared_ptr<GeometryShader>& geometryShader, const shared_ptr<FragmentShader>& fragmentShader);
+			ShaderProgram(Device* device, const shared_ptr<VertexShader>& vertexShader, const shared_ptr<FragmentShader>& fragmentShader);
+			ShaderProgram(Device* device, const shared_ptr<ComputeShader>& computeShader);
 
-    shared_ptr<VertexShader> vertexShader;
-    shared_ptr<FragmentShader> fragmentShader;
-    shared_ptr<ComputeShader> computeShader;
-    shared_ptr<GeometryShader> geometryShader;
-};
+			shared_ptr<VertexShader> vertexShader;
+			shared_ptr<FragmentShader> fragmentShader;
+			shared_ptr<ComputeShader> computeShader;
+			shared_ptr<GeometryShader> geometryShader;
+		};
 
-struct ShaderGlobalConstant
-{
-    const char* name;
-    unsigned int offset;
-    unsigned int size;
+		struct ShaderGlobalConstant
+		{
+			const char* name;
+			unsigned int offset;
+			unsigned int size;
 
-    ShaderGlobalConstant(const char* name, unsigned int offset, unsigned int size);
-};
+			ShaderGlobalConstant(const char* name, unsigned int offset, unsigned int size);
+		};
 
-}
+	}
 }

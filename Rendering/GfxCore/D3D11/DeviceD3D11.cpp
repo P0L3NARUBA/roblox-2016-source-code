@@ -176,7 +176,7 @@ namespace RBX
 			//shared_ptr<Renderbuffer> depthStencil = shared_ptr<Renderbuffer>(new RenderbufferD3D11(this, Texture::Format_D32f, width, height, 1));
 
 			// create frame buffer
-			mainFramebuffer.reset(new FramebufferD3D11(this, colorBuffers, NULL));
+			mainFramebuffer.reset(new FramebufferD3D11(this, colorBuffers, nullptr));
 		}
 
 		DeviceD3D11::~DeviceD3D11()
@@ -251,9 +251,9 @@ namespace RBX
 
 			// Don't render anything if window size changed; wait for validate
 			if (dimensions.first != mainFramebuffer->getWidth() || dimensions.second != mainFramebuffer->getHeight())
-				return NULL;
+				return nullptr;
 
-			immediateContext->bindFramebuffer(mainFramebuffer.get());
+			//immediateContext->bindFramebuffer(mainFramebuffer.get());
 			immediateContext->clearStates();
 
 			if (disjointQuery && beginQuery && endQuery)
@@ -279,7 +279,7 @@ namespace RBX
 			// Reset device if window size changed
 			if (mainFramebuffer && (dimensions.first != mainFramebuffer->getWidth() || dimensions.second != mainFramebuffer->getHeight()))
 			{
-				immediateContext->getContextDX11()->OMSetRenderTargets(NULL, NULL, NULL);
+				immediateContext->getContextDX11()->OMSetRenderTargets(0, nullptr, nullptr);
 
 				mainFramebuffer.reset();
 				resizeSwapchain();

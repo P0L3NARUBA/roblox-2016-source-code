@@ -166,7 +166,7 @@ namespace RBX
 
 			unsigned int finalize(FastCluster* cluster, FastClusterSharedGeometry& sharedGeometry)
 			{
-				Vertex* sharedVertexData = NULL;
+				InstancedMaterialVertex* sharedVertexData = NULL;
 				unsigned short* sharedIndexData = NULL;
 				unsigned int sharedVertexOffset = 0;
 				unsigned int sharedIndexOffset = 0;
@@ -209,7 +209,7 @@ namespace RBX
 				{
 					setupSharedGeometry(sharedGeometry, sharedVertexCount, sharedIndexCount, cluster->isFW());
 
-					sharedVertexData = static_cast<Vertex*>(sharedGeometry.vertexBuffer->lock(GeometryBuffer::Lock_Discard));
+					sharedVertexData = static_cast<InstancedMaterialVertex*>(sharedGeometry.vertexBuffer->lock(GeometryBuffer::Lock_Discard));
 					sharedIndexData = static_cast<unsigned short*>(sharedGeometry.indexBuffer->lock(GeometryBuffer::Lock_Discard));
 				}
 				else
@@ -394,7 +394,7 @@ namespace RBX
 					elements.push_back(VertexLayout::Element(0, 12u, VertexLayout::Format_Float2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture));
 					elements.push_back(VertexLayout::Element(0, 20u, VertexLayout::Format_Float4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Color));
 					elements.push_back(VertexLayout::Element(0, 36u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Normal));
-					elements.push_back(VertexLayout::Element(0, 48u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Tangent, 2));
+					elements.push_back(VertexLayout::Element(0, 48u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Tangent));
 
 					//bool useShaders = visualEngine->getRenderCaps()->getSkinningBoneCount() > 0;
 
@@ -418,7 +418,7 @@ namespace RBX
 				// Create vertex buffer
 				if (!sharedGeometry.vertexBuffer || !canUseBuffer(sharedGeometry.vertexBuffer->getElementCount(), vertexCount))
 				{
-					sharedGeometry.vertexBuffer = visualEngine->getDevice()->createVertexBuffer(sizeof(Vertex), vertexCount, GeometryBuffer::Usage_Static);
+					sharedGeometry.vertexBuffer = visualEngine->getDevice()->createVertexBuffer(sizeof(InstancedMaterialVertex), vertexCount, GeometryBuffer::Usage_Static);
 				}
 
 				// Create index buffer
@@ -449,7 +449,7 @@ namespace RBX
 				}
 			}
 
-			Extents generateBatchGeometry(const MaterialGroup& mg, const Batch& batch, Vertex* vbptr, unsigned short* ibptr, unsigned int vertexOffset, std::vector<unsigned int>& instanceVertexCount, bool isFW)
+			Extents generateBatchGeometry(const MaterialGroup& mg, const Batch& batch, InstancedMaterialVertex* vbptr, unsigned short* ibptr, unsigned int vertexOffset, std::vector<unsigned int>& instanceVertexCount, bool isFW)
 			{
 				RBXPROFILER_SCOPE("Render", "generateBatchGeometry");
 

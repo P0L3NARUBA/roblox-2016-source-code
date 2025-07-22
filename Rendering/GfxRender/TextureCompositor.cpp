@@ -14,6 +14,7 @@
 #include "TextureManager.h"
 #include "ShaderManager.h"
 #include "GlobalShaderData.h"
+#include "Vertex.h"
 
 #include "GfxBase/FileMeshData.h"
 
@@ -200,12 +201,6 @@ namespace RBX
 			}
 
 		private:
-			struct Vertex
-			{
-				Vector3 position;
-				Vector2 uv;
-			};
-
 			VisualEngine* visualEngine;
 
 			shared_ptr<VertexLayout> layout;
@@ -216,16 +211,16 @@ namespace RBX
 			GeometryBatch createMesh(Device* device, FileMeshData* data)
 			{
 				// Create and fill vertex buffer
-				shared_ptr<VertexBuffer> vbuf = device->createVertexBuffer(sizeof(Vertex), data->vnts.size(), GeometryBuffer::Usage_Static);
+				shared_ptr<VertexBuffer> vbuf = device->createVertexBuffer(sizeof(BasicVertex), data->vnts.size(), GeometryBuffer::Usage_Static);
 
-				Vertex* vbptr = static_cast<Vertex*>(vbuf->lock());
+				BasicVertex* vbptr = static_cast<BasicVertex*>(vbuf->lock());
 
 				for (size_t i = 0; i < data->vnts.size(); ++i)
 				{
 					const FileMeshVertexNormalTexture3d& v = data->vnts[i];
 
-					vbptr[i].position = Vector3(v.vx, v.vy, v.vz);
-					vbptr[i].uv = Vector2(v.tu, v.tv);
+					vbptr[i].Position = Vector3(v.vx, v.vy, v.vz);
+					vbptr[i].UV = Vector2(v.tu, v.tv);
 				}
 
 				vbuf->unlock();

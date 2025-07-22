@@ -40,7 +40,7 @@ namespace RBX {
 				DirtyWait,   // full update has been scheduled, but waiting for the sky to finish loading 
 				VeryDirty,   // full update has been scheduled,
 			};
-
+			
 			VisualEngine*			visualEngine;
 			TextureRef				outdoorTexture; // Outdoor cubemap texture
 			TextureRef				indoorTextures; // Indoor cubemap textures
@@ -52,7 +52,7 @@ namespace RBX {
 			double                  envmapLastTimeOfDay;
 			double                  envmapLastRealTime;
 
-			void renderOutdoorFace(DeviceContext* context, int face);
+			void renderOutdoorFace(DeviceContext* context, unsigned int face);
 			virtual void onDeviceRestored();
 			//void clearDirty();
 		};

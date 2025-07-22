@@ -97,7 +97,7 @@ namespace RBX
 
 			G3D::Array<VertexChunk> chunks[CS_NumTypes];
 
-			G3D::Array<Vertex> vertexData;
+			G3D::Array<BasicVertex> vertexData;
 			G3D::Array<VertexChunk*> worldSpaceZDepthLayers[Adorn::maximumZIndex + 1];
 			shared_ptr<VertexBuffer> vertexBuffer;
 			shared_ptr<VertexLayout> vertexLayout;

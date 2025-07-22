@@ -2,7 +2,6 @@
 
 #include "FramebufferD3D11.h"
 #include "DeviceD3D11.h"
-
 #include "HeadersD3D11.h"
 
 LOGGROUP(Graphics)
@@ -148,9 +147,10 @@ namespace RBX
 		static ID3D11ShaderResourceView* createSRV(ID3D11Device* device11, ID3D11Resource* resource, Texture::Type type, Texture::Format format, unsigned int mipLevels, unsigned int arraySize)
 		{
 			D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+			srvDesc.Format = gTextureFormatD3D11[format];
+
 			switch (type) {
 			case Texture::Type_1D: {
-				srvDesc.Format = gTextureFormatD3D11[format];
 				srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE1D;
 				srvDesc.Texture1D.MipLevels = mipLevels;
 				srvDesc.Texture1D.MostDetailedMip = 0;
@@ -158,7 +158,6 @@ namespace RBX
 				break;
 			}
 			case Texture::Type_1D_Array: {
-				srvDesc.Format = gTextureFormatD3D11[format];
 				srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE1DARRAY;
 				srvDesc.Texture1DArray.MipLevels = mipLevels;
 				srvDesc.Texture1DArray.MostDetailedMip = 0;
@@ -168,7 +167,6 @@ namespace RBX
 				break;
 			}
 			case Texture::Type_2D: {
-				srvDesc.Format = gTextureFormatD3D11[format];
 				srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 				srvDesc.Texture2D.MipLevels = mipLevels;
 				srvDesc.Texture2D.MostDetailedMip = 0;
@@ -176,7 +174,6 @@ namespace RBX
 				break;
 			}
 			case Texture::Type_2D_Array: {
-				srvDesc.Format = gTextureFormatD3D11[format];
 				srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
 				srvDesc.Texture2DArray.MipLevels = mipLevels;
 				srvDesc.Texture2DArray.MostDetailedMip = 0;
@@ -186,7 +183,6 @@ namespace RBX
 				break;
 			}
 			case Texture::Type_Cube: {
-				srvDesc.Format = gTextureFormatD3D11[format];
 				srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
 				srvDesc.TextureCube.MipLevels = mipLevels;
 				srvDesc.TextureCube.MostDetailedMip = 0;
@@ -194,7 +190,6 @@ namespace RBX
 				break;
 			}
 			case Texture::Type_Cube_Array: {
-				srvDesc.Format = gTextureFormatD3D11[format];
 				srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBEARRAY;
 				srvDesc.TextureCubeArray.MipLevels = mipLevels;
 				srvDesc.TextureCubeArray.MostDetailedMip = 0;
@@ -204,7 +199,6 @@ namespace RBX
 				break;
 			}
 			case Texture::Type_3D: {
-				srvDesc.Format = gTextureFormatD3D11[format];
 				srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE3D;
 				srvDesc.Texture3D.MipLevels = mipLevels;
 				srvDesc.Texture3D.MostDetailedMip = 0;
@@ -372,8 +366,8 @@ namespace RBX
 
 			if (!result)
 			{
-				if (getType() != Type_2D && getType() != Type_Cube)
-				{
+				// TODO: Add Texture2DArrray and TextureCubeArray support
+				if (getType() != Type_2D && getType() != Type_Cube) {
 					RBXASSERT(!"Renderbuffer for this kind of texture is not yet implemented.");
 					return shared_ptr<Renderbuffer>();
 				}

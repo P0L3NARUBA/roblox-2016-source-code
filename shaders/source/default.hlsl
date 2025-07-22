@@ -51,7 +51,7 @@ MaterialVertexOutput MaterialVS(InstancedMaterialAppData IN) {
 }
 
 /* Pixel Shader */
-void BlankPS(BasicMaterialVertexOutput IN) : SV_TARGET {
+void BlankPS(BasicMaterialVertexOutput IN) {
 }
 
 float4 DefaultPS(BasicMaterialVertexOutput IN) : SV_TARGET {

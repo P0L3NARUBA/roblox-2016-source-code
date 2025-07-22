@@ -66,11 +66,11 @@ namespace RBX
 
 				if (rop.renderable) {
 					unsigned int matrixCount = rop.renderable->getWorldTransforms4x3(matrixData, ARRAYSIZE(matrixData) / 12, &cachedMatrixData);
-					
+
 					if (matrixCount) {
 						static const float lastRow[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 						float matrix[16];
-						
+
 						memcpy(matrix, matrixData, 3 * 4 * 4);
 						memcpy(&matrix[12], lastRow, 16);
 
@@ -125,19 +125,19 @@ namespace RBX
 
 			shared_ptr<VertexLayout> layout = device->createVertexLayout(elements);
 
-			shared_ptr<VertexBuffer> vb = device->createVertexBuffer(36u, 9u, GeometryBuffer::Usage_Static);
-
 			/* 1 - - 2 */
 			/* - - - - */
 			/* - - - - */
 			/* 3 - - 4 */
 
-			Vertex vertices[4] = {
-				Vertex(Vector3(-1.0f, -1.0f, 0.0f), Vector2(0.0f, 0.0f), Color4(1.0f, 1.0f, 1.0f, 1.0f)),
-				Vertex(Vector3( 1.0f, -1.0f, 0.0f), Vector2(1.0f, 0.0f), Color4(1.0f, 1.0f, 1.0f, 1.0f)),
-				Vertex(Vector3(-1.0f,  1.0f, 0.0f), Vector2(0.0f, 1.0f), Color4(1.0f, 1.0f, 1.0f, 1.0f)),
-				Vertex(Vector3( 1.0f,  1.0f, 0.0f), Vector2(1.0f, 1.0f), Color4(1.0f, 1.0f, 1.0f, 1.0f)),
+			BasicVertex vertices[4] = {
+				BasicVertex(Vector3(-1.0f, -1.0f, 0.0f), Vector2(0.0f, 0.0f), Color4().one()),
+				BasicVertex(Vector3( 1.0f, -1.0f, 0.0f), Vector2(1.0f, 0.0f), Color4().one()),
+				BasicVertex(Vector3(-1.0f,  1.0f, 0.0f), Vector2(0.0f, 1.0f), Color4().one()),
+				BasicVertex(Vector3( 1.0f,  1.0f, 0.0f), Vector2(1.0f, 1.0f), Color4().one()),
 			};
+
+			shared_ptr<VertexBuffer> vb = device->createVertexBuffer(sizeof(BasicVertex), ARRAYSIZE(vertices), GeometryBuffer::Usage_Static);
 
 			vb->upload(0, vertices, sizeof(vertices));
 
@@ -252,7 +252,7 @@ namespace RBX
 					if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "BloomUpsampleFS", BlendState::Mode_Additive, width, height)) {
 						globalProcessingData->TextureSize_ViewportScale = Vector4(width, height, filterSize, filterSize * (width / height));
 						context->updateGlobalProcessingData(&globalProcessingData, sizeof(globalProcessingData));
-						
+
 						context->bindTexture(0, data->bloomBuffers[0].get(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 
 						ScreenSpaceEffect::renderFullscreenEnd(context, visualEngine);
@@ -473,7 +473,7 @@ namespace RBX
 					context->bindTexture(0, source, SamplerState(SamplerState::Filter_Point, SamplerState::Address_Clamp));
 
 					if (bloom) {
-						context->bindTexture(2, bloom->getTexture(), SamplerState(SamplerState::Filter_Point, SamplerState::Address_Clamp));
+						context->bindTexture(1, bloom->getTexture(), SamplerState(SamplerState::Filter_Point, SamplerState::Address_Clamp));
 					}
 
 					ScreenSpaceEffect::renderFullscreenEnd(context, visualEngine);
@@ -616,7 +616,7 @@ namespace RBX
 			spatialHashedScene.reset(new SpatialHashedScene());
 			renderQueue.reset(new RenderQueue());
 
-			fullscreenTriangle.reset(new GeometryBatch(createFullscreenTriangle(device), Geometry::Primitive_Triangles, 3, 3));
+			fullscreenTriangle.reset(new GeometryBatch(createFullscreenTriangle(device), Geometry::Primitive_Triangles, 4, 4));
 
 			sky.reset(new Sky(visualEngine));
 			//ssao.reset(new SSAO(visualEngine));
@@ -704,7 +704,7 @@ namespace RBX
 			//sky->prerender();
 
 			// prepare the envmap
-			//envMap->update(context, curTimeOfDay);
+			envMap->update(context, curTimeOfDay);
 
 			// Update SSAO
 			//ssao->update(frm->getSSAOLevel(), viewWidth, viewHeight);
@@ -853,7 +853,7 @@ namespace RBX
 				RBXPROFILER_SCOPE("Render", "Sky");
 				RBXPROFILER_SCOPE("GPU", "Sky");
 
-				sky->render(context, camera);
+				sky->render(context, camera, envMap->getOutdoorTexture().getTexture().get());
 			}
 
 			/* Transparent Geometry */
@@ -1029,7 +1029,7 @@ namespace RBX
 
 					main->mainColor = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16f, width, height, 1, 1, Texture::Usage_Renderbuffer);
 
-					std::vector<shared_ptr<Renderbuffer> > mainTextures;
+					std::vector<shared_ptr<Renderbuffer>> mainTextures;
 					mainTextures.push_back(main->mainColor->getRenderbuffer(0, 0));
 
 					main->mainFB = device->createFramebuffer(mainTextures, mainDepth);

@@ -35,9 +35,9 @@ namespace RBX
 			void update(const G3D::LightingParameters& lighting, int starCount, bool drawCelestialBodies);
 
 			void prerender(); // call as early as possible, before the envmap update
-			void render(DeviceContext* context, const RenderCamera& camera, bool drawStars = true);
+			void render(DeviceContext* context, const RenderCamera& camera, Texture* texture, bool drawStars = true);
 
-			void RenderSkyboxEnvMap(DeviceContext* context, int face);
+			void RenderSkyboxEnvMap(DeviceContext* context, unsigned int face, unsigned int targetSize);
 
 			void setSkyBoxDefault();
 			void setSkyBox(const ContentId& rt, const ContentId& lf, const ContentId& bk, const ContentId& ft, const ContentId& up, const ContentId& dn);
@@ -72,7 +72,7 @@ namespace RBX
 
 			shared_ptr<VertexLayout> layout;
 
-			scoped_ptr<GeometryBatch> quad;
+			scoped_ptr<GeometryBatch> cube;
 
 			TextureRef skyBox[6];
 			TextureRef skyBoxLoading[6];

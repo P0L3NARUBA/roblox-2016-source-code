@@ -12,6 +12,7 @@ float2 ParallaxOcclusionMapping(Texture2DArray<float> Texture, SamplerState Samp
     float CurrentDepthMapValue = 1.0 - Texture.Sample(Sampler, CurrentTexCoords);
     float CurrentLayerDepth = 0.0;
 
+    [loop]
     while (CurrentLayerDepth < CurrentDepthMapValue) {
         CurrentTexCoords.xy -= DeltaTexCoords;
         CurrentDepthMapValue = 1.0 - Texture.Sample(Sampler, CurrentTexCoords);  
