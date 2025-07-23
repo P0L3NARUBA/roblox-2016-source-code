@@ -29,7 +29,8 @@
 #define HATE_VEH_HOOK 0x2000000
 #define HATE_HSCE_HASH_CHANGED 0x1000000
 
-#define HATE_DLL_INJECTION 0x800000
+// Disabled since discord is injecting their own DLLs and causing kicks.
+// #define HATE_DLL_INJECTION 0x800000
 #define HATE_INVALID_ENVIRONMENT 0x400000
 #define HATE_SPEEDHACK 0x200000
 #define HATE_LUA_VM_HOOKED 0x100000

@@ -2035,7 +2035,7 @@ void CheatHandlingServerReplicator::processHashStats(unsigned int hashStats)
             | getSecurityMask(DFString::US30605p2, kGoldReportChar, &configError);
         if (hashStats & mask)
         {
-            players->onRemoteSysStats(remotePlayer->getUserID(), "1920x1200", "hector");
+          players->onRemoteSysStats(remotePlayer->getUserID(), "1920x1200", "hector");
         }
         mask |= getSecurityMask(DFString::US30605p2, kReportChar, &configError);
         if (hashStats & mask)
@@ -2062,7 +2062,7 @@ void CheatHandlingServerReplicator::processGoldHashStats(unsigned int hashStats)
         unsigned int mask = getSecurityMask(DFString::US30605p2, kGoldKickChar, &configError);
         if (hashStats & mask)
         {
-            players->onRemoteSysStats(remotePlayer->getUserID(), "1920x1200", "ghector");
+         players->onRemoteSysStats(remotePlayer->getUserID(), "1920x1200", "ghector");
         }
         mask |= getSecurityMask(DFString::US30605p2, kGoldReportChar, &configError);
         if (hashStats & mask)
@@ -2090,52 +2090,49 @@ void CheatHandlingServerReplicator::processSendStats(unsigned int sendStats, uns
 #if defined(_DEBUG) || defined(_NOOPT)
 		StandardOut::singleton()->printf(MESSAGE_ERROR, "ServerReplicator::processSendStats sendStats=0x%08X, extraStats=0x%08X", sendStats, extraStats);
 #endif
-        doRemoteSysStats(maskedSendStats, HATE_IMPOSSIBLE_ERROR, "impala", "Impossible Error (31)");
-        if (maskedSendStats && ((maskedSendStats & HATE_IMPOSSIBLE_ERROR) == 0))
-        {
-			// Not the perfect fix but should prevent it from false triggering.
-			// FFLags can trigger one of these (robert iirc)
-			// If I figure out more in the future I'll fix it
+		doRemoteSysStats(maskedSendStats, HATE_IMPOSSIBLE_ERROR, "impala", "Impossible Error (31)");
+		if (maskedSendStats && ((maskedSendStats & HATE_IMPOSSIBLE_ERROR) == 0))
+		{
+			doRemoteSysStats(maskedSendStats, HATE_CE_ASM, "robert", "WriteCopy changed (30)");
+			doRemoteSysStats(maskedSendStats, HATE_NEW_AV_CHECK, "moded", "Stealth Edit Revival (29)");
+			doRemoteSysStats(maskedSendStats, HATE_HASH_FUNCTION_CHANGED, "booing", "Tried to modify hash function (28)");
 
-            //doRemoteSysStats(maskedSendStats,  HATE_CE_ASM, "robert", "WriteCopy changed (30)");
-            //doRemoteSysStats(maskedSendStats,  HATE_NEW_AV_CHECK, "moded", "Stealth Edit Revival (29)");
-            doRemoteSysStats(maskedSendStats,  HATE_HASH_FUNCTION_CHANGED, "booing", "Tried to modify hash function (28)");
+			doRemoteSysStats(maskedSendStats, HATE_RETURN_CHECK, "bobby", "Function Return Check Failed (27)");
+			doRemoteSysStats(maskedSendStats, HATE_VERB_SNATCH, "vera", "Tried to get build tools (26)");
+			doDelayedSysStats(maskedSendStats, HATE_VEH_HOOK, "vegah", "VEH used (25)");
+			doRemoteSysStats(maskedSendStats, HATE_HSCE_HASH_CHANGED, "fisher", "HumanoidState::computeEvent changed (24)");
 
-            doRemoteSysStats(maskedSendStats,  HATE_RETURN_CHECK, "bobby", "Function Return Check Failed (27)");
-            doRemoteSysStats(maskedSendStats,  HATE_VERB_SNATCH, "vera", "Tried to get build tools (26)");
-            //doDelayedSysStats(maskedSendStats, HATE_VEH_HOOK, "vegah", "VEH used (25)");
-            doRemoteSysStats(maskedSendStats,  HATE_HSCE_HASH_CHANGED, "fisher", "HumanoidState::computeEvent changed (24)");
+			// Disabled since discord is injecting their own DLLs and causing kicks.
+			// doDelayedSysStats(maskedSendStats, HATE_DLL_INJECTION, "dallas", "DLL Injection (23)");
+			doRemoteSysStats(maskedSendStats, HATE_INVALID_ENVIRONMENT, "tomy", "Sandbox or VM detected (22)");
+			doRemoteSysStats(maskedSendStats, HATE_SPEEDHACK, "usain", "Speedhack. (21)");
+			doRemoteSysStats(maskedSendStats, HATE_LUA_VM_HOOKED, "carol", "Lua vm hooked (20)");
 
-            //doDelayedSysStats(maskedSendStats, HATE_DLL_INJECTION, "dallas", "DLL Injection (23)");
-            doRemoteSysStats(maskedSendStats,  HATE_INVALID_ENVIRONMENT, "tomy", "Sandbox or VM detected (22)");
-            doRemoteSysStats(maskedSendStats,  HATE_SPEEDHACK, "usain", "Speedhack. (21)");
-            doRemoteSysStats(maskedSendStats,  HATE_LUA_VM_HOOKED, "carol", "Lua vm hooked (20)");
+			doRemoteSysStats(maskedSendStats, HATE_OSX_MEMORY_HASH_CHANGED, "steven", "OSX hash changed (19)");
+			doDelayedSysStats(maskedSendStats, HATE_UNHOOKED_VEH, "larry", "Our VEH hook removed (18)");
+			doRemoteSysStats(maskedSendStats, HATE_CHEATENGINE_NEW, "mal", "Any New CE Method (17)");
+			doRemoteSysStats(maskedSendStats, HATE_HSCE_EBX, "ebx", " HumanoidState::computeEvent changed ebx (16)");
 
-            doRemoteSysStats(maskedSendStats,  HATE_OSX_MEMORY_HASH_CHANGED, "steven", "OSX hash changed (19)");
-            doDelayedSysStats(maskedSendStats, HATE_UNHOOKED_VEH, "larry", "Our VEH hook removed (18)");
-            doRemoteSysStats(maskedSendStats,  HATE_CHEATENGINE_NEW, "mal", "Any New CE Method (17)");
-            doRemoteSysStats(maskedSendStats,  HATE_HSCE_EBX, "ebx", " HumanoidState::computeEvent changed ebx (16)");
+			doRemoteSysStats(maskedSendStats, HATE_WEAK_DM_POINTER_BROKEN, "terrance", "Early null weak pointer (15)");
+			doRemoteSysStats(maskedSendStats, HATE_LUA_HASH_CHANGED, "ursula", "Lua hash changed (14)");
+			doRemoteSysStats(maskedSendStats, HATE_DESTROY_ALL, "bruger", "Speculative Call Check (13)");
+			doRemoteSysStats(maskedSendStats, HATE_SEH_CHECK, "seth", "SEH chain into dll (12)");
 
-            doRemoteSysStats(maskedSendStats,  HATE_WEAK_DM_POINTER_BROKEN, "terrance", "Early null weak pointer (15)");
-            doRemoteSysStats(maskedSendStats,  HATE_LUA_HASH_CHANGED, "ursula", "Lua hash changed (14)");
-            doRemoteSysStats(maskedSendStats,  HATE_DESTROY_ALL, "bruger", "Speculative Call Check (13)");
-            doRemoteSysStats(maskedSendStats,  HATE_SEH_CHECK, "seth", "SEH chain into dll (12)");
+			doDelayedSysStats(maskedSendStats, HATE_HOOKED_GTX, "curly", "Hooked API function (11)");
+			doRemoteSysStats(maskedSendStats, HATE_DEBUGGER, "olivia", "Debugger found (10)");
+			doRemoteSysStats(maskedSendStats, HATE_LUA_SCRIPT_HASH_CHANGED, "norman", "Lua script hash changed (9)");
+			doRemoteSysStats(maskedSendStats, HATE_CATCH_EXECUTABLE_ACCESS_VIOLATION, "mallory", "Catch executable acccess violation (8)");
 
-            doDelayedSysStats(maskedSendStats, HATE_HOOKED_GTX, "curly", "Hooked API function (11)");
-            doRemoteSysStats(maskedSendStats,  HATE_DEBUGGER, "olivia", "Debugger found (10)");
-            doRemoteSysStats(maskedSendStats,  HATE_LUA_SCRIPT_HASH_CHANGED, "norman", "Lua script hash changed (9)");
-            doRemoteSysStats(maskedSendStats,  HATE_CATCH_EXECUTABLE_ACCESS_VIOLATION, "mallory", "Catch executable acccess violation (8)");
+			doRemoteSysStats(maskedSendStats, HATE_CONST_CHANGED, "lance", "Const Changed (7)");
+			doRemoteSysStats(maskedSendStats, HATE_INVALID_BYTECODE, "jack", "Invalid bytecode (6)");
+			doRemoteSysStats(maskedSendStats, HATE_MEMORY_HASH_CHANGED, "imogen", "Memory hash changed (5)");
+			doRemoteSysStats(maskedSendStats, HATE_ILLEGAL_SCRIPTS, "ivan", "Illegal scripts (4)");
 
-            doRemoteSysStats(maskedSendStats,  HATE_CONST_CHANGED, "lance", "Const Changed (7)");
-            doRemoteSysStats(maskedSendStats,  HATE_INVALID_BYTECODE, "jack", "Invalid bytecode (6)");
-            //doRemoteSysStats(maskedSendStats,  HATE_MEMORY_HASH_CHANGED, "imogen", "Memory hash changed (5)");
-            doRemoteSysStats(maskedSendStats,  HATE_ILLEGAL_SCRIPTS, "ivan", "Illegal scripts (4)");
-
-            // doRemoteSysStats(maskedSendStats,  HATE_SIGNATURE, "omar", "Bad signature (3)");
-            doDelayedSysStats(maskedSendStats, HATE_NEW_HWBP, "moe", "detected HWBP (2)");
-            doRemoteSysStats(maskedSendStats,  HATE_XXHASH_BROKEN, "lafayette", "xxhash broken (1)");
-            doRemoteSysStats(maskedSendStats,  HATE_CHEATENGINE_OLD, "murdle", "Cheat Engine Stable Methods (0)");
-        }
+			doRemoteSysStats(maskedSendStats, HATE_SIGNATURE, "omar", "Bad signature (3)");
+			doDelayedSysStats(maskedSendStats, HATE_NEW_HWBP, "moe", "detected HWBP (2)");
+			doRemoteSysStats(maskedSendStats, HATE_XXHASH_BROKEN, "lafayette", "xxhash broken (1)");
+			doRemoteSysStats(maskedSendStats, HATE_CHEATENGINE_OLD, "murdle", "Cheat Engine Stable Methods (0)");
+		}
         sendStatsMask |= sendStats;
 
 	}

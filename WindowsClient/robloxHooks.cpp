@@ -39,7 +39,7 @@ HWND WINAPI findWindowHook(LPCTSTR className, LPCSTR windowName)
         && (_strnicmp(windowName, "ROBLOX", 6) == 0)) // with roblox as argument
     {
         RBX::hotpatchUnhook(resumeFindWindow);
-        RBX::Tokens::simpleToken |= HATE_DLL_INJECTION;
+     // RBX::Tokens::simpleToken |= HATE_DLL_INJECTION;
     }
     VMProtectEnd();
     return resumeFindWindow(className,windowName);
