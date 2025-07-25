@@ -16,26 +16,29 @@ namespace RBX {
 	const char* const sAreaLight = "AreaLight";
 
 	/* Base Light */
-	Reflection::PropDescriptor<Light, bool> Light::prop_Enabled("Enabled", category_Appearance, &Light::getEnabled, &Light::setEnabled);
+	Reflection::PropDescriptor<Light, bool>   Light::prop_Enabled("Enabled", category_Appearance, &Light::getEnabled, &Light::setEnabled);
 	Reflection::PropDescriptor<Light, Color3> Light::prop_Color("Color", category_Appearance, &Light::getColor, &Light::setColor);
-	Reflection::PropDescriptor<Light, float> Light::prop_Brightness("Brightness", category_Appearance, &Light::getBrightness, &Light::setBrightness);
-	Reflection::PropDescriptor<Light, float> Light::prop_Range("Range", category_Appearance, &Light::getRange, &Light::setRange);
-	Reflection::PropDescriptor<Light, float> Light::prop_Attenuation("Attenuation", category_Appearance, &Light::getAttenuation, &Light::setAttenuation);
-	Reflection::PropDescriptor<Light, float> Light::prop_DiffuseFactor("Diffuse Factor", category_Appearance, &Light::getDiffuseFactor, &Light::setDiffuseFactor);
-	Reflection::PropDescriptor<Light, float> Light::prop_SpecularFactor("Specular Factor", category_Appearance, &Light::getSpecularFactor, &Light::setSpecularFactor);
+	Reflection::PropDescriptor<Light, float>  Light::prop_Brightness("Brightness", category_Appearance, &Light::getBrightness, &Light::setBrightness);
+	Reflection::PropDescriptor<Light, float>  Light::prop_Range("Range", category_Appearance, &Light::getRange, &Light::setRange);
+	Reflection::PropDescriptor<Light, float>  Light::prop_Attenuation("Attenuation", category_Appearance, &Light::getAttenuation, &Light::setAttenuation);
+	Reflection::PropDescriptor<Light, float>  Light::prop_DiffuseFactor("Diffuse Factor", category_Appearance, &Light::getDiffuseFactor, &Light::setDiffuseFactor);
+	Reflection::PropDescriptor<Light, float>  Light::prop_SpecularFactor("Specular Factor", category_Appearance, &Light::getSpecularFactor, &Light::setSpecularFactor);
 
 	Reflection::PropDescriptor<Light, bool> Light::prop_Shadows("Cast", "Shadows", &Light::getShadows, &Light::setShadows);
 	Reflection::PropDescriptor<Light, bool> Light::prop_Colored("Colored", "Shadows", &Light::getColored, &Light::setColored);
 
 	/* Spot Light */
-	Reflection::PropDescriptor<SpotLight, float> SpotLight::prop_OuterAngle("Outer Angle", category_Appearance, &SpotLight::getOuterAngle, &SpotLight::setOuterAngle);
-	Reflection::PropDescriptor<SpotLight, float> SpotLight::prop_InnerAngle("Inner Angle", category_Appearance, &SpotLight::getInnerAngle, &SpotLight::setInnerAngle);
+	Reflection::PropDescriptor<SpotLight, float>        SpotLight::prop_OuterAngle("Outer Angle", category_Appearance, &SpotLight::getOuterAngle, &SpotLight::setOuterAngle);
+	Reflection::PropDescriptor<SpotLight, float>        SpotLight::prop_InnerAngle("Inner Angle", category_Appearance, &SpotLight::getInnerAngle, &SpotLight::setInnerAngle);
 	Reflection::EnumPropDescriptor<SpotLight, NormalId> SpotLight::prop_Face("Face", category_Appearance, &SpotLight::getFace, &SpotLight::setFace);
 
 	/* Area Light */
-	Reflection::PropDescriptor<AreaLight, float> AreaLight::prop_OuterAngle("Outer Angle", category_Appearance, &AreaLight::getOuterAngle, &AreaLight::setOuterAngle);
-	Reflection::PropDescriptor<AreaLight, float> AreaLight::prop_InnerAngle("Inner Angle", category_Appearance, &AreaLight::getInnerAngle, &AreaLight::setInnerAngle);
+	Reflection::PropDescriptor<AreaLight, float>        AreaLight::prop_OuterAngle("Outer Angle", category_Appearance, &AreaLight::getOuterAngle, &AreaLight::setOuterAngle);
+	Reflection::PropDescriptor<AreaLight, float>        AreaLight::prop_InnerAngle("Inner Angle", category_Appearance, &AreaLight::getInnerAngle, &AreaLight::setInnerAngle);
 	Reflection::EnumPropDescriptor<AreaLight, NormalId> AreaLight::prop_Face("Face", category_Appearance, &AreaLight::getFace, &AreaLight::setFace);
+
+	/* Deprecated */
+	Reflection::PropDescriptor<Light, bool> Light::prop_Shadows_deprecated("Shadows", category_Appearance, &Light::getShadows, &Light::setShadows, Reflection::PropertyDescriptor::Attributes::deprecated(prop_Shadows, Reflection::PropertyDescriptor::LEGACY_SCRIPTING));
 
 	Light::Light(const char* name)
 		: DescribedNonCreatable<Light, Instance, sLight>(name)
@@ -49,32 +52,27 @@ namespace RBX {
 		, shadows(false)
 		, colored(false)
 	{
-		/*static boost::once_flag flag = BOOST_ONCE_INIT;
-		boost::call_once(&sendLightingObjectsStats, flag);*/
 	}
 
 	Light::~Light()
 	{
 	}
 
-	void Light::setEnabled(bool value)
-	{
+	void Light::setEnabled(bool value) {
 		if (enabled != value) {
 			enabled = value;
 			raisePropertyChanged(prop_Enabled);
 		}
 	}
 
-	void Light::setColor(Color3 value)
-	{
+	void Light::setColor(Color3 value) {
 		if (color != value) {
 			color = value;
 			raisePropertyChanged(prop_Color);
 		}
 	}
 
-	void Light::setBrightness(float value)
-	{
+	void Light::setBrightness(float value) {
 		value = std::max(value, 0.f);
 
 		if (brightness != value) {
@@ -83,8 +81,7 @@ namespace RBX {
 		}
 	}
 
-	void Light::setRange(float value)
-	{
+	void Light::setRange(float value) {
 		value = std::min(std::max(value, 0.0f), 512.0f);
 
 		if (range != value) {
@@ -93,8 +90,7 @@ namespace RBX {
 		}
 	}
 
-	void Light::setAttenuation(float value)
-	{
+	void Light::setAttenuation(float value) {
 		value = std::min(std::max(value, 0.0f), 1.0f);
 
 		if (attenuation != value) {
@@ -103,8 +99,7 @@ namespace RBX {
 		}
 	}
 
-	void Light::setDiffuseFactor(float value)
-	{
+	void Light::setDiffuseFactor(float value) {
 		value = std::min(std::max(value, 0.0f), 1.0f);
 
 		if (diffuseFactor != value) {
@@ -113,8 +108,7 @@ namespace RBX {
 		}
 	}
 
-	void Light::setSpecularFactor(float value)
-	{
+	void Light::setSpecularFactor(float value) {
 		value = std::min(std::max(value, 0.0f), 1.0f);
 
 		if (specularFactor != value) {
@@ -123,29 +117,25 @@ namespace RBX {
 		}
 	}
 
-	void Light::setShadows(bool value)
-	{
+	void Light::setShadows(bool value) {
 		if (shadows != value) {
 			shadows = value;
 			raisePropertyChanged(prop_Shadows);
 		}
 	}
 
-	void Light::setColored(bool value)
-	{
+	void Light::setColored(bool value) {
 		if (colored != value) {
 			colored = value;
 			raisePropertyChanged(prop_Colored);
 		}
 	}
 
-	bool Light::askSetParent(const Instance* parent) const
-	{
+	bool Light::askSetParent(const Instance* parent) const {
 		return Instance::isA<PartInstance>(parent);
 	}
 
-	bool Light::askAddChild(const Instance* instance) const
-	{
+	bool Light::askAddChild(const Instance* instance) const {
 		return true;
 	}
 

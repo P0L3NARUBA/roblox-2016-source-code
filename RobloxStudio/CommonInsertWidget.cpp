@@ -481,11 +481,11 @@ void InsertObjectWidget::SetObjectDefaultValues(boost::shared_ptr<RBX::Instance>
 	{
 		spawnLocation->setAnchored(true);
 		spawnLocation->setPartSizeUi(RBX::Vector3(6, 1, 6));
-		spawnLocation->setSurfaceType(RBX::NORM_Y, RBX::NO_SURFACE);
+		spawnLocation->setSurfaceType(RBX::NORM_Y_POS, RBX::NO_SURFACE);
 		// create default decal
 		boost::shared_ptr<RBX::Decal> decal = RBX::Creatable<RBX::Instance>::create<RBX::Decal>();
 		decal->setTexture("rbxasset://Textures/SpawnLocation.png");
-		decal->setFace(RBX::NORM_Y);
+		decal->setFace(RBX::NORM_Y_POS);
 		decal->setParent(spawnLocation);
 	}
 	else if (RBX::ModuleScript* moduleScript = RBX::Instance::fastDynamicCast<RBX::ModuleScript>(pObjectToInsert.get()))

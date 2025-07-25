@@ -246,13 +246,13 @@ namespace RBX
 				Vector2 sphericalDirection;
 				switch (effect->getEmissionDirection())
 				{
-				case RBX::NORM_Y:
+				case RBX::NORM_Y_POS:
 					sphericalDirection = Vector2(M_PI / 2.0f, M_PI / 2.0f);
 					break;
 				case RBX::NORM_Y_NEG:
 					sphericalDirection = Vector2(-M_PI / 2.0f, M_PI / 2.0f);
 					break;
-				case RBX::NORM_X:
+				case RBX::NORM_X_POS:
 					sphericalDirection = Vector2(0.0f, M_PI / 2.0f);
 					break;
 				case RBX::NORM_X_NEG:
@@ -261,7 +261,7 @@ namespace RBX
 				case RBX::NORM_Z_NEG:
 					sphericalDirection = Vector2(0.0f, M_PI);
 					break;
-				case RBX::NORM_Z:
+				case RBX::NORM_Z_POS:
 					sphericalDirection = Vector2(0.0f, 0.0f);
 					break;
 				default:

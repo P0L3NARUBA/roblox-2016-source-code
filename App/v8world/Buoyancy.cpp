@@ -418,7 +418,7 @@ namespace RBX
 			return true;
 
 		Extents extents = floaterPrim->getExtentsLocal();
-		for (int faceId = NORM_X; faceId <= NORM_Z_NEG; ++faceId)
+		for (int faceId = NORM_X_POS; faceId <= NORM_Z_NEG; ++faceId)
 			if (worldPosUnderWater(center + extents.faceCenter(static_cast<NormalId>(faceId))))
 				return true;
 		return false;
@@ -499,7 +499,7 @@ namespace RBX
 
 		// Check center of 6 faces of the bounding box
 		Extents extents = floaterPrim->getExtentsLocal();
-		for (int faceId = NORM_X; faceId <= NORM_Z_NEG; ++faceId) {
+		for (int faceId = NORM_X_POS; faceId <= NORM_Z_NEG; ++faceId) {
 			velocity = cellVelocity( center + extents.faceCenter(static_cast<NormalId>(faceId)) );
 			if (velocity != Vector3::zero())
 				return velocity;

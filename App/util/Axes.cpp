@@ -14,13 +14,13 @@ Axes::Axes(int axisMask)
 Vector3::Axis Axes::normalIdToAxis(NormalId normalId)
 {
 	switch(normalId){
-		case NORM_X:
+		case NORM_X_POS:
 		case NORM_X_NEG:
 			return Vector3::X_AXIS;
-		case NORM_Y:
+		case NORM_Y_POS:
 		case NORM_Y_NEG:
 			return Vector3::Y_AXIS;
-		case NORM_Z:
+		case NORM_Z_POS:
 		case NORM_Z_NEG:
 			return Vector3::Z_AXIS;
 		default:
@@ -32,11 +32,11 @@ NormalId Axes::axisToNormalId(Vector3::Axis axis)
 {
 	switch(axis){
 		case Vector3::X_AXIS:
-			return NORM_X;
+			return NORM_X_POS;
 		case Vector3::Y_AXIS:
-			return NORM_Y;
+			return NORM_Y_POS;
 		case Vector3::Z_AXIS:
-			return NORM_Z;
+			return NORM_Z_POS;
 		default:
 			return NORM_UNDEFINED;
 	}

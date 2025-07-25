@@ -4,6 +4,7 @@ BasicVertexOutput PassThroughVS( BasicAppData IN ) {
     BasicVertexOutput OUT;
 	
     OUT.UV = IN.UV;
+	OUT.UV.y = 1.0 - OUT.UV.y;
 	OUT.Color = IN.Color;
     OUT.Position = float4(IN.Position, 1.0);
 

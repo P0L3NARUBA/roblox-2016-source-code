@@ -10,44 +10,33 @@ namespace RBX {
 	class Sky : public DescribedCreatable<Sky, Instance, sSky>
 	{
 	public:
-		TextureId skyUp;
-		TextureId skyLf;
-		TextureId skyRt;
-		TextureId skyBk;
-		TextureId skyFt;
-		TextureId skyDn;
-		bool drawCelestialBodies;
-	private:
-		int numStars;
-
-		bool useHDRI;
-		TextureId HDRI;
-	public:
 		Sky();
 		int getNumStars() const { return numStars; }
 		void setNumStars(int value);
 
-        void setSkyboxUp(const TextureId&  texId); 
-        void setSkyboxLf(const TextureId&  texId); 
-        void setSkyboxRt(const TextureId&  texId); 
-        void setSkyboxBk(const TextureId&  texId); 
-        void setSkyboxDn(const TextureId&  texId); 
-        void setSkyboxFt(const TextureId&  texId);
-        const TextureId&  getSkyboxUp() const { return skyUp; }
-        const TextureId&  getSkyboxLf() const { return skyLf; }
-        const TextureId&  getSkyboxRt() const { return skyRt; }
-        const TextureId&  getSkyboxBk() const { return skyBk; }
-        const TextureId&  getSkyboxDn() const { return skyDn; }
-        const TextureId&  getSkyboxFt() const { return skyFt; }
+		bool getDrawCelestialBodies() const { return drawCelestialBodies; }
+		void setDrawCelestialBodies(bool value);
+
+        const TextureId& getSkyboxUp() const { return skyUp; }
+        const TextureId& getSkyboxLf() const { return skyLf; }
+        const TextureId& getSkyboxRt() const { return skyRt; }
+        const TextureId& getSkyboxBk() const { return skyBk; }
+        const TextureId& getSkyboxDn() const { return skyDn; }
+        const TextureId& getSkyboxFt() const { return skyFt; }
+		const TextureId& getSkyboxHDRI() const { return skyHDRI; }
+        void setSkyboxUp(const TextureId& texId);
+        void setSkyboxLf(const TextureId& texId);
+        void setSkyboxRt(const TextureId& texId);
+        void setSkyboxBk(const TextureId& texId);
+        void setSkyboxDn(const TextureId& texId);
+		void setSkyboxFt(const TextureId& texId);
+		void setSkyboxHDRI(const TextureId& texId);
 
 		bool getUseHDRI() const { return useHDRI; }
 		void setUseHDRI(bool value);
-
-		const TextureId& getHDRI() const { return HDRI; }
-		void setHDRI(const TextureId& texId);
        
 		static Reflection::PropDescriptor<Sky, int> prop_StarCount;
-		static Reflection::BoundProp<bool> prop_CelestialBodiesShown;
+		static Reflection::PropDescriptor<Sky, bool> prop_CelestialBodiesShown;
 
 		static Reflection::PropDescriptor<Sky, TextureId> prop_Up;
 		static Reflection::PropDescriptor<Sky, TextureId> prop_Left;
@@ -65,5 +54,20 @@ namespace RBX {
 		static Reflection::PropDescriptor<Sky, TextureId> prop_SkyBk;
 		static Reflection::PropDescriptor<Sky, TextureId> prop_SkyFt;
 		static Reflection::PropDescriptor<Sky, TextureId> prop_SkyDn;
+
+	private:
+		bool drawCelestialBodies;
+		int numStars;
+
+		TextureId skyUp;
+		TextureId skyLf;
+		TextureId skyRt;
+		TextureId skyBk;
+		TextureId skyFt;
+		TextureId skyDn;
+
+		TextureId skyHDRI;
+		bool useHDRI;
+
 	};
 }

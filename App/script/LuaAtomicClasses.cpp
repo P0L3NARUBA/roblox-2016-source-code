@@ -2130,7 +2130,7 @@ namespace RBX {
 		{
 			if (strcmp(name, "Top") == 0)
 			{
-				lua_pushboolean(L, object.getNormalId(RBX::NORM_Y));
+				lua_pushboolean(L, object.getNormalId(RBX::NORM_Y_POS));
 				return 1;
 			}
 			if (strcmp(name, "Bottom") == 0)
@@ -2140,7 +2140,7 @@ namespace RBX {
 			}
 			if (strcmp(name, "Back") == 0)
 			{
-				lua_pushboolean(L, object.getNormalId(RBX::NORM_Z));
+				lua_pushboolean(L, object.getNormalId(RBX::NORM_Z_POS));
 				return 1;
 			}
 			if (strcmp(name, "Front") == 0)
@@ -2150,7 +2150,7 @@ namespace RBX {
 			}
 			if (strcmp(name, "Right") == 0)
 			{
-				lua_pushboolean(L, object.getNormalId(RBX::NORM_X));
+				lua_pushboolean(L, object.getNormalId(RBX::NORM_X_POS));
 				return 1;
 			}
 			if (strcmp(name, "Left") == 0)
@@ -2241,7 +2241,7 @@ namespace RBX {
 
 			if (strcmp(name, "Top") == 0)
 			{
-				lua_pushboolean(L, object.getAxisByNormalId(RBX::NORM_Y));
+				lua_pushboolean(L, object.getAxisByNormalId(RBX::NORM_Y_POS));
 				return 1;
 			}
 			if (strcmp(name, "Bottom") == 0)
@@ -2251,7 +2251,7 @@ namespace RBX {
 			}
 			if (strcmp(name, "Back") == 0)
 			{
-				lua_pushboolean(L, object.getAxisByNormalId(RBX::NORM_Z));
+				lua_pushboolean(L, object.getAxisByNormalId(RBX::NORM_Z_POS));
 				return 1;
 			}
 			if (strcmp(name, "Front") == 0)
@@ -2261,7 +2261,7 @@ namespace RBX {
 			}
 			if (strcmp(name, "Right") == 0)
 			{
-				lua_pushboolean(L, object.getAxisByNormalId(RBX::NORM_X));
+				lua_pushboolean(L, object.getAxisByNormalId(RBX::NORM_X_POS));
 				return 1;
 			}
 			if (strcmp(name, "Left") == 0)

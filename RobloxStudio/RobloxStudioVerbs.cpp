@@ -2619,7 +2619,7 @@ void InsertBasicObjectVerb::doIt(RBX::IDataState* dataState)
 		{
 			shared_ptr<RBX::BasicPartInstance> part = RBX::Creatable<RBX::Instance>::create<RBX::BasicPartInstance>();
 			part->setLegacyPartTypeUi(RBX::BasicPartInstance::CYLINDER_LEGACY_PART);
-			part->getPartPrimitive()->setSurfaceType(RBX::NORM_Y, RBX::NO_SURFACE);
+			part->getPartPrimitive()->setSurfaceType(RBX::NORM_Y_POS, RBX::NO_SURFACE);
 			part->getPartPrimitive()->setSurfaceType(RBX::NORM_Y_NEG, RBX::NO_SURFACE);
 			pInstance = part;
 		}
@@ -2627,7 +2627,7 @@ void InsertBasicObjectVerb::doIt(RBX::IDataState* dataState)
 		{
 			shared_ptr<RBX::BasicPartInstance> part = RBX::Creatable<RBX::Instance>::create<RBX::BasicPartInstance>();
 			part->setLegacyPartTypeUi(RBX::BasicPartInstance::BALL_LEGACY_PART);
-			part->getPartPrimitive()->setSurfaceType(RBX::NORM_Y, RBX::NO_SURFACE);
+			part->getPartPrimitive()->setSurfaceType(RBX::NORM_Y_POS, RBX::NO_SURFACE);
 			part->getPartPrimitive()->setSurfaceType(RBX::NORM_Y_NEG, RBX::NO_SURFACE);
 			part->getPartPrimitive()->setSize(G3D::Vector3(4.0f, 4.0f, 4.0f));
 			pInstance = part;

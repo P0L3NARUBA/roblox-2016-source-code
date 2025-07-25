@@ -1118,18 +1118,18 @@ NormalId Math::getClosestObjectNormalId(const G3D::Vector3& worldV, const G3D::M
 
     if (nx > ny) {
         if (nx > nz) {
-			return (dotResult.x > 0) ? NORM_X : NORM_X_NEG;
+			return (dotResult.x > 0) ? NORM_X_POS : NORM_X_NEG;
 		}
 		else {
-			return (dotResult.z > 0) ? NORM_Z : NORM_Z_NEG;
+			return (dotResult.z > 0) ? NORM_Z_POS : NORM_Z_NEG;
         }
     } 
 	else {
         if (ny > nz) {
-			return (dotResult.y > 0) ? NORM_Y : NORM_Y_NEG;
+			return (dotResult.y > 0) ? NORM_Y_POS : NORM_Y_NEG;
         } 
 		else {
-			return (dotResult.z > 0) ? NORM_Z : NORM_Z_NEG;
+			return (dotResult.z > 0) ? NORM_Z_POS : NORM_Z_NEG;
         }
 	}
 }

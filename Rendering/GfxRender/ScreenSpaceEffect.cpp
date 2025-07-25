@@ -15,20 +15,15 @@ namespace RBX
 {
 namespace Graphics
 {
-    ShaderProgram* ScreenSpaceEffect::renderFullscreenBegin(DeviceContext* context, VisualEngine* visualEngine, const char* vsName, const char* fsName, const BlendState& blendState, unsigned fbWidth, unsigned fbHeight)
-    {
+    ShaderProgram* ScreenSpaceEffect::renderFullscreenBegin(DeviceContext* context, VisualEngine* visualEngine, const char* vsName, const char* fsName, const BlendState& blendState, unsigned fbWidth, unsigned fbHeight) {
         ShaderProgram* program = visualEngine->getShaderManager()->getProgram(vsName, fsName).get();
         
-        if (program)
-        {
-            //const float textureSize[] = { fbWidth, fbHeight, 1 / (float)fbWidth, 1 / (float)fbHeight };
-
+        if (program) {
             context->setRasterizerState(RasterizerState::Cull_None);
             context->setBlendState(blendState);
             context->setDepthState(DepthState(DepthState::Function_Always, false));
 
             context->bindProgram(program);
-            //context->setConstant(program->getConstantHandle("TextureSize"), textureSize, 1);
         }
 
         return program;

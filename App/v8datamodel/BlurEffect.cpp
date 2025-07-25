@@ -9,7 +9,7 @@ namespace RBX {
 
 	BlurEffect::BlurEffect()
 		: DescribedCreatable<BlurEffect, PostEffect, sBlurEffect>("BlurEffect")
-		, size(8)
+		, size(5)
 	{
 	}
 

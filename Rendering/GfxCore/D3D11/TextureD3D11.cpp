@@ -57,7 +57,7 @@ namespace RBX
 
 		static ID3D11Resource* createTexture(ID3D11Device* device11, Texture::Type type, Texture::Format format, unsigned int width, unsigned int height, unsigned int depth, unsigned int mipLevels, const TextureUsageD3D11& textureUsage)
 		{
-			ID3D11Resource* result = NULL;
+			ID3D11Resource* result = nullptr;
 
 			DXGI_FORMAT format11 = gTextureFormatD3D11[format];
 
@@ -77,7 +77,7 @@ namespace RBX
 				desc.CPUAccessFlags = textureUsage.cpuAccess;
 				desc.MiscFlags = textureUsage.misc;
 				
-				hr = device11->CreateTexture1D(&desc, NULL, reinterpret_cast<ID3D11Texture1D**>(&result));
+				hr = device11->CreateTexture1D(&desc, nullptr, reinterpret_cast<ID3D11Texture1D**>(&result));
 				break;
 			}
 			case Texture::Type_2D:
@@ -96,7 +96,7 @@ namespace RBX
 				desc.CPUAccessFlags = textureUsage.cpuAccess;
 				desc.MiscFlags = textureUsage.misc | ((type == Texture::Type_Cube) ? D3D11_RESOURCE_MISC_TEXTURECUBE : 0);
 
-				hr = device11->CreateTexture2D(&desc, NULL, reinterpret_cast<ID3D11Texture2D**>(&result));
+				hr = device11->CreateTexture2D(&desc, nullptr, reinterpret_cast<ID3D11Texture2D**>(&result));
 				break;
 			}
 			case Texture::Type_2D_Array:
@@ -115,7 +115,7 @@ namespace RBX
 				desc.CPUAccessFlags = textureUsage.cpuAccess;
 				desc.MiscFlags = textureUsage.misc | ((type == Texture::Type_Cube_Array) ? D3D11_RESOURCE_MISC_TEXTURECUBE : 0);
 				
-				hr = device11->CreateTexture2D(&desc, NULL, reinterpret_cast<ID3D11Texture2D**>(&result));
+				hr = device11->CreateTexture2D(&desc, nullptr, reinterpret_cast<ID3D11Texture2D**>(&result));
 				break;
 			}
 			case Texture::Type_3D: {
@@ -131,7 +131,7 @@ namespace RBX
 				desc.CPUAccessFlags = textureUsage.cpuAccess;
 				desc.MiscFlags = textureUsage.misc;
 
-				hr = device11->CreateTexture3D(&desc, NULL, reinterpret_cast<ID3D11Texture3D**>(&result));
+				hr = device11->CreateTexture3D(&desc, nullptr, reinterpret_cast<ID3D11Texture3D**>(&result));
 				break;
 			}
 			default:
@@ -218,8 +218,8 @@ namespace RBX
 
 		TextureD3D11::TextureD3D11(Device* device, Type type, Format format, unsigned int width, unsigned int height, unsigned int depth, unsigned int mipLevels, Usage usage)
 			: Texture(device, type, format, width, height, depth, mipLevels, usage)
-			, object(NULL)
-			, objectSRV(NULL)
+			, object(nullptr)
+			, objectSRV(nullptr)
 		{
 			ID3D11Device* device11 = static_cast<DeviceD3D11*>(device)->getDevice11();
 

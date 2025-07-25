@@ -76,17 +76,17 @@ FASTFLAGVARIABLE(HumanoidRenderBillboardVR, true)
 namespace RBX {
 
 	// TODO: Create template version of normalIdToMatrix3 to avoid the switch statement
-static CoordinateFrame rightShoulderP(	normalIdToMatrix3(NORM_X), Vector3(1, 0.5, 0));
+static CoordinateFrame rightShoulderP(	normalIdToMatrix3(NORM_X_POS), Vector3(1, 0.5, 0));
 static CoordinateFrame leftShoulderP(	normalIdToMatrix3(NORM_X_NEG), Vector3(-1, 0.5, 0));
-static CoordinateFrame rightHipP(		normalIdToMatrix3(NORM_X), Vector3(1, -1, 0));
+static CoordinateFrame rightHipP(		normalIdToMatrix3(NORM_X_POS), Vector3(1, -1, 0));
 static CoordinateFrame leftHipP(		normalIdToMatrix3(NORM_X_NEG), Vector3(-1, -1, 0));
-static CoordinateFrame neckP(			normalIdToMatrix3(NORM_Y), Vector3(0, 1, 0));
+static CoordinateFrame neckP(			normalIdToMatrix3(NORM_Y_POS), Vector3(0, 1, 0));
 
-static CoordinateFrame rightArmP(		normalIdToMatrix3(NORM_X), Vector3(-0.5, 0.5, 0));
+static CoordinateFrame rightArmP(		normalIdToMatrix3(NORM_X_POS), Vector3(-0.5, 0.5, 0));
 static CoordinateFrame leftArmP(		normalIdToMatrix3(NORM_X_NEG), Vector3(0.5, 0.5, 0));
-static CoordinateFrame rightLegP(		normalIdToMatrix3(NORM_X), Vector3(0.5, 1, 0));
+static CoordinateFrame rightLegP(		normalIdToMatrix3(NORM_X_POS), Vector3(0.5, 1, 0));
 static CoordinateFrame leftLegP(		normalIdToMatrix3(NORM_X_NEG), Vector3(-0.5, 1, 0));
-static CoordinateFrame headP(			normalIdToMatrix3(NORM_Y), Vector3(0, -0.5, 0));
+static CoordinateFrame headP(			normalIdToMatrix3(NORM_Y_POS), Vector3(0, -0.5, 0));
 
 static CoordinateFrame headTorsoOffset( neckP * headP.inverse());			// used to calculate camera target
 
@@ -864,7 +864,7 @@ void Humanoid::buildJoints(RBX::DataModel* dm)
 					rootJoint->setPart0(pRoot);
 					rootJoint->setPart1(torso);
 
-					CoordinateFrame torsoP(			normalIdToMatrix3(NORM_Y), Vector3(0, 0, 0));
+					CoordinateFrame torsoP(			normalIdToMatrix3(NORM_Y_POS), Vector3(0, 0, 0));
 					rootJoint->setC0(torsoP);
 					rootJoint->setC1(torsoP);
 

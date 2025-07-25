@@ -93,7 +93,7 @@ namespace RBX
 
 			caps.supportsTexturePartialMipChain = true;
 
-			caps.maxDrawBuffers = 15;
+			caps.maxDrawBuffers = 8;
 			caps.maxSamples = getMaxSamplesSupported(device11);
 			caps.maxTextureSize = D3D11_REQ_TEXTURE2D_U_OR_V_DIMENSION;
 			caps.maxTextureUnits = 32;
@@ -164,16 +164,13 @@ namespace RBX
 			RBXASSERT(!mainFramebuffer);
 
 			// Get back buffer, create view
-			ID3D11Texture2D* backBuffer = NULL;
+			ID3D11Texture2D* backBuffer = nullptr;
 			HRESULT hr = swapChain11->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
 			RBXASSERT(SUCCEEDED(hr));
 
 			shared_ptr<Renderbuffer> backBufferRB = shared_ptr<Renderbuffer>(new RenderbufferD3D11(this, Texture::Format_RGBA8, width, height, 1, backBuffer));
 			std::vector<shared_ptr<Renderbuffer>> colorBuffers;
 			colorBuffers.push_back(backBufferRB);
-
-			// Create depth stencil
-			//shared_ptr<Renderbuffer> depthStencil = shared_ptr<Renderbuffer>(new RenderbufferD3D11(this, Texture::Format_D32f, width, height, 1));
 
 			// create frame buffer
 			mainFramebuffer.reset(new FramebufferD3D11(this, colorBuffers, nullptr));

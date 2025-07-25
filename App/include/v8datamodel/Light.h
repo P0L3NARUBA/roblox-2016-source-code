@@ -51,6 +51,8 @@ namespace RBX
 		static Reflection::PropDescriptor<Light, bool> prop_Shadows;
 		static Reflection::PropDescriptor<Light, bool> prop_Colored;
 
+		static Reflection::PropDescriptor<Light, bool> prop_Shadows_deprecated;
+
 	protected:
 		bool askSetParent(const Instance* parent) const;
 		bool askAddChild(const Instance* instance) const;

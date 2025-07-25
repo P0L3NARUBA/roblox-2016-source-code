@@ -163,8 +163,12 @@ namespace RBX
 			}*/
 
 			ID3D11VertexShader* vertexShader = nullptr;
-			HRESULT hr = device11->CreateVertexShader(bytecode.data(), bytecode.size(), NULL, &vertexShader);
-			RBXASSERT(SUCCEEDED(hr));
+			HRESULT hr = device11->CreateVertexShader(bytecode.data(), bytecode.size(), nullptr, &vertexShader);
+
+			if (FAILED(hr))
+				throw std::runtime_error("Failed to create vertex shader object.");
+
+			//RBXASSERT(SUCCEEDED(hr));
 
 			return vertexShader;
 		}
@@ -177,8 +181,12 @@ namespace RBX
 			uniformsCBuffer = findCBuffer(cbuffers, "$Globals");*/
 
 			ID3D11PixelShader* pixelShader = nullptr;
-			HRESULT hr = device11->CreatePixelShader(bytecode.data(), bytecode.size(), NULL, &pixelShader);
-			RBXASSERT(SUCCEEDED(hr));
+			HRESULT hr = device11->CreatePixelShader(bytecode.data(), bytecode.size(), nullptr, &pixelShader);
+
+			if (FAILED(hr))
+				throw std::runtime_error("Failed to create pixel shader object.");
+			
+			//RBXASSERT(SUCCEEDED(hr));
 
 			return pixelShader;
 		}
@@ -308,7 +316,7 @@ namespace RBX
 		VertexShaderD3D11::VertexShaderD3D11(Device* device, const std::vector<char>& bytecode)
 			: VertexShader(device)
 			, BaseShaderD3D11(bytecode)
-			, object(NULL)
+			, object(nullptr)
 			, worldMatrixCbuffer(-1)
 			, worldMatrixArray(-1)
 			, worldMatrix(-1)
@@ -444,8 +452,8 @@ namespace RBX
 			TypeD3DReflect D3DReflect = loadShaderReflector();
 			RBXASSERT(D3DReflect);
 
-			ID3D11ShaderReflection* reflectionVS11 = NULL;
-			ID3D11ShaderReflection* reflectionFS11 = NULL;
+			ID3D11ShaderReflection* reflectionVS11 = nullptr;
+			ID3D11ShaderReflection* reflectionFS11 = nullptr;
 			D3DReflect(vs->getByteCode().data(), vs->getByteCode().size(), IID_ID3D11ShaderReflection, (void**)&reflectionVS11);
 			D3DReflect(fs->getByteCode().data(), fs->getByteCode().size(), IID_ID3D11ShaderReflection, (void**)&reflectionFS11);
 
@@ -492,9 +500,9 @@ namespace RBX
 		ShaderProgramD3D11::ShaderProgramD3D11(Device* device, const shared_ptr<VertexShader>& vertexShader, const shared_ptr<FragmentShader>& fragmentShader)
 			: ShaderProgram(device, vertexShader, fragmentShader)
 		{
-#ifdef __RBX_NOT_RELEASE
+//#ifdef __RBX_NOT_RELEASE
 			verifyShaderSignatures(static_cast<VertexShaderD3D11*>(vertexShader.get()), static_cast<FragmentShaderD3D11*>(fragmentShader.get()));
-#endif
+//#endif
 		}
 
 		ShaderProgramD3D11::ShaderProgramD3D11(Device* device, const shared_ptr<ComputeShader>& computeShader)
@@ -672,8 +680,9 @@ namespace RBX
 
 			case DeviceD3D11::shaderProfile_DX11:
 			{
-				std::string shaderType = originalTarget.substr(0, 2);
-				targetOut = shaderType + "_5_1";
+				/*std::string shaderType = originalTarget.substr(0, 2);
+				targetOut = shaderType + "_5_1";*/
+				targetOut = originalTarget; // what's the point of specifying the target profile in shader.json if we're just gonna override it anyways?
 				return;
 			}
 			default:
@@ -686,7 +695,7 @@ namespace RBX
 			TypeD3DCompile D3DCompile = loadShaderCompiler();
 			RBXASSERT(D3DCompile);
 
-			unsigned int flags = D3DCOMPILE_PACK_MATRIX_ROW_MAJOR;
+			unsigned int flags = D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR;
 
 			std::string realTarget;
 			translateShaderProfile(target, device11->getShaderProfile(), realTarget);
@@ -773,6 +782,8 @@ namespace RBX
 			ID3D11DeviceContext* context11 = static_cast<DeviceD3D11*>(device)->getImmediateContext11();
 			VertexShaderD3D11* vs = static_cast<VertexShaderD3D11*>(vertexShader.get());
 			FragmentShaderD3D11* fs = static_cast<FragmentShaderD3D11*>(fragmentShader.get());
+			ID3D11VertexShader* vsObject = vs->getObject();
+			ID3D11PixelShader* fsObject = fs->getObject();
 
 			/*for (auto& cb : vs->getCBuffers())
 			{
@@ -786,8 +797,14 @@ namespace RBX
 				context11->PSSetConstantBuffers(cb->getRegisterId(), 1, &buffer);
 			}*/
 
-			context11->VSSetShader(vs->getObject(), nullptr, 0);
-			context11->PSSetShader(fs->getObject(), nullptr, 0);
+			if (!vsObject)
+				throw std::runtime_error("Vertex shader object is null");
+
+			if (!fsObject)
+				throw std::runtime_error("Fragment shader object is null");
+
+			context11->VSSetShader(vsObject, nullptr, 0);
+			context11->PSSetShader(fsObject, nullptr, 0);
 		}
 	}
 }

@@ -427,7 +427,7 @@ namespace RBX {
 		const Vector3 delta = coordFrame.translation - handlePosInWorld;
 		const float   radius = delta.length();
 		const Vector3 normal = normalIdToVector3(normalId);
-		const int     direction = (normalId == NORM_X || normalId == NORM_X_NEG) ? 1 : 0;
+		const int     direction = (normalId == NORM_X_POS || normalId == NORM_X_NEG) ? 1 : 0;
 		const float   rotationAngle = Math::pif() / boxesPerStud;
 		const Matrix3 rotation_increment = Matrix3::fromAxisAngle(normal, rotationAngle);
 		const float   line_thickness = scaleRelativeToCamera(
@@ -801,7 +801,7 @@ namespace RBX {
 		const Vector3 halfSize = size / 2;
 		const Extents localExtents(-halfSize, halfSize);
 
-		int usedaxes = 0; // for rotation handles, prevent use of NORM_X and NORM_X_NEG at the same time.
+		int usedaxes = 0; // for rotation handles, prevent use of NORM_X_POS and NORM_X_NEG at the same time.
 		for (int posNeg = 0; posNeg < 2; ++posNeg)
 		{
 			for (int xyz = 0; xyz < 3; ++xyz)
@@ -1044,7 +1044,7 @@ namespace RBX {
 		const Color4& color)
 	{
 		CircleRadialNormal trajectory(radius, axis);
-		CircleRadialNormal profile(thicknessradius, NORM_Z);
+		CircleRadialNormal profile(thicknessradius, NORM_Z_POS);
 
 		adorn->setObjectToWorldMatrix(position);
 		adorn->extrusion(&trajectory, 32, &profile, 8, color);

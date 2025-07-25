@@ -25,7 +25,7 @@ Wedge::Wedge()
 	setName("Wedge");
 	Primitive* myPrim = this->getPartPrimitive();
 	myPrim->setGeometryType(Geometry::GEOMETRY_WEDGE);
-	myPrim->setSurfaceType(NORM_Y, NO_SURFACE);
+	myPrim->setSurfaceType(NORM_Y_POS, NO_SURFACE);
 }
 
 Wedge::~Wedge()

@@ -191,21 +191,21 @@ namespace RBX
 		{
 			switch (face)
 			{
-			case NORM_X:
+			case NORM_X_POS:
 			case NORM_X_NEG:
 				axis = Vector4(Math::getWorldNormal(face, rotation), halfSize.x);
 				axisU = Vector4(Math::getColumn(rotation, 1), halfSize.y);
 				axisV = Vector4(Math::getColumn(rotation, 2), halfSize.z);
 				break;
 
-			case NORM_Y:
+			case NORM_Y_POS:
 			case NORM_Y_NEG:
 				axis = Vector4(Math::getWorldNormal(face, rotation), halfSize.y);
 				axisU = Vector4(Math::getColumn(rotation, 2), halfSize.z);
 				axisV = Vector4(Math::getColumn(rotation, 0), halfSize.x);
 				break;
 
-			case NORM_Z:
+			case NORM_Z_POS:
 			case NORM_Z_NEG:
 				axis = Vector4(Math::getWorldNormal(face, rotation), halfSize.z);
 				axisU = Vector4(Math::getColumn(rotation, 0), halfSize.x);

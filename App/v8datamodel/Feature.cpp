@@ -66,7 +66,7 @@ static const EnumPropDescriptor<Feature, Feature::InOut> prop_InOut("InOut", cat
 
 
 Feature::Feature()
-: faceId(NORM_X)
+: faceId(NORM_X_POS)
 , topBottom(CENTER_TB)
 , leftRight(CENTER_LR)
 , inOut(CENTER_IO)

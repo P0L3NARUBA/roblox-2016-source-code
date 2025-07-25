@@ -125,13 +125,14 @@ See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
       - [ ] Dirt mask
    - [ ] Volumetric Lighting
       - [ ] Texture mask
+   - [ ] Posterize
    - [ ] Chromatic Abberation
    - [ ] Film Grain
    - [ ] Edge Detection
 - [ ] Clouds
 - [ ] Modern skybox system
-   - [ ] HDRI support
-   - [ ] Highlight reconstruction
+   - [x] HDRI support
+   - [x] Highlight reconstruction
    - [ ] Decoupled celestial bodies
    - [ ] Custom time-based color shifting
    - [ ] Rotation

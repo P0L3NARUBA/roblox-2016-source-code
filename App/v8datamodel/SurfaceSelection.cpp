@@ -16,7 +16,7 @@ REFLECTION_END();
 
 SurfaceSelection::SurfaceSelection()
 	:DescribedCreatable<SurfaceSelection, PartAdornment, sSurfaceSelection>("SurfaceSelection")
-	,surfaceId(NORM_X)
+	,surfaceId(NORM_X_POS)
 {}
 
 void SurfaceSelection::setSurface(NormalId value)

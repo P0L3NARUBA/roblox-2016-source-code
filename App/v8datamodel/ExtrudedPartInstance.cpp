@@ -28,11 +28,11 @@ ExtrudedPartInstance::ExtrudedPartInstance()
 {
 	setName("Truss");
 	Primitive* myPrim = this->getPartPrimitive();		// this access function is used to maintain const correctness between DataModel and World
-	myPrim->setSurfaceType(NORM_X, UNIVERSAL);
+	myPrim->setSurfaceType(NORM_X_POS, UNIVERSAL);
 	myPrim->setSurfaceType(NORM_X_NEG, UNIVERSAL);
-	myPrim->setSurfaceType(NORM_Y, UNIVERSAL);
+	myPrim->setSurfaceType(NORM_Y_POS, UNIVERSAL);
 	myPrim->setSurfaceType(NORM_Y_NEG, UNIVERSAL);
-	myPrim->setSurfaceType(NORM_Z, UNIVERSAL);
+	myPrim->setSurfaceType(NORM_Z_POS, UNIVERSAL);
 	myPrim->setSurfaceType(NORM_Z_NEG, UNIVERSAL);
 }
 

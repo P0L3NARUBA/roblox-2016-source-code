@@ -517,8 +517,9 @@ public:
 		case ShaderCompilerD3D::shaderProfile_DX_11_DURANGO:
 		case ShaderCompilerD3D::shaderProfile_DX_11:
 		{
-			std::string shaderType = originalTarget.substr(0, 2);
-			targetOut = shaderType + "_5_1";
+			/*std::string shaderType = originalTarget.substr(0, 2);
+			targetOut = shaderType + "_5_0";*/
+			targetOut = originalTarget;
 			return;
 		}
 		default:
@@ -529,7 +530,7 @@ public:
 
 	virtual std::vector<char> compile(const std::string& source, const std::string& target, const std::string& entry, bool optimize)
 	{
-		unsigned int flags = D3DCOMPILE_PACK_MATRIX_ROW_MAJOR;
+		unsigned int flags = D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR;
 
 		if (!optimize)
 			flags |= D3DCOMPILE_SKIP_OPTIMIZATION;

@@ -536,7 +536,7 @@ namespace RBX
 			readData(in, &header, sizeof(header));
 
 			DDS_HEADER_DXT10 header_dxt10;
-			readData(in, &header_dxt10, sizeof(header_dxt10));
+			//readData(in, &header_dxt10, sizeof(header_dxt10));
 
 			if (magic != DDS_MAGIC)
 				throw RBX::runtime_error("Invalid DDS header");

@@ -273,11 +273,11 @@ int Cylinder::getNumVertsInSurface(const size_t surfaceId) const
 
 bool Cylinder::vertOverlapsFace(const Vector3& pointInBody, const size_t surfaceId) const
 {
-    if (surfaceId == NORM_X || surfaceId == NORM_X_NEG)
+    if (surfaceId == NORM_X_POS || surfaceId == NORM_X_NEG)
         return pointInBody.yz().squaredLength() <= realWidth * realWidth * 0.25f;
-    else if (surfaceId == NORM_Y || surfaceId == NORM_Y_NEG)
+    else if (surfaceId == NORM_Y_POS || surfaceId == NORM_Y_NEG)
         return fabsf(pointInBody.x) <= realLength * 0.5f && fabsf(pointInBody.z) <= realWidth * 0.5f;
-    else if (surfaceId == NORM_Z || surfaceId == NORM_Z_NEG)
+    else if (surfaceId == NORM_Z_POS || surfaceId == NORM_Z_NEG)
         return fabsf(pointInBody.x) <= realLength * 0.5f && fabsf(pointInBody.y) <= realWidth * 0.5f;
     else
         return false;
@@ -288,9 +288,9 @@ CoordinateFrame Cylinder::getSurfaceCoordInBody(const size_t surfaceId) const
     float sign = (surfaceId >= NORM_X_NEG) ? -1 : 1;
 
     Vector3 faceCentroid;
-    faceCentroid.x = (surfaceId == NORM_X || surfaceId == NORM_X_NEG) ? sign * realLength * 0.5f : 0;
-    faceCentroid.y = (surfaceId == NORM_Y || surfaceId == NORM_Y_NEG) ? sign * realWidth * 0.5f : 0;
-    faceCentroid.z = (surfaceId == NORM_Z || surfaceId == NORM_Z_NEG) ? sign * realWidth * 0.5f : 0;
+    faceCentroid.x = (surfaceId == NORM_X_POS || surfaceId == NORM_X_NEG) ? sign * realLength * 0.5f : 0;
+    faceCentroid.y = (surfaceId == NORM_Y_POS || surfaceId == NORM_Y_NEG) ? sign * realWidth * 0.5f : 0;
+    faceCentroid.z = (surfaceId == NORM_Z_POS || surfaceId == NORM_Z_NEG) ? sign * realWidth * 0.5f : 0;
 
     Matrix3 rotation = Math::getWellFormedRotForZVector(getSurfaceNormalInBody(surfaceId));
 

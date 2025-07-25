@@ -24,7 +24,7 @@ Surface::Surface(
 {
 }
 
-Surface::Surface() : partInstance(NULL), surfId(NORM_X)
+Surface::Surface() : partInstance(NULL), surfId(NORM_X_POS)
 {
 
 }
@@ -363,10 +363,10 @@ bool StringConverter<LegacyController::InputType>::convertToValue(const std::str
 }
 
 
-static SurfaceEnumPropDescriptor<NORM_Y, SurfaceType> desc_TopType("TopSurface", "Surface", &PartInstance::getSurfaceType, &PartInstance::setSurfaceType);
-static SurfaceEnumPropDescriptor<NORM_Y, LegacyController::InputType> desc_TopSurfaceInput("TopSurfaceInput", "Surface Inputs", &PartInstance::getInput, &PartInstance::setSurfaceInput);
-static SurfacePropDescriptor<NORM_Y, float> desc_TopParamA("TopParamA", "Surface Inputs", &PartInstance::getParamA, &PartInstance::setParamA);
-static SurfacePropDescriptor<NORM_Y, float> desc_TopParamB("TopParamB", "Surface Inputs", &PartInstance::getParamB, &PartInstance::setParamB);
+static SurfaceEnumPropDescriptor<NORM_Y_POS, SurfaceType> desc_TopType("TopSurface", "Surface", &PartInstance::getSurfaceType, &PartInstance::setSurfaceType);
+static SurfaceEnumPropDescriptor<NORM_Y_POS, LegacyController::InputType> desc_TopSurfaceInput("TopSurfaceInput", "Surface Inputs", &PartInstance::getInput, &PartInstance::setSurfaceInput);
+static SurfacePropDescriptor<NORM_Y_POS, float> desc_TopParamA("TopParamA", "Surface Inputs", &PartInstance::getParamA, &PartInstance::setParamA);
+static SurfacePropDescriptor<NORM_Y_POS, float> desc_TopParamB("TopParamB", "Surface Inputs", &PartInstance::getParamB, &PartInstance::setParamB);
 
 static SurfaceEnumPropDescriptor<NORM_Y_NEG, SurfaceType> desc_BottomType("BottomSurface", "Surface", &PartInstance::getSurfaceType, &PartInstance::setSurfaceType);
 static SurfaceEnumPropDescriptor<NORM_Y_NEG, LegacyController::InputType> desc_BottomSurfaceInput("BottomSurfaceInput", "Surface Inputs", &PartInstance::getInput, &PartInstance::setSurfaceInput);
@@ -378,20 +378,20 @@ static SurfaceEnumPropDescriptor<NORM_X_NEG, LegacyController::InputType> desc_L
 static SurfacePropDescriptor<NORM_X_NEG, float> desc_LeftParamA("LeftParamA", "Surface Inputs", &PartInstance::getParamA, &PartInstance::setParamA);
 static SurfacePropDescriptor<NORM_X_NEG, float> desc_LeftParamB("LeftParamB", "Surface Inputs", &PartInstance::getParamB, &PartInstance::setParamB);
 
-static SurfaceEnumPropDescriptor<NORM_X, SurfaceType> desc_RightType("RightSurface", "Surface", &PartInstance::getSurfaceType, &PartInstance::setSurfaceType);
-static SurfaceEnumPropDescriptor<NORM_X, LegacyController::InputType> desc_RightSurfaceInput("RightSurfaceInput", "Surface Inputs", &PartInstance::getInput, &PartInstance::setSurfaceInput);
-static SurfacePropDescriptor<NORM_X, float> desc_RightParamA("RightParamA", "Surface Inputs", &PartInstance::getParamA, &PartInstance::setParamA);
-static SurfacePropDescriptor<NORM_X, float> desc_RightParamB("RightParamB", "Surface Inputs", &PartInstance::getParamB, &PartInstance::setParamB);
+static SurfaceEnumPropDescriptor<NORM_X_POS, SurfaceType> desc_RightType("RightSurface", "Surface", &PartInstance::getSurfaceType, &PartInstance::setSurfaceType);
+static SurfaceEnumPropDescriptor<NORM_X_POS, LegacyController::InputType> desc_RightSurfaceInput("RightSurfaceInput", "Surface Inputs", &PartInstance::getInput, &PartInstance::setSurfaceInput);
+static SurfacePropDescriptor<NORM_X_POS, float> desc_RightParamA("RightParamA", "Surface Inputs", &PartInstance::getParamA, &PartInstance::setParamA);
+static SurfacePropDescriptor<NORM_X_POS, float> desc_RightParamB("RightParamB", "Surface Inputs", &PartInstance::getParamB, &PartInstance::setParamB);
 
 static SurfaceEnumPropDescriptor<NORM_Z_NEG, SurfaceType> desc_FrontType("FrontSurface", "Surface", &PartInstance::getSurfaceType, &PartInstance::setSurfaceType);
 static SurfaceEnumPropDescriptor<NORM_Z_NEG, LegacyController::InputType> desc_FrontSurfaceInput("FrontSurfaceInput", "Surface Inputs", &PartInstance::getInput, &PartInstance::setSurfaceInput);
 static SurfacePropDescriptor<NORM_Z_NEG, float> desc_FrontParamA("FrontParamA", "Surface Inputs", &PartInstance::getParamA, &PartInstance::setParamA);
 static SurfacePropDescriptor<NORM_Z_NEG, float> desc_FrontParamB("FrontParamB", "Surface Inputs", &PartInstance::getParamB, &PartInstance::setParamB);
 
-static SurfaceEnumPropDescriptor<NORM_Z, SurfaceType> desc_BackType("BackSurface", "Surface", &PartInstance::getSurfaceType, &PartInstance::setSurfaceType);
-static SurfaceEnumPropDescriptor<NORM_Z, LegacyController::InputType> desc_BackSurfaceInput("BackSurfaceInput", "Surface Inputs", &PartInstance::getInput, &PartInstance::setSurfaceInput);
-static SurfacePropDescriptor<NORM_Z, float> desc_BackParamA("BackParamA", "Surface Inputs", &PartInstance::getParamA, &PartInstance::setParamA);
-static SurfacePropDescriptor<NORM_Z, float> desc_BackParamB("BackParamB", "Surface Inputs", &PartInstance::getParamB, &PartInstance::setParamB);
+static SurfaceEnumPropDescriptor<NORM_Z_POS, SurfaceType> desc_BackType("BackSurface", "Surface", &PartInstance::getSurfaceType, &PartInstance::setSurfaceType);
+static SurfaceEnumPropDescriptor<NORM_Z_POS, LegacyController::InputType> desc_BackSurfaceInput("BackSurfaceInput", "Surface Inputs", &PartInstance::getInput, &PartInstance::setSurfaceInput);
+static SurfacePropDescriptor<NORM_Z_POS, float> desc_BackParamA("BackParamA", "Surface Inputs", &PartInstance::getParamA, &PartInstance::setParamA);
+static SurfacePropDescriptor<NORM_Z_POS, float> desc_BackParamB("BackParamB", "Surface Inputs", &PartInstance::getParamB, &PartInstance::setParamB);
 
 RBX_REGISTER_TYPE(RBX::Surface);
 
@@ -426,15 +426,15 @@ const Reflection::PropertyDescriptor& Surface::getSurfaceTypeStatic(NormalId fac
 	{
 	default:
 		RBXASSERT(false);
-	case NORM_Y:
+	case NORM_Y_POS:
 		return desc_TopType;
 	case NORM_Y_NEG:
 		return desc_BottomType;
-	case NORM_Z:
+	case NORM_Z_POS:
 		return desc_BackType;
 	case NORM_Z_NEG:
 		return desc_FrontType;
-	case NORM_X:
+	case NORM_X_POS:
 		return desc_RightType;
 	case NORM_X_NEG:
 		return desc_LeftType;
@@ -447,15 +447,15 @@ const Reflection::PropertyDescriptor& Surface::getSurfaceInputStatic(NormalId fa
 	{
 	default:
 		RBXASSERT(false);
-	case NORM_Y:
+	case NORM_Y_POS:
 		return desc_TopSurfaceInput;
 	case NORM_Y_NEG:
 		return desc_BottomSurfaceInput;
-	case NORM_Z:
+	case NORM_Z_POS:
 		return desc_BackSurfaceInput;
 	case NORM_Z_NEG:
 		return desc_FrontSurfaceInput;
-	case NORM_X:
+	case NORM_X_POS:
 		return desc_RightSurfaceInput;
 	case NORM_X_NEG:
 		return desc_LeftSurfaceInput;
@@ -468,15 +468,15 @@ const Reflection::PropertyDescriptor& Surface::getParamAStatic(NormalId face)
 	{
 	default:
 		RBXASSERT(false);
-	case NORM_Y:
+	case NORM_Y_POS:
 		return desc_TopParamA;
 	case NORM_Y_NEG:
 		return desc_BottomParamA;
-	case NORM_Z:
+	case NORM_Z_POS:
 		return desc_BackParamA;
 	case NORM_Z_NEG:
 		return desc_FrontParamA;
-	case NORM_X:
+	case NORM_X_POS:
 		return desc_RightParamA;
 	case NORM_X_NEG:
 		return desc_LeftParamA;
@@ -489,15 +489,15 @@ const Reflection::PropertyDescriptor& Surface::getParamBStatic(NormalId face)
 	{
 	default:
 		RBXASSERT(false);
-	case NORM_Y:
+	case NORM_Y_POS:
 		return desc_TopParamB;
 	case NORM_Y_NEG:
 		return desc_BottomParamB;
-	case NORM_Z:
+	case NORM_Z_POS:
 		return desc_BackParamB;
 	case NORM_Z_NEG:
 		return desc_FrontParamB;
-	case NORM_X:
+	case NORM_X_POS:
 		return desc_RightParamB;
 	case NORM_X_NEG:
 		return desc_LeftParamB;

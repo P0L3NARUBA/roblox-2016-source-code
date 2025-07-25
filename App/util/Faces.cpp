@@ -29,15 +29,15 @@ std::string StringConverter<Faces>::convertToString(const Faces& value)
 {
 	std::string seperator = "";
 	std::string result = "";
-	for(NormalId normal = NORM_X;  normal != NORM_UNDEFINED; normal = (NormalId)(normal+1)){
+	for(NormalId normal = NORM_X_POS;  normal != NORM_UNDEFINED; normal = (NormalId)(normal+1)){
 		if(value.getNormalId(normal)){
 			result += seperator;
 			switch(normal){
-				case NORM_Y:		result += "Top";	break;
+				case NORM_Y_POS:		result += "Top";	break;
 				case NORM_Y_NEG:	result += "Bottom";	break;
-				case NORM_Z:		result += "Back";	break;
+				case NORM_Z_POS:		result += "Back";	break;
 				case NORM_Z_NEG:	result += "Front";	break;
-				case NORM_X:		result += "Right";	break;
+				case NORM_X_POS:		result += "Right";	break;
 				case NORM_X_NEG:	result += "Left";	break;
                 default: break;
 			}

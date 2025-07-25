@@ -442,15 +442,15 @@ namespace RBX
 			doScreenshot = true;
 		}
 
-		bool RenderView::getAndClearDoScreenshot()
-		{
+		bool RenderView::getAndClearDoScreenshot() {
 			bool result = doScreenshot;
+
 			doScreenshot = false;
+
 			return result;
 		}
 
-		void RenderView::updateFog()
-		{
+		void RenderView::updateFog() {
 			//static const float TAU = 0.04f; // dampening factor as in:   exp( -x * TAU )
 
 			RBX::Lighting* lighting = ServiceProvider::create<RBX::Lighting>(dataModel.get());
@@ -496,30 +496,19 @@ namespace RBX
 			}*/
 		}
 
-		void RenderView::updateLighting(Lighting* lighting)
-		{
+		void RenderView::updateLighting(Lighting* lighting) {
 			SceneManager* smgr = visualEngine->getSceneManager();
 
-			if (!lightingValid)
-			{
-				// Sky
-				if (FFlag::RenderThumbModelReflectionsFix || !lighting->isSkySuppressed()) // prepare the sky regardless of whether it's suppressed, because it's needed for the envmaps
-				{
-					Sky* sky = smgr->getSky();
+			if (!lightingValid) {
+				Sky* sky = smgr->getSky();
 
-					if (lighting->sky)
-					{
-						sky->setSkyBox(lighting->sky->skyRt, lighting->sky->skyLf, lighting->sky->skyBk, lighting->sky->skyFt, lighting->sky->skyUp, lighting->sky->skyDn);
-						sky->update(lighting->getSkyParameters(), lighting->sky->getNumStars(), lighting->sky->drawCelestialBodies);
-					}
-					else
-					{
-						sky->setSkyBoxDefault();
-						sky->update(lighting->getSkyParameters(), 3000, true);
-					}
-
-					// Update clear color for time-of-day
-					//lighting->setClearColor(lighting->getSkyParameters().skyAmbient);
+				if (lighting->sky) {
+					sky->setSkyBox(lighting->sky->getSkyboxRt(), lighting->sky->getSkyboxLf(), lighting->sky->getSkyboxBk(), lighting->sky->getSkyboxFt(), lighting->sky->getSkyboxUp(), lighting->sky->getSkyboxDn(), lighting->sky->getSkyboxHDRI());
+					sky->update(lighting->getSkyParameters(), lighting->sky->getNumStars(), lighting->sky->getDrawCelestialBodies(), lighting->sky->getUseHDRI());
+				}
+				else {
+					sky->setSkyBoxDefault();
+					sky->update(lighting->getSkyParameters(), 3000, true, true);
 				}
 
 				// Lighting
@@ -527,30 +516,23 @@ namespace RBX
 
 				lightingValid = true;
 			}
-
-			smgr->setSkyEnabled(!lighting->isSkySuppressed());
-			smgr->setClearColor(Color4(lighting->getClearColor(), lighting->getClearAlpha()));
 		}
 
-		static void reportVRUsage(int placeId)
-		{
+		static void reportVRUsage(int placeId) {
 			std::string placeIdStr = format("%d", placeId);
 
 			RobloxGoogleAnalytics::trackEventWithoutThrottling(GA_CATEGORY_GAME, "VR", placeIdStr.c_str());
 		}
 
-		void RenderView::updateVR()
-		{
+		void RenderView::updateVR() {
 			if (!FFlag::RenderVR)
 				return;
 
 			RBXPROFILER_SCOPE("Render", "updateVR");
 
-			if (DeviceVR* vr = visualEngine->getDevice()->getVR())
-			{
+			if (DeviceVR* vr = visualEngine->getDevice()->getVR()) {
 				// GA
-				if (dataModel && dataModel->getPlaceID())
-				{
+				if (dataModel && dataModel->getPlaceID()) {
 					static boost::once_flag flag = BOOST_ONCE_INIT;
 					boost::call_once(flag, boost::bind(&reportVRUsage, dataModel->getPlaceID()));
 				}
@@ -567,14 +549,12 @@ namespace RBX
 				DeviceVR::State vrState = vr->getState();
 
 				// Setup interaction between DataModel and game
-				if (UserInputService* uis = ServiceProvider::find<UserInputService>(dataModel.get()))
-				{
+				if (UserInputService* uis = ServiceProvider::find<UserInputService>(dataModel.get())) {
 					RBXPROFILER_SCOPE("Render", "DM");
 
 					uis->setVREnabled(true);
 
-					if (vrState.headPose.valid)
-					{
+					if (vrState.headPose.valid) {
 						CoordinateFrame cframe = computeVRFrame(vrState.headPose);
 
 						// Legacy, to be removed
@@ -583,15 +563,13 @@ namespace RBX
 						uis->setUserCFrame(UserInputService::USERCFRAME_HEAD, cframe);
 					}
 
-					if (vrState.handPose[0].valid)
-					{
+					if (vrState.handPose[0].valid) {
 						CoordinateFrame cframe = computeVRFrame(vrState.handPose[0]);
 
 						uis->setUserCFrame(UserInputService::USERCFRAME_LEFTHAND, cframe);
 					}
 
-					if (vrState.handPose[1].valid)
-					{
+					if (vrState.handPose[1].valid) {
 						CoordinateFrame cframe = computeVRFrame(vrState.handPose[1]);
 
 						uis->setUserCFrame(UserInputService::USERCFRAME_RIGHTHAND, cframe);
@@ -601,8 +579,7 @@ namespace RBX
 						vr->recenter();
 				}
 			}
-			else
-			{
+			else {
 				// Reenable throttling if necessary
 				TaskScheduler::singleton().DataModel30fpsThrottle = DataModel::throttleAt30Fps;
 
@@ -610,29 +587,25 @@ namespace RBX
 				visualEngine->getFrameRateManager()->setAggressivePerformance(false);
 
 				// Clean up VR state
-				if (UserInputService* uis = ServiceProvider::find<UserInputService>(dataModel.get()))
-				{
+				if (UserInputService* uis = ServiceProvider::find<UserInputService>(dataModel.get())) {
 					uis->setVREnabled(false);
 					uis->setUserHeadCFrame(CoordinateFrame());
 				}
 			}
 		}
 
-		void RenderView::enableVR(bool enabled)
-		{
+		void RenderView::enableVR(bool enabled) {
 			if (!FFlag::RenderVR)
 				return;
 
 			visualEngine->getDevice()->setVR(enabled);
 		}
 
-		const char* RenderView::getVRDeviceName()
-		{
+		const char* RenderView::getVRDeviceName() {
 			return device->getVR() ? "VR" : 0;
 		}
 
-		double RenderView::getMetricValue(const std::string& name)
-		{
+		double RenderView::getMetricValue(const std::string& name) {
 			FrameRateManager* frm = visualEngine->getFrameRateManager();
 
 			if (name == "Delta Between Renders")
@@ -655,10 +628,8 @@ namespace RBX
 			return -1.0;
 		}
 
-		std::string RenderView::getRenderStatsMetric(const std::string& name)
-		{
-			if (name.compare(0, 15, "RenderStatsPass") == 0)
-			{
+		std::string RenderView::getRenderStatsMetric(const std::string& name) {
+			if (name.compare(0, 15, "RenderStatsPass") == 0) {
 				RenderPassStats* stats =
 					(name == "RenderStatsPassScene") ? &visualEngine->getRenderStats()->passScene :
 					(name == "RenderStatsPassShadow") ? &visualEngine->getRenderStats()->passShadow :
@@ -673,13 +644,11 @@ namespace RBX
 					stats->batches, stats->faces, stats->vertices, stats->passChanges, stats->stateChanges);
 			}
 
-			if (name == "RenderStatsResolution")
-			{
+			if (name == "RenderStatsResolution") {
 				return RBX::format("%u x %u", visualEngine->getViewWidth(), visualEngine->getViewHeight());
 			}
 
-			if (name == "RenderStatsTimeTotal")
-			{
+			if (name == "RenderStatsTimeTotal") {
 				FrameRateManager* frm = visualEngine->getFrameRateManager();
 				double totalWork = frm->GetRenderTimeAverage();
 
@@ -695,8 +664,7 @@ namespace RBX
 					artificialDelay);
 			}
 
-			if (name == "RenderStatsDelta")
-			{
+			if (name == "RenderStatsDelta") {
 				FrameRateManager* frm = visualEngine->getFrameRateManager();
 				double totalWork = frm->GetRenderTimeAverage();
 
@@ -714,8 +682,7 @@ namespace RBX
 					totalWork > frameTime ? 0.0 : frameTime - totalWork);
 			}
 
-			if (name == "RenderStatsGeometryGen")
-			{
+			if (name == "RenderStatsGeometryGen") {
 				RBX::RenderStats* stats = visualEngine->getRenderStats();
 				SceneUpdater* su = visualEngine->getSceneUpdater();
 
@@ -725,8 +692,7 @@ namespace RBX
 					int(su->getUpdateQueueSize()));
 			}
 
-			if (name == "RenderStatsClusters")
-			{
+			if (name == "RenderStatsClusters") {
 				RBX::RenderStats* stats = visualEngine->getRenderStats();
 
 				return RBX::format("fw %dc %dp; dyn %dc %dp; hum %dc %dp",
@@ -735,37 +701,32 @@ namespace RBX
 					stats->clusterFastHumanoid.clusters, stats->clusterFastHumanoid.parts);
 			}
 
-			if (name == "RenderStatsFRMConfig")
-			{
+			if (name == "RenderStatsFRMConfig") {
 				FrameRateManager* frm = visualEngine->getFrameRateManager();
 
 				return RBX::format("level %d (auto %s)",
 					frm->GetQualityLevel(), visualEngine->getSettings()->getQualityLevel() == CRenderSettings::QualityAuto ? "on" : "off");
 			}
 
-			if (name == "RenderStatsFRMBlocks")
-			{
+			if (name == "RenderStatsFRMBlocks") {
 				FrameRateManager* frm = visualEngine->getFrameRateManager();
 
 				return RBX::format("%d (target %d)", (int)frm->GetVisibleBlockCounter(), (int)frm->GetVisibleBlockTarget());
 			}
 
-			if (name == "RenderStatsFRMDistance")
-			{
+			if (name == "RenderStatsFRMDistance") {
 				FrameRateManager* frm = visualEngine->getFrameRateManager();
 
 				return RBX::format("render %d view %d (...%d)", (int)sqrt(frm->GetRenderCullSqDistance()), (int)sqrt(frm->GetViewCullSqDistance()), frm->GetRecomputeDistanceDelay());
 			}
 
-			if (name == "RenderStatsFRMAdjust")
-			{
+			if (name == "RenderStatsFRMAdjust") {
 				FrameRateManager* frm = visualEngine->getFrameRateManager();
 
 				return RBX::format("up %d down %d backoff %d backoff avg %d", frm->GetQualityDelayUp(), frm->GetQualityDelayDown(), frm->GetBackoffCounter(), (int)frm->GetBackoffAverage());
 			}
 
-			if (name == "RenderStatsFRMTargetTime")
-			{
+			if (name == "RenderStatsFRMTargetTime") {
 				FrameRateManager* frm = visualEngine->getFrameRateManager();
 
 				if (frm->GetQualityLevel() > 0 && frm->GetQualityLevel() < CRenderSettings::QualityLevelMax - 1)
@@ -774,8 +735,7 @@ namespace RBX
 					return RBX::format("frame n/a render n/a throttle %u", frm->getPhysicsThrottling());
 			}
 
-			if (name == "RenderStatsTC")
-			{
+			if (name == "RenderStatsTC") {
 				TextureCompositor* tc = visualEngine->getTextureCompositor();
 
 				const TextureCompositorConfiguration& config = tc->getConfiguration();
@@ -788,8 +748,7 @@ namespace RBX
 					stats.orphanedCount, stats.orphanedSize / 1048576);
 			}
 
-			if (name == "RenderStatsTM")
-			{
+			if (name == "RenderStatsTM") {
 				const TextureManagerStats& stats = visualEngine->getTextureManager()->getStatistics();
 
 				return RBX::format("queued %d live %d (%dM) cache %d (%dM)",
@@ -798,8 +757,7 @@ namespace RBX
 					stats.orphanedCount, stats.orphanedSize / 1048576);
 			}
 
-			if (name == "RenderStatsLightGrid")
-			{
+			if (name == "RenderStatsLightGrid") {
 				SceneUpdater* su = visualEngine->getSceneUpdater();
 				const RBX::WindowAverage<double, double>::Stats& stats = su->getLightingTimeStats();
 
@@ -809,16 +767,14 @@ namespace RBX
 					return "inactive";
 			}
 
-			if (name == "RenderStatsGPU")
-			{
+			if (name == "RenderStatsGPU") {
 				return RBX::format("%.1f ms (present: %.1f ms) %s", gpuAverage.getStats().average, presentAverage.getStats().average, visualEngine->getDevice()->getAPIName().c_str());
 			}
 
 			return "";
 		}
 
-		void RenderView::captureMetrics(RBX::RenderMetrics& metrics)
-		{
+		void RenderView::captureMetrics(RBX::RenderMetrics& metrics) {
 			FrameRateManager* frm = visualEngine->getFrameRateManager();
 
 			metrics.presentTime = presentAverage.getStats().average;
@@ -836,13 +792,11 @@ namespace RBX
 		{
 		}
 
-		void RenderView::reloadShaders()
-		{
+		void RenderView::reloadShaders() {
 			visualEngine->reloadShaders();
 		}
 
-		struct ProxyMetric : IMetric
-		{
+		struct ProxyMetric : IMetric {
 			RenderView* view;
 			IMetric* parent;
 
@@ -851,16 +805,14 @@ namespace RBX
 			{
 			}
 
-			virtual std::string getMetric(const std::string& metric) const
-			{
+			virtual std::string getMetric(const std::string& metric) const {
 				if (metric.compare(0, 11, "RenderStats") == 0)
 					return view->getRenderStatsMetric(metric);
 				else
 					return parent->getMetric(metric);
 			}
 
-			virtual double getMetricValue(const std::string& metric) const
-			{
+			virtual double getMetricValue(const std::string& metric) const {
 				if (metric.compare(0, 3, "FRM") == 0)
 					return view->getFrameRateManager()->getMetricValue(metric);
 				else
@@ -868,13 +820,11 @@ namespace RBX
 			}
 		};
 
-		void RenderView::renderPrepare(IMetric* metric)
-		{
+		void RenderView::renderPrepare(IMetric* metric) {
 			renderPrepareImpl(metric, /* updateViewport= */ true);
 		}
 
-		void RenderView::renderPrepareImpl(IMetric* metric, bool updateViewport)
-		{
+		void RenderView::renderPrepareImpl(IMetric* metric, bool updateViewport) {
 			RBXPROFILER_SCOPE("Render", "Prepare");
 
 			Timer<Time::Precise> timer;
@@ -894,8 +844,7 @@ namespace RBX
 			visualEngine->reloadQueuedAssets();
 
 			double newtimeMs = Time::now(Time::Precise).timestampSeconds() * 1000;
-			if (timestampMs != 0)
-			{
+			if (timestampMs != 0) {
 				deltaMs = (newtimeMs - timestampMs);
 			}
 			timestampMs = newtimeMs;
@@ -903,8 +852,7 @@ namespace RBX
 			if (!visualEngine->getDevice()->validate())
 				return;
 
-			if (updateViewport)
-			{
+			if (updateViewport) {
 				Vector2 newViewport = computeCanvasSize(visualEngine->getDevice());
 
 				visualEngine->setViewport(newViewport.x, newViewport.y);
@@ -931,12 +879,10 @@ namespace RBX
 
 			Vector3 poi;
 
-			if (cameraobj->getCameraSubject())
-			{
+			if (cameraobj->getCameraSubject()) {
 				poi = cameraobj->getCameraFocus().translation;
 			}
-			else
-			{
+			else {
 				poi = cameraobj->getCameraCoordinateFrame().translation;
 			}
 
@@ -946,8 +892,7 @@ namespace RBX
 
 			adorn->preSubmitPass();
 
-			if (adornsEnabled && !FFlag::DebugAdornsDisabled)
-			{
+			if (adornsEnabled && !FFlag::DebugAdornsDisabled) {
 				// HACK: Rendering code should NOT invoke Lua code or change DM in any way. But it does (in ScreenGui & Frame objects inside SurfaceGui).
 				DataModel::scoped_write_transfer request(dataModel.get());
 
@@ -957,8 +902,7 @@ namespace RBX
 				// then do 2d adorns, after 3d adorns (so that UI text shows on top)
 				ProxyMetric proxyMetric(this, metric);
 
-				if (FFlag::RenderUIAs3DInVR && adorn->isVR())
-				{
+				if (FFlag::RenderUIAs3DInVR && adorn->isVR()) {
 					Rect2D viewport = adorn->getViewport();
 
 					CoordinateFrame cframe = cameraobj->getRenderingCoordinateFrame();
@@ -976,8 +920,7 @@ namespace RBX
 
 					dataModel->renderPass2d(&adornView, &proxyMetric);
 				}
-				else
-				{
+				else {
 					dataModel->renderPass2d(adorn, &proxyMetric);
 				}
 			}
@@ -994,8 +937,7 @@ namespace RBX
 
 			visualEngine->getTextureCompositor()->update(poi);
 
-			if (RBX::Lighting* Ligh = ServiceProvider::find<Lighting>(dataModel.get()))
-			{
+			if (RBX::Lighting* Ligh = ServiceProvider::find<Lighting>(dataModel.get())) {
 				presetPostProcess(Ligh);
 			}
 
@@ -1004,7 +946,7 @@ namespace RBX
 
 			float shadingDistance = std::max(frm->getShadingDistance(), 0.1f);
 			float fovCoefficient = visualEngine->getCamera().getProjectionMatrix()[1][1];
-			float outlineScaling = fovCoefficient * visualEngine->getViewHeight() * (10.0f / FInt::OutlineThickness) * (1 / 2.0f) / shadingDistance;
+			float outlineScaling = fovCoefficient * visualEngine->getViewHeight() * (10.0f / FInt::OutlineThickness) * (1.0f / 2.0f) / shadingDistance;
 
 			float brightnessMulFactor = outlinesEnabled ? (FInt::OutlineBrightnessMax - FInt::OutlineBrightnessMin) / 255.0f : 0.0f;
 			float brightnessAddFactor = outlinesEnabled ? FInt::OutlineBrightnessMin / 255.0f : 1.0f;
@@ -1020,8 +962,7 @@ namespace RBX
 			prepareAverage.sample(prepareTime);
 		}
 
-		void RenderView::drawRecordingFrame(DeviceContext* context)
-		{
+		void RenderView::drawRecordingFrame(DeviceContext* context) {
 			RBXASSERT(videoFrameVertexStreamer);
 
 			Framebuffer* fb = visualEngine->getDevice()->getMainFramebuffer();
@@ -1043,8 +984,7 @@ namespace RBX
 			videoFrameVertexStreamer->renderFinish();
 		}
 
-		void RenderView::drawVRWindow(DeviceContext* context)
-		{
+		void RenderView::drawVRWindow(DeviceContext* context) {
 			RBXPROFILER_SCOPE("GPU", "Window");
 
 			DeviceVR* vr = visualEngine->getDevice()->getVR();
@@ -1079,13 +1019,11 @@ namespace RBX
 			vrVertexStreamer->renderFinish();
 		}
 
-		namespace
-		{
+		namespace {
 			const int g_MicroProfileFontTextureX = 1024;
 			const int g_MicroProfileFontTextureY = 9;
 
-			const uint16_t g_MicroProfileFontDescription[] =
-			{
+			const uint16_t g_MicroProfileFontDescription[] = {
 				0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,
 				0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,
 				0x0ce,0x201,0x209,0x211,0x219,0x221,0x229,0x231,0x239,0x241,0x249,0x251,0x259,0x261,0x269,0x271,
@@ -1104,8 +1042,7 @@ namespace RBX
 				0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,
 			};
 
-			const uint8_t g_MicroProfileFont[] =
-			{
+			const uint8_t g_MicroProfileFont[] = {
 				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
 				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
 				0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
@@ -1181,8 +1118,7 @@ namespace RBX
 			};
 		}
 
-		class ProfilerRenderer : public Profiler::Renderer
-		{
+		class ProfilerRenderer : public Profiler::Renderer {
 		public:
 			ProfilerRenderer(VisualEngine* visualEngine)
 				: visualEngine(visualEngine)
@@ -1205,11 +1141,10 @@ namespace RBX
 
 				int idx = 0;
 				int end = g_MicroProfileFontTextureX * g_MicroProfileFontTextureY / 8;
-				for (int i = 0; i < end; i++)
-				{
+
+				for (int i = 0; i < end; i++) {
 					unsigned char pValue = g_MicroProfileFont[i];
-					for (int j = 0; j < 8; ++j)
-					{
+					for (int j = 0; j < 8; ++j) {
 						pUnpacked[idx++] = (pValue & 0x80) ? 0xffffffff : 0;
 						pValue <<= 1;
 					}
@@ -1222,8 +1157,7 @@ namespace RBX
 				fontTexture->upload(0, 0, TextureRegion(0, 0, g_MicroProfileFontTextureX, g_MicroProfileFontTextureY), pUnpacked, fontSize);
 			}
 
-			void drawText(int x, int y, unsigned int color, const char* text, unsigned int length, unsigned int textWidth, unsigned int textHeight) override
-			{
+			void drawText(int x, int y, unsigned int color, const char* text, unsigned int length, unsigned int textWidth, unsigned int textHeight) override {
 				const float fOffsetU = float(textWidth) / float(g_MicroProfileFontTextureX);
 
 				float fX = (float)x;
@@ -1235,8 +1169,7 @@ namespace RBX
 				if (!colorOrderBGR)
 					color = 0xff000000 | ((color & 0xff) << 16) | (color & 0xff00) | ((color >> 16) & 0xff);
 
-				for (uint32_t j = 0; j < length; ++j)
-				{
+				for (uint32_t j = 0; j < length; ++j) {
 					int16_t nOffset = g_MicroProfileFontDescription[uint8_t(*pStr++)];
 					float fOffset = float(nOffset) / float(g_MicroProfileFontTextureX);
 
@@ -1256,10 +1189,8 @@ namespace RBX
 				}
 			}
 
-			void drawBox(int x0, int y0, int x1, int y1, unsigned int color0, unsigned int color1) override
-			{
-				if (!colorOrderBGR)
-				{
+			void drawBox(int x0, int y0, int x1, int y1, unsigned int color0, unsigned int color1) override {
+				if (!colorOrderBGR) {
 					color0 = ((color0 & 0xff) << 16) | ((color0 >> 16) & 0xff) | (0xff00ff00 & color0);
 					color1 = ((color1 & 0xff) << 16) | ((color1 >> 16) & 0xff) | (0xff00ff00 & color1);
 				}
@@ -1277,13 +1208,11 @@ namespace RBX
 				quads.push_back(v3);
 			}
 
-			void drawLine(unsigned int vertexCount, const float* vertexData, unsigned int color) override
-			{
+			void drawLine(unsigned int vertexCount, const float* vertexData, unsigned int color) override {
 				if (!colorOrderBGR)
 					color = ((color & 0xff) << 16) | ((color >> 16) & 0xff) | (0xff00ff00 & color);
 
-				for (unsigned int i = 0; i + 1 < vertexCount; ++i)
-				{
+				for (unsigned int i = 0; i + 1 < vertexCount; ++i) {
 					Vertex v0 = { vertexData[2 * i + 0], vertexData[2 * i + 1], 2.f, 2.f, color };
 					Vertex v1 = { vertexData[2 * i + 2], vertexData[2 * i + 3], 2.f, 2.f, color };
 
@@ -1292,16 +1221,14 @@ namespace RBX
 				}
 			}
 
-			void flush(DeviceContext* context, const RenderCamera& camera)
-			{
+			void flush(DeviceContext* context, const RenderCamera& camera) {
 				if (quads.empty() && lines.empty())
 					return;
 
 				updateBuffer(quadsVB, quadsGeometry, quads);
 				updateBuffer(linesVB, linesGeometry, lines);
 
-				if (shared_ptr<ShaderProgram> program = visualEngine->getShaderManager()->getProgram("ProfilerVS", "ProfilerFS"))
-				{
+				if (shared_ptr<ShaderProgram> program = visualEngine->getShaderManager()->getProgram("ProfilerVS", "ProfilerFS")) {
 					GlobalShaderData shaderData = visualEngine->getSceneManager()->readGlobalShaderData();
 
 					shaderData.setCamera(camera);
@@ -1328,8 +1255,7 @@ namespace RBX
 			}
 
 		private:
-			struct Vertex
-			{
+			struct Vertex {
 				float x, y;
 				float u, v;
 				unsigned int color;
@@ -1352,12 +1278,10 @@ namespace RBX
 			shared_ptr<VertexBuffer> linesVB;
 			shared_ptr<Geometry> linesGeometry;
 
-			void updateBuffer(shared_ptr<VertexBuffer>& vb, shared_ptr<Geometry>& geometry, const std::vector<Vertex>& vertices)
-			{
+			void updateBuffer(shared_ptr<VertexBuffer>& vb, shared_ptr<Geometry>& geometry, const std::vector<Vertex>& vertices) {
 				if (vertices.empty()) return;
 
-				if (!vb || vb->getElementCount() < vertices.size())
-				{
+				if (!vb || vb->getElementCount() < vertices.size()) {
 					size_t count = 1;
 					while (count < vertices.size())
 						count *= 2;
@@ -1372,8 +1296,7 @@ namespace RBX
 			}
 		};
 
-		void RenderView::drawProfiler(DeviceContext* context)
-		{
+		void RenderView::drawProfiler(DeviceContext* context) {
 			if (!Profiler::isVisible())
 				return;
 
@@ -1388,18 +1311,16 @@ namespace RBX
 
 			RenderCamera camera;
 			camera.setViewMatrix(Matrix4::identity());
-			camera.setProjectionOrtho(fb->getWidth(), fb->getHeight(), -1, 1, visualEngine->getDevice()->getCaps().needsHalfPixelOffset);
+			camera.setProjectionOrtho(fb->getWidth(), fb->getHeight(), -1.0f, 1.0f, visualEngine->getDevice()->getCaps().needsHalfPixelOffset);
 
 			profilerRenderer->flush(context, camera);
 		}
 
-		void RenderView::renderPerform(double timeJobStart)
-		{
+		void RenderView::renderPerform(double timeJobStart) {
 			renderPerformImpl(timeJobStart, visualEngine->getDevice()->getMainFramebuffer());
 		}
 
-		void RenderView::renderPerformImpl(double timeJobStart, Framebuffer* mainFramebuffer)
-		{
+		void RenderView::renderPerformImpl(double timeJobStart, Framebuffer* mainFramebuffer) {
 			RBXPROFILER_SCOPE("Render", "Perform");
 
 			if (!this->dataModel)
@@ -1420,8 +1341,7 @@ namespace RBX
 
 			adorn->prepareRenderPass();
 
-			if (DeviceContext* context = visualEngine->getDevice()->beginFrame())
-			{
+			if (DeviceContext* context = visualEngine->getDevice()->beginFrame()) {
 				//visualEngine->getSceneUpdater()->updatePerform();
 
 				visualEngine->getMaterialGenerator()->garbageCollectIncremental();
@@ -1433,21 +1353,19 @@ namespace RBX
 
 				visualEngine->getTextureCompositor()->render(context);
 
-				if (DeviceVR* vr = visualEngine->getDevice()->getVR())
-				{
+				if (DeviceVR* vr = visualEngine->getDevice()->getVR()) {
 					RBXPROFILER_SCOPE("GPU", "Scene");
 
 					DeviceVR::State vrState = vr->getState();
 
 					const RenderCamera& cullCamera = visualEngine->getCameraCull();
 
-					float zNear = 0.5f;
-					float zFar = 5000.f;
+					float zNear = 2147483647.0f;
+					float zFar = 0.1f;
 
 					visualEngine->getSceneManager()->renderBegin(context, cullCamera, vr->getEyeFramebuffer(0)->getWidth(), vr->getEyeFramebuffer(0)->getHeight());
 
-					for (int eye = 0; eye < 2; ++eye)
-					{
+					for (int eye = 0; eye < 2; ++eye) {
 						RBXPROFILER_SCOPE("GPU", "Eye");
 
 						Framebuffer* eyeFB = vr->getEyeFramebuffer(eye);
@@ -1467,18 +1385,14 @@ namespace RBX
 					if (vrState.needsMirror)
 						drawVRWindow(context);
 				}
-				else
-				{
+				else {
 					visualEngine->getSceneManager()->renderScene(context, mainFramebuffer, visualEngine->getCamera(), visualEngine->getViewWidth(), visualEngine->getViewHeight());
 				}
 
-				if ((!DFFlag::ScreenShotDuplicationFix && doScreenshot) || (DFFlag::ScreenShotDuplicationFix && getAndClearDoScreenshot()))
-				{
+				if (getAndClearDoScreenshot()) {
 					std::string screenshotFilename;
-					if (saveScreenshotToFile(screenshotFilename))
-					{
-						if (dataModel)
-						{
+					if (saveScreenshotToFile(screenshotFilename)) {
+						if (dataModel) {
 							dataModel->submitTask(boost::bind(&RBX::DataModel::ScreenshotReadyTask, weak_ptr<RBX::DataModel>(dataModel), screenshotFilename), RBX::DataModelJob::Write);
 						}
 					}
@@ -1487,8 +1401,7 @@ namespace RBX
 				performTime = timer.reset().msec();
 				performAverage.sample(performTime);
 
-				if (videoFrameVertexStreamer && frameDataCallback)
-				{
+				if (videoFrameVertexStreamer && frameDataCallback) {
 					frameDataCallback(visualEngine->getDevice());
 					// this has to be checked again, as frameDataCallback can stop video recording and NULL it
 					if (videoFrameVertexStreamer)
@@ -1514,8 +1427,7 @@ namespace RBX
 			FASTLOG4F(FLog::ViewRbxBase, "Render perform end. Delta: %f, Total %f, Present: %f, Prepare: %f", deltaMs, totalRenderTime, presentTime, prepareTime);
 		}
 
-		void RenderView::buildGui(bool buildInGameGui)
-		{
+		void RenderView::buildGui(bool buildInGameGui) {
 			dataModel->startCoreScripts(buildInGameGui);
 		}
 
@@ -1529,22 +1441,13 @@ namespace RBX
 		extern float grayscaleLevel = 0.0f;
 		extern Color3 tintColor = Color3(1.0f, 1.0f, 1.0f);
 
-		void RenderView::presetLighting(RBX::Lighting* l, const RBX::Color3& extraAmbient, float skylightFactor)
-		{
+		void RenderView::presetLighting(RBX::Lighting* l, const RBX::Color3& extraAmbient, float skylightFactor) {
 			const G3D::LightingParameters& skyParameters = l->getSkyParameters();
 			SceneManager* smgr = visualEngine->getSceneManager();
 
 			Vector3 topColorShift = Color3::toHSV(l->getSunColorShift());
 			topColorShift.y = topColorShift.y * topColorShift.z;
 			topColorShift.z = 1.0f;
-
-			/*Color3 bottomColorShift = l->getBottomColorShift();
-
-			float topShiftBase = (topColorShift.r + topColorShift.g + topColorShift.b) * 0.3333f;
-			Color3 topAdjustment = topColorShift - Color3(topShiftBase, topShiftBase, topShiftBase);
-
-			float bottomShiftBase = (bottomColorShift.r + bottomColorShift.g + bottomColorShift.b) * 0.3333f;
-			Color3 bottomAdjustment = bottomColorShift - Color3(bottomShiftBase, bottomShiftBase, bottomShiftBase);*/
 
 			float globalBrightness = l->getSunBrightness();
 
@@ -1555,19 +1458,11 @@ namespace RBX
 			Color3 outdoorAmbientColor = l->getGlobalOutdoorAmbient();
 
 			Color3 keyLightColor = keyColor * globalBrightness;
-			/*keyLightColor += topAdjustment * keyLightColor.length();
-			keyLightColor *= skylightFactor;*/
-
-			/*Color3 fillLightColor = sunColor * globalBrightness * 0.4f;
-			fillLightColor += bottomAdjustment * fillLightColor.length();
-			fillLightColor *= skylightFactor;*/
 
 			smgr->setLighting(ambientColor, outdoorAmbientColor, keyDirection, keyLightColor);
 		}
 
-		//void RenderView::presetPostProcess(RBX::PlatformService* platformService)
-		void RenderView::presetPostProcess(RBX::Lighting* l)
-		{
+		void RenderView::presetPostProcess(RBX::Lighting* l) {
 			SceneManager* smgr = visualEngine->getSceneManager();
 
 			bloomIntensity = 0.0f;
@@ -1578,11 +1473,9 @@ namespace RBX
 			contrast = 0.0f;
 			brightness = 0.0f;
 
-			if (shared_ptr<const Instances> children = l->getChildren2())
-			{
+			if (shared_ptr<const Instances> children = l->getChildren2()) {
 				Instances::const_iterator end = children->end();
-				for (Instances::const_iterator iter = children->begin(); iter != end; ++iter)
-				{
+				for (Instances::const_iterator iter = children->begin(); iter != end; ++iter) {
 					std::string className = (*iter)->getClassNameStr();
 
 					if (className == "BloomEffect") {
@@ -1604,7 +1497,7 @@ namespace RBX
 						auto colorCorrectionInstance = boost::dynamic_pointer_cast<ColorCorrectionEffect>((*iter));
 
 						if (colorCorrectionInstance && colorCorrectionInstance->getEnabled()) {
-							if (tintColor == Color3(1, 1, 1)) {
+							if (tintColor == Color3(1.0f, 1.0f, 1.0f)) {
 								tintColor = colorCorrectionInstance->getTintColor();
 							}
 							grayscaleLevel += colorCorrectionInstance->getSaturation();
@@ -1618,15 +1511,13 @@ namespace RBX
 			smgr->setPostProcess(brightness, contrast, grayscaleLevel, blurIntensity, tintColor, bloomIntensity, bloomSize);
 		}
 
-		static void waitForContent(RBX::ContentProvider* contentProvider)
-		{
+		static void waitForContent(RBX::ContentProvider* contentProvider) {
 			boost::xtime expirationTime;
 			boost::xtime_get(&expirationTime, boost::TIME_UTC_);
 			expirationTime.sec += static_cast<boost::xtime::xtime_sec_t>(120);
 
 			// TODO: Bail out after a certain number of seconds...
-			while (!contentProvider->isRequestQueueEmpty())
-			{
+			while (!contentProvider->isRequestQueueEmpty()) {
 				boost::xtime xt;
 				boost::xtime_get(&xt, boost::TIME_UTC_);
 
@@ -1637,8 +1528,7 @@ namespace RBX
 			}
 		}
 
-		static void modifyThumbnailCamera(VisualEngine* visualEngine, bool allowDolly, int recdepth = 1)
-		{
+		static void modifyThumbnailCamera(VisualEngine* visualEngine, bool allowDolly, int recdepth = 1) {
 			if (recdepth > 10)
 				return;
 
@@ -1646,7 +1536,7 @@ namespace RBX
 
 			Extents extents;
 
-			for (size_t i = 0; i < nodes.size(); ++i)
+			for (size_t i = 0u; i < nodes.size(); ++i)
 				if (!dynamic_cast<LightObject*>(nodes[i]))
 					extents.expandToContain(nodes[i]->getWorldBounds());
 
@@ -1654,18 +1544,16 @@ namespace RBX
 
 			Extents screen;
 
-			for (unsigned i = 0; i < 8; ++i)
-			{
-				Vector4 p = viewProj * Vector4(extents.getCorner(i), 1);
+			for (unsigned int i = 0u; i < 8u; ++i) {
+				Vector4 p = viewProj * Vector4(extents.getCorner(i), 1.0f);
 				Vector3 q = p.xyz() / p.w;
 
-				if (p.w <= 0.001f || fabsf(q.x) > 1 || fabsf(q.y) > 1 || fabsf(q.z) > 1)
-				{
+				if (p.w <= 0.001f || fabsf(q.x) > 1.0f || fabsf(q.y) > 1.0f || fabsf(q.z) > 1.0f) {
 					if (!allowDolly)
 						return;
 
 					Matrix4 view = visualEngine->getCameraMutable().getViewMatrix();
-					Matrix4 dolly = Matrix4::translation(0, 0, -1 - recdepth * recdepth);
+					Matrix4 dolly = Matrix4::translation(0.0f, 0.0f, -1.0f - recdepth * recdepth);
 					visualEngine->getCameraMutable().setViewMatrix(dolly * view);
 					return modifyThumbnailCamera(visualEngine, true, recdepth + 1); // try once again
 				}
@@ -1673,8 +1561,8 @@ namespace RBX
 				screen.expandToContain(q);
 			}
 
-			float zoomH = 2 / (screen.max().x - screen.min().x);
-			float zoomV = 2 / (screen.max().y - screen.min().y);
+			float zoomH = 2.0f / (screen.max().x - screen.min().x);
+			float zoomV = 2.0f / (screen.max().y - screen.min().y);
 			float zoom = std::min(zoomV, zoomH);
 
 			float offH = screen.center().x;
@@ -1690,8 +1578,7 @@ namespace RBX
 			visualEngine->getCameraMutable().setProjectionMatrix(crop * visualEngine->getCamera().getProjectionMatrix());
 		}
 
-		void RenderView::prepareSceneGraph()
-		{
+		void RenderView::prepareSceneGraph() {
 			// will populate scenegraph, and trigger resource loads.
 			//visualEngine->getSceneUpdater()->setComputeLightingEnabled(false);
 
@@ -1702,30 +1589,27 @@ namespace RBX
 			RBX::MeshContentProvider* meshContentProvider = visualEngine->getMeshContentProvider();
 			bool allContentLoaded = false;
 
-			do
-			{
+			do {
 				FASTLOG(FLog::ThumbnailRender, "Waiting for content to load");
 
 				waitForContent(contentProvider);
 
 				RBX::ServiceProvider::find<RBX::Workspace>(dataModel.get())->assemble();
 
-				renderPrepareImpl(NULL, /* updateViewport= */ false);
+				renderPrepareImpl(nullptr, /* updateViewport= */ false);
 
 				// Clear adorn rendering queue
 				visualEngine->getAdorn()->finishRenderPass();
 
 				// Load textures
-				while (!visualEngine->getTextureManager()->isQueueEmpty())
-				{
+				while (!visualEngine->getTextureManager()->isQueueEmpty()) {
 					visualEngine->getTextureManager()->processPendingRequests();
 
 					boost::this_thread::sleep(boost::posix_time::milliseconds(20));
 				}
 
 				// Run texture compositor
-				if (!visualEngine->getTextureCompositor()->isQueueEmpty())
-				{
+				if (!visualEngine->getTextureCompositor()->isQueueEmpty()) {
 					if (DeviceContext* context = visualEngine->getDevice()->beginFrame())
 					{
 						visualEngine->getTextureCompositor()->render(context);
@@ -1750,8 +1634,7 @@ namespace RBX
 			//visualEngine->getSceneUpdater()->setComputeLightingEnabled(true);
 		}
 
-		void RenderView::renderThumb(unsigned char* data, int width, int height, bool crop, bool allowDolly)
-		{
+		void RenderView::renderThumb(unsigned char* data, int width, int height, bool crop, bool allowDolly) {
 			// will populate scenegraph, and trigger resource loads.
 			FASTLOG(FLog::ThumbnailRender, "Rendering thumbnail: populating scene graph, trigger resource load");
 			prepareSceneGraph();
@@ -1768,8 +1651,7 @@ namespace RBX
 
 			renderPrepareImpl(NULL, /* updateViewport= */ false);
 
-			if (crop)
-			{
+			if (crop) {
 				modifyThumbnailCamera(visualEngine.get(), allowDolly);
 			}
 
@@ -1785,15 +1667,13 @@ namespace RBX
 		//
 		//	Write render target to file, using user picture folder\Roblox 
 		//
-		bool RenderView::saveScreenshotToFile(std::string& /*output*/ filename)
-		{
+		bool RenderView::saveScreenshotToFile(std::string& /*output*/ filename) {
 #if defined(RBX_PLATFORM_DURANGO)
 			// TODO: implement screenshot for durango
 #else
 			Framebuffer* framebuffer = visualEngine->getDevice()->getMainFramebuffer();
 
-			if (framebuffer)
-			{
+			if (framebuffer) {
 				time_t ctTime;
 				time(&ctTime);
 
@@ -1832,18 +1712,15 @@ namespace RBX
 			return false;
 		}
 
-		void RenderView::queueAssetReload(const std::string& filePath)
-		{
+		void RenderView::queueAssetReload(const std::string& filePath) {
 			visualEngine->queueAssetReload(filePath);
 		}
 
-		void RenderView::immediateAssetReload(const std::string& filePath)
-		{
+		void RenderView::immediateAssetReload(const std::string& filePath) {
 			visualEngine->immediateAssetReload(filePath);
 		}
 
-		bool RenderView::exportSceneThumbJSON(ExporterSaveType saveType, ExporterFormat format, bool encodeBase64, std::string& strOut)
-		{
+		bool RenderView::exportSceneThumbJSON(ExporterSaveType saveType, ExporterFormat format, bool encodeBase64, std::string& strOut) {
 #if !defined(RBX_PLATFORM_DURANGO)
 			FASTLOG(FLog::ThumbnailRender, "Rendering thumbnail: populating scene graph, trigger resource load");
 			prepareSceneGraph();
@@ -1854,8 +1731,7 @@ namespace RBX
 #endif
 		}
 
-		bool RenderView::exportScene(const std::string& filePath, ExporterSaveType saveType, ExporterFormat format)
-		{
+		bool RenderView::exportScene(const std::string& filePath, ExporterSaveType saveType, ExporterFormat format) {
 #if !defined(RBX_PLATFORM_DURANGO)
 			return ObjectExporter::exportToFile(filePath, saveType, format, dataModel.get(), visualEngine.get());
 #else
@@ -1863,57 +1739,49 @@ namespace RBX
 #endif
 		}
 
-
-		void RenderView::suspendView()
-		{
+		void RenderView::suspendView() {
 			device->suspend();
 		}
 
-		void RenderView::resumeView()
-		{
+		void RenderView::resumeView() {
 			device->resume();
 		}
 
-		void RenderView::garbageCollect()
-		{
+		void RenderView::garbageCollect() {
 			visualEngine->getMaterialGenerator()->garbageCollectFull();
 			visualEngine->getTextureCompositor()->garbageCollectFull();
 			visualEngine->getTextureManager()->garbageCollectFull();
 
-			if (RBX::ContentProvider* contentProvider = visualEngine->getContentProvider())
-			{
+			if (RBX::ContentProvider* contentProvider = visualEngine->getContentProvider()) {
 				contentProvider->clearContent();
 			}
 
-			if (RBX::MeshContentProvider* meshContentProvider = visualEngine->getMeshContentProvider())
-			{
+			if (RBX::MeshContentProvider* meshContentProvider = visualEngine->getMeshContentProvider()) {
 				meshContentProvider->clearContent();
 			}
 		}
 
-		std::pair<unsigned, unsigned> RenderView::setFrameDataCallback(const boost::function<void(void*)>& callback)
-		{
+		std::pair<unsigned, unsigned> RenderView::setFrameDataCallback(const boost::function<void(void*)>& callback) {
 			Framebuffer* framebuffer = visualEngine->getDevice()->getMainFramebuffer();
-			if (callback && framebuffer)
-			{
+
+			if (callback && framebuffer) {
 				videoFrameVertexStreamer.reset(new VertexStreamer(visualEngine.get()));
 				frameDataCallback = callback;
 				return std::make_pair(framebuffer->getWidth(), framebuffer->getHeight());
 			}
-			else
-			{
+			else {
 				videoFrameVertexStreamer.reset();
 				frameDataCallback = FrameDataCallback();
 				return std::make_pair(0, 0);
 			}
 		}
 
-		double busyWaitLoop(double ms)
-		{
-			double start = Time::now(Time::Precise).timestampSeconds() * 1000;
-			for (;;)
-			{
-				double cur = Time::now(Time::Precise).timestampSeconds() * 1000;
+		double busyWaitLoop(double ms) {
+			double start = Time::now(Time::Precise).timestampSeconds() * 1000.0;
+
+			for (;;) {
+				double cur = Time::now(Time::Precise).timestampSeconds() * 1000.0;
+
 				if (cur - start > ms)
 					return cur - start;
 			}

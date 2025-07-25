@@ -23,7 +23,7 @@ RightAngleRampInstance::RightAngleRampInstance() : DescribedNonCreatable<RightAn
 	myPrim->setGeometryType(Geometry::GEOMETRY_RIGHTANGLERAMP);
 	myPrim->setSurfaceType(NORM_X_NEG, UNIVERSAL);
 	myPrim->setSurfaceType(NORM_Y_NEG, UNIVERSAL);
-	myPrim->setSurfaceType(NORM_Y, NO_SURFACE);
+	myPrim->setSurfaceType(NORM_Y_POS, NO_SURFACE);
 
 	shouldRenderSetDirty();
 }

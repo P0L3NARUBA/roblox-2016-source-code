@@ -1038,7 +1038,7 @@ SpanningEdge* Primitive::getNextSpanningEdge(SpanningEdge* edge)
 
 bool Primitive::isGeometryOrthogonal( void ) const
 {
-	// Orthogonal shapes have surfaces defined by legacy 6-sides (NORM_X, NORM_Y, etc)
+	// Orthogonal shapes have surfaces defined by legacy 6-sides (NORM_X_POS, NORM_Y_POS, etc)
 	// Nonorthogonal shapes are generalized polyhedra such as prisms, pyramids, wedges and ramps.
 	return geometry->isGeometryOrthogonal();
 } 

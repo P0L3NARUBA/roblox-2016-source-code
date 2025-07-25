@@ -21,9 +21,9 @@ ParallelRampInstance::ParallelRampInstance() : DescribedNonCreatable<ParallelRam
 	setName("ParallelRamp");
 	Primitive* myPrim = this->getPartPrimitive();
 	myPrim->setGeometryType(Geometry::GEOMETRY_PARALLELRAMP);
-	myPrim->setSurfaceType(NORM_X, UNIVERSAL);
+	myPrim->setSurfaceType(NORM_X_POS, UNIVERSAL);
 	myPrim->setSurfaceType(NORM_X_NEG, UNIVERSAL);
-	myPrim->setSurfaceType(NORM_Y, NO_SURFACE);
+	myPrim->setSurfaceType(NORM_Y_POS, NO_SURFACE);
 	myPrim->setSurfaceType(NORM_Y_NEG, NO_SURFACE);
 
 	shouldRenderSetDirty();

@@ -267,7 +267,7 @@ namespace RBX
 	{
 		setName("PartOperation");
 		setColor(Color3(1.0f, 1.0f, 1.0f));
-		setSurfaceType(NORM_Y, NO_SURFACE);
+		setSurfaceType(NORM_Y_POS, NO_SURFACE);
 		setSurfaceType(NORM_Y_NEG, NO_SURFACE);
 		formFactor = SYMETRIC;
 		getPrimitive(this)->setGeometryType(Geometry::GEOMETRY_TRI_MESH);

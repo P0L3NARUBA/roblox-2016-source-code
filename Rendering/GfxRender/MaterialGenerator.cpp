@@ -729,6 +729,7 @@ namespace RBX
 			/* Cubemaps */
 			technique.setTexture(6, sceneManager->getEnvMap()->getOutdoorTexture(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Wrap));
 			technique.setTexture(7, sceneManager->getEnvMap()->getIndoorTextures(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Wrap));
+			technique.setTexture(8, sceneManager->getEnvMap()->getIrradianceTextures(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Wrap));
 		}
 
 		void MaterialGenerator::setupMaterialTextures(VisualEngine* ve, Technique& technique, PartMaterial renderMaterial) {

@@ -443,10 +443,10 @@ namespace RBX
 
 			switch (id)
 			{
-			case NORM_X: return NORM_Y;
-			case NORM_Y: return NORM_X_NEG;
+			case NORM_X_POS: return NORM_Y_POS;
+			case NORM_Y_POS: return NORM_X_NEG;
 			case NORM_X_NEG: return NORM_Y_NEG;
-			case NORM_Y_NEG: return NORM_X;
+			case NORM_Y_NEG: return NORM_X_POS;
 			default:
 				return id;
 			}
@@ -461,9 +461,9 @@ namespace RBX
 				{
 					switch (verticalRotate<vertical>(texture->getFace()))
 					{
-					case NORM_X: return Vector2(size.z, size.y) / texture->getStudsPerTile();
-					case NORM_Y: return Vector2(-size.x, size.z) / texture->getStudsPerTile();
-					case NORM_Z: return Vector2(size.x, size.y) / texture->getStudsPerTile();
+					case NORM_X_POS: return Vector2(size.z, size.y) / texture->getStudsPerTile();
+					case NORM_Y_POS: return Vector2(-size.x, size.z) / texture->getStudsPerTile();
+					case NORM_Z_POS: return Vector2(size.x, size.y) / texture->getStudsPerTile();
 
 					case NORM_X_NEG: return Vector2(-size.z, size.y) / texture->getStudsPerTile();
 					case NORM_Y_NEG: return Vector2(size.x, -size.z) / texture->getStudsPerTile();
@@ -512,12 +512,12 @@ namespace RBX
 
 
 			static const NormalId adjTable[6][4] = {
-				{ NORM_Z_NEG, NORM_Z, NORM_Y, NORM_Y_NEG }, // NormX
-				{ NORM_X_NEG, NORM_X, NORM_Z, NORM_Z_NEG }, // NormY
-				{ NORM_X, NORM_X_NEG, NORM_Y, NORM_Y_NEG }, // NormZ
-				{ NORM_Z, NORM_Z_NEG, NORM_Y, NORM_Y_NEG }, // NormX_Neg
-				{ NORM_X_NEG, NORM_X, NORM_Z_NEG, NORM_Z }, // NormY_Neg
-				{ NORM_X_NEG, NORM_X, NORM_Y, NORM_Y_NEG }, // NormZ_Neg
+				{ NORM_Z_NEG, NORM_Z_POS, NORM_Y_POS, NORM_Y_NEG }, // NormX
+				{ NORM_X_NEG, NORM_X_POS, NORM_Z_POS, NORM_Z_NEG }, // NormY
+				{ NORM_X_POS, NORM_X_NEG, NORM_Y_POS, NORM_Y_NEG }, // NormZ
+				{ NORM_Z_POS, NORM_Z_NEG, NORM_Y_POS, NORM_Y_NEG }, // NormX_Neg
+				{ NORM_X_NEG, NORM_X_POS, NORM_Z_NEG, NORM_Z_POS }, // NormY_Neg
+				{ NORM_X_NEG, NORM_X_POS, NORM_Y_POS, NORM_Y_NEG }, // NormZ_Neg
 			};
 
 			Vector4 result;
@@ -537,12 +537,12 @@ namespace RBX
 
 
 			static const NormalId adjTable[6][4] = {
-				{ NORM_Z, NORM_Z_NEG, NORM_Z_NEG, NORM_Y_NEG }, // NormX
-				{ NORM_Y, NORM_Y, NORM_Y, NORM_Y },				// NormY
-				{ NORM_X, NORM_X_NEG, NORM_Z_NEG, NORM_Y_NEG }, // NormZ
-				{ NORM_Z, NORM_Z_NEG, NORM_Z_NEG, NORM_Y_NEG }, // NormX_Neg
-				{ NORM_X_NEG, NORM_X, NORM_Z_NEG, NORM_Z },		// NormY_Neg
-				{ NORM_X_NEG, NORM_X, NORM_Z, NORM_Y_NEG },		// NormZ_Neg
+				{ NORM_Z_POS, NORM_Z_NEG, NORM_Z_NEG, NORM_Y_NEG }, // NormX
+				{ NORM_Y_POS, NORM_Y_POS, NORM_Y_POS, NORM_Y_POS },				// NormY
+				{ NORM_X_POS, NORM_X_NEG, NORM_Z_NEG, NORM_Y_NEG }, // NormZ
+				{ NORM_Z_POS, NORM_Z_NEG, NORM_Z_NEG, NORM_Y_NEG }, // NormX_Neg
+				{ NORM_X_NEG, NORM_X_POS, NORM_Z_NEG, NORM_Z_POS },		// NormY_Neg
+				{ NORM_X_NEG, NORM_X_POS, NORM_Z_POS, NORM_Y_NEG },		// NormZ_Neg
 			};
 
 			Vector4 result;
@@ -561,12 +561,12 @@ namespace RBX
 				return Vector4(NO_OUTLINES, NO_OUTLINES, NO_OUTLINES, NO_OUTLINES);
 
 			static const NormalId adjTable[6][4] = {
-				{ NORM_Z_NEG, NORM_Z, NORM_Z_NEG, NORM_Y_NEG }, // NormX
-				{ NORM_Y, NORM_Y, NORM_Y, NORM_Y },				// NormY
-				{ NORM_X, NORM_X_NEG, NORM_X_NEG, NORM_Y_NEG },	// NormZ
-				{ NORM_Z_NEG, NORM_Z, NORM_Z_NEG, NORM_Y_NEG }, // NormX_Neg
-				{ NORM_X_NEG, NORM_X, NORM_Z_NEG, NORM_Z },		// NormY_Neg
-				{ NORM_X_NEG, NORM_X, NORM_X_NEG, NORM_Y_NEG }, // NormZ_Neg
+				{ NORM_Z_NEG, NORM_Z_POS, NORM_Z_NEG, NORM_Y_NEG }, // NormX
+				{ NORM_Y_POS, NORM_Y_POS, NORM_Y_POS, NORM_Y_POS },				// NormY
+				{ NORM_X_POS, NORM_X_NEG, NORM_X_NEG, NORM_Y_NEG },	// NormZ
+				{ NORM_Z_NEG, NORM_Z_POS, NORM_Z_NEG, NORM_Y_NEG }, // NormX_Neg
+				{ NORM_X_NEG, NORM_X_POS, NORM_Z_NEG, NORM_Z_POS },		// NormY_Neg
+				{ NORM_X_NEG, NORM_X_POS, NORM_X_NEG, NORM_Y_NEG }, // NormZ_Neg
 			};
 
 			Vector4 result;
@@ -849,7 +849,7 @@ namespace RBX
 				{ 2,6,0,4, false, false, }, // Face 5
 			};
 
-			float capRightOutlineOffset = (part->getConstPartPrimitive()->getSurfaceType(NORM_X) == NO_SURFACE_NO_OUTLINES) ? NO_OUTLINES : 0;
+			float capRightOutlineOffset = (part->getConstPartPrimitive()->getSurfaceType(NORM_X_POS) == NO_SURFACE_NO_OUTLINES) ? NO_OUTLINES : 0;
 			float capLeftOutlineOffset = (part->getConstPartPrimitive()->getSurfaceType(NORM_X_NEG) == NO_SURFACE_NO_OUTLINES) ? NO_OUTLINES : 0;
 
 			for (int face = 0; face < 6; ++face)
@@ -1235,7 +1235,7 @@ namespace RBX
 					if (surface == NO_SURFACE_NO_OUTLINES)
 						noBlanks = false;
 
-					if (face == NORM_Y)
+					if (face == NORM_Y_POS)
 						continue;
 
 					facesIgnoreTiling[face] = IsNoSurface(surface) || ignoreMaterialsStuds;
@@ -1370,7 +1370,7 @@ namespace RBX
 				Vector2 uv = getDecalUV(decal, size, /* ignoreSurfaceType= */ ignoreMaterialsStuds);
 
 				Vector2 outUvs[4];
-				if (corner && face == NORM_Y)
+				if (corner && face == NORM_Y_POS)
 				{
 					// when projecting from top to corner wedge, make decal to "stand" on base part
 					outUvs[3] = Vector2(uv.x, uv.y);
@@ -1393,7 +1393,7 @@ namespace RBX
 				}
 				else
 				{
-					if (face == NORM_X || face == NORM_Z) // Fix for triangular part of corner wedge part
+					if (face == NORM_X_POS || face == NORM_Z_POS) // Fix for triangular part of corner wedge part
 						outUvs[1] = outUvs[0];
 				}
 
@@ -1480,7 +1480,7 @@ namespace RBX
 
 				for (int face = 0; face < ARRAYSIZE(wedgeFacesDesc); ++face)
 				{
-					if (face == NORM_Y) // Wedge only
+					if (face == NORM_Y_POS) // Wedge only
 						continue;
 
 					const FACEDESC& desc = facesDesc[face];
@@ -2612,15 +2612,15 @@ namespace RBX
 							{
 								switch (decal->getFace())
 								{
-								case NORM_X:
+								case NORM_X_POS:
 								case NORM_X_NEG:
 									uv = uv * Vector2(invSize.z, invSize.y) + Vector2(0.5f, 0.5f);
 									break;
-								case NORM_Y:
+								case NORM_Y_POS:
 								case NORM_Y_NEG:
 									uv = uv * Vector2(invSize.x, invSize.z) + Vector2(0.5f, 0.5f);
 									break;
-								case NORM_Z:
+								case NORM_Z_POS:
 								case NORM_Z_NEG:
 									uv = uv * Vector2(invSize.x, invSize.y) + Vector2(0.5f, 0.5f);
 									break;
@@ -2684,15 +2684,15 @@ namespace RBX
 						{
 							switch (decal->getFace())
 							{
-							case NORM_X:
+							case NORM_X_POS:
 							case NORM_X_NEG:
 								uv = uv * Vector2(invSize.z, invSize.y) + Vector2(0.5f, 0.5f);
 								break;
-							case NORM_Y:
+							case NORM_Y_POS:
 							case NORM_Y_NEG:
 								uv = uv * Vector2(invSize.x, invSize.z) + Vector2(0.5f, 0.5f);
 								break;
-							case NORM_Z:
+							case NORM_Z_POS:
 							case NORM_Z_NEG:
 								uv = uv * Vector2(invSize.x, invSize.y) + Vector2(0.5f, 0.5f);
 								break;

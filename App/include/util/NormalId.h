@@ -6,30 +6,31 @@
 
 namespace RBX {
 
-	enum NormalIdMask
-	{
-		NORM_NONE_MASK  = 0x00,
-		NORM_X_MASK     = 0x01,
-		NORM_Y_MASK     = 0x02,
-		NORM_Z_MASK     = 0x04,
+	enum NormalIdMask {
+		NORM_NONE_MASK = 0x00,
+		NORM_X_MASK = 0x01,
+		NORM_Y_MASK = 0x02,
+		NORM_Z_MASK = 0x04,
 		NORM_X_NEG_MASK = 0x08,
 		NORM_Y_NEG_MASK = 0x10,
 		NORM_Z_NEG_MASK = 0x20,
-		NORM_ALL_MASK   = 0x3f
+		NORM_ALL_MASK = 0x3f
 	};
-	enum NormalId { NORM_X = 0, 
-							NORM_Y, 
-							NORM_Z, 
-							NORM_X_NEG, 
-							NORM_Y_NEG, 
-							NORM_Z_NEG,
-							NORM_UNDEFINED};
+	enum NormalId {
+		NORM_X_POS,
+		NORM_X_NEG,
+		NORM_Y_POS,
+		NORM_Y_NEG,
+		NORM_Z_POS,
+		NORM_Z_NEG,
+		NORM_UNDEFINED
+	};
 
-	
+
 	bool validNormalId(NormalId normalId);
 
 	NormalIdMask normalIdToMask(NormalId normal);
-	
+
 	NormalId normalIdOpposite(NormalId normalId);
 	NormalId normalIdToU(NormalId normalId);
 	NormalId normalIdToV(NormalId normalId);

@@ -34,7 +34,7 @@ namespace RBX
 	, lockedToLocalSpace(false)
 	, dampening(0)
 	, velocityInheritance(0)
-	, emissionDirection(RBX::NORM_Y)
+	, emissionDirection(RBX::NORM_Y_POS)
     {
     }
 

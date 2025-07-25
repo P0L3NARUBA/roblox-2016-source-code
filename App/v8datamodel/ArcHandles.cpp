@@ -58,13 +58,13 @@ void ArcHandles::setAxes(Axes value)
 int ArcHandles::getHandlesNormalIdMask() const
 {
 	Faces faces;
-	faces.setNormalId(RBX::NORM_X, axes.getAxisByNormalId(RBX::NORM_X));
-	faces.setNormalId(RBX::NORM_Y, axes.getAxisByNormalId(RBX::NORM_Y));
-	faces.setNormalId(RBX::NORM_Z, axes.getAxisByNormalId(RBX::NORM_Z));
+	faces.setNormalId(RBX::NORM_X_POS, axes.getAxisByNormalId(RBX::NORM_X_POS));
+	faces.setNormalId(RBX::NORM_Y_POS, axes.getAxisByNormalId(RBX::NORM_Y_POS));
+	faces.setNormalId(RBX::NORM_Z_POS, axes.getAxisByNormalId(RBX::NORM_Z_POS));
 
-	faces.setNormalId(RBX::NORM_X_NEG, axes.getAxisByNormalId(RBX::NORM_X));
-	faces.setNormalId(RBX::NORM_Y_NEG, axes.getAxisByNormalId(RBX::NORM_Y));
-	faces.setNormalId(RBX::NORM_Z_NEG, axes.getAxisByNormalId(RBX::NORM_Z));
+	faces.setNormalId(RBX::NORM_X_NEG, axes.getAxisByNormalId(RBX::NORM_X_POS));
+	faces.setNormalId(RBX::NORM_Y_NEG, axes.getAxisByNormalId(RBX::NORM_Y_POS));
+	faces.setNormalId(RBX::NORM_Z_NEG, axes.getAxisByNormalId(RBX::NORM_Z_POS));
 
 	return faces.normalIdMask;
 }

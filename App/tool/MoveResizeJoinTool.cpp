@@ -132,7 +132,7 @@ void MoveResizeJoinTool::render2d(Adorn* adorn)
 
 				switch( localNormalId )
 				{
-					case NORM_X:
+					case NORM_X_POS:
 						modff(part->getPartSizeUi().x * 0.2f, &integerPart);
 						cf.translation += cf.vectorToWorldSpace(-origPartSize.x * 0.5f * Vector3::unitX());
 						// Show grid on best plane based on camera direction
@@ -174,7 +174,7 @@ void MoveResizeJoinTool::render2d(Adorn* adorn)
 							DrawAdorn::surfaceGridAtCoord(adorn, cf, bounds, Vector3::unitZ(), Vector3::unitX(), gridColor, boxesPerStud);
 						}
 						break;
-					case NORM_Y:
+					case NORM_Y_POS:
 						// only allow one stud y-dir resize for brick form factor
 						modff(part->getPartSizeUi().y * 0.2f, &integerPart);
 						cf.translation += cf.vectorToWorldSpace(-origPartSize.y * 0.5f * Vector3::unitY());
@@ -218,7 +218,7 @@ void MoveResizeJoinTool::render2d(Adorn* adorn)
 							DrawAdorn::surfaceGridAtCoord(adorn, cf, bounds, Vector3::unitY(), Vector3::unitZ(), gridColor, boxesPerStud);
 						}
 						break;
-					case NORM_Z:
+					case NORM_Z_POS:
 						modff(part->getPartSizeUi().z * 0.2f, &integerPart);
 						cf.translation += cf.vectorToWorldSpace(-origPartSize.z * 0.5f * Vector3::unitZ());
 						// Show grid on best plane based on camera direction

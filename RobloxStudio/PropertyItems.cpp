@@ -2200,11 +2200,11 @@ public:
 	, m_componentToUpdate(-1)
 	{
 		//create children
-		m_pChild[0] = new FaceComponentItem(this, "Top",    RBX::NORM_Y);
+		m_pChild[0] = new FaceComponentItem(this, "Top",    RBX::NORM_Y_POS);
 		m_pChild[1] = new FaceComponentItem(this, "Bottom", RBX::NORM_Y_NEG);
-		m_pChild[2] = new FaceComponentItem(this, "Back",   RBX::NORM_Z);
+		m_pChild[2] = new FaceComponentItem(this, "Back",   RBX::NORM_Z_POS);
 		m_pChild[3] = new FaceComponentItem(this, "Front",  RBX::NORM_Z_NEG);
-		m_pChild[4] = new FaceComponentItem(this, "Right",  RBX::NORM_X);
+		m_pChild[4] = new FaceComponentItem(this, "Right",  RBX::NORM_X_POS);
 		m_pChild[5] = new FaceComponentItem(this, "Left",   RBX::NORM_X_NEG);
 
 		//add children

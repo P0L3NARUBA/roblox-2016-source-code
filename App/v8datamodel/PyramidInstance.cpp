@@ -29,7 +29,7 @@ PyramidInstance::PyramidInstance() : DescribedNonCreatable<PyramidInstance, Part
 	myPrim->setGeometryType(Geometry::GEOMETRY_PYRAMID);
 	myPrim->setGeometryParameter("NumSides", 8);
 	myPrim->setGeometryParameter("NumSlices", 8);
-	myPrim->setSurfaceType(NORM_Y, NO_SURFACE);
+	myPrim->setSurfaceType(NORM_Y_POS, NO_SURFACE);
 }
 
 PyramidInstance::~PyramidInstance()

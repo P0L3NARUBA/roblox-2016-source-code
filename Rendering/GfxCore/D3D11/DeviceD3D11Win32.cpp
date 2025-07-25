@@ -37,7 +37,7 @@ namespace Graphics
 
     void DeviceD3D11::createDevice()
     {
-		IDXGIAdapter* adapter = NULL;
+		IDXGIAdapter* adapter = nullptr;
 
 		if (FFlag::RenderVR)
 			vr.reset(createVR(&adapter));
@@ -71,8 +71,8 @@ namespace Graphics
         sd.Flags = 0;
         sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
-        ID3D11DeviceContext* deviceContext = NULL;
-        HRESULT hr = createDeviceAndSwapChain(adapter, D3D_DRIVER_TYPE_HARDWARE, NULL, deviceCreationFlags, &requestedFeatureLevel, 1,
+        ID3D11DeviceContext* deviceContext = nullptr;
+        HRESULT hr = createDeviceAndSwapChain(adapter, D3D_DRIVER_TYPE_HARDWARE, nullptr, deviceCreationFlags, &requestedFeatureLevel, 1,
             D3D11_SDK_VERSION, &sd, &swapChain11, &device11, &featureLevelOut, &deviceContext);
         
         if (FAILED(hr))

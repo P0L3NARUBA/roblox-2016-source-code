@@ -8,10 +8,8 @@
 
 #include "TextureRef.h"
 
-namespace RBX
-{
-	namespace Graphics
-	{
+namespace RBX {
+	namespace Graphics {
 
 		class Sky;
 		class SpatialHashedScene;
@@ -34,16 +32,14 @@ namespace RBX
 		class ShaderProgram;
 		class ShadowMap;
 
-		class SceneManager : Resource
-		{
+		class SceneManager : Resource {
 		public:
 
-			struct PostProcessSettings
-			{
+			struct PostProcessSettings {
 				PostProcessSettings()
-					: brightness(0.0f)
-					, contrast(0.0f)
-					, grayscaleLevel(0.0f)
+					: brightness(1.0f)
+					, contrast(1.0f)
+					, grayscaleLevel(1.0f)
 					, blurIntensity(0.0f)
 					, bloomIntensity(0.0f)
 					, bloomSize(0)
@@ -79,8 +75,7 @@ namespace RBX
 			const Vector3& getPointOfInterest() const { return pointOfInterest; }
 			void setPointOfInterest(const Vector3& poi);
 
-			void processSqPartDistance(float distance)
-			{
+			void processSqPartDistance(float distance) {
 				sqMinPartDistance = std::min(sqMinPartDistance, distance);
 			}
 
@@ -106,8 +101,7 @@ namespace RBX
 
 			void onDeviceLost();
 
-			/*struct GBuffer
-			{
+			/*struct GBuffer {
 				shared_ptr<Texture> mainColor;
 				shared_ptr<Framebuffer> mainFB;
 
@@ -120,8 +114,7 @@ namespace RBX
 				shared_ptr<Framebuffer> gbufferFB;
 			};*/
 
-			struct Main
-			{
+			struct Main {
 				shared_ptr<Texture> mainColor;
 				shared_ptr<Texture> mainDepth;
 				shared_ptr<Framebuffer> mainFB;
@@ -131,9 +124,6 @@ namespace RBX
 			const TextureRef& getShadowMapArray() const { return shadowMapArray; }
 
 			const TextureRef& getAmbientOcclusion() const { return ambientOcclusion; }
-
-			const TextureRef& getIndoorCubemapA() const { return indoorCubemapA; }
-			const TextureRef& getIndoorCubemapB() const { return indoorCubemapB; }
 
 			/*GBuffer* getGBuffer() const { return gbuffer.get(); }
 			const TextureRef& getGBufferColor() const { return gbufferColor; }
@@ -189,9 +179,6 @@ namespace RBX
 
 			TextureRef ambientOcclusion;
 
-			TextureRef indoorCubemapA;
-			TextureRef indoorCubemapB;
-
 			/*scoped_ptr<ShadowMap> shadowMaps[3];
 			float shadowMapTexelSize;
 			TextureRef shadowMask;
@@ -200,11 +187,10 @@ namespace RBX
 			PostProcessSettings postProcessSettings;
 
 			double curTimeOfDay;
-			//bool   gbufferError; // when set to true, gbuffer is permanently disabled
+			//bool   gbufferError;
 			bool   msaaError;
 
-			struct ShadowValues
-			{
+			struct ShadowValues {
 				float intensity;
 			};
 
@@ -212,7 +198,6 @@ namespace RBX
 			void restoreShadows(DeviceContext* context, const ShadowValues& shadowValues);*/
 
 			void updateMain(unsigned width, unsigned height);
-
 			void updateMSAA(unsigned width, unsigned height);
 
 			/*void updateGBuffer(unsigned width, unsigned height);

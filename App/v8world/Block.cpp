@@ -33,7 +33,7 @@ namespace RBX {
 
 /** EDGE ID's
 Same as faceID's - i.e., there are 12 edges, they correspond to the
-first three faces (+x,+y,+z) as the normal direction (NORM_X, NORM_Y, NORM_Z)
+first three faces (+x,+y,+z) as the normal direction (NORM_X_POS, NORM_Y_POS, NORM_Z_POS)
 along with a vertex from the face 
 
 Every other normal is negative so that the normals on any different face (4 edges) are all
@@ -255,20 +255,20 @@ const Vector3* Block::getEdgePoint(const Vector3int16& clip, RBX::NormalId& norm
 
 	// normal is from the negative "zero" point positive
 	if (clip.x == 0) {
-		normalID = RBX::NORM_X;
+		normalID = RBX::NORM_X_POS;
 		int y = clip.y > 0 ? 0 : 1;
 		int z = clip.z > 0 ? 0 : 1;
 		return &vertices[4 + y*2 + z];
 	}
 	if (clip.y == 0) {
-		normalID = RBX::NORM_Y;
+		normalID = RBX::NORM_Y_POS;
 		int x = clip.x > 0 ? 0 : 1;
 		int z = clip.z > 0 ? 0 : 1;
 		return &vertices[x*4 + 2 + z];
 	}
 	RBXASSERT(!clip.z);
 	{
-		normalID = RBX::NORM_Z;
+		normalID = RBX::NORM_Z_POS;
 		int x = clip.x > 0 ? 0 : 1;
 		int y = clip.y > 0 ? 0 : 1;
 		return &vertices[x*4 + y*2 + 1];
@@ -280,18 +280,18 @@ const Vector3* Block::getPlanePoint(const Vector3int16& clip, RBX::NormalId& nor
 
 	// normal is from the negative "zero" point positive
 	if (clip.x != 0) {
-		normalID = clip.x > 0 ? RBX::NORM_X : RBX::NORM_X_NEG;
+		normalID = clip.x > 0 ? RBX::NORM_X_POS : RBX::NORM_X_NEG;
 		int x = clip.x > 0 ? 0 : 1;
 		return &vertices[x*4];		// either +x,+y,+z or -x,+y,+z
 	}
 	if (clip.y != 0) {
-		normalID = clip.y > 0 ? RBX::NORM_Y : RBX::NORM_Y_NEG;
+		normalID = clip.y > 0 ? RBX::NORM_Y_POS : RBX::NORM_Y_NEG;
 		int y = clip.y > 0 ? 0 : 1;
 		return &vertices[y*2];		
 	}
 	RBXASSERT(clip.z);
 	{
-		normalID = clip.z > 0 ? RBX::NORM_Z : RBX::NORM_Z_NEG;
+		normalID = clip.z > 0 ? RBX::NORM_Z_POS : RBX::NORM_Z_NEG;
 		int z = clip.z > 0 ? 0 : 1;
 		return &vertices[z];
 	}
@@ -339,7 +339,7 @@ GeoPairType Block::getBallInsideInfo(const Vector3& ray, const Vector3* &offset,
 	}
 	RBXASSERT(min != FLT_MAX);
 
-	offset = (normalID > RBX::NORM_Z) ? &vertices[7] : &vertices[0];
+	offset = (normalID > RBX::NORM_Z_POS) ? &vertices[7] : &vertices[0];
 	return BALL_PLANE_PAIR;
 }
 
@@ -371,9 +371,9 @@ Vector2 Block::getProjectedVertex(const Vector3& vertex, RBX::NormalId normalID)
 
 	Vector2 ans;
 	switch (normalID) {	
-				case (RBX::NORM_X):		ans.x = vertex.y;	ans.y = vertex.z;	return ans;
-				case (RBX::NORM_Y):		ans.x = vertex.z;	ans.y = vertex.x;	return ans;
-				case (RBX::NORM_Z):		ans.x = vertex.x;	ans.y = vertex.y;	return ans;
+				case (RBX::NORM_X_POS):		ans.x = vertex.y;	ans.y = vertex.z;	return ans;
+				case (RBX::NORM_Y_POS):		ans.x = vertex.z;	ans.y = vertex.x;	return ans;
+				case (RBX::NORM_Z_POS):		ans.x = vertex.x;	ans.y = vertex.y;	return ans;
 				case (RBX::NORM_X_NEG):	ans.x = vertex.z;	ans.y = vertex.y;	return ans;
 				case (RBX::NORM_Y_NEG):	ans.x = vertex.x;	ans.y = vertex.z;	return ans;
 				case (RBX::NORM_Z_NEG):	ans.x = vertex.y;	ans.y = vertex.x;	return ans;

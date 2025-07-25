@@ -19,6 +19,8 @@ static const float MATH_PI = 3.14159265359f;
 
 static const unsigned int outdoorCubemapSize = 1024u;
 static const unsigned int indoorCubemapSize = 512u;
+static const unsigned int irradianceCubemapSize = 32u;
+static const unsigned int cubemapMips = 6u;
 
 static const unsigned int indoorCubemapCount = 4u;
 static const unsigned int indoorCubemapTextureCount = 6u * indoorCubemapCount;
@@ -35,13 +37,20 @@ namespace RBX {
 			envmapLastTimeOfDay = 0;
 			setDebugName("Global envmap");
 
-			outdoorTexture = device->createTexture(Texture::Type_Cube, Texture::Format_R11G11B10f, outdoorCubemapSize, outdoorCubemapSize, 1u, 6u, Texture::Usage_Renderbuffer);
-			indoorTextures = device->createTexture(Texture::Type_Cube_Array, Texture::Format_RGBA16f, indoorCubemapSize, indoorCubemapSize, indoorCubemapCount, 6u, Texture::Usage_Renderbuffer);
+			outdoorTexture	   = device->createTexture(Texture::Type_Cube, Texture::Format_RGBA16f, outdoorCubemapSize, outdoorCubemapSize, 1u, cubemapMips, Texture::Usage_Renderbuffer);
+			indoorTextures	   = device->createTexture(Texture::Type_Cube_Array, Texture::Format_RGBA16f, indoorCubemapSize, indoorCubemapSize, indoorCubemapCount, cubemapMips, Texture::Usage_Renderbuffer);
+			irradianceTextures = device->createTexture(Texture::Type_Cube_Array, Texture::Format_RGBA16f, irradianceCubemapSize, irradianceCubemapSize, indoorCubemapCount + 1u, 1u, Texture::Usage_Renderbuffer);
 
 			for (unsigned int i = 0u; i < 6u; ++i) {
-				shared_ptr<Renderbuffer> outrb = outdoorTexture.getTexture()->getRenderbuffer(i, 0u);
+				CubemapFace cubemapFace;
 
-				outFaces[i] = device->createFramebuffer(outrb);
+				for (unsigned int m = 0u; m < cubemapMips; ++m) {
+					shared_ptr<Renderbuffer> rb = outdoorTexture.getTexture()->getRenderbuffer(i, m);
+
+					cubemapFace.mips[m] = device->createFramebuffer(rb);
+				}
+
+				outFaces[i] = cubemapFace;
 			}
 
 			/*for (unsigned int i = 0u; i < indoorCubemapTextureCount; ++i) {
@@ -49,19 +58,27 @@ namespace RBX {
 
 				inFaces[i] = device->createFramebuffer(inrb);
 			}*/
+
+			/*for (unsigned int i = 0u; i < indoorCubemapTextureCount + 6u; ++i) {
+				shared_ptr<Renderbuffer> irradiancerb = irradianceTextures.getTexture()->getRenderbuffer(i, 0u);
+
+				irradianceFaces[i] = device->createFramebuffer(irradiancerb);
+			}*/
 		}
 
 		EnvMap::~EnvMap()
 		{
 		}
 
-		static Matrix4 lookat(Vector3 dir, Vector3 up, float rh = 1.0f)
+		static Matrix4 lookat(Vector3 dir, Vector3 up)
 		{
 			Matrix4 result = Matrix4::identity();
-			Vector3 rt = cross(up, rh * dir);
-			result.setRow(0, Vector4(rt, 0));
-			result.setRow(1, Vector4(up, 0));
-			result.setRow(2, Vector4(dir, 0));
+			Vector3 rt = cross(up, -1.0f * dir);
+
+			result.setRow(0, Vector4(rt, 0.0f));
+			result.setRow(1, Vector4(up, 0.0f));
+			result.setRow(2, Vector4(dir, 0.0f));
+
 			return result;
 		}
 
@@ -75,12 +92,12 @@ namespace RBX {
 			if (outdoorTexture.getTexture()) {
 				double realTime = RBX::Time::nowFastSec();
 
-				if (visualEngine->getSettings()->getEagerBulkExecution() || fabs(envmapLastTimeOfDay - gameTime) > kEnvmapGameTimePeriod || fabs(envmapLastRealTime - realTime) > kEnvmapRealtimePeriod) {
+				//if (visualEngine->getSettings()->getEagerBulkExecution() || fabs(envmapLastTimeOfDay - gameTime) > kEnvmapGameTimePeriod || fabs(envmapLastRealTime - realTime) > kEnvmapRealtimePeriod) {
 					envmapLastTimeOfDay = gameTime;
 					envmapLastRealTime = realTime;
 
 					fullUpdate(context);
-				}
+				//}
 			}
 		}
 
@@ -145,62 +162,50 @@ namespace RBX {
 		}*/
 
 		// full re-render in a single frame
-		void EnvMap::fullUpdate(DeviceContext* context)
-		{
-			/*
-			while( !visualEngine->getSceneManager()->getSky()->isReady() )
-			{
-				visualEngine->getSceneManager()->getSky()->setSkyBoxDefault();
-				visualEngine->getSceneManager()->getSky()->prerender(context);
-				Sleep(100);
+		void EnvMap::fullUpdate(DeviceContext* context) {
+			Sky* sky = visualEngine->getSceneManager()->getSky();
+
+			if (sky->getUseHDRI()) {
+				static Matrix4 view[6u] = {
+					lookat(Vector3(-1.0f,  0.0f,  0.0f), Vector3(0.0f,  1.0f,  0.0f)),
+					lookat(Vector3( 1.0f,  0.0f,  0.0f), Vector3(0.0f,  1.0f,  0.0f)),
+					lookat(Vector3( 0.0f, -1.0f,  0.0f), Vector3(0.0f,  0.0f, -1.0f)),
+					lookat(Vector3( 0.0f,  1.0f,  0.0f), Vector3(0.0f,  0.0f,  1.0f)),
+					lookat(Vector3( 0.0f,  0.0f, -1.0f), Vector3(0.0f,  1.0f,  0.0f)),
+					lookat(Vector3( 0.0f,  0.0f,  1.0f), Vector3(0.0f,  1.0f,  0.0f)),
+				};
+
+				sky->PrepareSkyboxEnvMapEqui(context);
+
+				SceneManager* sceneManager = visualEngine->getSceneManager();
+				GlobalShaderData globalShaderData = sceneManager->readGlobalShaderData();
+				RenderCamera cam;
+
+				for (unsigned int i = 0u; i < 6u; ++i) {
+					cam.setViewMatrix(view[i]);
+					cam.setProjectionPerspective(MATH_PI / 2.0f, 1.0f, 0.1f, 10.0f);
+
+					globalShaderData.setCamera(cam);
+
+					context->updateGlobalConstants(&globalShaderData, sizeof(globalShaderData));
+					context->bindFramebuffer(outFaces[i].mips[0u].get());
+					
+					sky->RenderSkyboxEnvMapEqui(context);
+				}
 			}
-			*/
+			else {
+				for (unsigned int i = 0u; i < 6u; ++i) {
+					context->bindFramebuffer(outFaces[i].mips[0u].get());
 
-			/*if (!outdoorTexture.getTexture())
-				return;*/
-
-			for (unsigned int i = 0u; i < 6u; ++i)
-				renderOutdoorFace(context, i);
-
-			//texture.getTexture()->generateMipmaps();
-		}
-
-		void EnvMap::renderOutdoorFace(DeviceContext* context, unsigned int face)
-		{
-			PIX_SCOPE(context, "EnvMap/update", 0);
-
-			SceneManager* sman = visualEngine->getSceneManager();
-
-			// THIS IS A HACK!
-			/*static Matrix4 view[6 * 2] = {
-				lookat(Vector3(-1,  0,  0), Vector3( 0,  1,  0), -1),
-				lookat(Vector3( 1,  0,  0), Vector3( 0,  1,  0), -1),
-				lookat(Vector3( 0, -1,  0), Vector3( 0,  0, -1), -1),
-				lookat(Vector3( 0,  1,  0), Vector3( 0,  0,  1), -1),
-				lookat(Vector3( 0,  0, -1), Vector3( 0,  1,  0), -1),
-				lookat(Vector3( 0,  0,  1), Vector3( 0,  1,  0), -1),
-
-				lookat(Vector3(-1,  0,  0), Vector3( 0, -1,  0)),
-				lookat(Vector3( 1,  0,  0), Vector3( 0, -1,  0)),
-				lookat(Vector3( 0, -1,  0), Vector3( 0,  0,  1)),
-				lookat(Vector3( 0,  1,  0), Vector3( 0,  0, -1)),
-				lookat(Vector3( 0,  0, -1), Vector3( 0, -1,  0)),
-				lookat(Vector3( 0,  0,  1), Vector3( 0, -1,  0)),
-			};*/
-
-			{
-				PIX_SCOPE(context, "Outdoor Environment Map face %d", face);
-
-				context->bindFramebuffer(outFaces[face].get());
-				
-				visualEngine->getSceneManager()->getSky()->RenderSkyboxEnvMap(context, face, outdoorCubemapSize);
-				// add more stuff to render to envmap 
+					sky->RenderSkyboxEnvMapCube(context, i, outdoorCubemapSize);
+				}
 			}
+
+			// TODO: Add irradiance and convolution generation
 		}
 
 		void EnvMap::onDeviceRestored()
 		{
-			//markDirty(true);
 		}
 
 

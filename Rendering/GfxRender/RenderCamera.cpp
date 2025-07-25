@@ -46,8 +46,7 @@ namespace RBX
 					0.0f, 0.0f, -1.0f, 0.0f);
 		}
 
-		static Matrix4 projectionPerspective(float fovUpTan, float fovDownTan, float fovLeftTan, float fovRightTan, float znear, float zfar)
-		{
+		static Matrix4 projectionPerspective(float fovUpTan, float fovDownTan, float fovLeftTan, float fovRightTan, float znear, float zfar) {
 			float sx = 2.0f / (fovLeftTan + fovRightTan);
 			float ox = (fovRightTan - fovLeftTan) / (fovLeftTan + fovRightTan);
 			float sy = 2.0f / (fovUpTan + fovDownTan);

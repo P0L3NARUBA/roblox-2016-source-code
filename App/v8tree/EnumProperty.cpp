@@ -37,7 +37,7 @@ template<>
 bool StringConverter<NormalId>::convertToValue(const std::string& text, NormalId& value)
 {
 	if(text.find("Top") != std::string::npos || text.find("top") != std::string::npos ){
-		value = NORM_Y;
+		value = NORM_Y_POS;
 		return true;
 	}
 	if(text.find("Bottom") != std::string::npos || text.find("bottom") != std::string::npos ){
@@ -45,7 +45,7 @@ bool StringConverter<NormalId>::convertToValue(const std::string& text, NormalId
 		return true;
 	}
 	if(text.find("Back") != std::string::npos || text.find("back") != std::string::npos ){
-		value = NORM_Z;
+		value = NORM_Z_POS;
 		return true;
 	}
 	if(text.find("Front") != std::string::npos || text.find("front") != std::string::npos ){
@@ -53,7 +53,7 @@ bool StringConverter<NormalId>::convertToValue(const std::string& text, NormalId
 		return true;
 	}
 	if(text.find("Right") != std::string::npos || text.find("right") != std::string::npos ){
-		value = NORM_X;
+		value = NORM_X_POS;
 		return true;
 	}
 	if(text.find("Left") != std::string::npos || text.find("left") != std::string::npos ){
@@ -104,11 +104,11 @@ Should be:  (Also in PartInstance)
 > +Y top
 */
 
-	addPair(NORM_Y, "Top");
+	addPair(NORM_Y_POS, "Top");
 	addPair(NORM_Y_NEG, "Bottom");
-	addPair(NORM_Z, "Back");
+	addPair(NORM_Z_POS, "Back");
 	addPair(NORM_Z_NEG, "Front");
-	addPair(NORM_X, "Right");
+	addPair(NORM_X_POS, "Right");
 	addPair(NORM_X_NEG, "Left");
 
 	//addPair(NORM_UNDEFINED, "Undefined");

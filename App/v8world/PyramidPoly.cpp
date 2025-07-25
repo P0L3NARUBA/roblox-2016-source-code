@@ -141,7 +141,7 @@ size_t PyramidPoly::getFaceFromLegacyNormalId( const NormalId nId ) const
 	size_t faceId = -1;
 	switch(nId)
 	{
-		case NORM_X:
+		case NORM_X_POS:
 			switch(numSides)
 			{
 				case 3:
@@ -179,13 +179,13 @@ size_t PyramidPoly::getFaceFromLegacyNormalId( const NormalId nId ) const
 					break;
 			}
 			break;
-		case NORM_Y:
+		case NORM_Y_POS:
 			faceId = -1;
 			break;
 		case NORM_Y_NEG:
 			faceId = mesh->numFaces() - 1;
 			break;
-		case NORM_Z:
+		case NORM_Z_POS:
 			switch(numSides)
 			{
 				case 3:

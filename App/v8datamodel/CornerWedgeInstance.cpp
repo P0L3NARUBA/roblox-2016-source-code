@@ -23,7 +23,7 @@ CornerWedgeInstance::CornerWedgeInstance() : DescribedCreatable<CornerWedgeInsta
 	myPrim->setGeometryType(Geometry::GEOMETRY_CORNERWEDGE);
 	myPrim->setSurfaceType(NORM_X_NEG, NO_SURFACE);
 	myPrim->setSurfaceType(NORM_Y_NEG, NO_SURFACE);
-	myPrim->setSurfaceType(NORM_Y, NO_SURFACE);
+	myPrim->setSurfaceType(NORM_Y_POS, NO_SURFACE);
 
 	shouldRenderSetDirty();
 }

@@ -32,19 +32,22 @@ namespace RBX
 			Sky(VisualEngine* visualEngine);
 			~Sky();
 
-			void update(const G3D::LightingParameters& lighting, int starCount, bool drawCelestialBodies);
+			void update(const G3D::LightingParameters& lighting, int starCount, bool drawCelestialBodies, bool useHDRI);
 
-			void prerender(); // call as early as possible, before the envmap update
 			void render(DeviceContext* context, const RenderCamera& camera, Texture* texture, bool drawStars = true);
 
-			void RenderSkyboxEnvMap(DeviceContext* context, unsigned int face, unsigned int targetSize);
+			void RenderSkyboxEnvMapCube(DeviceContext* context, unsigned int face, unsigned int targetSize);
+
+			void PrepareSkyboxEnvMapEqui(DeviceContext* context);
+			void RenderSkyboxEnvMapEqui(DeviceContext* context);
 
 			void setSkyBoxDefault();
-			void setSkyBox(const ContentId& rt, const ContentId& lf, const ContentId& bk, const ContentId& ft, const ContentId& up, const ContentId& dn);
-			bool isReady() const { return readyState; }
+			void setSkyBox(const ContentId& rt, const ContentId& lf, const ContentId& bk, const ContentId& ft, const ContentId& up, const ContentId& dn, const ContentId& hdri);
+
+			bool getUseHDRI() const { return useSkyboxHDRI; }
 
 		private:
-			struct Star
+			/*struct Star
 			{
 				Vector3 position;
 				float intensity;
@@ -58,7 +61,7 @@ namespace RBX
 
 				void resize(Sky* sky, unsigned int count, bool dynamic);
 				void reset();
-			};
+			};*/
 
 			enum Brightness
 			{
@@ -74,13 +77,15 @@ namespace RBX
 
 			scoped_ptr<GeometryBatch> cube;
 
-			TextureRef skyBox[6];
-			TextureRef skyBoxLoading[6];
+			TextureRef skybox[6];
+			TextureRef skyboxHDRI;
 
 			Color3 skyColor;
 			Color3 skyColor2;
 
 			bool drawSunMoon;
+			bool useSkyboxHDRI;
+
 			Vector3 sunPosition;
 			Color4 sunColor;
 			TextureRef sun;
@@ -89,18 +94,18 @@ namespace RBX
 			Color4 moonColor;
 			TextureRef moon;
 
-			Brightness starLight;
+			/*Brightness starLight;
 			StarData starsNormal;
 			StarData starsTwinkle;
 			int starTwinkleCounter;
-			bool readyState;
+			bool readyState;*/
 
-			void loadSkyBoxDefault(TextureRef* textures);
-			void loadSkyBox(TextureRef* textures, const ContentId& rt, const ContentId& lf, const ContentId& bk, const ContentId& ft, const ContentId& up, const ContentId& dn);
+			void loadSkyBoxDefault();
+			void loadSkyBox(const ContentId& rt, const ContentId& lf, const ContentId& bk, const ContentId& ft, const ContentId& up, const ContentId& dn, const ContentId& hdri);
 
-			void createStarField(int starCount);
+			/*void createStarField(int starCount);
 			void updateStarsNormal();
-			void updateStarsTwinkle();
+			void updateStarsTwinkle();*/
 		};
 
 	}

@@ -132,16 +132,16 @@ namespace RBX {
 	////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////
 
-	static const float defaultFieldOfView = G3D::toRadians(70.0f);
+	static const float defaultFieldOfView = G3D::toRadians(90.0f);
 
 	float Camera::CameraKeyMoveFactor = 1.5f;
 	float Camera::CameraMouseWheelMoveFactor = 15.0f;
-	float Camera::CameraShiftKeyMoveFactor = .2f;
+	float Camera::CameraShiftKeyMoveFactor = 0.2f;
 
 	Camera::Camera() :
 		camInterpolation(CAM_INTERPOLATION_NONE),
-		interpolationDuration(0.f),
-		interpolationTime(-1.f),
+		interpolationDuration(0.0f),
+		interpolationTime(-1.0f),
 		cameraType(Camera::FIXED_CAMERA),
 		cameraFocus(Vector3(0.0f, 0.0f, -5.0f)),
 		fieldOfView(defaultFieldOfView),
@@ -154,7 +154,7 @@ namespace RBX {
 		currentCameraHistoryPosition(-1),
 		lastHistoryPushTime(0),
 		hasFocalObject(false),
-		viewport(Vector2(0, 0)),
+		viewport(Vector2(0.0f, 0.0f)),
 		headLocked(true)
 	{
 		setName("Camera");

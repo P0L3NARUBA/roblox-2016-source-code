@@ -122,28 +122,16 @@ namespace RBX
 		{
 			const FormatDescription& desc = gTextureFormats[format];
 
-			return width * height * (desc.bpp / 8);
-
-			/*switch (format)
+			switch (format)
 			{
 			case Format_BC1:
 			case Format_BC2:
 			case Format_BC3:
-			case Format_ETC1:
-				return ((width + 3) / 4) * ((height + 3) / 4) * (desc.bpp * 16 / 8);
-
-			case Format_PVRTC_RGB2:
-			case Format_PVRTC_RGBA2:
-				return (std::max(width, 16u) * std::max(height, 8u) * 2 + 7) / 8;
-
-			case Format_PVRTC_RGB4:
-			case Format_PVRTC_RGBA4:
-				return (std::max(width, 8u) * std::max(height, 8u) * 4 + 7) / 8;
+				return std::max(1u, ((width + 3u) / 4u)) * std::max(1u, ((height + 3u) / 4u)) * (desc.bpp * 16u / 8u);
 
 			default:
-				RBXASSERT(!desc.compressed);
 				return width * height * (desc.bpp / 8);
-			}*/
+			}
 		}
 
 		unsigned int Texture::getTextureSize(Type type, Format format, unsigned int width, unsigned int height, unsigned int depth, unsigned int mipLevels)

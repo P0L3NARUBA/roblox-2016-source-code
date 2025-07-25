@@ -25,10 +25,10 @@ NormalId Extents::closestFace(const Vector3& point)
 	float ny = std::abs(point.y - low.y);	
 	float nz = std::abs(point.z - low.z);	
 	
-	NormalId best = NORM_X; 
+	NormalId best = NORM_X_POS; 
 	float bestV = x;
-	if (y < bestV)	{best = NORM_Y; bestV = y;}
-	if (z < bestV)	{best = NORM_Z; bestV = z;}
+	if (y < bestV)	{best = NORM_Y_POS; bestV = y;}
+	if (z < bestV)	{best = NORM_Z_POS; bestV = z;}
 	if (nx < bestV)	{best = NORM_X_NEG; bestV = nx;}
 	if (ny < bestV)	{best = NORM_Y_NEG; bestV = ny;}
 	if (nz < bestV)	{best = NORM_Z_NEG;}

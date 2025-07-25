@@ -22,6 +22,7 @@ namespace RBX {
 
 			const TextureRef& getOutdoorTexture() const { return outdoorTexture; }
 			const TextureRef& getIndoorTextures() const { return indoorTextures; }
+			const TextureRef& getIrradianceTextures() const { return irradianceTextures; }
 
 			void update(DeviceContext* context, double gameTime);
 			//void markDirty(bool veryDirty = false);
@@ -40,19 +41,24 @@ namespace RBX {
 				DirtyWait,   // full update has been scheduled, but waiting for the sky to finish loading 
 				VeryDirty,   // full update has been scheduled,
 			};
+
+			struct CubemapFace {
+				shared_ptr<Framebuffer> mips[6];
+			};
 			
 			VisualEngine*			visualEngine;
 			TextureRef				outdoorTexture; // Outdoor cubemap texture
 			TextureRef				indoorTextures; // Indoor cubemap textures
-			shared_ptr<Framebuffer> outFaces[6]; // Outdoor cubemap framebuffers
-			shared_ptr<Framebuffer> inFaces[24]; // Indoor cubemaps framebuffers
+			TextureRef				irradianceTextures; // Irradiance cubemap textures
+			CubemapFace				outFaces[6]; // Outdoor cubemap framebuffers
+			CubemapFace				inFaces[24]; // Indoor cubemaps framebuffers
+			shared_ptr<Framebuffer> irradianceFaces[30]; // Irradiance cubemap framebuffers
 			//shared_ptr<ShaderProgram> mipGen; // mipmap generator
 			unsigned                updateStep;
 			DirtyState              dirtyState;
 			double                  envmapLastTimeOfDay;
 			double                  envmapLastRealTime;
 
-			void renderOutdoorFace(DeviceContext* context, unsigned int face);
 			virtual void onDeviceRestored();
 			//void clearDirty();
 		};

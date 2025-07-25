@@ -259,17 +259,17 @@ void AdvMoveToolBase::onMouseMove(const shared_ptr<InputObject>& inputObject)
             const int pos_neg = dragNormalId == pos_normal ? 1.0f : -1.0f;
             switch ( pos_normal )
             {
-                case NORM_X:
+                case NORM_X_POS:
                     right   = normalize(owner_rotation.column(0));
                     at      = normalize(pos_neg * new_vector);
                     up      = normalize(at.cross(right));
                     break;
-                case NORM_Y:
+                case NORM_Y_POS:
                     up      = normalize(owner_rotation.column(1));
                     right   = normalize(pos_neg * new_vector);
                     at      = normalize(right.cross(up));
                     break;
-                case NORM_Z:
+                case NORM_Z_POS:
                     at      = normalize(owner_rotation.column(2));
                     up      = normalize(pos_neg * new_vector);
                     right   = normalize(up.cross(at));
@@ -631,7 +631,7 @@ void AdvMoveTool::getGridXYUsingCamera(RBX::PartInstance *part, G3D::Vector3 &gr
 
 	switch(dragAxis)
 	{
-	case NORM_X:
+	case NORM_X_POS:
 	case NORM_X_NEG:		
 		if(fabs(bodyZWorld.dot(cameraDirection)) > fabs(bodyYWorld.dot(cameraDirection)))
 		{
@@ -644,7 +644,7 @@ void AdvMoveTool::getGridXYUsingCamera(RBX::PartInstance *part, G3D::Vector3 &gr
 			gridYDir = Vector3::unitX();
 		}
 		break;
-	case NORM_Y:
+	case NORM_Y_POS:
 	case NORM_Y_NEG:		
 		if( fabs(bodyZWorld.dot(cameraDirection)) > fabs(bodyXWorld.dot(cameraDirection)) )
 		{
@@ -657,7 +657,7 @@ void AdvMoveTool::getGridXYUsingCamera(RBX::PartInstance *part, G3D::Vector3 &gr
 			gridYDir = Vector3::unitZ();
 		}
 		break;
-	case NORM_Z:
+	case NORM_Z_POS:
 	case NORM_Z_NEG:		
 		if( fabs(bodyYWorld.dot(cameraDirection)) > fabs(bodyXWorld.dot(cameraDirection)) )
 		{

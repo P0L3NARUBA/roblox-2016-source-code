@@ -14,6 +14,7 @@ TEX_DECLARE2D(float4, LTC2, 4);
 TEX_DECLARE2D(float, AmbientOcclusion, 5);
 TEX_DECLARECUBE(float3, OutdoorCubemap, 6);
 TEX_DECLARECUBEARRAY(float4, IndoorCubemaps, 7);
+TEX_DECLARECUBEARRAY(float4, IrradianceCubemaps, 8);
 
 /* Material Textures */
 TEX_DECLARE2DARRAY(float4, Albedo,     10); /* R: Albedo.r           , G: Albedo.g         , B: Albedo.b         , A: Alpha/Factor      */
@@ -93,8 +94,8 @@ float4 MaterialPS(MaterialVertexOutput IN) : SV_TARGET {
 
 	if (AmbientDiffuseFactor + AmbientSpecularFactor > 0.0) {
 		if (AmbientDiffuseFactor > 0.0) {
-			float3 OutdoorDiffuse = OutdoorCubemapTexture.SampleLevel(OutdoorCubemapSampler, Normal, MAX_REFLECTION_LOD);
-			float4 IndoorDiffuse  = IndoorCubemapsTexture.SampleLevel(IndoorCubemapsSampler, float4(Normal, 0.0), MAX_REFLECTION_LOD);
+			float3 OutdoorDiffuse = IrradianceCubemapsTexture.Sample(IrradianceCubemapsSampler, float4(Normal, 0.0));
+			float4 IndoorDiffuse  = IrradianceCubemapsTexture.Sample(IrradianceCubemapsSampler, float4(Normal, 1.0));
 
             // The alpha channel in the indoor cubemap represents how visible the sky is.
             // By doing it this way, we avoid having to re-render the indoor cubemap when the sky changes.

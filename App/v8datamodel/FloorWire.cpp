@@ -188,13 +188,13 @@ void FloorWire::computeSurfacePosition(const shared_ptr<PartInstance>& part,
 	const Vector3 halfPartSize(part->getPartSizeUi() / 2);
 	Vector3 offset(0, 0, 0);
 	switch (surface.getNormalId()) {
-		case NORM_X:
+		case NORM_X_POS:
 			offset.x = halfPartSize.x + kMinDistanceFromBlocks;
 			break;
-		case NORM_Y:
+		case NORM_Y_POS:
 			offset.y = halfPartSize.y + kMinDistanceFromBlocks;
 			break;
-		case NORM_Z:
+		case NORM_Z_POS:
 			offset.z = halfPartSize.z + kMinDistanceFromBlocks;
 			break;
 		case NORM_X_NEG:

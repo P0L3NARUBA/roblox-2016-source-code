@@ -445,7 +445,7 @@ namespace RBX {
 	{
 		FASTLOG2(FLog::PartInstanceLifetime, "PartInstance created: %p, primitive: %p", this, getPartPrimitive());
 
-		primitive->setSurfaceType(NORM_Y, STUDS);
+		primitive->setSurfaceType(NORM_Y_POS, STUDS);
 		primitive->setSurfaceType(NORM_Y_NEG, INLET);
 		primitive->setSize(initialSize);
 		primitive->setFriction(defaultFriction());
@@ -570,7 +570,7 @@ namespace RBX {
 			if (RigidJoint::isRigidJoint(j) || Joint::isMotorJoint(j))
 			{
 				NormalId norm = j->getNormalId(j->getPrimitiveId(getConstPartPrimitive()));
-				if (norm == NORM_Y) {
+				if (norm == NORM_Y_POS) {
 					weldTop = true;
 				}
 				if (norm == NORM_Y_NEG) {
@@ -2902,10 +2902,10 @@ namespace RBX {
 				switch (getFormFactor())
 				{
 				case PartInstance::BRICK:
-					resizeIncrement = (localNormalId == NORM_Y || localNormalId == NORM_Y_NEG) ? 1.2f : 1.0f;
+					resizeIncrement = (localNormalId == NORM_Y_POS || localNormalId == NORM_Y_NEG) ? 1.2f : 1.0f;
 					break;
 				case PartInstance::PLATE:
-					resizeIncrement = (localNormalId == NORM_Y || localNormalId == NORM_Y_NEG) ? 0.4f : 1.0f;
+					resizeIncrement = (localNormalId == NORM_Y_POS || localNormalId == NORM_Y_NEG) ? 0.4f : 1.0f;
 					break;
 				case PartInstance::SYMETRIC:
 				default:
@@ -3038,7 +3038,7 @@ namespace RBX {
 			}
 		}
 		RBXASSERT_IF_VALIDATING(0);
-		return Surface(NULL, NORM_X);
+		return Surface(NULL, NORM_X_POS);
 	}
 
 	SurfaceType PartInstance::getSurfaceType(NormalId surfId) const
@@ -3125,9 +3125,9 @@ namespace RBX {
 		// Inlets on bottom, all sides flat, anything on top
 		return ((getSurfaceType(NORM_Y_NEG) == INLET)
 			&& (getSurfaceType(NORM_Z_NEG) == NO_SURFACE)
-			&& (getSurfaceType(NORM_Z) == NO_SURFACE)
+			&& (getSurfaceType(NORM_Z_POS) == NO_SURFACE)
 			&& (getSurfaceType(NORM_X_NEG) == NO_SURFACE)
-			&& (getSurfaceType(NORM_X) == NO_SURFACE));
+			&& (getSurfaceType(NORM_X_POS) == NO_SURFACE));
 	}
 
 	namespace Reflection

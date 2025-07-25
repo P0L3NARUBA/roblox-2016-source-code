@@ -99,10 +99,10 @@ namespace RBX
 
 					lightGrid.reset(lgrid);*/
 
-					// load fonts
+			// load fonts
 			if (FFlag::UseDynamicTypesetterUTF8)
 			{
-				glyphAtlas.reset(new TextureAtlas(this, 2048, 2048));
+				glyphAtlas.reset(new TextureAtlas(this, 2048u, 2048u));
 				for (Text::Font font = Text::FONT_LEGACY; font != Text::FONT_LAST; font = Text::Font(font + 1))
 				{
 					static const char* kFontTTFPaths[] = {

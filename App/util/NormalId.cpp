@@ -9,9 +9,9 @@ namespace RBX {
 	NormalIdMask normalIdToMask(NormalId normal)	
 	{
 		switch(normal){
-		case NORM_X:     return NORM_X_MASK;    
-		case NORM_Y:	 return NORM_Y_MASK;    
-		case NORM_Z:	 return NORM_Z_MASK;
+		case NORM_X_POS:     return NORM_X_MASK;    
+		case NORM_Y_POS:	 return NORM_Y_MASK;    
+		case NORM_Z_POS:	 return NORM_Z_MASK;
 		case NORM_X_NEG: return NORM_X_NEG_MASK;
 		case NORM_Y_NEG: return NORM_Y_NEG_MASK;
 		case NORM_Z_NEG: return NORM_Z_NEG_MASK;
@@ -40,12 +40,12 @@ NormalId normalIdToU(NormalId normalId)
 {
 	switch ( normalId )
     {
-        case NORM_X:    
-            return NORM_Z;
-        case NORM_Y:
-            return NORM_X;
-        case NORM_Z:
-            return NORM_Y;
+        case NORM_X_POS:    
+            return NORM_Z_POS;
+        case NORM_Y_POS:
+            return NORM_X_POS;
+        case NORM_Z_POS:
+            return NORM_Y_POS;
         case NORM_X_NEG:
             return NORM_Z_NEG;
         case NORM_Y_NEG:
@@ -54,7 +54,7 @@ NormalId normalIdToU(NormalId normalId)
             return NORM_Y_NEG;
         default:
             RBXASSERT(0);
-            return NORM_Y;
+            return NORM_Y_POS;
     }
 }
 
@@ -63,12 +63,12 @@ NormalId normalIdToV(NormalId normalId)
 {
 	switch ( normalId )
     {
-        case NORM_X:    
-            return NORM_Y;
-        case NORM_Y:
-            return NORM_Z;
-        case NORM_Z:
-            return NORM_X;
+        case NORM_X_POS:    
+            return NORM_Y_POS;
+        case NORM_Y_POS:
+            return NORM_Z_POS;
+        case NORM_Z_POS:
+            return NORM_X_POS;
         case NORM_X_NEG:
             return NORM_Y_NEG;
         case NORM_Y_NEG:
@@ -77,7 +77,7 @@ NormalId normalIdToV(NormalId normalId)
             return NORM_X_NEG;
         default:
             RBXASSERT(0);
-            return NORM_Y;
+            return NORM_Y_POS;
     }
 }
 
@@ -86,19 +86,19 @@ NormalId normalIdToV(NormalId normalId)
 // UVW to Object coords
 
 template<>
-Vector3 uvwToObject<NORM_X>(const Vector3& v) 
+Vector3 uvwToObject<NORM_X_POS>(const Vector3& v) 
 {
 	return Vector3(v.z, v.y, -v.x);
 }
 
 template<>
-Vector3 uvwToObject<NORM_Y>(const Vector3& v) 
+Vector3 uvwToObject<NORM_Y_POS>(const Vector3& v) 
 {
 	return Vector3(-v.x, v.z, v.y);
 }
 
 template<>
-Vector3 uvwToObject<NORM_Z>(const Vector3& v) 
+Vector3 uvwToObject<NORM_Z_POS>(const Vector3& v) 
 {
 	return Vector3(v.x, v.y, v.z);
 }
@@ -126,19 +126,19 @@ Vector3 uvwToObject<NORM_Z_NEG>(const Vector3& v)
 // Object to UVW coords
 
 template<>
-Vector3 objectToUvw<NORM_X>(const Vector3& v) 
+Vector3 objectToUvw<NORM_X_POS>(const Vector3& v) 
 {
 	return Vector3(-v.z, v.y, v.x);
 }
 
 template<>
-Vector3 objectToUvw<NORM_Y>(const Vector3& v) 
+Vector3 objectToUvw<NORM_Y_POS>(const Vector3& v) 
 {
 	return Vector3(-v.x, v.z, v.y);
 }
 
 template<>
-Vector3 objectToUvw<NORM_Z>(const Vector3& v) 
+Vector3 objectToUvw<NORM_Z_POS>(const Vector3& v) 
 {
 	return Vector3(v.x, v.y, v.z);
 }
@@ -177,12 +177,12 @@ Vector3 uvwToObject(const Vector3& uvwPt, NormalId faceId)
 {
 	switch (faceId)
 	{
-	case NORM_X:	
-		return uvwToObject<NORM_X>(uvwPt);
-	case NORM_Y:
-		return uvwToObject<NORM_Y>(uvwPt);
-	case NORM_Z:
-		return uvwToObject<NORM_Z>(uvwPt);
+	case NORM_X_POS:	
+		return uvwToObject<NORM_X_POS>(uvwPt);
+	case NORM_Y_POS:
+		return uvwToObject<NORM_Y_POS>(uvwPt);
+	case NORM_Z_POS:
+		return uvwToObject<NORM_Z_POS>(uvwPt);
 	case NORM_X_NEG:
 		return uvwToObject<NORM_X_NEG>(uvwPt);
 	case NORM_Y_NEG:
@@ -199,12 +199,12 @@ Vector3 objectToUvw(const Vector3& objectPt, NormalId faceId)
 {
 	switch (faceId)
 	{
-	case NORM_X:	
-		return objectToUvw<NORM_X>(objectPt);
-	case NORM_Y:
-		return objectToUvw<NORM_Y>(objectPt);
-	case NORM_Z:
-		return objectToUvw<NORM_Z>(objectPt);
+	case NORM_X_POS:	
+		return objectToUvw<NORM_X_POS>(objectPt);
+	case NORM_Y_POS:
+		return objectToUvw<NORM_Y_POS>(objectPt);
+	case NORM_Z_POS:
+		return objectToUvw<NORM_Z_POS>(objectPt);
 	case NORM_X_NEG:
 		return objectToUvw<NORM_X_NEG>(objectPt);
 	case NORM_Y_NEG:
@@ -234,19 +234,19 @@ const Vector3& normalIdToVector3(NormalId normalId)
 {
 	switch (normalId)
 	{
-	case NORM_X:
+	case NORM_X_POS:
 		{
-			static Vector3 v(normalIdToVector3Internal<NORM_X>());		
+			static Vector3 v(normalIdToVector3Internal<NORM_X_POS>());		
 			return v;
 		}
-	case NORM_Y:
+	case NORM_Y_POS:
 		{
-			static Vector3 v(normalIdToVector3Internal<NORM_Y>());		
+			static Vector3 v(normalIdToVector3Internal<NORM_Y_POS>());		
 			return v;
 		}
-	case NORM_Z:
+	case NORM_Z_POS:
 		{
-			static Vector3 v(normalIdToVector3Internal<NORM_Z>());		
+			static Vector3 v(normalIdToVector3Internal<NORM_Z_POS>());		
 			return v;
 		}
 	case NORM_X_NEG:
@@ -291,17 +291,17 @@ const Matrix3& normalIdToMatrix3(NormalId normalId)
 {
 	switch (normalId)
 	{
-	case NORM_X:
+	case NORM_X_POS:
 		{
-			static Matrix3 x = normalIdToMatrix3Internal(NORM_X);		return x;
+			static Matrix3 x = normalIdToMatrix3Internal(NORM_X_POS);		return x;
 		}
-	case NORM_Y:
+	case NORM_Y_POS:
 		{
-			static Matrix3 y = normalIdToMatrix3Internal(NORM_Y);		return y;
+			static Matrix3 y = normalIdToMatrix3Internal(NORM_Y_POS);		return y;
 		}
-	case NORM_Z:
+	case NORM_Z_POS:
 		{
-			static Matrix3 z = normalIdToMatrix3Internal(NORM_Z);		return z;
+			static Matrix3 z = normalIdToMatrix3Internal(NORM_Z_POS);		return z;
 		}
 	case NORM_X_NEG:
 		{
@@ -333,13 +333,13 @@ NormalId Vector3ToNormalId(const Vector3& v)
 				||	(v == -Vector3::unitZ())	);
 
 	if (v.x == 1.0f) {
-		return NORM_X;
+		return NORM_X_POS;
 	}
 	else if (v.y == 1.0f) {
-		return NORM_Y;
+		return NORM_Y_POS;
 	}
 	else if (v.z == 1.0f) {
-		return NORM_Z;
+		return NORM_Z_POS;
 	}
 	else if (v.x == -1.0f) {
 		return NORM_X_NEG;

@@ -14,9 +14,9 @@ namespace RBX {
 	
 	ColorCorrectionEffect::ColorCorrectionEffect()
 		:DescribedCreatable<ColorCorrectionEffect, PostEffect, sColorCorrectionEffect>("ColorCorrectionEffect")
-		, brightness(0.0f)
-		, contrast(0.0f)
-		, saturation(0.0f)
+		, brightness(1.0f)
+		, contrast(1.0f)
+		, saturation(1.0f)
 		, tintColor(Color3(1.0f, 1.0f, 1.0f))
 	{
 	}

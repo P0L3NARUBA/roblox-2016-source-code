@@ -73,20 +73,20 @@ size_t CornerWedgePoly::getFaceFromLegacyNormalId( const NormalId nId ) const
 	size_t faceId = -1;
 	switch(nId)
 	{
-		case NORM_X:
+		case NORM_X_POS:
 			faceId = 0;
 			break;
 		case NORM_X_NEG:
 			faceId = 2;
 			break;
-		case NORM_Y:
+		case NORM_Y_POS:
 		default:
 			faceId = -1;
 			break;
 		case NORM_Y_NEG:
 			faceId = 3;
 			break;
-		case NORM_Z:
+		case NORM_Z_POS:
 			faceId = 1;
 			break;
 		case NORM_Z_NEG:

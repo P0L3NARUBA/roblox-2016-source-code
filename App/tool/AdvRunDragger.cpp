@@ -835,7 +835,7 @@ void AdvRunDragger::turnUpright(PartInstance* part)
 		// Angled surface ... (nothing done here yet)
 		NormalId upInWorld = Math::getClosestObjectNormalId(Vector3::unitY(), dragCoord.rotation);
 
-		if (upInWorld != NORM_Y) {
+		if (upInWorld != NORM_Y_POS) {
 			dragCoord.rotation = Matrix3::identity();
 			part->setCoordinateFrame(dragCoord);
 		}
