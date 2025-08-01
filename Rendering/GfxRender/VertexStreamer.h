@@ -5,39 +5,34 @@
 #include "GfxCore/Geometry.h"
 #include "Vertex.h"
 
-namespace RBX
-{
+namespace RBX {
 	struct RenderPassStats;
 }
 
-namespace RBX
-{
+namespace RBX {
 
-	enum BatchTextureType
-	{
+	enum BatchTextureType {
 		BatchTextureType_Color,
 		BatchTextureType_Font,
 		BatchTextureType_Count
 	};
 
-	namespace Graphics
-	{
+	namespace Graphics {
 		class VisualEngine;
 		class DeviceContext;
 		class Texture;
 		class RenderCamera;
 
-		class VertexStreamer
-		{
+		class VertexStreamer {
 		public:
 			VertexStreamer(VisualEngine* visualEngine);
 			~VertexStreamer();
 
 			void renderPrepare();
 			void render3D(DeviceContext* context, const RenderCamera& camera, RenderPassStats& stats);
-			void render3DNoDepth(DeviceContext* context, const RenderCamera& camera, RenderPassStats& stats, int renderIndex);
-			void render2D(DeviceContext* context, unsigned int viewWidth, unsigned int viewHeight, RenderPassStats& stats);
-			void render2DVR(DeviceContext* context, unsigned int viewWidth, unsigned int viewHeight, RenderPassStats& stats);
+			void render3DNoDepth(DeviceContext* context, const RenderCamera& camera, RenderPassStats& stats, int32_t renderIndex);
+			void render2D(DeviceContext* context, uint32_t viewWidth, uint32_t viewHeight, RenderPassStats& stats);
+			void render2DVR(DeviceContext* context, uint32_t viewWidth, uint32_t viewHeight, RenderPassStats& stats);
 			void renderFinish();
 
 			void cleanUpFrameData();
@@ -47,23 +42,21 @@ namespace RBX
 			void line(float x1, float y1, float x2, float y2, const Color4& color4);
 			void line3d(float x1, float y1, float z1, float x2, float y2, float z2, const Color4& color4);
 
-			void spriteBlt3D(const shared_ptr<Texture>& texptr, const Color4& color4, BatchTextureType batchTexType, const Vector3& x0y0, const Vector3& x1y0, const Vector3& x0y1, const Vector3& x1y1, const Vector2& tex0, const Vector2& tex1, int zIndex, bool alwaysOnTop);
+			void spriteBlt3D(const shared_ptr<Texture>& texptr, const Color4& color4, BatchTextureType batchTexType, const Vector3& x0y0, const Vector3& x1y0, const Vector3& x0y1, const Vector3& x1y1, const Vector2& tex0, const Vector2& tex1, int32_t zIndex, bool alwaysOnTop);
 
-			void triangleList2d(const Color4& color4, const Vector2* v, int vcount, const short* i, int icount);
-			void triangleList(const Color4& color4, const CoordinateFrame& cframe, const Vector3* v, int vcount, const short* i, int icount);
+			void triangleList2d(const Color4& color4, const Vector2* v, uint32_t vcount, const short* i, uint32_t icount);
+			void triangleList(const Color4& color4, const CoordinateFrame& cframe, const Vector3* v, uint32_t vcount, const short* i, uint32_t icount);
 
 		private:
-			enum CoordinateSpace
-			{
+			enum CoordinateSpace {
 				CS_WorldSpace = 0,
 				CS_ScreenSpace = 1,
 				CS_WorldSpaceNoDepth = 2,
 				CS_NumTypes
 			};
 
-			struct VertexChunk
-			{
-				VertexChunk(const shared_ptr<Texture>& texture, Geometry::Primitive primitive, unsigned int vertexStart, unsigned int vertexCount, BatchTextureType batchTexType, int zIndex, bool forceTop)
+			struct VertexChunk {
+				VertexChunk(const shared_ptr<Texture>& texture, Geometry::Primitive primitive, uint32_t vertexStart, uint32_t vertexCount, BatchTextureType batchTexType, int32_t zIndex, bool forceTop)
 					: texture(texture)
 					, primitive(primitive)
 					, vertexStart(vertexStart)
@@ -81,10 +74,10 @@ namespace RBX
 				shared_ptr<Texture> texture;
 				Geometry::Primitive primitive;
 
-				unsigned int vertexStart;
-				unsigned int vertexCount;
+				uint32_t vertexStart;
+				uint32_t vertexCount;
 
-				int index;
+				int32_t index;
 				bool alwaysOnTop;
 
 				BatchTextureType batchTextureType;
@@ -103,8 +96,8 @@ namespace RBX
 			shared_ptr<VertexLayout> vertexLayout;
 			shared_ptr<Geometry> geometry;
 
-			VertexChunk* prepareChunk(const shared_ptr<Texture>& texPtr, Geometry::Primitive primitive, unsigned int vertexCount, CoordinateSpace coordinateSpace, BatchTextureType batchTextureType, bool ignoreTexture = false, int zIndex = -1, bool forceTop = false);
-			void renderInternal(DeviceContext* context, CoordinateSpace coordinateSpace, const RenderCamera& camera, RenderPassStats& stats, int renderIndex = -1);
+			VertexChunk* prepareChunk(const shared_ptr<Texture>& texPtr, Geometry::Primitive primitive, uint32_t vertexCount, CoordinateSpace coordinateSpace, BatchTextureType batchTextureType, bool ignoreTexture = false, int32_t zIndex = -1, bool forceTop = false);
+			void renderInternal(DeviceContext* context, CoordinateSpace coordinateSpace, const RenderCamera& camera, RenderPassStats& stats, int32_t renderIndex = -1);
 		};
 	}
 }

@@ -12,30 +12,31 @@ namespace RBX {
 		typedef GeometryPool<Vector3_2Ints, POLY::PrismMesh, Vector3_2IntsComparer> PrismMeshPool;
 		PrismMeshPool::Token prismMesh;
 
-		int numSides;
-		int numSlices;
+		size_t numSides;
+		size_t numSlices;
 
-		void setNumSides( int num );
-		void setNumSlices( int num );
-		/*override*/ bool isGeometryOrthogonal( void ) const { return false; }
+		void setNumSides(size_t num);
+		void setNumSlices(size_t num);
+		/*override*/ bool isGeometryOrthogonal(void) const { return false; }
 
 	protected:
 		// Geometry Overrides
-		/*override*/ virtual GeometryType getGeometryType() const	{return GEOMETRY_PRISM;}
-		/*override*/ void setGeometryParameter(const std::string& parameter, int value);
-		/*override*/ int getGeometryParameter(const std::string& parameter) const;
+		/*override*/ virtual GeometryType getGeometryType() const { return GEOMETRY_PRISM; }
+		/*override*/ void setGeometryParameter(const std::string& parameter, size_t value);
+		/*override*/ size_t getGeometryParameter(const std::string& parameter) const;
 
 		/*override*/ Matrix3 getMoment(float mass) const;
 		/*override*/ Vector3 getCofmOffset() const;
-		/*override*/ CoordinateFrame getSurfaceCoordInBody( const size_t surfaceId ) const;
-		/*override*/ size_t getFaceFromLegacyNormalId( const NormalId nId ) const;
-	
+		/*override*/ CoordinateFrame getSurfaceCoordInBody(const size_t surfaceId) const;
+		/*override*/ size_t getFaceFromLegacyNormalId(const NormalId nId) const;
+
 		// Poly Overrides
 		/*override*/ void buildMesh();
 
 	public:
-		PrismPoly() : numSides(0), numSlices(0)
-		{}
+		PrismPoly() : numSides(0u), numSlices(0u)
+		{
+		}
 
 		/*override*/ bool setUpBulletCollisionData(void) { return false; }
 

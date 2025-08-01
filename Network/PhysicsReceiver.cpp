@@ -65,7 +65,7 @@ void DeserializedTouchItem::process(Replicator& replicator)
 }
 
 PhysicsReceiver::PhysicsReceiver(Replicator* replicator, bool isServer)
-: replicator(replicator), iAmServer(isServer), stats(NULL), movementWaypointList(DFInt::DebugMovementPathNumTotalWayPoint)
+: replicator(replicator), iAmServer(isServer), stats(nullptr), movementWaypointList(DFInt::DebugMovementPathNumTotalWayPoint)
 {
 	setTime(Time::nowFast());
 }
@@ -490,7 +490,7 @@ void PhysicsReceiver::readCoordinateFrame(RakNet::BitStream& bitStream, Coordina
 {
     NETPROFILE_START("readCoordinateFrame", &bitStream);
 
-	if(stats == NULL)
+	if(stats == nullptr)
 	{
 		Compressor::readTranslation(bitStream, cFrame.translation);
 		Compressor::readRotation(bitStream, cFrame.rotation);
@@ -560,35 +560,27 @@ void PhysicsReceiver::readMotorAngles(RakNet::BitStream& bitStream, AssemblyItem
     NETPROFILE_END("readMotorAngles", &bitStream);
 }
 
-void PhysicsReceiver::readCompactCFrame(RakNet::BitStream& bitStream, CompactCFrame& cFrame)
-{
+void PhysicsReceiver::readCompactCFrame(RakNet::BitStream& bitStream, CompactCFrame& cFrame) {
     NETPROFILE_START("readCompactCFrame", &bitStream);
 	bool isSimpleZAngle = bitStream.ReadBit();
 
-	if(isSimpleZAngle)
-	{
-		unsigned char byteAngle;
+	if(isSimpleZAngle) {
+		uint8_t byteAngle;
 		bitStream >> byteAngle;
 		cFrame = CompactCFrame(Vector3::zero(), Vector3::unitZ(), Math::rotationFromByte(byteAngle));
 		RBXASSERT(!Math::isNanInfVector3(cFrame.getAxis()));
 		RBXASSERT(!Math::isNanInf(cFrame.getAngle()));
 		RBXASSERT(!Math::isNanInfVector3(cFrame.translation));
 	}
-	else
-	{
+	else {
 		bool hasTranslation = bitStream.ReadBit();
 		bool hasRotation = bitStream.ReadBit();
 		if(hasTranslation)
-		{
 			Compressor::readTranslation(bitStream, cFrame.translation);
-		}
 		else
-		{
 			cFrame.translation = Vector3::zero();
-		}
 
-		if(hasRotation)
-		{
+		if(hasRotation) {
 			Vector3 axis;
 			readVectorFast( bitStream, axis.x, axis.y, axis.z );
 			unsigned char byteAngle;
@@ -597,9 +589,7 @@ void PhysicsReceiver::readCompactCFrame(RakNet::BitStream& bitStream, CompactCFr
 			cFrame.setAxisAngle(axis, angle);
 		}
 		else
-		{
-			cFrame.setAxisAngle(RBX::Vector3::unitX(), 0);
-		}
+			cFrame.setAxisAngle(RBX::Vector3::unitX(), 0.0f);
 
 		RBXASSERT(!Math::isNanInfVector3(cFrame.getAxis()));
 		RBXASSERT(!Math::isNanInf(cFrame.getAngle()));
@@ -613,18 +603,16 @@ void PhysicsReceiver::setPhysics(const MechanismItem& item, const RBX::RemoteTim
 	bool hasVelocity = item.hasVelocity;
 	Time::Interval lag(static_cast<double>(lagInMs) / 1000.0f);
 
-	for (int i = 0; i < item.numAssemblies(); ++i)
-	{
+	for (size_t i = 0u; i < item.numAssemblies(); ++i) {
 		AssemblyItem& assemblyItem = item.getAssemblyItem(i);
 
-		// assemblyItem.primitive will be NULL if the Part was destroyed while the physics packet was outstanding
+		// assemblyItem.primitive will be nullptr if the Part was destroyed while the physics packet was outstanding
 
-		if (PartInstance* part = assemblyItem.rootPart.get())
-		{
-			if (this->replicator->filterPhysics(part) == Reject)
-			{
+		if (PartInstance* part = assemblyItem.rootPart.get()) {
+			if (this->replicator->filterPhysics(part) == Reject) {
 				if (replicator->settings().printPhysicsFilters)
 					RBX::StandardOut::singleton()->printf(RBX::MESSAGE_INFO, "filterPhysics %s", part->getName().c_str());
+
 				continue;
 			}
 
@@ -633,43 +621,38 @@ void PhysicsReceiver::setPhysics(const MechanismItem& item, const RBX::RemoteTim
 			// Show david this assert and then destroy - validating the case where we received this history item in the past, and the primitive is no longer in world
 			RBXASSERT(primitive->getWorld());
 
-			if (!Assembly::isAssemblyRootPrimitive(primitive))
-			{
+			if (!Assembly::isAssemblyRootPrimitive(primitive)) {
 				if (replicator->settings().printPhysicsFilters)
 					RBX::StandardOut::singleton()->printf(RBX::MESSAGE_INFO, "!isAssemblyRootPrimitive %s", part->getName().c_str());
+
 				continue;
 			}
 
 			Assembly* a = primitive->getAssembly();
-			if (a->computeIsGrounded())
-			{
+			if (a->computeIsGrounded()) {
 				if (replicator->settings().printPhysicsFilters)
 					RBX::StandardOut::singleton()->printf(RBX::MESSAGE_INFO, "computeIsGrounded %s", part->getName().c_str());
+
 				continue;
 			}
 			
 			a->setPhysics(assemblyItem.motorAngles, assemblyItem.pv);				// motor angles
 			a->setNetworkHumanoidState((i == 0) ? item.networkHumanoidState : 0);
 
-			if (hasVelocity)
-			{
-				if (iAmServer)
-				{
+			if (hasVelocity) {
+				if (iAmServer) {
 					part->addInterpolationSample(assemblyItem.pv.position, assemblyItem.pv.velocity, remoteSendTime, now, 0.f, numNodesInHistory);
 					part->setPhysics(assemblyItem.pv);
 
                     Time localTime = replicator->remoteRaknetTimeToLocalRbxTime(remoteSendTime);
                     part->addMovementNode(assemblyItem.pv.position, assemblyItem.pv.velocity, localTime); // force update the movement node
 				} 
-				else
-				{
+				else {
 					bool isLagCompenstated = false;
 
-                    if (isLagCompenstated)
-                    {
+                    if (isLagCompenstated) {
 						// Extrapolate with velocity
-						if (assemblyItem.pv.velocity.rotational.squaredLength() >= 0.01)
-						{
+						if (assemblyItem.pv.velocity.rotational.squaredLength() >= 0.01f) {
 							Quaternion qOrientation(assemblyItem.pv.position.rotation);
 							qOrientation.normalize();
 							Quaternion qDot(Quaternion(assemblyItem.pv.velocity.rotational) * qOrientation * 0.5f);
@@ -677,54 +660,51 @@ void PhysicsReceiver::setPhysics(const MechanismItem& item, const RBX::RemoteTim
 							qOrientation.normalize();
 							qOrientation.toRotationMatrix(assemblyItem.pv.position.rotation);
 						}
-						if (assemblyItem.pv.velocity.linear.squaredLength() >= 1)
+
+						if (assemblyItem.pv.velocity.linear.squaredLength() >= 1.0f)
 							assemblyItem.pv.position.translation += assemblyItem.pv.velocity.linear  * lag.seconds();
 
-                        part->addInterpolationSample(assemblyItem.pv.position, assemblyItem.pv.velocity, remoteSendTime + lag, now, 0.f, numNodesInHistory);
+                        part->addInterpolationSample(assemblyItem.pv.position, assemblyItem.pv.velocity, remoteSendTime + lag, now, 0.0f, numNodesInHistory);
                     } 
 					else 
-					{
-                        part->addInterpolationSample(assemblyItem.pv.position, assemblyItem.pv.velocity, remoteSendTime, now, 0.f, numNodesInHistory);
-					}
+                        part->addInterpolationSample(assemblyItem.pv.position, assemblyItem.pv.velocity, remoteSendTime, now, 0.0f, numNodesInHistory);
 
 					CoordinateFrame oldPosition;
 					RBX::Velocity previousLinearVelocity;
 					RBX::Time lastUpdateTime;
 					
-					if (DFFlag::HumanoidFloorPVUpdateSignal)
-					{
+					if (DFFlag::HumanoidFloorPVUpdateSignal) {
 						oldPosition = part->getCoordinateFrame();
 						previousLinearVelocity = part->getVelocity();
 						lastUpdateTime = part->getLastUpdateTime();
-
 					}
+
 					part->setPhysics(assemblyItem.pv);
 
-					if (DFFlag::HumanoidFloorPVUpdateSignal)
-					{
-						float deltaTime =  (replicator->remoteRaknetTimeToLocalRbxTime(remoteSendTime) - lastUpdateTime).seconds();
+					if (DFFlag::HumanoidFloorPVUpdateSignal) {
+						float deltaTime = (replicator->remoteRaknetTimeToLocalRbxTime(remoteSendTime) - lastUpdateTime).seconds();
 						//shared_ptr<PartInstance> partPointer = shared_from(part);
                         if (part->onDemandRead())
     						part->onDemandWrite()->onPositionUpdatedByNetworkSignal(boost::ref(part), boost::ref(oldPosition), boost::ref(previousLinearVelocity), boost::ref(deltaTime));
 					}
 				}
 			}
-			else
-			{
-    			part->addInterpolationSample(assemblyItem.pv.position, assemblyItem.pv.velocity, remoteSendTime, now, 0.f, numNodesInHistory);
+			else {
+    			part->addInterpolationSample(assemblyItem.pv.position, assemblyItem.pv.velocity, remoteSendTime, now, 0.0f, numNodesInHistory);
+
 				CoordinateFrame oldPosition;
 				RBX::Velocity previousLinearVelocity;
 				RBX::Time lastUpdateTime;
-				if (DFFlag::HumanoidFloorPVUpdateSignal)
-				{
+
+				if (DFFlag::HumanoidFloorPVUpdateSignal) {
 					oldPosition = part->getCoordinateFrame();
 					previousLinearVelocity = part->getVelocity();
 					lastUpdateTime = part->getLastUpdateTime();
 				}
+
 				part->setPhysics(assemblyItem.pv.position);
 
-				if (DFFlag::HumanoidFloorPVUpdateSignal)
-				{
+				if (DFFlag::HumanoidFloorPVUpdateSignal) {
 					float deltaTime =  (replicator->remoteRaknetTimeToLocalRbxTime(remoteSendTime) - lastUpdateTime).seconds();
 					//shared_ptr<PartInstance> partPointer = shared_from(part);
                     if (part->onDemandRead())
@@ -735,48 +715,31 @@ void PhysicsReceiver::setPhysics(const MechanismItem& item, const RBX::RemoteTim
 	}
 }
 
-
-
-
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-void PhysicsReceiver::addWayPointAdorn(const Vector3& p, const PathBasedMovementDebug::NodeDebugInfo& info, const std::string& debugText)
-{
-	if (Workspace::showPartMovementPath && info.show)
-	{
+void PhysicsReceiver::addWayPointAdorn(const Vector3& p, const PathBasedMovementDebug::NodeDebugInfo& info, const std::string& debugText) {
+	if (Workspace::showPartMovementPath && info.show) {
 		if (movementWaypointList.capacity() != NetworkSettings::singleton().getTotalNumMovementWayPoint())
-		{
 			movementWaypointList.rset_capacity(NetworkSettings::singleton().getTotalNumMovementWayPoint());
-		}
-		if (movementWaypointList.capacity() > 0)
-		{
+		if (movementWaypointList.capacity() > 0u)
 			movementWaypointList.push_back(MovementWaypointAdorn(p, info.color, info.size, debugText));
-		}
 	}
 }
 
-void PhysicsReceiver::addVectorAdorn(const Vector3& start, const Vector3& end, const RBX::Color4& c)
-{
-    if (Workspace::showPartMovementPath)
-    {
+void PhysicsReceiver::addVectorAdorn(const Vector3& start, const Vector3& end, const RBX::Color4& c) {
+    if (Workspace::showPartMovementPath) {
         if (movementVectorList.capacity() != NetworkSettings::singleton().getTotalNumMovementWayPoint())
-        {
             movementVectorList.rset_capacity(NetworkSettings::singleton().getTotalNumMovementWayPoint());
-        }
-        if (movementVectorList.capacity() > 0)
-        {
+        if (movementVectorList.capacity() > 0u)
             movementVectorList.push_back(MovementVectorAdorn(start, end, c));
-        }
     }
 }
 
 
-bool PhysicsReceiver::okDistributedReceivePart(const shared_ptr<PartInstance>& part)
-{
-	return (	!replicator->settings().distributedPhysicsEnabled
-			||	replicator->checkDistributedReceive(part.get())	);
+bool PhysicsReceiver::okDistributedReceivePart(const shared_ptr<PartInstance>& part) {
+	return (!replicator->settings().distributedPhysicsEnabled ||	replicator->checkDistributedReceive(part.get()));
 }
 
 
@@ -807,7 +770,7 @@ bool PhysicsReceiver::receivePart(shared_ptr<PartInstance>& part, RakNet::BitStr
 	RBX::Guid::Data id;
 	if (replicator->deserializeInstanceRef(inBitstream, instance, id))
 	{
-		if (instance==NULL) {
+		if (instance==nullptr) {
 			return false;			// packet end tag
 		}
 		part = Instance::fastSharedDynamicCast<PartInstance>(instance);

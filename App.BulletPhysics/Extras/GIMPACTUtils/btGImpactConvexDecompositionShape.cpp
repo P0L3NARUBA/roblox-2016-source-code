@@ -26,7 +26,7 @@ subject to the following restrictions:
 class GIM_ConvexDecomposition : public ConvexDecomposition::ConvexDecompInterface
 {
 protected:
-	btGImpactConvexDecompositionShape * m_compoundShape;
+	btGImpactConvexDecompositionShape* m_compoundShape;
 
 	btAlignedObjectArray<btCollisionShape*> m_convexShapes;
 
@@ -36,7 +36,7 @@ public:
 	int		mHullCount;
 	bool m_transformSubShapes;
 
-	GIM_ConvexDecomposition(btGImpactConvexDecompositionShape * compoundShape,bool transformSubShapes)
+	GIM_ConvexDecomposition(btGImpactConvexDecompositionShape* compoundShape, bool transformSubShapes)
 	{
 		mBaseCount = 0;
 		mHullCount = 0;
@@ -46,8 +46,8 @@ public:
 
 	virtual ~GIM_ConvexDecomposition()
 	{
-		int i;
-		for (i=0;i<m_convexShapes.size();i++)
+		size_t i;
+		for (i = 0; i < m_convexShapes.size(); i++)
 		{
 			btCollisionShape* shape = m_convexShapes[i];
 			delete shape;
@@ -55,35 +55,35 @@ public:
 
 	}
 
-	virtual void ConvexDecompResult(ConvexDecomposition::ConvexResult &result)
+	virtual void ConvexDecompResult(ConvexDecomposition::ConvexResult& result)
 	{
 
 		//calc centroid, to shift vertices around center of mass
-		btVector3 centroid(0,0,0);
+		btVector3 centroid(0, 0, 0);
 		btAlignedObjectArray<btVector3> vertices;
 
-		if(m_transformSubShapes)
+		if (m_transformSubShapes)
 		{
 
 			//const unsigned int *src = result.mHullIndices;
-			for (unsigned int i=0; i<result.mHullVcount; i++)
+			for (unsigned int i = 0; i < result.mHullVcount; i++)
 			{
-				btVector3 vertex(result.mHullVertices[i*3],result.mHullVertices[i*3+1],result.mHullVertices[i*3+2]);
+				btVector3 vertex(result.mHullVertices[i * 3], result.mHullVertices[i * 3 + 1], result.mHullVertices[i * 3 + 2]);
 
 				centroid += vertex;
 
 			}
-			centroid *= 1.f/(float(result.mHullVcount) );
+			centroid *= 1.f / (float(result.mHullVcount));
 		}
 
 		// collect vertices
-		for (unsigned int i=0; i<result.mHullVcount; i++)
+		for (unsigned int i = 0; i < result.mHullVcount; i++)
 		{
-			btVector3 vertex(result.mHullVertices[i*3],result.mHullVertices[i*3+1],result.mHullVertices[i*3+2]);
+			btVector3 vertex(result.mHullVertices[i * 3], result.mHullVertices[i * 3 + 1], result.mHullVertices[i * 3 + 2]);
 
-			if(m_transformSubShapes)
+			if (m_transformSubShapes)
 			{
-				vertex -= centroid ;
+				vertex -= centroid;
 			}
 			vertices.push_back(vertex);
 		}
@@ -91,12 +91,12 @@ public:
 		// build convex shape
 
 		btCollisionShape* convexShape = new btConvexHullShape(
-				&(vertices[0].getX()),vertices.size(),sizeof(btVector3));
+			&(vertices[0].getX()), vertices.size(), sizeof(btVector3));
 		m_convexShapes.push_back(convexShape);
 
 		convexShape->setMargin(m_compoundShape->getMargin());
 
-		if(m_transformSubShapes)
+		if (m_transformSubShapes)
 		{
 			btTransform trans;
 			trans.setIdentity();
@@ -104,7 +104,7 @@ public:
 
 			// add convex shape
 
-			m_compoundShape->addChildShape(trans,convexShape);
+			m_compoundShape->addChildShape(trans, convexShape);
 		}
 		else
 		{
@@ -114,7 +114,7 @@ public:
 
 			// add convex shape
 
-			m_compoundShape->addChildShape(trans,convexShape);
+			m_compoundShape->addChildShape(trans, convexShape);
 
 			//m_compoundShape->addChildShape(convexShape);
 		}
@@ -122,20 +122,20 @@ public:
 
 	void processDecomposition(int part)
 	{
-		btGImpactMeshShapePart::TrimeshPrimitiveManager * trimeshInterface =
-				m_compoundShape->getTrimeshInterface(part);
+		btGImpactMeshShapePart::TrimeshPrimitiveManager* trimeshInterface =
+			m_compoundShape->getTrimeshInterface(part);
 
 
 		trimeshInterface->lock();
 
 		//collect vertices
 		btAlignedObjectArray<float> vertices;
-		vertices.reserve(trimeshInterface->get_vertex_count()*3);
+		vertices.reserve(trimeshInterface->get_vertex_count() * 3);
 
-		for(int vi = 0;vi<trimeshInterface->get_vertex_count();vi++)
+		for (int vi = 0; vi < trimeshInterface->get_vertex_count(); vi++)
 		{
 			btVector3 vec;
-			trimeshInterface->get_vertex(vi,vec);
+			trimeshInterface->get_vertex(vi, vec);
 			vertices.push_back(vec[0]);
 			vertices.push_back(vec[1]);
 			vertices.push_back(vec[2]);
@@ -144,13 +144,13 @@ public:
 
 		//collect indices
 		btAlignedObjectArray<unsigned int> indices;
-		indices.reserve(trimeshInterface->get_primitive_count()*3);
+		indices.reserve(trimeshInterface->get_primitive_count() * 3);
 
 
-		for(int i = 0;i<trimeshInterface->get_primitive_count();i++)
+		for (int i = 0; i < trimeshInterface->get_primitive_count(); i++)
 		{
-			unsigned int i0, i1,i2;
-			trimeshInterface->get_indices(i,i0,i1,i2);
+			unsigned int i0, i1, i2;
+			trimeshInterface->get_indices(i, i0, i1, i2);
 			indices.push_back(i0);
 			indices.push_back(i1);
 			indices.push_back(i2);
@@ -161,22 +161,22 @@ public:
 
 
 		unsigned int depth = 5;
-		float cpercent     = 5;
-		float ppercent     = 15;
-		unsigned int maxv  = 16;
-		float skinWidth    = 0.0f;
+		float cpercent = 5;
+		float ppercent = 15;
+		unsigned int maxv = 16;
+		float skinWidth = 0.0f;
 
 
 		ConvexDecomposition::DecompDesc desc;
-		desc.mVcount       = trimeshInterface->get_vertex_count();
-		desc.mVertices     = &vertices[0];
-		desc.mTcount       = trimeshInterface->get_primitive_count();
-		desc.mIndices      = &indices[0];
-		desc.mDepth        = depth;
-		desc.mCpercent     = cpercent;
-		desc.mPpercent     = ppercent;
-		desc.mMaxVertices  = maxv;
-		desc.mSkinWidth    = skinWidth;
+		desc.mVcount = trimeshInterface->get_vertex_count();
+		desc.mVertices = &vertices[0];
+		desc.mTcount = trimeshInterface->get_primitive_count();
+		desc.mIndices = &indices[0];
+		desc.mDepth = depth;
+		desc.mCpercent = cpercent;
+		desc.mPpercent = ppercent;
+		desc.mMaxVertices = maxv;
+		desc.mSkinWidth = skinWidth;
 		desc.mCallback = this;
 
 		//convexDecomposition.performConvexDecomposition(desc);
@@ -195,10 +195,10 @@ public:
 void btGImpactConvexDecompositionShape::buildConvexDecomposition(bool transformSubShapes)
 {
 
-	m_decomposition = new GIM_ConvexDecomposition(this,transformSubShapes);
+	m_decomposition = new GIM_ConvexDecomposition(this, transformSubShapes);
 
 	int part_count = m_trimeshInterfaces.size();
-	for (int i = 0;i<part_count ;i++ )
+	for (int i = 0; i < part_count; i++)
 	{
 		m_decomposition->processDecomposition(i);
 	}
@@ -210,16 +210,16 @@ btGImpactConvexDecompositionShape::~btGImpactConvexDecompositionShape()
 {
 	delete m_decomposition;
 }
-void btGImpactConvexDecompositionShape::processAllTriangles(btTriangleCallback* callback,const btVector3& aabbMin,const btVector3& aabbMax) const
+void btGImpactConvexDecompositionShape::processAllTriangles(btTriangleCallback* callback, const btVector3& aabbMin, const btVector3& aabbMax) const
 {
 
 	int part_count = m_trimeshInterfaces.size();
-	for (int part = 0;part<part_count ;part++ )
+	for (int part = 0; part < part_count; part++)
 	{
-		void * ptr = (void * )&m_trimeshInterfaces[part];
+		void* ptr = (void*)&m_trimeshInterfaces[part];
 
-		btGImpactMeshShapePart::TrimeshPrimitiveManager * trimeshInterface =
-			static_cast<btGImpactMeshShapePart::TrimeshPrimitiveManager *>(ptr);
+		btGImpactMeshShapePart::TrimeshPrimitiveManager* trimeshInterface =
+			static_cast<btGImpactMeshShapePart::TrimeshPrimitiveManager*>(ptr);
 
 		trimeshInterface->lock();
 
@@ -227,10 +227,10 @@ void btGImpactConvexDecompositionShape::processAllTriangles(btTriangleCallback* 
 
 
 		int i = trimeshInterface->get_primitive_count();
-		while(i--)
+		while (i--)
 		{
-			trimeshInterface->get_primitive_triangle(i,triangle);
-			callback->processTriangle(triangle.m_vertices,part,i);
+			trimeshInterface->get_primitive_triangle(i, triangle);
+			callback->processTriangle(triangle.m_vertices, part, i);
 		}
 
 		trimeshInterface->unlock();

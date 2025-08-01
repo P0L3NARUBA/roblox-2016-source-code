@@ -235,7 +235,7 @@ public:
 				ungroupedItems.push_back(wInstance->getChild(j));
 			}
 			wInstance->promoteChildren();
-			wInstance->setParent(NULL);
+			wInstance->setParent(nullptr);
 			didSomething = true;
 		}
 	}

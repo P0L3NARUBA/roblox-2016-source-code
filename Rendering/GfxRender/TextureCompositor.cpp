@@ -28,23 +28,21 @@
 LOGVARIABLE(RenderTextureCompositor, 0)
 LOGVARIABLE(RenderTextureCompositorBudget, 0)
 
-namespace RBX
-{
-	namespace Graphics
-	{
+namespace RBX {
+	namespace Graphics {
 
 #if defined(RBX_PLATFORM_IOS) || defined(__ANDROID__)
-		static const size_t kTextureCompositorActiveJobs = 2;
+		static const uint32_t kTextureCompositorActiveJobs = 2u;
 #else
-		static const size_t kTextureCompositorActiveJobs = 8;
+		static const uint32_t kTextureCompositorActiveJobs = 8u;
 #endif
 
-		static const size_t kTextureCompositorCooldown = 2;
+		static const uint32_t kTextureCompositorCooldown = 2u;
 		static const double kRenderTextureCompositorRebakeDelaySeconds = 1.0;
 
-		static const unsigned int kTextureCompositorDefaultBudget = 8 * 1024 * 1024;
-		static const unsigned int kTextureCompositorOrphanedBudgetLimit = 32 * 1024 * 1024;
-		static const unsigned int kTextureCompositorOrphanedKeepAlive = 2;
+		static const size_t kTextureCompositorDefaultBudget = 8u * 1024u * 1024u;
+		static const uint32_t kTextureCompositorOrphanedBudgetLimit = 32u * 1024u * 1024u;
+		static const uint32_t kTextureCompositorOrphanedKeepAlive = 2u;
 
 #if defined(RBX_PLATFORM_IOS) || defined(__ANDROID__)
 		// OpenGL blits are really slow on iPad since they go through system memory (~240 ms for 1024x512)
@@ -57,31 +55,25 @@ namespace RBX
 		static const bool kTextureCompositorUse32BitTextures = true;
 #endif
 
-		static TextureCompositorConfiguration calculateConfiguration(const RenderCaps* caps)
-		{
+		static TextureCompositorConfiguration calculateConfiguration(const RenderCaps* caps) {
 			// Work around budget detection issues
 			// An example of this is that when we run headless (RCCService), we'd like to have some reasonable default for budget size.
 			// This also applies if the driver misreport VRAM size as zero.
-			unsigned int budget =
-				FLog::RenderTextureCompositorBudget
-				? FLog::RenderTextureCompositorBudget * 1024 * 1024
-				: std::max(kTextureCompositorDefaultBudget, static_cast<unsigned int>(caps->getVidMemSize() / 3));
+			size_t budget = FLog::RenderTextureCompositorBudget ? FLog::RenderTextureCompositorBudget * 1024u * 1024u : std::max(kTextureCompositorDefaultBudget, static_cast<size_t>(caps->getVidMemSize() / 3u));
 
 			TextureCompositorConfiguration config;
-			config.bpp = kTextureCompositorUse32BitTextures ? 32 : 16;
+			config.bpp = kTextureCompositorUse32BitTextures ? 32u : 16u;
 			config.budget = budget;
 
 			return config;
 		}
 
-		static unsigned int getTextureSize(const shared_ptr<Texture>& tex)
-		{
-			return tex ? Texture::getImageSize(tex->getFormat(), tex->getWidth(), tex->getHeight()) : 0;
+		static uint32_t getTextureSize(const shared_ptr<Texture>& tex) {
+			return tex ? Texture::getImageSize(tex->getFormat(), tex->getWidth(), tex->getHeight()) : 0u;
 		}
 
-		static unsigned int getTextureSize(unsigned int width, unsigned int height, unsigned int bpp)
-		{
-			return width * height * (bpp / 8);
+		static uint32_t getTextureSize(uint32_t width, uint32_t height, uint32_t bpp) {
+			return width * height * (bpp / 8u);
 		}
 
 		template <typename T> struct WeakPtrEqualPredicate
@@ -92,36 +84,30 @@ namespace RBX
 			{
 			}
 
-			bool operator()(const boost::weak_ptr<T>& rhs) const
-			{
+			bool operator()(const boost::weak_ptr<T>& rhs) const {
 				return !(*lhs < rhs || rhs < *lhs);
 			}
 		};
 
-		template <typename T> struct ExistsInSetPredicate
-		{
+		template <typename T> struct ExistsInSetPredicate {
 			const std::set<T>* set;
 
 			ExistsInSetPredicate(const std::set<T>* set) : set(set)
 			{
 			}
 
-			bool operator()(const T& object) const
-			{
+			bool operator()(const T& object) const {
 				return set->count(object) > 0;
 			}
 		};
 
-		template <typename T> struct PriorityComparator
-		{
-			bool operator()(const T& lhs, const T& rhs) const
-			{
+		template <typename T> struct PriorityComparator {
+			bool operator()(const T& lhs, const T& rhs) const {
 				return lhs->priority < rhs->priority;
 			}
 		};
 
-		struct DistanceUpdatePredicate
-		{
+		struct DistanceUpdatePredicate {
 			void* job;
 			Vector3 focus;
 			float* distance;
@@ -130,11 +116,9 @@ namespace RBX
 			{
 			}
 
-			bool operator()(const boost::weak_ptr<PartInstance>& locptr) const
-			{
+			bool operator()(const boost::weak_ptr<PartInstance>& locptr) const {
 				boost::shared_ptr<PartInstance> loc = locptr.lock();
-				if (!loc)
-				{
+				if (!loc) {
 					FASTLOG1(FLog::RenderTextureCompositor, "TC Job[%p]: detach instance", job);
 					return true;
 				}
@@ -144,34 +128,30 @@ namespace RBX
 			}
 		};
 
-		template <typename T> struct TextureIsNullPredicate
-		{
-			bool operator()(const T& obj) const
-			{
+		template <typename T> struct TextureIsNullPredicate {
+			bool operator()(const T& obj) const {
 				return !obj->texture;
 			}
 		};
 
-		std::string TextureCompositorLayer::toString() const
-		{
+		std::string TextureCompositorLayer::toString() const {
 			return format("L[%s:%s:%08x:%d]", mesh.c_str(), texture.c_str(), Color4uint8(color).asUInt32(), mode);
 		}
 
-		class TextureCompositorMeshCache
-		{
+		class TextureCompositorMeshCache {
 		public:
 			TextureCompositorMeshCache(VisualEngine* visualEngine)
 				: visualEngine(visualEngine)
 			{
 				std::vector<VertexLayout::Element> elements;
-				elements.push_back(VertexLayout::Element(0, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
-				elements.push_back(VertexLayout::Element(0, 12u, VertexLayout::Format_Float2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture));
+				elements.push_back(VertexLayout::Element(0u, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
+				elements.push_back(VertexLayout::Element(0u, 12u, VertexLayout::Format_Float2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture));
+				elements.push_back(VertexLayout::Element(0u, 20u, VertexLayout::Format_Float4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Color));
 
 				layout = visualEngine->getDevice()->createVertexLayout(elements);
 			}
 
-			const shared_ptr<GeometryBatch>* requestMesh(const MeshId& meshId)
-			{
+			const shared_ptr<GeometryBatch>* requestMesh(const MeshId& meshId) {
 				// Check mesh cache first; it's likely to have the mesh loaded
 				Meshes::iterator it = meshes.find(meshId);
 
@@ -185,12 +165,11 @@ namespace RBX
 				shared_ptr<FileMeshData> cachedMesh = boost::static_pointer_cast<FileMeshData>(mcp->requestContent(meshId, ContentProvider::PRIORITY_MESH, false, result));
 
 				if (result == AsyncHttpQueue::Waiting)
-					return NULL;
+					return nullptr;
 
 				shared_ptr<GeometryBatch>& cache = meshes[meshId];
 
-				if (result == AsyncHttpQueue::Succeeded)
-				{
+				if (result == AsyncHttpQueue::Succeeded) {
 					// Fill cache with new mesh
 					GeometryBatch mesh = createMesh(visualEngine->getDevice(), cachedMesh.get());
 
@@ -208,14 +187,13 @@ namespace RBX
 			typedef boost::unordered_map<MeshId, shared_ptr<GeometryBatch> > Meshes;
 			Meshes meshes;
 
-			GeometryBatch createMesh(Device* device, FileMeshData* data)
-			{
+			GeometryBatch createMesh(Device* device, FileMeshData* data) {
 				// Create and fill vertex buffer
 				shared_ptr<VertexBuffer> vbuf = device->createVertexBuffer(sizeof(BasicVertex), data->vnts.size(), GeometryBuffer::Usage_Static);
 
 				BasicVertex* vbptr = static_cast<BasicVertex*>(vbuf->lock());
 
-				for (size_t i = 0; i < data->vnts.size(); ++i)
+				for (size_t i = 0u; i < data->vnts.size(); ++i)
 				{
 					const FileMeshVertexNormalTexture3d& v = data->vnts[i];
 
@@ -226,17 +204,16 @@ namespace RBX
 				vbuf->unlock();
 
 				// Create and fill index buffer
-				shared_ptr<IndexBuffer> ibuf = device->createIndexBuffer(sizeof(unsigned short), data->faces.size() * 3, GeometryBuffer::Usage_Static);
+				shared_ptr<IndexBuffer> ibuf = device->createIndexBuffer(sizeof(uint16_t), data->faces.size() * 3u, GeometryBuffer::Usage_Static);
 
-				unsigned short* ibptr = static_cast<unsigned short*>(ibuf->lock());
+				uint16_t* ibptr = static_cast<uint16_t*>(ibuf->lock());
 
-				for (size_t i = 0; i < data->faces.size(); ++i)
-				{
+				for (size_t i = 0u; i < data->faces.size(); ++i) {
 					const FileMeshFace& f = data->faces[i];
 
-					ibptr[i * 3 + 0] = f.a;
-					ibptr[i * 3 + 1] = f.b;
-					ibptr[i * 3 + 2] = f.c;
+					ibptr[i * 3u + 0u] = f.a;
+					ibptr[i * 3u + 1u] = f.b;
+					ibptr[i * 3u + 2u] = f.c;
 				}
 
 				ibuf->unlock();
@@ -248,40 +225,34 @@ namespace RBX
 			}
 		};
 
-		class TextureCompositorJob
-		{
+		class TextureCompositorJob {
 		public:
 			TextureCompositorJob(VisualEngine* visualEngine, const Vector2& canvasSize, const std::vector<TextureCompositorLayer>& layers, float contentPriority, const std::string& context)
 				: visualEngine(visualEngine)
 				, canvasSize(canvasSize)
 				, layers(layers.size())
 				, contentPriority(contentPriority)
-				, readyCount(0)
+				, readyCount(0u)
 			{
-				for (size_t i = 0; i < layers.size(); ++i)
-				{
+				for (size_t i = 0u; i < layers.size(); ++i) {
 					LayerData& ld = this->layers[i];
 
 					ld.desc = layers[i];
 
 					// Fetch texture
-					if (!ld.desc.texture.isNull())
-					{
+					if (!ld.desc.texture.isNull()) {
 						ld.texture = visualEngine->getTextureManager()->load(ld.desc.texture, TextureManager::Fallback_None, context);
 					}
-					else
-					{
+					else {
 						ld.texture = visualEngine->getTextureManager()->getFallbackTexture(TextureManager::Fallback_White);
 					}
 				}
 			}
 
-			void update(TextureCompositorMeshCache& meshCache)
-			{
-				size_t ready = 0;
+			void update(TextureCompositorMeshCache& meshCache) {
+				size_t ready = 0u;
 
-				for (size_t i = 0; i < layers.size(); ++i)
-				{
+				for (size_t i = 0u; i < layers.size(); ++i) {
 					LayerData& ld = layers[i];
 
 					// Fetch mesh
@@ -296,25 +267,23 @@ namespace RBX
 				readyCount = ready;
 			}
 
-			void render(DeviceContext* context, const shared_ptr<Framebuffer>& framebuffer)
-			{
+			void render(DeviceContext* context, const shared_ptr<Framebuffer>& framebuffer) {
 				RBXASSERT(isReady());
 
 				const DeviceCaps& caps = visualEngine->getDevice()->getCaps();
 
 				// half-pixel offset for D3D to account for shifted pixel center during rasterization
-				float offset = caps.needsHalfPixelOffset ? 0.5f : 0;
+				float offset = caps.needsHalfPixelOffset ? 0.5f : 0.0f;
 
 				Matrix4 projection =
 					Matrix4(
-						2.f / canvasSize.x, 0.f, 0.f, -1.f - offset * 2.f / static_cast<float>(framebuffer->getWidth()),
-						0.f, 2.f / canvasSize.y, 0.f, -1.f + offset * 2.f / static_cast<float>(framebuffer->getHeight()),
-						0.f, 0.f, 0.001f, 0.5f, // shift depth to 0.5 to avoid clipping; don't multiply Z by zero to avoid d3d debug warnings.
-						0.f, 0.f, 0.f, 1.f);
+						2.0f / canvasSize.x, 0.0f, 0.0f, -1.0f - offset * 2.0f / static_cast<float>(framebuffer->getWidth()),
+						0.0f, 2.0f / canvasSize.y, 0.0f, -1.0f + offset * 2.0f / static_cast<float>(framebuffer->getHeight()),
+						0.0f, 0.0f, 0.001f, 0.5f, // shift depth to 0.5 to avoid clipping; don't multiply Z by zero to avoid d3d debug warnings.
+						0.0f, 0.0f, 0.0f, 1.0f);
 
-				if (caps.requiresRenderTargetFlipping)
-				{
-					projection.setRow(1, -projection.row(1));
+				if (caps.requiresRenderTargetFlipping) {
+					projection.setRow(1u, -projection.row(1u));
 				}
 
 				RenderCamera orthoCamera;
@@ -331,40 +300,36 @@ namespace RBX
 
 				context->bindFramebuffer(framebuffer.get());
 
-				const float clearColor[] = { 0.5f, 0.5f, 0.5f, 0.f };
-				context->clearFramebuffer(DeviceContext::Buffer_Color, clearColor, 1.f, 0);
+				const float clearColor[] = { 0.5f, 0.5f, 0.5f, 0.0f };
+				context->clearFramebuffer(DeviceContext::Buffer_Color, clearColor, 1.0f, 0u);
 
-				for (size_t i = 0; i < layers.size(); ++i)
-				{
+				for (size_t i = 0u; i < layers.size(); ++i) {
 					LayerData& ld = layers[i];
 
 					shared_ptr<ShaderProgram> program = visualEngine->getShaderManager()->getProgramOrFFP("TexCompVS", ld.desc.mode == TextureCompositorLayer::Composit_BlendTexture ? "TexCompPMAFS" : "TexCompFS");
 
-					if (program && *ld.mesh && ld.texture.getTexture())
-					{
+					if (program && *ld.mesh && ld.texture.getTexture()) {
 						context->setBlendState(ld.desc.mode == TextureCompositorLayer::Composit_BlendTexture ? BlendState::Mode_PremultipliedAlphaBlend : BlendState::Mode_None);
 
 						context->bindProgram(program.get());
 
-						context->bindTexture(0, ld.texture.getTexture().get(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+						context->bindTexture(0u, ld.texture.getTexture().get(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 
-						float colorData[] = { ld.desc.color.r, ld.desc.color.g, ld.desc.color.b, (ld.desc.mode == TextureCompositorLayer::Composit_BlitTextureAlphaMagnify4x) ? 4.f : 1.f };
-						context->setConstant(program->getConstantHandle("Color"), colorData, 1);
+						//float colorData[] = { ld.desc.color.r, ld.desc.color.g, ld.desc.color.b, (ld.desc.mode == TextureCompositorLayer::Composit_BlitTextureAlphaMagnify4x) ? 4.f : 1.f };
+						//context->setConstant(program->getConstantHandle("Color"), colorData, 1);
 
 						context->draw(**ld.mesh);
 					}
 				}
 			}
 
-			bool isReady() const
-			{
+			bool isReady() const {
 				return readyCount == layers.size();
 			}
 
 		private:
-			struct LayerData
-			{
-				LayerData() : desc(MeshId(), TextureId()), mesh(NULL)
+			struct LayerData {
+				LayerData() : desc(MeshId(), TextureId()), mesh(nullptr)
 				{
 				}
 
@@ -411,19 +376,16 @@ namespace RBX
 		{
 		}
 
-		TextureCompositor::JobHandle TextureCompositor::getJob(const std::string& textureid, const std::string& context, unsigned int width, unsigned int height, const Vector2& canvasSize, const std::vector<TextureCompositorLayer>& layers)
-		{
+		TextureCompositor::JobHandle TextureCompositor::getJob(const std::string& textureid, const std::string& context, uint32_t width, uint32_t height, const Vector2& canvasSize, const std::vector<TextureCompositorLayer>& layers) {
 			// look for an existing job
 			boost::shared_ptr<Job>& job = jobs[textureid];
 			if (job) return job;
 
 			// look for an orphaned job with the same id
-			for (size_t i = 0; i < orphanedJobs.size(); ++i)
-			{
+			for (size_t i = 0u; i < orphanedJobs.size(); ++i) {
 				const boost::shared_ptr<Job>& orphaned = orphanedJobs[i];
 
-				if (orphaned->desc.textureid == textureid && orphaned->texture)
-				{
+				if (orphaned->desc.textureid == textureid && orphaned->texture) {
 					// we recently orphaned a job with the same description and a texture which is still valid
 					// we have to readd the job to job list, but we don't have to rebake it - just reuse the contents
 					FASTLOG1(FLog::RenderTextureCompositor, "TC Job[%p]: restoring orphaned job", orphaned.get());
@@ -454,8 +416,7 @@ namespace RBX
 			FASTLOG4(FLog::RenderTextureCompositor, "TC Job[%p]: create %dx%d (%d layers)", job.get(), width, height, layers.size());
 			FASTLOGS(FLog::RenderTextureCompositor, "TC Job texture: %s", textureid.c_str());
 
-			for (size_t i = 0; i < layers.size(); ++i)
-			{
+			for (size_t i = 0u; i < layers.size(); ++i) {
 				FASTLOGS(FLog::RenderTextureCompositor, "TC Job layer: %s", layers[i].toString().c_str());
 			}
 
@@ -467,30 +428,26 @@ namespace RBX
 			return job;
 		}
 
-		TextureRef TextureCompositor::getTexture(const JobHandle& job)
-		{
+		TextureRef TextureCompositor::getTexture(const JobHandle& job) {
 			RBXASSERT(job);
 
 			return job->textureRef;
 		}
 
-		const std::string& TextureCompositor::getTextureId(const JobHandle& job)
-		{
+		const std::string& TextureCompositor::getTextureId(const JobHandle& job) {
 			RBXASSERT(job);
 
 			return job->desc.textureid;
 		}
 
-		void TextureCompositor::attachInstance(const JobHandle& job, const boost::shared_ptr<PartInstance>& instance)
-		{
+		void TextureCompositor::attachInstance(const JobHandle& job, const boost::shared_ptr<PartInstance>& instance) {
 			RBXASSERT(job);
 
 			if (!instance) return;
 
 			boost::weak_ptr<PartInstance> weakptr = instance;
 
-			if (std::find_if(job->instances.begin(), job->instances.end(), WeakPtrEqualPredicate<PartInstance>(&weakptr)) == job->instances.end())
-			{
+			if (std::find_if(job->instances.begin(), job->instances.end(), WeakPtrEqualPredicate<PartInstance>(&weakptr)) == job->instances.end()) {
 				job->instances.push_back(weakptr);
 
 				FASTLOG2(FLog::RenderTextureCompositor, "TC Job[%p]: attach instance %p", job.get(), instance.get());
@@ -498,18 +455,15 @@ namespace RBX
 			}
 		}
 
-		bool TextureCompositor::isQueueEmpty() const
-		{
+		bool TextureCompositor::isQueueEmpty() const {
 			return pendingJobs.empty() && activeJobs.empty() && !renderedJob.job;
 		}
 
-		void TextureCompositor::updatePrioritiesAndOrphanJobs(const Vector3& pointOfInterest)
-		{
+		void TextureCompositor::updatePrioritiesAndOrphanJobs(const Vector3& pointOfInterest) {
 			std::set<boost::shared_ptr<Job> > newOrphanedJobs;
 
 			// update priorities for all jobs and keep track of jobs we no longer need
-			for (JobMap::iterator it = jobs.begin(); it != jobs.end(); )
-			{
+			for (JobMap::iterator it = jobs.begin(); it != jobs.end(); ) {
 				Job& job = *it->second;
 
 				// update priority and discard dead instances
@@ -520,8 +474,7 @@ namespace RBX
 				job.priority = distance;
 
 				// remove jobs where texture is not needed any more (no point regenerating the texture)
-				if (job.textureRef.isUnique())
-				{
+				if (job.textureRef.isUnique()) {
 					FASTLOG1(FLog::RenderTextureCompositor, "TC Job[%p]: orphaning job (no materials)", &job);
 
 					// cleanup job state
@@ -538,8 +491,7 @@ namespace RBX
 					++it;
 			}
 
-			if (!newOrphanedJobs.empty())
-			{
+			if (!newOrphanedJobs.empty()) {
 				// add all orphaned jobs to orphaned queue (we'll garbage collect them separately)
 				orphanedJobs.insert(orphanedJobs.end(), newOrphanedJobs.begin(), newOrphanedJobs.end());
 
@@ -551,57 +503,48 @@ namespace RBX
 			}
 		}
 
-		void TextureCompositor::garbageCollectOrphanedJobs()
-		{
-			unsigned int totalSize = getTotalLiveTextureSize();
-			unsigned int orphanedSize = getTotalOrphanedTextureSize();
+		void TextureCompositor::garbageCollectOrphanedJobs() {
+			uint32_t totalSize = getTotalLiveTextureSize();
+			uint32_t orphanedSize = getTotalOrphanedTextureSize();
 
 			// we always keep N low-res textures so that downsampling or creating a new outfit does not require a texture allocation
 			// otherwise we cap the total orphaned size by remaining budget, but no more than 25% of the budget and no more than a fixed limit
-			unsigned int maxOrphanedSize = (totalSize > config.budget) ? 0 : std::min(config.budget - totalSize, std::min(config.budget / 4, kTextureCompositorOrphanedBudgetLimit));
+			uint32_t maxOrphanedSize = (totalSize > config.budget) ? 0u : std::min(config.budget - totalSize, std::min(config.budget / 4u, kTextureCompositorOrphanedBudgetLimit));
 
-			if (orphanedSize > maxOrphanedSize)
-			{
+			if (orphanedSize > maxOrphanedSize) {
 				std::vector<char> sweep(orphanedJobs.size());
 
 				// sweep textures starting from the front (textures at the back are LRU) while we exceed the orphaned size budget
-				for (size_t i = 0; i < orphanedJobs.size(); ++i)
-				{
-					if (orphanedSize > maxOrphanedSize)
-					{
+				for (size_t i = 0u; i < orphanedJobs.size(); ++i) {
+					if (orphanedSize > maxOrphanedSize) {
 						orphanedSize -= getTextureSize(orphanedJobs[i]->texture);
 						sweep[i] = true;
 					}
 				}
 
 				// don't sweep last N low-res textures
-				unsigned int keepAlive = kTextureCompositorOrphanedKeepAlive;
+				uint32_t keepAlive = kTextureCompositorOrphanedKeepAlive;
 
-				for (size_t i = orphanedJobs.size(); i > 0; --i)
-				{
+				for (size_t i = orphanedJobs.size(); i > 0u; --i) {
 					const shared_ptr<Job>& job = orphanedJobs[i - 1];
 					const shared_ptr<Texture>& texture = job->texture;
 
-					if (texture && texture->getWidth() < job->desc.width && keepAlive > 0)
-					{
+					if (texture && texture->getWidth() < job->desc.width && keepAlive > 0u) {
 						keepAlive--;
-						sweep[i - 1] = false;
+						sweep[i - 1u] = false;
 					}
 				}
 
 				// sweep!
-				for (size_t i = 0; i < sweep.size(); ++i)
-				{
+				for (size_t i = 0u; i < sweep.size(); ++i) {
 					shared_ptr<Texture>& texture = orphanedJobs[i]->texture;
 
-					if (sweep[i] && texture)
-					{
+					if (sweep[i] && texture) {
 						FASTLOG1(FLog::RenderTextureCompositor, "TC Destroy texture %p", texture.get());
 
 						texture.reset();
 
-						if (orphanedJobs[i] == renderedJob.job)
-						{
+						if (orphanedJobs[i] == renderedJob.job) {
 							FASTLOG1(FLog::RenderTextureCompositor, "TC Job[%p]: cancelling blit in progress since the texture is destroyed", orphanedJobs[i].get());
 
 							renderedJob = RenderedJob();
@@ -614,9 +557,8 @@ namespace RBX
 			orphanedJobs.erase(std::remove_if(orphanedJobs.begin(), orphanedJobs.end(), TextureIsNullPredicate<boost::shared_ptr<Job> >()), orphanedJobs.end());
 		}
 
-		void TextureCompositor::findRebakeTargetAndEnqueue()
-		{
-			unsigned int totalSize = getTotalLiveTextureSize();
+		void TextureCompositor::findRebakeTargetAndEnqueue() {
+			uint32_t totalSize = getTotalLiveTextureSize();
 
 			// gather all jobs and sort by priority
 			std::vector<boost::shared_ptr<Job> > sortedJobs;
@@ -631,13 +573,11 @@ namespace RBX
 			size_t leftMostLow = sortedJobs.size();
 			size_t rightMostHighPlus1 = 0;
 
-			for (size_t i = 0; i < sortedJobs.size(); ++i)
-			{
+			for (size_t i = 0u; i < sortedJobs.size(); ++i) {
 				const shared_ptr<Job>& job = sortedJobs[i];
 				const shared_ptr<Texture>& texture = job->texture;
 
-				if (texture)
-				{
+				if (texture) {
 					if (texture->getWidth() < job->desc.width)
 						leftMostLow = std::min(leftMostLow, i);
 					else
@@ -646,12 +586,10 @@ namespace RBX
 			}
 
 			// we can upsample something
-			if (leftMostLow < sortedJobs.size())
-			{
+			if (leftMostLow < sortedJobs.size()) {
 				const shared_ptr<Job>& job = sortedJobs[leftMostLow];
 
-				if (totalSize + getTextureSize(job->desc.width, job->desc.height, config.bpp) < config.budget)
-				{
+				if (totalSize + getTextureSize(job->desc.width, job->desc.height, config.bpp) < config.budget) {
 					FASTLOG1(FLog::RenderTextureCompositor, "TC Job[%p]: queueing (upsample)", job.get());
 
 					pendingJobs.push_back(job);
@@ -660,17 +598,15 @@ namespace RBX
 			}
 
 			// we can downsample something
-			if (rightMostHighPlus1 > 0)
-			{
-				size_t rightMostHigh = rightMostHighPlus1 - 1;
+			if (rightMostHighPlus1 > 0u) {
+				size_t rightMostHigh = rightMostHighPlus1 - 1u;
 
 				// equilibrium conditions:
 				// - all high-res textures have priority less than all low-res textures
 				// - we are below texture budget
 				if (rightMostHigh < leftMostLow && totalSize < config.budget)
 					;
-				else
-				{
+				else {
 					FASTLOG1(FLog::RenderTextureCompositor, "TC Job[%p]: queueing (downsample)", sortedJobs[rightMostHigh].get());
 
 					pendingJobs.push_back(sortedJobs[rightMostHigh]);
@@ -678,22 +614,18 @@ namespace RBX
 			}
 		}
 
-		void TextureCompositor::garbageCollectFull()
-		{
+		void TextureCompositor::garbageCollectFull() {
 			updatePrioritiesAndOrphanJobs(Vector3());
 
-			for (size_t i = 0; i < orphanedJobs.size(); ++i)
-			{
+			for (size_t i = 0u; i < orphanedJobs.size(); ++i) {
 				shared_ptr<Texture>& texture = orphanedJobs[i]->texture;
 
-				if (texture)
-				{
+				if (texture) {
 					FASTLOG1(FLog::RenderTextureCompositor, "TC Destroy texture %p", texture.get());
 
 					texture.reset();
 
-					if (orphanedJobs[i] == renderedJob.job)
-					{
+					if (orphanedJobs[i] == renderedJob.job) {
 						FASTLOG1(FLog::RenderTextureCompositor, "TC Job[%p]: cancelling blit in progress since the texture is destroyed", orphanedJobs[i].get());
 
 						renderedJob = RenderedJob();
@@ -704,8 +636,7 @@ namespace RBX
 			orphanedJobs.clear();
 		}
 
-		void TextureCompositor::cancelPendingRequests()
-		{
+		void TextureCompositor::cancelPendingRequests() {
 			jobs.clear();
 
 			pendingJobs.clear();
@@ -715,8 +646,7 @@ namespace RBX
 			renderedJob = RenderedJob();
 		}
 
-		void TextureCompositor::update(const Vector3& pointOfInterest)
-		{
+		void TextureCompositor::update(const Vector3& pointOfInterest) {
 			// this gets rid of all jobs that we don't need to process anyway
 			updatePrioritiesAndOrphanJobs(pointOfInterest);
 
@@ -724,23 +654,19 @@ namespace RBX
 			garbageCollectOrphanedJobs();
 
 			// if we have nothing else to do, let's try to find some textures that need to have a different resolution
-			if (isQueueEmpty())
-			{
+			if (isQueueEmpty()) {
 				double latency = (Time::now<Time::Fast>() - lastActiveTime).seconds();
 
-				if (latency >= kRenderTextureCompositorRebakeDelaySeconds)
-				{
+				if (latency >= kRenderTextureCompositorRebakeDelaySeconds) {
 					findRebakeTargetAndEnqueue();
 				}
 			}
-			else
-			{
+			else {
 				lastActiveTime = Time::now<Time::Fast>();
 			}
 
 			// move some jobs from pending to active
-			if (pendingJobs.size() > 0 && activeJobs.size() < kTextureCompositorActiveJobs)
-			{
+			if (pendingJobs.size() > 0 && activeJobs.size() < kTextureCompositorActiveJobs) {
 				size_t count = std::min(pendingJobs.size(), kTextureCompositorActiveJobs - activeJobs.size());
 
 				std::nth_element(pendingJobs.begin(), pendingJobs.begin() + count, pendingJobs.end(), PriorityComparator<boost::shared_ptr<Job> >());
@@ -753,36 +679,29 @@ namespace RBX
 			std::sort(activeJobs.begin(), activeJobs.end(), PriorityComparator<boost::shared_ptr<Job> >());
 
 			// update active jobs
-			for (size_t i = 0; i < activeJobs.size(); ++i)
-			{
+			for (size_t i = 0u; i < activeJobs.size(); ++i) {
 				updateJob(*activeJobs[i]);
 			}
 		}
 
-		void TextureCompositor::render(DeviceContext* context)
-		{
+		void TextureCompositor::render(DeviceContext* context) {
 			RBXPROFILER_SCOPE("Render", "TextureCompositor::render");
 			RBXPROFILER_SCOPE("GPU", "TextureCompositor::render");
-			if (renderedJob.job)
-			{
+			if (renderedJob.job) {
 				// finalize the job that we rendered before
 				--renderedJob.cooldown;
 
-				if (renderedJob.cooldown <= 0)
-				{
+				if (renderedJob.cooldown <= 0) {
 					renderJobFinalize(*renderedJob.job, renderedJob.framebuffer, context);
 					renderedJob = RenderedJob();
 				}
 			}
-			else
-			{
+			else {
 				// render at most one active job
-				for (size_t i = 0; i < activeJobs.size(); ++i)
-				{
+				for (size_t i = 0u; i < activeJobs.size(); ++i) {
 					Job& job = *activeJobs[i];
 
-					if (job.job && job.job->isReady())
-					{
+					if (job.job && job.job->isReady()) {
 						// render and update materials to use new texture
 						renderJobIfNecessary(job, i, context);
 
@@ -797,14 +716,12 @@ namespace RBX
 			}
 		}
 
-		void TextureCompositor::updateJob(Job& job)
-		{
-			if (!job.job)
-			{
+		void TextureCompositor::updateJob(Job& job) {
+			if (!job.job) {
 				FASTLOG2(FLog::RenderTextureCompositor, "TC Job[%p]: start loading assets (priority %d)", &job, (int)sqrtf(job.priority));
 
 				// convert from [0..+inf) to [0..1] while keeping the ordering; distribution is not very important
-				float priority = 1.f - 1.f / (1.f + sqrtf(job.priority));
+				float priority = 1.0f - 1.0f / (1.0f + sqrtf(job.priority));
 
 				job.job.reset(new TextureCompositorJob(visualEngine, job.desc.canvasSize, job.desc.layers, ContentProvider::PRIORITY_CHARACTER + priority, job.context));
 			}
@@ -812,23 +729,19 @@ namespace RBX
 			job.job->update(*meshCache);
 		}
 
-		void TextureCompositor::renderJobFinalize(Job& job, const shared_ptr<Framebuffer>& framebuffer, DeviceContext* context)
-		{
+		void TextureCompositor::renderJobFinalize(Job& job, const shared_ptr<Framebuffer>& framebuffer, DeviceContext* context) {
 			const shared_ptr<Texture>& texture = job.texture;
 			RBXASSERT(texture);
 
-			if (texture->getUsage() != Texture::Usage_Renderbuffer)
-			{
-				try
-				{
+			if (texture->getUsage() != Texture::Usage_Renderbuffer) {
+				try {
 					Timer<Time::Precise> timer;
 
 					context->copyFramebuffer(framebuffer.get(), texture.get());
 
 					FASTLOG3(FLog::RenderTextureCompositor, "TC Job[%p]: texture blit (width %d) took %d us", &job, texture->getWidth(), (int)(timer.delta().msec() * 1000));
 				}
-				catch (const RBX::base_exception& e)
-				{
+				catch (const RBX::base_exception& e) {
 					FASTLOG2(FLog::RenderTextureCompositor, "TC Job[%p]: texture blit (width %d) failed", &job, texture->getWidth());
 					FASTLOGS(FLog::RenderTextureCompositor, "TC: Failure reason %s", e.what());
 
@@ -841,29 +754,26 @@ namespace RBX
 				job.textureRef.updateAllRefs(texture);
 		}
 
-		void TextureCompositor::renderJobIfNecessary(Job& job, size_t activePosition, DeviceContext* context)
-		{
-			unsigned int totalSize = getTotalLiveTextureSize();
+		void TextureCompositor::renderJobIfNecessary(Job& job, size_t activePosition, DeviceContext* context) {
+			uint32_t totalSize = getTotalLiveTextureSize();
 
 			// assuming that all other textures in the queue are new (they should be, since we don't rebake with non-empty queue),
 			// we can estimate a final texture size better if we assume that we already created all other textures with suitable quality
-			unsigned int pendingSize =
-				getProjectedPendingTextureSize() / 4 + // all pending jobs are assumed to get low-res texture
-				getProjectedActiveTextureSize(activePosition + 1, activeJobs.size()) / 4 + // all active jobs after us are assumed to get low-res texture
-				getProjectedActiveTextureSize(0, activePosition); // all active jobs before us are assumed to get high-res textures (even if our assets load first we don't get high-res texture out of order)
+			uint32_t pendingSize =
+				getProjectedPendingTextureSize() / 4u + // all pending jobs are assumed to get low-res texture
+				getProjectedActiveTextureSize(activePosition + 1u, activeJobs.size()) / 4u + // all active jobs after us are assumed to get low-res texture
+				getProjectedActiveTextureSize(0u, activePosition); // all active jobs before us are assumed to get high-res textures (even if our assets load first we don't get high-res texture out of order)
 
 			// create a high-quality texture only if we're within budget after we create the texture
-			unsigned int textureSize = getTextureSize(job.desc.width, job.desc.height, config.bpp);
+			uint32_t textureSize = getTextureSize(job.desc.width, job.desc.height, config.bpp);
 
 			bool hq = (totalSize + pendingSize + textureSize < config.budget);
 
-			unsigned int width = hq ? job.desc.width : job.desc.width / 2;
-			unsigned int height = hq ? job.desc.height : job.desc.height / 2;
+			uint32_t width = hq ? job.desc.width : job.desc.width / 2u;
+			uint32_t height = hq ? job.desc.height : job.desc.height / 2u;
 
-			if (!job.texture || job.texture->getWidth() != width || job.texture->getHeight() != height)
-			{
-				if (job.texture)
-				{
+			if (!job.texture || job.texture->getWidth() != width || job.texture->getHeight() != height) {
+				if (job.texture) {
 					// We're resampling an existing job; rather than lose the texture, let's add it to orphaned queue as an empty job - garbage collection will take care of it
 					orphanTextureFromJob(job);
 				}
@@ -884,8 +794,7 @@ namespace RBX
 			}
 		}
 
-		void TextureCompositor::orphanTextureFromJob(Job& job)
-		{
+		void TextureCompositor::orphanTextureFromJob(Job& job) {
 			boost::shared_ptr<Job> textureJob(new Job());
 
 			textureJob->priority = FLT_MAX;
@@ -898,9 +807,8 @@ namespace RBX
 			job.texture.reset();
 		}
 
-		unsigned int TextureCompositor::getTotalLiveTextureSize()
-		{
-			unsigned int result = 0;
+		uint32_t TextureCompositor::getTotalLiveTextureSize() {
+			uint32_t result = 0u;
 
 			for (JobMap::const_iterator it = jobs.begin(); it != jobs.end(); ++it)
 				result += getTextureSize(it->second->texture);
@@ -908,22 +816,19 @@ namespace RBX
 			return result;
 		}
 
-		unsigned int TextureCompositor::getTotalOrphanedTextureSize()
-		{
-			unsigned int result = 0;
+		uint32_t TextureCompositor::getTotalOrphanedTextureSize() {
+			uint32_t result = 0u;
 
-			for (size_t i = 0; i < orphanedJobs.size(); ++i)
+			for (size_t i = 0u; i < orphanedJobs.size(); ++i)
 				result += getTextureSize(orphanedJobs[i]->texture);
 
 			return result;
 		}
 
-		unsigned int TextureCompositor::getProjectedPendingTextureSize()
-		{
-			unsigned int result = 0;
+		uint32_t TextureCompositor::getProjectedPendingTextureSize() {
+			uint32_t result = 0u;
 
-			for (size_t i = 0; i < pendingJobs.size(); ++i)
-			{
+			for (size_t i = 0u; i < pendingJobs.size(); ++i) {
 				const shared_ptr<Job>& job = pendingJobs[i];
 
 				result += getTextureSize(job->desc.width, job->desc.height, config.bpp);
@@ -932,12 +837,10 @@ namespace RBX
 			return result;
 		}
 
-		unsigned int TextureCompositor::getProjectedActiveTextureSize(size_t begin, size_t end)
-		{
-			unsigned int result = 0;
+		uint32_t TextureCompositor::getProjectedActiveTextureSize(size_t begin, size_t end) {
+			uint32_t result = 0u;
 
-			for (size_t i = begin; i < end; ++i)
-			{
+			for (size_t i = begin; i < end; ++i) {
 				const shared_ptr<Job>& job = activeJobs[i];
 
 				result += getTextureSize(job->desc.width, job->desc.height, config.bpp);
@@ -946,22 +849,20 @@ namespace RBX
 			return result;
 		}
 
-		shared_ptr<Framebuffer> TextureCompositor::getOrCreateFramebufer(const shared_ptr<Texture>& texture)
-		{
+		shared_ptr<Framebuffer> TextureCompositor::getOrCreateFramebufer(const shared_ptr<Texture>& texture) {
 			// we can render into the texture if it's a render target itself
 			if (texture->getUsage() == Texture::Usage_Renderbuffer)
-				return visualEngine->getDevice()->createFramebuffer(texture->getRenderbuffer(0, 0));
+				return visualEngine->getDevice()->createFramebuffer(texture->getRenderbuffer(0u, 0u));
 
 			// look for matching framebuffer in cache
-			for (size_t i = 0; i < framebuffers.size(); ++i)
-			{
+			for (size_t i = 0u; i < framebuffers.size(); ++i) {
 				if (framebuffers[i]->getWidth() == texture->getWidth() && framebuffers[i]->getHeight() == texture->getHeight())
 					return framebuffers[i];
 			}
 
 			// create a new framebuffer
-			shared_ptr<Texture> rt = visualEngine->getDevice()->createTexture(Texture::Type_2D, Texture::Format_RGBA16f, texture->getWidth(), texture->getHeight(), 1, 1, Texture::Usage_Renderbuffer);
-			shared_ptr<Framebuffer> framebuffer = visualEngine->getDevice()->createFramebuffer(rt->getRenderbuffer(0, 0));
+			shared_ptr<Texture> rt = visualEngine->getDevice()->createTexture(Texture::Type_2D, Texture::Format_RGBA16f, texture->getWidth(), texture->getHeight(), 1u, 1u, Texture::Usage_Renderbuffer);
+			shared_ptr<Framebuffer> framebuffer = visualEngine->getDevice()->createFramebuffer(rt->getRenderbuffer(0u, 0u));
 
 			// we make sure RTs are always alive to minimize stalls (there should be <3 Mb of them anyway)
 			framebuffers.push_back(framebuffer);
@@ -969,15 +870,12 @@ namespace RBX
 			return framebuffer;
 		}
 
-		shared_ptr<Texture> TextureCompositor::getOrCreateTexture(unsigned int width, unsigned int height)
-		{
+		shared_ptr<Texture> TextureCompositor::getOrCreateTexture(uint32_t width, uint32_t height) {
 			// try to steal a texture from orphaned queue
-			for (size_t i = 0; i < orphanedJobs.size(); ++i)
-			{
+			for (size_t i = 0u; i < orphanedJobs.size(); ++i) {
 				shared_ptr<Texture> texture = orphanedJobs[i]->texture;
 
-				if (texture && texture->getWidth() == width && texture->getHeight() == height)
-				{
+				if (texture && texture->getWidth() == width && texture->getHeight() == height) {
 					FASTLOG1(FLog::RenderTextureCompositor, "TC Reuse texture %p", texture.get());
 
 					orphanedJobs.erase(orphanedJobs.begin() + i);
@@ -986,42 +884,37 @@ namespace RBX
 				}
 			}
 
-			Texture::Format format = config.bpp == 16 ? Texture::Format_BGR5A1 : Texture::Format_RGBA8;
+			Texture::Format format = config.bpp == 16u ? Texture::Format_BGR5A1 : Texture::Format_RGBA8;
 			Texture::Usage usage = kTextureCompositorUseRenderTextures ? Texture::Usage_Renderbuffer : Texture::Usage_Static;
 
-			shared_ptr<Texture> texture = visualEngine->getDevice()->createTexture(Texture::Type_2D, format, width, height, 1, 1, usage);
+			shared_ptr<Texture> texture = visualEngine->getDevice()->createTexture(Texture::Type_2D, format, width, height, 1u, 1u, usage);
 
 			FASTLOG1(FLog::RenderTextureCompositor, "TC Create texture %p", texture.get());
 
 			return texture;
 		}
 
-		TextureCompositorStats TextureCompositor::getStatistics() const
-		{
+		TextureCompositorStats TextureCompositor::getStatistics() const {
 			TextureCompositorStats result = {};
 
-			for (JobMap::const_iterator it = jobs.begin(); it != jobs.end(); ++it)
-			{
+			for (JobMap::const_iterator it = jobs.begin(); it != jobs.end(); ++it) {
 				const shared_ptr<Job>& job = it->second;
 				const shared_ptr<Texture>& texture = job->texture;
 
 				if (!texture)
 					continue;
 
-				if (texture->getWidth() == job->desc.width)
-				{
+				if (texture->getWidth() == job->desc.width) {
 					result.liveHQCount++;
 					result.liveHQSize += getTextureSize(texture);
 				}
-				else
-				{
+				else {
 					result.liveLQCount++;
 					result.liveLQSize += getTextureSize(texture);
 				}
 			}
 
-			for (size_t i = 0; i < orphanedJobs.size(); ++i)
-			{
+			for (size_t i = 0u; i < orphanedJobs.size(); ++i) {
 				result.orphanedCount++;
 				result.orphanedSize += getTextureSize(orphanedJobs[i]->texture);
 			}
@@ -1029,12 +922,10 @@ namespace RBX
 			return result;
 		}
 
-		void TextureCompositor::onDeviceLost()
-		{
+		void TextureCompositor::onDeviceLost() {
 			FASTLOG(FLog::RenderTextureCompositor, "TC Device lost");
 
-			if (shared_ptr<Job> job = renderedJob.job)
-			{
+			if (shared_ptr<Job> job = renderedJob.job) {
 				// We're going to blit the texture at some point in the future; however, we've just lost the texture contents.
 				// Let's put the job back to the pending queue.
 				FASTLOG1(FLog::RenderTextureCompositor, "TC Job[%p]: device lost while job render is in progress, enqueue job once again", job.get());

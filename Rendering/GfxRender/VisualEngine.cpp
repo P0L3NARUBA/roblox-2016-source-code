@@ -43,19 +43,17 @@ FASTFLAG(UseDynamicTypesetterUTF8)
 
 FASTFLAG(CameraVR)
 
-namespace RBX
-{
-	namespace Graphics
-	{
+namespace RBX {
+	namespace Graphics {
 
 		VisualEngine::VisualEngine(Device* device, CRenderSettings* settings)
 			: device(device)
-			, viewWidth(0)
-			, viewHeight(0)
+			, viewWidth(0u)
+			, viewHeight(0u)
 			, settings(settings)
-			, contentProvider(0)
-			, lighting(0)
-			, meshContentProvider(0)
+			, contentProvider(nullptr)
+			, lighting(nullptr)
+			, meshContentProvider(nullptr)
 		{
 			renderStats.reset(new RenderStats());
 			renderCaps.reset(new RenderCaps("Unknown", SystemUtil::getVideoMemory()));
@@ -99,12 +97,11 @@ namespace RBX
 
 					lightGrid.reset(lgrid);*/
 
-			// load fonts
-			if (FFlag::UseDynamicTypesetterUTF8)
-			{
+					// load fonts
+			if (FFlag::UseDynamicTypesetterUTF8) {
 				glyphAtlas.reset(new TextureAtlas(this, 2048u, 2048u));
-				for (Text::Font font = Text::FONT_LEGACY; font != Text::FONT_LAST; font = Text::Font(font + 1))
-				{
+
+				for (Text::Font font = Text::FONT_LEGACY; font != Text::FONT_LAST; font = Text::Font(font + 1)) {
 					static const char* kFontTTFPaths[] = {
 						"fonts/arial.ttf",
 						"fonts/arial.ttf",
@@ -129,23 +126,20 @@ namespace RBX
 						"fonts/GothamSSm-Black.ttf"
 					};
 
-					float legacyHeightScale = (font == Text::FONT_LEGACY) ? 1.5f : 1.f;
+					float legacyHeightScale = (font == Text::FONT_LEGACY) ? 1.5f : 1.0f;
 					typesetters[font].reset(new TypesetterDynamic(glyphAtlas.get(), textureManager.get(), ContentProvider::assetFolder() + kFontTTFPaths[font], legacyHeightScale, (unsigned)font, device->getCaps().retina));
 				}
 			}
-			else
-			{
-				for (Text::Font font = Text::FONT_LEGACY; font != Text::FONT_LAST; font = Text::Font(font + 1))
-				{
-					static const char* kFontPaths[Text::FONT_LAST] =
-					{
+			else {
+				for (Text::Font font = Text::FONT_LEGACY; font != Text::FONT_LAST; font = Text::Font(font + 1)) {
+					static const char* kFontPaths[Text::FONT_LAST] = {
 						"fonts/Arial.font", "fonts/Arial.font", "fonts/ArialBold.font", "fonts/SourceSans.font", "fonts/SourceSansBold.font",
 						"fonts/SourceSansLight.font", "fonts/SourceSansItalic.font",
 					};
 
 					static const char* kTexturePath = "rbxasset://fonts/fonts.dds";
 
-					float legacyHeightScale = (font == Text::FONT_LEGACY) ? 1.5f : 1.f;
+					float legacyHeightScale = (font == Text::FONT_LEGACY) ? 1.5f : 1.0f;
 					typesetters[font].reset(new TypesetterBitmap(getTextureManager(), ContentProvider::assetFolder() + kFontPaths[font], kTexturePath, legacyHeightScale, device->getCaps().retina));
 				}
 			}
@@ -173,7 +167,7 @@ namespace RBX
 			renderCaps->setSupportsGBuffer(gbufferSupported);
 
 			if (shared_ptr<ShaderProgram> program = shaderManager->getProgram("DefaultSkinnedVS", "DefaultFS")) {
-				unsigned int boneCount = program->getMaxWorldTransforms();
+				uint32_t boneCount = program->getMaxWorldTransforms();
 
 				FASTLOG1(FLog::Graphics, "Supported bones for skinning: %d", boneCount);
 
@@ -187,20 +181,16 @@ namespace RBX
 			frameRateManager->Configure(renderCaps.get(), settings);
 		}
 
-		const shared_ptr<Typesetter>& VisualEngine::getTypesetter(Text::Font font)
-		{
+		const shared_ptr<Typesetter>& VisualEngine::getTypesetter(Text::Font font) {
 			return typesetters[font];
 		}
 
-		VisualEngine::~VisualEngine()
-		{
+		VisualEngine::~VisualEngine() {
 			bindWorkspace(shared_ptr<DataModel>());
 		}
 
-		void VisualEngine::bindWorkspace(const shared_ptr<DataModel>& dm)
-		{
-			if (dm)
-			{
+		void VisualEngine::bindWorkspace(const shared_ptr<DataModel>& dm) {
+			if (dm) {
 				contentProvider = ServiceProvider::create<ContentProvider>(dm.get());
 				meshContentProvider = ServiceProvider::create<MeshContentProvider>(dm.get());
 				lighting = ServiceProvider::create<Lighting>(dm.get());
@@ -220,36 +210,32 @@ namespace RBX
 					lightGrid->lightingUploadCommit();
 				}*/
 			}
-			else
-			{
-				contentProvider = NULL;
-				meshContentProvider = NULL;
-				lighting = NULL;
+			else {
+				contentProvider = nullptr;
+				meshContentProvider = nullptr;
+				lighting = nullptr;
 
-				if (sceneUpdater)
-				{
+				if (sceneUpdater) {
 					sceneUpdater->unbind();
 					sceneUpdater.reset();
 				}
 
 				adorn.reset();
 
-				if (FFlag::CancelPendingTextureLoads)
-				{
+				if (FFlag::CancelPendingTextureLoads) {
 					textureCompositor->cancelPendingRequests();
 					textureManager->cancelPendingRequests();
 				}
 			}
 		}
 
-		void VisualEngine::setViewport(int width, int height)
+		void VisualEngine::setViewport(uint32_t width, uint32_t height)
 		{
 			viewWidth = width;
 			viewHeight = height;
 		}
 
-		void VisualEngine::setCamera(const Camera& value, const G3D::Vector3& poi)
-		{
+		void VisualEngine::setCamera(const Camera& value, const G3D::Vector3& poi) {
 			if (FFlag::CameraVR)
 				camera.setViewCFrame(value.getRenderingCoordinateFrame());
 			else
@@ -278,8 +264,7 @@ namespace RBX
 			// update camera for culling
 			cameraCull = camera;
 
-			if (DeviceVR* vr = device->getVR())
-			{
+			if (DeviceVR* vr = device->getVR()) {
 				DeviceVR::State vrState = vr->getState();
 
 				// Use max FOV for culling; ideally we also should account for IPD
@@ -297,19 +282,15 @@ namespace RBX
 			cameraCullFrm.changeProjectionPerspectiveZ(-value.nearPlaneZ(), -value.farPlaneZ()); //std::min(-value.farPlaneZ(), sqrtf(frameRateManager->GetRenderCullSqDistance())));
 		}
 
-		void VisualEngine::reloadShaders()
-		{
+		void VisualEngine::reloadShaders() {
 			shaderManager->loadShaders(ContentProvider::assetFolder() + "../shaders", device->getShadingLanguage(), /* consoleOutput= */ true);
 		}
 
-		void VisualEngine::reloadQueuedAssets()
-		{
-			for (FilenameCountdown::iterator it = assetsToReload.begin(); it != assetsToReload.end(); ++it)
-			{
+		void VisualEngine::reloadQueuedAssets() {
+			for (FilenameCountdown::iterator it = assetsToReload.begin(); it != assetsToReload.end(); ++it) {
 				--it->second;
 
-				if (it->second == 0)
-				{
+				if (it->second == 0u) {
 					const std::string& filePath = it->first;
 					immediateAssetReload(filePath);
 					assetsToReload.erase(it);
@@ -319,37 +300,30 @@ namespace RBX
 			}
 		}
 
-		void VisualEngine::queueAssetReload(const std::string& filePath)
-		{
+		void VisualEngine::queueAssetReload(const std::string& filePath) {
 			if (!filePath.empty())
-				assetsToReload[filePath] = 2; // wait this amount of frames before reloading
+				assetsToReload[filePath] = 2u; // wait this amount of frames before reloading
 		}
 
-		static void reloadMaterialTable(MegaClusterInstance* mci)
-		{
+		static void reloadMaterialTable(MegaClusterInstance* mci) {
 			mci->reloadMaterialTable();
 
 			if (SmoothClusterBase* sc = dynamic_cast<SmoothClusterBase*>(mci->getGfxPart()))
 				sc->reloadMaterialTable();
 		}
 
-		void VisualEngine::immediateAssetReload(const std::string& filePath)
-		{
-			if (filePath.find("rbxasset://") == 0 || filePath.find("rbxgameasset://") == 0 || filePath.find("rbxapp://") == 0)
-			{
-				if (filePath == "rbxasset://terrain/materials.json")
-				{
+		void VisualEngine::immediateAssetReload(const std::string& filePath) {
+			if (filePath.find("rbxasset://") == 0 || filePath.find("rbxgameasset://") == 0 || filePath.find("rbxapp://") == 0) {
+				if (filePath == "rbxasset://terrain/materials.json") {
 					if (MegaClusterInstance* mci = Instance::fastDynamicCast<MegaClusterInstance>(sceneUpdater->getDataModel()->getWorkspace()->getTerrain()))
 						DataModel::get(mci)->submitTask(boost::bind(reloadMaterialTable, mci), DataModelJob::Write);
 				}
 
 				getTextureManager()->reloadImage(ContentId(filePath));
 			}
-			else
-			{
-				std::string extension = filePath.substr(std::min(filePath.find_last_of(".") + 1, filePath.size()));
-				if (extension == "hlsl" || extension == "h")
-				{
+			else {
+				std::string extension = filePath.substr(std::min(filePath.find_last_of(".") + 1u, filePath.size()));
+				if (extension == "hlsl" || extension == "hlsli") {
 					StandardOut::singleton()->printf(MESSAGE_INFO, "Reloading shaders");
 					reloadShaders();
 				}

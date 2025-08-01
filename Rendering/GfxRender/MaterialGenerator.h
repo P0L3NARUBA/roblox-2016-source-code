@@ -7,19 +7,16 @@
 
 #include "v8datamodel/PartInstance.h"
 
-namespace RBX
-{
+namespace RBX {
 	class Decal;
 	class Humanoid;
 	class HumanoidIdentifier;
 }
 
-namespace RBX
-{
-	namespace Graphics
-	{
+namespace RBX {
+	namespace Graphics {
 
-		static const unsigned kMatCacheSize = 32;
+		static const uint32_t kMatCacheSize = 64u;
 
 		class VisualEngine;
 		class Material;
@@ -28,8 +25,7 @@ namespace RBX
 		class MaterialGenerator
 		{
 		public:
-			enum MaterialFlags
-			{
+			enum MaterialFlags {
 				Flag_Skinned = 1 << 0,
 				Flag_Transparent = 1 << 1,
 				Flag_AlphaKill = 1 << 2,
@@ -42,16 +38,14 @@ namespace RBX
 				Flag_CacheMask = Flag_Skinned | Flag_Transparent | Flag_AlphaKill | Flag_ForceDecal | Flag_ForceDecalTexture
 			};
 
-			enum ResultFlags
-			{
+			enum ResultFlags {
 				Result_UsesTexture = 1 << 0,
 				Result_UsesCompositTexture = 1 << 1,
 				Result_PlasticLOD = 1 << 2,
 			};
 
-			struct Result
-			{
-				explicit Result(const shared_ptr<Material>& material = shared_ptr<Material>(), unsigned int flags = 0, unsigned int features = 0, const G3D::Vector4& uvOffsetScale = G3D::Vector4(0, 0, 1, 1))
+			struct Result {
+				explicit Result(const shared_ptr<Material>& material = shared_ptr<Material>(), uint32_t flags = 0u, uint32_t features = 0u, const G3D::Vector4& uvOffsetScale = G3D::Vector4(0.0f, 0.0f, 1.0f, 1.0f))
 					: material(material)
 					, flags(flags)
 					, features(features)
@@ -61,14 +55,14 @@ namespace RBX
 				}
 
 				shared_ptr<Material> material;
-				unsigned int flags;
-				unsigned int features;
+				uint32_t flags;
+				uint32_t features;
 				G3D::Vector4 uvOffsetScale;
 			};
 
 			MaterialGenerator(VisualEngine* visualEngine);
 
-			Result createMaterial(PartInstance* part, Decal* decal, const HumanoidIdentifier* hi, unsigned int flags);
+			Result createMaterial(PartInstance* part, Decal* decal, const HumanoidIdentifier* hi, uint32_t flags);
 
 			void invalidateCompositCache();
 
@@ -77,21 +71,20 @@ namespace RBX
 
 			static MaterialData getParameters(PartMaterial material);
 			static float getTiling(PartMaterial material);
-			static int getMaterialId(PartMaterial material);
+			static uint32_t getMaterialId(PartMaterial material);
 
 			GlobalMaterialData getMaterialData() { return globalMaterialData; }
 
-			static unsigned int createFlags(bool skinned, RBX::PartInstance* part, const HumanoidIdentifier* humanoidIdentifier, bool& ignoreDecalsOut);
+			static uint32_t createFlags(bool skinned, RBX::PartInstance* part, const HumanoidIdentifier* humanoidIdentifier, bool& ignoreDecalsOut);
 
-			static unsigned int getDiffuseMapStage();
+			static uint32_t getDiffuseMapStage();
 
 		private:
 			VisualEngine* visualEngine;
 
 			typedef boost::unordered_map<std::string, shared_ptr<Material> > TexturedMaterialMap;
 
-			struct TexturedMaterialCache
-			{
+			struct TexturedMaterialCache {
 				TexturedMaterialMap map;
 
 				size_t gcSizeLast;
@@ -121,19 +114,19 @@ namespace RBX
 			GlobalMaterialData globalMaterialData;
 
 			void setupSmoothPlasticTextures(VisualEngine* visualEngine, Technique& technique);
-			void setupComplexMaterialTextures(VisualEngine* visualEngine, Technique& technique, const std::string& materialName, int materialId, const std::string& materialVariant);
+			void setupComplexMaterialTextures(VisualEngine* visualEngine, Technique& technique, const std::string& materialName, uint32_t materialId, const std::string& materialVariant);
 			void setupMaterialTextures(VisualEngine* ve, Technique& technique, PartMaterial renderMaterial);
 			void assignMaterialTextures(VisualEngine* visualEngine, Technique& technique) const;
 
 			void createTextureArrays(VisualEngine* visualEngine);
 
-			shared_ptr<Material> createBaseMaterial(unsigned int flags);
-			shared_ptr<Material> createRenderMaterial(unsigned int flags, PartMaterial renderMaterial);
-			shared_ptr<Material> createTexturedMaterial(const TextureRef& texture, const std::string& textureName, unsigned int flags);
+			shared_ptr<Material> createBaseMaterial(uint32_t flags);
+			shared_ptr<Material> createRenderMaterial(uint32_t flags, PartMaterial renderMaterial);
+			shared_ptr<Material> createTexturedMaterial(const TextureRef& texture, const std::string& textureName, uint32_t flags);
 
-			Result createDefaultMaterial(PartInstance* part, unsigned int flags, PartMaterial renderMaterial);
-			Result createMaterialForPart(PartInstance* part, const HumanoidIdentifier* hi, unsigned int flags);
-			Result createMaterialForDecal(Decal* decal, unsigned int flags);
+			Result createDefaultMaterial(PartInstance* part, uint32_t flags, PartMaterial renderMaterial);
+			Result createMaterialForPart(PartInstance* part, const HumanoidIdentifier* hi, uint32_t flags);
+			Result createMaterialForDecal(Decal* decal, uint32_t flags);
 
 			//TextureRef  wangTilesTex;
 		};

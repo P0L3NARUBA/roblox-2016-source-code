@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Util/DoubleEndedVector.h"
-#include "boost/cstdint.hpp"
+
+#include <cstdint>
 
 namespace RBX {
 
@@ -12,7 +13,7 @@ namespace RBX {
  * implementation will likely use less memory than a traditional set).
  */
 struct UintSet {
-	typedef boost::uint32_t BitGroup;
+	typedef uint32_t BitGroup;
 
 	// these two constants are public for testing
 	static const unsigned int kShiftForGroup;

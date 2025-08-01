@@ -18,20 +18,18 @@
 FASTFLAG(GUIZFighterGPU)
 FASTFLAG(UseDynamicTypesetterUTF8)
 
-namespace RBX
-{
-	namespace Graphics
-	{
+namespace RBX {
+	namespace Graphics {
 
-		static const unsigned int kVertexBufferMaxCount = 512 * 1024;
+		static const uint32_t kVertexBufferMaxCount = 512u * 1024u;
 
 		VertexStreamer::VertexStreamer(VisualEngine* visualEngine)
 			: visualEngine(visualEngine)
 		{
 			std::vector<VertexLayout::Element> elements;
-			elements.push_back(VertexLayout::Element(0, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
-			elements.push_back(VertexLayout::Element(0, 12u, VertexLayout::Format_Float2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture));
-			elements.push_back(VertexLayout::Element(0, 20u, VertexLayout::Format_Float4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Color));
+			elements.push_back(VertexLayout::Element(0u, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
+			elements.push_back(VertexLayout::Element(0u, 12u, VertexLayout::Format_Float2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture));
+			elements.push_back(VertexLayout::Element(0u, 20u, VertexLayout::Format_Float4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Color));
 
 			vertexLayout = visualEngine->getDevice()->createVertexLayout(elements);
 
@@ -45,43 +43,38 @@ namespace RBX
 		{
 		}
 
-		void VertexStreamer::cleanUpFrameData()
-		{
-			for (int cs = 0; cs < CS_NumTypes; ++cs)
-			{
-				chunks[cs].resize(0);
+		void VertexStreamer::cleanUpFrameData() {
+			for (size_t cs = 0u; cs < CS_NumTypes; ++cs) {
+				chunks[cs].resize(0u);
 			}
 
-			for (int i = 0; i < 10; ++i)
-			{
-				worldSpaceZDepthLayers[i].resize(0);
+			for (size_t i = 0u; i < 10u; ++i) {
+				worldSpaceZDepthLayers[i].resize(0u);
 			}
+
 			vertexData.fastClear();
 		}
 
-		void VertexStreamer::renderPrepare()
-		{
+		void VertexStreamer::renderPrepare() {
 			RBXPROFILER_SCOPE("Render", "prepare");
 
 			RBXASSERT(vertexData.size() <= kVertexBufferMaxCount);
 
 			// allocate hardware buffer according to total # of vertices
-			unsigned int bufferSize = 32;
+			size_t bufferSize = 32u;
 
-			while (bufferSize < static_cast<unsigned int>(vertexData.size()))
-				bufferSize += bufferSize / 2;
+			while (bufferSize < vertexData.size())
+				bufferSize += bufferSize / 2u;
 
 			bufferSize = std::min(bufferSize, kVertexBufferMaxCount);
 
-			if (!vertexBuffer || vertexBuffer->getElementCount() < bufferSize)
-			{
+			if (!vertexBuffer || vertexBuffer->getElementCount() < bufferSize) {
 				vertexBuffer = visualEngine->getDevice()->createVertexBuffer(sizeof(BasicVertex), bufferSize, GeometryBuffer::Usage_Dynamic);
 
 				geometry = visualEngine->getDevice()->createGeometry(vertexLayout, vertexBuffer, shared_ptr<IndexBuffer>());
 			}
 
-			if (vertexData.size() > 0)
-			{
+			if (vertexData.size() > 0u) {
 				void* bufferData = vertexBuffer->lock(GeometryBuffer::Lock_Discard);
 
 				memcpy(bufferData, &vertexData[0], sizeof(BasicVertex) * vertexData.size());
@@ -89,45 +82,40 @@ namespace RBX
 				vertexBuffer->unlock();
 			}
 
-			if (chunks[CS_WorldSpaceNoDepth].size() > 0)
-			{
-				for (G3D::Array<VertexChunk>::iterator iter = chunks[CS_WorldSpaceNoDepth].begin(); iter != chunks[CS_WorldSpaceNoDepth].end(); ++iter)
-				{
-					RBXASSERT(iter->index >= 0);
+			if (chunks[CS_WorldSpaceNoDepth].size() > 0u) {
+				for (G3D::Array<VertexChunk>::iterator iter = chunks[CS_WorldSpaceNoDepth].begin(); iter != chunks[CS_WorldSpaceNoDepth].end(); ++iter) {
+					RBXASSERT(iter->index >= 0u);
+
 					worldSpaceZDepthLayers[iter->index].push_back(&(*iter));
 				}
 			}
 		}
 
-		void VertexStreamer::render3D(DeviceContext* context, const RenderCamera& camera, RenderPassStats& stats)
-		{
+		void VertexStreamer::render3D(DeviceContext* context, const RenderCamera& camera, RenderPassStats& stats) {
 			RBXPROFILER_SCOPE("Render", "render3D");
 
 			PIX_SCOPE(context, "3D");
 			renderInternal(context, CS_WorldSpace, camera, stats);
 		}
 
-		void VertexStreamer::render3DNoDepth(DeviceContext* context, const RenderCamera& camera, RenderPassStats& stats, int renderIndex)
-		{
+		void VertexStreamer::render3DNoDepth(DeviceContext* context, const RenderCamera& camera, RenderPassStats& stats, int32_t renderIndex) {
 			RBXPROFILER_SCOPE("Render", "render3DNoDepth");
 
 			PIX_SCOPE(context, "3D");
 			renderInternal(context, CS_WorldSpaceNoDepth, camera, stats, renderIndex);
 		}
 
-		void VertexStreamer::render2D(DeviceContext* context, unsigned int viewWidth, unsigned int viewHeight, RenderPassStats& stats)
-		{
+		void VertexStreamer::render2D(DeviceContext* context, uint32_t viewWidth, uint32_t viewHeight, RenderPassStats& stats) {
 			RBXPROFILER_SCOPE("Render", "render2D");
 
 			RenderCamera orthoCamera;
 			orthoCamera.setViewMatrix(Matrix4::identity());
-			orthoCamera.setProjectionOrtho(viewWidth, viewHeight, -1, 1, halfPixelOffset);
+			orthoCamera.setProjectionOrtho(viewWidth, viewHeight, -1.0f, 1.0f, halfPixelOffset);
 
 			renderInternal(context, CS_ScreenSpace, orthoCamera, stats);
 		}
 
-		void VertexStreamer::render2DVR(DeviceContext* context, unsigned int viewWidth, unsigned int viewHeight, RenderPassStats& stats)
-		{
+		void VertexStreamer::render2DVR(DeviceContext* context, uint32_t viewWidth, uint32_t viewHeight, RenderPassStats& stats) {
 			RBXPROFILER_SCOPE("Render", "render2DVR");
 
 			float scaleX = float(viewWidth) / float(visualEngine->getViewWidth());
@@ -135,21 +123,19 @@ namespace RBX
 
 			RenderCamera orthoCamera;
 			orthoCamera.setViewMatrix(Matrix4::identity());
-			orthoCamera.setProjectionOrtho(viewWidth / scaleX, viewHeight / scaleY, -1, 1, halfPixelOffset);
+			orthoCamera.setProjectionOrtho(viewWidth / scaleX, viewHeight / scaleY, -1.0f, 1.0f, halfPixelOffset);
 
-			orthoCamera.setProjectionMatrix(Matrix4::scale(0.5, 0.5, 1) * orthoCamera.getProjectionMatrix());
+			orthoCamera.setProjectionMatrix(Matrix4::scale(0.5f, 0.5f, 1.0f) * orthoCamera.getProjectionMatrix());
 
 			renderInternal(context, CS_ScreenSpace, orthoCamera, stats);
 		}
 
-		void VertexStreamer::renderFinish()
-		{
+		void VertexStreamer::renderFinish() {
 			cleanUpFrameData();
 		}
 
-		void VertexStreamer::renderInternal(DeviceContext* context, CoordinateSpace coordinateSpace, const RenderCamera& camera, RenderPassStats& stats, int renderIndex)
-		{
-			if (chunks[coordinateSpace].size() == 0 || (coordinateSpace == CS_WorldSpaceNoDepth && worldSpaceZDepthLayers[renderIndex].size() == 0))
+		void VertexStreamer::renderInternal(DeviceContext* context, CoordinateSpace coordinateSpace, const RenderCamera& camera, RenderPassStats& stats, int32_t renderIndex) {
+			if (chunks[coordinateSpace].size() == 0u || (coordinateSpace == CS_WorldSpaceNoDepth && worldSpaceZDepthLayers[renderIndex].size() == 0u))
 				return;
 
 			// Get resources
@@ -162,7 +148,7 @@ namespace RBX
 			std::string vsName = (coordinateSpace == CS_WorldSpace) ? "UIFogVS" : "UIVS";
 			std::string fsName = (coordinateSpace == CS_WorldSpace) ? "UIFogFS" : "UIFS";
 
-			shared_ptr<ShaderProgram> shaderProgram = visualEngine->getShaderManager()->getProgramOrFFP(vsName, fsName);
+			shared_ptr<ShaderProgram> shaderProgram = visualEngine->getShaderManager()->getProgram(vsName, fsName);
 
 			if (!shaderProgram)
 				return;
@@ -176,10 +162,10 @@ namespace RBX
 			context->bindProgram(shaderProgram.get());
 
 			// init luminance sampling
-			static const float zFighterOffset = FFlag::GUIZFighterGPU ? 0.001f : 0;
+			static const float zFighterOffset = FFlag::GUIZFighterGPU ? 0.001f : 0.0f;
 			static const Vector4 luminanceSamplingOff = Vector4(0.0f, 0.0f, 0.0f, zFighterOffset);
 			static const Vector4 luminanceSamplingOn = Vector4(1.0f, 1.0f, 1.0f, zFighterOffset);
-			int uiParamsHandle = shaderProgram->getConstantHandle("UIParams");
+			//int uiParamsHandle = shaderProgram->getConstantHandle("UIParams");
 			BatchTextureType currentTextureType = BatchTextureType_Count; // invalid so it will be set at first iteration
 
 			context->setRasterizerState(RasterizerState::Cull_Back);
@@ -187,15 +173,15 @@ namespace RBX
 			context->setDepthState(DepthState(coordinateSpace == CS_WorldSpace ? DepthState::Function_GreaterEqual : DepthState::Function_Always, false));
 
 			// Only required for FFP
-			context->setWorldTransforms4x3(NULL, 0);
+			//context->setWorldTransforms4x3(NULL, 0);
 
 			stats.passChanges++;
 
-			Texture* currentTexture = NULL;
+			Texture* currentTexture = nullptr;
 
-			int arraySize = coordinateSpace == CS_WorldSpaceNoDepth ? worldSpaceZDepthLayers[renderIndex].size() : chunks[coordinateSpace].size();
-			for (int i = 0; i < arraySize; ++i)
-			{
+			size_t arraySize = coordinateSpace == CS_WorldSpaceNoDepth ? worldSpaceZDepthLayers[renderIndex].size() : chunks[coordinateSpace].size();
+
+			for (size_t i = 0u; i < arraySize; ++i) {
 				const VertexChunk& currChunk = coordinateSpace == CS_WorldSpaceNoDepth ? *worldSpaceZDepthLayers[renderIndex][i] : chunks[coordinateSpace][i];
 
 				if (currChunk.index >= 0)
@@ -204,49 +190,47 @@ namespace RBX
 				Texture* texture = currChunk.texture.get();
 
 				// Change texture
-				if (texture != currentTexture || i == 0)
-				{
+				if (texture != currentTexture || i == 0u) {
 					currentTexture = texture;
 
-					if (currentTextureType != currChunk.batchTextureType)
-					{
-						if (currChunk.batchTextureType == BatchTextureType_Font)
+					if (currentTextureType != currChunk.batchTextureType) {
+						/*if (currChunk.batchTextureType == BatchTextureType_Font)
 							context->setConstant(uiParamsHandle, &luminanceSamplingOn[0], 1);
 						else
-							context->setConstant(uiParamsHandle, &luminanceSamplingOff[0], 1);
+							context->setConstant(uiParamsHandle, &luminanceSamplingOff[0], 1);*/
 
 						currentTextureType = currChunk.batchTextureType;
 					}
 
 					if (currChunk.batchTextureType == BatchTextureType_Font && FFlag::UseDynamicTypesetterUTF8)
-						context->bindTexture(0, texture ? texture : defaultTexture.get(), wrapSamplerState);
+						context->bindTexture(0u, texture ? texture : defaultTexture.get(), wrapSamplerState);
 					else
-						context->bindTexture(0, texture ? texture : defaultTexture.get(), defaultSamplerState);
+						context->bindTexture(0u, texture ? texture : defaultTexture.get(), defaultSamplerState);
 				}
 
 				// Render!
-				context->draw(geometry.get(), currChunk.primitive, currChunk.vertexStart, currChunk.vertexCount, 0, 0);
+				context->draw(geometry.get(), currChunk.primitive, currChunk.vertexStart, currChunk.vertexCount, 0u, 0u);
 
 				stats.batches++;
-				stats.faces += currChunk.vertexCount / 3;
+				stats.faces += currChunk.vertexCount / 3u;
 				stats.vertices += currChunk.vertexCount;
 			}
 		}
 
-		VertexStreamer::VertexChunk* VertexStreamer::prepareChunk(const shared_ptr<Texture>& texture, Geometry::Primitive primitive, unsigned int vertexCount, CoordinateSpace coordinateSpace, BatchTextureType batchTexType, bool ignoreTexture, int zIndex, bool forceTop)
-		{
-			unsigned int vertexStart = vertexData.size();
+		VertexStreamer::VertexChunk* VertexStreamer::prepareChunk(const shared_ptr<Texture>& texture, Geometry::Primitive primitive, uint32_t vertexCount, CoordinateSpace coordinateSpace, BatchTextureType batchTexType, bool ignoreTexture, int32_t zIndex, bool forceTop) {
+			uint32_t vertexStart = vertexData.size();
 
 			if (vertexStart + vertexCount > kVertexBufferMaxCount)
-				return NULL;
+				return nullptr;
 
 			const shared_ptr<Texture>& actualTexture = ignoreTexture ? visualEngine->getTextureManager()->getFallbackTexture(TextureManager::Fallback_White) : texture;
 			G3D::Array<VertexChunk>& orderedChunks = chunks[coordinateSpace];
 
 			bool newsection = true;
-			if (orderedChunks.size() > 0)
-			{
+
+			if (orderedChunks.size() > 0u) {
 				VertexChunk& last = orderedChunks.back();
+
 				newsection =
 					(last.texture != actualTexture) ||
 					last.primitive != primitive ||
@@ -255,12 +239,10 @@ namespace RBX
 					last.alwaysOnTop != forceTop;
 			}
 
-			if (newsection)
-			{
+			if (newsection) {
 				orderedChunks.push_back(VertexChunk(actualTexture, primitive, vertexStart, vertexCount, batchTexType, zIndex, forceTop));
 			}
-			else
-			{
+			else {
 				RBXASSERT(orderedChunks.back().batchTextureType == batchTexType);
 				orderedChunks.back().vertexCount += vertexCount;
 			}
@@ -273,11 +255,9 @@ namespace RBX
 			const Vector2& x0y0, const Vector2& x1y0, const Vector2& x0y1, const Vector2& x1y1,
 			const Vector2& tex0, const Vector2& tex1, BatchTextureType batchTexType, bool ignoreTexture)
 		{
-			if (prepareChunk(texptr, Geometry::Primitive_Triangles, 6, CS_ScreenSpace, batchTexType, ignoreTexture))
-			{
-				float z = 0;
-				//unsigned int color = packColor(color4, colorOrderBGR);
-
+			if (prepareChunk(texptr, Geometry::Primitive_Triangles, 6u, CS_ScreenSpace, batchTexType, ignoreTexture)) {
+				float z = 0.0f;
+				
 				vertexData.push_back(BasicVertex(Vector3(x0y1.x, x0y1.y, z), Vector2(tex0.x, tex1.y), color4));
 				vertexData.push_back(BasicVertex(Vector3(x1y0.x, x1y0.y, z), Vector2(tex1.x, tex0.y), color4));
 				vertexData.push_back(BasicVertex(Vector3(x0y0.x, x0y0.y, z), Vector2(tex0.x, tex0.y), color4));
@@ -289,12 +269,9 @@ namespace RBX
 
 		void VertexStreamer::spriteBlt3D(const shared_ptr<Texture>& texptr, const Color4& color4, BatchTextureType batchTexType,
 			const Vector3& x0y0, const Vector3& x1y0, const Vector3& x0y1, const Vector3& x1y1,
-			const Vector2& tex0, const Vector2& tex1, int zIndex, bool alwaysOnTop)
+			const Vector2& tex0, const Vector2& tex1, int32_t zIndex, bool alwaysOnTop)
 		{
-			if (prepareChunk(texptr, Geometry::Primitive_Triangles, 6, alwaysOnTop || zIndex >= 0 ? CS_WorldSpaceNoDepth : CS_WorldSpace, batchTexType, false, zIndex, alwaysOnTop))
-			{
-				//unsigned int color = packColor(color4, colorOrderBGR);
-
+			if (prepareChunk(texptr, Geometry::Primitive_Triangles, 6u, alwaysOnTop || zIndex >= 0 ? CS_WorldSpaceNoDepth : CS_WorldSpace, batchTexType, false, zIndex, alwaysOnTop)) {
 				vertexData.push_back(BasicVertex(Vector3(x0y1), Vector2(tex0.x, tex1.y), color4));
 				vertexData.push_back(BasicVertex(Vector3(x1y0), Vector2(tex1.x, tex0.y), color4));
 				vertexData.push_back(BasicVertex(Vector3(x0y0), Vector2(tex0.x, tex0.y), color4));
@@ -304,54 +281,37 @@ namespace RBX
 			}
 		}
 
-		void VertexStreamer::triangleList2d(const Color4& color4, const Vector2* v, int vcount, const short* indices, int icount)
-		{
-			if (prepareChunk(shared_ptr<Texture>(), Geometry::Primitive_Triangles, icount, CS_ScreenSpace, BatchTextureType_Color))
-			{
-				//unsigned int color = packColor(color4, colorOrderBGR);
-
-				RBXASSERT(icount % 3 == 0);
+		void VertexStreamer::triangleList2d(const Color4& color4, const Vector2* v, uint32_t vcount, const short* indices, uint32_t icount) {
+			if (prepareChunk(shared_ptr<Texture>(), Geometry::Primitive_Triangles, icount, CS_ScreenSpace, BatchTextureType_Color)) {
+				RBXASSERT(icount % 3u == 0u);
 				//todo: we currently just ignore the nice indexing work done. todo: support indexing.
-				for (int i = 0; i < icount; ++i)
-				{
+				for (size_t i = 0u; i < icount; ++i) {
 					vertexData.push_back(BasicVertex(Vector3(v[indices[i]], 0.0f), Vector2(), color4));
 				}
 			}
 		}
 
-		void VertexStreamer::triangleList(const Color4& color4, const CoordinateFrame& cframe, const Vector3* v, int vcount, const short* indices, int icount)
-		{
-			if (prepareChunk(shared_ptr<Texture>(), Geometry::Primitive_Triangles, icount, CS_WorldSpace, BatchTextureType_Color))
-			{
-				//unsigned int color = packColor(color4, colorOrderBGR);
-
-				RBXASSERT(icount % 3 == 0);
+		void VertexStreamer::triangleList(const Color4& color4, const CoordinateFrame& cframe, const Vector3* v, uint32_t vcount, const short* indices, uint32_t icount) {
+			if (prepareChunk(shared_ptr<Texture>(), Geometry::Primitive_Triangles, icount, CS_WorldSpace, BatchTextureType_Color)) {
+				RBXASSERT(icount % 3u == 0u);
 				//todo: we currently just ignore the nice indexing work done. todo: support indexing.
-				for (int i = 0; i < icount; ++i)
-				{
+				for (size_t i = 0u; i < icount; ++i) {
 					vertexData.push_back(BasicVertex(Vector3(cframe.pointToWorldSpace(v[indices[i]])), Vector2(), color4));
 				}
 			}
 		}
 
-		void VertexStreamer::line(float x1, float y1, float x2, float y2, const Color4& color4)
-		{
-			if (prepareChunk(shared_ptr<Texture>(), Geometry::Primitive_Lines, 2, CS_ScreenSpace, BatchTextureType_Color))
-			{
-				float z = 0;
-				//unsigned int color = packColor(color4, colorOrderBGR);
-
+		void VertexStreamer::line(float x1, float y1, float x2, float y2, const Color4& color4) {
+			if (prepareChunk(shared_ptr<Texture>(), Geometry::Primitive_Lines, 2, CS_ScreenSpace, BatchTextureType_Color)) {
+				float z = 0.0f;
+				
 				vertexData.push_back(BasicVertex(Vector3(x1, y1, z), Vector2(), color4));
 				vertexData.push_back(BasicVertex(Vector3(x2, y2, z), Vector2(), color4));
 			}
 		}
 
-		void VertexStreamer::line3d(float x1, float y1, float z1, float x2, float y2, float z2, const Color4& color4)
-		{
-			if (prepareChunk(shared_ptr<Texture>(), Geometry::Primitive_Lines, 2, CS_WorldSpace, BatchTextureType_Color))
-			{
-				//unsigned int color = packColor(color4, colorOrderBGR);
-
+		void VertexStreamer::line3d(float x1, float y1, float z1, float x2, float y2, float z2, const Color4& color4) {
+			if (prepareChunk(shared_ptr<Texture>(), Geometry::Primitive_Lines, 2, CS_WorldSpace, BatchTextureType_Color)) {
 				vertexData.push_back(BasicVertex(Vector3(x1, y1, z1), Vector2(), color4));
 				vertexData.push_back(BasicVertex(Vector3(x2, y2, z2), Vector2(), color4));
 			}

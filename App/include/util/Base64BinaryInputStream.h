@@ -1,13 +1,13 @@
 #pragma once
 
-#include "boost/cstdint.hpp"
+#include <cstdint>
 
 namespace RBX {
 
 struct Base64BinaryInputStream {
 private:
 	const char* source;
-	boost::uint16_t buffer;
+	uint16_t buffer;
 	size_t readableBitsInBuffer;
 	static unsigned char decode(unsigned char charFromString);
 

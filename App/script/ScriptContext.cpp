@@ -2710,7 +2710,7 @@ void ScriptContext::onServiceProvider(ServiceProvider* oldProvider, ServiceProvi
 	}
 
 	if (statsItem) {
-		statsItem->setParent(NULL);
+		statsItem->setParent(nullptr);
 		statsItem.reset();
 	}
 

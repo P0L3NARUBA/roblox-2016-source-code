@@ -21,76 +21,76 @@ namespace RBX {
 	{
 	public:
 		NodeBase(short level, int hashId, const Vector3int32& gridId)
-		: level(level)
-		, hashId(hashId)
-		, gridId(gridId)
-		{};
+			: level(level)
+			, hashId(hashId)
+			, gridId(gridId)
+		{
+		};
 		NodeBase()
-		: level(-1)
-		, hashId(-1)
-		{};
-		
+			: level(-1)
+			, hashId(-1)
+		{
+		};
+
 		~NodeBase() {
 			level = -2;
 			hashId = -2;
 		}
-		
+
 		short level;
-		int hashId;
+		int32_t hashId;
 		Vector3int32 gridId;
-		
-		int getLevel() {
+
+		int32_t getLevel() {
 			RBXASSERT(level >= -1);
-			return level; 
+			return level;
 		}
 	};
-	
-	enum enumAction
-	{
+
+	enum enumAction {
 		aRecurseTreeNode,
 		aVisitSingleSpatialNode,
 		aVisitAllSiblingsSpatialNodes
 	};
-	
-	struct NodeInfo
-	{
-		
+
+	struct NodeInfo {
+
 		NodeInfo(NodeBase* node, enumAction action, IntersectResult intersectResult, float distance)
-		: node(node)
-		, action(action)
-		, intersectResult(intersectResult)
-		, distance(distance)
-		{};
+			: node(node)
+			, action(action)
+			, intersectResult(intersectResult)
+			, distance(distance)
+		{
+		};
 		NodeBase* node;
 		enumAction action;
 		IntersectResult intersectResult;
 		float distance;
-		
+
 		// transform distance into priority (lower distance, higher priority == invert sign)
-		bool operator < (const NodeInfo& r) const
-		{
+		bool operator < (const NodeInfo& r) const {
 			return distance > r.distance;
 		}
 	};
-	
-	
+
+
 	class SpatialHashStatic {
 	public:
 		// in SpatialHashMultiRes.inl
-		static const int cellMinSize;
-		static const int maxLevelForAnchored;
-		inline static float hashGridSize(int level);
-		inline static float hashGridRecip(int level);
-		inline static size_t numBuckets(int level);
-		inline static Extents hashGridToRealExtents(int level, const Vector3int32& hashGrid);
-		inline static ExtentsInt32 scaleExtents(int smallLevel, int bigLevel, const ExtentsInt32& smallExtents);
-		inline static Vector3int32 realToHashGrid(int level, const Vector3& realPoint);
-		inline static Vector3 hashGridToReal(int level, const Vector3int32& hashGrid);
-		
+		static const int32_t cellMinSize;
+		static const int32_t maxLevelForAnchored;
+		inline static float hashGridSize(int32_t level);
+		inline static float hashGridRecip(int32_t level);
+		inline static size_t numBuckets(int32_t level);
+		inline static Extents hashGridToRealExtents(int32_t level, const Vector3int32& hashGrid);
+		inline static ExtentsInt32 scaleExtents(int32_t smallLevel, int32_t bigLevel, const ExtentsInt32& smallExtents);
+		inline static Vector3int32 realToHashGrid(int32_t level, const Vector3& realPoint);
+		inline static Vector3 hashGridToReal(int32_t level, const Vector3int32& hashGrid);
+
 		// in SpatialHashMultiRes.cpp
-		static int getHash(int level, const Vector3int32& grid);
+		static int getHash(int32_t level, const Vector3int32& grid);
 		static void computeMinMax(const int level, const Extents& extents, Vector3int32& min, Vector3int32& max);
-		static void makeVisitOrder(int* offsets, const Vector3& visitDir);
+		static void makeVisitOrder(int32_t* offsets, const Vector3& visitDir);
 
 		static const Extents safeExtents(const Extents& e) {
 			RBXASSERT(Extents(e.min(), e.max()) == e);
@@ -105,12 +105,12 @@ namespace RBX {
 	};
 
 	template<class Primitive, class Contact, class ContactManager, int MAX_LEVELS>
-	class SpatialHash {	
+	class SpatialHash {
 	public:
 		struct SpaceFilter
 		{
 			virtual IntersectResult Intersects(const Extents& extents) = 0;
-			virtual float Distance(const Extents& extents) { return 0; };
+			virtual float Distance(const Extents& extents) { return 0.0f; };
 			// return false to break iteration.
 			virtual bool onPrimitive(Primitive* p, IntersectResult intersectResult, float distance) = 0;
 		};
@@ -130,9 +130,9 @@ namespace RBX {
 				// for Changed update type, both old and new info is valid
 				UpdateType updateType;
 
-				int oldLevel;
+				int32_t oldLevel;
 				ExtentsInt32 oldSpatialExtents;
-				int newLevel;
+				int32_t newLevel;
 				ExtentsInt32 newSpatialExtents;
 			};
 			// This callback may be invoked when a part is altered from lua,
@@ -143,7 +143,7 @@ namespace RBX {
 			virtual void coarsePrimitiveMovement(Primitive* p, const UpdateInfo& info) = 0;
 		};
 
-		SpatialHash(World* world, ContactManager* contactManager, int maxCellsPerPrimitive);
+		SpatialHash(World* world, ContactManager* contactManager, int32_t maxCellsPerPrimitive);
 		~SpatialHash();
 
 		// loosely sorted.
@@ -157,7 +157,7 @@ namespace RBX {
 		void onPrimitiveRemoved(Primitive* p);
 		void onPrimitiveExtentsChanged(Primitive* p);
 		void onPrimitiveAssembled(Primitive* p);
-	
+
 		void getPrimitivesInGrid(const Vector3int32& grid, G3D::Array<Primitive*>& primitives);
 		bool getNextGrid(Vector3int32& grid, const RbxRay& unitRay, float maxDistance);
 
@@ -165,24 +165,24 @@ namespace RBX {
 		void getPrimitivesTouchingGrids(
 			const Extents& extents,
 			const Primitive* ingore,
-			std::size_t maxCount, 
+			std::size_t maxCount,
 			boost::unordered_set<Primitive*>& answer);
 
 		void getPrimitivesTouchingGrids(
-			const Extents& extents, 
-			const boost::unordered_set<const Primitive*>& ignoreSet, 
-			std::size_t maxCount, 
+			const Extents& extents,
+			const boost::unordered_set<const Primitive*>& ignoreSet,
+			std::size_t maxCount,
 			boost::unordered_set<Primitive*>& answer);
 
 		// This function iteratively processes cells that overlap with extents, which is faster on small regions
-		template <typename Set> void getPrimitivesOverlapping( const Extents& extents, Set& answer);
+		template <typename Set> void getPrimitivesOverlapping(const Extents& extents, Set& answer);
 
 		// This function recursively processes cells that overlap with extents, which is faster on large regions
 		template <typename Set> void getPrimitivesOverlappingRec(const Extents& extents, Set& answer);
 
 		// inquiry
-		int	getNodesOut() const {return nodesOut;}
-		int getMaxBucket() const {return maxBucket;}
+		int	getNodesOut() const { return nodesOut; }
+		int getMaxBucket() const { return maxBucket; }
 
 		void doStats() const;
 
@@ -203,37 +203,32 @@ namespace RBX {
 		typedef std::pair<TreeNode*, IntersectResult> TreeNodePair;
 
 		// sort by the dot product of( the position of the offsets in space by the visitDir ).
-		struct SortOffsetByVisitDir
-		{
-			SortOffsetByVisitDir(const Vector3& visitDir) 
-			: visitDir(visitDir) {};
+		struct SortOffsetByVisitDir {
+			SortOffsetByVisitDir(const Vector3& visitDir)
+				: visitDir(visitDir) {
+			};
 			const Vector3& visitDir;
-			
-			bool operator()(const TreeNodePair& a, const TreeNodePair& b)
-			{
+
+			bool operator()(const TreeNodePair& a, const TreeNodePair& b) {
 				Vector3 va((float)a.first->gridId.x, (float)a.first->gridId.y, (float)a.first->gridId.z);
 				Vector3 vb((float)b.first->gridId.x, (float)b.first->gridId.y, (float)b.first->gridId.z);
 				return va.dot(visitDir) < vb.dot(visitDir);
 			}
 		};
-		
-		struct FastClearSpatialNode
-		{
+
+		struct FastClearSpatialNode {
 			SpatialHash<Primitive, Contact, ContactManager, MAX_LEVELS>* hash;
 			FastClearSpatialNode(SpatialHash<Primitive, Contact, ContactManager, MAX_LEVELS>* h) : hash(h) {};
-			void operator()(SpatialNode* node)
-			{
+			void operator()(SpatialNode* node) {
 				node->primitive->setOldSpatialExtents(ExtentsInt32::empty());
 				hash->nodesOut--;
 			}
 		};
 
-		struct FastClearTreeNode
-		{
+		struct FastClearTreeNode {
 			SpatialHash<Primitive, Contact, ContactManager, MAX_LEVELS>* hash;
 			FastClearTreeNode(SpatialHash<Primitive, Contact, ContactManager, MAX_LEVELS>* h) : hash(h) {};
-			void operator()(TreeNode* node)
-			{
+			void operator()(TreeNode* node) {
 				node->refByPrimitives = 0;
 				node->next = 0;
 				hash->numTreeNodesTotal--;
@@ -247,26 +242,26 @@ namespace RBX {
 
 			unsigned short children[8];
 			unsigned char childMask;
-			int refByPrimitives;
-			TreeNode *next;
+			int32_t refByPrimitives;
+			TreeNode* next;
 
 			void reset() {
 				refByPrimitives = 0;
 				this->level = -1;
 				this->hashId = -1;
-				next = NULL;
+				next = nullptr;
 				childMask = 0;
-				for (int i=0; i<8; i++)
+				for (size_t i = 0u; i < 8u; i++)
 					children[i] = 0xffff;
 			}
 
 			void setChild(int i, unsigned int child) {
-				childMask |=  (1<<i);
+				childMask |= (1 << i);
 				children[i] = child;
 			}
 
 			void removeChild(int i) {
-				childMask &= ~(1<<i);
+				childMask &= ~(1 << i);
 				children[i] = 0xffff;
 			}
 
@@ -277,12 +272,12 @@ namespace RBX {
 
 			~TreeNode() {
 				RBXASSERT(refByPrimitives == 0);
-				RBXASSERT(next == NULL);
-				next = NULL;
+				RBXASSERT(next == nullptr);
+				next = nullptr;
 			}
 
 			unsigned char hasChild(int i) {
-				return childMask & (1<<i);
+				return childMask & (1 << i);
 			}
 
 		};
@@ -293,38 +288,39 @@ namespace RBX {
 			friend class SpatialHash;
 			friend class TreeNode;
 
-			Primitive*			primitive;			// primitive associated with this node
-			SpatialNode*		nextHashLink;		// next node for this hash
-	#ifdef _RBX_DEBUGGING_SPATIAL_HASH
-			SpatialNode*		nextPrimitiveLink;	// next node for this primitive
-			SpatialNode*		prevPrimitiveLink;	// prior node for this primitive
-	#endif
-			TreeNode *treeNode;
+			Primitive* primitive;			// primitive associated with this node
+			SpatialNode* nextHashLink;		// next node for this hash
+#ifdef _RBX_DEBUGGING_SPATIAL_HASH
+			SpatialNode* nextPrimitiveLink;	// next node for this primitive
+			SpatialNode* prevPrimitiveLink;	// prior node for this primitive
+#endif
+			TreeNode* treeNode;
 
 		public:
 			SpatialNode(int l, int hashId, const Vector3int32& gridId)
 				: NodeBase(l, hashId, gridId)
 				, nextHashLink(0)
-				, primitive(NULL)
-				, treeNode(NULL)
-			#ifdef _RBX_DEBUGGING_SPATIAL_HASH
+				, primitive(nullptr)
+				, treeNode(nullptr)
+#ifdef _RBX_DEBUGGING_SPATIAL_HASH
 				, nextPrimitiveLink(0)
 				, prevPrimitiveLink(0)
-			#endif
-			{}
+#endif
+			{
+			}
 
 			~SpatialNode()
 			{
-				treeNode = NULL;
-				primitive = NULL;
-				nextHashLink = NULL;
+				treeNode = nullptr;
+				primitive = nullptr;
+				nextHashLink = nullptr;
 			}
 		};
 
 		class SpatialHashTableEntry {
 		public:
-			SpatialNode *nodes;
-			TreeNode *treeNodes;
+			SpatialNode* nodes;
+			TreeNode* treeNodes;
 		};
 
 	protected: // default settings override on construction
@@ -337,8 +333,8 @@ namespace RBX {
 
 		int numTreeNodesTotal;
 
-		World*								world;
-		ContactManager*						contactManager;
+		World* world;
+		ContactManager* contactManager;
 		std::vector<SpatialHashTableEntry>	hashTables[MAX_LEVELS];
 		int									nodesOut;
 		int									maxBucket;
@@ -348,19 +344,19 @@ namespace RBX {
 		SpatialNode* newNode(int level, int hash, const Vector3int32& grid);
 		void returnNode(SpatialNode* node);
 
-		TreeNode * findTreeNode(
-			int level, int hash, const Vector3int32 &gridCoord);
-		TreeNode * createTreeNode(
-			int level, int hash, const Vector3int32 &gridCoord);
+		TreeNode* findTreeNode(
+			int level, int hash, const Vector3int32& gridCoord);
+		TreeNode* createTreeNode(
+			int level, int hash, const Vector3int32& gridCoord);
 		void _retireTreeNode(TreeNode* tn);
 		void retireTreeNode(TreeNode* tn);
-		void removeTreeNodeChild(int childLevel, Vector3int32 &childGridCoord);
+		void removeTreeNodeChild(int childLevel, Vector3int32& childGridCoord);
 
 		bool findOtherNodesInLevel0Cell(SpatialNode* destroy);
 
-		void checkAndReleaseContacts(Primitive *p);
+		void checkAndReleaseContacts(Primitive* p);
 
-		void addContactFromChildren(TreeNode *tn, Primitive *p);
+		void addContactFromChildren(TreeNode* tn, Primitive* p);
 
 		int computeLevel(const Primitive* p, const Extents& extents);
 
@@ -376,11 +372,11 @@ namespace RBX {
 		void addNode(Primitive* p, const Vector3int32& grid, bool addContact = true);
 		void destroyNode(SpatialNode* destroy);
 
-		void changeMinMax(	Primitive* p,
-							const ExtentsInt32* change,
-							const ExtentsInt32* oldBox,
-							const ExtentsInt32* newBox,
-							bool addContact = true);
+		void changeMinMax(Primitive* p,
+			const ExtentsInt32* change,
+			const ExtentsInt32* oldBox,
+			const ExtentsInt32* newBox,
+			bool addContact = true);
 		void primitiveAdded(Primitive* p, bool addContact);
 		void primitiveRemoved(Primitive* p);
 		void primitiveExtentsChanged(Primitive* p, const Extents& extents);
@@ -390,13 +386,13 @@ namespace RBX {
 		object_pool<SpatialNode, roblox_allocator> spatialNodeAllocator;
 		//
 
-		inline Vector3int32 getChildGrid(const Vector3int32& grid, int offset) 
+		inline Vector3int32 getChildGrid(const Vector3int32& grid, int offset)
 		{
 			return Vector3int32(
 				(grid.x << 1) + (offset & 1), // bit 0 of offset is x coord.
 				(grid.y << 1) + ((offset & 2) >> 1), // bit 1 of offset is y coord.
 				(grid.z << 1) + ((offset & 4) >> 2)  // bit 2 of offset is z coord.
-				);
+			);
 		}
 
 		static const Extents calcNewExtents(Primitive* p);

@@ -38,7 +38,7 @@ namespace RBX {
 	}
 
 	extern const char* const sHumanoid;
-	class Humanoid 
+	class Humanoid
 		: public DescribedCreatable<Humanoid, Instance, sHumanoid>
 		, public KernelJoint		// Implements "computeForce"
 		, public IAdornable
@@ -67,7 +67,7 @@ namespace RBX {
 			HUMANOID_RIG_TYPE_R15 = 1,
 		};
 	private:
-        friend unsigned int HUMAN::HumanoidState::checkComputeEvent(); // only used to check for exploits.
+		friend unsigned int HUMAN::HumanoidState::checkComputeEvent(); // only used to check for exploits.
 
 		typedef DescribedCreatable<Humanoid, Instance, sHumanoid> Super;
 
@@ -84,16 +84,16 @@ namespace RBX {
 		float walkAngleError;
 		HeapValue<float> walkSpeed;
 		HeapValue<float> walkSpeedShadow;  // due to exploits.
-        HeapValue<float> percentWalkSpeed;                 // used to make walk speed variable (for joysticks and the like)
+		HeapValue<float> percentWalkSpeed;                 // used to make walk speed variable (for joysticks and the like)
 		HeapValue<float> health;
 		HeapValue<float> maxHealth;
-        mutable ObscureValue<size_t> walkSpeedErrors; // only used in const member functions...
+		mutable ObscureValue<size_t> walkSpeedErrors; // only used in const member functions...
 		HeapValue<float> jumpPower;
 		HeapValue<float> maxSlopeAngle;
 		HeapValue<float> hipHeight;
 		bool torsoArrived;
 		bool jump;
-		bool autoJump; 
+		bool autoJump;
 		bool sit;
 		bool touchedHard;
 		bool strafe;
@@ -109,8 +109,8 @@ namespace RBX {
 		bool activatePhysics;
 		Vector3 activatePhysicsImpulse;			//
 
-		int ragdollCriteria;
-		int numContacts;						// Used to signal nearlyTouched event
+		size_t ragdollCriteria;
+		size_t numContacts;						// Used to signal nearlyTouched event
 		NameOcclusion nameOcclusion;
 		HumanoidDisplayDistanceType displayDistanceType;
 		float nameDisplayDistance;
@@ -118,7 +118,7 @@ namespace RBX {
 		Vector3 cameraOffset;					// When this humanoid is used as a camera target, offset the camera target by this vector
 
 		bool isWalkingFromStudioTouchEmulation;
-		
+
 		std::string displayText;
 		ContentFilter::FilterResult filterState;
 
@@ -130,16 +130,16 @@ namespace RBX {
 		Vector3 getDeltaToGoal() const;
 		void setWalkMode(bool walking);
 		void stepWalkMode(double gameDt);
-		
+
 		bool clickToWalkEnabled;
 
-        bool stateTransitionEnabled[HUMAN::NUM_STATE_TYPES];
+		bool stateTransitionEnabled[HUMAN::NUM_STATE_TYPES];
 
 		Vector3 lastFloorNormal;
 		// Humanoid Network Floor Platforms
 		boost::shared_ptr<PartInstance> lastFloorPart;
 		boost::shared_ptr<PartInstance> rootFloorMechPart;
-		int lastFilterPhase;
+		size_t lastFilterPhase;
 
 		// hack - easiest place to update is on query of had neck
 		bool hadNeck;							// has this humanoid ever had a neck?  Only break joints on death if so
@@ -153,13 +153,13 @@ namespace RBX {
 			hadHealth = hadHealth || (health > 0.0f);
 		}
 
-		typedef enum {TORSO, HEAD, RIGHT_ARM, LEFT_ARM, RIGHT_LEG, LEFT_LEG, VISIBLE_TORSO, APPENDAGE_COUNT} AppendageType;
+		typedef enum { TORSO, HEAD, RIGHT_ARM, LEFT_ARM, RIGHT_LEG, LEFT_LEG, VISIBLE_TORSO, APPENDAGE_COUNT } AppendageType;
 
 		shared_ptr<PartInstance> appendageCache[APPENDAGE_COUNT];
 		shared_ptr<PartInstance> baseInstance;
 
-		rbx::signals::scoped_connection characterChildAdded;		
-		rbx::signals::scoped_connection characterChildRemoved;				
+		rbx::signals::scoped_connection characterChildAdded;
+		rbx::signals::scoped_connection characterChildRemoved;
 		void onEvent_ChildModified(shared_ptr<Instance> child);
 
 		boost::unordered_map<shared_ptr<PartInstance>, rbx::signals::scoped_connection> siblingMap;
@@ -171,7 +171,7 @@ namespace RBX {
 		rbx::signals::scoped_connection onCFrameChangedConnection;
 		rbx::signals::scoped_connection humanoidEquipConnection;
 
-		void setCachePointerByType(AppendageType appendage, PartInstance *part);
+		void setCachePointerByType(AppendageType appendage, PartInstance* part);
 		void updateBaseInstance();
 
 		const PartInstance* getConstAppendageSlow(AppendageType appendage) const;
@@ -192,7 +192,7 @@ namespace RBX {
 		void onCFrameChangedFromReflection();
 
 		bool hasWalkToPoint(Vector3& worldPosition) const;
-	
+
 		bool canClickToWalk() const;
 
 		void setLocalTransparencyModifier(float transparencyModifier) const;
@@ -212,8 +212,8 @@ namespace RBX {
 
 		///////////////////////////////////////////////////////////////////////////
 		// IAdornable
-		/*override*/ bool shouldRender3dAdorn() const {return true;}
-		/*override*/ bool shouldRender3dSortedAdorn() const {return true;}
+		/*override*/ bool shouldRender3dAdorn() const { return true; }
+		/*override*/ bool shouldRender3dSortedAdorn() const { return true; }
 		/*override*/ Vector3 render3dSortedPosition() const;
 		/*override*/ void render3dAdorn(Adorn* adorn);
 		/*override*/ void render3dSortedAdorn(Adorn* adorn);
@@ -230,7 +230,7 @@ namespace RBX {
 		///////////////////////////////////////////////////////////////////////////
 		// KernelJoint / Connector
 		/*override*/ void computeForce(bool throttling);
-		/*override*/ Body* getEngineBody()						{return getRootBodyFast();}
+		/*override*/ Body* getEngineBody() { return getRootBodyFast(); }
 		/*override*/ virtual KernelType getConnectorKernelType() const { return Connector::HUMANOID; }
 
 		///////////////////////////////////////////////////////////////////////////
@@ -247,14 +247,14 @@ namespace RBX {
 		/*override*/ float getYAxisRotationalVelocity() const; // used for camera control
 		/*override*/ void setFirstPersonRotationalVelocity(const Vector3& desiredLook, bool firstPersonOn);
 		/*override*/ void getSelectionIgnorePrimitives(std::vector<const Primitive*>& primitives);
-		/*override*/ virtual bool hasFocusCoord() const {return getHeadSlow() != NULL;}
+		/*override*/ virtual bool hasFocusCoord() const { return getHeadSlow() != NULL; }
 
 		// Humanoid Platform Networking
 		bool validateNetworkUpdateDistance(PartInstance* floorPart, CoordinateFrame& previousFloorPosition, float& netDt);
 		void truncateDisplacementIfObstacle(PartInstance* floorPart, Vector3& newCharPosition, const Vector3& previousCharPosition);
 		Vector3 getSimulatedFrictionVelocityOffset(PartInstance* floorPart, Vector3& newCharPosition, const Vector3& previousCharPosition, const Vector3& charPosInFloorSpace, const RBX::Velocity& previousFloorVelocity, float& netDt);
 		const Velocity getHumanoidRelativeVelocityToPart(Primitive* floorPrim);
-	
+
 	public:
 		void updateNetworkFloorPosition(PartInstance* floorPart, CoordinateFrame& previousFloorPosition, RBX::Velocity& lastFloorVelocity, float& netDt);
 		bool shouldNotApplyFloorVelocity(Primitive* floorPrim);
@@ -269,7 +269,7 @@ namespace RBX {
 		/*override*/ void getCameraIgnorePrimitives(std::vector<const Primitive*>& primitives);
 		/*override*/ Velocity calcDesiredWalkVelocity() const; // used for camera control
 
-		static float autoTurnSpeed()		{return 8.0f;}
+		static float autoTurnSpeed() { return 8.0f; }
 
 		Humanoid();
 		~Humanoid();
@@ -289,18 +289,18 @@ namespace RBX {
 		bool hasCustomStatus(std::string status);
 		bool addCustomStatus(std::string status);
 		bool removeCustomStatus(std::string status);
-		bool isLocalSimulating() const {return localSimulating;}
+		bool isLocalSimulating() const { return localSimulating; }
 		bool computeNearlyTouched();
 
-        bool getStateTransitionEnabled(HUMAN::StateType state); 
-        void setStateTransitionEnabled(HUMAN::StateType state, bool enabled);
+		bool getStateTransitionEnabled(HUMAN::StateType state);
+		void setStateTransitionEnabled(HUMAN::StateType state, bool enabled);
 
 		shared_ptr<const Reflection::ValueArray> getStatuses();
 		rbx::signal<void(Status)> statusAddedSignal;
 		rbx::signal<void(Status)> statusRemovedSignal;
 		rbx::signal<void(std::string)> customStatusAddedSignal;
 		rbx::signal<void(std::string)> customStatusRemovedSignal;
-		
+
 		rbx::remote_signal<void(shared_ptr<Instance>)> serverEquipToolSignal;
 
 		// Humanoid Network Update Connection
@@ -333,7 +333,7 @@ namespace RBX {
 
 		static Weld* getGrip(Instance* character);
 
-		static const Vector3 &defaultCharacterCorner() { static Vector3 corner(2.5f,2.5f,2.5f); return corner; }
+		static const Vector3& defaultCharacterCorner() { static Vector3 corner(2.5f, 2.5f, 2.5f); return corner; }
 
 		// By Definition, these are all called by HumanoidState - these are reflected
 		rbx::signal<void()> diedSignal;
@@ -348,13 +348,13 @@ namespace RBX {
 		rbx::signal<void(bool)> ragdollSignal;
 		rbx::signal<void(bool, shared_ptr<Instance>)> seatedSignal;
 		rbx::signal<void(bool)> platformStandingSignal;
-        rbx::signal<void(RBX::HUMAN::StateType, RBX::HUMAN::StateType)> stateChangedSignal;
-        rbx::signal<void(RBX::HUMAN::StateType, bool)> stateEnabledChangedSignal;
+		rbx::signal<void(RBX::HUMAN::StateType, RBX::HUMAN::StateType)> stateChangedSignal;
+		rbx::signal<void(RBX::HUMAN::StateType, bool)> stateEnabledChangedSignal;
 		RBX::HUMAN::StateType getCurrentStateType();
 		RBX::HUMAN::StateType getPreviousStateType() { return previousState; };
 		void setPreviousStateType(RBX::HUMAN::StateType newState);
 		void changeState(RBX::HUMAN::StateType state);
-		static bool isStateInString(const std::string& text, const RBX::HUMAN::StateType &compare, RBX::HUMAN::StateType& value);
+		static bool isStateInString(const std::string& text, const RBX::HUMAN::StateType& compare, RBX::HUMAN::StateType& value);
 
 		rbx::signal<void(float)> healthChangedSignal;
 
@@ -367,22 +367,22 @@ namespace RBX {
 		void unequipTools();
 
 		void setWalkSpeed(float value);
-		float getWalkSpeed() const {return walkSpeed;}
-        void testWalkSpeed(float walkSpeed, float percentWalkSpeed) const
-        {
-            walkSpeedErrors = (walkSpeed > walkSpeedShadow) ? walkSpeedErrors + 1 : 0;
-            if (walkSpeedErrors > 8)
-            {
-                RBX::Security::setHackFlagVs<LINE_RAND4>(RBX::Security::hackFlag11, HATE_SPEEDHACK);
-            }
-            if (fabs(percentWalkSpeed) > 1.01)
-            {
-                RBX::Security::setHackFlagVs<LINE_RAND4>(RBX::Security::hackFlag11, HATE_SPEEDHACK);
-            }
-        }
-        
-        void setPercentWalkSpeed(float value);
-        float getPercentWalkSpeed() const { return percentWalkSpeed; }
+		float getWalkSpeed() const { return walkSpeed; }
+		void testWalkSpeed(float walkSpeed, float percentWalkSpeed) const
+		{
+			walkSpeedErrors = (walkSpeed > walkSpeedShadow) ? walkSpeedErrors + 1 : 0;
+			if (walkSpeedErrors > 8)
+			{
+				RBX::Security::setHackFlagVs<LINE_RAND4>(RBX::Security::hackFlag11, HATE_SPEEDHACK);
+			}
+			if (fabs(percentWalkSpeed) > 1.01)
+			{
+				RBX::Security::setHackFlagVs<LINE_RAND4>(RBX::Security::hackFlag11, HATE_SPEEDHACK);
+			}
+		}
+
+		void setPercentWalkSpeed(float value);
+		float getPercentWalkSpeed() const { return percentWalkSpeed; }
 
 		void setJumpPower(float value);
 		float getJumpPower() const { return jumpPower; }
@@ -390,8 +390,8 @@ namespace RBX {
 		void setMaxSlopeAngle(float value);
 		float getMaxSlopeAngle() const { return maxSlopeAngle; }
 
-		const Vector3 &getLastFloorNormal() const { return lastFloorNormal; }
-		void setLastFloorNormal(const Vector3 &norm) { lastFloorNormal = norm; }
+		const Vector3& getLastFloorNormal() const { return lastFloorNormal; }
+		void setLastFloorNormal(const Vector3& norm) { lastFloorNormal = norm; }
 
 		void setHipHeight(float value);
 		float getHipHeight() const { return hipHeight; }
@@ -399,11 +399,11 @@ namespace RBX {
 		// Health / damage interface
 		void setHealth(float value);
 		void setHealthUi(float value);
-		void zeroHealthLocal() {health = 0.0f;}		// for a non-simulating client -zero out health without bouncing back to the server
-		float getHealth() const {return health;}
+		void zeroHealthLocal() { health = 0.0f; }		// for a non-simulating client -zero out health without bouncing back to the server
+		float getHealth() const { return health; }
 
 		void setMaxHealth(float value);
-		float getMaxHealth() const {return maxHealth;}
+		float getMaxHealth() const { return maxHealth; }
 
 		void setTyping(bool value) { typing = value; }
 		bool getTyping() const { return typing; }
@@ -414,35 +414,35 @@ namespace RBX {
 
 		// Controller interface - don't set the walk direction directly
 		void setWalkDirection(const Vector3& value);				// compacted - z is in the y place
-		Vector3 getWalkDirection() const {return walkDirection;}	// compacted - z is in the y place
+		Vector3 getWalkDirection() const { return walkDirection; }	// compacted - z is in the y place
 		bool allow3dWalkDirection() const;
 
 		void move(Vector3 walkVector, bool relativeToCamera);
 
-		Vector3 getLuaMoveDirection() const { return luaMoveDirection;}
+		Vector3 getLuaMoveDirection() const { return luaMoveDirection; }
 		void setLuaMoveDirection(const Vector3& value);
 		Vector3 getRawMovementVector() const { return rawMovementVector; }
 
 		bool getAutoJumpEnabled() const { return autoJumpEnabled; };
 		void setAutoJumpEnabled(bool value);
 
-		void setWalkAngleError(const float &value);
-		float getWalkAngleError() const {return walkAngleError;}
-             
+		void setWalkAngleError(const float& value);
+		float getWalkAngleError() const { return walkAngleError; }
+
 		void setWalkToPoint(const Vector3& value);
-		const Vector3& getWalkToPoint() const {return walkToPoint;}
+		const Vector3& getWalkToPoint() const { return walkToPoint; }
 
 		void setWalkToPart(PartInstance* value);
-		PartInstance* getWalkToPart() const {return walkToPart.get();}
+		PartInstance* getWalkToPart() const { return walkToPart.get(); }
 
 		void setSeatPart(PartInstance* value);
-		PartInstance* getSeatPart() const {return seatPart.get();}
+		PartInstance* getSeatPart() const { return seatPart.get(); }
 
 		void setJump(bool value);
 		bool getJump() const { return jump; }
 
-		void setAutoJump(bool value); 
-		bool getAutoJump() const { return autoJump;} 
+		void setAutoJump(bool value);
+		bool getAutoJump() const { return autoJump; }
 
 		void setSit(bool value);
 		bool getSit() const { return sit; }
@@ -452,20 +452,20 @@ namespace RBX {
 
 		void setTouchedHard(bool hit) { touchedHard = hit; }
 
-		void setActivatePhysics(bool flag, const Vector3& impulse) 
-		{ 
+		void setActivatePhysics(bool flag, const Vector3& impulse)
+		{
 			activatePhysics = flag;
 			if (flag)
 				activatePhysicsImpulse += impulse;
 			else
 				activatePhysicsImpulse = impulse;
 		}
-		bool getActivatePhysics() { return activatePhysics; }  
-		const Vector3 getActivatePhysicsImpulse() { return activatePhysicsImpulse; }  
-        bool getTouchedHard() { return touchedHard; }
+		bool getActivatePhysics() { return activatePhysics; }
+		const Vector3 getActivatePhysicsImpulse() { return activatePhysicsImpulse; }
+		bool getTouchedHard() { return touchedHard; }
 
 		void setRagdollCriteria(int value);
-        int getRagdollCriteria() const { return ragdollCriteria; }
+		int getRagdollCriteria() const { return ragdollCriteria; }
 
 		void setPlatformStanding(bool value);
 		bool getPlatformStanding() const { return platformStanding; }
@@ -475,12 +475,12 @@ namespace RBX {
 
 		bool getDead() const;
 
-		void setHadNeck() {hadNeck = true;}
-		bool breakJointsOnDeath() const {return hadNeck && hadHealth;}
+		void setHadNeck() { hadNeck = true; }
+		bool breakJointsOnDeath() const { return hadNeck && hadHealth; }
 
 		void setTargetPoint(const Vector3& value);
 		void setTargetPointLocal(const Vector3& value);	// does not replicate
-		const Vector3& getTargetPoint() const {return targetPoint;}
+		const Vector3& getTargetPoint() const { return targetPoint; }
 
 		void setNameDisplayDistance(float d);
 		float getNameDisplayDistance() const { return nameDisplayDistance; }
@@ -488,17 +488,17 @@ namespace RBX {
 		void setHealthDisplayDistance(float d);
 		float getHealthDisplayDistance() const { return healthDisplayDistance; }
 
-		void setCameraOffset(const Vector3 &value);
-		const Vector3 &getCamearaOffset() const { return cameraOffset; }
+		void setCameraOffset(const Vector3& value);
+		const Vector3& getCamearaOffset() const { return cameraOffset; }
 
 		// Humanoid Platform Update Getters and Setters;
-		void setLastFloor(PartInstance* part) 
-		{ 
-			if(lastFloorPart)
+		void setLastFloor(PartInstance* part)
+		{
+			if (lastFloorPart)
 			{
 				lastFloorPart.reset();
 			}
-			lastFloorPart = shared_from(part); 
+			lastFloorPart = shared_from(part);
 		}
 		const shared_ptr<PartInstance>& getLastFloor() const { return lastFloorPart; }
 
@@ -523,9 +523,9 @@ namespace RBX {
 		void moveTo2(Vector3 worldPosition, shared_ptr<Instance> part);
 		rbx::signal<void(bool)> moveToFinishedSignal;
 
-        bool getUseR15() const { return (rigType != HUMANOID_RIG_TYPE_R6); }
+		bool getUseR15() const { return (rigType != HUMANOID_RIG_TYPE_R6); }
 		Humanoid::HumanoidRigType getRigType() const { return rigType; }
-        void setRigType(Humanoid::HumanoidRigType type);
+		void setRigType(Humanoid::HumanoidRigType type);
 
 		// Build Joints
 		void buildJoints(RBX::DataModel* dm = NULL);
@@ -536,7 +536,7 @@ namespace RBX {
 
 		// Primitive
 		void getPrimitives(std::vector<Primitive*>& primitives) const;
-		
+
 		void getParts(std::vector<PartInstance*>& primitives) const;
 
 		PartInstance* getTorsoDangerous() const;		// reflection only
@@ -595,12 +595,12 @@ namespace RBX {
 		void setTorso(PartInstance* value);
 		void setLeftLeg(PartInstance* value);
 		void setRightLeg(PartInstance* value);
-		
+
 		void setHeadMesh(DataModelMesh* value);
 		void setHeadDecal(Decal* value);
 
-		World* getWorld()							{return world;};
-		const World* getConstWorld() const			{return world;};
+		World* getWorld() { return world; };
+		const World* getConstWorld() const { return world; };
 
 		static void renderWaypoint(Adorn* adorn, const Vector3& waypoint);
 
@@ -613,7 +613,7 @@ namespace RBX {
 		rbx::signal<void(shared_ptr<Instance>)> animationPlayedSignal;
 
 		bool getOwnedByLocalPlayer() const { return ownedByLocalPlayer; }
-		
+
 		bool getWalkingFromStudioTouchEmulation() const { return isWalkingFromStudioTouchEmulation; }
 		void setWalkingFromStudioTouchEmulation(bool value) { isWalkingFromStudioTouchEmulation = value; }
 	};

@@ -308,7 +308,7 @@ bool ChatOutput::removeExpired()
 		if(playerfifo.empty())
 		{
 			if(shared_ptr<BillboardGui> billlboardGui = it->second.billboardGui.lock())
-				billlboardGui->setParent(NULL);
+				billlboardGui->setParent(nullptr);
 
 			characterSortedMsg.erase(it++);
 		}

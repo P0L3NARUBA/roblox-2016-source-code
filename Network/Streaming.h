@@ -156,7 +156,7 @@ namespace RBX
                     if (idToDesc.at(id).outdated)
                     {
                         // outdated API
-                        value = NULL;
+                        value = nullptr;
                     }
                 }
                 return id;

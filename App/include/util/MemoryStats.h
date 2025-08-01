@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stddef.h>
-#include <boost/cstdint.hpp>
+#include <cstdint>
 #include "standardout.h"
 #include "FastLog.h"
 
@@ -20,7 +20,7 @@ enum MemoryLevel
     MEMORYLEVEL_OK
 };
 
-typedef boost::uint64_t memsize_t;
+typedef uint64_t memsize_t;
 
 memsize_t usedMemoryBytes();
 memsize_t freeMemoryBytes();

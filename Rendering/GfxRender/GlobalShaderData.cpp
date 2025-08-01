@@ -21,10 +21,10 @@ namespace RBX
 
 			ViewProjection[0] = viewProjMatrix;
 			ViewProjection[1] = viewProjMatrix.inverse();
-			ViewRight = Vector4(camMat.column(0), 0.0);
-			ViewUp = Vector4(camMat.column(1), 0.0);
-			ViewDirection = Vector4(camMat.column(2), 0.0);
-			CameraPosition = Vector4(camera.getPosition(), 1.0);
+			ViewRight = Vector4(camMat.column(0u), 0.0f);
+			ViewUp = Vector4(camMat.column(1u), 0.0f);
+			ViewDirection = Vector4(camMat.column(2u), 0.0f);
+			CameraPosition = Vector4(camera.getPosition(), 1.0f);
 		}
 		
 		void GlobalProcessingData::define(Device* device) {
@@ -46,27 +46,29 @@ namespace RBX
 		void GlobalLightList::populateList(const std::vector<LightObject*> lights) {
 			LightList.clear();
 
-			size_t maxSize = std::min(lights.size(), size_t(1024u));
+			size_t maxSize = std::min(lights.size(), 1024u);
 
-			for (size_t i = 0; i < maxSize; ++i) {
+			for (size_t i = 0u; i < maxSize; ++i) {
 				LightObject* light = lights[i];
 				GPULight gpuLight;
 
-				float range = light->getRange();
-				gpuLight.Position_RangeSquared = Vector4(light->getPosition(), range * range);
 				Color3 color = light->getColor();
-				float brightness = light->getBrightness();
+				float range = light->getRange();
 				float attenuation = light->getAttenuation();
+				float brightness = light->getBrightness();
+
+				gpuLight.Position_RangeSquared = Vector4(light->getPosition(), range * range);
 				gpuLight.Color_Attenuation = Vector4(color.r * brightness, color.g * brightness, color.b * brightness, attenuation * attenuation * attenuation);
-				gpuLight.Direction_SubSurfaceFac = Vector4(light->getDirection(), 0.0);
+				gpuLight.Direction_SubSurfaceFac = Vector4(light->getDirection(), 0.0f);
 				gpuLight.InnerOuterAngle = Vector2(light->getInnerAngle(), light->getOuterAngle());
 				gpuLight.DiffSpecFac = Vector2(light->getDiffuseFactor(), light->getSpecularFactor());
 
 				gpuLight.AxisU = light->getAxisU();
 				gpuLight.AxisV = light->getAxisV();
 
-				gpuLight.ShadowsColored = Vector2(0, 0);
-				gpuLight.Type_unused = Vector2(0, 0);
+				// TODO: Add 32 bit integer vectors
+				gpuLight.ShadowsColored = Vector2(0.0f, 0.0f);
+				gpuLight.Type_unused = Vector2(0.0f, 0.0f);
 				
 				LightList.push_back(gpuLight);
 			}

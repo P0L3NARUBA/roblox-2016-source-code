@@ -671,7 +671,7 @@ void BreakpointItem::activate()
 void BreakpointItem::deleteBreakpoint()
 {
 	RBX::DataModel::LegacyLock lock(DebuggerClientManager::Instance().getDataModel(), RBX::DataModelJob::Write);
-	m_spBreakpoint->setParent(NULL);
+	m_spBreakpoint->setParent(nullptr);
 	m_spBreakpoint.reset();
 }
 
@@ -1159,7 +1159,7 @@ void WatchItem::deleteWatch()
 		return;
 
 	RBX::DataModel::LegacyLock lock(DebuggerClientManager::Instance().getDataModel(), RBX::DataModelJob::Write);
-	m_spWatch->setParent(NULL);
+	m_spWatch->setParent(nullptr);
 	m_spWatch.reset();
 }
 

@@ -10,8 +10,7 @@
 
 #include "GfxCore/Resource.h"
 
-namespace RBX
-{
+namespace RBX {
 	class AsyncResult;
 	class MeshId;
 	class ContentId;
@@ -19,169 +18,160 @@ namespace RBX
 	class PartInstance;
 }
 
-namespace RBX
-{
-namespace Graphics
-{
+namespace RBX {
+	namespace Graphics {
 
-class VisualEngine;
-class DeviceContext;
-class Framebuffer;
+		class VisualEngine;
+		class DeviceContext;
+		class Framebuffer;
 
-struct TextureCompositorLayer
-{
-    enum CompositMode
-    {
-        Composit_BlendTexture,
-        Composit_BlitColor,
-        Composit_BlitTextureAlphaMagnify4x
-    };
-    
-    TextureCompositorLayer(const MeshId& mesh, const TextureId& texture, CompositMode mode = Composit_BlendTexture)
-        : mesh(mesh)
-        , texture(texture)
-        , color(1.0f, 1.0f, 1.0f)
-        , mode(mode)
-    {
-    }
-    
-    TextureCompositorLayer(const MeshId& mesh, const Color3& color)
-        : mesh(mesh)
-        , color(color)
-        , mode(Composit_BlitColor)
-    {
-    }
+		struct TextureCompositorLayer {
+			enum CompositMode {
+				Composit_BlendTexture,
+				Composit_BlitColor,
+				Composit_BlitTextureAlphaMagnify4x
+			};
 
-    MeshId mesh;
-    TextureId texture;
-    Color3 color;
-    CompositMode mode;
+			TextureCompositorLayer(const MeshId& mesh, const TextureId& texture, CompositMode mode = Composit_BlendTexture)
+				: mesh(mesh)
+				, texture(texture)
+				, color(1.0f, 1.0f, 1.0f)
+				, mode(mode)
+			{
+			}
 
-    std::string toString() const;
-};
+			TextureCompositorLayer(const MeshId& mesh, const Color3& color)
+				: mesh(mesh)
+				, color(color)
+				, mode(Composit_BlitColor)
+			{
+			}
 
-struct TextureCompositorConfiguration
-{
-    unsigned int bpp;
-    unsigned int budget;
-};
+			MeshId mesh;
+			TextureId texture;
+			Color3 color;
+			CompositMode mode;
 
-struct TextureCompositorStats
-{
-    unsigned int liveHQCount;
-    unsigned int liveHQSize;
-    unsigned int liveLQCount;
-    unsigned int liveLQSize;
-    unsigned int orphanedCount;
-    unsigned int orphanedSize;
-};
+			std::string toString() const;
+		};
 
-class TextureCompositorJob;
-class TextureCompositorMeshCache;
+		struct TextureCompositorConfiguration {
+			uint32_t bpp;
+			uint32_t budget;
+		};
 
-class TextureCompositor: public Resource
-{
-    struct Job;
-    
-public:
-    TextureCompositor(VisualEngine* visualEngine);
-    ~TextureCompositor();
-    
-    typedef shared_ptr<Job> JobHandle;
-    
-    JobHandle getJob(const std::string& textureid, const std::string& context, unsigned int width, unsigned int height, const Vector2& canvasSize, const std::vector<TextureCompositorLayer>& layers);
-    
-    TextureRef getTexture(const JobHandle& job);
-    const std::string& getTextureId(const JobHandle& job);
-    
-    void attachInstance(const JobHandle& job, const shared_ptr<PartInstance>& instance);
+		struct TextureCompositorStats {
+			uint32_t liveHQCount;
+			uint32_t liveHQSize;
+			uint32_t liveLQCount;
+			uint32_t liveLQSize;
+			uint32_t orphanedCount;
+			uint32_t orphanedSize;
+		};
 
-    void garbageCollectFull();
+		class TextureCompositorJob;
+		class TextureCompositorMeshCache;
 
-	void cancelPendingRequests();
+		class TextureCompositor : public Resource {
+			struct Job;
 
-    void update(const Vector3& pointOfInterest);
-    void render(DeviceContext* context);
+		public:
+			TextureCompositor(VisualEngine* visualEngine);
+			~TextureCompositor();
 
-    bool isQueueEmpty() const;
-    
-    const TextureCompositorConfiguration& getConfiguration() const { return config; }
-    TextureCompositorStats getStatistics() const;
+			typedef shared_ptr<Job> JobHandle;
 
-    virtual void onDeviceLost();
+			JobHandle getJob(const std::string& textureid, const std::string& context, uint32_t width, uint32_t height, const Vector2& canvasSize, const std::vector<TextureCompositorLayer>& layers);
 
-private:
-    struct JobDescriptor
-    {
-        std::string textureid;
-        
-		unsigned int width, height;
-        Vector2 canvasSize;
-        std::vector<TextureCompositorLayer> layers;
-    };
-    
-    struct Job
-    {
-        JobDescriptor desc;
-        
-        std::vector<weak_ptr<PartInstance> > instances;
-        
-        float priority;
-		std::string context;
-        
-        shared_ptr<Texture> texture;
-        TextureRef textureRef;
+			TextureRef getTexture(const JobHandle& job);
+			const std::string& getTextureId(const JobHandle& job);
 
-        shared_ptr<TextureCompositorJob> job;
-    };
+			void attachInstance(const JobHandle& job, const shared_ptr<PartInstance>& instance);
 
-    struct RenderedJob
-	{
-        shared_ptr<Job> job;
-        shared_ptr<Framebuffer> framebuffer;
-        int cooldown;
+			void garbageCollectFull();
 
-        RenderedJob();
-        RenderedJob(const shared_ptr<Job>& job, const shared_ptr<Framebuffer>& framebuffer, int cooldown);
-	};
-    
-    VisualEngine* visualEngine;
-    TextureCompositorConfiguration config;
+			void cancelPendingRequests();
 
-    scoped_ptr<TextureCompositorMeshCache> meshCache;
-    
-    typedef std::map<std::string, shared_ptr<Job> > JobMap;
-    JobMap jobs;
-    
-    std::vector<shared_ptr<Job> > pendingJobs;
-    std::vector<shared_ptr<Job> > activeJobs;
-    std::vector<shared_ptr<Job> > orphanedJobs;
-    
-    RenderedJob renderedJob;
-    
-    std::vector<shared_ptr<Framebuffer> > framebuffers;
-    
-    Time lastActiveTime;
-    
-    void updatePrioritiesAndOrphanJobs(const Vector3& pointOfInterest);
-    void garbageCollectOrphanedJobs();
-    void findRebakeTargetAndEnqueue();
-    
-    void updateJob(Job& job);
-    void renderJobIfNecessary(Job& job, size_t activePosition, DeviceContext* context);
-    void renderJobFinalize(Job& job, const shared_ptr<Framebuffer>& framebuffer, DeviceContext* context);
-    
-    void orphanTextureFromJob(Job& job);
-    
-    unsigned int getTotalLiveTextureSize();
-    unsigned int getTotalOrphanedTextureSize();
+			void update(const Vector3& pointOfInterest);
+			void render(DeviceContext* context);
 
-    unsigned int getProjectedPendingTextureSize();
-    unsigned int getProjectedActiveTextureSize(size_t begin, size_t end);
+			bool isQueueEmpty() const;
 
-    shared_ptr<Framebuffer> getOrCreateFramebufer(const shared_ptr<Texture>& texture);
-    shared_ptr<Texture> getOrCreateTexture(unsigned int width, unsigned int height);
-};
+			const TextureCompositorConfiguration& getConfiguration() const { return config; }
+			TextureCompositorStats getStatistics() const;
 
-}
+			virtual void onDeviceLost();
+
+		private:
+			struct JobDescriptor {
+				std::string textureid;
+
+				uint32_t width;
+				uint32_t height;
+				Vector2 canvasSize;
+				std::vector<TextureCompositorLayer> layers;
+			};
+
+			struct Job {
+				JobDescriptor desc;
+
+				std::vector<weak_ptr<PartInstance> > instances;
+
+				float priority;
+				std::string context;
+
+				shared_ptr<Texture> texture;
+				TextureRef textureRef;
+
+				shared_ptr<TextureCompositorJob> job;
+			};
+
+			struct RenderedJob {
+				shared_ptr<Job> job;
+				shared_ptr<Framebuffer> framebuffer;
+				int32_t cooldown;
+
+				RenderedJob();
+				RenderedJob(const shared_ptr<Job>& job, const shared_ptr<Framebuffer>& framebuffer, int32_t cooldown);
+			};
+
+			VisualEngine* visualEngine;
+			TextureCompositorConfiguration config;
+
+			scoped_ptr<TextureCompositorMeshCache> meshCache;
+
+			typedef std::map<std::string, shared_ptr<Job> > JobMap;
+			JobMap jobs;
+
+			std::vector<shared_ptr<Job> > pendingJobs;
+			std::vector<shared_ptr<Job> > activeJobs;
+			std::vector<shared_ptr<Job> > orphanedJobs;
+
+			RenderedJob renderedJob;
+
+			std::vector<shared_ptr<Framebuffer> > framebuffers;
+
+			Time lastActiveTime;
+
+			void updatePrioritiesAndOrphanJobs(const Vector3& pointOfInterest);
+			void garbageCollectOrphanedJobs();
+			void findRebakeTargetAndEnqueue();
+
+			void updateJob(Job& job);
+			void renderJobIfNecessary(Job& job, size_t activePosition, DeviceContext* context);
+			void renderJobFinalize(Job& job, const shared_ptr<Framebuffer>& framebuffer, DeviceContext* context);
+
+			void orphanTextureFromJob(Job& job);
+
+			uint32_t getTotalLiveTextureSize();
+			uint32_t getTotalOrphanedTextureSize();
+
+			uint32_t getProjectedPendingTextureSize();
+			uint32_t getProjectedActiveTextureSize(size_t begin, size_t end);
+
+			shared_ptr<Framebuffer> getOrCreateFramebufer(const shared_ptr<Texture>& texture);
+			shared_ptr<Texture> getOrCreateTexture(uint32_t width, uint32_t height);
+		};
+
+	}
 }

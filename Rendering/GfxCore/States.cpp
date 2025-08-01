@@ -1,9 +1,7 @@
 #include "GfxCore/States.h"
 
-namespace RBX
-{
-namespace Graphics
-{
+namespace RBX {
+	namespace Graphics {
 
-}
+	}
 }

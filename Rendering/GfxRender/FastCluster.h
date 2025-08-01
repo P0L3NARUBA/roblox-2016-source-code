@@ -24,34 +24,32 @@ namespace RBX
 		class FastClusterEntity;
 		class SuperCluster;
 
-		class FastClusterEntity : public RenderEntity
-		{
+		class FastClusterEntity : public RenderEntity {
 		public:
 			FastClusterEntity(FastCluster* cluster, const GeometryBatch& geometry, const shared_ptr<Material>& material, const shared_ptr<Material>& decalMaterialOpaque,
-				RenderQueue::Id renderQueueId, unsigned char lodMask, const std::vector<unsigned int>& bones, const Extents& localBounds, unsigned int extraFeatures);
+				RenderQueue::Id renderQueueId, uint8_t lodMask, const std::vector<uint32_t>& bones, const Extents& localBounds, uint32_t extraFeatures);
 			~FastClusterEntity() override;
 
 			// Renderable overrides
-			unsigned int getWorldTransforms4x3(float* buffer, unsigned int maxTransforms, const void** cacheKey) const override;
+			uint32_t getWorldTransforms4x3(float* buffer, uint32_t maxTransforms, const void** cacheKey) const override;
 
 			// RenderNode overrides
-			void updateRenderQueue(RenderQueue& queue, const RenderCamera& camera, unsigned int lodIndex, RenderQueue::Pass pass) override;
+			void updateRenderQueue(RenderQueue& queue, const RenderCamera& camera, uint32_t lodIndex, RenderQueue::Pass pass) override;
 			float getViewDepth(const RenderCamera& camera) const override;
 
 		private:
 			TextureRef decalTexture;
 			shared_ptr<Material> decalMaterialOpaque;
 
-			unsigned int extraFeatures;
+			uint32_t extraFeatures;
 
-			std::vector<unsigned int> bones;
+			std::vector<uint32_t> bones;
 
 			Vector3 localBoundsCenter;
 			float sortKeyOffset;
 		};
 
-		class FastClusterBinding : public GfxBinding, public RBX::Allocator<FastClusterBinding>
-		{
+		class FastClusterBinding : public GfxBinding, public RBX::Allocator<FastClusterBinding> {
 		public:
 			FastClusterBinding(FastCluster* cluster, const boost::shared_ptr<PartInstance>& part);
 
@@ -66,8 +64,7 @@ namespace RBX
 			FastCluster* cluster;
 		};
 
-		struct FastClusterSharedGeometry
-		{
+		struct FastClusterSharedGeometry {
 			FastClusterSharedGeometry();
 
 			void reset();
@@ -76,8 +73,7 @@ namespace RBX
 			shared_ptr<IndexBuffer> indexBuffer;
 		};
 
-		class FastCluster : public RenderNode
-		{
+		class FastCluster : public RenderNode {
 		public:
 			FastCluster(VisualEngine* visualEngine, Humanoid* humanoid, SuperCluster* owner, bool fw);
 			virtual ~FastCluster();
@@ -91,9 +87,9 @@ namespace RBX
 			SuperCluster* getOwner() const { return owner; }
 
 			// Transform access
-			const CoordinateFrame& getTransform(unsigned int id) const
-			{
+			const CoordinateFrame& getTransform(uint32_t id) const {
 				RBXASSERT(id < bones.size());
+
 				return bones[id].transform;
 			}
 
@@ -110,31 +106,29 @@ namespace RBX
 
 			// GfxPart overrides
 			virtual void updateCoordinateFrame(bool recalcLocalBounds);
-			virtual unsigned int getPartCount();
+			virtual uint32_t getPartCount();
 			virtual void onSleepingChanged(bool sleeping, PartInstance* part);
 			virtual void onClumpChanged(PartInstance* part);
 
 			void getAllParts(std::vector< shared_ptr<PartInstance> >& retParts) const;
-			PartInstance* getPart() const { if (parts.empty()) return NULL; return parts[0].instance; }
+			PartInstance* getPart() const { if (parts.empty()) return nullptr; return parts[0].instance; }
 
 		private:
 			void checkBindings();
 			void updateClumpGrouping();
-			unsigned int updateGeometry(AsyncResult* asyncResult);
+			uint32_t updateGeometry(AsyncResult* asyncResult);
 
 			void invalidateLighting(const Extents& bbox);
 
 			ClusterStats& getStatsBucket();
 
-			struct Bone
-			{
+			struct Bone {
 				PartInstance* root;
 				Extents localBounds;
 				CoordinateFrame transform;
 			};
 
-			struct Part
-			{
+			struct Part {
 				PartInstance* instance;
 				FastClusterBinding* binding;
 			};

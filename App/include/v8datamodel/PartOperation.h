@@ -10,132 +10,129 @@
 
 namespace RBX {
 
-enum CollisionFidelity
-{
-	CollisionFidelity_Default,
-	CollisionFidelity_Hull,
-	CollisionFidelity_Box
-};
+	enum CollisionFidelity {
+		CollisionFidelity_Default,
+		CollisionFidelity_Hull,
+		CollisionFidelity_Box
+	};
 
-extern const char* const sPartOperation;
-class PartOperation
-	: public DescribedCreatable<PartOperation, PartInstance, sPartOperation>
-{
+	extern const char* const sPartOperation;
+	class PartOperation : public DescribedCreatable<PartOperation, PartInstance, sPartOperation> {
 
-protected:
-	BinaryString childData;
-	BinaryString meshData;
-	BinaryString physicsData;
-	CollisionFidelity collisionFidelity;
+	protected:
+		BinaryString childData;
+		BinaryString meshData;
+		BinaryString physicsData;
+		CollisionFidelity collisionFidelity;
 
-	boost::shared_ptr<CSGMesh> cachedMesh;
+		boost::shared_ptr<CSGMesh> cachedMesh;
 
-	Vector3 initialSize;
-    bool usePartColor;
-  	FormFactor formFactor;
-    bool hasAssetId;
-    ContentId assetId;
+		Vector3 initialSize;
+		bool usePartColor;
+		FormFactor formFactor;
+		bool hasAssetId;
+		ContentId assetId;
 
-	bool hasMeshData() { return meshData.value() != "" && meshData.value().size() != 0; }
+		bool hasMeshData() { return meshData.value() != "" && meshData.value().size() != 0u; }
 
-	void onServiceProvider(ServiceProvider* oldProvider, ServiceProvider* newProvider);
+		void onServiceProvider(ServiceProvider* oldProvider, ServiceProvider* newProvider);
 
-public:
-	static bool renderCollisionData;
-	typedef DescribedCreatable<PartOperation, PartInstance, sPartOperation> Super;
+	public:
+		static bool renderCollisionData;
+		typedef DescribedCreatable<PartOperation, PartInstance, sPartOperation> Super;
 
-	PartOperation();
+		PartOperation();
 
-	static const Reflection::PropDescriptor<PartOperation, Vector3> desc_InitialSize;
-	static const Reflection::PropDescriptor<PartOperation, bool> desc_UsePartColor;
-    static const Reflection::EnumPropDescriptor<PartOperation, FormFactor> desc_FormFactor;
-	static const Reflection::PropDescriptor<PartOperation, ContentId> desc_AssetId;
+		static const Reflection::PropDescriptor<PartOperation, Vector3> desc_InitialSize;
+		static const Reflection::PropDescriptor<PartOperation, bool> desc_UsePartColor;
+		static const Reflection::EnumPropDescriptor<PartOperation, FormFactor> desc_FormFactor;
+		static const Reflection::PropDescriptor<PartOperation, ContentId> desc_AssetId;
 
-	/* override */ virtual PartType getPartType() const;
+		/* override */ virtual PartType getPartType() const;
 
-	static const Reflection::PropDescriptor<PartOperation, BinaryString> desc_ChildData;
-	static const Reflection::PropDescriptor<PartOperation, BinaryString> desc_MeshData;
-	static const Reflection::PropDescriptor<PartOperation, BinaryString> desc_PhysicsData;
-	static const Reflection::EnumPropDescriptor<PartOperation, CollisionFidelity> prop_CollisionFidelity;
-    
-    const BinaryString peekChildData(RBX::Instance* context = NULL);
-    const BinaryString& getChildData() const;
-  const BinaryString& getChildDataBlocking(RBX::Instance* context = NULL) const;
-	void setChildData(const BinaryString& cData);
+		static const Reflection::PropDescriptor<PartOperation, BinaryString> desc_ChildData;
+		static const Reflection::PropDescriptor<PartOperation, BinaryString> desc_MeshData;
+		static const Reflection::PropDescriptor<PartOperation, BinaryString> desc_PhysicsData;
+		static const Reflection::EnumPropDescriptor<PartOperation, CollisionFidelity> prop_CollisionFidelity;
 
-	const BinaryString& getMeshData() const { return meshData; }
-	void setMeshData(const BinaryString& mData);
+		const BinaryString peekChildData(RBX::Instance* context = nullptr);
+		const BinaryString& getChildData() const;
+		const BinaryString& getChildDataBlocking(RBX::Instance* context = nullptr) const;
+		void setChildData(const BinaryString& cData);
 
-    void setMesh(CSGMesh* mesh);
-	void refreshMesh();
-	shared_ptr<CSGMesh> getMesh();
-    shared_ptr<CSGMesh> getRenderMesh();
+		const BinaryString& getMeshData() const { return meshData; }
+		void setMeshData(const BinaryString& mData);
 
-	void setCollisionFidelity(const CollisionFidelity value);
-	CollisionFidelity getCollisionFidelity() const { return collisionFidelity; }
+		void setMesh(CSGMesh* mesh);
+		void refreshMesh();
+		shared_ptr<CSGMesh> getMesh();
+		shared_ptr<CSGMesh> getRenderMesh();
 
-	const BinaryString& getPhysicsData() const { return physicsData; }
-	void setPhysicsData(const BinaryString& mData);
-	bool hasPhysicsData() const { return physicsData.value() != ""; }
+		void setCollisionFidelity(const CollisionFidelity value);
+		CollisionFidelity getCollisionFidelity() const { return collisionFidelity; }
 
-	virtual void clearData();
-	
-    Vector3 getInitialSize() const { return initialSize; }
-	void setInitialSize(const Vector3& size);
+		const BinaryString& getPhysicsData() const { return physicsData; }
+		void setPhysicsData(const BinaryString& mData);
+		bool hasPhysicsData() const { return physicsData.value() != ""; }
 
-    bool getUsePartColor() const { return usePartColor; }
-    void setUsePartColor(bool usePartColorValue);
+		virtual void clearData();
 
-    bool hasAsset() const { return hasAssetId; }
-    const ContentId& getAssetId() const { return assetId; }
-    void setAssetId(ContentId id);
+		Vector3 getInitialSize() const { return initialSize; }
+		void setInitialSize(const Vector3& size);
 
-    Vector3 getSizeDifference();
+		bool getUsePartColor() const { return usePartColor; }
+		void setUsePartColor(bool usePartColorValue);
 
-    /*override*/ virtual void setPartSizeXml(const Vector3& rbxSize);
-  	/*override*/ virtual bool hasThreeDimensionalSize();
-    /*override*/ virtual float getMinimumYDimension() const;
-    /*override*/ virtual float getMinimumXOrZDimension() const;
-    /*override*/ virtual const Vector3& getMinimumUiSize() const;
-  	/*override*/ virtual Vector3 uiToXmlSize(const Vector3& uiSize) const;
-    
-    /*override*/ virtual FormFactor getFormFactor() const { return formFactor; }
-	void setFormFactor(FormFactor value);
-    
-    static size_t getMaximumTriangleCount();
-    static size_t getMaximumMeshStreamSize();
-	bool createPhysicsData(const CSGMesh* mData);
-	void createPlaceholderPhysicsData();
-	void trySetPhysicsData();
-	bool checkDecompExists();
-	void processOutOfDateData();
-	void setBulletCollisionObject();
-	std::string getNonKeyPhysicsData() const;
-	std::string generateHashKey(const std::string& dataString) const;
-	void setBulletObjectsScale(const Vector3& newBoundingBoxSize);
-	Vector3 calculateSizeDifference(const Vector3& newBoundingBoxSize);
-	Vector3 calculateAdjustedSizeDifference(const Vector3& newBoundingBoxSize);
+		bool hasAsset() const { return hasAssetId; }
+		const ContentId& getAssetId() const { return assetId; }
+		void setAssetId(ContentId id);
 
-};
+		Vector3 getSizeDifference();
 
-static std::vector<btVector3> getCSGVertexPositions(const std::vector<CSGVertex> &vertices); 
+		/*override*/ virtual void setPartSizeXml(const Vector3& rbxSize);
+		/*override*/ virtual bool hasThreeDimensionalSize();
+		/*override*/ virtual float getMinimumYDimension() const;
+		/*override*/ virtual float getMinimumXOrZDimension() const;
+		/*override*/ virtual const Vector3& getMinimumUiSize() const;
+		/*override*/ virtual Vector3 uiToXmlSize(const Vector3& uiSize) const;
 
-extern const char* const sUnionOperation;
-class UnionOperation
-	: public DescribedCreatable<UnionOperation, PartOperation, sUnionOperation>
-{
-public:
-	typedef DescribedCreatable<UnionOperation, PartOperation, sUnionOperation> Super;
-	UnionOperation();
-};
+		/*override*/ virtual FormFactor getFormFactor() const { return formFactor; }
+		void setFormFactor(FormFactor value);
 
-extern const char* const sNegateOperation;
-class NegateOperation
-	: public DescribedCreatable<NegateOperation, PartOperation, sNegateOperation>
-{
-public:
-	typedef DescribedCreatable<NegateOperation, PartOperation, sNegateOperation> Super;
-	NegateOperation();
-};
+		static size_t getMaximumTriangleCount();
+		static size_t getMaximumMeshStreamSize();
+		bool createPhysicsData(const CSGMesh* mData);
+		void createPlaceholderPhysicsData();
+		void trySetPhysicsData();
+		bool checkDecompExists();
+		void processOutOfDateData();
+		void setBulletCollisionObject();
+		std::string getNonKeyPhysicsData() const;
+		std::string generateHashKey(const std::string& dataString) const;
+		void setBulletObjectsScale(const Vector3& newBoundingBoxSize);
+		Vector3 calculateSizeDifference(const Vector3& newBoundingBoxSize);
+		Vector3 calculateAdjustedSizeDifference(const Vector3& newBoundingBoxSize);
+
+	};
+
+	static std::vector<btVector3> getCSGVertexPositions(const std::vector<CSGVertex>& vertices);
+
+	extern const char* const sUnionOperation;
+	class UnionOperation
+		: public DescribedCreatable<UnionOperation, PartOperation, sUnionOperation>
+	{
+	public:
+		typedef DescribedCreatable<UnionOperation, PartOperation, sUnionOperation> Super;
+		UnionOperation();
+	};
+
+	extern const char* const sNegateOperation;
+	class NegateOperation
+		: public DescribedCreatable<NegateOperation, PartOperation, sNegateOperation>
+	{
+	public:
+		typedef DescribedCreatable<NegateOperation, PartOperation, sNegateOperation> Super;
+		NegateOperation();
+	};
 
 } // namespace

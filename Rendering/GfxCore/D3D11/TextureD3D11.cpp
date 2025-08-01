@@ -6,12 +6,9 @@
 
 LOGGROUP(Graphics)
 
-namespace RBX
-{
-	namespace Graphics
-	{
-		static const DXGI_FORMAT gTextureFormatD3D11[Texture::Format_Count] =
-		{
+namespace RBX {
+	namespace Graphics {
+		static const DXGI_FORMAT gTextureFormatD3D11[Texture::Format_Count] = {
 			DXGI_FORMAT_R8_UNORM,
 			DXGI_FORMAT_R8G8_UNORM,
 			DXGI_FORMAT_R8G8B8A8_UNORM,
@@ -39,87 +36,83 @@ namespace RBX
 			DXGI_FORMAT_D32_FLOAT_S8X24_UINT,
 		};
 
-		struct TextureUsageD3D11
-		{
+		struct TextureUsageD3D11 {
 			D3D11_USAGE usage;
-			unsigned    cpuAccess;
-			unsigned    bindFlags;
-			unsigned    misc;
+			unsigned int cpuAccess;
+			unsigned int bindFlags;
+			unsigned int misc;
 		};
 
-		static const TextureUsageD3D11 gTextureUsageD3D11[Texture::Usage_Count] =
-		{
-			{ D3D11_USAGE_DEFAULT, 0, D3D11_BIND_SHADER_RESOURCE, 0}, // Static
-			{ D3D11_USAGE_DEFAULT, 0, D3D11_BIND_SHADER_RESOURCE, 0}, //{ D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_SHADER_RESOURCE, 0}, // Dynamic
-			{ D3D11_USAGE_IMMUTABLE, 0, D3D11_BIND_SHADER_RESOURCE, 0}, // Immutable
-			{ D3D11_USAGE_DEFAULT, 0, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET, D3D11_RESOURCE_MISC_GENERATE_MIPS} // Renderbuffer
+		static const TextureUsageD3D11 gTextureUsageD3D11[Texture::Usage_Count] = {
+			{ D3D11_USAGE_DEFAULT, 0u, D3D11_BIND_SHADER_RESOURCE, 0u}, // Static
+			{ D3D11_USAGE_DEFAULT, 0u, D3D11_BIND_SHADER_RESOURCE, 0u}, //{ D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_SHADER_RESOURCE, 0}, // Dynamic
+			{ D3D11_USAGE_IMMUTABLE, 0u, D3D11_BIND_SHADER_RESOURCE, 0u}, // Immutable
+			{ D3D11_USAGE_DEFAULT, 0u, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET, D3D11_RESOURCE_MISC_GENERATE_MIPS} // Renderbuffer
 		};
 
-		static ID3D11Resource* createTexture(ID3D11Device* device11, Texture::Type type, Texture::Format format, unsigned int width, unsigned int height, unsigned int depth, unsigned int mipLevels, const TextureUsageD3D11& textureUsage)
-		{
+		static ID3D11Resource* createTexture(ID3D11Device* device11, Texture::Type type, Texture::Format format, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevels, const TextureUsageD3D11& textureUsage) {
 			ID3D11Resource* result = nullptr;
 
 			DXGI_FORMAT format11 = gTextureFormatD3D11[format];
 
 			HRESULT hr;
-			switch (type)
-			{
+			switch (type) {
 			case Texture::Type_1D:
 			case Texture::Type_1D_Array: {
-				D3D11_TEXTURE1D_DESC desc;
+				D3D11_TEXTURE1D_DESC desc = {};
 
 				desc.Width = width;
 				desc.MipLevels = mipLevels;
 				desc.Format = format11;
-				desc.ArraySize = (type == Texture::Type_1D_Array) ? depth : 1;
+				desc.ArraySize = (type == Texture::Type_1D_Array) ? depth : 1u;
 				desc.Usage = textureUsage.usage;
 				desc.BindFlags = textureUsage.bindFlags;
 				desc.CPUAccessFlags = textureUsage.cpuAccess;
 				desc.MiscFlags = textureUsage.misc;
-				
+
 				hr = device11->CreateTexture1D(&desc, nullptr, reinterpret_cast<ID3D11Texture1D**>(&result));
 				break;
 			}
 			case Texture::Type_2D:
 			case Texture::Type_Cube: {
-				D3D11_TEXTURE2D_DESC desc;
-				
+				D3D11_TEXTURE2D_DESC desc = {};
+
 				desc.Width = width;
 				desc.Height = height;
 				desc.MipLevels = mipLevels;
 				desc.Format = format11;
-				desc.SampleDesc.Count = 1;
-				desc.SampleDesc.Quality = 0;
-				desc.ArraySize = (type == Texture::Type_Cube) ? 6 : 1;
+				desc.SampleDesc.Count = 1u;
+				desc.SampleDesc.Quality = 0u;
+				desc.ArraySize = (type == Texture::Type_Cube) ? 6u : 1u;
 				desc.Usage = textureUsage.usage;
 				desc.BindFlags = textureUsage.bindFlags;
 				desc.CPUAccessFlags = textureUsage.cpuAccess;
-				desc.MiscFlags = textureUsage.misc | ((type == Texture::Type_Cube) ? D3D11_RESOURCE_MISC_TEXTURECUBE : 0);
+				desc.MiscFlags = textureUsage.misc | ((type == Texture::Type_Cube) ? D3D11_RESOURCE_MISC_TEXTURECUBE : 0u);
 
 				hr = device11->CreateTexture2D(&desc, nullptr, reinterpret_cast<ID3D11Texture2D**>(&result));
 				break;
 			}
 			case Texture::Type_2D_Array:
 			case Texture::Type_Cube_Array: {
-				D3D11_TEXTURE2D_DESC desc;
-				
+				D3D11_TEXTURE2D_DESC desc = {};
+
 				desc.Width = width;
 				desc.Height = height;
 				desc.MipLevels = mipLevels;
 				desc.Format = format11;
-				desc.SampleDesc.Count = 1;
-				desc.SampleDesc.Quality = 0;
-				desc.ArraySize = ((type == Texture::Type_Cube_Array) ? 6 : 1) * depth;
+				desc.SampleDesc.Count = 1u;
+				desc.SampleDesc.Quality = 0u;
+				desc.ArraySize = ((type == Texture::Type_Cube_Array) ? 6u : 1u) * depth;
 				desc.Usage = textureUsage.usage;
 				desc.BindFlags = textureUsage.bindFlags;
 				desc.CPUAccessFlags = textureUsage.cpuAccess;
-				desc.MiscFlags = textureUsage.misc | ((type == Texture::Type_Cube_Array) ? D3D11_RESOURCE_MISC_TEXTURECUBE : 0);
-				
+				desc.MiscFlags = textureUsage.misc | ((type == Texture::Type_Cube_Array) ? D3D11_RESOURCE_MISC_TEXTURECUBE : 0u);
+
 				hr = device11->CreateTexture2D(&desc, nullptr, reinterpret_cast<ID3D11Texture2D**>(&result));
 				break;
 			}
 			case Texture::Type_3D: {
-				D3D11_TEXTURE3D_DESC desc;
+				D3D11_TEXTURE3D_DESC desc = {};
 
 				desc.Width = width;
 				desc.Height = height;
@@ -144,8 +137,7 @@ namespace RBX
 			return result;
 		}
 
-		static ID3D11ShaderResourceView* createSRV(ID3D11Device* device11, ID3D11Resource* resource, Texture::Type type, Texture::Format format, unsigned int mipLevels, unsigned int arraySize)
-		{
+		static ID3D11ShaderResourceView* createSRV(ID3D11Device* device11, ID3D11Resource* resource, Texture::Type type, Texture::Format format, uint32_t mipLevels, uint32_t arraySize) {
 			D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 			srvDesc.Format = gTextureFormatD3D11[format];
 
@@ -153,15 +145,15 @@ namespace RBX
 			case Texture::Type_1D: {
 				srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE1D;
 				srvDesc.Texture1D.MipLevels = mipLevels;
-				srvDesc.Texture1D.MostDetailedMip = 0;
+				srvDesc.Texture1D.MostDetailedMip = 0u;
 
 				break;
 			}
 			case Texture::Type_1D_Array: {
 				srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE1DARRAY;
 				srvDesc.Texture1DArray.MipLevels = mipLevels;
-				srvDesc.Texture1DArray.MostDetailedMip = 0;
-				srvDesc.Texture1DArray.FirstArraySlice = 0;
+				srvDesc.Texture1DArray.MostDetailedMip = 0u;
+				srvDesc.Texture1DArray.FirstArraySlice = 0u;
 				srvDesc.Texture1DArray.ArraySize = arraySize;
 
 				break;
@@ -169,15 +161,15 @@ namespace RBX
 			case Texture::Type_2D: {
 				srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 				srvDesc.Texture2D.MipLevels = mipLevels;
-				srvDesc.Texture2D.MostDetailedMip = 0;
+				srvDesc.Texture2D.MostDetailedMip = 0u;
 
 				break;
 			}
 			case Texture::Type_2D_Array: {
 				srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
 				srvDesc.Texture2DArray.MipLevels = mipLevels;
-				srvDesc.Texture2DArray.MostDetailedMip = 0;
-				srvDesc.Texture2DArray.FirstArraySlice = 0;
+				srvDesc.Texture2DArray.MostDetailedMip = 0u;
+				srvDesc.Texture2DArray.FirstArraySlice = 0u;
 				srvDesc.Texture2DArray.ArraySize = arraySize;
 
 				break;
@@ -185,15 +177,15 @@ namespace RBX
 			case Texture::Type_Cube: {
 				srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
 				srvDesc.TextureCube.MipLevels = mipLevels;
-				srvDesc.TextureCube.MostDetailedMip = 0;
+				srvDesc.TextureCube.MostDetailedMip = 0u;
 
 				break;
 			}
 			case Texture::Type_Cube_Array: {
 				srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBEARRAY;
 				srvDesc.TextureCubeArray.MipLevels = mipLevels;
-				srvDesc.TextureCubeArray.MostDetailedMip = 0;
-				srvDesc.TextureCubeArray.First2DArrayFace = 0;
+				srvDesc.TextureCubeArray.MostDetailedMip = 0u;
+				srvDesc.TextureCubeArray.First2DArrayFace = 0u;
 				srvDesc.TextureCubeArray.NumCubes = arraySize;
 
 				break;
@@ -201,7 +193,7 @@ namespace RBX
 			case Texture::Type_3D: {
 				srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE3D;
 				srvDesc.Texture3D.MipLevels = mipLevels;
-				srvDesc.Texture3D.MostDetailedMip = 0;
+				srvDesc.Texture3D.MostDetailedMip = 0u;
 
 				break;
 			}
@@ -216,7 +208,7 @@ namespace RBX
 			return SRV;
 		}
 
-		TextureD3D11::TextureD3D11(Device* device, Type type, Format format, unsigned int width, unsigned int height, unsigned int depth, unsigned int mipLevels, Usage usage)
+		TextureD3D11::TextureD3D11(Device* device, Type type, Format format, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevels, Usage usage)
 			: Texture(device, type, format, width, height, depth, mipLevels, usage)
 			, object(nullptr)
 			, objectSRV(nullptr)
@@ -227,11 +219,10 @@ namespace RBX
 			objectSRV = createSRV(device11, object, type, format, mipLevels, depth);
 		}
 
-		void TextureD3D11::upload(unsigned int index, unsigned int mip, const TextureRegion& region, const void* data, unsigned int size)
-		{
-			unsigned int mipWidth = getMipSide(width, mip);
-			unsigned int mipHeight = getMipSide(height, mip);
-			unsigned int mipDepth = getMipSide(depth, mip);
+		void TextureD3D11::upload(uint32_t index, uint32_t mip, const TextureRegion& region, const void* data, size_t size) {
+			uint32_t mipWidth = getMipSide(width, mip);
+			uint32_t mipHeight = getMipSide(height, mip);
+			uint32_t mipDepth = getMipSide(depth, mip);
 
 			RBXASSERT(mip < mipLevels);
 			RBXASSERT(region.x + region.width <= mipWidth);
@@ -244,12 +235,11 @@ namespace RBX
 
 			ID3D11DeviceContext* context11 = static_cast<DeviceD3D11*>(device)->getImmediateContext11();
 
-			unsigned int dataRowPitch = Texture::getImageSize(format, region.width, 1);
-			unsigned int dataSlicePitch = (type == Type_3D) ? Texture::getImageSize(format, region.width, region.height) : 0;
+			uint32_t dataRowPitch = Texture::getImageSize(format, region.width, 1u);
+			uint32_t dataSlicePitch = (type == Type_3D) ? Texture::getImageSize(format, region.width, region.height) : 0u;
 
 			D3D11_BOX box = {};
-			if (partialUpload)
-			{
+			if (partialUpload) {
 				box.left = region.x;
 				box.right = region.x + region.width;
 				box.top = region.y;
@@ -259,31 +249,28 @@ namespace RBX
 			}
 
 			UINT res = D3D11CalcSubresource(mip, index, mipLevels);
-			context11->UpdateSubresource(object, res, partialUpload ? &box : NULL, data, dataRowPitch, dataSlicePitch);
+			context11->UpdateSubresource(object, res, partialUpload ? &box : nullptr, data, dataRowPitch, dataSlicePitch);
 		}
 
-		static void copyHelper(void* targetData, unsigned int targetRowPitch, unsigned int targetSlicePitch,
-			const void* sourceData, unsigned int sourceRowPitch, unsigned int sourceSlicePitch,
-			unsigned int width, unsigned int height, unsigned int depth, Texture::Format format)
+		static void copyHelper(void* targetData, uint32_t targetRowPitch, uint32_t targetSlicePitch,
+			const void* sourceData, uint32_t sourceRowPitch, uint32_t sourceSlicePitch,
+			uint32_t width, uint32_t height, uint32_t depth, Texture::Format format)
 		{
-			unsigned int heightBlocks = Texture::isFormatCompressed(format) ? (height + 3) / 4 : height;
-			unsigned int lineSize = Texture::getImageSize(format, width, 1);
+			uint32_t heightBlocks = Texture::isFormatCompressed(format) ? (height + 3u) / 4u : height;
+			uint32_t lineSize = Texture::getImageSize(format, width, 1u);
 
 			RBXASSERT(lineSize <= sourceRowPitch && lineSize <= targetRowPitch);
 
-			if (targetRowPitch == sourceRowPitch && targetSlicePitch == sourceSlicePitch)
-			{
+			if (targetRowPitch == sourceRowPitch && targetSlicePitch == sourceSlicePitch) {
 				// Fast path: memory layout is the same
-				unsigned int size = (sourceSlicePitch == 0) ? depth * heightBlocks * sourceRowPitch : depth * sourceSlicePitch;
+				uint32_t size = (sourceSlicePitch == 0u) ? depth * heightBlocks * sourceRowPitch : depth * sourceSlicePitch;
 
 				memcpy(targetData, sourceData, size);
 			}
-			else
-			{
+			else {
 				// Slow path: need to copy line by line
-				for (unsigned int z = 0; z < depth; ++z)
-					for (unsigned int yb = 0; yb < heightBlocks; ++yb)
-					{
+				for (uint32_t z = 0u; z < depth; ++z)
+					for (uint32_t yb = 0u; yb < heightBlocks; ++yb) {
 						void* target = static_cast<char*>(targetData) + z * targetSlicePitch + yb * targetRowPitch;
 						const void* source = static_cast<const char*>(sourceData) + z * sourceSlicePitch + yb * sourceRowPitch;
 
@@ -292,10 +279,10 @@ namespace RBX
 			}
 		}
 
-		bool TextureD3D11::download(unsigned int index, unsigned int mip, void* data, unsigned int size) {
-			unsigned int mipWidth = getMipSide(width, mip);
-			unsigned int mipHeight = getMipSide(height, mip);
-			unsigned int mipDepth = getMipSide(depth, mip);
+		bool TextureD3D11::download(uint32_t index, uint32_t mip, void* data, size_t size) {
+			uint32_t mipWidth = getMipSide(width, mip);
+			uint32_t mipHeight = getMipSide(height, mip);
+			uint32_t mipDepth = getMipSide(depth, mip);
 
 			RBXASSERT(mip < mipLevels);
 			//RBXASSERT(size == getImageSize(format, mipWidth, mipHeight) * mipDepth);
@@ -308,67 +295,66 @@ namespace RBX
 			D3D11_TEXTURE2D_DESC desc = {};
 			desc.Width = mipWidth;
 			desc.Height = mipHeight;
-			desc.MipLevels = 1;
+			desc.MipLevels = 1u;
 			desc.Format = gTextureFormatD3D11[format];
-			desc.SampleDesc.Count = 1;
-			desc.SampleDesc.Quality = 0;
-			desc.ArraySize = 1;
+			desc.SampleDesc.Count = 1u;
+			desc.SampleDesc.Quality = 0u;
+			desc.ArraySize = 1u;
 			desc.Usage = D3D11_USAGE_STAGING;
-			desc.BindFlags = 0;
+			desc.BindFlags = 0u;
 			desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
-			desc.MiscFlags = 0;
+			desc.MiscFlags = 0u;
 
-			ID3D11Texture2D* tempTex = NULL;
-			HRESULT hr = device11->getDevice11()->CreateTexture2D(&desc, NULL, reinterpret_cast<ID3D11Texture2D**>(&tempTex));
+			ID3D11Texture2D* tempTex = nullptr;
+			HRESULT hr = device11->getDevice11()->CreateTexture2D(&desc, nullptr, reinterpret_cast<ID3D11Texture2D**>(&tempTex));
 			if (FAILED(hr))
 				throw RBX::runtime_error("Download texture cant create temp texture %x", hr);
 
 			UINT res = D3D11CalcSubresource(mip, index, mipLevels);
-			context11->CopySubresourceRegion(tempTex, 0, 0, 0, 0, object, res, NULL);
+			context11->CopySubresourceRegion(tempTex, 0u, 0u, 0u, 0u, object, res, nullptr);
 
 			// copy texture to provided memory
 			D3D11_MAPPED_SUBRESOURCE mappedResource;
-			hr = context11->Map(tempTex, 0, D3D11_MAP_READ, 0, &mappedResource);
+			hr = context11->Map(tempTex, 0u, D3D11_MAP_READ, 0u, &mappedResource);
 			RBXASSERT(SUCCEEDED(hr));
 
-			unsigned int dataRowPitch = Texture::getImageSize(format, mipWidth, 1);
-			unsigned int dataSlicePitch = (type == Type_3D) ? Texture::getImageSize(format, mipWidth, mipHeight) : 0;
+			uint32_t dataRowPitch = Texture::getImageSize(format, mipWidth, 1u);
+			uint32_t dataSlicePitch = (type == Type_3D) ? Texture::getImageSize(format, mipWidth, mipHeight) : 0u;
 
-			copyHelper(data, dataRowPitch, dataSlicePitch, mappedResource.pData, mappedResource.RowPitch, 0, mipWidth, mipHeight, mipDepth, format);
+			copyHelper(data, dataRowPitch, dataSlicePitch, mappedResource.pData, mappedResource.RowPitch, 0u, mipWidth, mipHeight, mipDepth, format);
 
 			// release all the things
-			context11->Unmap(tempTex, 0);
+			context11->Unmap(tempTex, 0u);
 			ReleaseCheck(tempTex);
 
 			return true;
 		}
 
-		bool TextureD3D11::supportsLocking() const
-		{
+		bool TextureD3D11::supportsLocking() const {
 			return false;
 		}
 
-		Texture::LockResult TextureD3D11::lock(unsigned int index, unsigned int mip, const TextureRegion& region)
-		{
+		Texture::LockResult TextureD3D11::lock(uint32_t index, uint32_t mip, const TextureRegion& region) {
 			return LockResult();
 		}
 
-		void TextureD3D11::unlock(unsigned int index, unsigned int mip)
+		void TextureD3D11::unlock(uint32_t index, uint32_t mip)
 		{
 		}
 
-		shared_ptr<Renderbuffer> TextureD3D11::getRenderbuffer(unsigned int index, unsigned int mip)
-		{
+		shared_ptr<Renderbuffer> TextureD3D11::getRenderbuffer(uint32_t index, uint32_t mip) {
 			RBXASSERT(mip < mipLevels);
 
 			weak_ptr<Renderbuffer>& slot = renderbuffers[std::make_pair(index, mip)];
 			shared_ptr<Renderbuffer> result = slot.lock();
 
-			if (!result)
-			{
-				// TODO: Add Texture2DArrray and TextureCubeArray support
-				if (getType() != Type_2D && getType() != Type_Cube) {
-					RBXASSERT(!"Renderbuffer for this kind of texture is not yet implemented.");
+			if (!result) {
+				Type type = getType();
+
+				// TODO: Add Texture1D and Texture1DArray support
+				if (type != Type_2D && type != Type_2D_Array && type != Type_Cube && type != Type_Cube_Array) {
+					throw std::runtime_error("Tried to create a renderbuffer for an unsupported texture type.");
+
 					return shared_ptr<Renderbuffer>();
 				}
 
@@ -380,8 +366,7 @@ namespace RBX
 			return result;
 		}
 
-		unsigned TextureD3D11::getInternalFormat(Texture::Format format)
-		{
+		unsigned int TextureD3D11::getInternalFormat(Texture::Format format) {
 			return gTextureFormatD3D11[format];
 		}
 
@@ -389,8 +374,7 @@ namespace RBX
 		{
 		}
 
-		void TextureD3D11::generateMipmaps()
-		{
+		void TextureD3D11::generateMipmaps() {
 			RBXASSERT(usage == Texture::Usage_Renderbuffer);
 
 			ID3D11DeviceContext* context11 = static_cast<DeviceD3D11*>(device)->getImmediateContext11();
@@ -398,8 +382,7 @@ namespace RBX
 			context11->GenerateMips(objectSRV);
 		}
 
-		TextureD3D11::~TextureD3D11()
-		{
+		TextureD3D11::~TextureD3D11() {
 			static_cast<DeviceD3D11*>(device)->getImmediateContextD3D11()->invalidateCachedTexture(this);
 
 			ReleaseCheck(objectSRV);

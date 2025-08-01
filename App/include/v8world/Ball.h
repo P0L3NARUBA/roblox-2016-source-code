@@ -54,9 +54,9 @@ namespace RBX {
 		CoordinateFrame getSurfaceCoordInBody( const size_t surfaceId ) const;
 		Vector3 getSurfaceNormalInBody( const size_t surfaceId ) const;
 		size_t getMostAlignedSurface( const Vector3& vecInWorld, const G3D::Matrix3& objectR ) const;
-		int getNumSurfaces( void ) const { return 6; }
-		Vector3 getSurfaceVertInBody( const size_t surfaceId, const int vertId ) const;
-		int getNumVertsInSurface( const size_t surfaceId ) const;
+		size_t getNumSurfaces( void ) const { return 6u; }
+		Vector3 getSurfaceVertInBody( const size_t surfaceId, const size_t vertId ) const;
+		size_t getNumVertsInSurface( const size_t surfaceId ) const;
 		bool vertOverlapsFace( const Vector3& pointInBody, const size_t surfaceId ) const;
 
         bool findTouchingSurfacesConvex( const CoordinateFrame& myCf, size_t& myFaceId, const Geometry& otherGeom, const CoordinateFrame& otherCf, size_t& otherFaceId ) const {return false;}

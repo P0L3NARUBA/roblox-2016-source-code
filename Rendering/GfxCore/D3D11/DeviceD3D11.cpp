@@ -18,20 +18,17 @@ LOGGROUP(VR)
 
 FASTFLAGVARIABLE(DebugD3D11DebugMode, false)
 
-namespace RBX
-{
-	namespace Graphics
-	{
-		static unsigned int getMaxSamplesSupported(ID3D11Device* device11)
-		{
-			unsigned int result = 1;
+namespace RBX {
+	namespace Graphics {
+		static uint32_t getMaxSamplesSupported(ID3D11Device* device11) {
+			uint32_t result = 1u;
 
-			for (unsigned int mode = 2; mode <= D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT; mode *= 2)
-			{
-				unsigned maxQualityLevel;
+			for (uint32_t mode = 2u; mode <= D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT; mode *= 2u) {
+				uint32_t maxQualityLevel;
+
 				HRESULT hr = device11->CheckMultisampleQualityLevels(DXGI_FORMAT_R16G16B16A16_FLOAT, mode, &maxQualityLevel);
 				RBXASSERT(SUCCEEDED(hr));
-				if (maxQualityLevel <= 0)
+				if (maxQualityLevel <= 0u)
 					break;
 
 				result = mode;
@@ -40,9 +37,8 @@ namespace RBX
 			return result;
 		}
 
-		static DXGI_ADAPTER_DESC getAdapterDesc(IDXGIDevice* device)
-		{
-			IDXGIAdapter* adapter = NULL;
+		static DXGI_ADAPTER_DESC getAdapterDesc(IDXGIDevice* device) {
+			IDXGIAdapter* adapter = nullptr;
 			device->GetAdapter(&adapter);
 
 			DXGI_ADAPTER_DESC desc = {};
@@ -53,8 +49,7 @@ namespace RBX
 			return desc;
 		}
 
-		template <typename T, typename P> T* queryInterface(P* object)
-		{
+		template <typename T, typename P> T* queryInterface(P* object) {
 			void* result = 0;
 			if (SUCCEEDED(object->QueryInterface(__uuidof(T), &result)))
 				return static_cast<T*>(result);
@@ -64,14 +59,14 @@ namespace RBX
 
 		DeviceD3D11::DeviceD3D11(void* windowHandle)
 			: windowHandle(windowHandle)
-			, device11(NULL)
-			, swapChain11(NULL)
-			, immediateContext(NULL)
+			, device11(nullptr)
+			, swapChain11(nullptr)
+			, immediateContext(nullptr)
 			, frameTimeQueryIssued(false)
-			, gpuTime(0)
-			, beginQuery(NULL)
-			, endQuery(NULL)
-			, disjointQuery(NULL)
+			, gpuTime(0.0f)
+			, beginQuery(nullptr)
+			, endQuery(nullptr)
+			, disjointQuery(nullptr)
 			, vrEnabled(true)
 		{
 			createDevice();
@@ -93,10 +88,10 @@ namespace RBX
 
 			caps.supportsTexturePartialMipChain = true;
 
-			caps.maxDrawBuffers = 8;
+			caps.maxDrawBuffers = 8u;
 			caps.maxSamples = getMaxSamplesSupported(device11);
 			caps.maxTextureSize = D3D11_REQ_TEXTURE2D_U_OR_V_DIMENSION;
-			caps.maxTextureUnits = 32;
+			caps.maxTextureUnits = 32u;
 
 			caps.colorOrderBGR = false;
 			caps.needsHalfPixelOffset = false;
@@ -104,14 +99,14 @@ namespace RBX
 
 			caps.retina = false;
 
-			std::pair<unsigned int, unsigned int> dimensions = getFramebufferSize();
+			std::pair<uint32_t, uint32_t> dimensions = getFramebufferSize();
 			createMainFramebuffer(dimensions.first, dimensions.second);
 
 			// queries
 			HRESULT hr;
 
-			D3D11_QUERY_DESC queryDesc;
-			queryDesc.MiscFlags = 0;
+			D3D11_QUERY_DESC queryDesc = {};
+			queryDesc.MiscFlags = 0u;
 
 			queryDesc.Query = D3D11_QUERY_TIMESTAMP;
 			hr = device11->CreateQuery(&queryDesc, &beginQuery);
@@ -123,14 +118,12 @@ namespace RBX
 			hr = device11->CreateQuery(&queryDesc, &disjointQuery);
 			RBXASSERT(SUCCEEDED(hr));
 
-			if (IDXGIDevice1* deviceDXGI1 = queryInterface<IDXGIDevice1>(device11))
-			{
-				deviceDXGI1->SetMaximumFrameLatency(1);
+			if (IDXGIDevice1* deviceDXGI1 = queryInterface<IDXGIDevice1>(device11)) {
+				deviceDXGI1->SetMaximumFrameLatency(1u);
 				deviceDXGI1->Release();
 			}
 
-			if (IDXGIDevice* deviceDXGI = queryInterface<IDXGIDevice>(device11))
-			{
+			if (IDXGIDevice* deviceDXGI = queryInterface<IDXGIDevice>(device11)) {
 				DXGI_ADAPTER_DESC desc = getAdapterDesc(deviceDXGI);
 
 				FASTLOGS(FLog::Graphics, "D3D11 Adapter: %s", utf8_encode(desc.Description));
@@ -144,31 +137,26 @@ namespace RBX
 				deviceDXGI->Release();
 			}
 
-			if (vr)
-			{
-				try
-				{
+			if (vr) {
+				try {
 					vr->setup(this);
 				}
-				catch (RBX::base_exception& e)
-				{
+				catch (RBX::base_exception& e) {
 					FASTLOGS(FLog::VR, "VR ERROR during setup: %s", e.what());
 					vr.reset();
 				}
 			}
 		}
 
-
-		void DeviceD3D11::createMainFramebuffer(unsigned width, unsigned height)
-		{
+		void DeviceD3D11::createMainFramebuffer(uint32_t width, uint32_t height) {
 			RBXASSERT(!mainFramebuffer);
 
 			// Get back buffer, create view
 			ID3D11Texture2D* backBuffer = nullptr;
-			HRESULT hr = swapChain11->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
+			HRESULT hr = swapChain11->GetBuffer(0u, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
 			RBXASSERT(SUCCEEDED(hr));
 
-			shared_ptr<Renderbuffer> backBufferRB = shared_ptr<Renderbuffer>(new RenderbufferD3D11(this, Texture::Format_RGBA8, width, height, 1, backBuffer));
+			shared_ptr<Renderbuffer> backBufferRB = shared_ptr<Renderbuffer>(new RenderbufferD3D11(this, Texture::Format_RGBA8, width, height, 1u, backBuffer));
 			std::vector<shared_ptr<Renderbuffer>> colorBuffers;
 			colorBuffers.push_back(backBufferRB);
 
@@ -176,8 +164,7 @@ namespace RBX
 			mainFramebuffer.reset(new FramebufferD3D11(this, colorBuffers, nullptr));
 		}
 
-		DeviceD3D11::~DeviceD3D11()
-		{
+		DeviceD3D11::~DeviceD3D11() {
 			Profiler::gpuShutdown();
 
 			// we want to release all the DX references before releasing device to be able to test if nothing is hanging
@@ -193,54 +180,45 @@ namespace RBX
 			ReleaseCheck(device11);
 		}
 
-		void DeviceD3D11::defineGlobalConstants(size_t dataSize)
-		{
+		void DeviceD3D11::defineGlobalConstants(size_t dataSize) {
 			// Since constants are directly set to register values, we impose additional restrictions on constant data
 			// The struct should be an integer number of float4 registers, and every constant has to be aligned to float4 boundary
-			RBXASSERT(dataSize % 16 == 0);
+			if (dataSize % 16u != 0u)
+				throw std::runtime_error("Global constants buffer is not 16 byte aligned.");
 
 			immediateContext->defineGlobalConstants(dataSize);
 		}
 
-		void DeviceD3D11::defineGlobalProcessingData(size_t dataSize)
-		{
-			// Since constants are directly set to register values, we impose additional restrictions on constant data
-			// The struct should be an integer number of float4 registers, and every constant has to be aligned to float4 boundary
-			RBXASSERT(dataSize % 16 == 0);
+		void DeviceD3D11::defineGlobalProcessingData(size_t dataSize) {
+			if (dataSize % 16u != 0u)
+				throw std::runtime_error("Global processing buffer is not 16 byte aligned.");
 
 			immediateContext->defineGlobalProcessingData(dataSize);
 		}
 
-		void DeviceD3D11::defineGlobalMaterialData(size_t dataSize)
-		{
-			// Since constants are directly set to register values, we impose additional restrictions on constant data
-			// The struct should be an integer number of float4 registers, and every constant has to be aligned to float4 boundary
-			RBXASSERT(dataSize % 16 == 0);
+		void DeviceD3D11::defineGlobalMaterialData(size_t dataSize) {
+			if (dataSize % 16u != 0u)
+				throw std::runtime_error("Global materials buffer is not 16 byte aligned.");
 
 			immediateContext->defineGlobalMaterialData(dataSize);
 		}
 
-		void DeviceD3D11::defineInstancedModelMatrixes(size_t dataSize, size_t elementSize)
-		{
-			// Since constants are directly set to register values, we impose additional restrictions on constant data
-			// The struct should be an integer number of float4 registers, and every constant has to be aligned to float4 boundary
-			RBXASSERT(dataSize % 16 == 0);
+		void DeviceD3D11::defineInstancedModelMatrixes(size_t dataSize, size_t elementSize) {
+			if (dataSize % 16u != 0u)
+				throw std::runtime_error("Instanced model matrix buffer is not 16 byte aligned.");
 
 			immediateContext->defineInstancedModelMatrixes(dataSize, elementSize);
 		}
 
-		void DeviceD3D11::defineGlobalLightList(size_t dataSize, size_t elementSize)
-		{
-			// Since constants are directly set to register values, we impose additional restrictions on constant data
-			// The struct should be an integer number of float4 registers, and every constant has to be aligned to float4 boundary
-			RBXASSERT(dataSize % 16 == 0);
+		void DeviceD3D11::defineGlobalLightList(size_t dataSize, size_t elementSize) {
+			if (dataSize % 16u != 0u)
+				throw std::runtime_error("Global light list buffer is not 16 byte aligned.");
 
 			immediateContext->defineGlobalLightList(dataSize, elementSize);
 		}
 
-		DeviceContext* DeviceD3D11::beginFrame()
-		{
-			std::pair<unsigned int, unsigned int> dimensions = getFramebufferSize();
+		DeviceContext* DeviceD3D11::beginFrame() {
+			std::pair<uint32_t, uint32_t> dimensions = getFramebufferSize();
 
 			// Don't render anything if there is no main framebuffer or device is lost
 			if (!mainFramebuffer)
@@ -253,10 +231,8 @@ namespace RBX
 			//immediateContext->bindFramebuffer(mainFramebuffer.get());
 			immediateContext->clearStates();
 
-			if (disjointQuery && beginQuery && endQuery)
-			{
-				if (!frameTimeQueryIssued)
-				{
+			if (disjointQuery && beginQuery && endQuery) {
+				if (!frameTimeQueryIssued) {
 					immediateContext->beginQuery(disjointQuery);
 					immediateContext->endQuery(beginQuery);
 				}
@@ -265,18 +241,16 @@ namespace RBX
 			return immediateContext.get();
 		}
 
-		bool DeviceD3D11::validate()
-		{
-			std::pair<unsigned int, unsigned int> dimensions = getFramebufferSize();
+		bool DeviceD3D11::validate() {
+			std::pair<uint32_t, uint32_t> dimensions = getFramebufferSize();
 
 			// Don't change anything if window is minimized (getFramebufferSize returns 1x1)
-			if (dimensions.first <= 1 && dimensions.second <= 1)
+			if (dimensions.first <= 1u && dimensions.second <= 1u)
 				return false;
 
 			// Reset device if window size changed
-			if (mainFramebuffer && (dimensions.first != mainFramebuffer->getWidth() || dimensions.second != mainFramebuffer->getHeight()))
-			{
-				immediateContext->getContextDX11()->OMSetRenderTargets(0, nullptr, nullptr);
+			if (mainFramebuffer && (dimensions.first != mainFramebuffer->getWidth() || dimensions.second != mainFramebuffer->getHeight())) {
+				immediateContext->getContextDX11()->OMSetRenderTargets(0u, nullptr, nullptr);
 
 				mainFramebuffer.reset();
 				resizeSwapchain();
@@ -286,18 +260,14 @@ namespace RBX
 			return true;
 		}
 
-		void DeviceD3D11::endFrame()
-		{
-			if (disjointQuery && beginQuery && endQuery)
-			{
-				if (!frameTimeQueryIssued)
-				{
+		void DeviceD3D11::endFrame() {
+			if (disjointQuery && beginQuery && endQuery) {
+				if (!frameTimeQueryIssued) {
 					immediateContext->endQuery(endQuery);
 					immediateContext->endQuery(disjointQuery);
 					frameTimeQueryIssued = true;
 				}
-				else
-				{
+				else {
 					UINT64 tsBeginFrame, tsEndFrame;
 					D3D11_QUERY_DATA_TIMESTAMP_DISJOINT tsDisjoint;
 
@@ -305,25 +275,23 @@ namespace RBX
 					queryFinished &= immediateContext->getQueryData(beginQuery, &tsBeginFrame, sizeof(UINT64));
 					queryFinished &= immediateContext->getQueryData(endQuery, &tsEndFrame, sizeof(UINT64));
 
-					if (queryFinished)
-					{
+					if (queryFinished) {
 						if (!tsDisjoint.Disjoint)
 							gpuTime = (float)(double(tsEndFrame - tsBeginFrame) / double(tsDisjoint.Frequency) * 1000.0);
+
 						frameTimeQueryIssued = false;
 					}
 				}
 			}
 
-			if (vr && vrEnabled)
-			{
+			if (vr && vrEnabled) {
 				vr->submitFrame(immediateContext.get());
 			}
 
 			present();
 		}
 
-		DeviceStats DeviceD3D11::getStatistics() const
-		{
+		DeviceStats DeviceD3D11::getStatistics() const {
 			DeviceStats result = {};
 
 			result.gpuFrameTime = gpuTime;
@@ -331,107 +299,87 @@ namespace RBX
 			return result;
 		}
 
-		shared_ptr<Texture> DeviceD3D11::createTexture(Texture::Type type, Texture::Format format, unsigned int width, unsigned int height, unsigned int depth, unsigned int mipLevels, Texture::Usage usage)
-		{
+		shared_ptr<Texture> DeviceD3D11::createTexture(Texture::Type type, Texture::Format format, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevels, Texture::Usage usage) {
 			return shared_ptr<Texture>(new TextureD3D11(this, type, format, width, height, depth, mipLevels, usage));
 		}
 
-		shared_ptr<VertexBuffer> DeviceD3D11::createVertexBuffer(size_t elementSize, size_t elementCount, GeometryBuffer::Usage usage)
-		{
+		shared_ptr<VertexBuffer> DeviceD3D11::createVertexBuffer(size_t elementSize, size_t elementCount, GeometryBuffer::Usage usage) {
 			return shared_ptr<VertexBuffer>(new VertexBufferD3D11(this, elementSize, elementCount, usage));
 		}
 
-		shared_ptr<IndexBuffer> DeviceD3D11::createIndexBuffer(size_t elementSize, size_t elementCount, GeometryBuffer::Usage usage)
-		{
+		shared_ptr<IndexBuffer> DeviceD3D11::createIndexBuffer(size_t elementSize, size_t elementCount, GeometryBuffer::Usage usage) {
 			return shared_ptr<IndexBuffer>(new IndexBufferD3D11(this, elementSize, elementCount, usage));
 		}
 
-		shared_ptr<VertexLayout> DeviceD3D11::createVertexLayout(const std::vector<VertexLayout::Element>& elements)
-		{
+		shared_ptr<VertexLayout> DeviceD3D11::createVertexLayout(const std::vector<VertexLayout::Element>& elements) {
 			return shared_ptr<VertexLayout>(new VertexLayoutD3D11(this, elements));
 		}
 
-		shared_ptr<Geometry> DeviceD3D11::createGeometryImpl(const shared_ptr<VertexLayout>& layout, const std::vector<shared_ptr<VertexBuffer> >& vertexBuffers, const shared_ptr<IndexBuffer>& indexBuffer, unsigned int baseVertexIndex)
-		{
+		shared_ptr<Geometry> DeviceD3D11::createGeometryImpl(const shared_ptr<VertexLayout>& layout, const std::vector<shared_ptr<VertexBuffer> >& vertexBuffers, const shared_ptr<IndexBuffer>& indexBuffer, unsigned int baseVertexIndex) {
 			return shared_ptr<Geometry>(new GeometryD3D11(this, layout, vertexBuffers, indexBuffer, baseVertexIndex));
 		}
 
-		shared_ptr<Framebuffer> DeviceD3D11::createFramebufferImpl(const std::vector<shared_ptr<Renderbuffer> >& color, const shared_ptr<Renderbuffer>& depth)
-		{
+		shared_ptr<Framebuffer> DeviceD3D11::createFramebufferImpl(const std::vector<shared_ptr<Renderbuffer> >& color, const shared_ptr<Renderbuffer>& depth) {
 			return shared_ptr<Framebuffer>(new FramebufferD3D11(this, color, depth));
 		}
 
-		Framebuffer* DeviceD3D11::getMainFramebuffer()
-		{
+		Framebuffer* DeviceD3D11::getMainFramebuffer() {
 			return mainFramebuffer.get();
 		}
 
-		DeviceVR* DeviceD3D11::getVR()
-		{
-			return (vr && vrEnabled) ? vr.get() : NULL;
+		DeviceVR* DeviceD3D11::getVR() {
+			return (vr && vrEnabled) ? vr.get() : nullptr;
 		}
 
-		void DeviceD3D11::setVR(bool enabled)
-		{
+		void DeviceD3D11::setVR(bool enabled) {
 			vrEnabled = enabled;
 		}
 
-		shared_ptr<Renderbuffer> DeviceD3D11::createRenderbuffer(Texture::Format format, unsigned int width, unsigned int height, unsigned int samples)
-		{
+		shared_ptr<Renderbuffer> DeviceD3D11::createRenderbuffer(Texture::Format format, uint32_t width, uint32_t height, uint32_t samples) {
 			return shared_ptr<Renderbuffer>(new RenderbufferD3D11(this, format, width, height, samples));
 		}
 
-		std::string DeviceD3D11::createShaderSource(const std::string& path, const std::string& defines, boost::function<std::string(const std::string&)> fileCallback)
-		{
+		std::string DeviceD3D11::createShaderSource(const std::string& path, const std::string& defines, boost::function<std::string(const std::string&)> fileCallback) {
 			std::string dx11Defines = defines;
 			dx11Defines += " DX11";
 
 			return ShaderProgramD3D11::createShaderSource(path, dx11Defines, this, fileCallback);
 		}
 
-		std::vector<char> DeviceD3D11::createShaderBytecode(const std::string& source, const std::string& target, const std::string& entrypoint)
-		{
+		std::vector<char> DeviceD3D11::createShaderBytecode(const std::string& source, const std::string& target, const std::string& entrypoint) {
 			return ShaderProgramD3D11::createShaderBytecode(source, target, this, entrypoint);
 		}
 
-		shared_ptr<VertexShader> DeviceD3D11::createVertexShader(const std::vector<char>& bytecode)
-		{
+		shared_ptr<VertexShader> DeviceD3D11::createVertexShader(const std::vector<char>& bytecode) {
 			return shared_ptr<VertexShader>(new VertexShaderD3D11(this, bytecode));
 		}
 
-		shared_ptr<FragmentShader> DeviceD3D11::createFragmentShader(const std::vector<char>& bytecode)
-		{
+		shared_ptr<FragmentShader> DeviceD3D11::createFragmentShader(const std::vector<char>& bytecode) {
 			return shared_ptr<FragmentShader>(new FragmentShaderD3D11(this, bytecode));
 		}
 
-		shared_ptr<ComputeShader> DeviceD3D11::createComputeShader(const std::vector<char>& bytecode)
-		{
+		shared_ptr<ComputeShader> DeviceD3D11::createComputeShader(const std::vector<char>& bytecode) {
 			return shared_ptr<ComputeShader>(new ComputeShaderD3D11(this, bytecode));
 		}
 
-		shared_ptr<GeometryShader> DeviceD3D11::createGeometryShader(const std::vector<char>& bytecode)
-		{
+		shared_ptr<GeometryShader> DeviceD3D11::createGeometryShader(const std::vector<char>& bytecode) {
 			return shared_ptr<GeometryShader>(new GeometryShaderD3D11(this, bytecode));
 		}
 
-		shared_ptr<ShaderProgram> DeviceD3D11::createShaderProgram(const shared_ptr<VertexShader>& vertexShader, const shared_ptr<GeometryShader>& geometryShader, const shared_ptr<FragmentShader>& fragmentShader)
-		{
+		shared_ptr<ShaderProgram> DeviceD3D11::createShaderProgram(const shared_ptr<VertexShader>& vertexShader, const shared_ptr<GeometryShader>& geometryShader, const shared_ptr<FragmentShader>& fragmentShader) {
 			return shared_ptr<ShaderProgram>(new ShaderProgramD3D11(this, vertexShader, geometryShader, fragmentShader));
 		}
 
-		shared_ptr<ShaderProgram> DeviceD3D11::createShaderProgram(const shared_ptr<VertexShader>& vertexShader, const shared_ptr<FragmentShader>& fragmentShader)
-		{
+		shared_ptr<ShaderProgram> DeviceD3D11::createShaderProgram(const shared_ptr<VertexShader>& vertexShader, const shared_ptr<FragmentShader>& fragmentShader) {
 			return shared_ptr<ShaderProgram>(new ShaderProgramD3D11(this, vertexShader, fragmentShader));
 		}
 
-		shared_ptr<ShaderProgram> DeviceD3D11::createShaderProgram(const shared_ptr<ComputeShader>& computeShader)
-		{
+		shared_ptr<ShaderProgram> DeviceD3D11::createShaderProgram(const shared_ptr<ComputeShader>& computeShader) {
 			return shared_ptr<ShaderProgram>(new ShaderProgramD3D11(this, computeShader));
 		}
 
-		shared_ptr<ShaderProgram> DeviceD3D11::createShaderProgramFFP()
-		{
-			throw RBX::runtime_error("No FFP support");
+		shared_ptr<ShaderProgram> DeviceD3D11::createShaderProgramFFP() {
+			throw RBX::runtime_error("No Fixed-Function Pipeline (FFP) support");
 		}
 
 	}

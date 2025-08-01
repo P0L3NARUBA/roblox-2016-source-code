@@ -18,7 +18,7 @@
 namespace RBX { 
 namespace Network {
 
-DeserializedNewInstanceItem::DeserializedNewInstanceItem() : classDescriptor(NULL)
+DeserializedNewInstanceItem::DeserializedNewInstanceItem() : classDescriptor(nullptr)
 { 
 	type = Item::ItemTypeNew;
 }
@@ -203,13 +203,13 @@ bool Replicator::NewInstanceItem::read(Replicator& replicator, RakNet::BitStream
 	// Write properties directly into newly created instances since it's not in datamodel yet, otherwise write to variant array to be set later.
 	if (isJoinData)
 	{
-		replicator.readProperties(bitStream, deserializedItem.instance.get(), PropertyCacheType_All, false, false, newInstance ? NULL : &deserializedItem.propValueList);
+		replicator.readProperties(bitStream, deserializedItem.instance.get(), PropertyCacheType_All, false, false, newInstance ? nullptr : &deserializedItem.propValueList);
 		replicator.deserializeIdWithoutDictionary(bitStream, deserializedItem.parentId);
 	}
 	else
 	{
-		replicator.readProperties(bitStream, deserializedItem.instance.get(), PropertyCacheType_NonCacheable, true, false, newInstance ? NULL : &deserializedItem.propValueList);
-		replicator.readProperties(bitStream, deserializedItem.instance.get(), PropertyCacheType_Cacheable, true, false, newInstance ? NULL : &deserializedItem.propValueList);
+		replicator.readProperties(bitStream, deserializedItem.instance.get(), PropertyCacheType_NonCacheable, true, false, newInstance ? nullptr : &deserializedItem.propValueList);
+		replicator.readProperties(bitStream, deserializedItem.instance.get(), PropertyCacheType_Cacheable, true, false, newInstance ? nullptr : &deserializedItem.propValueList);
 		replicator.deserializeId(bitStream, deserializedItem.parentId);
 	}
     

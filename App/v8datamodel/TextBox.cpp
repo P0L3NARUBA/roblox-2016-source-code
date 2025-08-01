@@ -22,38 +22,38 @@ DYNAMIC_FASTFLAGVARIABLE(TextBoxIsFocusedEnabled, false)
 namespace RBX
 {
 
-    REFLECTION_BEGIN();
+	REFLECTION_BEGIN();
 	const char* const sTextBox = "TextBox";
 	static const Reflection::PropDescriptor<TextBox, bool> prop_MultiLine("MultiLine", category_Data, &TextBox::getMultiLine, &TextBox::setMultiLine);
 	static const Reflection::PropDescriptor<TextBox, bool> prop_ClearTextOnFocus("ClearTextOnFocus", category_Data, &TextBox::getClearTextOnFocus, &TextBox::setClearTextOnFocus);
-    
+
 	static const Reflection::BoundFuncDesc<TextBox, void()> func_CaptureFocus(&TextBox::captureFocus, "CaptureFocus", Security::None);
 	static const Reflection::BoundFuncDesc<TextBox, void()> func_ReleaseFocus(&TextBox::releaseFocusLua, "ReleaseFocus", Security::None);
 	static const Reflection::BoundFuncDesc<TextBox, bool()> func_GetFocus(&TextBox::getFocused, "IsFocused", Security::None);
 
 	static const Reflection::EventDesc<TextBox, void(bool, const shared_ptr<Instance>)> event_FocusLost(&TextBox::focusLostSignal, "FocusLost", "enterPressed", "inputThatCausedFocusLoss");
 	static const Reflection::EventDesc<TextBox, void()> event_FocusGained(&TextBox::focusGainedSignal, "Focused");
-	
+
 	IMPLEMENT_GUI_TEXT_MIXIN(TextBox);
-    REFLECTION_END();
-    
+	REFLECTION_END();
+
 	TextBox::TextBox()
-    : DescribedCreatable<TextBox,GuiObject,sTextBox>("TextBox", true)
-    , GuiTextMixin("TextBox",BrickColor::brickBlack().color3())
-    , iAmFocus(false)
-    , showingCursor(false)
-    , multiLine(false)
-    , shouldCaptureFocus(false)
-    , cursorPos(0)
-    , clearTextOnFocus(true)
-	, shouldFocusFromInput(true)
+		: DescribedCreatable<TextBox, GuiObject, sTextBox>("TextBox", true)
+		, GuiTextMixin("TextBox", BrickColor::brickBlack().color3())
+		, iAmFocus(false)
+		, showingCursor(false)
+		, multiLine(false)
+		, shouldCaptureFocus(false)
+		, cursorPos(0)
+		, clearTextOnFocus(true)
+		, shouldFocusFromInput(true)
 	{
 		selectable = true;
 		setGuiQueue(GUIQUEUE_TEXT);
 	}
 	void TextBox::setMultiLine(bool value)
 	{
-		if(value != multiLine)
+		if (value != multiLine)
 		{
 			multiLine = value;
 			raisePropertyChanged(prop_MultiLine);
@@ -61,7 +61,7 @@ namespace RBX
 	}
 	void TextBox::setClearTextOnFocus(bool value)
 	{
-		if(value != clearTextOnFocus)
+		if (value != clearTextOnFocus)
 		{
 			clearTextOnFocus = value;
 			raisePropertyChanged(prop_ClearTextOnFocus);
@@ -69,45 +69,45 @@ namespace RBX
 	}
 	void TextBox::onServiceProvider(ServiceProvider* oldProvider, ServiceProvider* newProvider)
 	{
-        if(oldProvider)
+		if (oldProvider)
 		{
 			bufferedText = "";
-            textBoxFinishedEditingConnection.disconnect();
+			textBoxFinishedEditingConnection.disconnect();
 		}
-            
+
 		Super::onServiceProvider(oldProvider, newProvider);
 		onServiceProviderHeartbeatInstance(oldProvider, newProvider);
-        
-        if(newProvider)
+
+		if (newProvider)
 		{
 			bufferedText = getText();
 
-            if( RBX::UserInputService* userInputService = RBX::ServiceProvider::create<RBX::UserInputService>(newProvider) )
-                textBoxFinishedEditingConnection = userInputService->textBoxFinishedEditing.connect(bind(&TextBox::externalReleaseFocus,this,_1,_2, _3));
+			if (RBX::UserInputService* userInputService = RBX::ServiceProvider::create<RBX::UserInputService>(newProvider))
+				textBoxFinishedEditingConnection = userInputService->textBoxFinishedEditing.connect(bind(&TextBox::externalReleaseFocus, this, _1, _2, _3));
 		}
 	}
-	
+
 	void TextBox::onAncestorChanged(const AncestorChanged& event)
 	{
 		Super::onAncestorChanged(event);
-		releaseFocus(false, shared_ptr<InputObject>(), event.oldParent );
+		releaseFocus(false, shared_ptr<InputObject>(), event.oldParent);
 	}
 
-    GuiResponse TextBox::process(const shared_ptr<InputObject>& event)
-    {
-		if( this->isDescendantOf( ServiceProvider::find<Workspace>(this) ) ) // textbox on SurfaceGUIs under workspace won't accept user input
+	GuiResponse TextBox::process(const shared_ptr<InputObject>& event)
+	{
+		if (this->isDescendantOf(ServiceProvider::find<Workspace>(this))) // textbox on SurfaceGUIs under workspace won't accept user input
 			return GuiResponse();
 
 		GuiResponse answer = Super::process(event);
-        
-        if (event->getUserInputType() == InputObject::TYPE_FOCUS &&
-            event->getUserInputState() == InputObject::INPUT_STATE_END)
-        {
-            releaseFocus(false, event);
-        }
-        
-        return answer;
-    }
+
+		if (event->getUserInputType() == InputObject::TYPE_FOCUS &&
+			event->getUserInputState() == InputObject::INPUT_STATE_END)
+		{
+			releaseFocus(false, event);
+		}
+
+		return answer;
+	}
 
 	GuiResponse TextBox::preProcessMouseEvent(const shared_ptr<InputObject>& event)
 	{
@@ -124,26 +124,26 @@ namespace RBX
 		}
 
 		GuiResponse answer = Super::processMouseEventInternal(event, iAmFocus);			//We need to call our classParent to deal with the state table
-        
+
 		return iAmFocus ? GuiResponse::sunkWithTarget(this) : answer;
 	}
 
 	GuiResponse TextBox::preProcess(const shared_ptr<InputObject>& event)
-    {
-		if( this->isDescendantOf( ServiceProvider::find<Workspace>(this) ) ) // textbox on SurfaceGUIs under workspace won't accept user input
+	{
+		if (this->isDescendantOf(ServiceProvider::find<Workspace>(this))) // textbox on SurfaceGUIs under workspace won't accept user input
 			return GuiResponse();
 
 		if (event->getUserInputType() == InputObject::TYPE_FOCUS &&
-            event->getUserInputState() == InputObject::INPUT_STATE_END)
-        {
-            releaseFocus(false, event);
-        }
+			event->getUserInputState() == InputObject::INPUT_STATE_END)
+		{
+			releaseFocus(false, event);
+		}
 
 		if (event->isMouseEvent())
 		{
 			return preProcessMouseEvent(event);
 		}
-		else if (event->isKeyEvent()) 
+		else if (event->isKeyEvent())
 		{
 			return processKeyEvent(event);
 		}
@@ -161,8 +161,8 @@ namespace RBX
 		}
 
 		return GuiResponse::notSunk();
-    }
-    
+	}
+
 	GuiResponse TextBox::processMouseEvent(const shared_ptr<InputObject>& event)
 	{
 		Rect rect(getClippedRect());
@@ -178,7 +178,7 @@ namespace RBX
 		}
 
 		GuiResponse answer = Super::processMouseEvent(event);			//We need to call our classParent to deal with the state table
-        
+
 		// used(this) will set a target and sink this event at the PlayerGui processing level - no other GuiObjects will see it.
 		return iAmFocus ? GuiResponse::sunkWithTarget(this) : answer;
 	}
@@ -187,9 +187,9 @@ namespace RBX
 	{
 		shouldFocusFromInput = true;
 
-		if ( event->isTouchEvent() && mouseIsOver(event->get2DPosition()) && getActive() )
+		if (event->isTouchEvent() && mouseIsOver(event->get2DPosition()) && getActive())
 		{
-			if( RBX::ScrollingFrame* scrollFrame = findFirstAncestorOfType<RBX::ScrollingFrame>())
+			if (RBX::ScrollingFrame* scrollFrame = findFirstAncestorOfType<RBX::ScrollingFrame>())
 			{
 				bool processedInput = scrollFrame->processInputFromDescendant(event);
 				shouldFocusFromInput = !scrollFrame->isTouchScrolling();
@@ -224,14 +224,14 @@ namespace RBX
 		return Super::processGamepadEvent(event);
 	}
 
-    
+
 	int TextBox::getCursorPos(RBX::Vector2 mousePos)
 	{
 		int pos = getPosInString(mousePos);
-		if(pos < 0) // cursor did not click on any text, lets determine to put at end or beginning of text field
+		if (pos < 0) // cursor did not click on any text, lets determine to put at end or beginning of text field
 		{
 			Rect2D rect = getRect2D();
-			if(mousePos.x < rect.center().x)
+			if (mousePos.x < rect.center().x)
 				pos = 0;
 			else
 				pos = bufferedText.length();
@@ -248,14 +248,14 @@ namespace RBX
 			setText(bufferedText);
 		}
 	}
-    
+
 	void TextBox::gainFocus(const shared_ptr<InputObject>& event)
 	{
 		cursorPos = bufferedText.length();
 		iAmFocus = true;
 		showingCursor = false;
-        
-		if(clearTextOnFocus)
+
+		if (clearTextOnFocus)
 		{
 			bufferedText = "";
 			cursorPos = 0;
@@ -265,41 +265,41 @@ namespace RBX
 			setText(bufferedText);
 			cursorPos = getCursorPos(event->get2DPosition());
 		}
-        
+
 		lastSwap = Time::nowFast();
 		repeatKeyState.state = RepeatKeyState::STATE_NONE;
-        
+
 		ModelInstance* localCharacter = Network::Players::findLocalCharacter(this);
 		Humanoid* localHumanoid = Humanoid::modelIsCharacter(localCharacter);
 		if (localHumanoid)
 			localHumanoid->setTyping(true);
-        
-		if(DataModel* dm = DataModel::get(this))
+
+		if (DataModel* dm = DataModel::get(this))
 		{
 			dm->setGuiTargetInstance(shared_from(this));
 			dm->setSuppressNavKeys(true); // suppress the nav keys
 		}
 
 		focusGainedSignal();
-        
-        if( RBX::UserInputService* userInputService = RBX::ServiceProvider::create<RBX::UserInputService>(this) )
-            userInputService->textBoxGainFocus(shared_from(this));
+
+		if (RBX::UserInputService* userInputService = RBX::ServiceProvider::create<RBX::UserInputService>(this))
+			userInputService->textBoxGainFocus(shared_from(this));
 	}
-    
+
 	void TextBox::captureFocus()
 	{
 		cursorPos = bufferedText.length();
 		iAmFocus = true;
 		showingCursor = false;
 
-		if(clearTextOnFocus)
+		if (clearTextOnFocus)
 		{
 			bufferedText = "";
 			cursorPos = 0;
 		}
-		
+
 		shouldCaptureFocus = true;
-        
+
 		gainFocus(shared_ptr<RBX::InputObject>());
 	}
 
@@ -308,33 +308,33 @@ namespace RBX
 	{
 		if (descriptor == prop_Text && strcmp(getText().c_str(), bufferedText.c_str()))
 		{
-            bufferedText = getText();
+			bufferedText = getText();
 		}
 
 		Super::onPropertyChanged(descriptor);
 	}
 
 
-    void TextBox::externalReleaseFocus(const char* externalReleaseText, bool enterPressed, const shared_ptr<InputObject>& inputThatCausedFocusLoss)
-    {
-        if(!iAmFocus)
-            return;
-        
-        bufferedText = std::string(externalReleaseText);
-        setText(bufferedText);
-        
-        ModelInstance* localCharacter = Network::Players::findLocalCharacter(this);
+	void TextBox::externalReleaseFocus(const char* externalReleaseText, bool enterPressed, const shared_ptr<InputObject>& inputThatCausedFocusLoss)
+	{
+		if (!iAmFocus)
+			return;
+
+		bufferedText = std::string(externalReleaseText);
+		setText(bufferedText);
+
+		ModelInstance* localCharacter = Network::Players::findLocalCharacter(this);
 		Humanoid* localHumanoid = Humanoid::modelIsCharacter(localCharacter);
 		if (localHumanoid)
 			localHumanoid->setTyping(false);
-        
-        iAmFocus = false;
+
+		iAmFocus = false;
 		showingCursor = false;
 		repeatKeyState.state = RepeatKeyState::STATE_NONE;
-        
-        setFocusLost(enterPressed, inputThatCausedFocusLoss);
-	}	
-	
+
+		setFocusLost(enterPressed, inputThatCausedFocusLoss);
+	}
+
 	void TextBox::releaseFocusLua()
 	{
 		releaseFocus(false, shared_ptr<InputObject>());
@@ -349,62 +349,62 @@ namespace RBX
 		}
 		return iAmFocus;
 	}
-    
+
 	void TextBox::releaseFocus(bool enterPressed, const shared_ptr<InputObject>& inputThatCausedFocusLoss, Instance* contextLocalCharacter)
 	{
-		if(!iAmFocus)
+		if (!iAmFocus)
 			return;
-        
-		ModelInstance* localCharacter = Network::Players::findLocalCharacter( contextLocalCharacter ? contextLocalCharacter : this);
+
+		ModelInstance* localCharacter = Network::Players::findLocalCharacter(contextLocalCharacter ? contextLocalCharacter : this);
 		Humanoid* localHumanoid = Humanoid::modelIsCharacter(localCharacter);
 		if (localHumanoid)
 			localHumanoid->setTyping(false);
-        
+
 		setText(bufferedText);
 		iAmFocus = false;
 		showingCursor = false;
 		repeatKeyState.state = RepeatKeyState::STATE_NONE;
-        
-		if(DataModel* dm = DataModel::get(this))
+
+		if (DataModel* dm = DataModel::get(this))
 			dm->setSuppressNavKeys(false); // give nav back
-        
-        setFocusLost(enterPressed, inputThatCausedFocusLoss);
+
+		setFocusLost(enterPressed, inputThatCausedFocusLoss);
 	}
-    
-    void TextBox::setFocusLost(bool enterPressed, const shared_ptr<InputObject>& inputThatCausedFocusLoss)
-    {
-        focusLostSignal(enterPressed, inputThatCausedFocusLoss);
-        if( RBX::UserInputService* userInputService = RBX::ServiceProvider::create<RBX::UserInputService>(this) )
-            userInputService->textBoxReleaseFocus(shared_from(this));
-    }
-    
+
+	void TextBox::setFocusLost(bool enterPressed, const shared_ptr<InputObject>& inputThatCausedFocusLoss)
+	{
+		focusLostSignal(enterPressed, inputThatCausedFocusLoss);
+		if (RBX::UserInputService* userInputService = RBX::ServiceProvider::create<RBX::UserInputService>(this))
+			userInputService->textBoxReleaseFocus(shared_from(this));
+	}
+
 	void TextBox::onHeartbeat(const Heartbeat& event)
 	{
-		if(iAmFocus)
+		if (iAmFocus)
 		{
-			switch(repeatKeyState.state)
+			switch (repeatKeyState.state)
 			{
-				case RepeatKeyState::STATE_NONE:
-					break;
-				case RepeatKeyState::STATE_DEPRESSED:
-					if(repeatKeyState.stateWallTime + 0.5 < event.wallTime && !UserInputService::IsUsingNewKeyboardEvents())
+			case RepeatKeyState::STATE_NONE:
+				break;
+			case RepeatKeyState::STATE_DEPRESSED:
+				if (repeatKeyState.stateWallTime + 0.5 < event.wallTime && !UserInputService::IsUsingNewKeyboardEvents())
+				{
+					//We've waited half a second, start repeating
+					doKey(repeatKeyState.keyType, repeatKeyState.character);
+					repeatKeyState.state = RepeatKeyState::STATE_REPEATING;
+					repeatKeyState.stateWallTime = event.wallTime;
+				}
+				break;
+			case RepeatKeyState::STATE_REPEATING:
+				if (!UserInputService::IsUsingNewKeyboardEvents())
+				{
+					while (repeatKeyState.stateWallTime + (1 / 20.0) < event.wallTime)
 					{
-						//We've waited half a second, start repeating
 						doKey(repeatKeyState.keyType, repeatKeyState.character);
-						repeatKeyState.state = RepeatKeyState::STATE_REPEATING;
-						repeatKeyState.stateWallTime = event.wallTime;
+						repeatKeyState.stateWallTime += 1 / 20.0;
 					}
-					break;
-				case RepeatKeyState::STATE_REPEATING:
-					if (!UserInputService::IsUsingNewKeyboardEvents())
-					{
-						while(repeatKeyState.stateWallTime + (1/20.0) < event.wallTime)
-						{
-							doKey(repeatKeyState.keyType, repeatKeyState.character);
-							repeatKeyState.stateWallTime += 1/20.0;
-						}
-					}
-					break;
+				}
+				break;
 			}
 		}
 	}
@@ -413,85 +413,85 @@ namespace RBX
 	{
 		doKey(keyType, std::string(1, key));
 	}
-    void TextBox::doKey(RepeatKeyState::KeyType keyType, std::string key)
+	void TextBox::doKey(RepeatKeyState::KeyType keyType, std::string key)
 	{
 		std::string bufferedTextBefore = bufferedText;
 
-		switch(keyType)
+		switch (keyType)
 		{
 		case RepeatKeyState::TYPE_BACKSPACE:
+		{
+			if (!key.empty() && key[0] != 0)
 			{
-				if(!key.empty() && key[0] != 0)
+				//Delete word
+				int i = std::min<int>(bufferedText.size() - 1, cursorPos);
+
+				//Move past any whitespace
+				while (i >= 0)
 				{
-					//Delete word
-					int i = std::min<int>(bufferedText.size() - 1, cursorPos);
-
-					//Move past any whitespace
-					while( i >= 0 ) 
-					{
-						if(Typesetter::isCharWhitespace(bufferedText[i]) || bufferedText[i] == '\n')
-							--i;
-						else
-							break;
-					}
-
-					//Move until we hit our first whitespace
-					while( i >= 0 )
-					{
-						if(Typesetter::isCharWhitespace(bufferedText[i]))
-							break;
-						else
-							--i;
-					}
-
-					if( i < 0 )
-					{
-						bufferedText = bufferedText.substr(cursorPos);
-						cursorPos = 0;
-					}
-					else if (i != cursorPos)
-					{
-						bufferedText = bufferedText.erase(i, (cursorPos - i));
-						cursorPos = i;
-					}
+					if (Typesetter::isCharWhitespace(bufferedText[i]) || bufferedText[i] == '\n')
+						--i;
+					else
+						break;
 				}
-				else if ( (bufferedText.size() > 0) && (cursorPos > 0) && (unsigned(cursorPos) <= bufferedText.length()) ) // delete key
+
+				//Move until we hit our first whitespace
+				while (i >= 0)
 				{
-					bufferedText.erase(cursorPos - 1, 1);
-					cursorPos--;
+					if (Typesetter::isCharWhitespace(bufferedText[i]))
+						break;
+					else
+						--i;
 				}
-				break;
+
+				if (i < 0)
+				{
+					bufferedText = bufferedText.substr(cursorPos);
+					cursorPos = 0;
+				}
+				else if (i != cursorPos)
+				{
+					bufferedText = bufferedText.erase(i, (cursorPos - i));
+					cursorPos = i;
+				}
 			}
+			else if ((bufferedText.size() > 0) && (cursorPos > 0) && (unsigned(cursorPos) <= bufferedText.length())) // delete key
+			{
+				bufferedText.erase(cursorPos - 1, 1);
+				cursorPos--;
+			}
+			break;
+		}
 		case RepeatKeyState::TYPE_DELETE:
-			if ( (bufferedText.size() > 0) && (cursorPos >= 0) && (unsigned(cursorPos) < bufferedText.length()) )
+			if ((bufferedText.size() > 0) && (cursorPos >= 0) && (unsigned(cursorPos) < bufferedText.length()))
 				bufferedText.erase(cursorPos, 1);
 			break;
 		case RepeatKeyState::TYPE_CHARACTER:
-			if(Typesetter::isStringSupported(key))
+			if (Typesetter::isStringSupported(key))
 			{
-				if( (cursorPos >= 0) && (cursorPos >= 0) && (unsigned(cursorPos) <= bufferedText.length()) )
-					bufferedText.insert(cursorPos,key);
+				if ((cursorPos >= 0) && (cursorPos >= 0) && (unsigned(cursorPos) <= bufferedText.length()))
+					bufferedText.insert(cursorPos, key);
 				cursorPos += key.length();
 			}
 			break;
 		case RepeatKeyState::TYPE_LEFTARROW:
-			if(0 <= cursorPos - 1)
+			if (0 <= cursorPos - 1)
 				cursorPos--;
 			break;
 		case RepeatKeyState::TYPE_RIGHTARROW:
-			if(bufferedText.length() >= unsigned(cursorPos + 1))
+			if (bufferedText.length() >= unsigned(cursorPos + 1))
 				cursorPos++;
 			break;
 		case RepeatKeyState::TYPE_PASTE:
-			if(repeatKeyState.state == RepeatKeyState::STATE_NONE)
+			if (repeatKeyState.state == RepeatKeyState::STATE_NONE)
 			{
 				std::string pasteText = "";
-				if(RBX::UserInputService* inputService = RBX::ServiceProvider::find<RBX::UserInputService>(this))
+				if (RBX::UserInputService* inputService = RBX::ServiceProvider::find<RBX::UserInputService>(this))
 					pasteText = inputService->getPasteText();
 
-				if( (pasteText.length() > 0) && (cursorPos >= 0) && (unsigned(cursorPos) <= bufferedText.length()) )
+				if ((pasteText.length() > 0) && (cursorPos >= 0) && (unsigned(cursorPos) <= bufferedText.length()))
 				{
-					bufferedText.insert(cursorPos,pasteText);
+					bufferedText.insert(cursorPos, pasteText);
 					cursorPos += pasteText.length();
 				}
 			}
@@ -504,8 +504,8 @@ namespace RBX
 
 	void TextBox::keyUp(RepeatKeyState::KeyType keyType, RBX::KeyCode keyCode, char key)
 	{
-		if( repeatKeyState.state == RepeatKeyState::STATE_DEPRESSED || (repeatKeyState.state == RepeatKeyState::STATE_REPEATING && !UserInputService::IsUsingNewKeyboardEvents()) )
-			if(keyType == repeatKeyState.keyType && keyCode == repeatKeyState.keyCode) //if last key pressed was ours, stop it from repeating further
+		if (repeatKeyState.state == RepeatKeyState::STATE_DEPRESSED || (repeatKeyState.state == RepeatKeyState::STATE_REPEATING && !UserInputService::IsUsingNewKeyboardEvents()))
+			if (keyType == repeatKeyState.keyType && keyCode == repeatKeyState.keyCode) //if last key pressed was ours, stop it from repeating further
 				repeatKeyState.state = RepeatKeyState::STATE_NONE;
 	}
 
@@ -519,16 +519,16 @@ namespace RBX
 
 	void TextBox::keyDown(RepeatKeyState::KeyType keyType, RBX::KeyCode keyCode, char key)
 	{
-		if(repeatKeyState.state == RepeatKeyState::STATE_NONE || repeatKeyState.state == RepeatKeyState::STATE_DEPRESSED)
+		if (repeatKeyState.state == RepeatKeyState::STATE_NONE || repeatKeyState.state == RepeatKeyState::STATE_DEPRESSED)
 		{
 			doKey(keyType, key);
-            
+
 			repeatKeyState.keyCode = keyCode;
 			repeatKeyState.keyType = keyType;
 			repeatKeyState.character = key;
-			if(keyType != RepeatKeyState::TYPE_PASTE) // we don't repeat paste commands
+			if (keyType != RepeatKeyState::TYPE_PASTE) // we don't repeat paste commands
 				repeatKeyState.state = RepeatKeyState::STATE_DEPRESSED;
-			if(RunService* runService = ServiceProvider::find<RunService>(this))
+			if (RunService* runService = ServiceProvider::find<RunService>(this))
 				repeatKeyState.stateWallTime = runService->wallTime();
 		}
 		else
@@ -548,28 +548,28 @@ namespace RBX
 	{
 		RBXASSERT(event->isKeyEvent());
 
-		if(shouldCaptureFocus)
+		if (shouldCaptureFocus)
 		{
 			gainFocus(event);
 			shouldCaptureFocus = false;
 		}
-        
+
 		std::string bufferedTextBefore = bufferedText;
 		bool wasFocusAtStartOfProcessKey = iAmFocus;
-        
-        
+
+
 		GuiResponse answer = Super::processKeyEvent(event);
-		if (iAmFocus) 
+		if (iAmFocus)
 		{
 			if (event->isKeyDownEvent())
 			{
-				if( event->isEscapeKey() )
+				if (event->isEscapeKey())
 					releaseFocus(false, event);
-				else if(event->isCarriageReturnKey())
+				else if (event->isCarriageReturnKey())
 				{
 					if (isSelectedObject())
 						releaseFocus(false, event);
-					else if(getMultiLine())
+					else if (getMultiLine())
 						keyDown(RepeatKeyState::TYPE_CHARACTER, event->getKeyCode(), '\n');
 					else
 						releaseFocus(true, event);
@@ -583,43 +583,43 @@ namespace RBX
 				else if (event->isDeleteKey())
 					keyDown(RepeatKeyState::TYPE_DELETE, event->getKeyCode(), '\0');
 				else if (event->isBackspaceKey())
-                {
-                    RBX::UserInputService* inputService = RBX::ServiceProvider::find<RBX::UserInputService>(this);
-                    RBXASSERT(inputService);
+				{
+					RBX::UserInputService* inputService = RBX::ServiceProvider::find<RBX::UserInputService>(this);
+					RBXASSERT(inputService);
 					keyDown(RepeatKeyState::TYPE_BACKSPACE, event->getKeyCode(), inputService->isCtrlDown() ? '\1' : '\0');
-                }
+				}
 				else if (event->isTextCharacterKey())
 				{
-                    if(isPasteCommand(event))
-						keyDown(RepeatKeyState::TYPE_PASTE, event->getKeyCode(),'v');
+					if (isPasteCommand(event))
+						keyDown(RepeatKeyState::TYPE_PASTE, event->getKeyCode(), 'v');
 					else
-                        keyDown(RepeatKeyState::TYPE_CHARACTER, event->getKeyCode(), event->modifiedKey);
+						keyDown(RepeatKeyState::TYPE_CHARACTER, event->getKeyCode(), event->modifiedKey);
 				}
 			}
-			else if(event->isKeyUpEvent()) // key up
+			else if (event->isKeyUpEvent()) // key up
 			{
-				if(event->isCarriageReturnKey())
+				if (event->isCarriageReturnKey())
 				{
-					if(getMultiLine())
+					if (getMultiLine())
 						keyUp(RepeatKeyState::TYPE_CHARACTER, event->getKeyCode(), '\n');
 				}
-				else if(event->isDeleteKey())
+				else if (event->isDeleteKey())
 					keyUp(RepeatKeyState::TYPE_DELETE, event->getKeyCode(), '\0');
-				else if(event->isBackspaceKey())
+				else if (event->isBackspaceKey())
 					keyUp(RepeatKeyState::TYPE_BACKSPACE, event->getKeyCode(), '\0');
 				else if (event->isLeftArrowKey())
 					keyUp(RepeatKeyState::TYPE_LEFTARROW, event->getKeyCode(), 'l');
 				else if (event->isRightArrowKey())
 					keyUp(RepeatKeyState::TYPE_RIGHTARROW, event->getKeyCode(), 'r');
-				else if(event->isTextCharacterKey())
+				else if (event->isTextCharacterKey())
 				{
 					char found = event->modifiedKey;
 					keyUp(RepeatKeyState::TYPE_CHARACTER, event->getKeyCode(), found);
 				}
 			}
 			//Turn off repeating characters if shift is pressed or unpressed
-			if((event->getKeyCode() == SDLK_LSHIFT || event->getKeyCode() == SDLK_RSHIFT) &&
-			   (repeatKeyState.state == RepeatKeyState::STATE_DEPRESSED || (repeatKeyState.state == RepeatKeyState::STATE_REPEATING && !UserInputService::IsUsingNewKeyboardEvents())))
+			if ((event->getKeyCode() == SDLK_LSHIFT || event->getKeyCode() == SDLK_RSHIFT) &&
+				(repeatKeyState.state == RepeatKeyState::STATE_DEPRESSED || (repeatKeyState.state == RepeatKeyState::STATE_REPEATING && !UserInputService::IsUsingNewKeyboardEvents())))
 				repeatKeyState.state = RepeatKeyState::STATE_NONE;
 		}
 		else if (!iAmFocus && event->isKeyDownEvent() && isSelectedObject() && event->getKeyCode() == SDLK_RETURN)
@@ -627,53 +627,53 @@ namespace RBX
 
 		if (bufferedTextBefore != bufferedText)
 			setText(bufferedText);
-        
+
 		return wasFocusAtStartOfProcessKey ? GuiResponse::sunkWithTarget(this) : answer;
 	}
-        
-    bool TextBox::isPasteCommand(const shared_ptr<InputObject>& event)
-    {
-        if(event->getKeyCode() == RBX::SDLK_v)
-        {
-            if(RBX::UserInputService* inputService = RBX::ServiceProvider::find<RBX::UserInputService>(this))
-            {
-                std::vector<RBX::ModCode> modCodes = inputService->getCommandModCodes();
-                for(std::vector<RBX::ModCode>::iterator it = modCodes.begin(); it != modCodes.end(); ++it)
-                {
-                    if(DFFlag::PasteWithCapsLockOn ? event->mod & *(it) : event->mod == *(it))
-                        return true;
-                }
+
+	bool TextBox::isPasteCommand(const shared_ptr<InputObject>& event)
+	{
+		if (event->getKeyCode() == RBX::SDLK_v)
+		{
+			if (RBX::UserInputService* inputService = RBX::ServiceProvider::find<RBX::UserInputService>(this))
+			{
+				std::vector<RBX::ModCode> modCodes = inputService->getCommandModCodes();
+				for (std::vector<RBX::ModCode>::iterator it = modCodes.begin(); it != modCodes.end(); ++it)
+				{
+					if (DFFlag::PasteWithCapsLockOn ? event->mod & *(it) : event->mod == *(it))
+						return true;
+				}
 			}
 		}
-        
-        return false;
+
+		return false;
 	}
-    
+
 	std::string TextBox::getTextWithCursor()
 	{
 		RBXASSERT(cursorPos >= 0);
-        
+
 		// make sure we are in range
 		cursorPos = std::min<int>(std::max<int>(0, cursorPos), bufferedText.length());
-        
+
 		std::string textWithCursor = bufferedText;
-		
-        textWithCursor.insert(cursorPos,"\1");
-        
+
+		textWithCursor.insert(cursorPos, "\1");
+
 		return textWithCursor;
 	}
 	std::string TextBox::getTextWithBlankCursor()
 	{
 		RBXASSERT(cursorPos >= 0);
-        
+
 		// make sure we are in range
 		cursorPos = std::min<int>(std::max<int>(0, cursorPos), bufferedText.length());
-        
+
 		std::string textWithCursor = bufferedText;
-        
+
 		return textWithCursor;
 	}
-	
+
 	void TextBox::render2d(Adorn* adorn)
 	{
 		if (iAmFocus)
@@ -685,12 +685,12 @@ namespace RBX
 				showingCursor = !showingCursor;
 				lastSwap = now;
 			}
-            
+
 			render2dTextImpl(adorn, getRenderBackgroundColor4(), showingCursor ? getTextWithCursor() : getTextWithBlankCursor(), getFont(), getFontSize(), getRenderTextColor4(), getRenderTextStrokeColor4(), getTextWrap(), getTextScale(), getXAlignment(), getYAlignment());
 		}
 		else
 			render2dTextImpl(adorn, getRenderBackgroundColor4(), getText(), getFont(), getFontSize(), getRenderTextColor4(), getRenderTextStrokeColor4(), getTextWrap(), getTextScale(), getXAlignment(), getYAlignment());
-        
+
 		renderStudioSelectionBox(adorn);
 	}
 }

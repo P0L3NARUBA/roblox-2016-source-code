@@ -522,7 +522,7 @@ RobloxView::~RobloxView(void)
 
 		if(m_renderStatsItem)
 		{
-			m_renderStatsItem->setParent(NULL);
+			m_renderStatsItem->setParent(nullptr);
 			m_renderStatsItem.reset();
 		}
 	}

@@ -88,15 +88,14 @@ namespace RBX {
 		{
 			RBXASSERT_IF_VALIDATING(array.find(item) != array.end());
 
-			int removeIndex = indexOf(item);
+			size_t removeIndex = (size_t)indexOf(item);
 
 			RBXASSERT(removeIndex >= 0);
 			RBXASSERT(array[removeIndex] == item);
 
 			// Move all the items back in the array. 
-			for (int i = removeIndex; i < array.size() - 1; i++)
-			{
-				Item* nextItem = array[i + 1];
+			for (size_t i = removeIndex; i < array.size() - 1u; i++) {
+				Item* nextItem = array[i + 1u];
 				array[i] = nextItem;
 				indexOf(nextItem) = i;
 			}

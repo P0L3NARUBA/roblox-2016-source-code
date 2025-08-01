@@ -72,7 +72,7 @@ void Pose::removeSubPose(shared_ptr<Instance> pose)
 {
 	if (pose != NULL) {
 		if(pose->getParent() == this){
-			pose->setParent(NULL);
+			pose->setParent(nullptr);
 		}
 	}
 }

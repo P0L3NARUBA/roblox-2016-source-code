@@ -135,7 +135,7 @@ void Tonemapping(inout float3 color) {
 	float3 params2 = Parameters2.xyz;
 
 	color = agx(color);
-	color = agxLook(color, float3x3(params1.xxx, params2.xyz, params1.yyy), params1.z);
+	color = agxLook(color, float3x3(params1.xxx, params2.xyz, params1.yyy), 1.0);//params1.z);
 	color = agxEotf(color);
 
 	#else
@@ -163,7 +163,7 @@ float4 TonemappingPS( BasicVertexOutput IN ) : SV_TARGET {
 
 	Tonemapping(color);
 
-	#if defined(COLOR_CORRECTION) && !defined(AGX)
+	#ifndef AGX
 	ColorCorrection(color);
 	#endif
 

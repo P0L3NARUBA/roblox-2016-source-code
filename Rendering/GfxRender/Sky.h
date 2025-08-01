@@ -1,23 +1,18 @@
 #pragma once
 
 #include "TextureRef.h"
-
 #include "util/G3DCore.h"
 
-namespace RBX
-{
+namespace RBX {
 	class ContentId;
 }
 
-namespace G3D
-{
+namespace G3D {
 	class LightingParameters;
 }
 
-namespace RBX
-{
-	namespace Graphics
-	{
+namespace RBX {
+	namespace Graphics {
 
 		class VisualEngine;
 		class DeviceContext;
@@ -26,20 +21,19 @@ namespace RBX
 		class VertexLayout;
 		class VertexBuffer;
 
-		class Sky
-		{
+		class Sky {
 		public:
 			Sky(VisualEngine* visualEngine);
 			~Sky();
 
-			void update(const G3D::LightingParameters& lighting, int starCount, bool drawCelestialBodies, bool useHDRI);
+			void update(const G3D::LightingParameters& lighting, uint32_t starCount, bool drawCelestialBodies, bool useHDRI);
 
 			void render(DeviceContext* context, const RenderCamera& camera, Texture* texture, bool drawStars = true);
 
-			void RenderSkyboxEnvMapCube(DeviceContext* context, unsigned int face, unsigned int targetSize);
+			void RenderSkyboxEnvMapCube(DeviceContext* context, uint32_t face, uint32_t targetSize);
 
 			void PrepareSkyboxEnvMapEqui(DeviceContext* context);
-			void RenderSkyboxEnvMapEqui(DeviceContext* context);
+			void RenderSkyboxEnvMapBox(DeviceContext* context);
 
 			void setSkyBoxDefault();
 			void setSkyBox(const ContentId& rt, const ContentId& lf, const ContentId& bk, const ContentId& ft, const ContentId& up, const ContentId& dn, const ContentId& hdri);
@@ -63,8 +57,7 @@ namespace RBX
 				void reset();
 			};*/
 
-			enum Brightness
-			{
+			enum Brightness {
 				Brightness_Bright,
 				Brightness_Dimmer,
 				Brightness_Dim,

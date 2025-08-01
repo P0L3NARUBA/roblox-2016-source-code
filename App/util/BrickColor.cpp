@@ -15,7 +15,7 @@ namespace RBX {
 		Colors allColors;
 		Colors colorPalette;
 		Colors renderingPalette; // supported by the current graphics engine.
-		
+
 		struct ColorInfo
 		{
 			bool valid;
@@ -23,70 +23,68 @@ namespace RBX {
 			G3D::Color4uint8 colorInt;
 			G3D::Color4 color;
 			std::string name;
-			
+
 			ColorInfo()
-			 : valid(false)
-			 , deprecated(true)
-			{}
+				: valid(false)
+				, deprecated(true)
+			{
+			}
 		};
 
 		std::vector<ColorInfo> map;
-		
-		std::map<BrickColor::Number, int> paletteMap;		// maps number to index in colorPalette
-		std::map<BrickColor::Number, int> renderingPaletteMap;		// maps number to index in colorPalette, limited to first "supported colors"
+
+		std::map<BrickColor::Number, int32_t> paletteMap;		   // maps number to index in colorPalette
+		std::map<BrickColor::Number, int32_t> renderingPaletteMap; // maps number to index in colorPalette, limited to first "supported colors"
 
 		static BrickMap& singleton();
 	private:
-		void insert(BrickColor::Number number, G3D::uint8 r, G3D::uint8 g, G3D::uint8 b, std::string name)
+		void insert(BrickColor::Number number, uint8_t r, uint8_t g, uint8_t b, std::string name)
 		{
 			allColors.push_back(BrickColor(number));
 
 			if (map.size() <= static_cast<unsigned int>(number))
 				map.resize(number + 1);
-				
+
 			ColorInfo& info = map[number];
-			
+
 			info.valid = true;
-			info.colorInt = G3D::Color4uint8(r, g, b, 255);
+			info.colorInt = G3D::Color4uint8(r, g, b, 255u);
 			info.color = G3D::Color4(info.colorInt);
 			info.name = name;
-		}	
+		}
 		void insertPaletteItem(BrickColor::Number c)
 		{
 			colorPalette.push_back(c);
 			map[c].deprecated = false;
 		}
 
-		void generatePaletteMap(std::map<BrickColor::Number, int>& pMap, Colors availablecolors, Number number)
+		void generatePaletteMap(std::map<BrickColor::Number, int32_t>& pMap, Colors availablecolors, Number number)
 		{
 			int bestMatch = 0;
 			float closestDistance = 10000;
 
 			G3D::Color4 match = map[number].color;
 
-			for(size_t paletteIndex = 0; paletteIndex < availablecolors.size(); ++paletteIndex)
-			{
-				if (availablecolors[paletteIndex]==number)
-				{
+			for (size_t paletteIndex = 0; paletteIndex < availablecolors.size(); ++paletteIndex) {
+				if (availablecolors[paletteIndex] == number) {
 					// short-cut
 					bestMatch = paletteIndex;
 					break;
 				}
-				else
-				{
+				else {
 					G3D::Color4 color = map[availablecolors[paletteIndex].number].color;
 					float distance = fabs(match.r - color.r);
 					distance += fabs(match.g - color.g);
 					distance += fabs(match.b - color.b);
-					if (distance<closestDistance) {
+					if (distance < closestDistance) {
 						bestMatch = paletteIndex;
-						if (distance==0.0f)
-							break;	
+						if (distance == 0.0f)
+							break;
 						closestDistance = distance;
 					}
 				}
 			}
-			
+
 			pMap[number] = bestMatch;
 
 		}
@@ -98,7 +96,7 @@ namespace RBX {
 
 			Colors::iterator iter = allColors.begin();
 			Colors::iterator end = allColors.end();
-			while (iter!=end)
+			while (iter != end)
 			{
 				generatePaletteMap(paletteMap, colorPalette, iter->number);
 				generatePaletteMap(renderingPaletteMap, renderingPalette, iter->number);
@@ -116,7 +114,7 @@ namespace RBX {
 			insert(BrickColor::brick_5, 215, 197, 154, "Brick yellow"); //	467 C
 			insert(BrickColor::brick_6, 194, 218, 184, "Light green (Mint)"); //	351 C
 			insert(BrickColor::brick_9, 232, 186, 200, "Light reddish violet"); //	203 C
-			insert(BrickColor::brick_11, 0x80,0xbb,0xdb, "Pastel Blue"); //	
+			insert(BrickColor::brick_11, 0x80, 0xbb, 0xdb, "Pastel Blue"); //	
 			insert(BrickColor::brick_12, 203, 132, 66, "Light orange brown"); //	1385 C
 			insert(BrickColor::brick_18, 204, 142, 105, "Nougat"); //	472 C
 			insert(BrickColor::brick_21, 196, 40, 28, "Bright red"); //	032 C
@@ -223,71 +221,71 @@ namespace RBX {
 			insert(BrickColor::brick_232, 125, 187, 221, "Dove blue"); //	311 C
 			insert(BrickColor::brick_268, 52, 43, 117, "Medium lilac"); //	2685 C
 
-			insert(BrickColor::brick_301, 80,109,84, "Slime green");
-			insert(BrickColor::brick_302, 91,93,105, "Smoky grey");
-			insert(BrickColor::brick_303, 0,16,176, "Dark blue");
-			insert(BrickColor::brick_304, 44,101,29, "Parsley green");
-			insert(BrickColor::brick_305, 82,124,174, "Steel blue");
-			insert(BrickColor::brick_306, 51,88,130, "Storm blue");
-			insert(BrickColor::brick_307, 16,42,220, "Lapis");
-			insert(BrickColor::brick_308, 61,21,133, "Dark indigo");
-			insert(BrickColor::brick_309, 52,142,64, "Sea green");
-			insert(BrickColor::brick_310, 91,154,76, "Shamrock");
-			insert(BrickColor::brick_311, 159,161,172, "Fossil");
-			insert(BrickColor::brick_312, 89,34,89, "Mulberry");
-			insert(BrickColor::brick_313, 31,128,29, "Forest green");
-			insert(BrickColor::brick_314, 159,173,192, "Cadet blue");
-			insert(BrickColor::brick_315, 9,137,207, "Electric blue");
-			insert(BrickColor::brick_316, 123,0,123, "Eggplant");
-			insert(BrickColor::brick_317, 124,156,107, "Moss");
-			insert(BrickColor::brick_318, 138,171,133, "Artichoke");
-			insert(BrickColor::brick_319, 185,196,177, "Sage green");
-			insert(BrickColor::brick_320, 202,203,209, "Ghost grey");
-			insert(BrickColor::brick_321, 167,94,155, "Lilac");
-			insert(BrickColor::brick_322, 123,47,123, "Plum");
-			insert(BrickColor::brick_323, 148,190,129, "Olivine");
-			insert(BrickColor::brick_324, 168,189,153, "Laurel green");
-			insert(BrickColor::brick_325, 223,223,222, "Quill grey");
+			insert(BrickColor::brick_301, 80, 109, 84, "Slime green");
+			insert(BrickColor::brick_302, 91, 93, 105, "Smoky grey");
+			insert(BrickColor::brick_303, 0, 16, 176, "Dark blue");
+			insert(BrickColor::brick_304, 44, 101, 29, "Parsley green");
+			insert(BrickColor::brick_305, 82, 124, 174, "Steel blue");
+			insert(BrickColor::brick_306, 51, 88, 130, "Storm blue");
+			insert(BrickColor::brick_307, 16, 42, 220, "Lapis");
+			insert(BrickColor::brick_308, 61, 21, 133, "Dark indigo");
+			insert(BrickColor::brick_309, 52, 142, 64, "Sea green");
+			insert(BrickColor::brick_310, 91, 154, 76, "Shamrock");
+			insert(BrickColor::brick_311, 159, 161, 172, "Fossil");
+			insert(BrickColor::brick_312, 89, 34, 89, "Mulberry");
+			insert(BrickColor::brick_313, 31, 128, 29, "Forest green");
+			insert(BrickColor::brick_314, 159, 173, 192, "Cadet blue");
+			insert(BrickColor::brick_315, 9, 137, 207, "Electric blue");
+			insert(BrickColor::brick_316, 123, 0, 123, "Eggplant");
+			insert(BrickColor::brick_317, 124, 156, 107, "Moss");
+			insert(BrickColor::brick_318, 138, 171, 133, "Artichoke");
+			insert(BrickColor::brick_319, 185, 196, 177, "Sage green");
+			insert(BrickColor::brick_320, 202, 203, 209, "Ghost grey");
+			insert(BrickColor::brick_321, 167, 94, 155, "Lilac");
+			insert(BrickColor::brick_322, 123, 47, 123, "Plum");
+			insert(BrickColor::brick_323, 148, 190, 129, "Olivine");
+			insert(BrickColor::brick_324, 168, 189, 153, "Laurel green");
+			insert(BrickColor::brick_325, 223, 223, 222, "Quill grey");
 			//insert(BrickColor::brick_326, 218,220,225, "Iron");
-			insert(BrickColor::brick_327, 151,0,0, "Crimson");
-			insert(BrickColor::brick_328, 177,229,166, "Mint");
-			insert(BrickColor::brick_329, 152,194,219, "Baby blue");
-			insert(BrickColor::brick_330, 255,152,220, "Carnation pink");
-			insert(BrickColor::brick_331, 255,89,89, "Persimmon");
-			insert(BrickColor::brick_332, 117,0,0, "Maroon");
-			insert(BrickColor::brick_333, 239,184,56, "Gold");
-			insert(BrickColor::brick_334, 248,217,109, "Daisy orange");
-			insert(BrickColor::brick_335, 231,231,236, "Pearl");
-			insert(BrickColor::brick_336, 199,212,228, "Fog");
-			insert(BrickColor::brick_337, 255,148,148, "Salmon");
-			insert(BrickColor::brick_338, 190,104,98, "Terra Cotta");
-			insert(BrickColor::brick_339, 86,36,36, "Cocoa");
-			insert(BrickColor::brick_340, 241,231,199, "Wheat");
-			insert(BrickColor::brick_341, 254,243,187, "Buttermilk");
-			insert(BrickColor::brick_342, 224,178,208, "Mauve");
-			insert(BrickColor::brick_343, 212,144,189, "Sunrise");
-			insert(BrickColor::brick_344, 150,85,85, "Tawny");
-			insert(BrickColor::brick_345, 143,76,42, "Rust");
-			insert(BrickColor::brick_346, 211,190,150, "Cashmere");
-			insert(BrickColor::brick_347, 226,220,188, "Khaki");
-			insert(BrickColor::brick_348, 237,234,234, "Lily white");
-			insert(BrickColor::brick_349, 233,218,218, "Seashell");
-			insert(BrickColor::brick_350, 136,62,62, "Burgundy");
-			insert(BrickColor::brick_351, 188,155,93, "Cork");
-			insert(BrickColor::brick_352, 199,172,120, "Burlap");
-			insert(BrickColor::brick_353, 202,191,163, "Beige");
-			insert(BrickColor::brick_354, 187,179,178, "Oyster");
-			insert(BrickColor::brick_355, 108,88,75, "Pine Cone");
-			insert(BrickColor::brick_356, 160,132,79, "Fawn brown");
-			insert(BrickColor::brick_357, 149,137,136, "Hurricane grey");
-			insert(BrickColor::brick_358, 171,168,158, "Cloudy grey");
-			insert(BrickColor::brick_359, 175,148,131, "Linen");
-			insert(BrickColor::brick_360, 150,103,102, "Copper");
-			insert(BrickColor::brick_361, 86,66,54, "Dirt brown");
-			insert(BrickColor::brick_362, 126,104,63, "Bronze");
-			insert(BrickColor::brick_363, 105,102,92, "Flint");
-			insert(BrickColor::brick_364, 90,76,66, "Dark taupe");
-			insert(BrickColor::brick_365, 106,57,9, "Burnt Sienna");
+			insert(BrickColor::brick_327, 151, 0, 0, "Crimson");
+			insert(BrickColor::brick_328, 177, 229, 166, "Mint");
+			insert(BrickColor::brick_329, 152, 194, 219, "Baby blue");
+			insert(BrickColor::brick_330, 255, 152, 220, "Carnation pink");
+			insert(BrickColor::brick_331, 255, 89, 89, "Persimmon");
+			insert(BrickColor::brick_332, 117, 0, 0, "Maroon");
+			insert(BrickColor::brick_333, 239, 184, 56, "Gold");
+			insert(BrickColor::brick_334, 248, 217, 109, "Daisy orange");
+			insert(BrickColor::brick_335, 231, 231, 236, "Pearl");
+			insert(BrickColor::brick_336, 199, 212, 228, "Fog");
+			insert(BrickColor::brick_337, 255, 148, 148, "Salmon");
+			insert(BrickColor::brick_338, 190, 104, 98, "Terra Cotta");
+			insert(BrickColor::brick_339, 86, 36, 36, "Cocoa");
+			insert(BrickColor::brick_340, 241, 231, 199, "Wheat");
+			insert(BrickColor::brick_341, 254, 243, 187, "Buttermilk");
+			insert(BrickColor::brick_342, 224, 178, 208, "Mauve");
+			insert(BrickColor::brick_343, 212, 144, 189, "Sunrise");
+			insert(BrickColor::brick_344, 150, 85, 85, "Tawny");
+			insert(BrickColor::brick_345, 143, 76, 42, "Rust");
+			insert(BrickColor::brick_346, 211, 190, 150, "Cashmere");
+			insert(BrickColor::brick_347, 226, 220, 188, "Khaki");
+			insert(BrickColor::brick_348, 237, 234, 234, "Lily white");
+			insert(BrickColor::brick_349, 233, 218, 218, "Seashell");
+			insert(BrickColor::brick_350, 136, 62, 62, "Burgundy");
+			insert(BrickColor::brick_351, 188, 155, 93, "Cork");
+			insert(BrickColor::brick_352, 199, 172, 120, "Burlap");
+			insert(BrickColor::brick_353, 202, 191, 163, "Beige");
+			insert(BrickColor::brick_354, 187, 179, 178, "Oyster");
+			insert(BrickColor::brick_355, 108, 88, 75, "Pine Cone");
+			insert(BrickColor::brick_356, 160, 132, 79, "Fawn brown");
+			insert(BrickColor::brick_357, 149, 137, 136, "Hurricane grey");
+			insert(BrickColor::brick_358, 171, 168, 158, "Cloudy grey");
+			insert(BrickColor::brick_359, 175, 148, 131, "Linen");
+			insert(BrickColor::brick_360, 150, 103, 102, "Copper");
+			insert(BrickColor::brick_361, 86, 66, 54, "Dirt brown");
+			insert(BrickColor::brick_362, 126, 104, 63, "Bronze");
+			insert(BrickColor::brick_363, 105, 102, 92, "Flint");
+			insert(BrickColor::brick_364, 90, 76, 66, "Dark taupe");
+			insert(BrickColor::brick_365, 106, 57, 9, "Burnt Sienna");
 
 			insert(BrickColor::roblox_1001, 248, 248, 248, "Institutional white");
 			insert(BrickColor::roblox_1002, 205, 205, 205, "Mid gray");
@@ -327,7 +325,7 @@ namespace RBX {
 	public:
 		void setRenderingSupportedPaletteSize(size_t maxSupportedColors)
 		{
-			if(maxSupportedColors == renderingPalette.size())
+			if (maxSupportedColors == renderingPalette.size())
 				return; // nothing to do;
 
 			renderingPalette.clear();
@@ -474,9 +472,9 @@ namespace RBX {
 			size_t expectedPaletteSize = 128;
 			if (expectedPaletteSize == colorPalette.size())
 				return;
-			
+
 			colorPalette.clear();
-		
+
 			insertPaletteItem(BrickColor::brick_141);
 			insertPaletteItem(BrickColor::brick_301);
 			insertPaletteItem(BrickColor::brick_107);
@@ -515,8 +513,8 @@ namespace RBX {
 			insertPaletteItem(BrickColor::brick_317);
 			insertPaletteItem(BrickColor::brick_318);
 			insertPaletteItem(BrickColor::brick_319);
-			insertPaletteItem(BrickColor::roblox_1024);				
-			insertPaletteItem(BrickColor::brick_314);				
+			insertPaletteItem(BrickColor::roblox_1024);
+			insertPaletteItem(BrickColor::brick_314);
 			insertPaletteItem(BrickColor::roblox_1013);
 			insertPaletteItem(BrickColor::roblox_1006);
 			insertPaletteItem(BrickColor::brick_321);
@@ -652,10 +650,10 @@ namespace RBX {
 		const std::vector<BrickMap::ColorInfo>& colors = BrickMap::singleton().map;
 
 		bool isDeprecated = true;
-		int brickNumber = -1;
+		int32_t brickNumber = -1;
 
-		for (size_t i = 0; i < colors.size() && isDeprecated; ++i)
-		{					
+		for (size_t i = 0u; i < colors.size() && isDeprecated; ++i)
+		{
 			if (colors[i].valid && colors[i].name == name)
 			{
 				isDeprecated = colors[i].deprecated;
@@ -665,7 +663,7 @@ namespace RBX {
 
 		if (brickNumber != -1)
 			return static_cast<BrickColor::Number>(brickNumber);
-				
+
 		return BrickColor::defaultColor();
 	}
 
@@ -681,23 +679,23 @@ namespace RBX {
 	BrickColor BrickColor::closest(G3D::Color4uint8 color)
 	{
 		BrickColor::Number bestMatch = BrickColor::defaultColor().number;
-		int closestDistance = 10000;
+		int32_t closestDistance = 10000;
 
 		const std::vector<BrickMap::ColorInfo>& colors = BrickMap::singleton().map;
-		
-		for (size_t i = 0; i < colors.size(); ++i)
+
+		for (size_t i = 0u; i < colors.size(); ++i)
 		{
 			if (!colors[i].valid)
 				continue;
-				
+
 			G3D::Color4uint8 match = colors[i].colorInt;
-			
-			int distance = std::abs(match.r - color.r);
+
+			int32_t distance = std::abs(match.r - color.r);
 			distance += std::abs(match.g - color.g);
 			distance += std::abs(match.b - color.b);
-			if (distance<closestDistance) {
+			if (distance < closestDistance) {
 				bestMatch = static_cast<BrickColor::Number>(i);
-				if (distance==0)
+				if (distance == 0)
 					break;
 				closestDistance = distance;
 			}
@@ -707,9 +705,10 @@ namespace RBX {
 	}
 
 	BrickColor BrickColor::random() {
-		size_t index = G3D::iRandom(0, BrickMap::singleton().colorPalette.size()-1);
-		return BrickMap::singleton().colorPalette[index]; 
-	}
+		G3D::Random randomGen;
+		uint32_t index = randomGen.integer(0u, BrickMap::singleton().colorPalette.size() - 1u);
+		return BrickMap::singleton().colorPalette[index];
+	} 
 
 	BrickColor BrickColor::closest(G3D::Color3 color) {
 		G3D::Color4 c4;
@@ -722,24 +721,24 @@ namespace RBX {
 	BrickColor BrickColor::closest(G3D::Color4 color)
 	{
 		BrickColor::Number bestMatch = BrickColor::defaultColor().number;
-		float closestDistance = 10000;
-		
+		float closestDistance = 10000.0f;
+
 		const std::vector<BrickMap::ColorInfo>& colors = BrickMap::singleton().map;
-		
-		for (size_t i = 0; i < colors.size(); ++i)
+
+		for (size_t i = 0u; i < colors.size(); ++i)
 		{
 			if (!colors[i].valid)
 				continue;
-				
+
 			G3D::Color4 match = colors[i].color;
-				
+
 			float distance = fabs(match.r - color.r);
 			distance += fabs(match.g - color.g);
 			distance += fabs(match.b - color.b);
-			if (distance<closestDistance) {
+			if (distance < closestDistance) {
 				bestMatch = static_cast<BrickColor::Number>(i);
-				if (distance==0.0f)
-					break;	
+				if (distance == 0.0f)
+					break;
 				closestDistance = distance;
 			}
 		}
@@ -748,11 +747,11 @@ namespace RBX {
 	}
 
 	// Assignment
-	BrickColor::BrickColor(int number)
+	BrickColor::BrickColor(int32_t number)
 	{
 		const std::vector<BrickMap::ColorInfo>& colors = BrickMap::singleton().map;
-		
-		if (static_cast<unsigned int>(number) < colors.size() && colors[number].valid)
+
+		if (static_cast<size_t>(number) < colors.size() && colors[number].valid)
 			this->number = static_cast<BrickColor::Number>(number);
 		else
 			this->number = defaultColor().number;
@@ -760,7 +759,7 @@ namespace RBX {
 
 	G3D::Color4uint8 BrickColor::color4uint8() const {
 		const std::vector<BrickMap::ColorInfo>& colors = BrickMap::singleton().map;
-		RBXASSERT(static_cast<unsigned int>(number) < colors.size() && colors[number].valid);
+		RBXASSERT(static_cast<size_t>(number) < colors.size() && colors[number].valid);
 		return colors[number].colorInt;
 	}
 
@@ -771,13 +770,13 @@ namespace RBX {
 
 	const std::string& BrickColor::name() const {
 		const std::vector<BrickMap::ColorInfo>& colors = BrickMap::singleton().map;
-		RBXASSERT(static_cast<unsigned int>(number) < colors.size() && colors[number].valid);
+		RBXASSERT(static_cast<size_t>(number) < colors.size() && colors[number].valid);
 		return colors[number].name;
 	}
 
 	G3D::Color4 BrickColor::color4() const {
 		const std::vector<BrickMap::ColorInfo>& colors = BrickMap::singleton().map;
-		RBXASSERT(static_cast<unsigned int>(number) < colors.size() && colors[number].valid);
+		RBXASSERT(static_cast<size_t>(number) < colors.size() && colors[number].valid);
 		return colors[number].color;
 	}
 
@@ -788,7 +787,7 @@ namespace RBX {
 
 	std::size_t hash_value(const BrickColor& c)
 	{
-		boost::hash<int> hasher;
+		boost::hash<int32_t> hasher;
 		return hasher(c.asInt());
 	}
 }

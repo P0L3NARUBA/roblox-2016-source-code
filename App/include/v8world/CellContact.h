@@ -11,46 +11,43 @@ namespace RBX {
 
 	class PolyConnector;
 
-	const Vector3int16 kFaceDirectionToLocationOffset[7] =
-	{
-		Vector3int16( 1, 0, 0),
-		Vector3int16( 0, 0, 1),
-		Vector3int16(-1, 0, 0),
-		Vector3int16( 0, 0,-1),
-		Vector3int16( 0, 1, 0),
-		Vector3int16( 0,-1, 0),
-		Vector3int16( 0, 0, 0),
+	const Vector3int16 kFaceDirectionToLocationOffset[7] = {
+		Vector3int16( 1,  0,  0),
+		Vector3int16( 0,  0,  1),
+		Vector3int16(-1,  0,  0),
+		Vector3int16( 0,  0, -1),
+		Vector3int16( 0,  1,  0),
+		Vector3int16( 0, -1,  0),
+		Vector3int16( 0,  0,  0),
 	};
 
-	static inline Voxel::FaceDirection oppositeSideOffset(Voxel::FaceDirection f) 
-	{
+	static inline Voxel::FaceDirection oppositeSideOffset(Voxel::FaceDirection f) {
 		static Voxel::FaceDirection OPPOSITES[6] = { Voxel::MinusX, Voxel::MinusZ, Voxel::PlusX, Voxel::PlusZ, Voxel::MinusY, Voxel::PlusY };
 		return OPPOSITES[f];
 	}
 
-	class CellContact: public Contact 
-	{
+	class CellContact : public Contact {
 	public:
 		CellContact(Primitive* p0, Primitive* p1, const Vector3int32& gridFeature)
 			: Contact(p0, p1)
 			, gridFeature(gridFeature)
-		{}
+		{
+		}
 
-        const Vector3int32& getGridFeature() const { return gridFeature; }
+		const Vector3int32& getGridFeature() const { return gridFeature; }
 
 		virtual ContactType getContactType() const { return Contact_Cell; }
 
-    protected:
-        Vector3int32 gridFeature;
+	protected:
+		Vector3int32 gridFeature;
 	};
 
-	class CellMeshContact: public CellContact
-	{
+	class CellMeshContact : public CellContact {
 	public:
 		typedef RBX::FixedArray<PolyConnector*, CONTACT_ARRAY_SIZE> ConnectorArray;		// TODO - should only ever need 8
 
-    protected:
-        POLY::Mesh* cellMesh;
+	protected:
+		POLY::Mesh* cellMesh;
 
 	private:
 		ConnectorArray polyConnectors;
@@ -66,9 +63,9 @@ namespace RBX {
 
 		// Contact
 		/*override*/ void deleteAllConnectors();
-		/*override*/ int numConnectors() const					{return polyConnectors.size();}
-		/*override*/ ContactConnector* getConnector(int i);
-		/*override*/ bool computeIsColliding(float overlapIgnored); 
+		/*override*/ size_t numConnectors() const { return polyConnectors.size(); }
+		/*override*/ ContactConnector* getConnector(size_t i);
+		/*override*/ bool computeIsColliding(float overlapIgnored);
 		/*override*/ bool stepContact();
 
 		/*implement*/ virtual void findClosestFeatures(ConnectorArray& newConnectors) = 0;
@@ -76,12 +73,13 @@ namespace RBX {
 	public:
 		CellMeshContact(Primitive* p0, Primitive* p1, const Vector3int32& gridFeature)
 			: CellContact(p0, p1, gridFeature)
-            , cellMesh(NULL)
-		{}
+			, cellMesh(nullptr)
+		{
+		}
 
 		~CellMeshContact();
 
-        POLY::Mesh* getCellMesh(void) {return cellMesh;}
+		POLY::Mesh* getCellMesh(void) { return cellMesh; }
 
 		bool cellFaceIsInterior(const Vector3int16& mainCellLoc, RBX::Voxel::FaceDirection faceDir);
 	};

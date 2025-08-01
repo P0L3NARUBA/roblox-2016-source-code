@@ -530,7 +530,7 @@ public:
 
 	virtual std::vector<char> compile(const std::string& source, const std::string& target, const std::string& entry, bool optimize)
 	{
-		unsigned int flags = D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR;
+		unsigned int flags = D3DCOMPILE_PACK_MATRIX_ROW_MAJOR;
 
 		if (!optimize)
 			flags |= D3DCOMPILE_SKIP_OPTIMIZATION;

@@ -188,7 +188,7 @@ public:
 	// Call this function to request that the Replicator disconnect.
 	// This function will submit a task to set Parent to null.
 	// The reason for the delay is that some context are unsafe
-	// to set Parent to NULL, such as RakPeerInterface::OnUpdate
+	// to set Parent to nullptr, such as RakPeerInterface::OnUpdate
 	void requestDisconnect(DisconnectReason reason);
 	void requestDisconnectWithSignal(DisconnectReason reason);
 
@@ -497,7 +497,7 @@ protected:
 	void createPhysicsReceiver(NetworkSettings::PhysicsReceiveMethod method, bool isServer);
 
 	void readPropertiesFromValueArray(const std::vector<PropValuePair>& propValueArray, Instance* instance);
-    void readProperties(RakNet::BitStream& inBitstream, Instance* instance, PropertyCacheType cacheType, bool useDictionary, bool preventBounceBack = true, std::vector<PropValuePair>* valueArray = NULL);
+    void readProperties(RakNet::BitStream& inBitstream, Instance* instance, PropertyCacheType cacheType, bool useDictionary, bool preventBounceBack = true, std::vector<PropValuePair>* valueArray = nullptr);
 	void readPropertiesInternal(Reflection::Property& property, RakNet::BitStream& inBitstream, bool useDictionary, bool preventBounceBack, Reflection::Variant* value);
 
     virtual void writeProperties(const Instance* instance, RakNet::BitStream& outBitstream, PropertyCacheType cacheType, bool useDictionary);

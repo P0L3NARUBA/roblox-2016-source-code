@@ -27,7 +27,7 @@ namespace RBX
 
 	void BuoyancyContact::removeAllConnectorsFromKernel()
 	{
-		Kernel* kernel = NULL;
+		Kernel* kernel = nullptr;
 		for (size_t i = 0; i < connectors.size(); ++i) {
 			if (connectors[i]->isInKernel()) {
 				kernel = kernel ? kernel : getKernel();		// small optimization - getKernel walks the IPipelines
@@ -54,8 +54,8 @@ namespace RBX
 			delete connectors[i];
 		}
 		connectors.fastClear();
-		
-		floaterPrim->onBuoyancyChanged( false );
+
+		floaterPrim->onBuoyancyChanged(false);
 	}
 
 	void BuoyancyContact::deleteAllConnectors()
@@ -63,7 +63,7 @@ namespace RBX
 		deleteConnectors();
 	}
 
-	Geometry::GeometryType BuoyancyContact::determineGeometricType( Primitive *primitive )
+	Geometry::GeometryType BuoyancyContact::determineGeometricType(Primitive* primitive)
 	{
 		if (RBX::PartInstance::fromPrimitive(primitive)->getPartType() == CYLINDER_PART)
 			return Geometry::GEOMETRY_CYLINDER;
@@ -83,24 +83,24 @@ namespace RBX
 		if (getPrimitive(0)->getWorld()->getUsingNewPhysicalProperties())
 		{
 			// Buoyancy force does not depend on the object density. Only water density.
-			fullBuoyancy.y = - floaterPrim->getGeometry()->getVolume() * Units::kmsAccelerationToRbx( RBX::Constants::getKmsGravity() ) * waterDensity;
+			fullBuoyancy.y = -floaterPrim->getGeometry()->getVolume() * Units::kmsAccelerationToRbx(RBX::Constants::getKmsGravity()) * waterDensity;
 		}
 		else
 		{
 			// Buoyant force:			Fb = p_water * grav_constant * Volume_displaced
 			// Can be expanded into:	Fb = p_o * g * V / (p_w/p_o)
 			// Unfortunately legacy Roblox never knew the correct mass of an object, so what the hell?
-			fullBuoyancy.y = - floaterPrim->getConstBody()->getMass() * (Units::kmsAccelerationToRbx( RBX::Constants::getKmsGravity() ) / floaterPrim->getSpecificGravity());
+			fullBuoyancy.y = -floaterPrim->getConstBody()->getMass() * (Units::kmsAccelerationToRbx(RBX::Constants::getKmsGravity()) / floaterPrim->getSpecificGravity());
 		}
 	}
 
-	BuoyancyContact::BuoyancyContact( Primitive* p0, Primitive* p1 ) :
+	BuoyancyContact::BuoyancyContact(Primitive* p0, Primitive* p1) :
 		floaterPrim(p1),
 		Contact(p0, p1),
 		radius(floaterPrim->getRadius()),
 		fullSurfaceArea(0.0f),
-        voxelGrid(NULL),
-        smoothGrid(NULL)
+		voxelGrid(NULL),
+		smoothGrid(NULL)
 	{
 		updateBuoyancyFloatingForce();
 		MegaClusterInstance* mci = boost::polymorphic_downcast<MegaClusterInstance*>(p0->getOwner());
@@ -115,25 +115,27 @@ namespace RBX
 	{
 		deleteConnectors();
 		RBXASSERT(connectors.size() == 0);
-		floaterPrim->onBuoyancyChanged( false );
+		floaterPrim->onBuoyancyChanged(false);
 	}
 
 
-	void BuoyancyContact::computeExtentsWaterBand( const Extents& extents, float& floatDistance, float& sinkDistance )
+	void BuoyancyContact::computeExtentsWaterBand(const Extents& extents, float& floatDistance, float& sinkDistance)
 	{
 		float waterLevel;
 
 		if (hasDistanceSubmergedUnderWater(extents.min(), waterLevel, extents.max())) {
 			floatDistance = waterLevel - extents.min().y;
-			RBXASSERT(floatDistance >= -1e-5);
+			RBXASSERT(floatDistance >= -1e-5f);
 			if (worldPosUnderWater(extents.max())) {
 				// fully submerged
 				sinkDistance = -1.0f;
-			} else if (worldPosAboveWater(extents.max(), extents.min().y, waterLevel)) {
+			}
+			else if (worldPosAboveWater(extents.max(), extents.min().y, waterLevel)) {
 				// Partially submerged
 				sinkDistance = extents.max().y - waterLevel;
-				RBXASSERT(sinkDistance >= -1e-5);
-			} else {
+				RBXASSERT(sinkDistance >= -1e-5f);
+			}
+			else {
 				// Degenerate case: no water found below the top point within the extent.
 				// Bottom side in the water while top side out of water.
 				// Let's test the center and approximate
@@ -142,15 +144,17 @@ namespace RBX
 				else
 					floatDistance = -1.0f;			  // receive no buoyancy
 			}
-		} else {
+		}
+		else {
 			// No water found above the bottom point
 			if (hasDistanceSubmergedUnderWater(extents.max(), waterLevel, extents.max())) {
 				floatDistance = waterLevel - extents.min().y;
-				RBXASSERT(floatDistance >= -1e-5);
+				RBXASSERT(floatDistance >= -1e-5f);
 				if (worldPosAboveWater(extents.min(), extents.min().y - floatDistance, waterLevel)) {
 					// Partially submerged
 					sinkDistance = extents.max().y - waterLevel;
-				} else {
+				}
+				else {
 					// Degenerate case: No water found below the bottom point within extent.
 					// Top side in the water while bottom side out of water.
 					// Let's test the center and approximate
@@ -159,10 +163,11 @@ namespace RBX
 					else
 						floatDistance = -1.0f;			  // receive no buoyancy
 				}
-			} else {
+			}
+			else {
 				// Make sure we are completely out of water
 				floatDistance = 0.0f;
-				for (unsigned int i = 0; i < 7; ++i) {
+				for (size_t i = 0u; i < 7u; ++i) {
 					Vector3 corner = extents.getCorner(i);
 					if (corner != extents.min() && corner != extents.max() && worldPosUnderWater(corner))
 						floatDistance += 1.0f;
@@ -172,13 +177,14 @@ namespace RBX
 					// Sample more points to have a smoother approximation				
 					if (worldPosUnderWater(extents.center()))
 						floatDistance += 1.0f;
-					for (unsigned int i = 0; i < 7; ++i) {
+					for (size_t i = 0u; i < 7u; ++i) {
 						Vector3 midCorner = (extents.getCorner(i) + extents.center()) / 2;
 						if (worldPosUnderWater(midCorner))
 							floatDistance += 1.0f;
 					}
 					sinkDistance = 17.0f - floatDistance;
-				} else
+				}
+				else
 					floatDistance = -1.0f; // completely out of water
 			}
 		}
@@ -190,21 +196,20 @@ namespace RBX
 
 	void BuoyancyContact::updateSubmergeRatio()
 	{
-		for (unsigned int i = 0; i < connectors.size(); ++i) {
+		for (size_t i = 0u; i < connectors.size(); ++i) {
 			float floatDistance, sinkDistance;
 			connectors[i]->getWaterBand(floatDistance, sinkDistance);
 			if (floatDistance <= 0.0f)
 				connectors[i]->setSubMergeRatio(0.0f);	// outside water
 			else if (sinkDistance <= 0.0f)
 				connectors[i]->setSubMergeRatio(1.0f);	// fully submerged
-			else 
+			else
 				connectors[i]->setSubMergeRatio(floatDistance / (floatDistance + sinkDistance));
 		}
 	}
 
-	Vector3 BuoyancyContact::getWaterVelocity( int i )
-	{
-		return cellVelocity( connectors[i]->getWorldPosition() );
+	Vector3 BuoyancyContact::getWaterVelocity(size_t i) {
+		return cellVelocity(connectors[i]->getWorldPosition());
 	}
 
 	void BuoyancyContact::onPrimitiveContactParametersChanged()
@@ -221,33 +226,34 @@ namespace RBX
 		const Vector3 partialBuoyancy = fullBuoyancy / connectors.size();
 		float viscosity_K = -waterViscosity / RBX::Constants::kernelDt() / connectors.size();
 
-		for (unsigned int i = 0; i < connectors.size(); ++i) {
+		for (size_t i = 0u; i < connectors.size(); ++i) {
 			float submergeRatio = connectors[i]->getSubMergeRatio();
 
 			if (submergeRatio > 0.0f) {
 				const Vector3 relativeVelocity = floaterPrim->getPV().velocity.linear - getWaterVelocity(i);
 
-				if ( relativeVelocity.isZero() ) // to avoid division by zero
-					connectors[i]->setForce( partialBuoyancy * submergeRatio );
+				if (relativeVelocity.isZero()) // to avoid division by zero
+					connectors[i]->setForce(partialBuoyancy * submergeRatio);
 				else
 				{
 					const Vector3 relativeVelocityInObject = floaterPrim->getCoordinateFrame().vectorToObjectSpace(relativeVelocity);
 					// Scale the viscosity by the cross sections in axis aligned directions
 					Vector3 viscosityInObject = relativeVelocityInObject * getCrossSections(i, relativeVelocityInObject);
 					Vector3 linearViscosity = viscosity_K * floaterPrim->getCoordinateFrame().vectorToWorldSpace(viscosityInObject);
-					connectors[i]->setForce( ( partialBuoyancy + linearViscosity ) * submergeRatio );
+					connectors[i]->setForce((partialBuoyancy + linearViscosity) * submergeRatio);
 				}
-			} else
-				connectors[i]->setForce( Vector3::zero() );
+			}
+			else
+				connectors[i]->setForce(Vector3::zero());
 		}
 	}
 
 
 	bool BuoyancyContact::stepContact()
 	{
-		if (computeIsColliding(0.0)) {
+		if (computeIsColliding(0.0f)) {
 			if (inKernel()) {
-				if (connectors.size() == 0) {
+				if (connectors.size() == 0u) {
 					createConnectors();
 					putAllConnectorsInKernel();
 				}
@@ -255,7 +261,7 @@ namespace RBX
 				updateSubmergeRatio();
 				updateConnectors();
 			}
-			floaterPrim->onBuoyancyChanged( true );
+			floaterPrim->onBuoyancyChanged(true);
 			return true;
 		}
 		else {
@@ -264,22 +270,22 @@ namespace RBX
 		}
 	}
 
-	bool BuoyancyContact::cellHasWater( Vector3int16 pos )
+	bool BuoyancyContact::cellHasWater(Vector3int16 pos)
 	{
-        if (smoothGrid)
+		if (smoothGrid)
 			return smoothGrid->getCell(pos.x, pos.y, pos.z).getMaterial() == Voxel2::Cell::Material_Water;
 		else
-            return !voxelGrid->getWaterCell(pos).isEmpty();
+			return !voxelGrid->getWaterCell(pos).isEmpty();
 	}
 
-	bool BuoyancyContact::worldPosUnderWater( const Vector3& pos )
+	bool BuoyancyContact::worldPosUnderWater(const Vector3& pos)
 	{
 		Vector3int16 internalPos(worldToCell_floor(pos));
 		return cellHasWater(internalPos);
 	}
 
 	// Search water level above the specified world pos if under water
-	bool BuoyancyContact::hasDistanceSubmergedUnderWater( const Vector3& worldpos, float& waterLevel, const Vector3& worldMaxSearch )
+	bool BuoyancyContact::hasDistanceSubmergedUnderWater(const Vector3& worldpos, float& waterLevel, const Vector3& worldMaxSearch)
 	{
 		Vector3int16 pos(worldToCell_floor(worldpos));
 		if (!cellHasWater(pos))
@@ -296,7 +302,7 @@ namespace RBX
 	}
 
 	// Search water level below the specified world pos if above water
-	bool BuoyancyContact::worldPosAboveWater( const Vector3& worldpos, int minY, float& waterLevel )
+	bool BuoyancyContact::worldPosAboveWater(const Vector3& worldpos, int minY, float& waterLevel)
 	{
 		Vector3int16 pos(worldToCell_floor(worldpos));
 		// Skip the current cell the worldpos is located
@@ -311,9 +317,9 @@ namespace RBX
 		return false;		// no water below the position and above minY
 	}
 
-	Vector3 BuoyancyContact::cellVelocity( const Vector3& worldpos )
+	Vector3 BuoyancyContact::cellVelocity(const Vector3& worldpos)
 	{
-        if (!voxelGrid)
+		if (!voxelGrid)
 			return Vector3::zero();
 
 		Vector3int16 pos(worldToCell_floor(worldpos));
@@ -321,15 +327,15 @@ namespace RBX
 
 		if (cell.isEmpty())
 			return Vector3::zero();
-	
-		int magnitude = 16 * cell.water.getForce();
+
+		int32_t magnitude = 16 * cell.water.getForce();
 		Vector3 velocity(0.0f, 0.0f, 0.0f);
 		velocity[cell.water.getDirection() >> 1] = (cell.water.getDirection() & 0x1) ? magnitude : -magnitude;
 		return velocity;
 	}
 
 	// extremely expedited "broadphase" check
-	bool BuoyancyContact::isTouchingWater( Primitive* prim )
+	bool BuoyancyContact::isTouchingWater(Primitive* prim)
 	{
 		Extents extents = prim->getExtentsWorld();
 		// check center
@@ -337,19 +343,19 @@ namespace RBX
 			return true;
 
 		// check circumscribing corners
-		for (int i = 0; i < 8; ++i)
+		for (size_t i = 0u; i < 8u; ++i)
 			if (worldPosUnderWater(extents.getCorner(i)))
 				return true;
 
 		return false;
 	}
 
-	bool BuoyancyContact::computeIsColliding( float ) 
+	bool BuoyancyContact::computeIsColliding(float)
 	{
 		return isTouchingWater(floaterPrim);
 	}
 
-	bool BuoyancyContact::computeIsCollidingUi( float )
+	bool BuoyancyContact::computeIsCollidingUi(float)
 	{
 		// override to always return false so can build underwater; shouldn't affect HumanoidState code
 		getPrimitive(0)->getFastFuzzyExtents();			// updates - outside of world loop
@@ -357,30 +363,30 @@ namespace RBX
 		return false;
 	}
 
-	BuoyancyContact* BuoyancyContact::create( Primitive* p0, Primitive *p1 )
+	BuoyancyContact* BuoyancyContact::create(Primitive* p0, Primitive* p1)
 	{
 		Geometry::GeometryType geoType = BuoyancyContact::determineGeometricType(p1);
-		BuoyancyContact* contact = NULL;
-		
-		switch( geoType )
+		BuoyancyContact* contact = nullptr;
+
+		switch (geoType)
 		{
-			case Geometry::GEOMETRY_BALL:
-				contact = new BuoyancyBallContact(p0, p1);
-				break;
-			case Geometry::GEOMETRY_CYLINDER:
-				contact = new BuoyancyCylinderContact(p0, p1);
-				break;
-			case Geometry::GEOMETRY_BLOCK:
-				contact = new BuoyancyBoxContact(p0, p1);
-				break;
-			case Geometry::GEOMETRY_WEDGE:
-				contact = new BuoyancyWedgeContact(p0, p1);
-				break;
-			case Geometry::GEOMETRY_CORNERWEDGE:
-				contact = new BuoyancyCornerWedgeContact(p0, p1);
-				break;
-			default:
-				RBXASSERT(contact);
+		case Geometry::GEOMETRY_BALL:
+			contact = new BuoyancyBallContact(p0, p1);
+			break;
+		case Geometry::GEOMETRY_CYLINDER:
+			contact = new BuoyancyCylinderContact(p0, p1);
+			break;
+		case Geometry::GEOMETRY_BLOCK:
+			contact = new BuoyancyBoxContact(p0, p1);
+			break;
+		case Geometry::GEOMETRY_WEDGE:
+			contact = new BuoyancyWedgeContact(p0, p1);
+			break;
+		case Geometry::GEOMETRY_CORNERWEDGE:
+			contact = new BuoyancyCornerWedgeContact(p0, p1);
+			break;
+		default:
+			RBXASSERT(contact);
 		}
 
 		contact->initializeCrossSections();
@@ -406,12 +412,11 @@ namespace RBX
 		tangentArea = 2.0f * crossSectionArea;
 	}
 
-	Vector3 BuoyancyBallContact::getCrossSections(int, const Vector3&)
-	{
+	Vector3 BuoyancyBallContact::getCrossSections(size_t, const Vector3&) {
 		return Vector3(crossSectionArea, crossSectionArea, crossSectionArea) / 8.0f;
 	}
 
-	bool BuoyancyBallContact::computeIsColliding( float overlapIgnored )
+	bool BuoyancyBallContact::computeIsColliding(float overlapIgnored)
 	{
 		Vector3 center = floaterPrim->getPV().position.translation;
 		if (worldPosUnderWater(center))
@@ -437,28 +442,31 @@ namespace RBX
 		Vector3 center = floaterPrim->getPV().position.translation;
 		Vector3 bottom = center + Vector3(0.0f, -radius, 0.0f);
 		Vector3 top = center + Vector3(0.0f, radius, 0.0f);
-	
+
 		if (hasDistanceSubmergedUnderWater(bottom, waterLevel, top)) {
 			floatDistance = waterLevel - bottom.y;
 			RBXASSERT(floatDistance >= -1e-5);
 			if (worldPosUnderWater(top)) {
 				// fully submerged
 				sinkDistance = -1.0f;
-			} else {
+			}
+			else {
 				bool aboveWater = worldPosAboveWater(top, bottom.y, waterLevel);
 				RBXASSERT(aboveWater);
 				// Partially submerged
 				sinkDistance = top.y - waterLevel;
 				RBXASSERT(sinkDistance >= -1e-5);
 			}
-		} else {
+		}
+		else {
 			// No water found above the bottom point
 			if (worldPosAboveWater(top, bottom.y, waterLevel)) {
 				floatDistance = top.y - waterLevel;
-				RBXASSERT(floatDistance >= -1e-5);
+				RBXASSERT(floatDistance >= -1e-5f);
 				sinkDistance = waterLevel - bottom.y;
-				RBXASSERT(sinkDistance >= -1e-5);
-			} else {
+				RBXASSERT(sinkDistance >= -1e-5f);
+			}
+			else {
 				// De-generate case : No water found at the top and bottom
 				// Just sample the 4 sides and give a rough estimate
 				float leftHasWater = worldPosUnderWater(center + Vector3(-radius, 0.0f, 0.0f)) ? 1.0f : 0.0f;
@@ -485,22 +493,21 @@ namespace RBX
 		else if (sinkDistance <= 0.0f)
 			connectors[0]->setSubMergeRatio(1.0f);	// fully submerged
 		else {
-			float normalizedDepth = floatDistance / ( floatDistance + sinkDistance );
-			connectors[0]->setSubMergeRatio( normalizedDepth * normalizedDepth * (3 - 2 * normalizedDepth) );
+			float normalizedDepth = floatDistance / (floatDistance + sinkDistance);
+			connectors[0]->setSubMergeRatio(normalizedDepth * normalizedDepth * (3 - 2 * normalizedDepth));
 		}
 	}
 
-	RBX::Vector3 BuoyancyBallContact::getWaterVelocity( int )
-	{
+	RBX::Vector3 BuoyancyBallContact::getWaterVelocity(size_t) {
 		Vector3 center = floaterPrim->getPV().position.translation;
-		Vector3 velocity = cellVelocity( center );
+		Vector3 velocity = cellVelocity(center);
 		if (velocity != Vector3::zero())
 			return velocity;
 
 		// Check center of 6 faces of the bounding box
 		Extents extents = floaterPrim->getExtentsLocal();
 		for (int faceId = NORM_X_POS; faceId <= NORM_Z_NEG; ++faceId) {
-			velocity = cellVelocity( center + extents.faceCenter(static_cast<NormalId>(faceId)) );
+			velocity = cellVelocity(center + extents.faceCenter(static_cast<NormalId>(faceId)));
 			if (velocity != Vector3::zero())
 				return velocity;
 		}
@@ -520,15 +527,14 @@ namespace RBX
 		crossSectionSurfaceAreas.x = boxSize.y * boxSize.z;
 		crossSectionSurfaceAreas.y = boxSize.x * boxSize.z;
 		crossSectionSurfaceAreas.z = boxSize.x * boxSize.y;
-		tangentSurfaceAreas.x = 2.0f * ( crossSectionSurfaceAreas.y + crossSectionSurfaceAreas.z );
-		tangentSurfaceAreas.y = 2.0f * ( crossSectionSurfaceAreas.x + crossSectionSurfaceAreas.z );
-		tangentSurfaceAreas.z = 2.0f * ( crossSectionSurfaceAreas.x + crossSectionSurfaceAreas.y );
+		tangentSurfaceAreas.x = 2.0f * (crossSectionSurfaceAreas.y + crossSectionSurfaceAreas.z);
+		tangentSurfaceAreas.y = 2.0f * (crossSectionSurfaceAreas.x + crossSectionSurfaceAreas.z);
+		tangentSurfaceAreas.z = 2.0f * (crossSectionSurfaceAreas.x + crossSectionSurfaceAreas.y);
 
 		fullSurfaceArea = crossSectionSurfaceAreas.sum() * 2.0f;
 	}
 
-	Vector3 BuoyancyBoxContact::getCrossSections(int i, const Vector3& velocity)
-	{
+	Vector3 BuoyancyBoxContact::getCrossSections(size_t i, const Vector3& velocity) {
 		const Extents extents = floaterPrim->getExtentsLocal();
 		Vector3int16 index = extents.getCornerIndex(i);
 		// Polarity: 0 - negative axis direction points outwards
@@ -539,10 +545,10 @@ namespace RBX
 		Vector3 crossAreas[2];
 		crossAreas[0] = crossSectionSurfaceAreas / 4.0f;
 		crossAreas[1] = Vector3::zero();
-		Vector3int16 sign(velocity.x > 0, velocity.y > 0, velocity.z > 0);;
-		return Vector3( crossAreas[sign.x ^ index.x].x,
-					    crossAreas[sign.y ^ index.y].y,
-					    crossAreas[sign.z ^ index.z].z );
+		Vector3int16 sign(velocity.x > 0.0f, velocity.y > 0.0f, velocity.z > 0.0f);;
+		return Vector3(crossAreas[sign.x ^ index.x].x,
+			crossAreas[sign.y ^ index.y].y,
+			crossAreas[sign.z ^ index.z].z);
 	}
 
 	void BuoyancyBoxContact::getSurfaceAreaInDirection(const Vector3& relativeVelocityDir, float& crossArea, float& tangentArea)
@@ -558,7 +564,7 @@ namespace RBX
 	{
 		// 8 corners
 		const Extents extents = floaterPrim->getExtentsLocal();
-		for (unsigned int i = 0; i < 8; ++i)
+		for (size_t i = 0u; i < 8u; ++i)
 			connectors.push_back(new BuoyancyConnector(getBody(0), getBody(1), extents.getCorner(i) / 2.0f));
 	}
 
@@ -568,8 +574,8 @@ namespace RBX
 		// Each voxel computes its own submersion ratio.
 		RBXASSERT(connectors.size() == 8);
 
-		for (unsigned int i = 0; i < connectors.size(); ++i) {
-			float floatDistance, sinkDistnace;		
+		for (size_t i = 0u; i < connectors.size(); ++i) {
+			float floatDistance, sinkDistnace;
 			Extents primExtents = floaterPrim->getExtentsLocal();
 			Extents voxelExtents = Extents::vv(Vector3::zero(), primExtents.getCorner(i));
 			Extents voxelWorldExtents = voxelExtents.toWorldSpace(floaterPrim->getCoordinateFrame());
@@ -578,7 +584,7 @@ namespace RBX
 		}
 	}
 
-	BuoyancyBoxContact::BuoyancyBoxContact( Primitive* p0, Primitive* p1 ) : BuoyancyContact(p0, p1)
+	BuoyancyBoxContact::BuoyancyBoxContact(Primitive* p0, Primitive* p1) : BuoyancyContact(p0, p1)
 	{
 		crossSectionSurfaceAreas = tangentSurfaceAreas = Vector3::zero();
 	}
@@ -610,12 +616,12 @@ namespace RBX
 		// Just do a linear interpolation for vertical case
 		BuoyancyBoxContact::updateSubmergeRatio();
 
-		RBXASSERT(connectors.size() == 8);
+		RBXASSERT(connectors.size() == 8u);
 		// we average the 4 ratios, and then map them to [-1, 1] from [0, 1]
 		float startPointRatio = (connectors[0]->getSubMergeRatio() + connectors[1]->getSubMergeRatio() +
-								 connectors[2]->getSubMergeRatio() + connectors[3]->getSubMergeRatio()) * 0.5f - 1.0f;
+			connectors[2]->getSubMergeRatio() + connectors[3]->getSubMergeRatio()) * 0.5f - 1.0f;
 		float endPointRatio = (connectors[4]->getSubMergeRatio() + connectors[5]->getSubMergeRatio() +
-							   connectors[6]->getSubMergeRatio() + connectors[7]->getSubMergeRatio()) * 0.5f - 1.0f;
+			connectors[6]->getSubMergeRatio() + connectors[7]->getSubMergeRatio()) * 0.5f - 1.0f;
 
 		// the length of the cylinder runs along its local x-axis
 		static const Vector3 upVector(0.0f, 1.0f, 0.0f);
@@ -623,15 +629,15 @@ namespace RBX
 
 		// we calculate the horizontal cylinder ratios here
 		static const float pi_inverse = 1.0f / 3.1415926535f;
-		startPointRatio = 0.5f + ( asinf(startPointRatio) + startPointRatio * sqrt(1.0f - startPointRatio*startPointRatio) ) * pi_inverse;
-		endPointRatio = 0.5f + ( asinf(endPointRatio) + endPointRatio * sqrt(1.0f - endPointRatio*endPointRatio) ) * pi_inverse;
+		startPointRatio = 0.5f + (asinf(startPointRatio) + startPointRatio * sqrt(1.0f - startPointRatio * startPointRatio)) * pi_inverse;
+		endPointRatio = 0.5f + (asinf(endPointRatio) + endPointRatio * sqrt(1.0f - endPointRatio * endPointRatio)) * pi_inverse;
 
 		// we use verticality to weight the average between the original submergeRatio and the horizontal-cylinder ratios
-		for (int i = 0; i < 4; i++)
-			connectors[i]->setSubMergeRatio( verticality * (connectors[i]->getSubMergeRatio()) + (1.0f - verticality) * (startPointRatio) );
+		for (size_t i = 0u; i < 4u; i++)
+			connectors[i]->setSubMergeRatio(verticality * (connectors[i]->getSubMergeRatio()) + (1.0f - verticality) * (startPointRatio));
 
-		for (int i = 4; i < 8; i++)
-			connectors[i]->setSubMergeRatio( verticality * (connectors[i]->getSubMergeRatio()) + (1.0f - verticality) * (endPointRatio) );
+		for (size_t i = 4u; i < 8u; i++)
+			connectors[i]->setSubMergeRatio(verticality * (connectors[i]->getSubMergeRatio()) + (1.0f - verticality) * (endPointRatio));
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////
@@ -644,11 +650,11 @@ namespace RBX
 		crossSectionSurfaceAreas.y = boxSize.x * boxSize.z;
 		crossSectionSurfaceAreas.z = boxSize.x * boxSize.y;
 
-		float slopingSurfaceArea = boxSize.x * sqrtf(boxSize.y*boxSize.y + boxSize.z*boxSize.z);
-		
+		float slopingSurfaceArea = boxSize.x * sqrtf(boxSize.y * boxSize.y + boxSize.z * boxSize.z);
+
 		tangentSurfaceAreas.x = crossSectionSurfaceAreas.y + crossSectionSurfaceAreas.z + slopingSurfaceArea;
-		tangentSurfaceAreas.y = 2.0f * ( crossSectionSurfaceAreas.x + crossSectionSurfaceAreas.z );
-		tangentSurfaceAreas.z = 2.0f * ( crossSectionSurfaceAreas.x + crossSectionSurfaceAreas.y );
+		tangentSurfaceAreas.y = 2.0f * (crossSectionSurfaceAreas.x + crossSectionSurfaceAreas.z);
+		tangentSurfaceAreas.z = 2.0f * (crossSectionSurfaceAreas.x + crossSectionSurfaceAreas.y);
 
 		fullSurfaceArea = 2.0f * crossSectionSurfaceAreas.x + tangentSurfaceAreas.x;
 	}
@@ -658,10 +664,10 @@ namespace RBX
 	{
 		BuoyancyBoxContact::updateSubmergeRatio();
 		// GetMass() still returns a mass as if it were a box, so voxel weights must sum to number of voxels (8 here)
-		static const float WedgeVoxelWeightArray[8] = {1.0f, 2.0f, 0.0f, 1.0f, 1.0f, 2.0f, 0.0f, 1.0f};
+		static const float WedgeVoxelWeightArray[8] = { 1.0f, 2.0f, 0.0f, 1.0f, 1.0f, 2.0f, 0.0f, 1.0f };
 		RBXASSERT(connectors.size() == 8);
-		for (unsigned int i = 0; i < connectors.size(); ++i)
-			connectors[i]->setSubMergeRatio( WedgeVoxelWeightArray[i] * connectors[i]->getSubMergeRatio() );
+		for (size_t i = 0u; i < connectors.size(); ++i)
+			connectors[i]->setSubMergeRatio(WedgeVoxelWeightArray[i] * connectors[i]->getSubMergeRatio());
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////
@@ -674,22 +680,22 @@ namespace RBX
 		crossSectionSurfaceAreas.y = boxSize.x * boxSize.z;
 		crossSectionSurfaceAreas.z = boxSize.x * boxSize.y / 2.0f;
 
-		tangentSurfaceAreas.x = 2.0f * ( crossSectionSurfaceAreas.y + crossSectionSurfaceAreas.z );
-		tangentSurfaceAreas.y = 2.0f * ( crossSectionSurfaceAreas.x + crossSectionSurfaceAreas.z );
-		tangentSurfaceAreas.z = 2.0f * ( crossSectionSurfaceAreas.x + crossSectionSurfaceAreas.y );
+		tangentSurfaceAreas.x = 2.0f * (crossSectionSurfaceAreas.y + crossSectionSurfaceAreas.z);
+		tangentSurfaceAreas.y = 2.0f * (crossSectionSurfaceAreas.x + crossSectionSurfaceAreas.z);
+		tangentSurfaceAreas.z = 2.0f * (crossSectionSurfaceAreas.x + crossSectionSurfaceAreas.y);
 
-		float slopingSurfaceArea1 = boxSize.x * sqrtf(boxSize.y*boxSize.y + boxSize.z*boxSize.z);
-		float slopingSurfaceArea2 = boxSize.z * sqrtf(boxSize.y*boxSize.y + boxSize.x*boxSize.x);
-		fullSurfaceArea = crossSectionSurfaceAreas.sum() +  slopingSurfaceArea1 + slopingSurfaceArea2;
+		float slopingSurfaceArea1 = boxSize.x * sqrtf(boxSize.y * boxSize.y + boxSize.z * boxSize.z);
+		float slopingSurfaceArea2 = boxSize.z * sqrtf(boxSize.y * boxSize.y + boxSize.x * boxSize.x);
+		fullSurfaceArea = crossSectionSurfaceAreas.sum() + slopingSurfaceArea1 + slopingSurfaceArea2;
 	}
 
 	void BuoyancyCornerWedgeContact::updateSubmergeRatio()
 	{
 		BuoyancyBoxContact::updateSubmergeRatio();
-		static const float CornerWedgeVoxelWeightArray[8] = {1.5f, 1.0f, 0.0f, 0.0f, 3.0f, 1.5f, 1.0f, 0.0f};
+		static const float CornerWedgeVoxelWeightArray[8] = { 1.5f, 1.0f, 0.0f, 0.0f, 3.0f, 1.5f, 1.0f, 0.0f };
 		RBXASSERT(connectors.size() == 8);
-		for (unsigned int i = 0; i < connectors.size(); ++i)
-			connectors[i]->setSubMergeRatio( CornerWedgeVoxelWeightArray[i] * connectors[i]->getSubMergeRatio() );
+		for (size_t i = 0u; i < connectors.size(); ++i)
+			connectors[i]->setSubMergeRatio(CornerWedgeVoxelWeightArray[i] * connectors[i]->getSubMergeRatio());
 	}
 
 }

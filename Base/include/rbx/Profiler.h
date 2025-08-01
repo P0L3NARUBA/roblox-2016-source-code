@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "RbxFormat.h" // for RBX_PRINTF_ATTR
 

@@ -21,6 +21,7 @@
 #include "G3D/g3dmath.h"
 #include "G3D/HashTrait.h"
 #include "G3D/Color1.h"
+#include "G3D/Vector3.h"
 #include <string>
 
 namespace G3D {
@@ -75,7 +76,7 @@ public:
     /**
      Initialize from an HTML-style color (e.g. 0xFF0000 == RED)
      */
-    static Color3 fromARGB(uint32);
+    static Color3 fromARGB(uint32_t);
 
     /** Returns one of the color wheel colors (e.g. RED, GREEN, CYAN).
         Does not include white, black, or gray. */
@@ -83,7 +84,7 @@ public:
 
     /** Generate colors according to the ANSI color set, mod 16.
      \sa pastelMap */
-    static Color3 ansiMap(uint32 i);
+    static Color3 ansiMap(uint32_t i);
 
     /**
        Generate colors using a hash such that adjacent values
@@ -95,7 +96,7 @@ public:
 
        \sa ansiMap
      */
-    static Color3 pastelMap(uint32 i);
+    static Color3 pastelMap(uint32_t i);
 
     /**
      * Channel value.
@@ -107,8 +108,8 @@ public:
     // WARNING.  These member functions rely on
     // (1) Color3 not having virtual functions
     // (2) the data packed in a 3*sizeof(float) memory block
-    const float& operator[] (int i) const;
-    float& operator[] (int i);
+    const float& operator[] (int32_t i) const;
+    float& operator[] (int32_t i);
 
     // assignment and comparison
     Color3& operator= (const Color3& rkVector);
@@ -270,13 +271,13 @@ inline Color3::Color3 (const Color3& rkVector) {
 }
 
 //----------------------------------------------------------------------------
-inline float& Color3::operator[] (int i) {
+inline float& Color3::operator[] (int32_t i) {
     return ((float*)this)[i];
 }
 
 //----------------------------------------------------------------------------
 
-inline const float& Color3::operator[] (int i) const {
+inline const float& Color3::operator[] (int32_t i) const {
     return ((float*)this)[i];
 }
 

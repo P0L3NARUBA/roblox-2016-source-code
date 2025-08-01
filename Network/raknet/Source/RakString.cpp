@@ -439,9 +439,9 @@ void RakString::SetChar( unsigned index, RakNet::RakString s )
 WCHAR * RakString::ToWideChar(void)
 {
 	//
-	// Special case of NULL or empty input string
+	// Special case of nullptr or empty input string
 	//
-	if ( (sharedString->c_str == NULL) || (*sharedString->c_str == '\0') )
+	if ( (sharedString->c_str == nullptr) || (*sharedString->c_str == '\0') )
 	{
 		// Return empty string
 		return L"";
@@ -456,7 +456,7 @@ WCHAR * RakString::ToWideChar(void)
 		sharedString->c_str,            // source UTF-8 string
 		GetLength()+1,                 // total length of source UTF-8 string,
 		// in CHAR's (= bytes), including end-of-string \0
-		NULL,                   // unused - no conversion done in this step
+		nullptr,                   // unused - no conversion done in this step
 		0                       // request size of destination buffer, in WCHAR's
 		);
 

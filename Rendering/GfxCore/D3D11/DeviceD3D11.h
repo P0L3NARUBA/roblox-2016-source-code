@@ -22,266 +22,259 @@ struct IDXGIAdapter;
 struct IDXGIDevice1;
 struct ID3D11DeviceChild;
 
-namespace RBX
-{
-namespace Graphics
-{
+namespace RBX {
+	namespace Graphics {
 
-class DeviceVRD3D11: public DeviceVR
-{
-public:
-	virtual void setup(Device* device) = 0;
-	virtual void submitFrame(DeviceContext* context) = 0;
+		class DeviceVRD3D11 : public DeviceVR {
+		public:
+			virtual void setup(Device* device) = 0;
+			virtual void submitFrame(DeviceContext* context) = 0;
 
-	static DeviceVRD3D11* createOculus(IDXGIAdapter** outAdapter);
-	static DeviceVRD3D11* createOpenVR(IDXGIAdapter** outAdapter);
-};
+			static DeviceVRD3D11* createOculus(IDXGIAdapter** outAdapter);
+			static DeviceVRD3D11* createOpenVR(IDXGIAdapter** outAdapter);
+		};
 
-class FramebufferD3D11;
-class ShaderProgramD3D11;
-class TextureD3D11;
-class VertexLayoutD3D11;
-class GeometryD3D11;
+		class FramebufferD3D11;
+		class ShaderProgramD3D11;
+		class TextureD3D11;
+		class VertexLayoutD3D11;
+		class GeometryD3D11;
 
-template<class Ty>
-inline void ReleaseCheck(Ty*& object)
-{
-    if (object)
-    {
-        ULONG refCnt = object->Release();
+		template<class Ty>
+		inline void ReleaseCheck(Ty*& object) {
+			if (object) {
+				ULONG refCnt = object->Release();
 #if !defined(RBX_PLATFORM_DURANGO) // on xbox, object->Release() always returns 1, just because the COM doc says Release() can return anything
-        RBXASSERT(refCnt == 0);
+				RBXASSERT(refCnt == 0);
 #endif
-        object = NULL;
-    }
-}
-
-class DeviceContextD3D11: public DeviceContext
-{
-public:
-	DeviceContextD3D11(Device* device, ID3D11DeviceContext* deviceContext11);
-    ~DeviceContextD3D11();
-
-    void defineGlobalConstants(size_t dataSize);
-    unsigned getGlobalDataSize() { return globalDataSize; }
-    void defineGlobalProcessingData(size_t dataSize);
-    void defineGlobalMaterialData(size_t dataSize);
-    void defineInstancedModelMatrixes(size_t dataSize, size_t elementSize);
-    void defineGlobalLightList(size_t dataSize, size_t elementSize);
-
-    void clearStates();
-
-    void invalidateCachedProgram();
-    void invalidateCachedVertexLayout();
-    void invalidateCachedGeometry();
-    void invalidateCachedTexture(Texture* texture);
-
-    virtual void updateGlobalConstants(const void* data, size_t dataSize);
-    virtual void updateGlobalProcessingData(const void* data, size_t dataSize);
-    virtual void updateGlobalMaterialData(const void* data, size_t dataSize);
-    virtual void updateInstancedModelMatrixes(const void* data, size_t dataSize);
-    virtual void updateGlobalLightList(const void* data, size_t dataSize);
-
-    virtual void setDefaultAnisotropy(unsigned int value);
-
-    virtual void bindFramebuffer(Framebuffer* buffer);
-    virtual void clearFramebuffer(unsigned int mask, const float color[4], float depth, unsigned int stencil);
-
-    virtual void copyFramebuffer(Framebuffer* buffer, Texture* texture);
-    virtual void resolveFramebuffer(Framebuffer* msaaBuffer, Framebuffer* buffer, unsigned int mask);
-    virtual void discardFramebuffer(Framebuffer* buffer, unsigned int mask);
-
-    virtual void bindProgram(ShaderProgram* program);
-    virtual void setWorldTransforms4x3(const float* data, size_t matrixCount);
-    virtual void setConstant(int handle, const float* data, size_t vectorCount);
-
-    virtual void bindTexture(unsigned int stage, Texture* texture, const SamplerState& state);
-
-	virtual void setRasterizerState(const RasterizerState& state);
-    virtual void setBlendState(const BlendState& state);
-    virtual void setDepthState(const DepthState& state);
-
-    virtual void drawImpl(Geometry* geometry, Geometry::Primitive primitive, unsigned int offset, unsigned int count, unsigned int indexRangeBegin, unsigned int indexRangeEnd);
-
-    void beginQuery(ID3D11Query* query);
-    void endQuery(ID3D11Query* query);
-    bool getQueryData(ID3D11Query* query, void* dataOut, size_t dataSize);
-
-    virtual void pushDebugMarkerGroup(const char* text);
-    virtual void popDebugMarkerGroup();
-    virtual void setDebugMarker(const char* text);
-
-    ID3D11DeviceContext* getContextDX11();
-
-protected:
-    struct TextureUnit
-	{
-        TextureD3D11* texture;
-        SamplerState samplerState;
-
-        TextureUnit()
-			: texture(NULL)
-			, samplerState(SamplerState::Filter_Point)
-		{
+				object = nullptr;
+			}
 		}
-	};
 
-    Device*                 device;
-	ID3D11Device*           device11;
-    ID3D11DeviceContext*    immediateContext11;
+		class DeviceContextD3D11 : public DeviceContext {
+		public:
+			DeviceContextD3D11(Device* device, ID3D11DeviceContext* deviceContext11);
+			~DeviceContextD3D11();
 
-    ID3D11Buffer* globalsConstantBuffer;
-    ID3D11Buffer* globalsProcessingDataBuffer;
-    ID3D11Buffer* globalsMaterialDataBuffer;
-    ID3D11Buffer* instancedModelMatrixesBuffer;
-    ID3D11Buffer* globalsLightListBuffer;
-    ID3D11ShaderResourceView* instancedModelMatrixesResource;
-    ID3D11ShaderResourceView* globalsLightListResource;
-    size_t globalDataSize;
-    size_t processingDataSize;
+			void defineGlobalConstants(size_t dataSize);
+			size_t getGlobalDataSize() const { return globalDataSize; }
+			void defineGlobalProcessingData(size_t dataSize);
+			size_t getProcessingDataSize() const { return processingDataSize; }
+			void defineGlobalMaterialData(size_t dataSize);
+			void defineInstancedModelMatrixes(size_t dataSize, size_t elementSize);
+			void defineGlobalLightList(size_t dataSize, size_t elementSize);
 
-    unsigned int defaultAnisotropy;
+			void clearStates();
 
-    Framebuffer* cachedFramebuffer;
-	ShaderProgramD3D11* cachedProgram;
-	VertexLayoutD3D11* cachedVertexLayout;
-    GeometryD3D11* cachedGeometry;
+			void invalidateCachedProgram();
+			void invalidateCachedVertexLayout();
+			void invalidateCachedGeometry();
+			void invalidateCachedTexture(Texture* texture);
 
-    TextureUnit cachedTextureUnits[16];
+			virtual void updateGlobalConstants(const void* data, size_t dataSize);
+			virtual void updateGlobalProcessingData(const void* data, size_t dataSize);
+			virtual void updateGlobalMaterialData(const void* data, size_t dataSize);
+			virtual void updateInstancedModelMatrixes(const void* data, size_t dataSize);
+			virtual void updateGlobalLightList(const void* data, size_t dataSize);
 
-    RasterizerState cachedRasterizerState;
-	BlendState cachedBlendState;
-    DepthState cachedDepthState;
+			virtual void setDefaultAnisotropy(uint32_t value);
 
-    typedef boost::unordered_map<RasterizerState, ID3D11RasterizerState*, StateHasher<RasterizerState>> RasterizerStateHash;
-    typedef boost::unordered_map<BlendState, ID3D11BlendState*, StateHasher<BlendState>> BlendStateHash;
-    typedef boost::unordered_map<DepthState, ID3D11DepthStencilState*, StateHasher<DepthState>> DepthStateHash;
-    typedef boost::unordered_map<SamplerState, ID3D11SamplerState*, StateHasher<SamplerState>> SamplerStateHash;
+			virtual void bindFramebuffer(Framebuffer* buffer);
+			virtual void clearFramebuffer(uint32_t mask, const float color[4], float depth, uint32_t stencil);
 
-    RasterizerStateHash rasterizerStateHash;
-    BlendStateHash blendStateHash;
-    DepthStateHash depthStateHash;
-    SamplerStateHash samplerStateHash;
+			virtual void copyFramebuffer(Framebuffer* buffer, Texture* texture);
+			virtual void resolveFramebuffer(Framebuffer* msaaBuffer, Framebuffer* buffer, uint32_t mask);
+			virtual void discardFramebuffer(Framebuffer* buffer, uint32_t mask);
 
-    template <class tHash, class tState>
-    void checkDuplicates(const tHash& hash, tState* state)
-    {
-        for (tHash::const_iterator it = hash.begin(); it != hash.end(); ++it)
-		{
-            RBXASSERT(state != it->second);
-		}
-    }
+			virtual void bindProgram(ShaderProgram* program);
+			//virtual void setWorldTransforms4x3(const float* data, size_t matrixCount);
+			//virtual void setConstant(int handle, const float* data, size_t vectorCount);
 
-    // functions
-    HMODULE d3d9;
-    int (WINAPI *pfn_D3DPERF_BeginEvent)( DWORD col, LPCWSTR wszName);
-    int (WINAPI *pfn_D3DPERF_EndEvent)();
-    void (WINAPI *pfn_D3DPERF_SetMarker)( DWORD col, LPCWSTR wszName ); 
-};
+			virtual void bindTexture(uint32_t stage, Texture* texture, const SamplerState& state);
 
-class DeviceD3D11: public Device
-{
-public:
+			virtual void setRasterizerState(const RasterizerState& state);
+			virtual void setBlendState(const BlendState& state);
+			virtual void setDepthState(const DepthState& state);
 
-    DeviceD3D11(void* windowHandle);
-    ~DeviceD3D11();
+			virtual void drawImpl(Geometry* geometry, Geometry::Primitive primitive, uint32_t offset, uint32_t count, uint32_t indexRangeBegin, uint32_t indexRangeEnd);
 
-    enum ShaderProfile
-    {
-        shaderProfile_DX11,
-        shaderProfile_DX11_level_9_3
-    };
+			void beginQuery(ID3D11Query* query);
+			void endQuery(ID3D11Query* query);
+			bool getQueryData(ID3D11Query* query, void* dataOut, size_t dataSize);
 
-    virtual bool validate();
+			virtual void pushDebugMarkerGroup(const char* text);
+			virtual void popDebugMarkerGroup();
+			virtual void setDebugMarker(const char* text);
 
-    virtual DeviceContext* beginFrame();
-    virtual void endFrame();
+			ID3D11DeviceContext* getContextDX11();
 
-	virtual Framebuffer* getMainFramebuffer();
+		protected:
+			struct TextureUnit {
+				TextureD3D11* texture;
+				SamplerState samplerState;
 
-	virtual DeviceVR* getVR();
-	virtual void setVR(bool enabled);
+				TextureUnit()
+					: texture(nullptr)
+					, samplerState(SamplerState::Filter_Point)
+				{
+				}
+			};
 
-    virtual void defineGlobalConstants(size_t dataSize);
-    virtual void defineGlobalProcessingData(size_t dataSize);
-    virtual void defineGlobalMaterialData(size_t dataSize);
-    virtual void defineInstancedModelMatrixes(size_t dataSize, size_t elementSize);
-    virtual void defineGlobalLightList(size_t dataSize, size_t elementSize);
+			Device* device;
+			ID3D11Device* device11;
+			ID3D11DeviceContext* immediateContext11;
 
-    virtual std::string getAPIName() { return "DirectX 11"; }
-    virtual std::string getFeatureLevel(){ return "D3D11"; }
-    virtual std::string getShadingLanguage(){ return "hlsl11"; }
-    virtual std::string createShaderSource(const std::string& path, const std::string& defines, boost::function<std::string (const std::string&)> fileCallback);
-    virtual std::vector<char> createShaderBytecode(const std::string& source, const std::string& target, const std::string& entrypoint);
+			/* Constant Buffers */
+			ID3D11Buffer* globalsConstantBuffer;
+			ID3D11Buffer* globalsProcessingDataBuffer;
+			ID3D11Buffer* globalsMaterialDataBuffer;
+			size_t globalDataSize;
+			size_t processingDataSize;
+			size_t materialDataSize;
 
-    virtual shared_ptr<VertexShader> createVertexShader(const std::vector<char>& bytecode);
-    virtual shared_ptr<FragmentShader> createFragmentShader(const std::vector<char>& bytecode);
-    virtual shared_ptr<ComputeShader> createComputeShader(const std::vector<char>& bytecode);
-    virtual shared_ptr<GeometryShader> createGeometryShader(const std::vector<char>& bytecode);
-    virtual shared_ptr<ShaderProgram> createShaderProgram(const shared_ptr<VertexShader>& vertexShader, const shared_ptr<GeometryShader>& geometryShader, const shared_ptr<FragmentShader>& fragmentShader);
-    virtual shared_ptr<ShaderProgram> createShaderProgram(const shared_ptr<VertexShader>& vertexShader, const shared_ptr<FragmentShader>& fragmentShader);
-    virtual shared_ptr<ShaderProgram> createShaderProgram(const shared_ptr<ComputeShader>& computeShader);
-    virtual shared_ptr<ShaderProgram> createShaderProgramFFP();
+			/* Structured Buffers */
+			ID3D11Buffer* instancedModelMatrixesBuffer;
+			ID3D11Buffer* globalsLightListBuffer;
+			ID3D11ShaderResourceView* instancedModelMatrixesResource;
+			ID3D11ShaderResourceView* globalsLightListResource;
 
-    virtual shared_ptr<VertexBuffer> createVertexBuffer(size_t elementSize, size_t elementCount, GeometryBuffer::Usage usage);
-    virtual shared_ptr<IndexBuffer> createIndexBuffer(size_t elementSize, size_t elementCount, GeometryBuffer::Usage usage);
-    virtual shared_ptr<VertexLayout> createVertexLayout(const std::vector<VertexLayout::Element>& elements);
+			uint32_t defaultAnisotropy;
 
-	virtual shared_ptr<Texture> createTexture(Texture::Type type, Texture::Format format, unsigned int width, unsigned int height, unsigned int depth, unsigned int mipLevels, Texture::Usage usage);
+			Framebuffer* cachedFramebuffer;
+			ShaderProgramD3D11* cachedProgram;
+			VertexLayoutD3D11* cachedVertexLayout;
+			GeometryD3D11* cachedGeometry;
 
-	virtual shared_ptr<Renderbuffer> createRenderbuffer(Texture::Format format, unsigned int width, unsigned int height, unsigned int samples);
+			TextureUnit cachedTextureUnits[32];
 
-    virtual shared_ptr<Geometry> createGeometryImpl(const shared_ptr<VertexLayout>& layout, const std::vector<shared_ptr<VertexBuffer> >& vertexBuffers, const shared_ptr<IndexBuffer>& indexBuffer, unsigned int baseVertexIndex);
+			RasterizerState cachedRasterizerState;
+			BlendState cachedBlendState;
+			DepthState cachedDepthState;
 
-    virtual shared_ptr<Framebuffer> createFramebufferImpl(const std::vector<shared_ptr<Renderbuffer> >& color, const shared_ptr<Renderbuffer>& depth);
+			typedef boost::unordered_map<RasterizerState, ID3D11RasterizerState*, StateHasher<RasterizerState>> RasterizerStateHash;
+			typedef boost::unordered_map<BlendState, ID3D11BlendState*, StateHasher<BlendState>> BlendStateHash;
+			typedef boost::unordered_map<DepthState, ID3D11DepthStencilState*, StateHasher<DepthState>> DepthStateHash;
+			typedef boost::unordered_map<SamplerState, ID3D11SamplerState*, StateHasher<SamplerState>> SamplerStateHash;
 
-	virtual const DeviceCaps& getCaps() const { return caps; }
+			RasterizerStateHash rasterizerStateHash;
+			BlendStateHash blendStateHash;
+			DepthStateHash depthStateHash;
+			SamplerStateHash samplerStateHash;
 
-    virtual DeviceStats getStatistics() const;
+			template <class tHash, class tState>
+			void checkDuplicates(const tHash& hash, tState* state) {
+				for (tHash::const_iterator it = hash.begin(); it != hash.end(); ++it) {
+					RBXASSERT(state != it->second);
+				}
+			}
+
+			// functions
+			HMODULE d3d9;
+			int (WINAPI* pfn_D3DPERF_BeginEvent)(DWORD col, LPCWSTR wszName);
+			int (WINAPI* pfn_D3DPERF_EndEvent)();
+			void (WINAPI* pfn_D3DPERF_SetMarker)(DWORD col, LPCWSTR wszName);
+		};
+
+		class DeviceD3D11 : public Device {
+		public:
+
+			DeviceD3D11(void* windowHandle);
+			~DeviceD3D11();
+
+			enum ShaderProfile {
+				shaderProfile_DX11
+			};
+
+			virtual bool validate();
+
+			virtual DeviceContext* beginFrame();
+			virtual void endFrame();
+
+			virtual Framebuffer* getMainFramebuffer();
+
+			virtual DeviceVR* getVR();
+			virtual void setVR(bool enabled);
+
+			virtual void defineGlobalConstants(size_t dataSize);
+			virtual void defineGlobalProcessingData(size_t dataSize);
+			virtual void defineGlobalMaterialData(size_t dataSize);
+			virtual void defineInstancedModelMatrixes(size_t dataSize, size_t elementSize);
+			virtual void defineGlobalLightList(size_t dataSize, size_t elementSize);
+
+			virtual std::string getAPIName() { return "DirectX 11"; }
+			virtual std::string getFeatureLevel() { return "D3D11"; }
+			virtual std::string getShadingLanguage() { return "hlsl11"; }
+			virtual std::string createShaderSource(const std::string& path, const std::string& defines, boost::function<std::string(const std::string&)> fileCallback);
+			virtual std::vector<char> createShaderBytecode(const std::string& source, const std::string& target, const std::string& entrypoint);
+
+			virtual shared_ptr<VertexShader> createVertexShader(const std::vector<char>& bytecode);
+			virtual shared_ptr<FragmentShader> createFragmentShader(const std::vector<char>& bytecode);
+			virtual shared_ptr<ComputeShader> createComputeShader(const std::vector<char>& bytecode);
+			virtual shared_ptr<GeometryShader> createGeometryShader(const std::vector<char>& bytecode);
+			virtual shared_ptr<ShaderProgram> createShaderProgram(const shared_ptr<VertexShader>& vertexShader, const shared_ptr<GeometryShader>& geometryShader, const shared_ptr<FragmentShader>& fragmentShader);
+			virtual shared_ptr<ShaderProgram> createShaderProgram(const shared_ptr<VertexShader>& vertexShader, const shared_ptr<FragmentShader>& fragmentShader);
+			virtual shared_ptr<ShaderProgram> createShaderProgram(const shared_ptr<ComputeShader>& computeShader);
+			virtual shared_ptr<ShaderProgram> createShaderProgramFFP();
+
+			virtual shared_ptr<VertexBuffer> createVertexBuffer(size_t elementSize, size_t elementCount, GeometryBuffer::Usage usage);
+			virtual shared_ptr<IndexBuffer> createIndexBuffer(size_t elementSize, size_t elementCount, GeometryBuffer::Usage usage);
+			virtual shared_ptr<VertexLayout> createVertexLayout(const std::vector<VertexLayout::Element>& elements);
+
+			virtual shared_ptr<Texture> createTexture(Texture::Type type, Texture::Format format, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevels, Texture::Usage usage);
+
+			virtual shared_ptr<Renderbuffer> createRenderbuffer(Texture::Format format, uint32_t width, uint32_t height, uint32_t samples);
+
+			virtual shared_ptr<Geometry> createGeometryImpl(const shared_ptr<VertexLayout>& layout, const std::vector<shared_ptr<VertexBuffer> >& vertexBuffers, const shared_ptr<IndexBuffer>& indexBuffer, unsigned int baseVertexIndex);
+
+			virtual shared_ptr<Framebuffer> createFramebufferImpl(const std::vector<shared_ptr<Renderbuffer> >& color, const shared_ptr<Renderbuffer>& depth);
+
+			virtual const DeviceCaps& getCaps() const { return caps; }
+
+			virtual DeviceStats getStatistics() const;
 
 #ifdef RBX_PLATFORM_DURANGO
-    virtual void suspend();
-    virtual void resume();
+			virtual void suspend();
+			virtual void resume();
 #endif
 
-    ID3D11Device* getDevice11() { return device11; }
-    ShaderProfile getShaderProfile() const { return shaderProfile; }
+			ID3D11Device* getDevice11() { return device11; }
+			ShaderProfile getShaderProfile() const { return shaderProfile; }
 
-    ID3D11DeviceContext* getImmediateContext11() { return immediateContext->getContextDX11(); }
-    DeviceContextD3D11* getImmediateContextD3D11() { return immediateContext.get(); }
+			ID3D11DeviceContext* getImmediateContext11() { return immediateContext->getContextDX11(); }
+			DeviceContextD3D11* getImmediateContextD3D11() { return immediateContext.get(); }
 
-	void* getWindowHandle() const { return windowHandle; }
+			void* getWindowHandle() const { return windowHandle; }
 
-private:
-    void* windowHandle;
-    DeviceCaps caps;
+		private:
+			void* windowHandle;
+			DeviceCaps caps;
 
-    ID3D11Device* device11;
-    IDXGISwapChain* swapChain11;
-    scoped_ptr<DeviceContextD3D11> immediateContext;
+			ID3D11Device* device11;
+			IDXGISwapChain* swapChain11;
+			scoped_ptr<DeviceContextD3D11> immediateContext;
 
-    scoped_ptr<FramebufferD3D11> mainFramebuffer;
+			scoped_ptr<FramebufferD3D11> mainFramebuffer;
 
-    void createMainFramebuffer(unsigned width, unsigned height);
+			void createMainFramebuffer(uint32_t width, uint32_t height);
 
-    ShaderProfile shaderProfile;
+			ShaderProfile shaderProfile;
 
-    float gpuTime;
+			float gpuTime;
 
-    ID3D11Query* beginQuery;
-    ID3D11Query* endQuery;
-    ID3D11Query* disjointQuery;
-    bool frameTimeQueryIssued;
+			ID3D11Query* beginQuery;
+			ID3D11Query* endQuery;
+			ID3D11Query* disjointQuery;
+			bool frameTimeQueryIssued;
 
-	scoped_ptr<DeviceVRD3D11> vr;
-	bool vrEnabled;
+			scoped_ptr<DeviceVRD3D11> vr;
+			bool vrEnabled;
 
-    // these functions are platform-dependent
-    void createDevice();
-    void present();
-    void resizeSwapchain();
-    std::pair<unsigned int, unsigned int> getFramebufferSize();
-};
+			// these functions are platform-dependent
+			void createDevice();
+			void present();
+			void resizeSwapchain();
+			std::pair<uint32_t, uint32_t> getFramebufferSize();
+		};
 
-}
+	}
 }

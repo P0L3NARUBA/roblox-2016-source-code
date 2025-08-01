@@ -145,7 +145,7 @@ class PlatformImpl : public ActionStation<Base>
 		void findAndDestroyPlatformMotor6DInternal()
 		{
 			while (Motor6D* motor6D = findPlatformMotor6D()) {
-				motor6D->setParent(NULL);
+				motor6D->setParent(nullptr);
 			}
 		}
 
@@ -174,7 +174,7 @@ class PlatformImpl : public ActionStation<Base>
 
 		void destroyOtherMotor6D(shared_ptr<Instance> child, Motor6D* childMotor6D) {
 			if ((child.get() != childMotor6D) && isChildPlatformMotor6D(child.get())) {
-				child->setParent(NULL);
+				child->setParent(nullptr);
 			}
 		}
 

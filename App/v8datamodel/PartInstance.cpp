@@ -133,7 +133,7 @@ namespace RBX {
 	static const PropDescriptor<PartInstance, Vector3> prop_RotationUi("Rotation", category_Data, &PartInstance::getRotationUi, &PartInstance::setRotationUi, PropertyDescriptor::UI);
 	const PropDescriptor<PartInstance, Vector3> PartInstance::prop_Velocity("Velocity", category_Data, &PartInstance::getLinearVelocity, &PartInstance::setLinearVelocity);
 	const PropDescriptor<PartInstance, Vector3> PartInstance::prop_RotVelocity("RotVelocity", category_Data, &PartInstance::getRotationalVelocity, &PartInstance::setRotationalVelocityRoot);
-	static const PropDescriptor<PartInstance, float> prop_Density("SpecificGravity", category_Data, &PartInstance::getSpecificGravity, NULL, Reflection::PropertyDescriptor::UI);
+	static const PropDescriptor<PartInstance, float> prop_Density("SpecificGravity", category_Data, &PartInstance::getSpecificGravity, nullptr, Reflection::PropertyDescriptor::UI);
 
 	//////////////////////////
 
@@ -244,7 +244,7 @@ namespace RBX {
 	static BoundFuncDesc<PartInstance, shared_ptr<const Reflection::Tuple>()> desc_canSetNetworkOwnershipScript(&PartInstance::canSetNetworkOwnershipScript, "CanSetNetworkOwnership", Security::None);
 
 	// shape, size, form factor - both UI and streaming
-	const PropDescriptor<PartInstance, RBX::Vector3> prop_Siz("siz", category_Part, NULL, &PartInstance::setPartSizeXml, PropertyDescriptor::LEGACY); // Used to prepare for TA14264
+	const PropDescriptor<PartInstance, RBX::Vector3> prop_Siz("siz", category_Part, nullptr, &PartInstance::setPartSizeXml, PropertyDescriptor::LEGACY); // Used to prepare for TA14264
 	const PropDescriptor<PartInstance, RBX::Vector3> PartInstance::prop_Size("size", category_Part, &PartInstance::getPartSizeXml, &PartInstance::setPartSizeXml, PropertyDescriptor::STREAMING);
 	static const PropDescriptor<PartInstance, RBX::Vector3> prop_SizeUi("Size", category_Part, &PartInstance::getPartSizeUi, &PartInstance::setPartSizeUi, PropertyDescriptor::UI);
 
@@ -270,8 +270,8 @@ namespace RBX {
 	const PropDescriptor<PartInstance, bool> PartInstance::prop_Anchored("Anchored", category_Behavior, &PartInstance::getAnchored, &PartInstance::setAnchored);
 	const PropDescriptor<PartInstance, bool> PartInstance::prop_CanCollide("CanCollide", category_Behavior, &PartInstance::getCanCollide, &PartInstance::setCanCollide);
 
-	const PropDescriptor<PartInstance, Faces> prop_ResizeableFaces("ResizeableFaces", category_Behavior, &PartInstance::getResizeHandleMask, NULL, PropertyDescriptor::UI);
-	const PropDescriptor<PartInstance, int>  prop_ResizeIncrement("ResizeIncrement", category_Behavior, &PartInstance::getResizeIncrement, NULL, PropertyDescriptor::UI);
+	const PropDescriptor<PartInstance, Faces> prop_ResizeableFaces("ResizeableFaces", category_Behavior, &PartInstance::getResizeHandleMask, nullptr, PropertyDescriptor::UI);
+	const PropDescriptor<PartInstance, int>  prop_ResizeIncrement("ResizeIncrement", category_Behavior, &PartInstance::getResizeIncrement, nullptr, PropertyDescriptor::UI);
 	const BoundFuncDesc<PartInstance, bool(NormalId, int)> desc_resize(&PartInstance::resize, "Resize", "normalId", "deltaAmount", Security::None);
 	const BoundFuncDesc<PartInstance, bool(NormalId, int)> desc_dep_resize(&PartInstance::resize, "resize", "normalId", "deltaAmount", Security::None, Descriptor::Attributes::deprecated(desc_resize));
 
@@ -324,7 +324,7 @@ namespace RBX {
 
 	// Temporary property for handling concurrent drags
 	const PropDescriptor<PartInstance, bool> prop_Dragging("DraggingV1", category_Behavior, &PartInstance::getDragging, &PartInstance::setDragging, PropertyDescriptor::REPLICATE_ONLY);
-	const PropDescriptor<PartInstance, float> PartInstance::prop_ReceiveAge("ReceiveAge", category_Part, &PartInstance::getReceiveInterval, NULL, PropertyDescriptor::HIDDEN_SCRIPTING);
+	const PropDescriptor<PartInstance, float> PartInstance::prop_ReceiveAge("ReceiveAge", category_Part, &PartInstance::getReceiveInterval, nullptr, PropertyDescriptor::HIDDEN_SCRIPTING);
 
 	Extents PartInstance::computeExtentsWorld() const
 	{
@@ -333,7 +333,7 @@ namespace RBX {
 
 	void PartInstance::addTouchTransmitter()
 	{
-		RBXASSERT(!onDemandRead() || onDemandRead()->touchTransmitter == NULL);
+		RBXASSERT(!onDemandRead() || onDemandRead()->touchTransmitter == nullptr);
 		shared_ptr<TouchTransmitter> tt = Creatable<Instance>::create<TouchTransmitter>();
 		tt->setParent(this);
 
@@ -343,10 +343,10 @@ namespace RBX {
 
 	void PartInstance::removeTouchTransmitter()
 	{
-		if (!onDemandRead() || onDemandRead()->touchTransmitter == NULL)
+		if (!onDemandRead() || onDemandRead()->touchTransmitter == nullptr)
 			return;
-		onDemandWrite()->touchTransmitter->setParent(NULL);
-		onDemandWrite()->touchTransmitter = 0;
+		onDemandWrite()->touchTransmitter->setParent(nullptr);
+		onDemandWrite()->touchTransmitter = nullptr;
 	}
 
 	void PartInstance::incrementTouchedSlotCount()
@@ -372,11 +372,11 @@ namespace RBX {
 	{
 		Super::onChildRemoved(child);
 		if (onDemandRead() && child == onDemandRead()->touchTransmitter)
-			onDemandWrite()->touchTransmitter = NULL;
+			onDemandWrite()->touchTransmitter = nullptr;
 	}
 
 	PartInstance::OnDemandPartInstance::OnDemandPartInstance(PartInstance* owner)
-		: touchTransmitter(NULL)
+		: touchTransmitter(nullptr)
 		, isCurrentlyStreamRemovingPart(false)
 	{
 		touchedSlotCount = 0;
@@ -393,35 +393,35 @@ namespace RBX {
 		case PLASTIC_MATERIAL:
 		case SMOOTH_PLASTIC_MATERIAL:
 		case NEON_MATERIAL:
-			return 0.7;
-		case WOOD_MATERIAL: return 0.350;				// Pine
-		case WOODPLANKS_MATERIAL: return 0.350;
-		case MARBLE_MATERIAL: return 2.563;
-		case SLATE_MATERIAL: return 2.691;
-		case CONCRETE_MATERIAL: return 2.403;
-		case GRANITE_MATERIAL: return 2.691;
-		case BRICK_MATERIAL: return 1.922;
-		case PEBBLE_MATERIAL: return 2.403;
-		case COBBLESTONE_MATERIAL: return 2.691;
-		case RUST_MATERIAL: return 7.850;
-		case DIAMONDPLATE_MATERIAL: return 7.850;
-		case FOIL_MATERIAL: return 7.700;
-		case METAL_MATERIAL: return 7.850;
-		case GRASS_MATERIAL: return 0.9;
-		case SAND_MATERIAL: return 1.602;
-		case FABRIC_MATERIAL: return 0.7;
-		case ICE_MATERIAL: return 0.919;
-		case AIR_MATERIAL: return 0;
-		case WATER_MATERIAL: return 1;
-		case ROCK_MATERIAL: return 2.691;
-		case GLACIER_MATERIAL: return 0.919;
-		case SNOW_MATERIAL: return 0.9;
-		case SANDSTONE_MATERIAL: return 2.691;
-		case MUD_MATERIAL: return 0.9;
-		case BASALT_MATERIAL: return 2.691;
-		case GROUND_MATERIAL: return 0.9;
-		case CRACKED_LAVA_MATERIAL: return 2.691;
-		default: RBXASSERT(false); return 1;
+			return 0.7f;
+		case WOOD_MATERIAL: return 0.35f;				// Pine
+		case WOODPLANKS_MATERIAL: return 0.35f;
+		case MARBLE_MATERIAL: return 2.563f;
+		case SLATE_MATERIAL: return 2.691f;
+		case CONCRETE_MATERIAL: return 2.403f;
+		case GRANITE_MATERIAL: return 2.691f;
+		case BRICK_MATERIAL: return 1.922f;
+		case PEBBLE_MATERIAL: return 2.403f;
+		case COBBLESTONE_MATERIAL: return 2.691f;
+		case RUST_MATERIAL: return 7.850f;
+		case DIAMONDPLATE_MATERIAL: return 7.850f;
+		case FOIL_MATERIAL: return 7.700f;
+		case METAL_MATERIAL: return 7.850f;
+		case GRASS_MATERIAL: return 0.9f;
+		case SAND_MATERIAL: return 1.602f;
+		case FABRIC_MATERIAL: return 0.7f;
+		case ICE_MATERIAL: return 0.919f;
+		case AIR_MATERIAL: return 0.0f;
+		case WATER_MATERIAL: return 1.0f;
+		case ROCK_MATERIAL: return 2.691f;
+		case GLACIER_MATERIAL: return 0.919f;
+		case SNOW_MATERIAL: return 0.9f;
+		case SANDSTONE_MATERIAL: return 2.691f;
+		case MUD_MATERIAL: return 0.9f;
+		case BASALT_MATERIAL: return 2.691f;
+		case GROUND_MATERIAL: return 0.9f;
+		case CRACKED_LAVA_MATERIAL: return 2.691f;
+		default: RBXASSERT(false); return 1.0f;
 		}
 	}
 
@@ -429,15 +429,15 @@ namespace RBX {
 
 	PartInstance::PartInstance(const Vector3& initialSize)
 		: DescribedNonCreatable<PartInstance, PVInstance, sPart>(partName)
-		, raknetTime(0)
+		, raknetTime(0u)
 		, primitive(new Primitive(Geometry::GEOMETRY_BLOCK))
-		, gfxPart(NULL)
-		, cookie(0)
+		, gfxPart(nullptr)
+		, cookie(0u)
 		, brickColor(BrickColor::defaultColor())
 		, color(BrickColor::defaultColor().color3())
 		, transparency(0.0f)
 		, reflectance(0.0f)
-		, localTransparencyModifier(0.0)
+		, localTransparencyModifier(0.0f)
 		, locked(false)
 		, cachedNetworkOwnerIsSomeoneElse(false)
 		, formFactor(BRICK)
@@ -451,7 +451,7 @@ namespace RBX {
 		primitive->setFriction(defaultFriction());
 		primitive->setElasticity(defaultElasticity());
 		primitive->setSpecificGravity(toSpecificGravity(getRenderMaterial()));
-		primitive->setAnchoredProperty(false);
+		primitive->setAnchoredProperty(true);
 		primitive->setPreventCollide(false);
 		primitive->setOwner(this);
 
@@ -463,8 +463,8 @@ namespace RBX {
 		FASTLOG2(FLog::PartInstanceLifetime, "PartInstance destroyed: %p, primitive: %p", this, getPartPrimitive());
 
 		RBXASSERT(getPartPrimitive());
-		RBXASSERT(getPartPrimitive()->getClump() == NULL);
-		RBXASSERT(getPartPrimitive()->getWorld() == NULL);
+		RBXASSERT(getPartPrimitive()->getClump() == nullptr);
+		RBXASSERT(getPartPrimitive()->getWorld() == nullptr);
 	}
 
 	OnDemandInstance* PartInstance::initOnDemand()
@@ -611,7 +611,7 @@ namespace RBX {
 			parts.push_back(shared_from(part));
 		}
 
-		for (size_t i = 0; i < instance->numChildren(); i++) {
+		for (size_t i = 0u; i < instance->numChildren(); i++) {
 			findParts(instance->getChild(i), parts);
 		}
 	}
@@ -643,7 +643,7 @@ namespace RBX {
 			}
 		}
 
-		for (size_t i = 0; i < instance->numChildren(); i++) {
+		for (size_t i = 0u; i < instance->numChildren(); i++) {
 			convertToNewPhysicalPropRecursive(instance->getChild(i));
 		}
 	}
@@ -659,7 +659,7 @@ namespace RBX {
 			}
 		}
 
-		for (size_t i = 0; i < instance->numChildren(); i++)
+		for (size_t i = 0u; i < instance->numChildren(); i++)
 		{
 			if (instanceOrChildrenContainsNewCustomPhysics(instance->getChild(i)))
 				return true;
@@ -727,13 +727,13 @@ namespace RBX {
 	void PartInstance::onCameraNear(float distance)
 	{
 		if (distance < cameraTransparentDistance()) {
-			setLocalTransparencyModifier(1.0);
+			setLocalTransparencyModifier(1.0f);
 		}
 		else if (distance < cameraTranslucentDistance()) {
-			setLocalTransparencyModifier(0.5);
+			setLocalTransparencyModifier(0.5f);
 		}
 		else {
-			setLocalTransparencyModifier(0.0);
+			setLocalTransparencyModifier(0.0f);
 		}
 	}
 
@@ -791,7 +791,7 @@ namespace RBX {
 
 	bool PartInstance::askSetParent(const Instance* instance) const
 	{
-		return Instance::fastDynamicCast<ModelInstance>(instance) != NULL;
+		return Instance::fastDynamicCast<ModelInstance>(instance) != nullptr;
 	}
 
 
@@ -805,7 +805,7 @@ namespace RBX {
 	{
 		return p
 			? rbx_static_cast<PartInstance*>(p->getOwner())
-			: NULL;
+			: nullptr;
 	}
 
 
@@ -813,14 +813,14 @@ namespace RBX {
 	{
 		Primitive* p = this->getPartPrimitive();
 		RBXASSERT(p);
-		return p ? p->getClump() : NULL;
+		return p ? p->getClump() : nullptr;
 	}
 
 	const Clump* PartInstance::getConstClump() const
 	{
 		const Primitive* p = this->getConstPartPrimitive();
 		RBXASSERT(p);
-		return p ? p->getConstClump() : NULL;
+		return p ? p->getConstClump() : nullptr;
 	}
 
 
@@ -863,7 +863,7 @@ namespace RBX {
 
 	bool PartInstance::computeSurfacesNeedAdorn() const
 	{
-		for (int i = 0; i < 6; ++i) {
+		for (size_t i = 0u; i < 6u; ++i) {
 			SurfaceType type = getSurfaceType(NormalId(i));
 			if (type == ROTATE
 				|| type == ROTATE_P
@@ -878,7 +878,7 @@ namespace RBX {
 	Part PartInstance::getPart()
 	{
 		Vector6<SurfaceType> surf6;
-		for (int i = 0; i < 6; i++) {
+		for (size_t i = 0u; i < 6u; i++) {
 			surf6[i] = getSurfaceType(NormalId(i));
 		}
 
@@ -898,24 +898,24 @@ namespace RBX {
 	void PartInstance::updatePrimitiveState()
 	{
 		Workspace* workspace = Workspace::getWorkspaceIfInWorkspace(this);
-		World* world = workspace ? workspace->getWorld() : NULL;
+		World* world = workspace ? workspace->getWorld() : nullptr;
 		World* oldWorld = getPartPrimitive()->getWorld();
 
 		if (world != oldWorld)
 		{
-			RBXASSERT(oldWorld || (getPartPrimitive()->getClump() == NULL));
+			RBXASSERT(oldWorld || (getPartPrimitive()->getClump() == nullptr));
 
 			if (oldWorld)
 			{
 				Primitive* prim = getPartPrimitive();
 				// signal stop touching
-				for (int i = 0; i < prim->getNumContacts(); i++)
+				for (size_t i = 0u; i < prim->getNumContacts(); i++)
 				{
 					if (prim->getContact(i)->isInContact())
 						reportUntouch(shared_from(fromPrimitive(prim->getContactOther(i))));
 				}
 
-				setMovingManager(NULL);
+				setMovingManager(nullptr);
 				oldWorld->removePrimitive(prim, getIsCurrentlyStreamRemovingPart());
 			}
 
@@ -976,12 +976,12 @@ namespace RBX {
 		if (prim->getNumJoints() > 0 && prim->findWorld() != Workspace::getWorldIfInWorkspace(this))
 		{
 			std::vector<Joint*> processJoints;
-			for (int i = 0; i < prim->getNumJoints(); i++)
+			for (size_t i = 0u; i < prim->getNumJoints(); i++)
 			{
 				if (prim->getJoint(i)->getJointOwner())
 					processJoints.push_back(prim->getJoint(i));
 			}
-			for (unsigned int i = 0; i < processJoints.size(); i++)
+			for (size_t i = 0u; i < processJoints.size(); i++)
 			{
 				JointInstance* jointInstance = static_cast<JointInstance*>(processJoints[i]->getJointOwner());
 				jointInstance->onCoParentChanged();
@@ -1020,7 +1020,7 @@ namespace RBX {
 		if (getTransparencyUi() >= 1.0f)
 			return;
 
-		if (getPartPrimitive()->getWorld() == NULL)
+		if (getPartPrimitive()->getWorld() == nullptr)
 			return;
 
 		if (computeSurfacesNeedAdorn()) {
@@ -1079,7 +1079,7 @@ namespace RBX {
 		{
 			Body* body = getPartPrimitive()->getBody();
 			Workspace* workspace = Workspace::getWorkspaceIfInWorkspace(this);
-			World* world = workspace ? workspace->getWorld() : NULL;
+			World* world = workspace ? workspace->getWorld() : nullptr;
 
 			if (body && world)
 			{
@@ -1134,7 +1134,7 @@ namespace RBX {
 				if (Mechanism::isMechanismRootPrimitive(getPartPrimitive()))
 				{
 					adorn->setObjectToWorldMatrix(getCoordinateFrame().translation);
-					Vector3 boxSize(Vector3::one() * 0.40);
+					Vector3 boxSize(Vector3::one() * 0.4f);
 					bool primitiveAnchoredInEngine = Assembly::computeIsGroundingPrimitive(getPartPrimitive());
 
 					adorn->box(AABox(-boxSize, boxSize),
@@ -1144,7 +1144,7 @@ namespace RBX {
 				else if (Mechanism::getRootMovingPrimitive(getPartPrimitive()) == getPartPrimitive())
 				{
 					adorn->setObjectToWorldMatrix(getCoordinateFrame().translation);
-					Vector3 boxSize(Vector3::one() * 0.40);
+					Vector3 boxSize(Vector3::one() * 0.4f);
 					adorn->box(AABox(-boxSize, boxSize),
 						(Color3::blue())
 					);
@@ -1152,7 +1152,7 @@ namespace RBX {
 				else if (Assembly::isAssemblyRootPrimitive(getPartPrimitive()))
 				{
 					adorn->setObjectToWorldMatrix(getCoordinateFrame().translation);
-					adorn->sphere(Sphere(Vector3::zero(), 0.4), Color3::yellow() * .8f);
+					adorn->sphere(Sphere(Vector3::zero(), 0.4f), Color3::yellow() * 0.8f);
 				}
 				else if (Clump::isClumpRootPrimitive(getPartPrimitive()))
 				{
@@ -1162,9 +1162,9 @@ namespace RBX {
 			}
 		}
 		if (PartInstance::showContactPoints) {
-			for (int i = 0; i < getPartPrimitive()->getNumContacts(); ++i) {
+			for (size_t i = 0u; i < getPartPrimitive()->getNumContacts(); ++i) {
 				Contact* c = getPartPrimitive()->getContact(i);
-				for (int j = 0; j < c->numConnectors(); ++j) {
+				for (size_t j = 0u; j < c->numConnectors(); ++j) {
 					Vector3 loc, normal;
 					float length;
 					ContactConnector* connector = c->getConnector(j);
@@ -1205,12 +1205,12 @@ namespace RBX {
 			adorn->ray(RbxRay::fromOriginAndDirection(Vector3::zero(), Vector3::unitY() * 2.0f), Color3::green() * .5f);
 			adorn->ray(RbxRay::fromOriginAndDirection(Vector3::zero(), Vector3::unitZ() * 2.0f), Color3::blue() * .5f);
 
-			for (int i = 0; i < getPartPrimitive()->getNumJoints(); ++i) {
+			for (size_t i = 0u; i < getPartPrimitive()->getNumJoints(); ++i) {
 				Primitive* primitive = getPartPrimitive();
 				Joint* joint = primitive->getJoint(i);
 				if (!Joint::isSpringJoint(joint))
 					continue;
-				for (int j = 0; j < 2; ++j) {
+				for (size_t j = 0u; j < 2u; ++j) {
 					adorn->setObjectToWorldMatrix(joint->getJointWorldCoord(j));
 					adorn->ray(RbxRay::fromOriginAndDirection(Vector3::zero(), Vector3::unitX() * 2.0f), Color3::red() * .5f);
 					adorn->ray(RbxRay::fromOriginAndDirection(Vector3::zero(), Vector3::unitY() * 2.0f), Color3::green() * .5f);
@@ -1561,7 +1561,7 @@ namespace RBX {
 		PartInstance* part = this;
 		Mechanism* m = prim->getMechanism();
 
-		if (currentSecurityIdentityIsScript() && m != NULL)
+		if (currentSecurityIdentityIsScript() && m != nullptr)
 		{
 			prim = m->getMechanismPrimitive();
 			part = PartInstance::fromPrimitive(prim);
@@ -1631,7 +1631,7 @@ namespace RBX {
 		PartInstance* part = this;
 		Mechanism* m = prim->getMechanism();
 
-		if (currentSecurityIdentityIsScript() && m != NULL)
+		if (currentSecurityIdentityIsScript() && m != nullptr)
 		{
 			prim = m->getMechanismPrimitive();
 			part = PartInstance::fromPrimitive(prim);
@@ -1686,7 +1686,7 @@ namespace RBX {
 		PartInstance* part = this;
 		Mechanism* m = prim->getMechanism();
 
-		if (currentSecurityIdentityIsScript() && m != NULL)
+		if (currentSecurityIdentityIsScript() && m != nullptr)
 		{
 			prim = m->getMechanismPrimitive();
 			part = PartInstance::fromPrimitive(prim);
@@ -1970,7 +1970,7 @@ namespace RBX {
 				RBXASSERT(currentOwner == Network::NetworkOwner::Server());
 
 				args[0] = currentOwner;
-				raiseEventInvocation(event_NetworkOwnerChanged, args, NULL);
+				raiseEventInvocation(event_NetworkOwnerChanged, args, nullptr);
 			}
 
 		}
@@ -1978,7 +1978,7 @@ namespace RBX {
 
 	rbx::remote_signal<void(RBX::SystemAddress)>* PartInstance::getOrCreateNetworkOwnerChangedSignal(bool create)
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	void PartInstance::processRemoteEvent(const EventDescriptor& descriptor, const EventArguments& args, const SystemAddress& source)
@@ -2070,12 +2070,12 @@ namespace RBX {
 
 	bool PartInstance::isGrounded()
 	{
-		return (primitive != NULL) && primitive->computeIsGrounded();
+		return (primitive != nullptr) && primitive->computeIsGrounded();
 	}
 
 	static void getConnectedPartsVisitor(Primitive* prim, shared_ptr<Instances>& inst)
 	{
-		if (prim != NULL && PartInstance::fromPrimitive(prim) != NULL)
+		if (prim != nullptr && PartInstance::fromPrimitive(prim) != nullptr)
 		{
 			inst->push_back(shared_from(PartInstance::fromPrimitive(prim)));
 		}
@@ -2084,15 +2084,15 @@ namespace RBX {
 	void PartInstance::getConnectedPartsRecursiveImpl(shared_ptr<Instances>& objs, boost::unordered_set<PartInstance*>& seen) const
 	{
 		const Workspace* ws = Workspace::findConstWorkspace(this);
-		const Instance* terrain = ws != NULL ? ws->getTerrain() : NULL;
-		for (int i = 0; i < primitive->getNumJoints(); ++i)
+		const Instance* terrain = ws != nullptr ? ws->getTerrain() : nullptr;
+		for (size_t i = 0u; i < primitive->getNumJoints(); ++i)
 		{
 			Primitive* otherNeighbor = primitive->getJointOther(i);
-			if (otherNeighbor != NULL &&
+			if (otherNeighbor != nullptr &&
 				(Joint::isKinematicJoint(primitive->getJoint(i))))
 			{
 				PartInstance* otherPart = PartInstance::fromPrimitive(otherNeighbor);
-				if (otherPart != NULL && otherPart != terrain && seen.find(otherPart) == seen.end())
+				if (otherPart != nullptr && otherPart != terrain && seen.find(otherPart) == seen.end())
 				{
 					seen.insert(otherPart);
 					objs->push_back(shared_from(otherPart));
@@ -2105,7 +2105,7 @@ namespace RBX {
 	void PartInstance::gatherResetOwnershipDataPreUnanchor(std::vector<Primitive*>& previousOwnershipRoots)
 	{
 		Primitive* partPrim = getPartPrimitive();
-		for (int i = 0; i < partPrim->getNumJoints(); ++i)
+		for (size_t i = 0u; i < partPrim->getNumJoints(); ++i)
 		{
 			Primitive* otherNeighbor = partPrim->getJointOther(i);
 			if (otherNeighbor)
@@ -2222,7 +2222,7 @@ namespace RBX {
 		}
 		else
 		{
-			ownershipData.prim = NULL;
+			ownershipData.prim = nullptr;
 		}
 	}
 
@@ -2237,7 +2237,7 @@ namespace RBX {
 		{
 			if (DFFlag::SetNetworkOwnerFixAnchoring2)
 			{
-				PartInstance* futureMechRootPart = NULL;
+				PartInstance* futureMechRootPart = nullptr;
 				if (Primitive* rootMovingPrim = futureMechRoots[i]->getRootMovingPrimitive())
 					futureMechRootPart = PartInstance::fromPrimitive(rootMovingPrim);
 
@@ -2346,15 +2346,15 @@ namespace RBX {
 	shared_ptr<const Instances> PartInstance::getConnectedParts(bool recursive)
 	{
 		const Workspace* ws = Workspace::findConstWorkspace(this);
-		const Instance* terrain = ws != NULL ? ws->getTerrain() : NULL;
+		const Instance* terrain = ws != nullptr ? ws->getTerrain() : nullptr;
 		shared_ptr<Instances> result(new Instances());
 		if (!recursive)
 		{
 			result->push_back(shared_from(this));
-			for (int i = 0; i < primitive->getNumJoints(); ++i)
+			for (size_t i = 0u; i < primitive->getNumJoints(); ++i)
 			{
 				Primitive* otherNeighbor = primitive->getJointOther(i);
-				if (otherNeighbor != NULL && PartInstance::fromPrimitive(otherNeighbor) != NULL &&
+				if (otherNeighbor != nullptr && PartInstance::fromPrimitive(otherNeighbor) != nullptr &&
 					PartInstance::fromPrimitive(otherNeighbor) != terrain &&
 					(Joint::isKinematicJoint(primitive->getJoint(i))))
 				{
@@ -2363,7 +2363,7 @@ namespace RBX {
 			}
 		}
 		else { // recursive
-			if (primitive != NULL && primitive->getAssembly() != NULL)
+			if (primitive != nullptr && primitive->getAssembly() != nullptr)
 			{
 				if (!primitive->getAssembly()->computeIsGrounded())
 				{
@@ -2383,8 +2383,8 @@ namespace RBX {
 
 	shared_ptr<Instance> PartInstance::getRootPart()
 	{
-		PartInstance* part = NULL;
-		if (primitive != NULL && primitive->getAssembly() != NULL)
+		PartInstance* part = nullptr;
+		if (primitive != nullptr && primitive->getAssembly() != nullptr)
 		{
 			part = PartInstance::fromPrimitive(primitive->getAssembly()->getAssemblyPrimitive());
 		}
@@ -2584,7 +2584,7 @@ namespace RBX {
 
 	bool PartInstance::canSetNetworkOwnership(Primitive*& rootPrimitive, std::string& statusMessage)
 	{
-		rootPrimitive = NULL;
+		rootPrimitive = nullptr;
 		statusMessage.clear();
 
 		if (!Workspace::getWorkspaceIfInWorkspace(this))
@@ -3038,7 +3038,7 @@ namespace RBX {
 			}
 		}
 		RBXASSERT_IF_VALIDATING(0);
-		return Surface(NULL, NORM_X_POS);
+		return Surface(nullptr, NORM_X_POS);
 	}
 
 	SurfaceType PartInstance::getSurfaceType(NormalId surfId) const
@@ -3254,7 +3254,7 @@ namespace RBX {
 			current = current->getParent();
 		}
 
-		return NULL;
+		return nullptr;
 	}
 
 	void PartInstance::updateHumanoidCookie()

@@ -1,8 +1,9 @@
 #pragma once
 
 #include "solver/SolverConfig.h"
-#include "boost/cstdint.hpp"
 #include "rbx/ArrayDynamic.h"
+
+#include <cstdint>
 
 namespace RBX
 {
@@ -20,7 +21,7 @@ void PGSComputeEffectiveMasses(
     EffectiveMassPair* _effectiveMassesVelStage,
     EffectiveMassPair* _effectiveMassesPosStage,
     size_t _constraintCount, 
-    const boost::uint8_t* _dimensions, 
+    const uint8_t* _dimensions, 
     const ConstraintJacobianPair* _jacobians, 
     const BodyPairIndices* _pairs,
     const SolverBodyMassAndInertia* _massAndIntertia,
@@ -30,7 +31,7 @@ void PGSApplyEffectiveMassMultipliers(
     EffectiveMassPair* _effectiveMassesVelStage,
     EffectiveMassPair* _effectiveMassesPosStage,
     size_t _constraintCount, 
-    const boost::uint8_t* _dimensions, 
+    const uint8_t* _dimensions, 
     const float* _multipliers, 
     const BodyPairIndices* _pairs,
     const SolverConfig& _config );
@@ -41,8 +42,8 @@ void PGSPreconditionConstraintEquations(
     ConstraintVariables* _velocityStageVariables, 
     ConstraintVariables* _positionStageVariables,
     size_t _constraintCount, 
-    const boost::uint8_t* _dimensions, 
-    const boost::uint8_t* _useBlock,
+    const uint8_t* _dimensions, 
+    const uint8_t* _useBlock,
     const float* __restrict _sorVel,
     const float* __restrict _sorPos,
     const ConstraintJacobianPair* _jacobians, 
@@ -55,7 +56,7 @@ void PGSInitVirtualDisplacements(
     const EffectiveMassPair* _effectiveMassesVelStage,
     const EffectiveMassPair* _effectiveMassesPosStage,
     size_t _constraintCount, 
-    const boost::uint8_t* _dimensions, 
+    const uint8_t* _dimensions, 
     const ConstraintVariables* __restrict _velStage,
     const ConstraintVariables* __restrict _posStage,
     const BodyPairIndices* _pairs,
@@ -68,7 +69,7 @@ void PGSSolveKernel(
     VirtualDisplacementArray& _virDPos,
     size_t _constraintCount, 
     size_t _collisionCount,
-    const boost::uint8_t* _dimensions, 
+    const uint8_t* _dimensions, 
     const BodyPairIndices* _pairs,
     const ConstraintJacobianPair* _preconditionedJacobiansVelStage, 
     const ConstraintJacobianPair* _preconditionedJacobiansPosStage, 
@@ -84,7 +85,7 @@ void PGSSolveKernelComputeErrors(
     size_t _constraintCount, 
     size_t _collisionCount,
     size_t _bodyCount,
-    const boost::uint8_t* _dimensions, 
+    const uint8_t* _dimensions, 
     const BodyPairIndices* _pairs,
     const ConstraintJacobianPair* _jacobians, 
     const ConstraintJacobianPair* _preconditionedJacobians, 

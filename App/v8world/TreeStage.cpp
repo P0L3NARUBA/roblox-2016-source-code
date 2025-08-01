@@ -285,7 +285,7 @@ void TreeStage::onSpanningEdgeRemoved(SpanningEdge* edge, SpanningNode* childNod
 		RBXASSERT(0);
 	}
 
-	childPrim->getBody()->setParent(NULL);
+	childPrim->getBody()->setParent(nullptr);
 
 	sendClumpChangedMessage(childPrim);
 

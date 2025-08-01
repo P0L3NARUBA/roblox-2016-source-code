@@ -46,27 +46,27 @@ namespace RBX {
 
 		// use a BulletShapeConnector to represent this connector (we don't need a specific BulletShapeCellConnector)
 		BulletShapeCellConnector* newBulletShapeCellConnector(btCollisionObject* bulletColObj0, btCollisionObject* bulletColObj1,
-															  btCollisionAlgorithm* algo, int manifoldIndex, int contactIndex);
+			btCollisionAlgorithm* algo, size_t manifoldIndex, size_t contactIndex);
 
 		void updateContactPoints();
 		void computeManifoldsWithBulletNarrowPhase(btManifoldArray& manifoldArray);
 
 		// Contact
-        void deleteAllConnectors() override;
-		int numConnectors() const override					{return polyConnectors.size();}
-        ContactConnector* getConnector(int i) override;
-        bool computeIsColliding(float overlapIgnored) override;
-        bool stepContact() override;
+		void deleteAllConnectors() override;
+		size_t numConnectors() const override { return polyConnectors.size(); }
+		ContactConnector* getConnector(size_t i) override;
+		bool computeIsColliding(float overlapIgnored) override;
+		bool stepContact() override;
 
 		void invalidateContactCache() override;
 
-		void findClosestFeatures(ConnectorArray& newConnectors) override {RBXASSERT(0);} // don't use this when using btCompound Narrow Phase
-																							  // since it generates too many connectors
+		void findClosestFeatures(ConnectorArray& newConnectors) override { RBXASSERT(0); } // don't use this when using btCompound Narrow Phase
+		// since it generates too many connectors
 		void findClosestBulletCellFeatures(BulletConnectorArray& newConnectors);
 
 	public:
-        BulletShapeCellContact(Primitive* p0, Primitive* p1, const Vector3int16& cell, World* contactWorld);
-        BulletShapeCellContact(Primitive* p0, Primitive* p1, const Vector3int32& feature, const shared_ptr<btCollisionShape>& customShape, World* contactWorld);
+		BulletShapeCellContact(Primitive* p0, Primitive* p1, const Vector3int16& cell, World* contactWorld);
+		BulletShapeCellContact(Primitive* p0, Primitive* p1, const Vector3int32& feature, const shared_ptr<btCollisionShape>& customShape, World* contactWorld);
 		~BulletShapeCellContact();
 	};
 } // namespace

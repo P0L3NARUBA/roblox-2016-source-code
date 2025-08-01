@@ -24,20 +24,18 @@
 FASTFLAG(DebugRenderDownloadAssets)
 FASTFLAGVARIABLE(RenderMoonBillboard, true)
 
-namespace RBX
-{
-	namespace Graphics
-	{
+namespace RBX {
+	namespace Graphics {
 
-		static const float kSunSize = 25;
-		static const float kMoonSize = 50;
-		static const float kSkySize = 2700;
-		static const float kStarDistance = 2500;
-		static const int kStarTwinkleRate = 40;
+		static const float kSunSize = 25.0f;
+		static const float kMoonSize = 25.0f;
+		static const float kSkySize = 2700.0f;
+		static const float kStarDistance = 2500.0f;
 		static const float kStarTwinkleRatio = 0.2f;
+		static const uint32_t kStarTwinkleRate = 40u;
 
 		static TextureRef::Status getCombinedStatus(const TextureRef(&textures)[6]) {
-			for (int i = 0; i < 6; ++i) {
+			for (uint32_t i = 0u; i < 6u; ++i) {
 				TextureRef::Status status = textures[i].getStatus();
 
 				if (status != TextureRef::Status_Loaded)
@@ -53,8 +51,7 @@ namespace RBX
 
 				return Matrix4(rotation * Matrix3::fromDiagonal(Vector3(size)), position);
 			}
-			else
-			{
+			else {
 				Matrix4 viewInverse = camera.getViewMatrix().inverse();
 
 				return Matrix4(viewInverse.upper3x3() * Matrix3::fromDiagonal(Vector3(size)), position);
@@ -63,7 +60,7 @@ namespace RBX
 
 		static shared_ptr<Geometry> createCube(Device* device) {
 			std::vector<VertexLayout::Element> elements;
-			elements.push_back(VertexLayout::Element(0, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
+			elements.push_back(VertexLayout::Element(0u, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
 
 			shared_ptr<VertexLayout> layout = device->createVertexLayout(elements);
 
@@ -119,7 +116,7 @@ namespace RBX
 
 			shared_ptr<VertexBuffer> vb = device->createVertexBuffer(sizeof(Vector3), ARRAYSIZE(vertices), GeometryBuffer::Usage_Static);
 
-			vb->upload(0, vertices, sizeof(vertices));
+			vb->upload(0u, vertices, sizeof(vertices));
 
 			return device->createGeometry(layout, vb, shared_ptr<IndexBuffer>());
 		}
@@ -151,7 +148,7 @@ namespace RBX
 			, starTwinkleCounter(0)
 			, readyState(false)*/
 		{
-			cube.reset(new GeometryBatch(createCube(visualEngine->getDevice()), Geometry::Primitive_Triangles, 36, 36));
+			cube.reset(new GeometryBatch(createCube(visualEngine->getDevice()), Geometry::Primitive_Triangles, 36u, 36u));
 
 			// preload default skybox so that we can show it even while fetching custom skies over HTTP
 			//if (!FFlag::DebugRenderDownloadAssets)
@@ -166,7 +163,7 @@ namespace RBX
 		{
 		}
 
-		void Sky::update(const G3D::LightingParameters& lighting, int starCount, bool drawCelestialBodies, bool useHDRI) {
+		void Sky::update(const G3D::LightingParameters& lighting, uint32_t starCount, bool drawCelestialBodies, bool useHDRI) {
 			skyColor = lighting.skyAmbient;
 			skyColor2 = lighting.skyAmbient2;
 
@@ -234,7 +231,7 @@ namespace RBX
 			starTwinkleCounter++;
 		}*/
 
-		void Sky::RenderSkyboxEnvMapCube(DeviceContext* context, unsigned int face, unsigned int size) {
+		void Sky::RenderSkyboxEnvMapCube(DeviceContext* context, uint32_t face, uint32_t size) {
 			if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "SkyCubeFaceFS", BlendState::Mode_None, size, size)) {
 				context->bindTexture(0u, skybox[face].getTexture().get(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 
@@ -252,11 +249,11 @@ namespace RBX
 				context->setDepthState(DepthState(DepthState::Function_Always, false));
 				context->setBlendState(BlendState::Mode_None);
 
-				context->bindTexture(0, skyboxHDRI.getTexture().get(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+				context->bindTexture(0u, skyboxHDRI.getTexture().get(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 			}
 		}
 
-		void Sky::RenderSkyboxEnvMapEqui(DeviceContext* context) {
+		void Sky::RenderSkyboxEnvMapBox(DeviceContext* context) {
 			context->draw(*cube);
 		}
 
@@ -282,7 +279,7 @@ namespace RBX
 				context->setDepthState(DepthState(DepthState::Function_GreaterEqual, false));
 				context->setBlendState(BlendState::Mode_None);
 
-				context->bindTexture(0, texture, SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Wrap));
+				context->bindTexture(0u, texture, SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Wrap));
 
 				context->draw(*cube);
 			}

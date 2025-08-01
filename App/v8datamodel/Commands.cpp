@@ -745,7 +745,7 @@ void DeleteBase::doIt(IDataState* dataState)
 				{
 					if (!iPtr->fastDynamicCast<Workspace>() && !iPtr->fastDynamicCast<Network::Players>() && !dynamic_cast<Service*>(iPtr)
 						&& (!isCloudEdit || !iPtr->fastDynamicCast<Network::Player>())) {
-						instance->setParent(NULL);
+						instance->setParent(nullptr);
 						//if camera is getting deleted then create new camera here itself (instead of Workspace::onHeartbeat) to correctly record change history
 						if (iPtr->fastDynamicCast<RBX::Camera>())
 							dataModel->getWorkspace()->replenishCamera();

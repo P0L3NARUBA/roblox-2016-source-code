@@ -19,19 +19,7 @@ subject to the following restrictions:
 #include "btMinMax.h"
 #include "btVector3.h"
 
-#ifdef __GNUC__
-	#include <stdint.h>
-#elif defined(_MSC_VER)
-	typedef __int32 int32_t;
-	typedef __int64 int64_t;
-	typedef unsigned __int32 uint32_t;
-	typedef unsigned __int64 uint64_t;
-#else
-	typedef int int32_t;
-	typedef long long int int64_t;
-	typedef unsigned int uint32_t;
-	typedef unsigned long long int uint64_t;
-#endif
+#include <cstdint>
 
 
 //The definition of USE_X86_64_ASM is moved into the build system. You can enable it manually by commenting out the following lines
@@ -2581,10 +2569,10 @@ bool btConvexHullInternal::shiftFace(Face* face, btScalar amount, btAlignedObjec
 #ifdef SHOW_ITERATIONS
 	n = 0;
 #endif
-	int pos = 0;
+	size_t pos = 0u;
 	while (pos < stack.size())
 	{
-		int end = stack.size();
+		size_t end = stack.size();
 		while (pos < end)
 		{
 			Vertex* kept = stack[pos++];
@@ -2593,7 +2581,7 @@ bool btConvexHullInternal::shiftFace(Face* face, btScalar amount, btAlignedObjec
 #endif
 			bool deeper = false;
 			Vertex* removed;
-			while ((removed = stack[pos++]) != NULL)
+			while ((removed = stack[pos++]) != nullptr)
 			{
 #ifdef SHOW_ITERATIONS
 				n++;
@@ -2612,7 +2600,7 @@ bool btConvexHullInternal::shiftFace(Face* face, btScalar amount, btAlignedObjec
 			}
 			if (deeper)
 			{
-				stack.push_back(NULL);
+				stack.push_back(nullptr);
 			}
 		}
 	}
@@ -2670,7 +2658,7 @@ btScalar btConvexHullComputer::compute(const void* coords, bool doubleCoords, in
 
 	btAlignedObjectArray<btConvexHullInternal::Vertex*> oldVertices;
 	getVertexCopy(hull.vertexList, oldVertices);
-	int copied = 0;
+	size_t copied = 0u;
 	while (copied < oldVertices.size())
 	{
 		btConvexHullInternal::Vertex* v = oldVertices[copied];
@@ -2716,7 +2704,7 @@ btScalar btConvexHullComputer::compute(const void* coords, bool doubleCoords, in
 		copied++;
 	}
 
-	for (int i = 0; i < copied; i++)
+	for (size_t i = 0; i < copied; i++)
 	{
 		btConvexHullInternal::Vertex* v = oldVertices[i];
 		btConvexHullInternal::Edge* firstEdge = v->edges;

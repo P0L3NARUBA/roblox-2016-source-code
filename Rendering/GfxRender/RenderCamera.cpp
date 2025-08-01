@@ -1,13 +1,10 @@
 #include "stdafx.h"
 #include "RenderCamera.h"
 
-namespace RBX
-{
-	namespace Graphics
-	{
+namespace RBX {
+	namespace Graphics {
 
-		static Matrix4 projectionOrtho(float width, float height, float znear, float zfar, bool halfPixelOffset = false)
-		{
+		static Matrix4 projectionOrtho(float width, float height, float znear, float zfar, bool halfPixelOffset = false) {
 			// Note: this maps to [0..1] Z range
 			float q = 1.0f / (zfar - znear);
 			float qn = -znear * q;
@@ -15,22 +12,19 @@ namespace RBX
 			float wOffset = 0.0f;
 			float hOffset = 0.0f;
 
-			if (halfPixelOffset)
-			{
+			if (halfPixelOffset) {
 				wOffset = 1.0f / width;
 				hOffset = 1.0f / height;
 			}
 
 			return
-				Matrix4(
-					2.0f / width, 0.0f, 0.0f, -1.0f - wOffset,
-					0.0f, 2.0f / height, 0.0f, -1.0f + hOffset,
-					0.0f, 0.0f, q, qn,
-					0.0f, 0.0f, 0.0f, 1.0f);
+				Matrix4(2.0f / width,            0.0f, 0.0f, 0.0f,
+								0.0f,   2.0f / height, 0.0f, 0.0f,
+								0.0f,            0.0f,    q, 0.0f,
+					 -1.0f - wOffset, -1.0f + hOffset,   qn, 1.0f);
 		}
 
-		static Matrix4 projectionPerspective(float fovY, float aspect, float znear, float zfar)
-		{
+		static Matrix4 projectionPerspective(float fovY, float aspect, float znear, float zfar) {
 			float h = 1.0f / tanf(fovY / 2.0f);
 			float w = h / aspect;
 
@@ -39,11 +33,10 @@ namespace RBX
 			float qn = znear * q;
 
 			return
-				Matrix4(
-					w, 0.0f, 0.0f, 0.0f,
-					0.0f, h, 0.0f, 0.0f,
-					0.0f, 0.0f, q, qn,
-					0.0f, 0.0f, -1.0f, 0.0f);
+				Matrix4(   w, 0.0f, 0.0f,  0.0f,
+						0.0f,    h, 0.0f,  0.0f,
+						0.0f, 0.0f,    q, -1.0f,
+						0.0f, 0.0f,   qn,  0.0f);
 		}
 
 		static Matrix4 projectionPerspective(float fovUpTan, float fovDownTan, float fovLeftTan, float fovRightTan, float znear, float zfar) {
@@ -52,16 +45,15 @@ namespace RBX
 			float sy = 2.0f / (fovUpTan + fovDownTan);
 			float oy = (fovUpTan - fovDownTan) / (fovUpTan + fovDownTan);
 
-			// Note: this maps to [0..1] Z range
+			// Note: this maps to [0..1] Z range, which is what we want
 			float q = -zfar / (zfar - znear);
 			float qn = znear * q;
 
 			return
-				Matrix4(
-					sx, 0.0f, ox, 0.0f,
-					0.0f, sy, oy, 0.0f,
-					0.0f, 0.0f, q, qn,
-					0.0f, 0.0f, -1.0f, 0.0f);
+				Matrix4(  sx, 0.0f, 0.0f,  0.0f,
+						0.0f,   sy, 0.0f,  0.0f,
+						  ox,   oy,    q, -1.0f,
+						0.0f, 0.0f,   qn,  0.0f);
 		}
 
 		RenderCamera::FrustumPlane::FrustumPlane(const Vector4& plane)
@@ -74,54 +66,47 @@ namespace RBX
 		{
 		}
 
-		void RenderCamera::setViewCFrame(const CoordinateFrame& cframe, float roll)
-		{
+		void RenderCamera::setViewCFrame(const CoordinateFrame& cframe, float roll) {
 			position = cframe.translation;
-			direction = -cframe.rotation.column(2);
+			direction = -cframe.rotation.column(2u);
 			view = Matrix4::rollDegrees(G3D::toDegrees(roll)) * cframe.inverse().toMatrix4();
 
 			updateViewProjection();
 		}
 
-		void RenderCamera::setViewMatrix(const Matrix4& value)
-		{
-			position = (value.inverse() * Vector4(0.0f, 0.0f, 0.0f, 1.0f)).xyz();
-			direction = (value.inverse() * Vector4(0.0f, 0.0f, -1.0f, 0.0f)).xyz();
+		void RenderCamera::setViewMatrix(const Matrix4& value) {
+			position = (Vector4(0.0f, 0.0f, 0.0f, 1.0f) * value.inverse()).xyz();
+			direction = (Vector4(0.0f, 0.0f, -1.0f, 0.0f) * value.inverse()).xyz();
 			view = value;
 
 			updateViewProjection();
 		}
 
-		void RenderCamera::setProjectionPerspective(float fovY, float aspect, float znear, float zfar)
-		{
+		void RenderCamera::setProjectionPerspective(float fovY, float aspect, float znear, float zfar) {
 			projection = projectionPerspective(fovY, aspect, znear, zfar);
 
 			updateViewProjection();
 		}
 
-		void RenderCamera::setProjectionPerspective(float fovUpTan, float fovDownTan, float fovLeftTan, float fovRightTan, float znear, float zfar)
-		{
+		void RenderCamera::setProjectionPerspective(float fovUpTan, float fovDownTan, float fovLeftTan, float fovRightTan, float znear, float zfar) {
 			projection = projectionPerspective(fovUpTan, fovDownTan, fovLeftTan, fovRightTan, znear, zfar);
 
 			updateViewProjection();
 		}
 
-		void RenderCamera::setProjectionOrtho(float width, float height, float znear, float zfar, bool halfPixelOffset /*= false*/)
-		{
+		void RenderCamera::setProjectionOrtho(float width, float height, float znear, float zfar, bool halfPixelOffset /*= false*/) {
 			projection = projectionOrtho(width, height, znear, zfar, halfPixelOffset);
 
 			updateViewProjection();
 		}
 
-		void RenderCamera::setProjectionMatrix(const Matrix4& value)
-		{
+		void RenderCamera::setProjectionMatrix(const Matrix4& value) {
 			projection = value;
 
 			updateViewProjection();
 		}
 
-		void RenderCamera::changeProjectionPerspectiveZ(float znear, float zfar)
-		{
+		void RenderCamera::changeProjectionPerspectiveZ(float znear, float zfar) {
 			// Note: this maps to [0..1] Z range
 			float q = -zfar / (zfar - znear);
 			float qn = znear * q;
@@ -134,13 +119,11 @@ namespace RBX
 			updateViewProjection();
 		}
 
-		bool RenderCamera::isVisible(const Extents& extents) const
-		{
+		bool RenderCamera::isVisible(const Extents& extents) const {
 			Vector4 center = Vector4(extents.center(), 1.0f);
 			Vector3 extent = extents.size() * 0.5f;
 
-			for (int i = 0; i < 6; ++i)
-			{
+			for (size_t i = 0u; i < 6u; ++i) {
 				const FrustumPlane& p = frustumPlanes[i];
 
 				float d = p.plane.dot(center);
@@ -154,14 +137,12 @@ namespace RBX
 			return true;
 		}
 
-		bool RenderCamera::isVisible(const Sphere& sphere) const
-		{
+		bool RenderCamera::isVisible(const Sphere& sphere) const {
 			Vector4 center = Vector4(sphere.center, 1.0f);
 
 			float r = sphere.radius;
 
-			for (int i = 0; i < 6; ++i)
-			{
+			for (size_t i = 0u; i < 6u; ++i) {
 				const FrustumPlane& p = frustumPlanes[i];
 
 				float d = p.plane.dot(center);
@@ -174,20 +155,17 @@ namespace RBX
 			return true;
 		}
 
-		bool RenderCamera::isVisible(const Extents& extents, const CoordinateFrame& cframe) const
-		{
+		bool RenderCamera::isVisible(const Extents& extents, const CoordinateFrame& cframe) const {
 			return isVisible(extents.toWorldSpace(cframe));
 		}
 
-		IntersectResult RenderCamera::intersects(const Extents& extents) const
-		{
+		IntersectResult RenderCamera::intersects(const Extents& extents) const {
 			Vector4 center = Vector4(extents.center(), 1.0f);
 			Vector3 extent = extents.size() * 0.5f;
 
 			IntersectResult result = irFull;
 
-			for (int i = 0; i < 6; ++i)
-			{
+			for (size_t i = 0u; i < 6u; ++i) {
 				const FrustumPlane& p = frustumPlanes[i];
 
 				float d = p.plane.dot(center);
@@ -205,27 +183,25 @@ namespace RBX
 			return result;
 		}
 
-		static Vector4 normalize3(const Vector4& v)
-		{
+		static Vector4 normalize3(const Vector4& v) {
 			return v / v.xyz().length();
 		}
 
-		void RenderCamera::updateViewProjection()
-		{
-			viewProjection = projection * view;
+		void RenderCamera::updateViewProjection() {
+			viewProjection = view * projection;
 
 			// near: z >= 0
-			frustumPlanes[0] = normalize3(viewProjection.row(2));
+			frustumPlanes[0] = normalize3(viewProjection.row(2u));
 			// far: z <= w
-			frustumPlanes[1] = normalize3(viewProjection.row(3) - viewProjection.row(2));
+			frustumPlanes[1] = normalize3(viewProjection.row(3u) - viewProjection.row(2u));
 			// left: x >= -w
-			frustumPlanes[2] = normalize3(viewProjection.row(3) + viewProjection.row(0));
+			frustumPlanes[2] = normalize3(viewProjection.row(3u) + viewProjection.row(0u));
 			// right: x <= w
-			frustumPlanes[3] = normalize3(viewProjection.row(3) - viewProjection.row(0));
+			frustumPlanes[3] = normalize3(viewProjection.row(3u) - viewProjection.row(0u));
 			// bottom: y >= -w
-			frustumPlanes[4] = normalize3(viewProjection.row(3) + viewProjection.row(1));
+			frustumPlanes[4] = normalize3(viewProjection.row(3u) + viewProjection.row(1u));
 			// top: y <= w
-			frustumPlanes[5] = normalize3(viewProjection.row(3) - viewProjection.row(1));
+			frustumPlanes[5] = normalize3(viewProjection.row(3u) - viewProjection.row(1u));
 		}
 
 	}

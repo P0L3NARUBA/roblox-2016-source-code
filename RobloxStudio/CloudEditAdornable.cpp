@@ -17,20 +17,20 @@ using namespace RBX;
 
 void CloudEditAdornable::renderSelection(Color3 playerColor, shared_ptr<Instance> instance, Part part, float lineThickness, Adorn* adorn)
 {
-	static const Vector3 kLipSize = Vector3::one() * .015;
-	Vector3 size = (part.gridSize * .5) + kLipSize;
-	adorn->box(part.coordinateFrame, size, Color4(playerColor, .25), -1, false);
-	Draw::selectionBox(part, adorn, Color4(playerColor, 1), lineThickness);
+	static const Vector3 kLipSize = Vector3::one() * 0.015f;
+	Vector3 size = (part.gridSize * 0.5f) + kLipSize;
+	adorn->box(part.coordinateFrame, size, Color4(playerColor, 0.25f), -1, false);
+	Draw::selectionBox(part, adorn, Color4(playerColor, 1.0f), lineThickness);
 }
 
 void CloudEditAdornable::renderCamera(Color3 playerColor, shared_ptr<RBX::Network::Player> player, const Camera* localCamera, Adorn* adorn)
 {
 	CoordinateFrame cameraCFrame = player->getCloudEditCameraCoordinateFrame();
-	Color4 cameraColor(playerColor, 0.25);
+	Color4 cameraColor(playerColor, 0.25f);
 
 	adorn->setObjectToWorldMatrix(cameraCFrame);
-	adorn->ray(RbxRay(Vector3(0, 0, 1.2), Vector3(0, 0, -3)), cameraColor);
-	adorn->sphere(Sphere(Vector3::zero(), .75), cameraColor);
+	adorn->ray(RbxRay(Vector3(0.0f, 0.0f, 1.2f), Vector3(0.0f, 0.0f, -3.0f)), cameraColor);
+	adorn->sphere(Sphere(Vector3::zero(), 0.75f), cameraColor);
 
 	Vector3 screenLoc = localCamera->project(cameraCFrame.translation);
 	adorn->drawFont2D(
@@ -62,7 +62,7 @@ void CloudEditAdornable::render3dAdorn(Adorn* adorn)
 		{
 			if (shared_ptr<Network::Player> p = Instance::fastSharedDynamicCast<Network::Player>(playerInstance))
 			{
-				if (p.get() == players->getLocalPlayer()) 
+				if (p.get() == players->getLocalPlayer())
 				{
 					continue;
 				}
@@ -71,7 +71,7 @@ void CloudEditAdornable::render3dAdorn(Adorn* adorn)
 
 				renderCamera(playerColor, p, m_pDataModel->getWorkspace()->getConstCamera(), adorn);
 				shared_ptr<const RBX::Instances> selectedInstances = m_pPlayersDataManager->getLastKnownSelection(p->getUserID());
-				if (selectedInstances->size() > 0)
+				if (selectedInstances->size() > 0u)
 				{
 					SelectionHighlightAdornable::renderSelection(m_pDataModel.get(), *selectedInstances, adorn,
 						boost::bind(&CloudEditAdornable::renderSelection, playerColor, _1, _2, _3, _4));

@@ -109,8 +109,8 @@ namespace RBX
 #endif
 
 	static Reflection::PropDescriptor<NetworkSettings, int> prop_extraMemoryUsed("ExtraMemoryUsed", category_Data, &NetworkSettings::getExtraMemoryUsedInMB, &NetworkSettings::setExtraMemoryUsedInMB, Reflection::PropertyDescriptor::HIDDEN_SCRIPTING, Security::Plugin);
-	static Reflection::PropDescriptor<NetworkSettings, float> prop_freeMemoryMBytes("FreeMemoryMBytes", category_Data, &NetworkSettings::getFreeMemoryMBytes, NULL, Reflection::PropertyDescriptor::HIDDEN_SCRIPTING, Security::Plugin);
-    static Reflection::PropDescriptor<NetworkSettings, float> prop_freeMemoryPoolMBytes("FreeMemoryPoolMBytes", category_Data, &NetworkSettings::getFreeMemoryPoolMBytes, NULL, Reflection::PropertyDescriptor::HIDDEN_SCRIPTING, Security::Plugin);
+	static Reflection::PropDescriptor<NetworkSettings, float> prop_freeMemoryMBytes("FreeMemoryMBytes", category_Data, &NetworkSettings::getFreeMemoryMBytes, nullptr, Reflection::PropertyDescriptor::HIDDEN_SCRIPTING, Security::Plugin);
+    static Reflection::PropDescriptor<NetworkSettings, float> prop_freeMemoryPoolMBytes("FreeMemoryPoolMBytes", category_Data, &NetworkSettings::getFreeMemoryPoolMBytes, nullptr, Reflection::PropertyDescriptor::HIDDEN_SCRIPTING, Security::Plugin);
 	static Reflection::PropDescriptor<NetworkSettings, bool> prop_RenderRegions("RenderStreamedRegions", category_Appearance, &NetworkSettings::getRenderStreamedRegions, &NetworkSettings::setRenderStreamedRegions);
     static Reflection::PropDescriptor<NetworkSettings, bool> prop_ShowPartMovementPath("ShowPartMovementWayPoint", category_Appearance, &NetworkSettings::getShowPartMovementPath, &NetworkSettings::setShowPartMovementPath);
     static Reflection::PropDescriptor<NetworkSettings, int> prop_TotalNumMovementWayPoint("TotalNumMovementWayPoint", category_Appearance, &NetworkSettings::getTotalNumMovementWayPoint, &NetworkSettings::setTotalNumMovementWayPoint);

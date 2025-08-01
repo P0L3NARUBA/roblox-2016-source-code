@@ -5,6 +5,12 @@
 #ifndef EXCLUDE_COMMON
 #define EXCLUDE_COMMON
 
+#define TEX_DECLARE1D(type, name, slot)                \
+    Texture1D<##type> name##Texture : register(t##slot); \
+    SamplerState name##Sampler : register(s##slot)
+#define TEX_DECLARE1DARRAY(type, name, slot)                \
+    Texture1DArray<##type> name##Texture : register(t##slot); \
+    SamplerState name##Sampler : register(s##slot)
 #define TEX_DECLARE2D(type, name, slot)                \
     Texture2D<##type> name##Texture : register(t##slot); \
     SamplerState name##Sampler : register(s##slot)
@@ -50,7 +56,7 @@ struct InstancedBasicAppData /* size 44 */ {
     float2 UV       : TEXCOORD0;        // size 8, offset 12
     float4 Color    : COLOR;            // size 16, offset 20
     uint InstanceID : SV_InstanceID;    // size 4, offset 36
-    uint MaterialID : TEXCOORD1;        // size 4, offset 40
+    uint MaterialID : MATERIALID;       // size 4, offset 40
 };
 
 struct InstancedBasicMaterialAppData /* size 56 */ {
@@ -59,7 +65,7 @@ struct InstancedBasicMaterialAppData /* size 56 */ {
     float4 Color    : COLOR;            // size 16, offset 20
     float3 Normal   : NORMAL;           // size 12, offset 36
     uint InstanceID : SV_InstanceID;    // size 4, offset 48
-    uint MaterialID : TEXCOORD1;        // size 4, offset 52
+    uint MaterialID : MATERIALID;       // size 4, offset 52
 };
 
 struct InstancedMaterialAppData /* size 68 */ {
@@ -69,32 +75,35 @@ struct InstancedMaterialAppData /* size 68 */ {
     float3 Normal   : NORMAL;           // size 12, offset 36
     float3 Tangent  : TANGENT;          // size 12, offset 48
     uint InstanceID : SV_InstanceID;    // size 4,  offset 60
-    uint MaterialID : TEXCOORD1;        // size 4,  offset 64
+    uint MaterialID : MATERIALID;       // size 4,  offset 64
 };
 
-struct BasicVertexOutput /* size 48 */ {
-    centroid float4 Position : SV_POSITION; // size 16, offset 0
-    float2 UV                : TEXCOORD0;   // size 12, offset 16
-    float4 Color             : COLOR;       // size 16, offset 28
-    uint MaterialID          : TEXCOORD1;   // size 4,  offset 44
+struct BasicVertexOutput /* size 64 */ {
+    centroid float4 Position : SV_POSITION;    // size 16, offset 0
+    float2 UV                : TEXCOORD0;      // size 12, offset 16
+    float4 Color             : COLOR;          // size 16, offset 28
+    float4 WorldPosition     : WORLD_POSITION; // size 16, offset 44
+    uint MaterialID          : MATERIALID;     // size 4,  offset 60
 };
 
-struct BasicMaterialVertexOutput /* size 60 */ {
-    centroid float4 Position : SV_POSITION; // size 16, offset 0
-    float2 UV                : TEXCOORD0;   // size 12, offset 16
-    float4 Color             : COLOR;       // size 16, offset 28
-    float3 Normal            : NORMAL;      // size 12, offset 44
-    uint MaterialID          : TEXCOORD1;   // size 4,  offset 56
+struct BasicMaterialVertexOutput /* size 76 */ {
+    centroid float4 Position : SV_POSITION;    // size 16, offset 0
+    float2 UV                : TEXCOORD0;      // size 12, offset 16
+    float4 Color             : COLOR;          // size 16, offset 28
+    float3 Normal            : NORMAL;         // size 12, offset 44
+    float4 WorldPosition     : WORLD_POSITION; // size 16, offset 56
+    uint MaterialID          : MATERIALID;     // size 4,  offset 72
 };
 
-struct MaterialVertexOutput /* size 84 */ {
-    centroid float4 Position : SV_POSITION; // size 16, offset 0
-    float2 UV                : TEXCOORD0;   // size 12, offset 16
-    float4 Color             : COLOR;       // size 16, offset 28
-    float3 Tangent           : TANGENT;     // size 12, offset 44
-    float3 Bitangent         : BINORMAL;    // size 12, offset 56
-    float3 Normal            : NORMAL;      // size 12, offset 68
-    uint MaterialID          : TEXCOORD1;   // size 4,  offset 80
+struct MaterialVertexOutput /* size 100 */ {
+    centroid float4 Position : SV_POSITION;    // size 16, offset 0
+    float2 UV                : TEXCOORD0;      // size 12, offset 16
+    float4 Color             : COLOR;          // size 16, offset 28
+    float3 Tangent           : TANGENT;        // size 12, offset 44
+    float3 Bitangent         : BINORMAL;       // size 12, offset 56
+    float3 Normal            : NORMAL;         // size 12, offset 68
+    float4 WorldPosition     : WORLD_POSITION; // size 16, offset 80
+    uint MaterialID          : MATERIALID;     // size 4,  offset 96
 };
 
 #endif

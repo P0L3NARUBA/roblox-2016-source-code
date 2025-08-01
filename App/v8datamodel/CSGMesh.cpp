@@ -27,13 +27,11 @@ namespace RBX {
 		CSGMeshFactory* csgMeshFactory = 0;
 	}
 
-	void CSGMeshFactory::set(CSGMeshFactory* factory)
-	{
+	void CSGMeshFactory::set(CSGMeshFactory* factory) {
 		csgMeshFactory = factory;
 	}
 
-	CSGMeshFactory* CSGMeshFactory::singleton()
-	{
+	CSGMeshFactory* CSGMeshFactory::singleton() {
 		if (csgMeshFactory)
 			return csgMeshFactory;
 
@@ -41,14 +39,13 @@ namespace RBX {
 		return meshFactory;
 	}
 
-	CSGMesh* CSGMeshFactory::createMesh()
-	{
+	CSGMesh* CSGMeshFactory::createMesh() {
 		return new CSGMesh;
 	}
 
 	CSGMesh::CSGMesh()
-		: version(2)
-		, brepVersion(1)
+		: version(2u)
+		, brepVersion(1u)
 		, badMesh(false)
 	{
 	}
@@ -57,8 +54,7 @@ namespace RBX {
 	{
 	}
 
-	void CSGMesh::clearMesh()
-	{
+	void CSGMesh::clearMesh() {
 		vertices.clear();
 		indices.clear();
 	}
@@ -73,25 +69,22 @@ namespace RBX {
 
 	namespace {
 
-		void generateRandomString(char* s, const size_t len)
-		{
-			for (size_t i = 0; i < len; ++i)
-			{
+		void generateRandomString(char* s, const size_t len) {
+			for (size_t i = 0u; i < len; ++i) {
 				s[i] = (char)rand();
 			}
 		}
 
 	}
 
-	const size_t saltSize = 16;
-	const size_t hashSize = 16;
+	const size_t saltSize = 16u;
+	const size_t hashSize = 16u;
 
-	std::string CSGMesh::createHash(const std::string saltIn) const
-	{
+	std::string CSGMesh::createHash(const std::string saltIn) const {
 		VMProtectBeginMutation("17");
 
 		const size_t verticesSize = vertices.size() * sizeof(CSGVertex);
-		const size_t indicesSize = indices.size() * sizeof(unsigned int);
+		const size_t indicesSize = indices.size() * sizeof(uint32_t);
 		size_t buffSize = verticesSize + indicesSize + saltSize;
 
 		std::vector<unsigned char> byteBuffer(buffSize);
@@ -99,13 +92,12 @@ namespace RBX {
 
 		std::string salt = saltIn;
 
-		if (salt.empty())
-		{
+		if (salt.empty()) {
 			salt.resize(saltSize);
 			generateRandomString(&salt[0], salt.size());
 		}
 
-		size_t copyOffset = 0;
+		size_t copyOffset = 0u;
 		memcpy(&byteBuffer[copyOffset], &vertices[0], verticesSize);
 
 		copyOffset += verticesSize;
@@ -115,8 +107,7 @@ namespace RBX {
 		memcpy(&byteBuffer[copyOffset], salt.c_str(), salt.size());
 
 		LcmRand randGen;
-		for (size_t i = 0; i < buffSize; i++)
-		{
+		for (size_t i = 0u; i < buffSize; i++) {
 			std::swap(byteBuffer[i], byteBuffer[randGen.value() % buffSize]);
 		}
 
@@ -133,17 +124,16 @@ namespace RBX {
 		return hashStr;
 	}
 
-	void CSGMesh::computeDecalRemap()
-	{
+	void CSGMesh::computeDecalRemap() {
 		if (!FFlag::FixGlowingCSG) return;
 
-		for (unsigned i = 0; i < 6; ++i)
+		for (size_t i = 0; i < 6; ++i)
 		{
 			decalVertexRemap[i].clear();
 			decalIndexRemap[i].clear();
 		}
 
-		std::vector<unsigned> tmpTranslation;
+		std::vector<size_t> tmpTranslation;
 		tmpTranslation.resize(vertices.size());
 
 		/*for (unsigned vi = 0; vi < vertices.size(); ++vi)
@@ -161,25 +151,23 @@ namespace RBX {
 		}*/
 	}
 
-	void xorBuffer(std::string& buffer)
-	{
-		const size_t basicEncryptionKeySize = 31;
+	void xorBuffer(std::string& buffer) {
+		const size_t basicEncryptionKeySize = 31u;
 
 		LcmRand randGen;
 		std::string basicEncryptionKey;
 		basicEncryptionKey.resize(basicEncryptionKeySize);
 
-		for (size_t i = 0; i < basicEncryptionKey.size(); i++)
+		for (size_t i = 0u; i < basicEncryptionKey.size(); i++)
 			basicEncryptionKey[i] = randGen.value() % CHAR_MAX;
 
-		for (size_t i = 0; i < buffer.size(); i++)
+		for (size_t i = 0u; i < buffer.size(); i++)
 			buffer[i] = buffer[i] ^ basicEncryptionKey[i % basicEncryptionKey.size()];
 	}
 
 	std::string headerTag("CSGMDL");
 
-	std::string CSGMesh::toBinaryString() const
-	{
+	std::string CSGMesh::toBinaryString() const {
 		std::stringstream stream;
 
 		stream.write(headerTag.c_str(), headerTag.size());
@@ -190,15 +178,15 @@ namespace RBX {
 
 		stream.write(reinterpret_cast<const char*>(hash.c_str()), hashSize + saltSize);
 
-		unsigned int numVertices = vertices.size();
-		unsigned int vertexStride = sizeof(CSGVertex);
-		stream.write(reinterpret_cast<const char*>(&numVertices), sizeof(unsigned int));
-		stream.write(reinterpret_cast<const char*>(&vertexStride), sizeof(unsigned int));
+		size_t numVertices = vertices.size();
+		size_t vertexStride = sizeof(CSGVertex);
+		stream.write(reinterpret_cast<const char*>(&numVertices), sizeof(size_t));
+		stream.write(reinterpret_cast<const char*>(&vertexStride), sizeof(size_t));
 		stream.write(reinterpret_cast<const char*>(&vertices[0]), vertexStride * numVertices);
 
-		unsigned int numIndices = indices.size();
-		stream.write(reinterpret_cast<const char*>(&numIndices), sizeof(unsigned int));
-		stream.write(reinterpret_cast<const char*>(&indices[0]), sizeof(unsigned int) * numIndices);
+		size_t numIndices = indices.size();
+		stream.write(reinterpret_cast<const char*>(&numIndices), sizeof(size_t));
+		stream.write(reinterpret_cast<const char*>(&indices[0]), sizeof(size_t) * numIndices);
 
 		std::string buffer(stream.str().c_str(), stream.str().size());
 
@@ -207,23 +195,22 @@ namespace RBX {
 		return buffer;
 	}
 
-	std::string CSGMesh::toBinaryStringForPhysics() const
-	{
+	std::string CSGMesh::toBinaryStringForPhysics() const {
 		std::vector<btVector3> vertexPositions;
-		for (unsigned int i = 0; i < vertices.size(); i++)
+
+		for (size_t i = 0u; i < vertices.size(); i++)
 			vertexPositions.push_back(btVector3(vertices[i].Position.x, vertices[i].Position.y, vertices[i].Position.z));
 
 		return TriangleMesh::generateStaticMeshData(indices, vertexPositions);
 	}
 
-	bool CSGMesh::fromBinaryString(const std::string& str)
-	{
+	bool CSGMesh::fromBinaryString(const std::string& str) {
 		std::string buffer(str.c_str(), str.size());
 
 		xorBuffer(buffer);
 
 		std::stringstream stream(buffer);
-		int currentVersion = version;
+		uint32_t currentVersion = version;
 
 		std::string fileId;
 		fileId.resize(headerTag.size());
@@ -232,7 +219,7 @@ namespace RBX {
 		if (fileId != headerTag)
 			return false;
 
-		stream.read(reinterpret_cast<char*>(&version), sizeof(int));
+		stream.read(reinterpret_cast<char*>(&version), sizeof(uint32_t));
 
 		if (version != currentVersion)
 			return false;
@@ -241,10 +228,10 @@ namespace RBX {
 		hash.resize(hashSize + saltSize);
 		stream.read(reinterpret_cast<char*>(&hash[0]), hashSize + saltSize);
 
-		unsigned int numVertices = 0;
-		unsigned int vertexStride = 0;
-		stream.read(reinterpret_cast<char*>(&numVertices), sizeof(unsigned int));
-		stream.read(reinterpret_cast<char*>(&vertexStride), sizeof(unsigned int));
+		size_t numVertices = 0u;
+		size_t vertexStride = 0u;
+		stream.read(reinterpret_cast<char*>(&numVertices), sizeof(size_t));
+		stream.read(reinterpret_cast<char*>(&vertexStride), sizeof(size_t));
 
 		if (vertexStride != sizeof(CSGVertex))
 			return false;
@@ -252,10 +239,10 @@ namespace RBX {
 		vertices.resize(numVertices);
 		stream.read(reinterpret_cast<char*>(&vertices[0]), vertexStride * numVertices);
 
-		unsigned int numIndices = 0;
-		stream.read(reinterpret_cast<char*>(&numIndices), sizeof(unsigned int));
+		size_t numIndices = 0u;
+		stream.read(reinterpret_cast<char*>(&numIndices), sizeof(size_t));
 		indices.resize(numIndices);
-		stream.read(reinterpret_cast<char*>(&indices[0]), sizeof(unsigned int) * numIndices);
+		stream.read(reinterpret_cast<char*>(&indices[0]), sizeof(size_t) * numIndices);
 
 		std::string salt(&hash[hashSize], saltSize);
 
@@ -269,20 +256,17 @@ namespace RBX {
 		return true;
 	}
 
-	void CSGMesh::set(const std::vector<CSGVertex>& verticesIn, const std::vector<unsigned int>& indicesIn)
-	{
+	void CSGMesh::set(const std::vector<CSGVertex>& verticesIn, const std::vector<uint32_t>& indicesIn) {
 		vertices = verticesIn;
 		indices = indicesIn;
 	}
 
-	CSGMesh* CSGMesh::clone() const
-	{
+	CSGMesh* CSGMesh::clone() const {
 		CSGMesh* mesh = new CSGMesh(*this);
 		return mesh;
 	}
 
-	void CSGVertex::generateUv()
-	{
+	void CSGVertex::generateUv() {
 		/*switch (extra.r)
 		{
 		case CSGVertex::UV_BOX_X:
@@ -306,8 +290,7 @@ namespace RBX {
 		}*/
 	}
 
-	Vector2 CSGVertex::generateUv(const Vector3& posIn) const
-	{
+	Vector2 CSGVertex::generateUv(const Vector3& posIn) const {
 		Vector2 uvResult;
 
 		/*switch (extra.r)
@@ -337,9 +320,8 @@ namespace RBX {
 		return uvResult;
 	}
 
-	bool CSGMesh::isNotEmpty() const
-	{
-		if ((getVertices().size() > 0) && (getIndices().size() > 0))
+	bool CSGMesh::isNotEmpty() const {
+		if ((getVertices().size() > 0u) && (getIndices().size() > 0u))
 			return true;
 
 		return false;

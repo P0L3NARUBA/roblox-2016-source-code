@@ -17,7 +17,7 @@ namespace RBX {
 		public:
 			static std::vector< const EnumDescriptor* >::const_iterator enumsBegin();
 			static std::vector< const EnumDescriptor* >::const_iterator enumsEnd();
-            static size_t allEnumSize() {return allEnums().size();}
+			static size_t allEnumSize() { return allEnums().size(); }
 
 			class Item : public Descriptor
 			{
@@ -27,9 +27,9 @@ namespace RBX {
 				const size_t index;	// place in ordered enum values  (0<=index<enumCount)
 				Item(const char* name, Descriptor::Attributes attributes, int value, size_t index, const EnumDescriptor& owner)
 					:Descriptor(name, attributes)
-					,value(value)
-					,index(index)
-					,owner(owner)
+					, value(value)
+					, index(index)
+					, owner(owner)
 				{
 				}
 				bool convertToValue(Variant& value) const
@@ -69,22 +69,22 @@ namespace RBX {
 			size_t getEnumCountMSB() const { return enumCountMSB; }
 			std::vector< const Item* >::const_iterator begin() const {
 				return allItems.begin();
-			}		
+			}
 			std::vector< const Item* >::const_iterator end() const {
 				return allItems.end();
-			}		
+			}
 			static const EnumDescriptor* lookupDescriptor(const RBX::Name& name) {
 				EnumNameTable::const_iterator iter = allEnumsNameLookup().find(&name);
-				if (iter!=allEnumsNameLookup().end())
+				if (iter != allEnumsNameLookup().end())
 					return iter->second;
 				else
-					return NULL;
+					return nullptr;
 			}
 			static const EnumDescriptor* lookupDescriptor(const Type& type) {
 				if (type.isEnum)
 					return static_cast<const EnumDescriptor*>(&type);
 				else
-					return NULL;
+					return nullptr;
 			}
 
 			bool isValue(int intValue) const {
@@ -118,7 +118,7 @@ namespace RBX {
 			};
 		};
 
-template<typename Enum> class EnumRegistrar;
+		template<typename Enum> class EnumRegistrar;
 
 		template<typename Enum>
 		class EnumDesc : public EnumDescriptor
@@ -129,7 +129,7 @@ template<typename Enum> class EnumRegistrar;
 			{
 				return Singleton<const EnumDesc<Enum> >::singleton();
 			}
-			
+
 		private:
 			// You must implement the following constructor for each EnumDesc that you define
 			EnumDesc();
@@ -138,8 +138,8 @@ template<typename Enum> class EnumRegistrar;
 				// Force linking of EnumRegistrar<Enum>, which will force clients
 				// of this library to define EnumRegistrar<Enum>::registrar in
 				// their startup code.
-				
-				
+
+
 				Reflection::EnumRegistrar<Enum>::registrar.dummy();
 
 				std::for_each(allItems.begin(), allItems.end(), &del_fun<const Item>);
@@ -156,7 +156,7 @@ template<typename Enum> class EnumRegistrar;
 			std::vector< Enum > indexToEnum;
 			std::vector< size_t > enumToIndex;		// maps enum to Index (there may be gaps)
 
-			
+
 			// Used in constructor
 			void addPair(Enum value, const char* name, Descriptor::Attributes attributes = Descriptor::Attributes())
 			{
@@ -170,27 +170,27 @@ template<typename Enum> class EnumRegistrar;
 
 				allItems.push_back(item);
 
-				if (intToEnum.size()<=(size_t)value)
-					intToEnum.resize(value+1, (Enum)-1);
+				if (intToEnum.size() <= (size_t)value)
+					intToEnum.resize(value + 1, (Enum)-1);
 				intToEnum[value] = value;
 
-				RBXASSERT(value>=0);
+				RBXASSERT(value >= 0);
 
-				if (enumToIndex.size()<=(size_t)value)
-					enumToIndex.resize(value+1, -1);
+				if (enumToIndex.size() <= (size_t)value)
+					enumToIndex.resize(value + 1, -1);
 				enumToIndex[value] = enumCount;
 				indexToEnum.push_back(value);
 
-				if (enumToName.size()<=(size_t)value)
-					enumToName.resize(value+1, &RBX::Name::getNullName());
+				if (enumToName.size() <= (size_t)value)
+					enumToName.resize(value + 1, &RBX::Name::getNullName());
 				enumToName[value] = &item->name;
 
-				if (enumToString.size()<=(size_t)value)
-					enumToString.resize(value+1);
+				if (enumToString.size() <= (size_t)value)
+					enumToString.resize(value + 1);
 				enumToString[value] = name;
 
-				if (enumToItem.size()<=(size_t)value)
-					enumToItem.resize(value+1);
+				if (enumToItem.size() <= (size_t)value)
+					enumToItem.resize(value + 1);
 				enumToItem[value] = item;
 
 				nameToEnum[&item->name] = value;
@@ -202,8 +202,8 @@ template<typename Enum> class EnumRegistrar;
 			{
 				RBXASSERT_VERY_FAST(value >= 0);
 
-				if (intToEnum.size()<=(size_t)oldValue)
-					intToEnum.resize(oldValue+1, (Enum)-1);
+				if (intToEnum.size() <= (size_t)oldValue)
+					intToEnum.resize(oldValue + 1, (Enum)-1);
 				intToEnum[oldValue] = value;
 				nameToEnumLegacy[&RBX::Name::declare(name)] = value;
 			}
@@ -214,33 +214,33 @@ template<typename Enum> class EnumRegistrar;
 		public:
 			const RBX::Name& convertToName(const Enum& value) const
 			{
-				RBXASSERT(value>=0);
-				RBXASSERT(value<enumToItem.size());
-				if (value<0)
+				RBXASSERT(value >= 0);
+				RBXASSERT(value < enumToItem.size());
+				if (value < 0)
 					return RBX::Name::getNullName();
-				if ((size_t)value>=enumToName.size())
+				if ((size_t)value >= enumToName.size())
 					return RBX::Name::getNullName();
 
 				return *enumToName[value];
 			}
 			std::string convertToString(const Enum& value) const
 			{
-				RBXASSERT(value>=0);
-				RBXASSERT((size_t)value<enumToItem.size());
-				if (value<0)
+				RBXASSERT(value >= 0);
+				RBXASSERT((size_t)value < enumToItem.size());
+				if (value < 0)
 					return "";
-				if ((size_t)value>=enumToString.size())
+				if ((size_t)value >= enumToString.size())
 					return "";
 
 				return enumToString[value];
 			}
 			const Item* convertToItem(const Enum& value) const
 			{
-				RBXASSERT(value>=0);
-				RBXASSERT((size_t)value<enumToItem.size());
-				if (value<0)
+				RBXASSERT(value >= 0);
+				RBXASSERT((size_t)value < enumToItem.size());
+				if (value < 0)
 					return NULL;
-				if ((size_t)value>=enumToItem.size())
+				if ((size_t)value >= enumToItem.size())
 					return NULL;
 
 				return enumToItem[value];
@@ -255,7 +255,7 @@ template<typename Enum> class EnumRegistrar;
 					return false;
 
 				value = intToEnum[intValue];
-                if ((int)value == -1)
+				if ((int)value == -1)
 					return false;
 				return true;
 			}
@@ -263,13 +263,13 @@ template<typename Enum> class EnumRegistrar;
 			bool convertToValue(const RBX::Name& name, Enum& value) const
 			{
 				typename std::map<const RBX::Name*, Enum>::const_iterator iter = nameToEnum.find(&name);
-				if (iter!=nameToEnum.end()) {
+				if (iter != nameToEnum.end()) {
 					value = iter->second;
 					return true;
 				}
 
 				iter = nameToEnumLegacy.find(&name);
-				if (iter!=nameToEnumLegacy.end()) {
+				if (iter != nameToEnumLegacy.end()) {
 					value = iter->second;
 					return true;
 				}
@@ -284,7 +284,7 @@ template<typename Enum> class EnumRegistrar;
 				else
 					return NULL;
 			}
-			/*implement*/ const Item* lookup(const Variant& value) const 
+			/*implement*/ const Item* lookup(const Variant& value) const
 			{
 				return convertToItem(value.cast<Enum>());
 			}
@@ -299,7 +299,7 @@ template<typename Enum> class EnumRegistrar;
 			/*implement*/ bool convertToString(size_t index, std::string& stringValue) const
 			{
 				Enum enumValue;
-				if(convertToValue(index, enumValue)){
+				if (convertToValue(index, enumValue)) {
 					stringValue = convertToString(enumValue);
 					return true;
 				}
@@ -313,26 +313,26 @@ template<typename Enum> class EnumRegistrar;
 			}
 			size_t convertToIndex(Enum value) const
 			{
-				RBXASSERT(value>=0);
-				if ((size_t)value<enumToIndex.size())
+				RBXASSERT(value >= 0);
+				if ((size_t)value < enumToIndex.size())
 					return enumToIndex[value];
 				else
 					return -1;
 			}
 			bool convertToValue(size_t index, Enum& value) const
 			{
-				if (index<enumCount) {
+				if (index < enumCount) {
 					value = indexToEnum[index];
 					return true;
 				}
 				else {
 					return false;
-                }
+				}
 			}
 		};
 
-// Helper macro
-// GCC does not generate the registrar variable defination & fails at Link Time. Force Construct by passing in an dummy arg to ctor. That works. WEIRD huh? 
+		// Helper macro
+		// GCC does not generate the registrar variable defination & fails at Link Time. Force Construct by passing in an dummy arg to ctor. That works. WEIRD huh? 
 #define RBX_REGISTER_ENUM(Enum)		namespace RBX { namespace Reflection {								\
 									template<>															\
 									const Type& Type::getSingleton<Enum>()			  					\
@@ -342,7 +342,7 @@ template<typename Enum> class EnumRegistrar;
 									template<> EnumRegistrar<Enum> EnumRegistrar<Enum>::registrar(0);	\
 									template<> TypeRegistrar<Enum> TypeRegistrar<Enum>::registrar(0);	\
 									}}
-		
+
 		// This class is intended to prevent clients of the library
 		// from forgetting to initialize the enum descriptor
 		template<typename Enum>
@@ -351,7 +351,7 @@ template<typename Enum> class EnumRegistrar;
 			int x;
 
 			//// GCC does not generate the registrar variable defination & fails at Link Time. Force Construct by passing in an dummy arg to ctor. That works. WEIRD huh? 
-			EnumRegistrar(int i):x(i)
+			EnumRegistrar(int i) :x(i)
 			{
 				// This call registers the enum descriptor 
 				// in the reflection database
@@ -367,7 +367,7 @@ template<typename Enum> class EnumRegistrar;
 			// that is initialized in the main thread before any objects
 			// are created. Otherwise the reflection database
 			// can change at runtime, which would be a disaster
-			static EnumRegistrar registrar;	
+			static EnumRegistrar registrar;
 		};
 
 

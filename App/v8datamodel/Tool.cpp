@@ -529,7 +529,7 @@ void Tool::downFrom_Equipped(bool connectTouchEvent)
 		{
 			oldCharacter = Instance::fastDynamicCast<ModelInstance>(oldArm->getParent());
 		}
-		weld->setParent(NULL);
+		weld->setParent(nullptr);
 		weld.reset();
 	}
 

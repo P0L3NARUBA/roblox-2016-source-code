@@ -14,69 +14,63 @@
 
 LOGGROUP(Graphics)
 
-namespace RBX
-{
-	namespace Graphics
-	{
+namespace RBX {
+	namespace Graphics {
 		typedef HRESULT(WINAPI* TypeD3DCompile)(LPCVOID, SIZE_T, LPCSTR, const D3D_SHADER_MACRO*, ID3DInclude*, LPCSTR, LPCSTR, UINT, UINT, ID3DBlob**, ID3DBlob**);
 		typedef HRESULT(WINAPI* TypeD3DPreprocess)(LPCVOID, SIZE_T, LPCSTR, const D3D_SHADER_MACRO*, ID3DInclude*, ID3DBlob**, ID3DBlob**);
 		typedef HRESULT(WINAPI* TypeD3DReflect)(LPCVOID, SIZE_T, REFIID, void**);
 
-		static TypeD3DCompile loadShaderCompiler()
-		{
+		static TypeD3DCompile loadShaderCompiler() {
 #if !defined(RBX_PLATFORM_DURANGO)
 			HMODULE d3dCompiler = ShaderProgramD3D11::loadShaderCompilerDLL();
 
-			return d3dCompiler ? (TypeD3DCompile)GetProcAddress(d3dCompiler, "D3DCompile") : NULL;
+			return d3dCompiler ? (TypeD3DCompile)GetProcAddress(d3dCompiler, "D3DCompile") : nullptr;
 #else
 			return &D3DCompile;
 #endif
 		}
 
-		static TypeD3DPreprocess loadShaderPreprocessor()
-		{
+		static TypeD3DPreprocess loadShaderPreprocessor() {
 #if !defined(RBX_PLATFORM_DURANGO)
 			HMODULE d3dCompiler = ShaderProgramD3D11::loadShaderCompilerDLL();
 
-			return d3dCompiler ? (TypeD3DPreprocess)GetProcAddress(d3dCompiler, "D3DPreprocess") : NULL;
+			return d3dCompiler ? (TypeD3DPreprocess)GetProcAddress(d3dCompiler, "D3DPreprocess") : nullptr;
 #else
 			return &D3DPreprocess;
 #endif
 		}
 
-		static TypeD3DReflect loadShaderReflector()
-		{
+		static TypeD3DReflect loadShaderReflector() {
 #if !defined(RBX_PLATFORM_DURANGO)
 			HMODULE d3dCompiler = ShaderProgramD3D11::loadShaderCompilerDLL();
 
-			return d3dCompiler ? (TypeD3DReflect)GetProcAddress(d3dCompiler, "D3DReflect") : NULL;
+			return d3dCompiler ? (TypeD3DReflect)GetProcAddress(d3dCompiler, "D3DReflect") : nullptr;
 #else
 			return &D3DReflect;
 #endif
 		}
 
-		static void extractCbuffers(Device* device, const std::vector<char>& bytecode, std::vector<shared_ptr<CBufferD3D11>>& cbuffers, unsigned globalSize, unsigned int* outSamplerMask) {
+		/*static void extractCbuffers(Device* device, const std::vector<char>& bytecode, std::vector<shared_ptr<CBufferD3D11>>& cbuffers, unsigned int globalSize, unsigned int* outSamplerMask) {
 			TypeD3DReflect D3DReflect = loadShaderReflector();
 			RBXASSERT(D3DReflect);
 
 			cbuffers.clear();
 
-			ID3D11ShaderReflection* shaderReflection11 = NULL;
+			ID3D11ShaderReflection* shaderReflection11 = nullptr;
 			HRESULT hr = D3DReflect(bytecode.data(), bytecode.size(), IID_ID3D11ShaderReflection, (void**)&shaderReflection11);
 			RBXASSERT(SUCCEEDED(hr));
 
 			D3D11_SHADER_DESC shaderDesc;
 			shaderReflection11->GetDesc(&shaderDesc);
 
-			unsigned int samplerMask = 0;
-			for (unsigned i = 0; i < shaderDesc.BoundResources; ++i)
-			{
+			unsigned int samplerMask = 0u;
+			for (size_t i = 0u; i < shaderDesc.BoundResources; ++i) {
 				D3D11_SHADER_INPUT_BIND_DESC desc;
 				HRESULT hr = shaderReflection11->GetResourceBindingDesc(i, &desc);
 				RBXASSERT(SUCCEEDED(hr));
 
 				if (desc.Type == D3D_SIT_TEXTURE) {
-					samplerMask |= 1 << desc.BindPoint;
+					samplerMask |= 1u << desc.BindPoint;
 				}
 				else if (desc.Type == D3D_SIT_CBUFFER) {
 					ID3D11ShaderReflectionConstantBuffer* cb = shaderReflection11->GetConstantBufferByName(desc.Name);
@@ -85,21 +79,9 @@ namespace RBX
 					cb->GetDesc(&cbDesc);
 
 					if (cbDesc.Type == D3D11_CT_CBUFFER) {
-						/*if (desc.BindPoint == 0) {
-							bool isGlobals = strcmp(cbDesc.Name, "Globals") == 0;
-
-							if (!isGlobals)
-								throw std::runtime_error("D3D11 Shader compilation: Globals are not bound to register 0 (or not bound at all)");
-
-							if (isGlobals && cbDesc.Size != globalSize)
-								throw std::runtime_error("D3D11 Shader compilation: Globals CBuffer size is not the same as defined CBuffer size");
-
-							continue; // globals are same for all the shaders globally in deviceContext, so we want to skip it here
-						}*/
-
 						std::vector<UniformD3D11> uniforms;
 
-						for (unsigned varId = 0; varId < cbDesc.Variables; ++varId) {
+						for (size_t varId = 0u; varId < cbDesc.Variables; ++varId) {
 							ID3D11ShaderReflectionVariable* var = cb->GetVariableByIndex(varId);
 
 							D3D11_SHADER_VARIABLE_DESC varDesc;
@@ -127,40 +109,17 @@ namespace RBX
 			ReleaseCheck(shaderReflection11);
 		}
 
-		static int findCBuffer(const std::vector<shared_ptr<CBufferD3D11>>& cBuffers, const std::string& name)
-		{
-			for (unsigned i = 0; i < cBuffers.size(); ++i)
-			{
+		static int findCBuffer(const std::vector<shared_ptr<CBufferD3D11>>& cBuffers, const std::string& name) {
+			for (size_t i = 0u; i < cBuffers.size(); ++i) {
 				if (cBuffers[i]->getName() == name)
 					return i;
 			}
 			return -1;
-		}
+		}*/
 
-		static ID3D11VertexShader* createVertexShader(Device* device, const std::vector<char>& bytecode, std::vector<shared_ptr<CBufferD3D11>>& cbuffers, int& uniformsCBuffer, unsigned& maxWorldTransforms, int& worldMatCBuffer, int& uniformWorldMatrix, int& uniformWorldMatrixArray) {
+		static ID3D11VertexShader* createVertexShader(Device* device, const std::vector<char>& bytecode) {
 			DeviceContextD3D11* context = static_cast<DeviceD3D11*>(device)->getImmediateContextD3D11();
 			ID3D11Device* device11 = static_cast<DeviceD3D11*>(device)->getDevice11();
-
-			/*extractCbuffers(device, bytecode, cbuffers, context->getGlobalDataSize(), NULL);
-
-			uniformsCBuffer = findCBuffer(cbuffers, "$Globals");
-			worldMatCBuffer = findCBuffer(cbuffers, "WorldMatrixCB");
-
-			if (worldMatCBuffer >= 0)
-			{
-				uniformWorldMatrix = cbuffers[worldMatCBuffer]->findUniform("WorldMatrix");
-				if (uniformWorldMatrix >= 0)
-				{
-					maxWorldTransforms = 1;
-				}
-
-				uniformWorldMatrixArray = cbuffers[worldMatCBuffer]->findUniform("WorldMatrixArray");
-				if (uniformWorldMatrixArray >= 0)
-				{
-					const UniformD3D11& uniform = cbuffers[worldMatCBuffer]->getUniform(uniformWorldMatrixArray);
-					maxWorldTransforms = uniform.size / (4 * 4 * 3); // 4bytes per float * 3 vectors
-				}
-			}*/
 
 			ID3D11VertexShader* vertexShader = nullptr;
 			HRESULT hr = device11->CreateVertexShader(bytecode.data(), bytecode.size(), nullptr, &vertexShader);
@@ -168,64 +127,60 @@ namespace RBX
 			if (FAILED(hr))
 				throw std::runtime_error("Failed to create vertex shader object.");
 
-			//RBXASSERT(SUCCEEDED(hr));
-
 			return vertexShader;
 		}
 
-		static ID3D11PixelShader* createPixelShader(Device* device, const std::vector<char>& bytecode, std::vector<shared_ptr<CBufferD3D11>>& cbuffers, int& uniformsCBuffer, unsigned int& samplerMask) {
+		static ID3D11PixelShader* createPixelShader(Device* device, const std::vector<char>& bytecode) {
 			DeviceContextD3D11* context = static_cast<DeviceD3D11*>(device)->getImmediateContextD3D11();
 			ID3D11Device* device11 = static_cast<DeviceD3D11*>(device)->getDevice11();
-
-			/*extractCbuffers(device, bytecode, cbuffers, context->getGlobalDataSize(), &samplerMask);
-			uniformsCBuffer = findCBuffer(cbuffers, "$Globals");*/
 
 			ID3D11PixelShader* pixelShader = nullptr;
 			HRESULT hr = device11->CreatePixelShader(bytecode.data(), bytecode.size(), nullptr, &pixelShader);
 
 			if (FAILED(hr))
 				throw std::runtime_error("Failed to create pixel shader object.");
-			
-			//RBXASSERT(SUCCEEDED(hr));
 
 			return pixelShader;
 		}
 
-		static ID3D11ComputeShader* createComputeShader(Device* device, const std::vector<char>& bytecode, std::vector<shared_ptr<CBufferD3D11>>& cbuffers, int& uniformsCBuffer) {
+		static ID3D11ComputeShader* createComputeShader(Device* device, const std::vector<char>& bytecode) {
 			ID3D11Device* device11 = static_cast<DeviceD3D11*>(device)->getDevice11();
 
-			ID3D11ComputeShader* computeShader = NULL;
-			HRESULT hr = device11->CreateComputeShader(bytecode.data(), bytecode.size(), NULL, &computeShader);
-			RBXASSERT(SUCCEEDED(hr));
+			ID3D11ComputeShader* computeShader = nullptr;
+			HRESULT hr = device11->CreateComputeShader(bytecode.data(), bytecode.size(), nullptr, &computeShader);
+
+			if (FAILED(hr))
+				throw std::runtime_error("Failed to create compute shader object.");
 
 			return computeShader;
 		}
 
-		static ID3D11GeometryShader* createGeometryShader(Device* device, const std::vector<char>& bytecode, std::vector<shared_ptr<CBufferD3D11>>& cbuffers, int& uniformsCBuffer) {
+		static ID3D11GeometryShader* createGeometryShader(Device* device, const std::vector<char>& bytecode) {
 			ID3D11Device* device11 = static_cast<DeviceD3D11*>(device)->getDevice11();
 
-			ID3D11GeometryShader* geometryShader = NULL;
-			HRESULT hr = device11->CreateGeometryShader(bytecode.data(), bytecode.size(), NULL, &geometryShader);
-			RBXASSERT(SUCCEEDED(hr));
+			ID3D11GeometryShader* geometryShader = nullptr;
+			HRESULT hr = device11->CreateGeometryShader(bytecode.data(), bytecode.size(), nullptr, &geometryShader);
+
+			if (FAILED(hr))
+				throw std::runtime_error("Failed to create geometry shader object.");
 
 			return geometryShader;
 		}
 
-		const UniformD3D11& CBufferD3D11::getUniform(int id) const
-		{
+		/*const UniformD3D11& CBufferD3D11::getUniform(int id) const {
 			RBXASSERT(id >= 0 && id < (int)uniforms.size());
 			return uniforms[id];
 		}
 
-		CBufferD3D11::CBufferD3D11(Device* device, int registerId, const std::string& name, unsigned sizeIn, const std::vector<UniformD3D11>& uniformsIn) :
+		CBufferD3D11::CBufferD3D11(Device* device, int registerId, const std::string& name, unsigned int sizeIn, const std::vector<UniformD3D11>& uniformsIn) :
 			Resource(device),
 			registerId(registerId),
 			name(name),
 			size(sizeIn),
-			data(NULL),
+			data(nullptr),
 			dirty(true),
 			uniforms(uniformsIn),
-			object(NULL)
+			object(nullptr)
 		{
 			ID3D11Device* device11 = static_cast<DeviceD3D11*>(device)->getDevice11();
 
@@ -236,55 +191,49 @@ namespace RBX
 			cbDesc.Usage = D3D11_USAGE_DEFAULT;
 			cbDesc.ByteWidth = size;
 			cbDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-			cbDesc.CPUAccessFlags = 0;
-			cbDesc.MiscFlags = 0;
-			cbDesc.StructureByteStride = 0;
+			cbDesc.CPUAccessFlags = 0u;
+			cbDesc.MiscFlags = 0u;
+			cbDesc.StructureByteStride = 0u;
 
-			HRESULT hr = device11->CreateBuffer(&cbDesc, NULL, &object);
+			HRESULT hr = device11->CreateBuffer(&cbDesc, nullptr, &object);
 			RBXASSERT(SUCCEEDED(hr));
 		}
 
-		void CBufferD3D11::updateUniform(int uniformId, const float* uniformData, unsigned vectorCount)
-		{
-			size_t uniformSize = vectorCount * sizeof(float) * 4; // our vectors are always float4
+		void CBufferD3D11::updateUniform(int uniformId, const float* uniformData, unsigned vectorCount) {
+			size_t uniformSize = vectorCount * sizeof(float) * 4u; // our vectors are always float4
 			RBXASSERT(uniformId >= 0 && uniformId < (int)uniforms.size());
 			RBXASSERT(uniforms[uniformId].size >= uniformSize);
 
-			if (dirty || memcmp(&data[uniforms[uniformId].offset], uniformData, uniformSize) != 0)
-			{
+			if (dirty || memcmp(&data[uniforms[uniformId].offset], uniformData, uniformSize) != 0) {
 				dirty = true;
 				memcpy(&data[uniforms[uniformId].offset], uniformData, uniformSize);
 			}
 		}
 
-		void CBufferD3D11::updateBuffer()
-		{
-			if (dirty)
-			{
+		void CBufferD3D11::updateBuffer() {
+			if (dirty) {
 				ID3D11Device* device11 = static_cast<DeviceD3D11*>(device)->getDevice11();
 				ID3D11DeviceContext* context11 = static_cast<DeviceD3D11*>(device)->getImmediateContext11();
 
-				context11->UpdateSubresource(object, 0, NULL, data, 0, 0);
+				context11->UpdateSubresource(object, 0u, nullptr, data, 0u, 0u);
 
 				dirty = false;
 			}
 		}
 
-		int CBufferD3D11::findUniform(const std::string& uniformName)
-		{
-			for (unsigned i = 0; i < uniforms.size(); ++i)
-			{
+		int CBufferD3D11::findUniform(const std::string& uniformName) {
+			for (size_t i = 0u; i < uniforms.size(); ++i) {
 				if (uniforms[i].name == uniformName)
 					return i;
 			}
+
 			return -1;
 		}
 
-		CBufferD3D11::~CBufferD3D11()
-		{
+		CBufferD3D11::~CBufferD3D11() {
 			ReleaseCheck(object);
 			delete[] data;
-		}
+		}*/
 
 		BaseShaderD3D11::BaseShaderD3D11(const std::vector<char>& bytecode)
 			: bytecode(bytecode)
@@ -292,41 +241,38 @@ namespace RBX
 		{
 		}
 
-		int BaseShaderD3D11::findUniform(const std::string& name)
-		{
+		/*int BaseShaderD3D11::findUniform(const std::string& name) {
 			if (uniformsBufferId < 0) return -1;
 
 			return cBuffers[uniformsBufferId]->findUniform(name);
 		}
 
-		void BaseShaderD3D11::setConstant(int handle, const float* data, size_t vectorCount)
-		{
+		void BaseShaderD3D11::setConstant(int handle, const float* data, size_t vectorCount) {
 			if (uniformsBufferId < 0)
 				return;
 
 			cBuffers[uniformsBufferId]->updateUniform(handle, data, vectorCount);
 		}
 
-		void BaseShaderD3D11::updateConstantBuffers()
-		{
-			for (size_t i = 0; i < cBuffers.size(); ++i)
+		void BaseShaderD3D11::updateConstantBuffers() {
+			for (size_t i = 0u; i < cBuffers.size(); ++i)
 				cBuffers[i]->updateBuffer();
-		}
+		}*/
 
 		VertexShaderD3D11::VertexShaderD3D11(Device* device, const std::vector<char>& bytecode)
 			: VertexShader(device)
 			, BaseShaderD3D11(bytecode)
 			, object(nullptr)
-			, worldMatrixCbuffer(-1)
+			/*, worldMatrixCbuffer(-1)
 			, worldMatrixArray(-1)
 			, worldMatrix(-1)
-			, maxWorldTransforms(0)
+			, maxWorldTransforms(0)*/
 		{
-			object = createVertexShader(device, bytecode, cBuffers, uniformsBufferId, maxWorldTransforms, worldMatrixCbuffer, worldMatrix, worldMatrixArray);
+			object = createVertexShader(device, bytecode);
 		}
 
 		void VertexShaderD3D11::reloadBytecode(const std::vector<char>& bytecode) {
-			ID3D11VertexShader* newObject = createVertexShader(device, bytecode, cBuffers, uniformsBufferId, maxWorldTransforms, worldMatrixCbuffer, worldMatrix, worldMatrixArray);
+			ID3D11VertexShader* newObject = createVertexShader(device, bytecode);
 			ReleaseCheck(object);
 
 			object = newObject;
@@ -352,18 +298,16 @@ namespace RBX
 		void VertexShaderD3D11::removeLayout(VertexLayoutD3D11* vertexLayout) {
 			InputLayoutMap::iterator it = inputLayoutMap.find(vertexLayout);
 
-			if (it != inputLayoutMap.end())
-			{
+			if (it != inputLayoutMap.end()) {
 				ReleaseCheck(it->second);
 				inputLayoutMap.erase(it);
 			}
 		}
 
-		void VertexShaderD3D11::setWorldTransforms4x3(const float* data, size_t matrixCount) {
+		/*void VertexShaderD3D11::setWorldTransforms4x3(const float* data, size_t matrixCount) {
 			if (worldMatrixCbuffer < 0) return;
 
-			if (worldMatrix >= 0)
-			{
+			if (worldMatrix >= 0) {
 				static const float lastRow[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 				float matrix[16];
 
@@ -375,19 +319,19 @@ namespace RBX
 
 			if (worldMatrixArray >= 0)
 				cBuffers[worldMatrixCbuffer]->updateUniform(0, data, matrixCount * 3);
-		}
+		}*/
 
 		FragmentShaderD3D11::FragmentShaderD3D11(Device* device, const std::vector<char>& bytecode)
 			: FragmentShader(device)
 			, BaseShaderD3D11(bytecode)
-			, object(NULL)
+			, object(nullptr)
 			, samplerMask(0)
 		{
-			object = createPixelShader(device, bytecode, cBuffers, uniformsBufferId, samplerMask);
+			object = createPixelShader(device, bytecode);
 		}
 
 		void FragmentShaderD3D11::reloadBytecode(const std::vector<char>& bytecode) {
-			ID3D11PixelShader* newObject = createPixelShader(device, bytecode, cBuffers, uniformsBufferId, samplerMask);
+			ID3D11PixelShader* newObject = createPixelShader(device, bytecode);
 			ReleaseCheck(object);
 
 			object = newObject;
@@ -397,13 +341,13 @@ namespace RBX
 		ComputeShaderD3D11::ComputeShaderD3D11(Device* device, const std::vector<char>& bytecode)
 			: ComputeShader(device)
 			, BaseShaderD3D11(bytecode)
-			, object(NULL)
+			, object(nullptr)
 		{
-			object = createComputeShader(device, bytecode, cBuffers, uniformsBufferId);
+			object = createComputeShader(device, bytecode);
 		}
 
 		void ComputeShaderD3D11::reloadBytecode(const std::vector<char>& bytecode) {
-			ID3D11ComputeShader* newObject = createComputeShader(device, bytecode, cBuffers, uniformsBufferId);
+			ID3D11ComputeShader* newObject = createComputeShader(device, bytecode);
 			ReleaseCheck(object);
 
 			object = newObject;
@@ -413,38 +357,34 @@ namespace RBX
 		GeometryShaderD3D11::GeometryShaderD3D11(Device* device, const std::vector<char>& bytecode)
 			: GeometryShader(device)
 			, BaseShaderD3D11(bytecode)
-			, object(NULL)
+			, object(nullptr)
 		{
-			object = createGeometryShader(device, bytecode, cBuffers, uniformsBufferId);
+			object = createGeometryShader(device, bytecode);
 		}
 
 		void GeometryShaderD3D11::reloadBytecode(const std::vector<char>& bytecode) {
-			ID3D11GeometryShader* newObject = createGeometryShader(device, bytecode, cBuffers, uniformsBufferId);
+			ID3D11GeometryShader* newObject = createGeometryShader(device, bytecode);
 			ReleaseCheck(object);
 
 			object = newObject;
 			this->bytecode = bytecode;
 		}
 
-		VertexShaderD3D11::~VertexShaderD3D11()
-		{
+		VertexShaderD3D11::~VertexShaderD3D11() {
 			ReleaseCheck(object);
 			for (InputLayoutMap::iterator it = inputLayoutMap.begin(); it != inputLayoutMap.end(); ++it)
 				ReleaseCheck(it->second);
 		}
 
-		FragmentShaderD3D11::~FragmentShaderD3D11()
-		{
+		FragmentShaderD3D11::~FragmentShaderD3D11() {
 			ReleaseCheck(object);
 		}
 
-		ComputeShaderD3D11::~ComputeShaderD3D11()
-		{
+		ComputeShaderD3D11::~ComputeShaderD3D11() {
 			ReleaseCheck(object);
 		}
 
-		GeometryShaderD3D11::~GeometryShaderD3D11()
-		{
+		GeometryShaderD3D11::~GeometryShaderD3D11() {
 			ReleaseCheck(object);
 		}
 
@@ -466,12 +406,12 @@ namespace RBX
 			RBXASSERT(shaderDescVS.OutputParameters >= shaderDescFS.InputParameters);
 
 			// we have to find matching signature from FS in VS
-			for (unsigned fsId = 0; fsId < shaderDescFS.InputParameters; ++fsId) {
+			for (size_t fsId = 0u; fsId < shaderDescFS.InputParameters; ++fsId) {
 				D3D11_SIGNATURE_PARAMETER_DESC fsDesc;
 				reflectionFS11->GetInputParameterDesc(fsId, &fsDesc);
 				bool found = false;
 
-				for (unsigned i = 0; i < shaderDescVS.OutputParameters; i++) {
+				for (size_t i = 0u; i < shaderDescVS.OutputParameters; i++) {
 					D3D11_SIGNATURE_PARAMETER_DESC vsDesc;
 					reflectionVS11->GetOutputParameterDesc(i, &vsDesc);
 
@@ -485,6 +425,7 @@ namespace RBX
 						break;
 					}
 				}
+
 				RBXASSERT(found);
 			}
 
@@ -500,9 +441,9 @@ namespace RBX
 		ShaderProgramD3D11::ShaderProgramD3D11(Device* device, const shared_ptr<VertexShader>& vertexShader, const shared_ptr<FragmentShader>& fragmentShader)
 			: ShaderProgram(device, vertexShader, fragmentShader)
 		{
-//#ifdef __RBX_NOT_RELEASE
+#ifdef __RBX_NOT_RELEASE
 			verifyShaderSignatures(static_cast<VertexShaderD3D11*>(vertexShader.get()), static_cast<FragmentShaderD3D11*>(fragmentShader.get()));
-//#endif
+#endif
 		}
 
 		ShaderProgramD3D11::ShaderProgramD3D11(Device* device, const shared_ptr<ComputeShader>& computeShader)
@@ -515,8 +456,7 @@ namespace RBX
 			static_cast<DeviceD3D11*>(device)->getImmediateContextD3D11()->invalidateCachedProgram();
 		}
 
-		struct IncludeCallback : ID3DInclude
-		{
+		struct IncludeCallback : ID3DInclude {
 			boost::function<std::string(const std::string&)> fileCallback;
 			std::map<const void*, std::string> paths;
 
@@ -525,12 +465,10 @@ namespace RBX
 			{
 			}
 
-			virtual HRESULT STDMETHODCALLTYPE Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes)
-			{
+			virtual HRESULT STDMETHODCALLTYPE Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes) {
 				std::string path;
 
-				if (pParentData)
-				{
+				if (pParentData) {
 					RBXASSERT(paths.count(pParentData));
 
 					path = paths[pParentData];
@@ -541,8 +479,7 @@ namespace RBX
 
 				path += pFileName;
 
-				try
-				{
+				try {
 					std::string source = fileCallback(path);
 
 					char* result = new char[source.length()];
@@ -555,14 +492,12 @@ namespace RBX
 
 					return S_OK;
 				}
-				catch (...)
-				{
+				catch (...) {
 					return ERROR_FILE_NOT_FOUND;
 				}
 			}
 
-			virtual HRESULT STDMETHODCALLTYPE Close(LPCVOID pData)
-			{
+			virtual HRESULT STDMETHODCALLTYPE Close(LPCVOID pData) {
 				RBXASSERT(paths.count(pData));
 				paths.erase(pData);
 				delete[] static_cast<const char*>(pData);
@@ -571,12 +506,9 @@ namespace RBX
 			}
 		};
 
-		template <typename T> static std::vector<T> consumeData(HRESULT hr, ID3DBlob* buffer, ID3DBlob* messages)
-		{
-			if (SUCCEEDED(hr))
-			{
-				if (messages)
-				{
+		template <typename T> static std::vector<T> consumeData(HRESULT hr, ID3DBlob* buffer, ID3DBlob* messages) {
+			if (SUCCEEDED(hr)) {
+				if (messages) {
 					std::string log(static_cast<char*>(messages->GetBufferPointer()), messages->GetBufferSize());
 
 					messages->Release();
@@ -593,8 +525,7 @@ namespace RBX
 
 				return result;
 			}
-			else if (messages)
-			{
+			else if (messages) {
 				std::string log(static_cast<char*>(messages->GetBufferPointer()), messages->GetBufferSize());
 
 				messages->Release();
@@ -605,8 +536,7 @@ namespace RBX
 				throw RBX::runtime_error("Unknown error %x", hr);
 		}
 
-		std::string ShaderProgramD3D11::createShaderSource(const std::string& path, const std::string& defines, const DeviceD3D11* device11, boost::function<std::string(const std::string&)> fileCallback)
-		{
+		std::string ShaderProgramD3D11::createShaderSource(const std::string& path, const std::string& defines, const DeviceD3D11* device11, boost::function<std::string(const std::string&)> fileCallback) {
 			TypeD3DPreprocess D3DPreprocess = loadShaderPreprocessor();
 			RBXASSERT(D3DPreprocess);
 
@@ -622,22 +552,19 @@ namespace RBX
 			// create d3dx defines
 			std::vector<D3D_SHADER_MACRO > macros;
 
-			for (size_t i = 0; i < defineStrings.size(); ++i)
-			{
+			for (size_t i = 0u; i < defineStrings.size(); ++i) {
 				std::string& def = defineStrings[i];
 				std::string::size_type pos = def.find('=');
 
-				if (pos == std::string::npos)
-				{
+				if (pos == std::string::npos) {
 					D3D_SHADER_MACRO  macro = { def.c_str(), "1" };
 					macros.push_back(macro);
 				}
-				else
-				{
+				else {
 					// split string into name and value
 					def[pos] = 0;
 
-					D3D_SHADER_MACRO  macro = { def.c_str(), def.c_str() + pos + 1 };
+					D3D_SHADER_MACRO macro = { def.c_str(), def.c_str() + pos + 1 };
 					macros.push_back(macro);
 				}
 			}
@@ -662,8 +589,7 @@ namespace RBX
 			std::string result = &resultBuffer[0];
 
 			// preprocessor output includes a #line 1 "<full-path>\memory"; remove it!
-			if (result.size() > 10 && result.compare(0, 9, "#line 1 \"") == 0 && result[10] == ':')
-			{
+			if (result.size() > 10u && result.compare(0u, 9u, "#line 1 \"") == 0 && result[10] == ':') {
 				std::string::size_type pos = result.find_first_of('\n');
 				assert(pos != std::string::npos);
 
@@ -673,13 +599,9 @@ namespace RBX
 			return result;
 		}
 
-		static void translateShaderProfile(const std::string& originalTarget, DeviceD3D11::ShaderProfile shaderProfile, std::string& targetOut)
-		{
-			switch (shaderProfile)
-			{
-
-			case DeviceD3D11::shaderProfile_DX11:
-			{
+		static void translateShaderProfile(const std::string& originalTarget, DeviceD3D11::ShaderProfile shaderProfile, std::string& targetOut) {
+			switch (shaderProfile) {
+			case DeviceD3D11::shaderProfile_DX11: {
 				/*std::string shaderType = originalTarget.substr(0, 2);
 				targetOut = shaderType + "_5_1";*/
 				targetOut = originalTarget; // what's the point of specifying the target profile in shader.json if we're just gonna override it anyways?
@@ -690,26 +612,24 @@ namespace RBX
 			}
 		}
 
-		std::vector<char> ShaderProgramD3D11::createShaderBytecode(const std::string& source, const std::string& target, const DeviceD3D11* device11, const std::string& entrypoint)
-		{
+		std::vector<char> ShaderProgramD3D11::createShaderBytecode(const std::string& source, const std::string& target, const DeviceD3D11* device11, const std::string& entrypoint) {
 			TypeD3DCompile D3DCompile = loadShaderCompiler();
 			RBXASSERT(D3DCompile);
 
-			unsigned int flags = D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR;
+			unsigned int flags = D3DCOMPILE_PACK_MATRIX_ROW_MAJOR;
 
 			std::string realTarget;
 			translateShaderProfile(target, device11->getShaderProfile(), realTarget);
 
 			ID3DBlob* bytecode = nullptr;
 			ID3DBlob* messages = nullptr;
-			HRESULT hr = D3DCompile(source.c_str(), source.length(), entrypoint.c_str(), nullptr, nullptr, entrypoint.c_str(), realTarget.c_str(), flags, 0, &bytecode, &messages);
+			HRESULT hr = D3DCompile(source.c_str(), source.length(), entrypoint.c_str(), nullptr, nullptr, entrypoint.c_str(), realTarget.c_str(), flags, 0u, &bytecode, &messages);
 
 			return consumeData<char>(hr, bytecode, messages);
 		}
 
 #if !defined(RBX_PLATFORM_DURANGO)
-		HMODULE ShaderProgramD3D11::loadShaderCompilerDLL()
-		{
+		HMODULE ShaderProgramD3D11::loadShaderCompilerDLL() {
 			static HMODULE compiler;
 
 			if (!compiler)
@@ -719,23 +639,19 @@ namespace RBX
 		}
 #endif
 
-		ID3D11InputLayout* ShaderProgramD3D11::getInputLayout11(VertexLayoutD3D11* vertexLayout)
-		{
+		ID3D11InputLayout* ShaderProgramD3D11::getInputLayout11(VertexLayoutD3D11* vertexLayout) {
 			return static_cast<VertexShaderD3D11*>(vertexShader.get())->getInputLayout11(vertexLayout);
 		}
 
-		unsigned int ShaderProgramD3D11::getMaxWorldTransforms() const
-		{
+		unsigned int ShaderProgramD3D11::getMaxWorldTransforms() const {
 			return static_cast<VertexShaderD3D11*>(vertexShader.get())->getMaxWorldTransforms();
 		}
 
-		void ShaderProgramD3D11::setWorldTransforms4x3(const float* data, size_t matrixCount)
-		{
+		/*void ShaderProgramD3D11::setWorldTransforms4x3(const float* data, size_t matrixCount) {
 			static_cast<VertexShaderD3D11*>(vertexShader.get())->setWorldTransforms4x3(data, matrixCount);
 		}
 
-		int ShaderProgramD3D11::getConstantHandle(const char* name) const
-		{
+		int ShaderProgramD3D11::getConstantHandle(const char* name) const {
 			int vs = static_cast<VertexShaderD3D11*>(vertexShader.get())->findUniform(name);
 			int fs = static_cast<FragmentShaderD3D11*>(fragmentShader.get())->findUniform(name);
 
@@ -747,38 +663,32 @@ namespace RBX
 				return (vs + 1) | ((fs + 1) << 16);
 		}
 
-		void ShaderProgramD3D11::setConstant(int handle, const float* data, size_t vectorCount)
-		{
+		void ShaderProgramD3D11::setConstant(int handle, const float* data, size_t vectorCount) {
 			if (handle < 0)
 				return;
 
 			int vs = (handle & 0xffff) - 1;
 			int fs = (handle >> 16) - 1;
 
-			if (vs >= 0)
-			{
+			if (vs >= 0) {
 				static_cast<VertexShaderD3D11*>(vertexShader.get())->setConstant(vs, data, vectorCount);
 			}
 
-			if (fs >= 0)
-			{
+			if (fs >= 0) {
 				static_cast<FragmentShaderD3D11*>(fragmentShader.get())->setConstant(fs, data, vectorCount);
 			}
 		}
 
-		void ShaderProgramD3D11::uploadConstantBuffers()
-		{
+		void ShaderProgramD3D11::uploadConstantBuffers() {
 			static_cast<VertexShaderD3D11*>(vertexShader.get())->updateConstantBuffers();
 			static_cast<FragmentShaderD3D11*>(fragmentShader.get())->updateConstantBuffers();
-		}
+		}*/
 
-		unsigned int ShaderProgramD3D11::getSamplerMask() const
-		{
+		unsigned int ShaderProgramD3D11::getSamplerMask() const {
 			return static_cast<FragmentShaderD3D11*>(fragmentShader.get())->getSamplerMask();
 		}
 
-		void ShaderProgramD3D11::bind()
-		{
+		void ShaderProgramD3D11::bind() {
 			ID3D11DeviceContext* context11 = static_cast<DeviceD3D11*>(device)->getImmediateContext11();
 			VertexShaderD3D11* vs = static_cast<VertexShaderD3D11*>(vertexShader.get());
 			FragmentShaderD3D11* fs = static_cast<FragmentShaderD3D11*>(fragmentShader.get());
@@ -803,8 +713,8 @@ namespace RBX
 			if (!fsObject)
 				throw std::runtime_error("Fragment shader object is null");
 
-			context11->VSSetShader(vsObject, nullptr, 0);
-			context11->PSSetShader(fsObject, nullptr, 0);
+			context11->VSSetShader(vsObject, nullptr, 0u);
+			context11->PSSetShader(fsObject, nullptr, 0u);
 		}
 	}
 }

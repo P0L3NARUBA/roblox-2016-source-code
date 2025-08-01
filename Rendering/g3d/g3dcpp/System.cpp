@@ -428,7 +428,7 @@ void System::memcpy(void* dst, const void* src, size_t numBytes) {
 
 
 
-void System::memset(void* dst, uint8 value, size_t numBytes) {
+void System::memset(void* dst, uint8_t value, size_t numBytes) {
     ::memset(dst, value, numBytes);
 }
 

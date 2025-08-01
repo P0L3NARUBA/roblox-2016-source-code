@@ -62,19 +62,17 @@ DYNAMIC_FASTFLAG(UseR15Character)
 
 FASTINTVARIABLE(FastClusterUpdateWaitingBudgetMs, 4)
 
-namespace RBX
-{
-	namespace Graphics
-	{
+namespace RBX {
+	namespace Graphics {
 
 		const double CLUSTER_INVALIDATE_FRAME_BUDGET_MS = 4.0;
 
 #if defined(RBX_PLATFORM_IOS) || defined(__ANDROID__)
-		const int FAST_CLUSTER_PRIORITY_INVALIDATE_BUDGET = 2;
-		const size_t MAX_INVALIDATIONS_PER_FRAME = 16;
+		const size_t FAST_CLUSTER_PRIORITY_INVALIDATE_BUDGET = 2u;
+		const size_t MAX_INVALIDATIONS_PER_FRAME = 16u;
 #else
-		const int FAST_CLUSTER_PRIORITY_INVALIDATE_BUDGET = 4;
-		const size_t MAX_INVALIDATIONS_PER_FRAME = 64;
+		const size_t FAST_CLUSTER_PRIORITY_INVALIDATE_BUDGET = 4u;
+		const size_t MAX_INVALIDATIONS_PER_FRAME = 64u;
 #endif
 
 		SceneUpdater::SceneUpdater(shared_ptr<RBX::DataModel> dataModel, VisualEngine* ve)
@@ -82,12 +80,12 @@ namespace RBX
 			, mSettings(ve->getSettings())
 			, mRenderCaps(ve->getRenderCaps())
 			, mRenderStats(ve->getRenderStats())
-			, currentFrameNum(0)
+			, currentFrameNum(0u)
 			, mVisualEngine(ve)
-			, mLastLightingUpdates(0)
-			, mLastOccupancyUpdates(0)
+			, mLastLightingUpdates(0u)
+			, mLastOccupancyUpdates(0u)
 			, mLightingComputeAverage(15)
-			, mAgeDirtyProportion(0)
+			, mAgeDirtyProportion(0u)
 			, mLightingActive(false)
 			, computeLightingEnabled(true)
 		{
@@ -100,15 +98,14 @@ namespace RBX
 
 			FASTLOG1(FLog::GfxClusters, "After initial bind, added parts: %u", mAddedParts.size());
 
-			RBX::Vector3 cellExtents = RBX::Vector3(32 * 4, 16 * 4, 32 * 4);
+			RBX::Vector3 cellExtents = RBX::Vector3(32.0f * 4.0f, 16.0f * 4.0f, 32.0f * 4.0f);
 			float largeCoeff = 1.5f;
 
 			mFastGridSC.reset(new FastGridSC(cellExtents, largeCoeff));
 
 			FASTLOG(FLog::ViewRbxInit, "SceneUpdater bind - end");
 
-			if (FFlag::NoRandomColorsWithoutOutlines)
-			{
+			if (FFlag::NoRandomColorsWithoutOutlines) {
 				RBX::Lighting* lighting = ServiceProvider::find<Lighting>(dataModel.get());
 				if (lighting)
 					propertyChangedSignal = lighting->propertyChangedSignal.connect(boost::bind(&SceneUpdater::onPropertyChanged, this, _1));
@@ -119,14 +116,12 @@ namespace RBX
 		{
 		}
 
-		void SceneUpdater::unbind()
-		{
+		void SceneUpdater::unbind() {
 			FASTLOG(FLog::ViewRbxInit, "SceneUpdater unbind - start");
 
-			for (size_t i = 0; i < connections.size(); ++i)
-			{
+			for (size_t i = 0u; i < connections.size(); ++i)
 				connections[i].disconnect();
-			}
+
 			connections.clear();
 			FASTLOG(FLog::ViewRbxInit, "SceneUpdater unbind - end");
 
@@ -149,34 +144,28 @@ namespace RBX
 			mFastGridSC.reset();
 		}
 
-		void SceneUpdater::onWorkspaceDescendantAdded(shared_ptr<RBX::Instance> descendant)
-		{
+		void SceneUpdater::onWorkspaceDescendantAdded(shared_ptr<RBX::Instance> descendant) {
 			// See if the new instance is a PartInstance
 
 			RBX::PartInstance* pi = RBX::Instance::fastDynamicCast<RBX::PartInstance>(descendant.get());
-			if (pi != NULL)
-			{
+
+			if (pi != nullptr) {
 				queuePartToCreate(shared_from(pi));
 				return;
 			}
 
 			if (dynamic_cast<Effect*>(descendant.get()))
-			{
 				queueAttachementToCreate(descendant);
-			}
 		}
 
-		bool SceneUpdater::isPartStatic(RBX::PartInstance* part)
-		{
+		bool SceneUpdater::isPartStatic(RBX::PartInstance* part) {
 			return part->getSleeping();
 		}
 
-		void SceneUpdater::queuePartToCreate(const boost::shared_ptr<RBX::PartInstance>& part)
-		{
+		void SceneUpdater::queuePartToCreate(const boost::shared_ptr<RBX::PartInstance>& part) {
 			RBX::mutex::scoped_lock scoped_lock(queue_mutex);
 
-			if (part->getPartType() == MEGACLUSTER_PART)
-			{
+			if (part->getPartType() == MEGACLUSTER_PART) {
 				FASTLOG2(FLog::GfxClustersFull, "Frame %u: Adding Megacluster to queue - %p", currentFrameNum, part.get());
 				mAddedMegaClusters[part.get()] = part;
 			}
@@ -186,37 +175,33 @@ namespace RBX
 			}
 		}
 
-		void SceneUpdater::queueAttachementToCreate(const boost::shared_ptr<RBX::Instance>& instance)
-		{
+		void SceneUpdater::queueAttachementToCreate(const boost::shared_ptr<RBX::Instance>& instance) {
 			RBX::mutex::scoped_lock scoped_lock(queue_mutex);
 			mAddedAttachementInstances[instance.get()] = instance;
 		}
 
-		void SceneUpdater::processPendingAttachments()
-		{
+		void SceneUpdater::processPendingAttachments() {
 			RBXPROFILER_SCOPE("Render", "processPendingAttachments");
 
 			InstanceSet tmp;
+
 			{
 				RBX::mutex::scoped_lock scoped_lock(queue_mutex);
 				std::swap(tmp, mAddedAttachementInstances);
 			}
+
 			{
 				// in dynamic clumping, we just create clumps of size 1.
-				for (InstanceSet::iterator it = tmp.begin(); it != tmp.end(); ++it)
-				{
+				for (InstanceSet::iterator it = tmp.begin(); it != tmp.end(); ++it) {
 					shared_ptr<Instance> p = it->second.lock();
 
 					if (p && GfxBinding::isInWorkspace(p.get())) // part could have dissapeared before render ever happened.
-					{
 						addAttachment(p);
-					}
 				}
 			}
 		}
 
-		void SceneUpdater::queueChunkInvalidateMegaCluster(RBX::GfxPart* part, const SpatialRegion::Id& pos, bool isWaterChunk)
-		{
+		void SceneUpdater::queueChunkInvalidateMegaCluster(RBX::GfxPart* part, const SpatialRegion::Id& pos, bool isWaterChunk) {
 			RBXASSERT(part->getPartInstance()->getPartType() == RBX::MEGACLUSTER_PART);
 			RBX::mutex::scoped_lock scoped_lock(queue_mutex);
 			FASTLOG3(FLog::MegaClusterDirty, "Chunk queued for update: %u x %u x %u",
@@ -227,51 +212,42 @@ namespace RBX
 
 			float distance = (camera->getCameraCoordinateFrame().translation - testLocation).squaredMagnitude();
 
-			if (distance < 256 * 256) { // radius = ~ 2 chunks
-				mCloseChunkInvalidates.insert(mCloseChunkInvalidates.begin(),
-					MegaClusterChunk(part, pos, isWaterChunk));
-			}
-			else if (distance < 2048 * 2048) { // radius = ~ 16 chunks
-				mMiddleChunkInvalidates.insert(mMiddleChunkInvalidates.begin(),
-					MegaClusterChunk(part, pos, isWaterChunk));
-			}
-			else {
-				mFarChunkInvalidates.insert(mFarChunkInvalidates.begin(),
-					MegaClusterChunk(part, pos, isWaterChunk));
-			}
+			if (distance < 256.0f * 256.0f) // radius = ~ 2 chunks
+				mCloseChunkInvalidates.insert(mCloseChunkInvalidates.begin(), MegaClusterChunk(part, pos, isWaterChunk));
+			else if (distance < 2048.0f * 2048.0f) // radius = ~ 16 chunks
+				mMiddleChunkInvalidates.insert(mMiddleChunkInvalidates.begin(), MegaClusterChunk(part, pos, isWaterChunk));
+			else
+				mFarChunkInvalidates.insert(mFarChunkInvalidates.begin(), MegaClusterChunk(part, pos, isWaterChunk));
 		}
 
-		void SceneUpdater::queueFullInvalidateMegaCluster(RBX::GfxPart* part)
-		{
+		void SceneUpdater::queueFullInvalidateMegaCluster(RBX::GfxPart* part) {
 			RBXASSERT(part->getPartInstance()->getPartType() == RBX::MEGACLUSTER_PART);
 			FASTLOG1(FLog::MegaClusterInit, "Full cluster queued for update - %p", part);
+
 			RBX::mutex::scoped_lock scoped_lock(queue_mutex);
 			mFullInvalidatedClusters.insert(part);
 		}
 
-		void SceneUpdater::queueInvalidatePart(RBX::GfxPart* part)
-		{
+		void SceneUpdater::queueInvalidatePart(RBX::GfxPart* part) {
 			FASTLOG2(FLog::GfxClustersFull, "Frame %u: Queue invalidate part: %p", currentFrameNum, part);
+
 			RBX::mutex::scoped_lock scoped_lock(queue_mutex);
 			mInvalidatedParts.insert(part);
 		}
 
-		void SceneUpdater::queueInvalidateFastCluster(RBX::GfxPart* cluster)
-		{
+		void SceneUpdater::queueInvalidateFastCluster(RBX::GfxPart* cluster) {
 			FASTLOG2(FLog::GfxClustersFull, "Frame %u: Queue invalidate fast cluster: %p", currentFrameNum, cluster);
 
 			RBX::mutex::scoped_lock scoped_lock(queue_mutex);
 			mInvalidatedFastClusters.insert(cluster);
 		}
 
-		void SceneUpdater::queuePriorityInvalidateFastCluster(RBX::GfxPart* cluster)
-		{
+		void SceneUpdater::queuePriorityInvalidateFastCluster(RBX::GfxPart* cluster) {
 			FASTLOG2(FLog::GfxClustersFull, "Frame %u: Queue priority invalidate fast cluster: %p", currentFrameNum, cluster);
 			mPriorityInvalidateFastClusters.insert(cluster);
 		}
 
-		void SceneUpdater::notifyWaitingForAssets(RBX::GfxPart* part, const std::vector<RBX::ContentId>& ids)
-		{
+		void SceneUpdater::notifyWaitingForAssets(RBX::GfxPart* part, const std::vector<RBX::ContentId>& ids) {
 			std::vector<RBX::ContentId> uids = ids;
 
 			std::sort(uids.begin(), uids.end());
@@ -283,30 +259,27 @@ namespace RBX
 
 			mWaitingParts.erase(part);
 
-			for (size_t i = 0; i < uids.size(); ++i)
+			for (size_t i = 0u; i < uids.size(); ++i)
 				mWaitingParts.insert(std::make_pair(part, uids[i]));
 		}
 
-		void SceneUpdater::updateAllInvalidParts(bool bulkExecution)
-		{
+		void SceneUpdater::updateAllInvalidParts(bool bulkExecution) {
 			RBXPROFILER_SCOPE("Render", "updateInvalidParts");
 
 			GfxPartSet tmp;
+
 			{
 				RBX::mutex::scoped_lock scoped_lock(queue_mutex);
 
-				if (mInvalidatedParts.size() > 0)
+				if (mInvalidatedParts.size() > 0u)
 					FASTLOG2(FLog::GfxClusters, "Total invalidated parts: %u, bulkExecution: %u", mInvalidatedParts.size(), bulkExecution);
 
 				if (mInvalidatedParts.size() < MAX_INVALIDATIONS_PER_FRAME || bulkExecution)
-				{
 					std::swap(tmp, mInvalidatedParts);
-				}
-				else
-				{
+				else {
 					GfxPartSet::iterator it = mInvalidatedParts.begin();
-					while (tmp.size() < MAX_INVALIDATIONS_PER_FRAME)
-					{
+
+					while (tmp.size() < MAX_INVALIDATIONS_PER_FRAME) {
 						tmp.insert(*it);
 						mInvalidatedParts.erase(it++);
 					}
@@ -316,37 +289,31 @@ namespace RBX
 			if (!tmp.empty())
 				FASTLOG1(FLog::GfxClusters, "Invalidating entities: %u", tmp.size());
 
-			for (GfxPartSet::iterator it = tmp.begin(); it != tmp.end(); ++it)
-			{
+			for (GfxPartSet::iterator it = tmp.begin(); it != tmp.end(); ++it) {
 				// remove this part from the waiting list if it managed to find it's way in the invalidation queue (it could get deleted!)
 				mWaitingParts.erase(*it);
 
 				FASTLOG1(FLog::GfxClustersFull, "Updating entity on part cluster: %p", *it);
 
 				(*it)->updateEntity();
-
 			}
 		}
 
-		struct WaitingPart
-		{
+		struct WaitingPart {
 			GfxPart* part;
 			std::multimap<GfxPart*, ContentId>::iterator assets;
 
 			float distance;
-			unsigned int assetCount;
+			size_t assetCount;
 
-			bool operator<(const WaitingPart& other) const
-			{
+			bool operator<(const WaitingPart& other) const {
 				return distance < other.distance;
 			}
 
-			bool isNewContentAvailable(ContentProvider* contentProvider) const
-			{
+			bool isNewContentAvailable(ContentProvider* contentProvider) const {
 				auto it = assets;
 
-				for (unsigned int i = 0; i < assetCount; ++i)
-				{
+				for (size_t i = 0u; i < assetCount; ++i) {
 					const ContentId& id = it->second;
 
 					if (contentProvider->hasContent(id) || contentProvider->isUrlBad(id))
@@ -359,8 +326,7 @@ namespace RBX
 			}
 		};
 
-		void SceneUpdater::updateWaitingParts(bool bulkExecution)
-		{
+		void SceneUpdater::updateWaitingParts(bool bulkExecution) {
 			RBXPROFILER_SCOPE("Render", "updateWaitingParts");
 
 			if (!mWaitingParts.empty())
@@ -371,15 +337,13 @@ namespace RBX
 			// Gather all clusters that are waiting for assets
 			std::vector<WaitingPart> waitingParts;
 
-			for (AssetPartMap::iterator it = mWaitingParts.begin(); it != mWaitingParts.end(); )
-			{
+			for (AssetPartMap::iterator it = mWaitingParts.begin(); it != mWaitingParts.end(); ) {
 				float distance = (it->first->getCenter() - pointOfInterest).squaredLength();
 
 				WaitingPart part = { it->first, it, distance, 0 };
 
 				// Scan through assets with the same part (map is sorted by part pointer)
-				while (it != mWaitingParts.end() && it->first == part.part)
-				{
+				while (it != mWaitingParts.end() && it->first == part.part) {
 					++it;
 					part.assetCount++;
 				}
@@ -393,38 +357,31 @@ namespace RBX
 			// Process all clusters with a timeout - closest clusters get processed first
 			Timer<Time::Precise> timer;
 
-			for (auto& part : waitingParts)
-			{
+			for (auto& part : waitingParts) {
 				// part.assets iterator must still point to a valid element since map iterators are only invalidated by erases of their keys
 				RBXASSERT(part.assets->first == part.part);
 
-				if (part.isNewContentAvailable(contentProvider))
-				{
+				if (part.isNewContentAvailable(contentProvider)) {
 					// Remove all entries for this part from the list; they will reappear if the part still needs them and they are not available
 					mWaitingParts.erase(part.part);
 
 					part.part->updateEntity(/* assetsUpdated= */ true);
 
+					// come again next time!
 					if (!bulkExecution && timer.delta().msec() > FInt::FastClusterUpdateWaitingBudgetMs)
-					{
-						// come again next time!
 						break;
-					}
 				}
 			}
 		}
 
-		static void limitCopy(unsigned int maxSize, SceneUpdater::MegaClusterChunkList& source, SceneUpdater::MegaClusterChunkList& dest)
-		{
-			while (dest.size() < maxSize && !source.empty())
-			{
+		static void limitCopy(uint32_t maxSize, SceneUpdater::MegaClusterChunkList& source, SceneUpdater::MegaClusterChunkList& dest) {
+			while (dest.size() < maxSize && !source.empty()) {
 				dest.push_back(source.back());
 				source.pop_back();
 			}
 		}
 
-		void SceneUpdater::updateMegaClusters(bool bulkExecution)
-		{
+		void SceneUpdater::updateMegaClusters(bool bulkExecution) {
 			RBXPROFILER_SCOPE("Render", "updateClusters");
 
 			GfxPartSet tmpFull;
@@ -434,72 +391,62 @@ namespace RBX
 				std::swap(tmpFull, mFullInvalidatedClusters);
 			}
 
-			if (tmpFull.size() > 0)
+			if (tmpFull.size() > 0u)
 				FASTLOG1(FLog::GfxClusters, "Updating %u Full clusters", tmpFull.size());
 
 			for (GfxPartSet::iterator it = tmpFull.begin(); it != tmpFull.end(); ++it)
-			{
 				(*it)->updateEntity();
-			}
 
 			MegaClusterChunkList tmpChunk;
 
 			{
 				RBX::mutex::scoped_lock scoped_lock(queue_mutex);
 
-				if (bulkExecution)
-				{
+				if (bulkExecution) {
 					limitCopy(UINT_MAX, mCloseChunkInvalidates, tmpChunk);
 					limitCopy(UINT_MAX, mMiddleChunkInvalidates, tmpChunk);
 					limitCopy(UINT_MAX, mFarChunkInvalidates, tmpChunk);
 				}
-				else
-				{
-					limitCopy(5, mCloseChunkInvalidates, tmpChunk);
-					limitCopy(7, mMiddleChunkInvalidates, tmpChunk);
-					limitCopy(8, mFarChunkInvalidates, tmpChunk);
-					limitCopy(8, mCloseChunkInvalidates, tmpChunk);
-					limitCopy(8, mMiddleChunkInvalidates, tmpChunk);
-					limitCopy(8, mFarChunkInvalidates, tmpChunk);
+				else {
+					limitCopy(5u, mCloseChunkInvalidates, tmpChunk);
+					limitCopy(7u, mMiddleChunkInvalidates, tmpChunk);
+					limitCopy(8u, mFarChunkInvalidates, tmpChunk);
+					limitCopy(8u, mCloseChunkInvalidates, tmpChunk);
+					limitCopy(8u, mMiddleChunkInvalidates, tmpChunk);
+					limitCopy(8u, mFarChunkInvalidates, tmpChunk);
 				}
 			}
 
-			if (tmpChunk.size() > 0)
+			if (tmpChunk.size() > 0u)
 				FASTLOG1(FLog::GfxClusters, "Updating %u cluster chunks", tmpChunk.size());
 
-			mRenderStats->lastFrameMegaClusterChunks = 0;
+			mRenderStats->lastFrameMegaClusterChunks = 0u;
 
-			for (MegaClusterChunkList::iterator itChunk = tmpChunk.begin(); itChunk != tmpChunk.end(); ++itChunk)
-			{
+			for (MegaClusterChunkList::iterator itChunk = tmpChunk.begin(); itChunk != tmpChunk.end(); ++itChunk) {
 				itChunk->cluster->updateChunk(itChunk->chunkPos, itChunk->isWaterChunk);
 				mRenderStats->lastFrameMegaClusterChunks++;
 			}
 		}
 
-		void SceneUpdater::updateInvalidatedFastClusters(bool bulkExecution /* = false */)
-		{
+		void SceneUpdater::updateInvalidatedFastClusters(bool bulkExecution /* = false */) {
 			RBXPROFILER_SCOPE("Render", "updateInvalidatedFastClusters");
 
-			mRenderStats->lastFrameFast.clusters = 0;
-			mRenderStats->lastFrameFast.parts = 0;
+			mRenderStats->lastFrameFast.clusters = 0u;
+			mRenderStats->lastFrameFast.parts = 0u;
 
 			RBX::Timer<RBX::Time::Precise> timer;
 
-			if (FLog::GfxClusters)
-			{
+			if (FLog::GfxClusters) {
 				RBX::mutex::scoped_lock scoped_lock(queue_mutex);
+
 				if (!mPriorityInvalidateFastClusters.empty() || !mInvalidatedFastClusters.empty())
-				{
 					FASTLOG2(FLog::GfxClusters, "Invalidating Fast Clusters, PriorityInvalidatedClusters: %u, InvalidatedClusters: %u", mPriorityInvalidateFastClusters.size(), mInvalidatedFastClusters.size());
-				}
 			}
 
-			do
-			{
-				GfxPart* cluster = NULL;
+			do {
+				GfxPart* cluster = nullptr;
 
-				if (mPriorityInvalidateFastClusters.empty())
-				{
+				if (mPriorityInvalidateFastClusters.empty()) {
 					RBX::mutex::scoped_lock scoped_lock(queue_mutex);
 
 					if (mInvalidatedFastClusters.empty())
@@ -509,8 +456,7 @@ namespace RBX
 					mInvalidatedFastClusters.erase(mInvalidatedFastClusters.begin());
 					FASTLOG3(FLog::GfxClusters, "Updating invalidated cluster %p (remaining: %u, bulkExecution: %u)", cluster, mPriorityInvalidateFastClusters.size(), bulkExecution);
 				}
-				else
-				{
+				else {
 					cluster = *mPriorityInvalidateFastClusters.begin();
 					mPriorityInvalidateFastClusters.erase(mPriorityInvalidateFastClusters.begin());
 				}
@@ -525,18 +471,15 @@ namespace RBX
 			} while (bulkExecution || !mPriorityInvalidateFastClusters.empty() || timer.delta().msec() <= CLUSTER_INVALIDATE_FRAME_BUDGET_MS);
 		}
 
-		bool SceneUpdater::arePartsWaitingForAssets()
-		{
+		bool SceneUpdater::arePartsWaitingForAssets() {
 			return !mWaitingParts.empty();
 		}
 
-		size_t SceneUpdater::getUpdateQueueSize() const
-		{
+		size_t SceneUpdater::getUpdateQueueSize() const {
 			return mInvalidatedFastClusters.size() + mPriorityInvalidateFastClusters.size();
 		}
 
-		void SceneUpdater::notifyAwake(RBX::GfxPart* part)
-		{
+		void SceneUpdater::notifyAwake(RBX::GfxPart* part) {
 			RBX::mutex::scoped_lock scoped_lock(queue_mutex);
 
 			FASTLOG1(FLog::GfxClustersFull, "notifyAwake, adding cluster %p to dynamic nodes", part);
@@ -544,34 +487,30 @@ namespace RBX
 			mDynamicNodes.insert(part);
 		}
 
-
-		void SceneUpdater::notifySleeping(RBX::GfxPart* part)
-		{
+		void SceneUpdater::notifySleeping(RBX::GfxPart* part) {
 			RBX::mutex::scoped_lock scoped_lock(queue_mutex);
 			GfxPartSet::iterator it = mDynamicNodes.find(part);
-			if (it != mDynamicNodes.end())
-			{
+
+			if (it != mDynamicNodes.end()) {
 				FASTLOG1(FLog::GfxClustersFull, "NotifySleeping for cluster %p, erasing from dynamic nodes", part);
+
 				mDynamicNodes.erase(it);
 			}
 		}
 
-		struct IsChunkFromCluster
-		{
+		struct IsChunkFromCluster {
 			GfxPart* part;
 
 			IsChunkFromCluster(GfxPart* part) : part(part)
 			{
 			}
 
-			bool operator()(const SceneUpdater::MegaClusterChunk& chunk) const
-			{
+			bool operator()(const SceneUpdater::MegaClusterChunk& chunk) const {
 				return chunk.cluster == part;
 			}
 		};
 
-		void SceneUpdater::notifyDestroyed(RBX::GfxPart* part)
-		{
+		void SceneUpdater::notifyDestroyed(RBX::GfxPart* part) {
 			// clear deleted parts from invalid/waiting lists.
 			RBX::mutex::scoped_lock scoped_lock(queue_mutex);
 
@@ -583,8 +522,7 @@ namespace RBX
 			mPriorityInvalidateFastClusters.erase(part);
 			mInvalidatedFastClusters.erase(part);
 
-			if (mMegaClusters.count(part))
-			{
+			if (mMegaClusters.count(part)) {
 				mMegaClusters.erase(part);
 
 				mFullInvalidatedClusters.erase(part);
@@ -592,17 +530,14 @@ namespace RBX
 				mMiddleChunkInvalidates.erase(std::remove_if(mMiddleChunkInvalidates.begin(), mMiddleChunkInvalidates.end(), IsChunkFromCluster(part)), mMiddleChunkInvalidates.end());
 				mFarChunkInvalidates.erase(std::remove_if(mFarChunkInvalidates.begin(), mFarChunkInvalidates.end(), IsChunkFromCluster(part)), mFarChunkInvalidates.end());
 
-				if (MegaClusterInstance* terrain = Instance::fastDynamicCast<MegaClusterInstance>(part->getPartInstance()))
-				{
-					if (terrain->isSmooth() == (dynamic_cast<SmoothClusterBase*>(part) != NULL))
-					{
+				if (MegaClusterInstance* terrain = Instance::fastDynamicCast<MegaClusterInstance>(part->getPartInstance())) {
+					if (terrain->isSmooth() == (dynamic_cast<SmoothClusterBase*>(part) != nullptr)) {
 						if (terrain->isSmooth())
 							terrain->getSmoothGrid()->disconnectListener(this);
 						else
 							terrain->getVoxelGrid()->disconnectListener(this);
 					}
-					else
-					{
+					else {
 						// terrain is smooth but the cluster is not smooth
 						// this can happen when we do convert-to-smooth
 						// however, in this case we don't really need to disconnect from old grid since it's dead at this point
@@ -611,8 +546,7 @@ namespace RBX
 			}
 		}
 
-		void SceneUpdater::queueFastClusterCheck(RBX::GfxPart* cluster, bool isFW)
-		{
+		void SceneUpdater::queueFastClusterCheck(RBX::GfxPart* cluster, bool isFW) {
 			// FIXME: Do we need to take queue_mutex here? Right now it seems to be protected by physics DM Write access
 			FASTLOG2(FLog::GfxClustersFull, "Fast Cluster queued to check - %p, isFW - %u", cluster, isFW);
 			if (isFW)
@@ -621,25 +555,23 @@ namespace RBX
 				mFastClustersToCheck.insert(cluster);
 		}
 
-		void SceneUpdater::updateDynamicParts()
-		{
+		void SceneUpdater::updateDynamicParts() {
 			RBXPROFILER_SCOPE("Render", "updateDynamicParts");
 
 			RBX::Profiling::Mark mark(*mRenderStats->updateDynamicParts, true, true);
 
 			std::vector<GfxPart*> tmp;
-			tmp.reserve(mDynamicNodes.size());
-			{
+			tmp.reserve(mDynamicNodes.size()); {
 				RBX::mutex::scoped_lock scoped_lock(queue_mutex);
 				std::copy(mDynamicNodes.begin(), mDynamicNodes.end(), std::back_inserter(tmp));
 			}
+
 			if (!mDynamicNodes.empty())
 				FASTLOG1(FLog::GfxClusters, "Dynamic parts to update: %u", mDynamicNodes.size());
 
 			//update the cframes of all the dynamic objects
 
-			for (std::vector<GfxPart*>::iterator childit = tmp.begin(); childit != tmp.end(); ++childit)
-			{
+			for (std::vector<GfxPart*>::iterator childit = tmp.begin(); childit != tmp.end(); ++childit) {
 				GfxPart* aggNode = *childit;
 
 				aggNode->updateCoordinateFrame();
@@ -647,11 +579,10 @@ namespace RBX
 
 		}
 
-		void SceneUpdater::processPendingMegaClusters()
-		{
+		void SceneUpdater::processPendingMegaClusters() {
 			RBXPROFILER_SCOPE("Render", "processPendingClusters");
 
-			if (mAddedMegaClusters.size() > 0)
+			if (mAddedMegaClusters.size() > 0u)
 				FASTLOG1(FLog::GfxClusters, "Processing %u new MegaClusters", mAddedMegaClusters.size());
 
 			PartInstanceSet localCopy;
@@ -661,16 +592,15 @@ namespace RBX
 				std::swap(localCopy, mAddedMegaClusters);
 			}
 
-			for (PartInstanceSet::iterator it = localCopy.begin(); it != localCopy.end(); ++it)
-			{
+			for (PartInstanceSet::iterator it = localCopy.begin(); it != localCopy.end(); ++it) {
 				shared_ptr<RBX::PartInstance> part = it->second.lock();
+
 				if (part)
 					addMegaCluster(part);
 			}
 		}
 
-		void SceneUpdater::processPendingParts(bool priorityParts)
-		{
+		void SceneUpdater::processPendingParts(bool priorityParts) {
 			RBXPROFILER_SCOPE("Render", "processPendingParts");
 
 			PartInstanceSet localCopy;
@@ -684,25 +614,20 @@ namespace RBX
 			if (!localCopy.empty())
 				FASTLOG2(FLog::GfxClusters, "Added parts to process: %u, priority: %u", localCopy.size(), priorityParts);
 
-			for (PartInstanceSet::iterator it = localCopy.begin(); it != localCopy.end(); ++it)
-			{
+			for (PartInstanceSet::iterator it = localCopy.begin(); it != localCopy.end(); ++it) {
 				shared_ptr<PartInstance> p = it->second.lock();
 
-				if (p && GfxBinding::isInWorkspace(p.get()))
-				{
+				if (p && GfxBinding::isInWorkspace(p.get())) {
 					p->setCookie(PartCookie::compute(p.get()));
 
 					addFastPart(p, /* isFW= */ isPartStatic(p.get()), priorityParts);
 				}
 				else
-				{
-					FASTLOG2(FLog::GfxClustersFull, "Part %p died or removed from workspace before we could process it (died: %u)", it->first, p.get() == NULL);
-				}
+					FASTLOG2(FLog::GfxClustersFull, "Part %p died or removed from workspace before we could process it (died: %u)", it->first, p.get() == nullptr);
 			}
 		}
 
-		void SceneUpdater::updatePrepare(unsigned long currentFrameNum, const RBX::Frustum& updateFrustum)
-		{
+		void SceneUpdater::updatePrepare(uint32_t currentFrameNum, const RBX::Frustum& updateFrustum) {
 			RBXPROFILER_SCOPE("Render", "UpdatePrepare");
 
 			this->currentFrameNum = currentFrameNum;
@@ -731,91 +656,71 @@ namespace RBX
 			FASTLOG(FLog::GfxClusters, "Scene updater finish");
 		}
 
-		void SceneUpdater::updatePerform()
-		{
+		void SceneUpdater::updatePerform() {
 			computeLightingPerform();
 		}
 
-		void SceneUpdater::terrainCellChanged(const Voxel::CellChangeInfo& info)
-		{
+		void SceneUpdater::terrainCellChanged(const Voxel::CellChangeInfo& info) {
 			// info.position is in terrain voxel coordinates; convert to studs before using
 			G3D::Vector3 terrainCoordInStuds = Voxel::cellToWorld_center(info.position);
 
-			if (LightGrid* lgrid = mVisualEngine->getLightGrid())
-			{
-				if (mLightingActive)
-				{
+			if (LightGrid* lgrid = mVisualEngine->getLightGrid()) {
+				if (mLightingActive) {
 					lgrid->invalidatePoint(terrainCoordInStuds, LightGridChunk::Dirty_OccupancyAndDependents | LightGridChunk::Dirty_HighPriority);
 				}
 			}
 		}
 
-		void SceneUpdater::onTerrainRegionChanged(const Voxel2::Region& region)
-		{
-			if (LightGrid* lgrid = mVisualEngine->getLightGrid())
-			{
-				if (mLightingActive)
-				{
+		void SceneUpdater::onTerrainRegionChanged(const Voxel2::Region& region) {
+			if (LightGrid* lgrid = mVisualEngine->getLightGrid()) {
+				if (mLightingActive) {
 					Vector3 begin = Voxel::cellSpaceToWorldSpace(region.begin().toVector3());
 					Vector3 end = Voxel::cellSpaceToWorldSpace(region.end().toVector3());
 
 					lgrid->invalidateExtents(Extents(begin, end), LightGridChunk::Dirty_OccupancyAndDependents);
-					lgrid->invalidatePoint((begin + end) / 2, LightGridChunk::Dirty_HighPriority);
+					lgrid->invalidatePoint((begin + end) / 2.0f, LightGridChunk::Dirty_HighPriority);
 				}
 			}
 		}
 
-		void SceneUpdater::lightingInvalidateOccupancy(const RBX::Extents& extents, const RBX::Vector3& highPriorityPoint, bool isFixed)
-		{
-			if (LightGrid* lgrid = mVisualEngine->getLightGrid())
-			{
-				if (mLightingActive && (isFixed || lgrid->getNonFixedPartsEnabled()))
-				{
+		void SceneUpdater::lightingInvalidateOccupancy(const RBX::Extents& extents, const RBX::Vector3& highPriorityPoint, bool isFixed) {
+			if (LightGrid* lgrid = mVisualEngine->getLightGrid()) {
+				if (mLightingActive && (isFixed || lgrid->getNonFixedPartsEnabled())) {
 					lgrid->invalidateExtents(extents, LightGridChunk::Dirty_OccupancyAndDependents);
 					lgrid->invalidatePoint(highPriorityPoint, LightGridChunk::Dirty_HighPriority);
 				}
 			}
 		}
 
-		void SceneUpdater::lightingInvalidateLocal(const RBX::Extents& extents)
-		{
-			if (LightGrid* lgrid = mVisualEngine->getLightGrid())
-			{
+		void SceneUpdater::lightingInvalidateLocal(const RBX::Extents& extents) {
+			if (LightGrid* lgrid = mVisualEngine->getLightGrid()) {
 				checkAndActivateLighting();
 
 				lgrid->invalidateExtents(extents, LightGridChunk::Dirty_LightingLocal);
 			}
 		}
 
-		void SceneUpdater::checkAndActivateLighting()
-		{
-			if (!mLightingActive)
-			{
+		void SceneUpdater::checkAndActivateLighting() {
+			if (!mLightingActive) {
 				mLightingActive = true;
 
 				// inactive lighting muted all occupancy updates; re-issue them
 				if (LightGrid* lgrid = mVisualEngine->getLightGrid())
-				{
 					lgrid->invalidateAll(LightGridChunk::Dirty_Occupancy);
-				}
 			}
 		}
 
-		void SceneUpdater::setComputeLightingEnabled(bool value)
-		{
+		void SceneUpdater::setComputeLightingEnabled(bool value) {
 			computeLightingEnabled = value;
 		}
 
-		void SceneUpdater::onPropertyChanged(const RBX::Reflection::PropertyDescriptor* descriptor)
-		{
-			if (*descriptor == Lighting::prop_Outlines_deprecated)
-			{
+		void SceneUpdater::onPropertyChanged(const RBX::Reflection::PropertyDescriptor* descriptor) {
+			if (*descriptor == Lighting::prop_Outlines_deprecated) {
 				invalidateAllFastClusters();
 			}
 		}
 
-		void SceneUpdater::computeLightingPrepare()
-		{
+		void SceneUpdater::computeLightingPrepare() {
 			RBXPROFILER_SCOPE("Render", "computeLightingPrepare");
 
 			bool bulkExecution = mSettings->getEagerBulkExecution();
@@ -832,13 +737,12 @@ namespace RBX
 			if (!computeLightingEnabled)
 				return;
 
-			mLastOccupancyUpdates = 0;
+			mLastOccupancyUpdates = 0u;
 
 			if (!computeLightingEnabled)
 				return;
 
-			if (LightGrid* lgrid = mVisualEngine->getLightGrid())
-			{
+			if (LightGrid* lgrid = mVisualEngine->getLightGrid()) {
 				ContactManager* contactManager = dataModel->getWorkspace()->getWorld()->getContactManager();
 				MegaClusterInstance* terrain = boost::polymorphic_downcast<MegaClusterInstance*>(dataModel->getWorkspace()->getTerrain());
 				RBX::Camera* camera = dataModel->getWorkspace()->getCamera();
@@ -846,31 +750,24 @@ namespace RBX
 
 				// Make sure lighting is active if global shadows are on
 				if (lighting->getGlobalShadows())
-				{
 					checkAndActivateLighting();
-				}
 
 				// Compute focus point; note that the computation is different in play mode and studio mode
 				if (camera->getCameraSubject())
-				{
 					mFocusPoint = camera->getCameraFocus().translation;
-				}
-				else
-				{
+				else {
 					RBX::Vector3 hit = RBX::Vector3::zero();
 
-					if (FFlag::FixCameraTargetStudio)
-					{
+					if (FFlag::FixCameraTargetStudio) {
 						RBX::Vector3 origin = mVisualEngine->getSceneManager()->getMinumumSqDistanceCenter();
 						RBX::Vector3 direction = camera->getCameraCoordinateFrame().vectorToWorldSpace(RBX::Vector3(0.0f, 0.0f, -1.0f));
 
 						hit = origin + direction;
 					}
-					else
-					{
+					else {
 						// TODO: getMinumumSqPartDistance will get data from previous frame, fix this when we move compute lighting to perform
 						float minSqDistance = mVisualEngine->getSceneManager()->getMinumumSqPartDistance();
-						float distance = (minSqDistance == FLT_MAX ? 0 : sqrt(minSqDistance));
+						float distance = (minSqDistance == FLT_MAX ? 0.0f : sqrt(minSqDistance));
 
 						// Has to be consistent with minSqDistance, so take it from SceneManager, not from camera
 						RBX::Vector3 origin = mVisualEngine->getSceneManager()->getMinumumSqDistanceCenter();
@@ -878,14 +775,14 @@ namespace RBX
 						RBX::Vector3 direction = camera->getCameraCoordinateFrame().vectorToWorldSpace(RBX::Vector3(0.0f, 0.0f, -1.0f));
 						hit = origin + direction * distance;
 
-						direction.y = 0;
-						hit += direction * 16 * 4.0f;
+						direction.y = 0.0f;
+						hit += direction * 16.0f * 4.0f;
 					}
 
 					mFocusPoint = hit;
 				}
 
-				unsigned chunkBudget = getChunkBudget();
+				size_t chunkBudget = getChunkBudget();
 
 				// Relocate the grid if focus point moved far enough
 				// Note: we can skip updating chunk contents (filling with dummy color and uploading) if lighting is not active
@@ -894,42 +791,32 @@ namespace RBX
 				mOccupancyPartCache.clear();
 				mLgridchunksToUpdate.clear();
 
-				if ((!mLightgridMoved || bulkExecution) && mLightingActive)
-				{
+				if ((!mLightgridMoved || bulkExecution) && mLightingActive) {
 					lgrid->updateAgePriorityForChunks(mFocusPoint);
 
 					// Update global light attributes for the light grid
-					if (1)
-					{
+					if (1) {
 						lgrid->setLightShadows(lighting->getGlobalShadows());
 
 						if (lighting->getGlobalShadows())
-						{
 							lgrid->setSkyAmbient(Color3uint8(lighting->getGlobalAmbient()));
-						}
 						else
-						{
 							lgrid->setSkyAmbient(Color3uint8());
-						}
 					}
 
 					if (lighting->getGlobalShadows())
-					{
 						lgrid->setLightDirection(-lighting->getSkyParameters().lightDirection.unit());
-					}
 
-					for (unsigned i = 0; i < chunkBudget; ++i)
-					{
-						LightGridChunk* chunk = NULL;
+					for (size_t i = 0; i < chunkBudget; ++i) {
+						LightGridChunk* chunk = nullptr;
+
 						if (bulkExecution)
 							chunk = lgrid->findFirstDirtyChunk();
-						else if (mAgeDirtyProportion == FLog::RenderLightGridAgeProportion)
-						{
+						else if (mAgeDirtyProportion == FLog::RenderLightGridAgeProportion) {
 							chunk = lgrid->findOldestChunk();
-							mAgeDirtyProportion = 0;
+							mAgeDirtyProportion = 0u;
 						}
-						else
-						{
+						else {
 							chunk = lgrid->findDirtyChunk();
 							mAgeDirtyProportion++;
 						}
@@ -939,8 +826,7 @@ namespace RBX
 
 						RBXASSERT(chunk->dirty);
 
-						if (chunk->dirty & LightGridChunk::Dirty_Occupancy)
-						{
+						if (chunk->dirty & LightGridChunk::Dirty_Occupancy) {
 							lgrid->occupancyUpdateChunkPrepare(*chunk, terrain, contactManager, mOccupancyPartCache);
 							mLastOccupancyUpdates++;
 						}
@@ -948,8 +834,8 @@ namespace RBX
 						mLgridchunksToUpdate.push_back(std::make_pair(chunk, (unsigned)chunk->dirty));
 
 						// reset chunk dirty flag so that findDirtyChunk does not pick it up again
-						chunk->dirty = 0;
-						chunk->age = 0;
+						chunk->dirty = 0u;
+						chunk->age = 0u;
 					}
 
 					// restore chunk dirty flags so that we get correct state in perform
@@ -960,52 +846,43 @@ namespace RBX
 			}
 		}
 
-		void SceneUpdater::computeLightingPerform()
-		{
+		void SceneUpdater::computeLightingPerform() {
 			RBXPROFILER_SCOPE("Render", "computeLightingPerform");
 
 			bool bulkExecution = mSettings->getEagerBulkExecution();
 			GlobalShaderData& globalShaderData = mVisualEngine->getSceneManager()->writeGlobalShaderData();
 
-			if (LightGrid* lgrid = mVisualEngine->getLightGrid())
-			{
+			if (LightGrid* lgrid = mVisualEngine->getLightGrid()) {
 				RBX::Timer<RBX::Time::Benchmark> timer;
 
-				mLastLightingUpdates = 0;
+				mLastLightingUpdates = 0u;
 
 				SpatialHashedScene* spatialHashedScene = mVisualEngine->getSceneManager()->getSpatialHashedScene();
 
 				// Don't update lighting in the same frame where we move the grid to reduce relocation stall
 				// Don't update lighting unless it is active
 				// Do update lighting if bulkExecution is true so that one pass is enough
-				if ((!mLightgridMoved || bulkExecution) && mLightingActive)
-				{
+				if ((!mLightgridMoved || bulkExecution) && mLightingActive) {
 					RBX::Timer<RBX::Time::Precise> timer;
 
 					lgrid->updateBorderColor(mFocusPoint, updateFrustum);
 
 					lgrid->occupancyUpdateChunkPerform(mOccupancyPartCache);
 
-					unsigned chunkBudget = getChunkBudget();
+					size_t chunkBudget = getChunkBudget();
 
-					if ((!mLightgridMoved || bulkExecution) && mLightingActive)
-					{
-						for (unsigned i = 0; i < chunkBudget; ++i)
-						{
+					if ((!mLightgridMoved || bulkExecution) && mLightingActive) {
+						for (size_t i = 0u; i < chunkBudget; ++i) {
 							// now the tricky part...
-							LightGridChunk* chunk = NULL;
+							LightGridChunk* chunk = nullptr;
 
 							if (i < mLgridchunksToUpdate.size()) // first, try the chunk cache from prepare
-							{
 								chunk = mLgridchunksToUpdate[i].first;
-							}
 							else // otherwise, we have some budget left, try other dirty chunks
-							{
 								if (bulkExecution)
 									chunk = lgrid->findFirstDirtyChunk();
 								else
 									chunk = lgrid->findDirtyChunk();
-							}
 
 							if (!chunk)
 								break; // nothing to update
@@ -1027,20 +904,17 @@ namespace RBX
 							if (!bulkExecution)
 								lgrid->lightingUploadChunk(*chunk);
 
-							chunk->dirty = 0;
-							chunk->age = 0;
+							chunk->dirty = 0u;
+							chunk->age = 0u;
 						}
 
-						if (bulkExecution && mLastLightingUpdates != 0)
+						if (bulkExecution && mLastLightingUpdates != 0u)
 							lgrid->lightingUploadAll();
 
 						lgrid->lightingUploadCommit();
 
-						if (mLastOccupancyUpdates > 0 || mLastLightingUpdates > 0)
-						{
-							FASTLOG3(FLog::RenderLightGrid, "LightGrid: Updated %d chunks in %d usec (occupancy: %d chunks)", mLastLightingUpdates, (int)(timer.delta().msec() * 1000), mLastOccupancyUpdates);
-						}
-
+						if (mLastOccupancyUpdates > 0u || mLastLightingUpdates > 0u)
+							FASTLOG3(FLog::RenderLightGrid, "LightGrid: Updated %d chunks in %d usec (occupancy: %d chunks)", mLastLightingUpdates, (int)(timer.delta().msec() * 1000.0), mLastOccupancyUpdates);
 					}
 
 				}
@@ -1052,11 +926,11 @@ namespace RBX
 
 				float frmRadius = mVisualEngine->getFrameRateManager()->getLightGridRadius();
 
-				RBX::Vector3 gridCenter = gridOffset + gridSize / 2.f;
-				RBX::Vector3 gridRadius = RBX::Vector3(frmRadius, gridSize.y / 2.f, frmRadius).min(gridSize / 2.f);
+				RBX::Vector3 gridCenter = gridOffset + gridSize / 2.0f;
+				RBX::Vector3 gridRadius = RBX::Vector3(frmRadius, gridSize.y / 2.0f, frmRadius).min(gridSize / 2.0f);
 
 				// world space -> texture space: v * scale + offset
-				RBX::Vector3 gridTextureScale = RBX::Vector3(1.f / gridSize.x, 1.f / gridSize.y, 1.f / gridSize.z);
+				RBX::Vector3 gridTextureScale = RBX::Vector3(1.0f / gridSize.x, 1.0f / gridSize.y, 1.0f / gridSize.z);
 
 				// note: technically we can make the offset zero - the texture is wrapped and shifted so that
 				// the world space to texture space mapping is constant.
@@ -1103,21 +977,19 @@ namespace RBX
 		{
 			RBXPROFILER_SCOPE("Render", "checkFastClusters");
 
-			mSeenFastClusters.resize(0);
+			mSeenFastClusters.resize(0u);
 
 			if (!mFastClustersToCheck.empty() || !mFastClustersToCheckFW.empty())
 				FASTLOG2(FLog::GfxClusters, "Fast clusters to check for break: %u, fw: %u", mFastClustersToCheck.size(), mFastClustersToCheckFW.size());
 
-			while (!mFastClustersToCheck.empty() || !mFastClustersToCheckFW.empty())
-			{
-				FastCluster* gfxcluster = NULL;
-				if (!mFastClustersToCheckFW.empty())
-				{
+			while (!mFastClustersToCheck.empty() || !mFastClustersToCheckFW.empty()) {
+				FastCluster* gfxcluster = nullptr;
+
+				if (!mFastClustersToCheckFW.empty()) {
 					gfxcluster = boost::polymorphic_downcast<FastCluster*>(*mFastClustersToCheckFW.begin());
 					RBXASSERT(gfxcluster->isFW());
 				}
-				else
-				{
+				else {
 					RBXASSERT(!mFastClustersToCheck.empty());
 					gfxcluster = boost::polymorphic_downcast<FastCluster*>(*mFastClustersToCheck.begin());
 				}
@@ -1126,52 +998,45 @@ namespace RBX
 					break;
 
 				// Doesn't make sense to continue if just one slot left in the budget and current chunk is not there yet
-				if (mSeenFastClusters.size() >= FAST_CLUSTER_PRIORITY_INVALIDATE_BUDGET - 1 && !seenIndexBefore(gfxcluster->getSpatialIndex()))
+				if (mSeenFastClusters.size() >= FAST_CLUSTER_PRIORITY_INVALIDATE_BUDGET - 1u && !seenIndexBefore(gfxcluster->getSpatialIndex()))
 					break;
 
 				// erase has to happen before checkCluster because it can queue itself if over budget
-				if (gfxcluster->isFW())
-				{
+				if (gfxcluster->isFW()) {
 					RBXASSERT(!mFastClustersToCheckFW.empty());
 					mFastClustersToCheckFW.erase(mFastClustersToCheckFW.begin());
 				}
-				else
-				{
+				else {
 					RBXASSERT(!mFastClustersToCheck.empty());
 					mFastClustersToCheck.erase(mFastClustersToCheck.begin());
 				}
+
 				gfxcluster->checkCluster();
 			}
 
 			RBXASSERT(mSeenFastClusters.size() <= FAST_CLUSTER_PRIORITY_INVALIDATE_BUDGET);
 		}
 
-		bool SceneUpdater::seenIndexBefore(const SpatialGridIndex& index)
-		{
+		bool SceneUpdater::seenIndexBefore(const SpatialGridIndex& index) {
 			return std::find(mSeenFastClusters.begin(), mSeenFastClusters.end(), index) != mSeenFastClusters.end();;
 		}
 
-		bool SceneUpdater::checkAddSeenFastClusters(const SpatialGridIndex& index)
-		{
+		bool SceneUpdater::checkAddSeenFastClusters(const SpatialGridIndex& index) {
 			if (!seenIndexBefore(index))
-			{
 				if (mSeenFastClusters.size() < FAST_CLUSTER_PRIORITY_INVALIDATE_BUDGET)
 					mSeenFastClusters.push_back(index);
 				else
 					return false;
-			}
 
 			return true;
 		}
 
-		void SceneUpdater::addMegaCluster(const shared_ptr<RBX::PartInstance>& part)
-		{
+		void SceneUpdater::addMegaCluster(const shared_ptr<RBX::PartInstance>& part) {
 			shared_ptr<MegaClusterInstance> terrain = shared_polymorphic_downcast<MegaClusterInstance>(part);
 
 			GfxPart* cluster;
 
-			if (terrain->isSmooth())
-			{
+			if (terrain->isSmooth()) {
 				terrain->getSmoothGrid()->connectListener(this);
 
 				if (FFlag::SmoothTerrainRenderLOD)
@@ -1179,8 +1044,7 @@ namespace RBX
 				else
 					cluster = new SmoothClusterChunked(mVisualEngine, part);
 			}
-			else
-			{
+			else {
 				terrain->getVoxelGrid()->connectListener(this);
 
 				cluster = new MegaCluster(mVisualEngine, part);
@@ -1191,17 +1055,14 @@ namespace RBX
 			queueFullInvalidateMegaCluster(cluster);
 		}
 
-		RBX::Humanoid* SceneUpdater::getHumanoid(RBX::PartInstance* part)
-		{
-			if (DFFlag::HumanoidCookieRecursive)
-			{
+		RBX::Humanoid* SceneUpdater::getHumanoid(RBX::PartInstance* part) {
+			if (DFFlag::HumanoidCookieRecursive) {
 				if (part->getCookie() & PartCookie::IS_HUMANOID_PART)
 					return part->findAncestorModelWithHumanoid();
 				else
-					return NULL;
+					return nullptr;
 			}
-			else
-			{
+			else {
 				RBX::Instance* parent = part->getParent();
 
 				// Regular humanoid part
@@ -1212,31 +1073,27 @@ namespace RBX
 				if (RBX::Instance::isA<RBX::Accoutrement>(parent) || RBX::Instance::isA<RBX::Tool>(parent))
 					return RBX::Humanoid::modelIsCharacter(parent->getParent());
 
-				return NULL;
+				return nullptr;
 			}
 		}
 
-		RBX::WindowAverage<double, double>::Stats SceneUpdater::getLightingTimeStats()
-		{
+		RBX::WindowAverage<double, double>::Stats SceneUpdater::getLightingTimeStats() {
 			return mLightingComputeAverage.getStats();
 		}
 
-		unsigned SceneUpdater::getLightOldestAge()
-		{
-			if (LightGrid* lgrid = mVisualEngine->getLightGrid())
-			{
+		uint32_t SceneUpdater::getLightOldestAge() {
+			if (LightGrid* lgrid = mVisualEngine->getLightGrid()) {
 				LightGridChunk* chunk = lgrid->findOldestChunk();
+
 				if (chunk)
 					return chunk->age;
 			}
 
-			return 0;
+			return 0u;
 		}
 
-		void SceneUpdater::addFastPart(const shared_ptr<RBX::PartInstance>& part, bool isFW, bool priorityPart)
-		{
-			if (RBX::Humanoid* humanoid = getHumanoid(part.get()))
-			{
+		void SceneUpdater::addFastPart(const shared_ptr<RBX::PartInstance>& part, bool isFW, bool priorityPart) {
+			if (RBX::Humanoid* humanoid = getHumanoid(part.get())) {
 				FastCluster*& cluster = mHumanoidClusters[humanoid];
 
 				if (!cluster)
@@ -1246,9 +1103,8 @@ namespace RBX
 
 				cluster->invalidateEntity();
 			}
-			else
-			{
-				SpatialGridIndex index = mFastGridSC->getIndexUnsafe(part.get(), isFW ? SpatialGridIndex::fFW : 0);
+			else {
+				SpatialGridIndex index = mFastGridSC->getIndexUnsafe(part.get(), isFW ? SpatialGridIndex::fFW : 0u);
 				FastGridSC::Cell* cell = mFastGridSC->requestCell(index);
 				SuperCluster*& cluster = cell->cluster;
 
@@ -1264,86 +1120,72 @@ namespace RBX
 			}
 		}
 
-		void SceneUpdater::invalidateAllFastClusters()
-		{
+		void SceneUpdater::invalidateAllFastClusters() {
 			std::vector<SuperCluster*> clusters = mFastGridSC->getClusters();
 
-			for (unsigned i = 0; i < clusters.size(); ++i)
+			for (size_t i = 0u; i < clusters.size(); ++i)
 				clusters[i]->invalidateAllFastClusters();
 		}
 
-		void SceneUpdater::destroyAttachment(GfxPart* object)
-		{
+		void SceneUpdater::destroyAttachment(GfxPart* object) {
 			size_t count = mAttachments.erase(object);
-			RBXASSERT(count == 1);
+			RBXASSERT(count == 1u);
 
 			delete object;
 		}
 
-		void SceneUpdater::destroyFastCluster(FastCluster* cluster)
-		{
-			if (void* humanoid = cluster->getHumanoidKey())
-			{
+		void SceneUpdater::destroyFastCluster(FastCluster* cluster) {
+			if (void* humanoid = cluster->getHumanoidKey()) {
 				size_t count = mHumanoidClusters.erase(humanoid);
-				RBXASSERT(count == 1);
+				RBXASSERT(count == 1u);
 				delete cluster;
 			}
 			else
-			{
 				RBXASSERT(!"Owned FastClusters must be deleted via their owners (see SuperCluster.h)");
-			}
 		}
 
-		void SceneUpdater::destroySuperCluster(SuperCluster* cluster)
-		{
+		void SceneUpdater::destroySuperCluster(SuperCluster* cluster) {
 			size_t count = mFastGridSC->removeCell(cluster->getSpatialIndex());
-			RBXASSERT(count == 1);
+			RBXASSERT(count == 1u);
 			delete cluster;
 		}
 
-		void SceneUpdater::addAttachment(const shared_ptr<RBX::Instance>& instance)
-		{
-			PartInstance* part = 0;
+		void SceneUpdater::addAttachment(const shared_ptr<RBX::Instance>& instance) {
+			PartInstance* part = nullptr;
+
 			if (RBX::Instance::fastDynamicCast<RBX::ForceField>(instance.get())) // Special case for forcefield - only put on character's Torso
-				if (DFFlag::UseR15Character)
-				{
-					Humanoid* humanoid = RBX::Instance::fastDynamicCast<Humanoid>(instance->getParent()->findFirstChildByName2("Humanoid", false).get());;
+				if (DFFlag::UseR15Character) {
+					Humanoid* humanoid = RBX::Instance::fastDynamicCast<Humanoid>(instance->getParent()->findFirstChildByName2("Humanoid", false).get());
+
 					if (humanoid)
 						part = humanoid->getVisibleTorsoSlow();
 					else
 						part = RBX::Instance::fastDynamicCast<PartInstance>(instance->getParent()->findFirstChildByName2("Torso", false).get());
 				}
 				else
-				{
 					part = RBX::Instance::fastDynamicCast<PartInstance>(instance->getParent()->findFirstChildByName2("Torso", false).get());
-				}
 			else
 				part = RBX::Instance::fastDynamicCast<PartInstance>(instance->getParent());
 
-			if (dynamic_cast<Effect*>(instance.get()))
-			{
-				if (shared_ptr<RBX::Light> light = Instance::fastSharedDynamicCast<RBX::Light>(instance))
-				{
+			if (dynamic_cast<Effect*>(instance.get())) {
+				if (shared_ptr<RBX::Light> light = Instance::fastSharedDynamicCast<RBX::Light>(instance)) {
 					LightObject* lightObject = new LightObject(mVisualEngine);
 
 					lightObject->bind(shared_from(part), light);
 
 					mAttachments.insert(lightObject);
 				}
-				else if (FFlag::RenderNewExplosionEnable && instance->isA<RBX::Explosion>())
-				{
+				else if (FFlag::RenderNewExplosionEnable && instance->isA<RBX::Explosion>()) {
 					ExplosionEmitter* emitter = new ExplosionEmitter(mVisualEngine);
 					emitter->bind(shared_from(part), instance);
 					mAttachments.insert(emitter);
 				}
-				else if (FFlag::CustomEmitterRenderEnabled && instance->isA<RBX::CustomParticleEmitter>())
-				{
+				else if (FFlag::CustomEmitterRenderEnabled && instance->isA<RBX::CustomParticleEmitter>()) {
 					CustomEmitter* emitter = new CustomEmitter(mVisualEngine);
 					emitter->bind(shared_from(part), instance);
 					mAttachments.insert(emitter);
 				}
-				else
-				{
+				else {
 					ParticleEmitter* emitter = new ParticleEmitter(mVisualEngine);
 
 					emitter->bind(shared_from(part), instance);
@@ -1353,14 +1195,14 @@ namespace RBX
 			}
 		}
 
-		unsigned SceneUpdater::getChunkBudget()
-		{
-			unsigned chunkBudget = mVisualEngine->getFrameRateManager()->getLightingChunkBudget();
-			if (mSettings->getEagerBulkExecution())
-			{
+		size_t SceneUpdater::getChunkBudget() {
+			size_t chunkBudget = mVisualEngine->getFrameRateManager()->getLightingChunkBudget();
+
+			if (mSettings->getEagerBulkExecution()) {
 				RBX::Vector3int32 chunkCount = mVisualEngine->getLightGrid()->getChunkCount();
 				chunkBudget = chunkCount.x * chunkCount.y * chunkCount.z * kLightGridChunkSizeY;
 			}
+
 			return chunkBudget;
 		}
 

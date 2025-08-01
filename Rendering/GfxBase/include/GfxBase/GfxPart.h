@@ -7,19 +7,20 @@
 #include "rbx/signal.h"
 #include "reflection/Property.h"
 
-namespace RBX { 
+namespace RBX {
 	class PartInstance;
 	class AsyncResult;
 
-	class GfxBinding
-	{
+	class GfxBinding {
 	protected:
 		GfxBinding(const boost::shared_ptr<RBX::PartInstance>& part)
 			: partInstance(part)
-		{}
+		{
+		}
 
 		GfxBinding()
-		{}
+		{
+		}
 
 		virtual ~GfxBinding();
 	public:
@@ -63,7 +64,7 @@ namespace RBX {
 		void onChildAdded(const shared_ptr<RBX::Instance>& child);
 		void onChildRemoved(const shared_ptr<RBX::Instance>& child);
 		void onSpecialShapeChangedEx();
-		
+
 		void onCombinedSignal(Instance::CombinedSignalType type, const Instance::ICombinedSignalData* data);
 		void onHumanoidChanged();
 		void onOutfitChanged();
@@ -73,41 +74,43 @@ namespace RBX {
 
 
 	// class used as a simple base class for linking PartInstances with graphics objects.
-	class GfxPart : public GfxBinding, public RBX::BasicSpatialHashPrimitive
-	{
+	class GfxPart : public GfxBinding, public RBX::BasicSpatialHashPrimitive {
 	public:
 		GfxPart(const boost::shared_ptr<RBX::PartInstance>& part)
 			: GfxBinding(part)
 			, lastFrustumVisibleFrameNumber(-1)
-		{}
+		{
+		}
 
 		GfxPart()
 			: lastFrustumVisibleFrameNumber(-1)
-		{}
+		{
+		}
 
 		// accessors?
-		int lastFrustumVisibleFrameNumber; // most recent frame where this object was within the view frustum
+		uint32_t lastFrustumVisibleFrameNumber; // most recent frame where this object was within the view frustum
 
 	public:
 		virtual void updateCoordinateFrame(bool recalcLocalBounds = false) {};
-		virtual unsigned int getPartCount() { return 1; }
+		virtual uint32_t getPartCount() { return 1u; }
 
 		virtual void onSleepingChanged(bool sleeping, PartInstance* part) {};
 		virtual void onClumpChanged(PartInstance* part) {};
-        
-        virtual Vector3 getCenter() const { return Vector3(); }
+
+		virtual Vector3 getCenter() const { return Vector3(); }
 	};
 
 	// serves to allow the gfx engine to have persistent gfxobject tracking the position of a part.
-	class GfxAttachment : public GfxBinding
-	{
+	class GfxAttachment : public GfxBinding {
 	public:
 		GfxAttachment(const boost::shared_ptr<RBX::PartInstance>& part)
 			: GfxBinding(part)
-		{}
+		{
+		}
 	protected:
 		GfxAttachment()
-		{}
+		{
+		}
 	public:
 
 		/*override*/ void unbind();

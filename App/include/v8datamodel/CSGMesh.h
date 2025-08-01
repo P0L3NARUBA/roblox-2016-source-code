@@ -13,11 +13,9 @@
 #include "rbx/Debug.h"
 
 
-namespace RBX
-{
+namespace RBX {
 
-	class CSGVertex
-	{
+	class CSGVertex {
 	public:
 		G3D::Vector3 Position;
 		G3D::Vector2 UV;
@@ -30,8 +28,7 @@ namespace RBX
 		G3D::Vector3 Tangent;
 		//G3D::Vector4 edgeDistances;
 
-		enum UVGenerationType
-		{
+		enum UVGenerationType {
 			NO_UV_GENERATION = 0,
 			UV_BOX_X,
 			UV_BOX_Y,
@@ -48,8 +45,7 @@ namespace RBX
 		void generateUv();
 	};
 
-	class CSGMesh
-	{
+	class CSGMesh {
 	public:
 		CSGMesh();
 		virtual ~CSGMesh();
@@ -57,17 +53,17 @@ namespace RBX
 		virtual CSGMesh* clone() const;
 
 		const std::vector<CSGVertex>& getVertices() const { return vertices; }
-		const std::vector<unsigned int>& getIndices() const { return indices; }
+		const std::vector<uint32_t>& getIndices() const { return indices; }
 
-		const std::vector<unsigned>& getIndexRemap(unsigned idx) const { RBXASSERT(idx < 6); return decalIndexRemap[idx]; }
-		const std::vector<unsigned>& getVertexRemap(unsigned idx) const { RBXASSERT(idx < 6); return decalVertexRemap[idx]; }
+		const std::vector<uint32_t>& getIndexRemap(uint32_t idx) const { RBXASSERT(idx < 6u); return decalIndexRemap[idx]; }
+		const std::vector<uint32_t>& getVertexRemap(uint32_t idx) const { RBXASSERT(idx < 6u); return decalVertexRemap[idx]; }
 
 		std::string createHash(const std::string salt = "") const;
 
 		bool isBadMesh() const { return badMesh; }
 		virtual bool isValid() const { return true; }
 
-		void set(const std::vector<CSGVertex>& vertices, const std::vector<unsigned int>& indices);
+		void set(const std::vector<CSGVertex>& vertices, const std::vector<uint32_t>& indices);
 		void clearMesh();
 
 		virtual void translate(const G3D::Vector3& translation) {}
@@ -95,7 +91,7 @@ namespace RBX
 		virtual void setBRepFromBinaryString(const std::string& str) {}
 
 		virtual size_t clusterVertices(float resolution) { return 0; }
-		virtual bool makeHalfEdges(std::vector< int>& vertexEdges) { return true; }
+		virtual bool makeHalfEdges(std::vector<int32_t>& vertexEdges) { return true; }
 
 		virtual G3D::Vector3 extentsCenter() { G3D::Vector3 v; return v; }
 		virtual G3D::Vector3 extentsSize() { G3D::Vector3 v; return v; }
@@ -103,19 +99,18 @@ namespace RBX
 		void computeDecalRemap();
 
 	protected:
-		int version;
-		int brepVersion;
+		uint32_t version;
+		uint32_t brepVersion;
 		bool badMesh;
 
 		std::vector<CSGVertex> vertices;
-		std::vector<unsigned int> indices;
+		std::vector<uint32_t> indices;
 
-		std::vector<unsigned> decalVertexRemap[6];
-		std::vector<unsigned> decalIndexRemap[6];
+		std::vector<uint32_t> decalVertexRemap[6];
+		std::vector<uint32_t> decalIndexRemap[6];
 	};
 
-	class CSGMeshFactory
-	{
+	class CSGMeshFactory {
 	public:
 		virtual CSGMesh* createMesh();
 

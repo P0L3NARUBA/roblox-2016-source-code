@@ -2,33 +2,28 @@
 
 #include "Resource.h"
 
-namespace RBX
-{
-	namespace Graphics
-	{
+namespace RBX {
+	namespace Graphics {
 
 		class Renderbuffer;
 
-		struct TextureRegion
-		{
-			unsigned int x;
-			unsigned int y;
-			unsigned int z;
+		struct TextureRegion {
+			uint32_t x;
+			uint32_t y;
+			uint32_t z;
 
-			unsigned int width;
-			unsigned int height;
-			unsigned int depth;
+			uint32_t width;
+			uint32_t height;
+			uint32_t depth;
 
 			TextureRegion();
-			TextureRegion(unsigned int x, unsigned int y, unsigned int z, unsigned int width, unsigned int height, unsigned int depth);
-			TextureRegion(unsigned int x, unsigned int y, unsigned int width, unsigned int height);
+			TextureRegion(uint32_t x, uint32_t y, uint32_t z, uint32_t width, uint32_t height, uint32_t depth);
+			TextureRegion(uint32_t x, uint32_t y, uint32_t width, uint32_t height);
 		};
 
-		class Texture : public Resource
-		{
+		class Texture : public Resource {
 		public:
-			enum Type
-			{
+			enum Type {
 				Type_1D,
 				Type_1D_Array,
 				Type_2D,
@@ -40,8 +35,7 @@ namespace RBX
 				Type_Count
 			};
 
-			enum Usage
-			{
+			enum Usage {
 				Usage_Static,		/* CPU: -/- | GPU: R/W */
 				Usage_Dynamic,		/* CPU: -/- | GPU: R/W */
 				Usage_Immutable,	/* CPU: -/- | GPU: R/- */
@@ -50,8 +44,7 @@ namespace RBX
 				Usage_Count
 			};
 
-			enum Format
-			{
+			enum Format {
 				Format_R8,			/* R8  --- --- ---         */
 				Format_RG8,			/* R8  G8  --- ---         */
 				Format_RGBA8,		/* R8  G8  B8  A8          */
@@ -81,24 +74,23 @@ namespace RBX
 				Format_Count
 			};
 
-			struct LockResult
-			{
+			struct LockResult {
 				void* data;
-				unsigned int rowPitch;
-				unsigned int slicePitch;
+				uint32_t rowPitch;
+				uint32_t slicePitch;
 			};
 
 			~Texture();
 
-			virtual void upload(unsigned int index, unsigned int mip, const TextureRegion& region, const void* data, unsigned int size) = 0;
+			virtual void upload(uint32_t index, uint32_t mip, const TextureRegion& region, const void* data, size_t size) = 0;
 
-			virtual bool download(unsigned int index, unsigned int mip, void* data, unsigned int size) = 0;
+			virtual bool download(uint32_t index, uint32_t mip, void* data, size_t size) = 0;
 
 			virtual bool supportsLocking() const = 0;
-			virtual LockResult lock(unsigned int index, unsigned int mip, const TextureRegion& region) = 0;
-			virtual void unlock(unsigned int index, unsigned int mip) = 0;
+			virtual LockResult lock(uint32_t index, uint32_t mip, const TextureRegion& region) = 0;
+			virtual void unlock(uint32_t index, uint32_t mip) = 0;
 
-			virtual shared_ptr<Renderbuffer> getRenderbuffer(unsigned int index, unsigned int mip) = 0;
+			virtual shared_ptr<Renderbuffer> getRenderbuffer(uint32_t index, uint32_t mip) = 0;
 
 			virtual void commitChanges() = 0;
 			virtual void generateMipmaps() = 0;
@@ -106,33 +98,33 @@ namespace RBX
 			Type getType() const { return type; }
 			Format getFormat() const { return format; }
 
-			unsigned int getWidth() const { return width; }
-			unsigned int getHeight() const { return height; }
-			unsigned int getDepth() const { return depth; }
+			uint32_t getWidth() const { return width; }
+			uint32_t getHeight() const { return height; }
+			uint32_t getDepth() const { return depth; }
 
-			unsigned int getMipLevels() const { return mipLevels; }
+			uint32_t getMipLevels() const { return mipLevels; }
 
 			Usage getUsage() const { return usage; }
 
 			static bool isFormatCompressed(Format format);
 			static bool isFormatDepth(Format format);
-			static unsigned int getFormatBits(Format format);
-			static unsigned int getImageSize(Format format, unsigned int width, unsigned int height);
+			static uint32_t getFormatBits(Format format);
+			static uint32_t getImageSize(Format format, uint32_t width, uint32_t height);
 
-			static unsigned int getTextureSize(Type type, Format format, unsigned int width, unsigned int height, unsigned int depth, unsigned int mipLevels);
+			static uint32_t getTextureSize(Type type, Format format, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevels);
 
-			static unsigned int getMipSide(unsigned int value, unsigned int mip);
-			static unsigned int getMaxMipCount(unsigned int width, unsigned int height, unsigned int depth);
+			static uint32_t getMipSide(uint32_t value, uint32_t mip);
+			static uint32_t getMaxMipCount(uint32_t width, uint32_t height, uint32_t depth);
 
 		protected:
-			Texture(Device* device, Type type, Format format, unsigned int width, unsigned int height, unsigned int depth, unsigned int mipLevels, Usage usage);
+			Texture(Device* device, Type type, Format format, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevels, Usage usage);
 
 			Type type;
 			Format format;
-			unsigned int width;
-			unsigned int height;
-			unsigned int depth;
-			unsigned int mipLevels;
+			uint32_t width;
+			uint32_t height;
+			uint32_t depth;
+			uint32_t mipLevels;
 			Usage usage;
 		};
 

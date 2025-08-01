@@ -296,7 +296,7 @@ void Controller::unbindButton(Button button)
 	BoundButtonSet::iterator it = boundButtons.find(button);
 	if(it != boundButtons.end())
 	{
-		it->second.guiWidget->setParent(NULL);
+		it->second.guiWidget->setParent(nullptr);
 		boundButtons.erase(it);
 	}
 }

@@ -43,7 +43,7 @@ shared_ptr<MouseCommand> HammerTool::onMouseDown(const shared_ptr<InputObject>& 
 		explosion->setVisualOnly();
 		explosion->setParent(workspace);
 
-		hammerPart->setParent(NULL);
+		hammerPart->setParent(nullptr);
 		ServiceProvider::create<Soundscape::SoundService>(workspace)->playSound(BOMB_SOUND);
 	}
 	return shared_ptr<MouseCommand>();

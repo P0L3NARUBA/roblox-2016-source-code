@@ -20,89 +20,76 @@ FASTINTVARIABLE(RenderTextureManagerBudget, 0)
 FASTINTVARIABLE(RenderTextureManagerBudgetFor4k, 0)
 DYNAMIC_FASTFLAG(ImageFailedToLoadContext)
 
-namespace RBX
-{
-	namespace Graphics
-	{
+namespace RBX {
+	namespace Graphics {
 
-		static const unsigned int kTextureManagerThreads = 1;
-		static const unsigned int kTextureManagerRequestsPerFrame = 1;
+		static const uint32_t kTextureManagerThreads = 1u;
+		static const uint32_t kTextureManagerRequestsPerFrame = 1u;
 
-		static const unsigned int kTextureManagerMinBudget = 32 * 1024 * 1024;
-		static const unsigned int kTextureManagerOrphanedBudgetLimit = 64 * 1024 * 1024;
+		static const uint32_t kTextureManagerMinBudget = 32u * 1024u * 1024u;
+		static const uint32_t kTextureManagerOrphanedBudgetLimit = 64u * 1024u * 1024u;
 
-		static void logError(const ContentId& id, const std::string& context, const char* error)
-		{
+		static void logError(const ContentId& id, const std::string& context, const char* error) {
 			FASTLOGS(FLog::Graphics, "Image failed to load: %s", id.toString() + ": " + error);
 
-			if (DFFlag::ImageFailedToLoadContext && context != "")
-			{
+			if (DFFlag::ImageFailedToLoadContext && context != "") {
 				StandardOut::singleton()->printf(MESSAGE_ERROR, "Image failed to load %s : %s because %s", context.c_str(), id.c_str(), error);
 			}
-			else
-			{
+			else {
 				RBX::StandardOut::singleton()->printf(RBX::MESSAGE_ERROR, "Image failed to load: %s: %s", id.c_str(), error);
 			}
 		}
 
-		static void httpCallback(AsyncHttpQueue::RequestResult result, std::istream* stream, const shared_ptr<const std::string>& content, boost::function<void(shared_ptr<const std::string>)> callback)
-		{
+		static void httpCallback(AsyncHttpQueue::RequestResult result, std::istream* stream, const shared_ptr<const std::string>& content, boost::function<void(shared_ptr<const std::string>)> callback) {
 			if (result == AsyncHttpQueue::Succeeded)
 				callback(content);
 			else
 				callback(shared_ptr<const std::string>());
 		}
 
-		static unsigned int getTextureSize(const shared_ptr<Texture>& tex)
-		{
-			unsigned int result = 0;
+		static uint32_t getTextureSize(const shared_ptr<Texture>& tex) {
+			uint32_t result = 0u;
 
-			for (unsigned int mip = 0; mip < tex->getMipLevels(); ++mip)
+			for (uint32_t mip = 0u; mip < tex->getMipLevels(); ++mip)
 				result += Texture::getImageSize(tex->getFormat(), Texture::getMipSide(tex->getWidth(), mip), Texture::getMipSide(tex->getHeight(), mip)) * Texture::getMipSide(tex->getDepth(), mip);
 
-			return result * (tex->getType() == Texture::Type_Cube ? 6 : 1);
+			return result * (tex->getType() == Texture::Type_Cube ? 6u : 1u);
 		}
 
-		static unsigned int getMaxTextureSize(const DeviceCaps& caps, unsigned int totalBudget, bool isLocal)
-		{
+		static uint32_t getMaxTextureSize(const DeviceCaps& caps, uint32_t totalBudget, bool isLocal) {
 			// Limit texture size by HW restrictions for local assets and by available VRAM for non-local assets
 			// If we don't support NPOT, limit texture size by 512 to restrict upscaling
-			if (isLocal)
-			{
+			if (isLocal) {
 				// Even if your hardware supports 4k textures, we don't want to use them unless you have enough VRAM
-				if (totalBudget < unsigned(FInt::RenderTextureManagerBudgetFor4k))
+				if (totalBudget < uint32_t(FInt::RenderTextureManagerBudgetFor4k))
 					return std::min(2048u, caps.maxTextureSize);
 				else
 					return caps.maxTextureSize;
 			}
-			else
-			{
+			else {
 				// We limit all asssets we fetch by either 1024 or 512, depending on whether we may need to upscale
 				// Upscaling to 1024 is bad since we have a lot of shirt/pants assets that are slightly larger than 512x512
-				return caps.supportsTextureNPOT ? 1024 : 512;
+				return caps.supportsTextureNPOT ? 1024u : 512u;
 			}
 		}
 
 		TextureManager::TextureData::TextureData()
 			: orphaned(false)
-			, orphanedPrev(0)
-			, orphanedNext(0)
+			, orphanedPrev(nullptr)
+			, orphanedNext(nullptr)
 		{
 		}
 
-		TextureRef TextureManager::TextureData::addExternalRef(const shared_ptr<Texture>& fallback)
-		{
-			if (object.getStatus() == TextureRef::Status_Loaded)
-			{
+		TextureRef TextureManager::TextureData::addExternalRef(const shared_ptr<Texture>& fallback) {
+			if (object.getStatus() == TextureRef::Status_Loaded) {
 				// All refs should be equivalent so just return any object
 				if (external.empty())
 					external.push_back(object.clone());
 
 				return external.back();
 			}
-			else
-			{
-				for (size_t i = 0; i < external.size(); ++i)
+			else {
+				for (size_t i = 0u; i < external.size(); ++i)
 					if (external[i].getTexture() == fallback)
 						return external[i];
 
@@ -115,40 +102,34 @@ namespace RBX
 			}
 		}
 
-		struct TextureRefUniquePredicate
-		{
-			bool operator()(const TextureRef& ref) const
-			{
+		struct TextureRefUniquePredicate {
+			bool operator()(const TextureRef& ref) const {
 				return ref.isUnique();
 			}
 		};
 
-		void TextureManager::TextureData::removeUnusedExternalRefs()
-		{
+		void TextureManager::TextureData::removeUnusedExternalRefs() {
 			RBXASSERT(object.isUnique());
 
 			external.erase(std::remove_if(external.begin(), external.end(), TextureRefUniquePredicate()), external.end());
 		}
 
-		void TextureManager::TextureData::updateAllRefsToLoaded(const shared_ptr<Texture>& texture, const ImageInfo& info)
-		{
-			for (size_t i = 0; i < external.size(); ++i)
+		void TextureManager::TextureData::updateAllRefsToLoaded(const shared_ptr<Texture>& texture, const ImageInfo& info) {
+			for (size_t i = 0u; i < external.size(); ++i)
 				external[i].updateAllRefsToLoaded(texture, info);
 
 			object.updateAllRefsToLoaded(texture, info);
 		}
 
-		void TextureManager::TextureData::updateAllRefsToFailed()
-		{
-			for (size_t i = 0; i < external.size(); ++i)
+		void TextureManager::TextureData::updateAllRefsToFailed() {
+			for (size_t i = 0u; i < external.size(); ++i)
 				external[i].updateAllRefsToFailed();
 
 			object.updateAllRefsToFailed();
 		}
 
-		void TextureManager::TextureData::updateAllRefsToWaiting()
-		{
-			for (size_t i = 0; i < external.size(); ++i)
+		void TextureManager::TextureData::updateAllRefsToWaiting() {
+			for (size_t i = 0u; i < external.size(); ++i)
 				external[i].updateAllRefsToWaiting();
 
 			object.updateAllRefsToWaiting();
@@ -156,53 +137,51 @@ namespace RBX
 
 		TextureManager::TextureManager(VisualEngine* visualEngine)
 			: visualEngine(visualEngine)
-			, outstandingRequests(0)
-			, liveCount(0)
-			, liveSize(0)
-			, orphanedCount(0)
-			, orphanedSize(0)
-			, orphanedHead(0)
-			, orphanedTail(0)
-			, gcSizeLast(0)
-			, totalSizeBudget(0)
+			, outstandingRequests(0u)
+			, liveCount(0u)
+			, liveSize(0u)
+			, orphanedCount(0u)
+			, orphanedSize(0u)
+			, orphanedHead(nullptr)
+			, orphanedTail(nullptr)
+			, gcSizeLast(0u)
+			, totalSizeBudget(0u)
 		{
 			loadingPool.reset(new ThreadPool(kTextureManagerThreads, BaseThreadPool::WaitForRunningTasks));
 			pendingImages.reset(new rbx::safe_queue<LoadedImage>());
 
-			fallbackTextures[Fallback_White] = createSingleColorTexture(255, 255, 255, 255);
-			fallbackTextures[Fallback_Gray] = createSingleColorTexture(127, 127, 127, 255);
-			fallbackTextures[Fallback_Black] = createSingleColorTexture(0, 0, 0, 255);
-			fallbackTextures[Fallback_BlackTransparent] = createSingleColorTexture(0, 0, 0, 0);
+			fallbackTextures[Fallback_White] = createSingleColorTexture(255u, 255u, 255u, 255u);
+			fallbackTextures[Fallback_Gray] = createSingleColorTexture(127u, 127u, 127u, 255u);
+			fallbackTextures[Fallback_Black] = createSingleColorTexture(0u, 0u, 0u, 255u);
+			fallbackTextures[Fallback_BlackTransparent] = createSingleColorTexture(0u, 0u, 0u, 0u);
 
 			// Normal maps use BC3N encoding on all platforms except iOS - not true anymore, the much higher quality BC7 format is used now
-			fallbackTextures[Fallback_NormalMap] = createSingleColorTexture(127, 127, 255, 255);
+			fallbackTextures[Fallback_NormalMap] = createSingleColorTexture(127u, 127u, 255u, 255u);
 
-			fallbackTextures[Fallback_Reflection] = createSingleColorTexture(0, 0, 0, 255, true);
+			fallbackTextures[Fallback_Reflection] = createSingleColorTexture(0u, 0u, 0u, 255u, true);
 
 			// Base budget configuration
-			totalSizeBudget = std::max(static_cast<unsigned int>(visualEngine->getRenderCaps()->getVidMemSize() / 3), kTextureManagerMinBudget);
+			totalSizeBudget = std::max(static_cast<uint32_t>(visualEngine->getRenderCaps()->getVidMemSize() / 3u), kTextureManagerMinBudget);
 
 			// Support budget overrides from config
 			if (FInt::RenderTextureManagerBudget)
-				totalSizeBudget = FInt::RenderTextureManagerBudget * 1024 * 1024;
+				totalSizeBudget = (uint32_t)FInt::RenderTextureManagerBudget * 1024u * 1024u;
 		}
 
 		TextureManager::~TextureManager()
 		{
 		}
 
-		void TextureManager::processPendingRequests()
-		{
+		void TextureManager::processPendingRequests() {
 			RBXPROFILER_SCOPE("Render", "TextureManager::processPendingRequests");
 
-			unsigned int maxRequests = visualEngine->getSettings()->getEagerBulkExecution() ? ~0u : kTextureManagerRequestsPerFrame;
+			uint32_t maxRequests = visualEngine->getSettings()->getEagerBulkExecution() ? ~0u : kTextureManagerRequestsPerFrame;
 
 			LoadedImage li;
-			unsigned int count = 0;
+			uint32_t count = 0u;
 
-			while (pendingImages->pop_if_present(li))
-			{
-				RBXASSERT(outstandingRequests > 0);
+			while (pendingImages->pop_if_present(li)) {
+				RBXASSERT(outstandingRequests > 0u);
 				outstandingRequests--;
 
 				Textures::iterator it = textures.find(li.id);
@@ -213,10 +192,8 @@ namespace RBX
 				// RBXASSERT(!data.orphaned); TODO: Why not to load orphaned textures? It makes sense for reloading... except, waiting for the texture to be actually used again, which is better
 				RBXASSERT(data.object.getStatus() == TextureRef::Status_Waiting);
 
-				if (Image* image = li.image.get())
-				{
-					try
-					{
+				if (Image* image = li.image.get()) {
+					try {
 						Timer<Time::Precise> timer;
 
 						shared_ptr<Texture> texture = createTexture(*image);
@@ -234,21 +211,18 @@ namespace RBX
 						liveCount++;
 						liveSize += getTextureSize(texture);
 					}
-					catch (const RBX::base_exception& e)
-					{
+					catch (const RBX::base_exception& e) {
 						logError(li.id, li.context, e.what());
 
 						data.updateAllRefsToFailed();
 					}
 				}
-				else
-				{
+				else {
 					data.updateAllRefsToFailed();
 				}
 
 				boost::unordered_set<ContentId>::iterator pendingReload = pendingReloads.find(li.id);
-				if (pendingReload != pendingReloads.end())
-				{
+				if (pendingReload != pendingReloads.end()) {
 					pendingReloads.erase(pendingReload);
 					reloadImage(li.id, li.context);
 				}
@@ -258,14 +232,11 @@ namespace RBX
 			}
 		}
 
-		void TextureManager::cancelPendingRequests()
-		{
-			for (Textures::iterator it = textures.begin(); it != textures.end(); )
-			{
+		void TextureManager::cancelPendingRequests() {
+			for (Textures::iterator it = textures.begin(); it != textures.end(); ) {
 				bool pending = (it->second.object.getStatus() == TextureRef::Status_Waiting);
 
-				if (pending)
-				{
+				if (pending) {
 					FASTLOGS(FLog::Graphics, "Cancelling image %s upon request", it->first.c_str());
 
 					if (it->second.orphaned)
@@ -278,66 +249,57 @@ namespace RBX
 			}
 		}
 
-		void TextureManager::garbageCollectIncremental()
-		{
+		void TextureManager::garbageCollectIncremental() {
 			RBXPROFILER_SCOPE("Render", "TextureManager::garbageCollectIncremental");
 
 			// To catch up with allocation rate we need to visit the number of allocated elements since last run plus a small constant
-			size_t visitCount = std::min(textures.size(), std::max(textures.size(), gcSizeLast) - gcSizeLast + 8);
+			size_t visitCount = std::min(textures.size(), std::max(textures.size(), gcSizeLast) - gcSizeLast + 8u);
 
 			orphanUnusedTextures(visitCount);
 
 			// Maintain total budget
-			unsigned int totalSize = liveSize + orphanedSize;
-			unsigned int maxOrphanedSize =
+			uint32_t totalSize = liveSize + orphanedSize;
+			uint32_t maxOrphanedSize =
 				(totalSize > totalSizeBudget)
-				? 0
-				: std::min(totalSizeBudget - totalSize, std::min(totalSizeBudget / 4, kTextureManagerOrphanedBudgetLimit));
+				? 0u
+				: std::min(totalSizeBudget - totalSize, std::min(totalSizeBudget / 4u, kTextureManagerOrphanedBudgetLimit));
 
 			collectOrphanedTextures(maxOrphanedSize);
 
 			gcSizeLast = textures.size();
 		}
 
-		void TextureManager::garbageCollectFull()
-		{
+		void TextureManager::garbageCollectFull() {
 			// Everything unused has to go
 			orphanUnusedTextures(textures.size());
-			collectOrphanedTextures(/* maxOrphanedSize= */ 0);
+			collectOrphanedTextures(/* maxOrphanedSize= */ 0u);
 
 			gcSizeLast = textures.size();
 		}
 
-		void TextureManager::reloadImage(const ContentId& id, const std::string& context)
-		{
+		void TextureManager::reloadImage(const ContentId& id, const std::string& context) {
 			// we want to reload files that were loaded
 			Textures::iterator it = textures.find(id);
 
-			if (it != textures.end())
-			{
-				if (it->second.object.getStatus() == TextureRef::Status_Waiting)
-				{
+			if (it != textures.end()) {
+				if (it->second.object.getStatus() == TextureRef::Status_Waiting) {
 					pendingReloads.insert(id);
 				}
-				else if (loadAsync(id, context))
-				{
+				else if (loadAsync(id, context)) {
 					StandardOut::singleton()->printf(MESSAGE_INFO, "Reloading %s texture", id.c_str());
 					it->second.updateAllRefsToWaiting();
 				}
 			}
 		}
 
-		TextureRef TextureManager::load(const ContentId& id, Fallback fallback, const std::string& context)
-		{
+		TextureRef TextureManager::load(const ContentId& id, Fallback fallback, const std::string& context) {
 			// Cache lookup
 			Textures::iterator it = textures.find(id);
 
-			if (it != textures.end())
-			{
+			if (it != textures.end()) {
 				TextureData& data = it->second;
 
-				if (data.orphaned)
-				{
+				if (data.orphaned) {
 					removeFromOrphaned(&data);
 
 					// Update live stats
@@ -363,38 +325,33 @@ namespace RBX
 			return data.addExternalRef(fallbackTextures[fallback]);
 		}
 
-		bool TextureManager::loadAsync(const ContentId& id, const std::string& context)
-		{
+		bool TextureManager::loadAsync(const ContentId& id, const std::string& context) {
 			// Convert id to either asset or http form
 			ContentId loadId = id;
 			loadId.convertToLegacyContent(GetBaseURL());
 
 			const DeviceCaps& caps = visualEngine->getDevice()->getCaps();
 
-			unsigned int maxTextureSize = getMaxTextureSize(caps, totalSizeBudget, id.isAsset());
+			uint32_t maxTextureSize = getMaxTextureSize(caps, totalSizeBudget, id.isAsset());
 
-			unsigned int flags =
-				(caps.supportsTextureDXT ? 0 : Image::Load_DecodeDXT) |
-				(caps.supportsTextureNPOT ? 0 : Image::Load_RoundToPOT) |
-				(caps.colorOrderBGR ? Image::Load_OutputBGR : 0) |
-				(caps.supportsTexturePartialMipChain ? 0 : Image::Load_ForceFullMipChain);
+			uint32_t flags =
+				(caps.supportsTextureDXT ? 0u : Image::Load_DecodeDXT) |
+				(caps.supportsTextureNPOT ? 0u : Image::Load_RoundToPOT) |
+				(caps.colorOrderBGR ? Image::Load_OutputBGR : 0u) |
+				(caps.supportsTexturePartialMipChain ? 0u : Image::Load_ForceFullMipChain);
 
 			bool useRetina = caps.retina;
 
-			try
-			{
-				if (loadId.isAsset() || loadId.isAppContent())
-				{
+			try {
+				if (loadId.isAsset() || loadId.isAppContent()) {
 					outstandingRequests++;
 
 					loadingPool->schedule(boost::bind(&TextureManager::loadImageFile, pendingImages, id, loadId, maxTextureSize, flags, useRetina, context));
 
 					return true;
 				}
-				else if (loadId.isHttp() || loadId.isAssetId() || loadId.isRbxHttp() || loadId.isNamedAsset())
-				{
-					if (ContentProvider* cp = visualEngine->getContentProvider())
-					{
+				else if (loadId.isHttp() || loadId.isAssetId() || loadId.isRbxHttp() || loadId.isNamedAsset()) {
+					if (ContentProvider* cp = visualEngine->getContentProvider()) {
 						boost::function<void(shared_ptr<const std::string>)> loadCallback =
 							boost::bind(&TextureManager::loadImageHttpCallback, weak_ptr<ThreadPool>(loadingPool), weak_ptr<rbx::safe_queue<LoadedImage> >(pendingImages), _1, id, maxTextureSize, flags, context);
 
@@ -404,30 +361,25 @@ namespace RBX
 
 						return true;
 					}
-					else
-					{
+					else {
 						throw RBX::runtime_error("Fetching remote assets is not available");
 					}
 				}
-				else
-				{
+				else {
 					throw RBX::runtime_error("Unexpected URL");
 				}
 			}
-			catch (const RBX::base_exception& e)
-			{
+			catch (const RBX::base_exception& e) {
 				logError(id, context, e.what());
 
 				return false;
 			}
 		}
 
-		void TextureManager::orphanUnusedTextures(size_t visitCount)
-		{
+		void TextureManager::orphanUnusedTextures(size_t visitCount) {
 			Textures::iterator it = textures.find(gcKeyNext);
 
-			for (size_t i = 0; i < visitCount; ++i)
-			{
+			for (size_t i = 0u; i < visitCount; ++i) {
 				if (it == textures.end())
 					it = textures.begin();
 
@@ -435,13 +387,12 @@ namespace RBX
 
 				data.removeUnusedExternalRefs();
 
-				if (!data.orphaned && data.external.empty() && data.object.getStatus() == TextureRef::Status_Loaded)
-				{
+				if (!data.orphaned && data.external.empty() && data.object.getStatus() == TextureRef::Status_Loaded) {
 					addToOrphanedTail(&data);
 
 					size_t textureSize = getTextureSize(data.object.getTexture());
 
-					RBXASSERT(liveCount > 0 && liveSize >= textureSize);
+					RBXASSERT(liveCount > 0u && liveSize >= textureSize);
 					liveCount--;
 					liveSize -= textureSize;
 
@@ -455,10 +406,8 @@ namespace RBX
 			gcKeyNext = (it == textures.end()) ? ContentId() : it->first;
 		}
 
-		void TextureManager::collectOrphanedTextures(unsigned int maxOrphanedSize)
-		{
-			while (orphanedSize > maxOrphanedSize)
-			{
+		void TextureManager::collectOrphanedTextures(uint32_t maxOrphanedSize) {
+			while (orphanedSize > maxOrphanedSize) {
 				RBXASSERT(orphanedHead && orphanedTail);
 
 				// Remove element from the beginning of the orphaned list
@@ -474,22 +423,19 @@ namespace RBX
 			}
 		}
 
-		void TextureManager::addToOrphanedTail(TextureData* data)
-		{
+		void TextureManager::addToOrphanedTail(TextureData* data) {
 			RBXASSERT(!data->orphaned && !data->orphanedPrev && !data->orphanedNext);
 
 			data->orphaned = true;
 
-			if (orphanedHead)
-			{
+			if (orphanedHead) {
 				RBXASSERT(orphanedTail);
 
 				data->orphanedPrev = orphanedTail;
 				orphanedTail->orphanedNext = data;
 				orphanedTail = data;
 			}
-			else
-			{
+			else {
 				RBXASSERT(!orphanedTail);
 
 				orphanedHead = data;
@@ -497,41 +443,38 @@ namespace RBX
 			}
 		}
 
-		void TextureManager::removeFromOrphaned(TextureData* data)
-		{
+		void TextureManager::removeFromOrphaned(TextureData* data) {
 			RBXASSERT(data->orphaned);
 			RBXASSERT(data->object.getStatus() == TextureRef::Status_Loaded);
 
 			if (data->orphanedPrev)
 				data->orphanedPrev->orphanedNext = data->orphanedNext;
-			else
-			{
+			else {
 				RBXASSERT(orphanedHead == data);
 				orphanedHead = data->orphanedNext;
 			}
 
 			if (data->orphanedNext)
 				data->orphanedNext->orphanedPrev = data->orphanedPrev;
-			else
-			{
+			else {
 				RBXASSERT(orphanedTail == data);
 				orphanedTail = data->orphanedPrev;
 			}
 
 			data->orphaned = false;
-			data->orphanedPrev = 0;
-			data->orphanedNext = 0;
+			data->orphanedPrev = nullptr;
+			data->orphanedNext = nullptr;
 
 			// Update stats
 			size_t textureSize = getTextureSize(data->object.getTexture());
 
-			RBXASSERT(orphanedCount > 0 && orphanedSize >= textureSize);
+			RBXASSERT(orphanedCount > 0u && orphanedSize >= textureSize);
 			orphanedCount--;
 			orphanedSize -= textureSize;
 		}
 
 		shared_ptr<Texture> TextureManager::createSingleColorTexture(unsigned char r, unsigned char g, unsigned char b, unsigned char a, bool cube) {
-			shared_ptr<Texture> result = visualEngine->getDevice()->createTexture(cube ? Texture::Type_Cube : Texture::Type_2D, Texture::Format_RGBA8, 1, 1, 1, 1, Texture::Usage_Static);
+			shared_ptr<Texture> result = visualEngine->getDevice()->createTexture(cube ? Texture::Type_Cube : Texture::Type_2D, Texture::Format_RGBA8, 1u, 1u, 1u, 1u, Texture::Usage_Static);
 			RBXASSERT(result);
 
 			unsigned char data[] = { r, g, b, a };
@@ -539,65 +482,56 @@ namespace RBX
 			if (visualEngine->getDevice()->getCaps().colorOrderBGR)
 				std::swap(data[0], data[2]);
 
-			for (int i = 0; i < (cube ? 6 : 1); ++i)
-				result->upload(i, 0, TextureRegion(0, 0, 1, 1), data, sizeof(data));
+			for (size_t i = 0u; i < (cube ? 6u : 1u); ++i)
+				result->upload(i, 0u, TextureRegion(0u, 0u, 1u, 1u), data, sizeof(data));
 
 			return result;
 		}
 
-		shared_ptr<Texture> TextureManager::createTexture(const Image& image)
-		{
+		shared_ptr<Texture> TextureManager::createTexture(const Image& image) {
 			shared_ptr<Texture> texture = visualEngine->getDevice()->createTexture(image.getType(), image.getFormat(), image.getWidth(), image.getHeight(), image.getDepth(), image.getMipLevels(), Texture::Usage_Static);
 
-			unsigned int faces = (image.getType() == Texture::Type_Cube) ? 6 : 1;
+			uint32_t faces = (image.getType() == Texture::Type_Cube) ? 6u : 1u;
 
-			for (unsigned int face = 0; face < faces; ++face) {
-				for (unsigned int mip = 0; mip < image.getMipLevels(); ++mip) {
-					unsigned int mipWidth = Texture::getMipSide(image.getWidth(), mip);
-					unsigned int mipHeight = Texture::getMipSide(image.getHeight(), mip);
-					unsigned int mipDepth = Texture::getMipSide(image.getDepth(), mip);
-					unsigned int mipSize = Texture::getImageSize(image.getFormat(), mipWidth, mipHeight) * mipDepth;
+			for (uint32_t face = 0u; face < faces; ++face) {
+				for (uint32_t mip = 0u; mip < image.getMipLevels(); ++mip) {
+					uint32_t mipWidth = Texture::getMipSide(image.getWidth(), mip);
+					uint32_t mipHeight = Texture::getMipSide(image.getHeight(), mip);
+					uint32_t mipDepth = Texture::getMipSide(image.getDepth(), mip);
+					uint32_t mipSize = Texture::getImageSize(image.getFormat(), mipWidth, mipHeight) * mipDepth;
 
 					const unsigned char* mipData = image.getMipData(face, mip);
 
-					texture->upload(face, mip, TextureRegion(0, 0, 0, mipWidth, mipHeight, mipDepth), mipData, mipSize);
+					texture->upload(face, mip, TextureRegion(0u, 0u, 0u, mipWidth, mipHeight, mipDepth), mipData, mipSize);
 				}
 			}
 
 			return texture;
 		}
 
-		void TextureManager::loadImageHttpCallback(const weak_ptr<ThreadPool>& loadingPoolWeak, const weak_ptr<rbx::safe_queue<LoadedImage> >& pendingImagesWeak, const shared_ptr<const std::string>& content, const ContentId& id, unsigned int maxTextureSize, unsigned int flags, const std::string& context)
-		{
+		void TextureManager::loadImageHttpCallback(const weak_ptr<ThreadPool>& loadingPoolWeak, const weak_ptr<rbx::safe_queue<LoadedImage> >& pendingImagesWeak, const shared_ptr<const std::string>& content, const ContentId& id, uint32_t maxTextureSize, uint32_t flags, const std::string& context) {
 			shared_ptr<ThreadPool> loadingPool = loadingPoolWeak.lock();
 			shared_ptr<rbx::safe_queue<LoadedImage> > pendingImages = pendingImagesWeak.lock();
 
-			if (loadingPool && pendingImages)
-			{
-				if (content)
-				{
+			if (loadingPool && pendingImages) {
+				if (content) {
 					loadingPool->schedule(boost::bind(&TextureManager::loadImageHttp, pendingImages, id, content, maxTextureSize, flags, context));
 				}
-				else
-				{
+				else {
 					loadImageError(pendingImages, id, "Request failed", context);
 				}
 			}
-			else
-			{
+			else {
 				FASTLOGS(FLog::Graphics, "Abandoning image %s because TextureManager is dead", id.c_str());
 			}
 		}
 
-		static std::pair<std::string, int> findImageAsset(const ContentId& id, bool useRetina)
-		{
-			if (useRetina)
-			{
+		static std::pair<std::string, int> findImageAsset(const ContentId& id, bool useRetina) {
+			if (useRetina) {
 				const std::string& idStr = id.toString();
 				std::string::size_type dot = idStr.find_last_of('.');
 
-				if (dot != std::string::npos)
-				{
+				if (dot != std::string::npos) {
 					ContentId retinaId(idStr.substr(0, dot) + "@2x" + idStr.substr(dot));
 					std::string retinaPath = ContentProvider::findAsset(retinaId);
 
@@ -609,32 +543,26 @@ namespace RBX
 			return std::make_pair(ContentProvider::findAsset(id), 1);
 		}
 
-		void TextureManager::loadImageFile(const shared_ptr<rbx::safe_queue<LoadedImage> >& pendingImages, const ContentId& id, const ContentId& loadId, unsigned int maxTextureSize, unsigned int flags, bool useRetina, const std::string& context)
-		{
+		void TextureManager::loadImageFile(const shared_ptr<rbx::safe_queue<LoadedImage> >& pendingImages, const ContentId& id, const ContentId& loadId, uint32_t maxTextureSize, uint32_t flags, bool useRetina, const std::string& context) {
 			std::pair<std::string, int> imageAsset = findImageAsset(loadId, useRetina);
 
-			if (!imageAsset.first.empty())
-			{
+			if (!imageAsset.first.empty()) {
 				std::ifstream stream(utf8_decode(imageAsset.first).c_str(), std::ios_base::in | std::ios_base::binary);
 				loadImage(pendingImages, id, stream, maxTextureSize, flags, imageAsset.second, context);
 			}
-			else
-			{
+			else {
 				loadImageError(pendingImages, id, "File not found", context);
 			}
 		}
 
-		void TextureManager::loadImageHttp(const shared_ptr<rbx::safe_queue<LoadedImage> >& pendingImages, const ContentId& id, const shared_ptr<const std::string>& content, unsigned int maxTextureSize, unsigned int flags, const std::string& context)
-		{
+		void TextureManager::loadImageHttp(const shared_ptr<rbx::safe_queue<LoadedImage> >& pendingImages, const ContentId& id, const shared_ptr<const std::string>& content, uint32_t maxTextureSize, uint32_t flags, const std::string& context) {
 			std::istringstream in(*content);
 
-			loadImage(pendingImages, id, in, maxTextureSize, flags, 1, context);
+			loadImage(pendingImages, id, in, maxTextureSize, flags, 1u, context);
 		}
 
-		void TextureManager::loadImage(const shared_ptr<rbx::safe_queue<LoadedImage> >& pendingImages, const ContentId& id, std::istream& stream, unsigned int maxTextureSize, unsigned int flags, int scale, const std::string& context)
-		{
-			try
-			{
+		void TextureManager::loadImage(const shared_ptr<rbx::safe_queue<LoadedImage> >& pendingImages, const ContentId& id, std::istream& stream, uint32_t maxTextureSize, uint32_t flags, uint32_t scale, const std::string& context) {
+			try {
 				Timer<Time::Precise> timer;
 
 				Image::LoadResult lr = Image::load(stream, maxTextureSize, flags);
@@ -653,18 +581,15 @@ namespace RBX
 
 				pendingImages->push(li);
 			}
-			catch (const std::bad_alloc& e)
-			{
+			catch (const std::bad_alloc& e) {
 				loadImageError(pendingImages, id, e.what(), context);
 			}
-			catch (const RBX::base_exception& e)
-			{
+			catch (const RBX::base_exception& e) {
 				loadImageError(pendingImages, id, e.what(), context);
 			}
 		}
 
-		void TextureManager::loadImageError(const shared_ptr<rbx::safe_queue<LoadedImage> >& pendingImages, const ContentId& id, const char* error, const std::string& context)
-		{
+		void TextureManager::loadImageError(const shared_ptr<rbx::safe_queue<LoadedImage> >& pendingImages, const ContentId& id, const char* error, const std::string& context) {
 			logError(id, context, error);
 
 			// Queue texture reference for updating to failed state
@@ -674,18 +599,15 @@ namespace RBX
 			pendingImages->push(li);
 		}
 
-		bool TextureManager::isFallbackTexture(const shared_ptr<Texture>& tex)
-		{
-			for (unsigned i = 0; i < Fallback_Count; ++i)
-			{
+		bool TextureManager::isFallbackTexture(const shared_ptr<Texture>& tex) {
+			for (size_t i = 0u; i < Fallback_Count; ++i) {
 				if (tex.get() == fallbackTextures[i].get())
 					return true;
 			}
 			return false;
 		}
 
-		TextureManagerStats TextureManager::getStatistics() const
-		{
+		TextureManagerStats TextureManager::getStatistics() const {
 			TextureManagerStats result = {};
 
 			result.queuedCount = outstandingRequests;

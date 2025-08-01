@@ -16,7 +16,8 @@ namespace RBX {
 		Extents()				// initialize to negativeInfiniteExtents; 
 			: low(Vector3::maxFinite())
 			, high(-Vector3::maxFinite())
-		{}		
+		{
+		}
 
 		Extents(const Vector3& _min, const Vector3& _max)
 			: low(_min)
@@ -26,13 +27,12 @@ namespace RBX {
 			RBXASSERT_SLOW(high == high.max(low));
 		}
 
-		bool isNanInf() const
-		{
+		bool isNanInf() const {
 			return (Math::isNanInfVector3(low) || Math::isNanInfVector3(high));
 		}
 
 		static Extents fromCenterCorner(const Vector3& center, const Vector3& corner) {
-			return Extents(center-corner, center+corner);
+			return Extents(center - corner, center + corner);
 		}
 
 		static Extents fromCenterRadius(const Vector3& center, float radius) {
@@ -54,8 +54,8 @@ namespace RBX {
 			return e;
 		}
 
-		const Vector3& min() const					{return low;}
-		const Vector3& max() const					{return high;}
+		const Vector3& min() const { return low; }
+		const Vector3& max() const { return high; }
 
 		Vector3int16 getCornerIndex(int i) const;
 		Vector3 getCorner(int i) const;
@@ -65,7 +65,7 @@ namespace RBX {
 		}
 
 		Vector3 center() const {
-			return 0.5 * (low + high);
+			return 0.5f * (low + high);
 		}
 
 		Vector3 bottomCenter() const {
@@ -95,8 +95,8 @@ namespace RBX {
 			return s.x * s.z;
 		}
 
-        bool isNull() const {
-            return low.x > high.x || low.y > high.y || low.z > high.z;
+		bool isNull() const {
+			return low.x > high.x || low.y > high.y || low.z > high.z;
 		}
 
 		Extents toWorldSpace(const CoordinateFrame& offset) const;
@@ -112,10 +112,10 @@ namespace RBX {
 		*/
 		void getFaceCorners(
 			NormalId			faceId,
-			Vector3&            v0,
-			Vector3&            v1,
-			Vector3&            v2,
-			Vector3&            v3) const;
+			Vector3& v0,
+			Vector3& v1,
+			Vector3& v2,
+			Vector3& v3) const;
 
 		Plane getPlane(NormalId normalId) const;
 
@@ -130,7 +130,7 @@ namespace RBX {
 		// minimum amount to move innerExtents and keep them within Extents
 		Vector3 clamp(const Extents& innerExtents) const;
 
-		NormalId closestFace(const Vector3& point); 
+		NormalId closestFace(const Vector3& point);
 
 		void unionWith(const Extents& other) { //		Extents& operator&= (const Extents& other) {
 			low = low.min(other.low);
@@ -150,14 +150,14 @@ namespace RBX {
 		}
 
 		void expand(float x) {
-			low -= Vector3(x,x,x);
-			high += Vector3(x,x,x);
+			low -= Vector3(x, x, x);
+			high += Vector3(x, x, x);
 		}
 
-        void expand(const Vector3& p) {
-            low -= p;
-            high += p;
-        }
+		void expand(const Vector3& p) {
+			low -= p;
+			high += p;
+		}
 
 		void expandToContain(const Vector3& p) {
 			low = low.min(p);
@@ -170,42 +170,42 @@ namespace RBX {
 		}
 
 		bool contains(const Vector3& point) const {
-			return (	(point.x >= low.x) 
-					&&	(point.y >= low.y) 
-					&&	(point.z >= low.z) 
-					&&	(point.x <= high.x) 
-					&&	(point.y <= high.y) 
-					&&	(point.z <= high.z)	);
+			return ((point.x >= low.x)
+				&& (point.y >= low.y)
+				&& (point.z >= low.z)
+				&& (point.x <= high.x)
+				&& (point.y <= high.y)
+				&& (point.z <= high.z));
 		}
 
 		bool fuzzyContains(const Vector3& point, float slop) const {
-			return (	(point.x >= (low.x - slop)) 
-					&&	(point.y >= (low.y - slop)) 
-					&&	(point.z >= (low.z - slop)) 
-					&&	(point.x <= (high.x + slop)) 
-					&&	(point.y <= (high.y + slop)) 
-					&&	(point.z <= (high.z + slop))	);
+			return ((point.x >= (low.x - slop))
+				&& (point.y >= (low.y - slop))
+				&& (point.z >= (low.z - slop))
+				&& (point.x <= (high.x + slop))
+				&& (point.y <= (high.y + slop))
+				&& (point.z <= (high.z + slop)));
 		}
 
 
 		bool overlapsOrTouches(const Extents& other) const {		// true if sides are exactly equal (touching) 
-			return (	(this->low.x > other.high.x) 
-					||	(this->low.y > other.high.y) 
-					||	(this->low.z > other.high.z)
-					||	(this->high.y < other.low.y)
-					||	(this->high.x < other.low.x)
-					||	(this->high.z < other.low.z)) ? false : true;
+			return ((this->low.x > other.high.x)
+				|| (this->low.y > other.high.y)
+				|| (this->low.z > other.high.z)
+				|| (this->high.y < other.low.y)
+				|| (this->high.x < other.low.x)
+				|| (this->high.z < other.low.z)) ? false : true;
 		}
 
-		static bool overlapsOrTouches(const Extents& e0, const Extents& e1) {return e0.overlapsOrTouches(e1);}
+		static bool overlapsOrTouches(const Extents& e0, const Extents& e1) { return e0.overlapsOrTouches(e1); }
 
 		bool clampToOverlap(const Extents& other) {
-			if	(	(this->low.x >= other.high.x) 
-				||	(this->low.y >= other.high.y) 
-				||	(this->low.z >= other.high.z)
-				||	(this->high.y <= other.low.y)
-				||	(this->high.x <= other.low.x)
-				||	(this->high.z <= other.low.z))
+			if ((this->low.x >= other.high.x)
+				|| (this->low.y >= other.high.y)
+				|| (this->low.z >= other.high.z)
+				|| (this->high.y <= other.low.y)
+				|| (this->high.x <= other.low.x)
+				|| (this->high.z <= other.low.z))
 				return false;	// not overlap
 			low = low.clamp(other.low, other.high);
 			high = high.clamp(other.low, other.high);
@@ -221,7 +221,7 @@ namespace RBX {
 		}
 
 		static const Extents& unit() {
-			static Extents e(Vector3(-1,-1,-1), Vector3(1,1,1));
+			static Extents e(Vector3(-1, -1, -1), Vector3(1, 1, 1));
 			return e;
 		}
 

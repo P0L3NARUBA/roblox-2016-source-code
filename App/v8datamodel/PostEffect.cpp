@@ -17,8 +17,7 @@ namespace RBX {
 	{
 	}
 
-	void PostEffect::setEnabled(bool value)
-	{
+	void PostEffect::setEnabled(bool value) {
 		if (enabled != value) {
 			enabled = value;
 			raisePropertyChanged(prop_Enabled);

@@ -16,25 +16,21 @@ struct ID3D11Buffer;
 struct ID3D11Device;
 struct ID3D11InputLayout;
 
-namespace RBX
-{
-	namespace Graphics
-	{
+namespace RBX {
+	namespace Graphics {
 		class VertexLayoutD3D11;
 		class DeviceD3D11;
 
-		struct UniformD3D11
-		{
+		/*struct UniformD3D11 {
 			std::string name;
 
-			unsigned offset;
-			unsigned size;
+			unsigned int offset;
+			unsigned int size;
 		};
 
-		class CBufferD3D11 : public Resource
-		{
+		class CBufferD3D11 : public Resource {
 		public:
-			CBufferD3D11(Device* device, int registerId, const std::string& name, unsigned sizeIn, const std::vector<UniformD3D11>& uniformsIn);
+			CBufferD3D11(Device* device, int registerId, const std::string& name, unsigned int sizeIn, const std::vector<UniformD3D11>& uniformsIn);
 			~CBufferD3D11();
 
 			const std::vector<UniformD3D11>& getUniforms() const { return uniforms; }
@@ -58,34 +54,32 @@ namespace RBX
 
 			size_t size;
 			char* data;
-		};
+		};*/
 
-		class BaseShaderD3D11
-		{
+		class BaseShaderD3D11 {
 		public:
 			BaseShaderD3D11(const std::vector<char>& bytecode);
 
 			const std::vector<char>& getByteCode() const { return bytecode; }
 
-			int findUniform(const std::string& name);
+			/*int findUniform(const std::string& name);
 			void setConstant(int handle, const float* data, size_t vectorCount);
 
 			void updateConstantBuffers();
 
 			typedef std::vector<shared_ptr<CBufferD3D11>> CBufferList;
-			const CBufferList& getCBuffers() const { return cBuffers; }
+			const CBufferList& getCBuffers() const { return cBuffers; }*/
 
 		protected:
-			typedef CBufferList CBufferList;
+			//typedef CBufferList CBufferList;
 
-			std::vector<shared_ptr<CBufferD3D11>> cBuffers;
+			//std::vector<shared_ptr<CBufferD3D11>> cBuffers;
 			int uniformsBufferId;
 
 			std::vector<char> bytecode;
 		};
 
-		class VertexShaderD3D11 : public VertexShader, public BaseShaderD3D11, public boost::enable_shared_from_this<VertexShaderD3D11>
-		{
+		class VertexShaderD3D11 : public VertexShader, public BaseShaderD3D11, public boost::enable_shared_from_this<VertexShaderD3D11> {
 		public:
 			VertexShaderD3D11(Device* device, const std::vector<char>& bytecode);
 			~VertexShaderD3D11();
@@ -96,7 +90,7 @@ namespace RBX
 			ID3D11InputLayout* getInputLayout11(VertexLayoutD3D11* vertexLayout);
 			void removeLayout(VertexLayoutD3D11* vertexLayout);
 
-			void setWorldTransforms4x3(const float* data, size_t matrixCount);
+			//void setWorldTransforms4x3(const float* data, size_t matrixCount);
 			unsigned int getMaxWorldTransforms() const { return maxWorldTransforms; }
 
 		private:
@@ -113,8 +107,7 @@ namespace RBX
 			shared_ptr<VertexShaderD3D11> sharedThis;
 		};
 
-		class FragmentShaderD3D11 : public FragmentShader, public BaseShaderD3D11
-		{
+		class FragmentShaderD3D11 : public FragmentShader, public BaseShaderD3D11 {
 		public:
 			FragmentShaderD3D11(Device* device, const std::vector<char>& bytecode);
 			~FragmentShaderD3D11();
@@ -122,7 +115,7 @@ namespace RBX
 			virtual void reloadBytecode(const std::vector<char>& bytecode);
 
 			ID3D11PixelShader* getObject() const { return object; }
-			const std::vector<shared_ptr<CBufferD3D11>>& getCBuffers() const { return cBuffers; }
+			//const std::vector<shared_ptr<CBufferD3D11>>& getCBuffers() const { return cBuffers; }
 			unsigned int getSamplerMask() { return samplerMask; }
 
 		private:
@@ -130,8 +123,7 @@ namespace RBX
 			unsigned int samplerMask;
 		};
 
-		class ComputeShaderD3D11 : public ComputeShader, public BaseShaderD3D11
-		{
+		class ComputeShaderD3D11 : public ComputeShader, public BaseShaderD3D11 {
 		public:
 			ComputeShaderD3D11(Device* device, const std::vector<char>& bytecode);
 			~ComputeShaderD3D11();
@@ -144,8 +136,7 @@ namespace RBX
 			ID3D11ComputeShader* object;
 		};
 
-		class GeometryShaderD3D11 : public GeometryShader, public BaseShaderD3D11
-		{
+		class GeometryShaderD3D11 : public GeometryShader, public BaseShaderD3D11 {
 		public:
 			GeometryShaderD3D11(Device* device, const std::vector<char>& bytecode);
 			~GeometryShaderD3D11();
@@ -153,30 +144,29 @@ namespace RBX
 			virtual void reloadBytecode(const std::vector<char>& bytecode);
 
 			ID3D11GeometryShader* getObject() const { return object; }
-			
+
 		private:
 			ID3D11GeometryShader* object;
 		};
 
-		class ShaderProgramD3D11 : public ShaderProgram
-		{
+		class ShaderProgramD3D11 : public ShaderProgram {
 		public:
 			ShaderProgramD3D11(Device* device, const shared_ptr<VertexShader>& vertexShader, const shared_ptr<GeometryShader>& geometryShader, const shared_ptr<FragmentShader>& fragmentShader);
 			ShaderProgramD3D11(Device* device, const shared_ptr<VertexShader>& vertexShader, const shared_ptr<FragmentShader>& fragmentShader);
 			ShaderProgramD3D11(Device* device, const shared_ptr<ComputeShader>& computeShader);
 			~ShaderProgramD3D11();
 
-			virtual int getConstantHandle(const char* name) const;
+			//virtual int getConstantHandle(const char* name) const;
 
-			virtual unsigned int getMaxWorldTransforms() const;
-			virtual unsigned int getSamplerMask() const;
+			virtual uint32_t getMaxWorldTransforms() const;
+			virtual uint32_t getSamplerMask() const;
 
 			ID3D11InputLayout* getInputLayout11(VertexLayoutD3D11* vertexLayout);
 
 			void bind();
-			void setWorldTransforms4x3(const float* data, size_t matrixCount);
-			void setConstant(int handle, const float* data, size_t vectorCount);
-			void uploadConstantBuffers();
+			//void setWorldTransforms4x3(const float* data, size_t matrixCount);
+			//void setConstant(int handle, const float* data, size_t vectorCount);
+			//void uploadConstantBuffers();
 
 			static std::string createShaderSource(const std::string& path, const std::string& defines, const DeviceD3D11* device11, boost::function<std::string(const std::string&)> fileCallback);
 			static std::vector<char> createShaderBytecode(const std::string& source, const std::string& target, const DeviceD3D11* device, const std::string& entrypoint);

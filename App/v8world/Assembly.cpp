@@ -189,7 +189,7 @@ void Assembly::getPhysics(G3D::Array<CompactCFrame>& motorAngles) const
 
 	motorAngles.resize(motors.size());
 
-	for (int i = 0; i < motorAngles.size(); ++i) 
+	for (size_t i = 0u; i < motorAngles.size(); ++i)
 	{
 		if(MotorJoint::isMotorJoint(motors[i]))
 		{
@@ -216,7 +216,7 @@ void Assembly::setPhysics(const G3D::Array<CompactCFrame>& motorAngles, const PV
 
 	if (assemblyMotors.size() == motorAngles.size()) 
 	{
-		for (int i = 0; i < assemblyMotors.size(); ++i) 
+		for (size_t i = 0u; i < assemblyMotors.size(); ++i)
 		{
 			if(MotorJoint::isMotorJoint(assemblyMotors[i]))
 			{
@@ -401,10 +401,10 @@ void notifyAssemblyPrimitiveMoved(Primitive* p, bool resetContacts)
 	if (resetContacts)
 	{
 #ifdef RBXASSERTENABLED
-		int temp = p->getNumContacts();
+		size_t temp = p->getNumContacts();
 #endif
 		
-		for (int i = 0; i < p->getNumContacts(); ++i)
+		for (size_t i = 0u; i < p->getNumContacts(); ++i)
 		{
 			RBXASSERT(p->getContact(i));
 			p->getContact(i)->primitiveMovedExternally();

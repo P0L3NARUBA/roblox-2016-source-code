@@ -17,6 +17,8 @@ cbuffer Globals : register(b0) {
 
     float4 FogColor_Density;
     float4 FogParams_unused;
+
+    float4 ViewportSize_ViewportScale;
 };
 
 #endif
@@ -36,12 +38,15 @@ cbuffer Processing : register(b0) {
 #if defined(MATERIAL) && !defined(MATERIAL_GUARD)
 #define MATERIAL_GUARD
 
+// TODO: Perform bitpacking on all variables for enabling/disabling stuff to condense them into a single integer.
+// int4 ClearcoatEnabled_AlbedoMode_NormalMapEnabled_EmissiveMode --> int EnabledStates
+// float4 CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_CCIndexOfRefraction --> float3 CCFactorOverride_CCRoughnessOverride_CCIndexOfRefraction
 struct MaterialData {
     float4 RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused;
 	float4 ClearcoatEnabled_AlbedoMode_NormalMapEnabled_EmissiveMode;
     float4 IndexOfRefraction_EmissiveFactor_ParallaxFactor_ParallaxOffset;
     
-	float4 CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused;
+	float4 CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_CCIndexOfRefraction;
 };
 
 cbuffer MaterialData : register(b1) {

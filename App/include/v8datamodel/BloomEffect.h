@@ -7,9 +7,7 @@
 namespace RBX {
 	extern const char* const sBloomEffect;
 
-	class BloomEffect : public DescribedCreatable<BloomEffect, PostEffect, sBloomEffect>
-
-	{
+	class BloomEffect : public DescribedCreatable<BloomEffect, PostEffect, sBloomEffect> {
 	public:
 		BloomEffect();
 		virtual ~BloomEffect();
@@ -17,8 +15,8 @@ namespace RBX {
 		float getIntensity() const { return intensity; }
 		void setIntensity(float value);
 
-		int getSize() const { return size; }
-		void setSize(int value);
+		int32_t getSize() const { return size; }
+		void setSize(int32_t value);
 
 		const TextureId& getDirtMask() const { return dirtMask; }
 		void setDirtMask(const TextureId& texture);
@@ -27,14 +25,14 @@ namespace RBX {
 		void setUseDirtMask(bool value);
 
 		static Reflection::PropDescriptor<BloomEffect, float> prop_Intensity;
-		static Reflection::PropDescriptor<BloomEffect, int>   prop_Size;
+		static Reflection::PropDescriptor<BloomEffect, int32_t>   prop_Size;
 
 		static Reflection::PropDescriptor<BloomEffect, TextureId> prop_DirtMask;
 		static Reflection::PropDescriptor<BloomEffect, bool>      prop_UseDirtMask;
 
 	private:
 		float intensity;
-		int size;
+		int32_t size;
 
 		TextureId dirtMask;
 		bool useDirtMask;

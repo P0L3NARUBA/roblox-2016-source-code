@@ -40,19 +40,24 @@ namespace RBX {
 					: brightness(1.0f)
 					, contrast(1.0f)
 					, grayscaleLevel(1.0f)
+					, tintColor(Color3::white())
+
 					, blurIntensity(0.0f)
+
 					, bloomIntensity(0.0f)
-					, bloomSize(0)
-					, tintColor(Color3::white()) {
+					, bloomSize(0u)
+				{
 				}
 
 				float brightness;
 				float contrast;
 				float grayscaleLevel;
-				float blurIntensity;
-				float bloomIntensity;
-				int bloomSize;
 				Color3 tintColor;
+
+				float blurIntensity;
+
+				float bloomIntensity;
+				uint32_t bloomSize;
 			};
 
 			SceneManager(VisualEngine* visualEngine);
@@ -84,18 +89,20 @@ namespace RBX {
 
 			void computeMinimumSqDistance(const RenderCamera& camera);
 
-			void renderScene(DeviceContext* context, Framebuffer* mainFramebuffer, const RenderCamera& camera, unsigned int viewWidth, unsigned int viewHeight);
+			void renderScene(DeviceContext* context, Framebuffer* mainFramebuffer, const RenderCamera& camera, uint32_t viewWidth, uint32_t viewHeight);
 
-			void renderBegin(DeviceContext* context, const RenderCamera& camera, unsigned int viewWidth, unsigned int viewHeight);
-			void renderView(DeviceContext* context, Framebuffer* mainFramebuffer, const RenderCamera& camera, unsigned int viewWidth, unsigned int viewHeight);
+			void renderBegin(DeviceContext* context, const RenderCamera& camera, uint32_t viewWidth, uint32_t viewHeight);
+			void renderView(DeviceContext* context, Framebuffer* mainFramebuffer, const RenderCamera& camera, uint32_t viewWidth, uint32_t viewHeight);
 			void renderEnd(DeviceContext* context);
 
 			void setSkyEnabled(bool value);
 			void setClearColor(const Color4& value);
+			void trackLightingTimeOfDay(double sec) { curTimeOfDay = sec; }
+
 			void setFog(const Color3& color, float density, float sunInfluence, bool usesSkybox, bool affectsSkybox);
 			void setLighting(const Color3& ambient, const Color3& outdoorAmbient, const Vector3& keyDirection, const Color3& keyColor);
-			void trackLightingTimeOfDay(double sec) { curTimeOfDay = sec; }
-			void setPostProcess(float brightness, float contrast, float grayscaleLevel, float blurIntensity, const Color3& tintColor, float bloomIntensity, int bloomSize);
+			void setPostProcess(float brightness, float contrast, float grayscaleLevel, const Color3& tintColor, float blurIntensity, float bloomIntensity, uint32_t bloomSize);
+			void setProcessing(float exposure, float gamma);
 
 			const GeometryBatch& getFullscreenTriangle() const { return *fullscreenTriangle; }
 
@@ -197,8 +204,8 @@ namespace RBX {
 			/*ShadowValues unsetAndGetShadowValues(DeviceContext* context);
 			void restoreShadows(DeviceContext* context, const ShadowValues& shadowValues);*/
 
-			void updateMain(unsigned width, unsigned height);
-			void updateMSAA(unsigned width, unsigned height);
+			void updateMain(uint32_t width, uint32_t height);
+			void updateMSAA(uint32_t width, uint32_t height);
 
 			/*void updateGBuffer(unsigned width, unsigned height);
 			void resolveGBuffer(DeviceContext* context, Texture* texture);

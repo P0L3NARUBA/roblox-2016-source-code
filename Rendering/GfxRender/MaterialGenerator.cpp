@@ -35,23 +35,21 @@ FASTFLAGVARIABLE(RenderMaterialsOnMobile, true)
 FASTFLAGVARIABLE(ForceWangTiles, false)
 //FASTFLAG(GlowEnabled)
 
-namespace RBX
-{
-	namespace Graphics
-	{
+namespace RBX {
+	namespace Graphics {
 
 		// here's how our texture compositing setup works:
 		// there is a set of body meshes that covers a canvas area of 1024x512
-		static const int kTextureCompositWidth = 1024;
-		static const int kTextureCompositHeight = 512;
+		static const uint32_t kTextureCompositWidth = 1024u;
+		static const uint32_t kTextureCompositHeight = 512u;
 
 		// we'd like a 256x512 strip on the side, which contains 1 256x256 slot and 4 128x128 slots
 		// this strip should make the base area less wide - therefore we make the canvas wider
 		// note that 256 pixels in texture space is more than that in canvas space
 		// X pixels in canvas space translate to X / (1024 + X) * 1024 in texture space, so X can be computed using the formula below
-		static const float kTextureCompositCanvasExtraSpace = 1024.f * 256.f / (1024.f - 256.f);
-		static const float kTextureCompositCanvasWidth = 1024.f + kTextureCompositCanvasExtraSpace;
-		static const float kTextureCompositCanvasHeight = 512.f;
+		static const float kTextureCompositCanvasExtraSpace = 1024.0f * 256.0f / (1024.0f - 256.0f);
+		static const float kTextureCompositCanvasWidth = 1024.0f + kTextureCompositCanvasExtraSpace;
+		static const float kTextureCompositCanvasHeight = 512.0f;
 
 		// given a base texture size of 1024, we have to rescale the UVs to fit
 		static const float kTextureCompositBaseWidth = 1024.f / kTextureCompositCanvasWidth;
@@ -64,8 +62,7 @@ namespace RBX
 		// 00
 		// with each digit corresponding to a 128x128 area in a 256x512 canvas
 		// Vector4 xy is UV offset, zw is UV scale; borders are not included in this table
-		static const G3D::Vector4 kTextureCompositSlotConfiguration[] =
-		{
+		static const G3D::Vector4 kTextureCompositSlotConfiguration[] = {
 			G3D::Vector4(kTextureCompositBaseWidth + 0.0f * kTextureCompositExtraWidth, 0.50f, 1.0f * kTextureCompositExtraWidth, 0.50f),
 			G3D::Vector4(kTextureCompositBaseWidth + 0.0f * kTextureCompositExtraWidth, 0.25f, 0.5f * kTextureCompositExtraWidth, 0.25f),
 			G3D::Vector4(kTextureCompositBaseWidth + 0.5f * kTextureCompositExtraWidth, 0.25f, 0.5f * kTextureCompositExtraWidth, 0.25f),
@@ -74,28 +71,25 @@ namespace RBX
 		};
 
 		// one of the slots is used by the head, all other slots are used by accoutrements
-		static const size_t kTextureCompositAccoutrementCount = ARRAYSIZE(kTextureCompositSlotConfiguration) - 1;
+		static const size_t kTextureCompositAccoutrementCount = ARRAYSIZE(kTextureCompositSlotConfiguration) - 1u;
 
 		// inside each slot we leave a small border of 8x8 pixels to deal with filtering
-		static const float kTextureCompositExtraBorderWidth = 8.f / kTextureCompositCanvasWidth;
-		static const float kTextureCompositExtraBorderHeight = 8.f / kTextureCompositCanvasHeight;
+		static const float kTextureCompositExtraBorderWidth = 8.0f / kTextureCompositCanvasWidth;
+		static const float kTextureCompositExtraBorderHeight = 8.0f / kTextureCompositCanvasHeight;
 
 		// diffuse map is always bound to stage 5
-		static const unsigned int kDiffuseMapStage = 5;
+		static const uint32_t kDiffuseMapStage = 5u;
 
-		class TextureCompositingDescription
-		{
+		class TextureCompositingDescription {
 		public:
-			TextureCompositingDescription()
-			{
-				name.reserve(1024);
-				layers.reserve(16);
+			TextureCompositingDescription() {
+				name.reserve(1024u);
+				layers.reserve(16u);
 
 				nameAppend("TexComp");
 			}
 
-			void add(const MeshId& mesh, const ContentId& texture, TextureCompositorLayer::CompositMode mode = TextureCompositorLayer::Composit_BlendTexture)
-			{
+			void add(const MeshId& mesh, const ContentId& texture, TextureCompositorLayer::CompositMode mode = TextureCompositorLayer::Composit_BlendTexture) {
 				layers.push_back(TextureCompositorLayer(mesh, texture, mode));
 
 				nameAppend(" T[");
@@ -107,8 +101,7 @@ namespace RBX
 				nameAppend("]");
 			}
 
-			void add(const MeshId& mesh, const Color3& color)
-			{
+			void add(const MeshId& mesh, const Color3& color) {
 				layers.push_back(TextureCompositorLayer(mesh, color));
 
 				nameAppend(" C[");
@@ -118,13 +111,11 @@ namespace RBX
 				nameAppend("]");
 			}
 
-			const std::string& getName() const
-			{
+			const std::string& getName() const {
 				return name;
 			}
 
-			const std::vector<TextureCompositorLayer>& getLayers() const
-			{
+			const std::vector<TextureCompositorLayer>& getLayers() const {
 				return layers;
 			}
 
@@ -132,18 +123,15 @@ namespace RBX
 			std::string name;
 			std::vector<TextureCompositorLayer> layers;
 
-			void nameAppend(const char* value)
-			{
+			void nameAppend(const char* value) {
 				name += value;
 			}
 
-			void nameAppend(const std::string& value)
-			{
+			void nameAppend(const std::string& value) {
 				name += value;
 			}
 
-			void nameAppend(int value)
-			{
+			void nameAppend(int value) {
 				char buf[32];
 				sprintf(buf, "%d", value);
 
@@ -151,8 +139,7 @@ namespace RBX
 			}
 		};
 
-		struct AccoutrementMesh
-		{
+		struct AccoutrementMesh {
 			PartInstance* part;
 			FileMesh* mesh;
 			float quality;
@@ -160,51 +147,41 @@ namespace RBX
 
 		typedef AccoutrementMesh AccoutrementMeshes[kTextureCompositAccoutrementCount];
 
-		static float getAccoutrementQuality(Accoutrement* acc, PartInstance* part)
-		{
+		static float getAccoutrementQuality(Accoutrement* acc, PartInstance* part) {
 			const Vector3& location = acc->getAttachmentPos();
 			const Vector3& extents = part->getPartSizeXml();
 
 			// accoutrements are attached to top of the head; Y axis is reversed
-			float attachmentTop = -location.y + extents.y / 2;
-			float attachmentBottom = -location.y - extents.y / 2;
+			float attachmentTop = -location.y + extents.y / 2.0f;
+			float attachmentBottom = -location.y - extents.y / 2.0f;
 
 			// top is below the top of the head - not a hat
 			// bottom is significantly below the bottom of the head (head is 1 unit high) - probably not a hat
-			if (attachmentTop < 0.f || attachmentBottom < -1.75f) return 0.f;
+			if (attachmentTop < 0.0f || attachmentBottom < -1.75f) return 0.0f;
 
 			// surface area
 			return extents.x * extents.y + extents.x * extents.z + extents.y * extents.z;
 		}
 
-		struct AccoutrementQualityComparator
-		{
-			bool operator()(const AccoutrementMesh& lhs, const AccoutrementMesh& rhs) const
-			{
+		struct AccoutrementQualityComparator {
+			bool operator()(const AccoutrementMesh& lhs, const AccoutrementMesh& rhs) const {
 				return lhs.quality < rhs.quality;
 			}
 		};
 
-		struct AccoutrementMeshIdComparator
-		{
-			bool operator()(const AccoutrementMesh& lhs, const AccoutrementMesh& rhs) const
-			{
+		struct AccoutrementMeshIdComparator {
+			bool operator()(const AccoutrementMesh& lhs, const AccoutrementMesh& rhs) const {
 				return lhs.mesh->getMeshId() < rhs.mesh->getMeshId();
 			}
 		};
 
-		static void getCompositedAccoutrements(AccoutrementMeshes& result, const HumanoidIdentifier& hi)
-		{
-			size_t count = 0;
+		static void getCompositedAccoutrements(AccoutrementMeshes& result, const HumanoidIdentifier& hi) {
+			size_t count = 0u;
 
-			for (size_t i = 0; i < hi.accoutrements.size(); ++i)
-			{
-				if (PartInstance* part = hi.accoutrements[i]->findFirstChildOfType<PartInstance>())
-				{
-					if (FileMesh* mesh = getFileMesh(part))
-					{
-						if (count < kTextureCompositAccoutrementCount && !mesh->getTextureId().isNull())
-						{
+			for (size_t i = 0u; i < hi.accoutrements.size(); ++i) {
+				if (PartInstance* part = hi.accoutrements[i]->findFirstChildOfType<PartInstance>()) {
+					if (FileMesh* mesh = getFileMesh(part)) {
+						if (count < kTextureCompositAccoutrementCount && !mesh->getTextureId().isNull()) {
 							result[count].part = part;
 							result[count].mesh = mesh;
 							result[count].quality = getAccoutrementQuality(hi.accoutrements[i], part);
@@ -214,46 +191,41 @@ namespace RBX
 				}
 			}
 
-			if (count > 1)
-			{
+			if (count > 1u) {
 				// sort all accoutrements by mesh id to keep order stable (this reduces rebaking)
 				std::sort(&result[0], &result[count], AccoutrementMeshIdComparator());
 
 				// put the best quality accoutrement to the front to make it use the HQ slot
 				AccoutrementMesh* bestQuality = std::max_element(&result[0], &result[count], AccoutrementQualityComparator());
 
-				if (bestQuality->quality > 0)
-				{
+				if (bestQuality->quality > 0.0f) {
 					std::swap(result[0], *bestQuality);
 				}
 			}
 		}
 
-		static int getExtraSlot(PartInstance* part, const HumanoidIdentifier& hi, const AccoutrementMeshes& accoutrements)
-		{
+		static int32_t getExtraSlot(PartInstance* part, const HumanoidIdentifier& hi, const AccoutrementMeshes& accoutrements) {
 			if (part == hi.head)
 				return kTextureCompositAccoutrementCount;
 
-			for (size_t i = 0; i < kTextureCompositAccoutrementCount; ++i)
+			for (size_t i = 0u; i < kTextureCompositAccoutrementCount; ++i)
 				if (accoutrements[i].part == part)
 					return i;
 
 			return -1;
 		}
 
-		static std::pair<bool, G3D::Vector4> getPartCompositConfiguration(PartInstance* part, const HumanoidIdentifier& hi, const AccoutrementMeshes& accoutrements)
-		{
+		static std::pair<bool, G3D::Vector4> getPartCompositConfiguration(PartInstance* part, const HumanoidIdentifier& hi, const AccoutrementMeshes& accoutrements) {
 			// base part
 			if (hi.leftArm == part || hi.leftLeg == part || hi.rightArm == part || hi.rightLeg == part || hi.torso == part)
-				return std::make_pair(true, G3D::Vector4(0, 0, kTextureCompositBaseWidth, 1));
+				return std::make_pair(true, G3D::Vector4(0.0f, 0.0f, kTextureCompositBaseWidth, 1.0f));
 
 			// head and accoutrements occupy the rightmost column, with reversed order (bottom to top)
-			int slot = getExtraSlot(part, hi, accoutrements);
+			int32_t slot = getExtraSlot(part, hi, accoutrements);
 
-			if (slot >= 0)
-			{
+			if (slot >= 0) {
 				const G3D::Vector4& cfg = kTextureCompositSlotConfiguration[slot];
-				G3D::Vector4 borderAdjustment(kTextureCompositExtraBorderWidth, kTextureCompositExtraBorderHeight, -2.f * kTextureCompositExtraBorderWidth, -2.f * kTextureCompositExtraBorderHeight);
+				G3D::Vector4 borderAdjustment(kTextureCompositExtraBorderWidth, kTextureCompositExtraBorderHeight, -2.0f * kTextureCompositExtraBorderWidth, -2.0f * kTextureCompositExtraBorderHeight);
 
 				return std::make_pair(true, cfg + borderAdjustment);
 			}
@@ -261,16 +233,14 @@ namespace RBX
 			return std::make_pair(false, G3D::Vector4());
 		}
 
-		static MeshId getExtraSlotMeshId(PartInstance* part, const HumanoidIdentifier& hi, const AccoutrementMeshes& accoutrements)
-		{
-			int slotId = getExtraSlot(part, hi, accoutrements);
+		static MeshId getExtraSlotMeshId(PartInstance* part, const HumanoidIdentifier& hi, const AccoutrementMeshes& accoutrements) {
+			int32_t slotId = getExtraSlot(part, hi, accoutrements);
 			RBXASSERT(slotId >= 0);
 
 			return MeshId(format("rbxasset://other/CompositExtraSlot%d.mesh", slotId));
 		}
 
-		static void prepareHumanoidTextureCompositing(TextureCompositingDescription& desc, const HumanoidIdentifier& hi, const AccoutrementMeshes& accoutrements, CharacterMesh* mesh)
-		{
+		static void prepareHumanoidTextureCompositing(TextureCompositingDescription& desc, const HumanoidIdentifier& hi, const AccoutrementMeshes& accoutrements, CharacterMesh* mesh) {
 			if (hi.torso)
 				desc.add(MeshId("rbxasset://other/CompositTorsoBase.mesh"), hi.torso->getColor());
 
@@ -286,8 +256,7 @@ namespace RBX
 			if (hi.rightLeg)
 				desc.add(MeshId("rbxasset://other/CompositRightLegBase.mesh"), hi.rightLeg->getColor());
 
-			if (hi.head)
-			{
+			if (hi.head) {
 				FileMesh* headMesh = getFileMesh(hi.head);
 				MeshId slotMeshId = getExtraSlotMeshId(hi.head, hi, accoutrements);
 
@@ -296,11 +265,10 @@ namespace RBX
 				if (headMesh && !headMesh->getTextureId().isNull())
 					desc.add(slotMeshId, headMesh->getTextureId());
 
-				if (hi.head->getChildren())
-				{
+				if (hi.head->getChildren()) {
 					const Instances& children = *hi.head->getChildren();
 
-					for (size_t i = children.size(); i > 0; --i)
+					for (size_t i = children.size(); i > 0u; --i)
 						if (Decal* decal = Instance::fastDynamicCast<Decal>(children[i - 1].get()))
 							if (decal->getFace() == NORM_Z_NEG && !decal->getTexture().isNull())
 								desc.add(slotMeshId, decal->getTexture());
@@ -322,10 +290,8 @@ namespace RBX
 			if (mesh && !mesh->getOverlayTextureId().isNull())
 				desc.add(MeshId("rbxasset://other/CompositFullAtlasOverlayTexture.mesh"), mesh->getOverlayTextureId());
 
-			for (size_t i = 0; i < kTextureCompositAccoutrementCount; ++i)
-			{
-				if (accoutrements[i].mesh)
-				{
+			for (size_t i = 0u; i < kTextureCompositAccoutrementCount; ++i) {
+				if (accoutrements[i].mesh) {
 					// Accoutrements do not use alpha blending; instead they use alpha test.
 					// This means that instead of alpha blend compositing, we have to use a straight blit (so that color stays in tact).
 					// In addition to that, texture compositor texture has 1-bit alpha, so the default alpha cutoff is 128;
@@ -357,8 +323,7 @@ namespace RBX
 			const HumanoidIdentifier& hi, const AccoutrementMeshes& accoutrements, CharacterMesh* mesh,
 			std::pair<Humanoid*, TextureCompositor::JobHandle>& compositCache)
 		{
-			if (hi.humanoid == compositCache.first)
-			{
+			if (hi.humanoid == compositCache.first) {
 				TextureRef texture = visualEngine->getTextureCompositor()->getTexture(compositCache.second);
 
 				return std::make_pair(texture, compositCache.second);
@@ -456,95 +421,95 @@ namespace RBX
 			}
 		};
 
-		int MaterialGenerator::getMaterialId(PartMaterial material) {
+		uint32_t MaterialGenerator::getMaterialId(PartMaterial material) {
 			switch (material) {
-			case ASPHALT_MATERIAL:			return 1;
-			case BASALT_MATERIAL:			return 2;
-			case BRICK_MATERIAL:			return 3;
-			case CARDBOARD_MATERIAL:		return 4;
-			case CARPET_MATERIAL:			return 5;
-			case CERAMIC_TILES_MATERIAL:	return 6;
-			case CLAY_ROOF_TILES_MATERIAL:	return 7;
-			case COBBLESTONE_MATERIAL:		return 8;
-			case CONCRETE_MATERIAL:			return 9;
-			case CRACKED_LAVA_MATERIAL:		return 10;
-			case DIAMONDPLATE_MATERIAL:		return 11;
-			case FABRIC_MATERIAL:			return 12;
-			case FOIL_MATERIAL:				return 13;
-			case GLACIER_MATERIAL:			return 14;
-			case GRANITE_MATERIAL:			return 15;
-			case GRASS_MATERIAL:			return 16;
-			case GROUND_MATERIAL:			return 17;
-			case ICE_MATERIAL:				return 18;
-			case LEAFY_GRASS_MATERIAL:		return 19;
-			case LEATHER_MATERIAL:			return 20;
-			case LIMESTONE_MATERIAL:		return 21;
-			case MARBLE_MATERIAL:			return 22;
-			case METAL_MATERIAL:			return 23;
-			case MUD_MATERIAL:				return 24;
-			case PAVEMENT_MATERIAL:			return 25;
-			case PEBBLE_MATERIAL:			return 26;
-			case PLASTER_MATERIAL:			return 27;
-			case PLASTIC_MATERIAL:			return 28;
-			case ROCK_MATERIAL:				return 29;
-			case ROOF_SHINGLES_MATERIAL:	return 30;
-			case RUBBER_MATERIAL:			return 31;
-			case RUST_MATERIAL:				return 32;
-			case SALT_MATERIAL:				return 33;
-			case SAND_MATERIAL:				return 34;
-			case SANDSTONE_MATERIAL:		return 35;
-			case SLATE_MATERIAL:			return 36;
-			case SNOW_MATERIAL:				return 37;
-			case WOOD_MATERIAL:				return 38;
-			case WOODPLANKS_MATERIAL:		return 39;
+			case ASPHALT_MATERIAL:			return 1u;
+			case BASALT_MATERIAL:			return 2u;
+			case BRICK_MATERIAL:			return 3u;
+			case CARDBOARD_MATERIAL:		return 4u;
+			case CARPET_MATERIAL:			return 5u;
+			case CERAMIC_TILES_MATERIAL:	return 6u;
+			case CLAY_ROOF_TILES_MATERIAL:	return 7u;
+			case COBBLESTONE_MATERIAL:		return 8u;
+			case CONCRETE_MATERIAL:			return 9u;
+			case CRACKED_LAVA_MATERIAL:		return 10u;
+			case DIAMONDPLATE_MATERIAL:		return 11u;
+			case FABRIC_MATERIAL:			return 12u;
+			case FOIL_MATERIAL:				return 13u;
+			case GLACIER_MATERIAL:			return 14u;
+			case GRANITE_MATERIAL:			return 15u;
+			case GRASS_MATERIAL:			return 16u;
+			case GROUND_MATERIAL:			return 17u;
+			case ICE_MATERIAL:				return 18u;
+			case LEAFY_GRASS_MATERIAL:		return 19u;
+			case LEATHER_MATERIAL:			return 20u;
+			case LIMESTONE_MATERIAL:		return 21u;
+			case MARBLE_MATERIAL:			return 22u;
+			case METAL_MATERIAL:			return 23u;
+			case MUD_MATERIAL:				return 24u;
+			case PAVEMENT_MATERIAL:			return 25u;
+			case PEBBLE_MATERIAL:			return 26u;
+			case PLASTER_MATERIAL:			return 27u;
+			case PLASTIC_MATERIAL:			return 28u;
+			case ROCK_MATERIAL:				return 29u;
+			case ROOF_SHINGLES_MATERIAL:	return 30u;
+			case RUBBER_MATERIAL:			return 31u;
+			case RUST_MATERIAL:				return 32u;
+			case SALT_MATERIAL:				return 33u;
+			case SAND_MATERIAL:				return 34u;
+			case SANDSTONE_MATERIAL:		return 35u;
+			case SLATE_MATERIAL:			return 36u;
+			case SNOW_MATERIAL:				return 37u;
+			case WOOD_MATERIAL:				return 38u;
+			case WOODPLANKS_MATERIAL:		return 39u;
 
-			default:						return 0;
+			default:						return 0u;
 			}
 		}
 
-		static PartMaterial getMaterialFromId(int materialId) {
+		static PartMaterial getMaterialFromId(uint32_t materialId) {
 			switch (materialId) {
-			case 1:	 return ASPHALT_MATERIAL;
-			case 2:	 return BASALT_MATERIAL;
-			case 3:	 return BRICK_MATERIAL;
-			case 4:	 return CARDBOARD_MATERIAL;
-			case 5:	 return CARPET_MATERIAL;
-			case 6:	 return CERAMIC_TILES_MATERIAL;
-			case 7:	 return CLAY_ROOF_TILES_MATERIAL;
-			case 8:	 return COBBLESTONE_MATERIAL;
-			case 9:	 return CONCRETE_MATERIAL;
-			case 10: return CRACKED_LAVA_MATERIAL;
-			case 11: return DIAMONDPLATE_MATERIAL;
-			case 12: return FABRIC_MATERIAL;
-			case 13: return FOIL_MATERIAL;
-			case 14: return GLACIER_MATERIAL;
-			case 15: return GRANITE_MATERIAL;
-			case 16: return GRASS_MATERIAL;
-			case 17: return GROUND_MATERIAL;
-			case 18: return ICE_MATERIAL;
-			case 19: return LEAFY_GRASS_MATERIAL;
-			case 20: return LEATHER_MATERIAL;
-			case 21: return LIMESTONE_MATERIAL;
-			case 22: return MARBLE_MATERIAL;
-			case 23: return METAL_MATERIAL;
-			case 24: return MUD_MATERIAL;
-			case 25: return PAVEMENT_MATERIAL;
-			case 26: return PEBBLE_MATERIAL;
-			case 27: return PLASTER_MATERIAL;
-			case 28: return PLASTIC_MATERIAL;
-			case 29: return ROCK_MATERIAL;
-			case 30: return ROOF_SHINGLES_MATERIAL;
-			case 31: return RUBBER_MATERIAL;
-			case 32: return RUST_MATERIAL;
-			case 33: return SALT_MATERIAL;
-			case 34: return SAND_MATERIAL;
-			case 35: return SANDSTONE_MATERIAL;
-			case 36: return SLATE_MATERIAL;
-			case 37: return SNOW_MATERIAL;
-			case 38: return WOOD_MATERIAL;
-			case 39: return WOODPLANKS_MATERIAL;
+			case 1u:  return ASPHALT_MATERIAL;
+			case 2u:  return BASALT_MATERIAL;
+			case 3u:  return BRICK_MATERIAL;
+			case 4u:  return CARDBOARD_MATERIAL;
+			case 5u:  return CARPET_MATERIAL;
+			case 6u:  return CERAMIC_TILES_MATERIAL;
+			case 7u:  return CLAY_ROOF_TILES_MATERIAL;
+			case 8u:  return COBBLESTONE_MATERIAL;
+			case 9u:  return CONCRETE_MATERIAL;
+			case 10u: return CRACKED_LAVA_MATERIAL;
+			case 11u: return DIAMONDPLATE_MATERIAL;
+			case 12u: return FABRIC_MATERIAL;
+			case 13u: return FOIL_MATERIAL;
+			case 14u: return GLACIER_MATERIAL;
+			case 15u: return GRANITE_MATERIAL;
+			case 16u: return GRASS_MATERIAL;
+			case 17u: return GROUND_MATERIAL;
+			case 18u: return ICE_MATERIAL;
+			case 19u: return LEAFY_GRASS_MATERIAL;
+			case 20u: return LEATHER_MATERIAL;
+			case 21u: return LIMESTONE_MATERIAL;
+			case 22u: return MARBLE_MATERIAL;
+			case 23u: return METAL_MATERIAL;
+			case 24u: return MUD_MATERIAL;
+			case 25u: return PAVEMENT_MATERIAL;
+			case 26u: return PEBBLE_MATERIAL;
+			case 27u: return PLASTER_MATERIAL;
+			case 28u: return PLASTIC_MATERIAL;
+			case 29u: return ROCK_MATERIAL;
+			case 30u: return ROOF_SHINGLES_MATERIAL;
+			case 31u: return RUBBER_MATERIAL;
+			case 32u: return RUST_MATERIAL;
+			case 33u: return SALT_MATERIAL;
+			case 34u: return SAND_MATERIAL;
+			case 35u: return SANDSTONE_MATERIAL;
+			case 36u: return SLATE_MATERIAL;
+			case 37u: return SNOW_MATERIAL;
+			case 38u: return WOOD_MATERIAL;
+			case 39u: return WOODPLANKS_MATERIAL;
 
-			default: return SMOOTH_PLASTIC_MATERIAL;
+			default:  return SMOOTH_PLASTIC_MATERIAL;
 			}
 		}
 
@@ -569,22 +534,18 @@ namespace RBX
 			}
 		}*/
 
-		static PartInstance* getHumanoidFocusPart(const HumanoidIdentifier& hi)
-		{
+		static PartInstance* getHumanoidFocusPart(const HumanoidIdentifier& hi) {
 			if (hi.torso) return hi.torso;
 			if (hi.head) return hi.head;
 
-			return NULL;
+			return nullptr;
 		}
 
-		static bool forceFlatPlastic(DataModelMesh* specialShape)
-		{
-			if (SpecialShape* shape = specialShape->fastDynamicCast<SpecialShape>())
-			{
+		static bool forceFlatPlastic(DataModelMesh* specialShape) {
+			if (SpecialShape* shape = specialShape->fastDynamicCast<SpecialShape>()) {
 				return shape->getMeshType() == SpecialShape::HEAD_MESH;
 			}
-			else
-			{
+			else {
 				return false;
 			}
 		}
@@ -597,13 +558,12 @@ namespace RBX
 		static const std::string kTextureExtension = ".dds";
 #endif
 
-		static void setupShadowDepthTechnique(Technique& technique)
-		{
+		static void setupShadowDepthTechnique(Technique& technique) {
 			// This really culls back faces because SM space has different handedness
 			technique.setRasterizerState(RasterizerState::Cull_Front);
 		}
 
-		static void setupTechnique(Technique& technique, unsigned int flags, bool hasGlow = false) {
+		static void setupTechnique(Technique& technique, uint32_t flags, bool hasGlow = false) {
 			if (flags & MaterialGenerator::Flag_Transparent) {
 				technique.setBlendState(BlendState::Mode_AlphaBlend);
 
@@ -618,14 +578,14 @@ namespace RBX
 			/*if (flags & (MaterialGenerator::Flag_ForceDecal | MaterialGenerator::Flag_ForceDecalTexture))
 				technique.setRasterizerState(RasterizerState(RasterizerState::Cull_Back, -16));*/
 
-			technique.setRasterizerState(RasterizerState(RasterizerState::Cull_Back, 0));
+			technique.setRasterizerState(RasterizerState(RasterizerState::Cull_Back, 0u));
 		}
 
-		static void copyTextureToArray(Texture* targetTexture, Texture* sourceTexture, int materialId = 0u) {
-			for (unsigned int i = 0; i < sourceTexture->getMipLevels(); ++i) {
+		static void copyTextureToArray(Texture* targetTexture, Texture* sourceTexture, uint32_t materialId = 0u) {
+			for (uint32_t i = 0u; i < sourceTexture->getMipLevels(); ++i) {
 				void* data = nullptr;
 
-				sourceTexture->download(0, i, data, 0u);
+				sourceTexture->download(0u, i, data, 0u);
 
 				targetTexture->upload(materialId, i, TextureRegion(0u, 0u, 1024u, 1024u), data, sizeof(data));
 			}
@@ -647,7 +607,7 @@ namespace RBX
 			technique.setTexture(16, tm->getFallbackTexture(TextureManager::Fallback_BlackTransparent), SamplerState::Filter_Anisotropic);*/
 		}
 
-		void MaterialGenerator::setupComplexMaterialTextures(VisualEngine* visualEngine, Technique& technique, const std::string& materialName, int materialId, const std::string& materialVariant) {
+		void MaterialGenerator::setupComplexMaterialTextures(VisualEngine* visualEngine, Technique& technique, const std::string& materialName, uint32_t materialId, const std::string& materialVariant) {
 			TextureManager* tm = visualEngine->getTextureManager();
 
 			std::string texturePath = "rbxasset://textures/" + materialVariant + "/" + materialName + "/";
@@ -684,15 +644,15 @@ namespace RBX
 		}
 
 		void MaterialGenerator::assignMaterialTextures(VisualEngine* visualEngine, Technique& technique) const {
-			technique.setTexture(10, albedoTextures, SamplerState::Filter_Anisotropic);
-			technique.setTexture(11, emissiveTextures, SamplerState::Filter_Anisotropic);
-			technique.setTexture(12, matValueTextures, SamplerState::Filter_Anisotropic);
+			technique.setTexture(10u, albedoTextures, SamplerState::Filter_Anisotropic);
+			technique.setTexture(11u, emissiveTextures, SamplerState::Filter_Anisotropic);
+			technique.setTexture(12u, matValueTextures, SamplerState::Filter_Anisotropic);
 
-			technique.setTexture(13, normalTextures, SamplerState::Filter_Anisotropic);
-			technique.setTexture(14, heightTextures, SamplerState::Filter_Anisotropic);
+			technique.setTexture(13u, normalTextures, SamplerState::Filter_Anisotropic);
+			technique.setTexture(14u, heightTextures, SamplerState::Filter_Anisotropic);
 
-			technique.setTexture(15, clearcoatATextures, SamplerState::Filter_Anisotropic);
-			technique.setTexture(16, clearcoatBTextures, SamplerState::Filter_Anisotropic);
+			technique.setTexture(15u, clearcoatATextures, SamplerState::Filter_Anisotropic);
+			technique.setTexture(16u, clearcoatBTextures, SamplerState::Filter_Anisotropic);
 		}
 
 		/*static void setupLQMaterialTextures(VisualEngine* visualEngine, Technique& technique, const std::string& materialName)
@@ -713,23 +673,23 @@ namespace RBX
 			SceneManager* sceneManager = visualEngine->getSceneManager();
 
 			/* Shadow Maps */
-			technique.setTexture(0, sceneManager->getShadowMapAtlas(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
-			technique.setTexture(1, sceneManager->getShadowMapArray(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+			technique.setTexture(0u, sceneManager->getShadowMapAtlas(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+			technique.setTexture(1u, sceneManager->getShadowMapArray(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 
 			/* Environment BRDF */
-			technique.setTexture(2, tm->load(ContentId("rbxasset://textures/brdfLUT" + kTextureExtension), TextureManager::Fallback_None), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+			technique.setTexture(2u, tm->load(ContentId("rbxasset://textures/brdfLUT" + kTextureExtension), TextureManager::Fallback_None), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 
 			/* Area Light LTCs */
-			technique.setTexture(3, tm->load(ContentId("rbxasset://textures/ltc1LUT" + kTextureExtension), TextureManager::Fallback_None), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
-			technique.setTexture(4, tm->load(ContentId("rbxasset://textures/ltc2LUT" + kTextureExtension), TextureManager::Fallback_None), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+			technique.setTexture(3u, tm->load(ContentId("rbxasset://textures/ltc1LUT" + kTextureExtension), TextureManager::Fallback_None), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+			technique.setTexture(4u, tm->load(ContentId("rbxasset://textures/ltc2LUT" + kTextureExtension), TextureManager::Fallback_None), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 
 			/* Ambient Occlusion */
-			technique.setTexture(5, sceneManager->getAmbientOcclusion(), SamplerState(SamplerState::Filter_Point, SamplerState::Address_Clamp));
+			technique.setTexture(5u, sceneManager->getAmbientOcclusion(), SamplerState(SamplerState::Filter_Point, SamplerState::Address_Clamp));
 
 			/* Cubemaps */
-			technique.setTexture(6, sceneManager->getEnvMap()->getOutdoorTexture(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Wrap));
-			technique.setTexture(7, sceneManager->getEnvMap()->getIndoorTextures(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Wrap));
-			technique.setTexture(8, sceneManager->getEnvMap()->getIrradianceTextures(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Wrap));
+			technique.setTexture(6u, sceneManager->getEnvMap()->getOutdoorTexture(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Wrap));
+			technique.setTexture(7u, sceneManager->getEnvMap()->getIndoorTextures(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Wrap));
+			technique.setTexture(8u, sceneManager->getEnvMap()->getIrradianceTextures(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Wrap));
 		}
 
 		void MaterialGenerator::setupMaterialTextures(VisualEngine* ve, Technique& technique, PartMaterial renderMaterial) {
@@ -755,27 +715,28 @@ namespace RBX
 				clearcoatATextures = device->createTexture(Texture::Type_2D_Array, Texture::Format_BC7_sRGB, 1024u, 1024u, 48u, 11u, Texture::Usage_Static);
 				clearcoatBTextures = device->createTexture(Texture::Type_2D_Array, Texture::Format_BC7, 1024u, 1024u, 48u, 11u, Texture::Usage_Static);
 
-				for (int i = 0; i == 39; ++i)
+				for (uint32_t i = 0u; i == 39u; ++i)
 					globalMaterialData.Materials[i] = getParameters(getMaterialFromId(i));
+
+				
 			}
 		}
 
 		MaterialGenerator::TexturedMaterialCache::TexturedMaterialCache()
-			: gcSizeLast(0)
+			: gcSizeLast(0u)
 		{
 		}
 
 		MaterialGenerator::MaterialGenerator(VisualEngine* visualEngine)
 			: visualEngine(visualEngine)
-			, compositCache(NULL, TextureCompositor::JobHandle())
+			, compositCache(nullptr, TextureCompositor::JobHandle())
 		{
 			createTextureArrays(visualEngine);
 			//wangTilesTex = visualEngine->getTextureManager()->load(ContentId("rbxasset://textures/wangIndex.dds"), TextureManager::Fallback_Black);
 		}
 
-		shared_ptr<Material> MaterialGenerator::createBaseMaterial(unsigned int flags)
-		{
-			unsigned int cacheKey = flags & Flag_CacheMask;
+		shared_ptr<Material> MaterialGenerator::createBaseMaterial(uint32_t flags) {
+			uint32_t cacheKey = flags & Flag_CacheMask;
 
 			// Cache lookup
 			if (baseMaterialCache[cacheKey])
@@ -787,7 +748,7 @@ namespace RBX
 			std::string vertexSkinning = (flags & Flag_Skinned) ? "Skinned" : "Static";
 
 			if (shared_ptr<ShaderProgram> program = visualEngine->getShaderManager()->getProgram("BasicMaterialVS", "RegularLOD0FS")) {
-				Technique technique(program, 0);
+				Technique technique(program, 0u);
 
 				setupTechnique(technique, flags);
 
@@ -856,13 +817,13 @@ namespace RBX
 			return material;
 		}
 
-		shared_ptr<Material> MaterialGenerator::createRenderMaterial(unsigned int flags, PartMaterial renderMaterial) {
-			int materialId = getMaterialId(renderMaterial);
-			if (materialId < 0) return shared_ptr<Material>();
+		shared_ptr<Material> MaterialGenerator::createRenderMaterial(uint32_t flags, PartMaterial renderMaterial) {
+			uint32_t materialId = getMaterialId(renderMaterial);
+			if (materialId < 0u) return shared_ptr<Material>();
 
-			RBXASSERT(materialId >= 0 && materialId < ARRAYSIZE(renderMaterialCache));
+			RBXASSERT(materialId >= 0u && materialId < ARRAYSIZE(renderMaterialCache));
 
-			unsigned int cacheKey = flags & Flag_CacheMask;
+			uint32_t cacheKey = flags & Flag_CacheMask;
 
 			// Fast cache lookup
 			if (renderMaterialCache[materialId][cacheKey])
@@ -882,7 +843,7 @@ namespace RBX
 
 			if (renderMaterial == NEON_MATERIAL) {
 				if (shared_ptr<ShaderProgram> program = visualEngine->getShaderManager()->getProgram(vertexShader, "NeonFS")) {
-					Technique technique(program, 0);
+					Technique technique(program, 0u);
 
 					setupTechnique(technique, flags, true);
 
@@ -891,7 +852,7 @@ namespace RBX
 			}
 			else if (renderMaterial == SMOOTH_PLASTIC_MATERIAL) {
 				if (shared_ptr<ShaderProgram> program = visualEngine->getShaderManager()->getProgram("BasicMaterialVS", "RegularLOD0FS")) {
-					Technique technique(program, 0);
+					Technique technique(program, 0u);
 
 					setupTechnique(technique, flags);
 
@@ -904,7 +865,7 @@ namespace RBX
 			}
 			else {
 				if (shared_ptr<ShaderProgram> program = visualEngine->getShaderManager()->getProgram(vertexShader, "RegularLOD0FS")) {
-					Technique technique(program, 0);
+					Technique technique(program, 0u);
 
 					setupTechnique(technique, flags);
 
@@ -915,7 +876,7 @@ namespace RBX
 					material->addTechnique(technique);
 				}
 				else if (shared_ptr<ShaderProgram> program = visualEngine->getShaderManager()->getProgram("BasicMaterialVS", "FallbackFS")) {
-					Technique technique(program, 0);
+					Technique technique(program, 0u);
 
 					setupTechnique(technique, flags);
 
@@ -1013,9 +974,8 @@ namespace RBX
 			return material;
 		}
 
-		shared_ptr<Material> MaterialGenerator::createTexturedMaterial(const TextureRef& texture, const std::string& textureName, unsigned int flags)
-		{
-			unsigned int cacheKey = flags & Flag_CacheMask;
+		shared_ptr<Material> MaterialGenerator::createTexturedMaterial(const TextureRef& texture, const std::string& textureName, uint32_t flags) {
+			uint32_t cacheKey = flags & Flag_CacheMask;
 
 			// Fast cache lookup
 			TexturedMaterialMap::iterator it = texturedMaterialCache[cacheKey].map.find(textureName);
@@ -1030,15 +990,14 @@ namespace RBX
 
 			shared_ptr<Material> material(new Material());
 
-			unsigned int diffuseMapStage = visualEngine->getDevice()->getCaps().supportsFFP ? 0 : kDiffuseMapStage;
+			uint32_t diffuseMapStage = kDiffuseMapStage;
 
 			SamplerState::Filter filter = (flags & (Flag_ForceDecal | Flag_ForceDecalTexture)) ? SamplerState::Filter_Anisotropic : SamplerState::Filter_Linear;
 			SamplerState::Address address = (flags & Flag_ForceDecal) ? SamplerState::Address_Clamp : SamplerState::Address_Wrap;
 
 			const std::vector<Technique>& techniques = baseMaterial->getTechniques();
 
-			for (size_t i = 0; i < techniques.size(); ++i)
-			{
+			for (size_t i = 0u; i < techniques.size(); ++i) {
 				Technique t = techniques[i];
 
 				t.setTexture(diffuseMapStage, texture, SamplerState(filter, address));
@@ -1052,8 +1011,7 @@ namespace RBX
 			return material;
 		}
 
-		MaterialGenerator::Result MaterialGenerator::createDefaultMaterial(PartInstance* part, unsigned int flags, PartMaterial renderMaterial)
-		{
+		MaterialGenerator::Result MaterialGenerator::createDefaultMaterial(PartInstance* part, uint32_t flags, PartMaterial renderMaterial) {
 			PartMaterial actualRenderMaterial = renderMaterial;
 
 #if defined(RBX_PLATFORM_IOS) || defined(__ANDROID__)
@@ -1064,12 +1022,12 @@ namespace RBX
 			}
 #endif
 
-			unsigned int features = 0; //renderMaterial == NEON_MATERIAL ? RenderQueue::Features_Glow : 0;
+			uint32_t features = 0u; //renderMaterial == NEON_MATERIAL ? RenderQueue::Features_Glow : 0;
 
-			return Result(createRenderMaterial(flags, actualRenderMaterial), 0 /*(flags & Flag_Transparent) ? 0 : Result_PlasticLOD*/, features);
+			return Result(createRenderMaterial(flags, actualRenderMaterial), 0u /*(flags & Flag_Transparent) ? 0 : Result_PlasticLOD*/, features);
 		}
 
-		MaterialGenerator::Result MaterialGenerator::createMaterialForPart(PartInstance* part, const HumanoidIdentifier* hi, unsigned int flags) {
+		MaterialGenerator::Result MaterialGenerator::createMaterialForPart(PartInstance* part, const HumanoidIdentifier* hi, uint32_t flags) {
 			if (hi && (flags & Flag_UseCompositTexture)) {
 				std::pair<std::pair<TextureRef, TextureCompositor::JobHandle>, G3D::Vector4> htp = createHumanoidTexture(visualEngine, part, *hi, flags, compositCache);
 
@@ -1079,7 +1037,7 @@ namespace RBX
 					// attach focus part to texture to make sure texture has an appropriate priority
 					visualEngine->getTextureCompositor()->attachInstance(htp.first.second, shared_from(getHumanoidFocusPart(*hi)));
 
-					return Result(material, Result_UsesTexture | Result_UsesCompositTexture, 0, htp.second);
+					return Result(material, Result_UsesTexture | Result_UsesCompositTexture, 0u, htp.second);
 				}
 			}
 
@@ -1095,14 +1053,13 @@ namespace RBX
 					: createDefaultMaterial(part, flags, SMOOTH_PLASTIC_MATERIAL);
 			}
 
-			if ((flags & Flag_DisableMaterialsAndStuds) != 0 || (specialShape != NULL && forceFlatPlastic(specialShape)))
+			if ((flags & Flag_DisableMaterialsAndStuds) != 0u || (specialShape != nullptr && forceFlatPlastic(specialShape)))
 				return createDefaultMaterial(part, flags, SMOOTH_PLASTIC_MATERIAL);
 			else
 				return createDefaultMaterial(part, flags, part->getRenderMaterial());
 		}
 
-		MaterialGenerator::Result MaterialGenerator::createMaterialForDecal(Decal* decal, unsigned int flags)
-		{
+		MaterialGenerator::Result MaterialGenerator::createMaterialForDecal(Decal* decal, uint32_t flags) {
 			const TextureId& textureId = decal->getTexture();
 
 			TextureRef texture = textureId.isNull() ? TextureRef() : visualEngine->getTextureManager()->load(textureId, TextureManager::Fallback_BlackTransparent, decal->getFullName() + ".Texture");
@@ -1112,8 +1069,7 @@ namespace RBX
 				: Result();
 		}
 
-		MaterialGenerator::Result MaterialGenerator::createMaterial(PartInstance* part, Decal* decal, const HumanoidIdentifier* hi, unsigned int flags)
-		{
+		MaterialGenerator::Result MaterialGenerator::createMaterial(PartInstance* part, Decal* decal, const HumanoidIdentifier* hi, uint32_t flags) {
 			if (decal) {
 				if (decal->isA<DecalTexture>())
 					return createMaterialForDecal(decal, flags | Flag_ForceDecalTexture);
@@ -1124,14 +1080,12 @@ namespace RBX
 				return createMaterialForPart(part, hi, flags);
 		}
 
-		void MaterialGenerator::invalidateCompositCache()
-		{
-			compositCache = std::make_pair(static_cast<Humanoid*>(NULL), TextureCompositor::JobHandle());
+		void MaterialGenerator::invalidateCompositCache() {
+			compositCache = std::make_pair(static_cast<Humanoid*>(nullptr), TextureCompositor::JobHandle());
 		}
 
-		void MaterialGenerator::garbageCollectIncremental()
-		{
-			for (unsigned int i = 0; i < ARRAYSIZE(texturedMaterialCache); ++i) {
+		void MaterialGenerator::garbageCollectIncremental() {
+			for (size_t i = 0u; i < ARRAYSIZE(texturedMaterialCache); ++i) {
 				TexturedMaterialCache& cache = texturedMaterialCache[i];
 
 				// To catch up with allocation rate we need to visit the number of allocated elements since last run plus a small constant
@@ -1139,8 +1093,7 @@ namespace RBX
 
 				TexturedMaterialMap::iterator it = cache.map.find(cache.gcKeyNext);
 
-				for (size_t j = 0; j < visitCount; ++j)
-				{
+				for (size_t j = 0u; j < visitCount; ++j) {
 					if (it == cache.map.end())
 						it = cache.map.begin();
 
@@ -1155,10 +1108,8 @@ namespace RBX
 			}
 		}
 
-		void MaterialGenerator::garbageCollectFull()
-		{
-			for (unsigned int i = 0; i < ARRAYSIZE(texturedMaterialCache); ++i)
-			{
+		void MaterialGenerator::garbageCollectFull() {
+			for (size_t i = 0u; i < ARRAYSIZE(texturedMaterialCache); ++i) {
 				TexturedMaterialCache& cache = texturedMaterialCache[i];
 
 				for (TexturedMaterialMap::iterator it = cache.map.begin(); it != cache.map.end(); )
@@ -1474,27 +1425,24 @@ namespace RBX
 			}
 			}
 
-			if (data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset.z > 0.0)
+			if (data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset.z > 0.0f)
 				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset.z *= getTiling(material);
 
 			return data;
 		}
 
-		unsigned int MaterialGenerator::createFlags(bool skinned, RBX::PartInstance* part, const HumanoidIdentifier* hi, bool& ignoreDecalsOut)
-		{
+		uint32_t MaterialGenerator::createFlags(bool skinned, RBX::PartInstance* part, const HumanoidIdentifier* hi, bool& ignoreDecalsOut) {
 			bool useCompositTexture = hi && hi->humanoid && hi->isPartComposited(part);
 			ignoreDecalsOut = false;
 
-			unsigned int materialFlags = skinned ? MaterialGenerator::Flag_Skinned : 0;
+			uint32_t materialFlags = skinned ? MaterialGenerator::Flag_Skinned : 0u;
 
-			if (hi && part == hi->head && hi->isPartHead(part))
-			{
+			if (hi && part == hi->head && hi->isPartHead(part)) {
 				// Heads don't support materials/studs
 				materialFlags |= MaterialGenerator::Flag_DisableMaterialsAndStuds;
 			}
 
-			if (useCompositTexture)
-			{
+			if (useCompositTexture) {
 				materialFlags |= MaterialGenerator::Flag_UseCompositTexture;
 
 				// Bake all accoutrements in the same composit texture
@@ -1509,12 +1457,10 @@ namespace RBX
 					ignoreDecalsOut = true;
 			}
 
-			if (part->getTransparencyUi() > 0)
-			{
+			if (part->getTransparencyUi() > 0.0f) {
 				materialFlags |= MaterialGenerator::Flag_Transparent;
 			}
-			else if (useCompositTexture)
-			{
+			else if (useCompositTexture) {
 				// Some accoutrements need alpha kill (i.e. feather on a hat)
 				// We enable it on all composited materials to batch body parts and accoutrements together
 				materialFlags |= MaterialGenerator::Flag_AlphaKill;
@@ -1571,8 +1517,7 @@ namespace RBX
 			}
 		}
 
-		unsigned int MaterialGenerator::getDiffuseMapStage()
-		{
+		uint32_t MaterialGenerator::getDiffuseMapStage() {
 			return kDiffuseMapStage;
 		}
 

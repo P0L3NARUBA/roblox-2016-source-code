@@ -13,16 +13,16 @@
 #include "Util/RunStateOwner.h"
 #include "V8datamodel/FastLogSettings.h"
 
-const char *const RBX::sPhysicsSettings = "PhysicsSettings";
+const char* const RBX::sPhysicsSettings = "PhysicsSettings";
 
 // Don't show tree in release mode - has ROBLOX specific secrets as to how we do assembly
 
 #ifdef _DEBUG
-	#define __RBX_SECRET_DEBUGGING
+#define __RBX_SECRET_DEBUGGING
 #endif
 
 #ifdef _NOOPT
-	#define __RBX_SECRET_DEBUGGING
+#define __RBX_SECRET_DEBUGGING
 #endif
 
 using namespace RBX;
@@ -50,7 +50,7 @@ static Reflection::EnumPropDescriptor<PhysicsSettings, EThrottle::EThrottleType>
 static Reflection::PropDescriptor<PhysicsSettings, double> prop_ThrottleAdjustTime("ThrottleAdjustTime", "Performance", &PhysicsSettings::getThrottleAdjustTime, &PhysicsSettings::setThrottleAdjustTime);
 
 static Reflection::PropDescriptor<PhysicsSettings, bool> prop_RenderDecompositionData("ShowDecompositionGeometry", "Display", &PhysicsSettings::getRenderDecompositionData, &PhysicsSettings::setRenderDecompositionData);
-static Reflection::PropDescriptor<PhysicsSettings, bool> prop_PhysicsAnalyzerEnabled("PhysicsAnalyzerEnabled", category_Data, &PhysicsSettings::getPhysicsAnalyzerState, NULL, Reflection::PropertyDescriptor::UI, Security::Plugin);
+static Reflection::PropDescriptor<PhysicsSettings, bool> prop_PhysicsAnalyzerEnabled("PhysicsAnalyzerEnabled", category_Data, &PhysicsSettings::getPhysicsAnalyzerState, nullptr, Reflection::PropertyDescriptor::UI, Security::Plugin);
 
 #if defined(RBX_TEST_BUILD) || RBX_PLATFORM_IOS
 static Reflection::PropDescriptor<PhysicsSettings, bool> prop_ThrottleAt30Fps("Is30FpsThrottleEnabled", "Performance", &PhysicsSettings::getThrottleAt30Fps, &PhysicsSettings::setThrottleAt30Fps);
@@ -120,7 +120,7 @@ EThrottle::EThrottleType PhysicsSettings::getEThrottle() const
 	return EThrottle::globalDebugEThrottle;
 }
 
-void PhysicsSettings::setEThrottle(EThrottle::EThrottleType value) 
+void PhysicsSettings::setEThrottle(EThrottle::EThrottleType value)
 {
 	if (value != getEThrottle()) {
 		EThrottle::globalDebugEThrottle = value;
@@ -133,7 +133,7 @@ bool PhysicsSettings::getThrottleAt30Fps() const
 	return DataModel::throttleAt30Fps;
 }
 
-void PhysicsSettings::setThrottleAt30Fps(bool value) 
+void PhysicsSettings::setThrottleAt30Fps(bool value)
 {
 	// Task Scheduler also needs to know about the current state of the DataModel Throttle.
 	if (TaskScheduler::singleton().isCyclicExecutive() && TaskScheduler::singleton().DataModel30fpsThrottle != value)
@@ -157,23 +157,23 @@ void PhysicsSettings::setThrottleAdjustTime(double value)
 	}
 }
 
-void PhysicsSettings::setPhysicsAnalyzerState( bool enabled )
+void PhysicsSettings::setPhysicsAnalyzerState(bool enabled)
 {
-    if (physicsAnalyzerState != enabled)
-    {
-        physicsAnalyzerState = enabled;
-        raisePropertyChanged(prop_PhysicsAnalyzerEnabled);
-    }
+	if (physicsAnalyzerState != enabled)
+	{
+		physicsAnalyzerState = enabled;
+		raisePropertyChanged(prop_PhysicsAnalyzerEnabled);
+	}
 }
 
 
 #ifdef __RBX_SECRET_DEBUGGING
 
-    REFLECTION_BEGIN();
-	static Reflection::PropDescriptor<PhysicsSettings, bool> prop_HighlightSleepParts("AreSleepPartsHighlighted", "Secret Display", &PhysicsSettings::getHighlightSleepParts, &PhysicsSettings::setHighlightSleepParts);
-	static Reflection::PropDescriptor<PhysicsSettings, float> prop_WaterViscosity("WaterViscosity", "Simulation", &PhysicsSettings::getWaterViscosity, &PhysicsSettings::setWaterViscosity);
-    REFLECTION_END();
-    
+REFLECTION_BEGIN();
+static Reflection::PropDescriptor<PhysicsSettings, bool> prop_HighlightSleepParts("AreSleepPartsHighlighted", "Secret Display", &PhysicsSettings::getHighlightSleepParts, &PhysicsSettings::setHighlightSleepParts);
+static Reflection::PropDescriptor<PhysicsSettings, float> prop_WaterViscosity("WaterViscosity", "Simulation", &PhysicsSettings::getWaterViscosity, &PhysicsSettings::setWaterViscosity);
+REFLECTION_END();
+
 SET_GET(bool, HighlightSleepParts, PartInstance, highlightSleepParts);
 SET_GET(float, WaterViscosity, BuoyancyContact, waterViscosity);
 #endif

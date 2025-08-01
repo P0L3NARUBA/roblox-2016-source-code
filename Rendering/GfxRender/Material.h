@@ -9,18 +9,15 @@
 #include <vector>
 #include <cstdlib>
 
-namespace RBX
-{
-	namespace Graphics
-	{
+namespace RBX {
+	namespace Graphics {
 
 		class DeviceContext;
 		class ShaderProgram;
 
-		class Technique
-		{
+		class Technique {
 		public:
-			Technique(const shared_ptr<ShaderProgram>& program, unsigned int lodIndex, RenderQueue::Pass pass = RenderQueue::Pass_Default);
+			Technique(const shared_ptr<ShaderProgram>& program, uint32_t lodIndex, RenderQueue::Pass pass = RenderQueue::Pass_Default);
 
 			void setRasterizerState(const RasterizerState& state);
 			const RasterizerState& getRasterizerState() const { return rasterizerState; }
@@ -31,33 +28,31 @@ namespace RBX
 			void setBlendState(const BlendState& state);
 			const BlendState& getBlendState() const { return blendState; }
 
-			void setTexture(unsigned int stage, const TextureRef& texture, const SamplerState& state);
-			const TextureRef& getTexture(unsigned int stage) const;
+			void setTexture(uint32_t stage, const TextureRef& texture, const SamplerState& state);
+			const TextureRef& getTexture(uint32_t stage) const;
 
-			void setConstant(int handle, const Vector4& value);
-			void setConstant(const char* name, const Vector4& value);
+			//void setConstant(uint32_t handle, const Vector4& value);
+			//void setConstant(const char* name, const Vector4& value);
 
 			void apply(DeviceContext* context) const;
 
-			unsigned int getLodIndex() const { return lodIndex; }
+			uint32_t getLodIndex() const { return lodIndex; }
 			RenderQueue::Pass getPass() const { return pass; }
 
 			const ShaderProgram* getProgram() const { return program.get(); }
 
 		private:
-			struct TextureUnit
-			{
+			struct TextureUnit {
 				TextureRef texture;
 				SamplerState state;
 			};
 
-			struct Constant
-			{
-				int handle;
+			/*struct Constant {
+				uint32_t handle;
 				Vector4 value;
-			};
+			};*/
 
-			unsigned int lodIndex;
+			uint32_t lodIndex;
 			RenderQueue::Pass pass;
 
 			RasterizerState rasterizerState;
@@ -67,17 +62,16 @@ namespace RBX
 			shared_ptr<ShaderProgram> program;
 
 			std::vector<TextureUnit> textures;
-			std::vector<Constant> constants;
+			//std::vector<Constant> constants;
 		};
 
-		class Material
-		{
+		class Material {
 		public:
 			Material();
 
 			void addTechnique(const Technique& technique);
 
-			const Technique* getBestTechnique(unsigned int lodIndex, RenderQueue::Pass pass) const;
+			const Technique* getBestTechnique(uint32_t lodIndex, RenderQueue::Pass pass) const;
 
 			const std::vector<Technique>& getTechniques() const { return techniques; }
 			std::vector<Technique>& getTechniques() { return techniques; }

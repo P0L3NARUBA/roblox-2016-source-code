@@ -44,14 +44,12 @@ Frustum::Frustum(const Vector3& apex, const Vector3& dir, const Vector3& up, con
 	faceArray.append(Plane(Vector3(0.0f, -faceArray.last().normal().y, faceArray.last().normal().z), Vector3::zero()));
 
 	// Far plane
-	if (farDist < inf()) 
-	{
+	if (farDist < inf()) {
 		faceArray.append(Plane(Vector3(0.0f, 0.0f, 1.0f), Vector3(0.0f, 0.0f, -farDist)));
 	}
 
 	// Transform planes to world space
-	for (int face = 0; face < faceArray.size(); ++face) 
-	{
+	for (size_t face = 0u; face < faceArray.size(); ++face)  {
 		// Since there is no scale factor, we don't have to 
 		// worry about the inverse transpose of the normal.
 		Vector3 normal;
@@ -121,28 +119,26 @@ bool Frustum::containsAABB(const Extents& aabb, const G3D::CoordinateFrame& exte
 
 bool Frustum::containsPoint(const Vector3& point) const
 {
-	for (int ii = 0; ii < faceArray.size(); ++ii)			
-	{
+	for (size_t ii = 0u; ii < faceArray.size(); ++ii) {
 		const Plane& plane = faceArray[ii];
+
 		if (!plane.halfSpaceContains(point))
-		{
 			return false;
-		}
 	}
+
 	return true;
 }
 
 
 bool Frustum::intersectsSphere(const Vector3& center, float radius) const
 {
-	for (int ii = 0; ii < faceArray.size(); ++ii)			
-	{
+	for (size_t ii = 0u; ii < faceArray.size(); ++ii) {
 		const Plane& p = faceArray[ii];
 		Plane offsetplane(p.normal(), p.distance() - radius);
+
 		if (!offsetplane.halfSpaceContains(center))
-		{
 			return false;
-		}
 	}
+
 	return true;
 }

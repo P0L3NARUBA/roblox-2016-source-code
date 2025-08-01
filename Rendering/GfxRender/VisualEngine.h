@@ -10,160 +10,157 @@
 #include "RbxG3D/Frustum.h"
 #include "RenderCamera.h"
 
-namespace RBX
-{
+namespace RBX {
 	class ContentProvider;
 	class MeshContentProvider;
-    class Lighting;
+	class Lighting;
 
 	class RenderStats;
 
 	class FrameRateManager;
-    class Camera;
-    class RenderCaps;
+	class Camera;
+	class RenderCaps;
 
 	class Typesetter;
 }
 
-namespace RBX
-{
-namespace Graphics
-{
+namespace RBX {
+	namespace Graphics {
 
-class Device;
+		class Device;
 
-class Water;
+		class Water;
 
-class TextureCompositor;
-class ShaderManager;
-class TextureManager;
-class SceneUpdater;
-class SceneManager;
-class TextureAtlas;
+		class TextureCompositor;
+		class ShaderManager;
+		class TextureManager;
+		class SceneUpdater;
+		class SceneManager;
+		class TextureAtlas;
 
-class MaterialGenerator;
+		class MaterialGenerator;
 
-class LightGrid;
+		class LightGrid;
 
-class AdornRender;
-class VertexStreamer;
+		class AdornRender;
+		class VertexStreamer;
 
-class TypesetterBitmap;
+		class TypesetterBitmap;
 
-class Material;
+		class Material;
 
-class VertexLayout;
-struct EmitterShared;
-	
-class VisualEngine 
-{
-public:
-	VisualEngine(Device* device, CRenderSettings* renderSettings);
-    virtual ~VisualEngine();
+		class VertexLayout;
+		struct EmitterShared;
 
-    void bindWorkspace(const shared_ptr<DataModel>& dm);
-    
-    void setViewport(int width, int height);
-    void setCamera(const Camera& value, const G3D::Vector3& poi);
+		class VisualEngine {
+		public:
+			VisualEngine(Device* device, CRenderSettings* renderSettings);
+			virtual ~VisualEngine();
 
-    void reloadShaders();
-    void queueAssetReload(const std::string& filePath);
-	void immediateAssetReload(const std::string& filePath);
-    void reloadQueuedAssets();
+			void bindWorkspace(const shared_ptr<DataModel>& dm);
 
-    Device* getDevice() { return device; }
-    SceneManager *getSceneManager() { return sceneManager.get(); }
-    FrameRateManager* getFrameRateManager() { return frameRateManager.get(); }
+			void setViewport(uint32_t width, uint32_t height);
+			void setCamera(const Camera& value, const G3D::Vector3& poi);
 
-	RenderCamera& getCameraMutable() { return camera; }
+			void reloadShaders();
+			void queueAssetReload(const std::string& filePath);
+			void immediateAssetReload(const std::string& filePath);
+			void reloadQueuedAssets();
 
-	const RenderCamera& getCamera() { return camera; }
-	const RenderCamera& getCameraCull() { return cameraCull; }
-	const RenderCamera& getCameraCullFrm() { return cameraCullFrm; }
+			Device* getDevice() { return device; }
+			SceneManager* getSceneManager() { return sceneManager.get(); }
+			FrameRateManager* getFrameRateManager() { return frameRateManager.get(); }
 
-	int getViewWidth() const { return viewWidth; }
-	int getViewHeight() const { return viewHeight; }
+			RenderCamera& getCameraMutable() { return camera; }
 
-    AdornRender* getAdorn() { return adorn.get(); }
-    VertexStreamer* getVertexStreamer() { return vertexStreamer.get(); }
-    TextureCompositor * getTextureCompositor() { return textureCompositor.get(); }
-    TextureManager* getTextureManager() { return textureManager.get(); }
-	EmitterShared*  getEmitterSharedState() { return emitterShared.get(); }
-    
-    ShaderManager* getShaderManager() { return shaderManager.get(); }
-    LightGrid* getLightGrid() { return lightGrid.get(); }
-    Water* getWater() { return water.get(); }
-    SceneUpdater* getSceneUpdater() { return sceneUpdater.get(); }
-    CRenderSettings* getSettings() { return settings; };
+			const RenderCamera& getCamera() { return camera; }
+			const RenderCamera& getCameraCull() { return cameraCull; }
+			const RenderCamera& getCameraCullFrm() { return cameraCullFrm; }
 
-    // returns area of interest that needs to be computed for next frame. slighly bigger than camera frustrum.
-    // rendering of primitives outside this area is not allowed, since objects outside this area are not guaranteed to
-    // be valid.
-    const Frustum* getUpdateFrustum() { return &updateFrustum; }
+			uint32_t getViewWidth() const { return viewWidth; }
+			uint32_t getViewHeight() const { return viewHeight; }
 
-    RenderStats* getRenderStats() { return renderStats.get(); }
+			AdornRender* getAdorn() { return adorn.get(); }
+			VertexStreamer* getVertexStreamer() { return vertexStreamer.get(); }
+			TextureCompositor* getTextureCompositor() { return textureCompositor.get(); }
+			TextureManager* getTextureManager() { return textureManager.get(); }
+			EmitterShared* getEmitterSharedState() { return emitterShared.get(); }
 
-    ContentProvider* getContentProvider() { return contentProvider; }
-    MeshContentProvider* getMeshContentProvider() { return meshContentProvider; }
-    Lighting* getLighting() { return lighting; }
+			ShaderManager* getShaderManager() { return shaderManager.get(); }
+			LightGrid* getLightGrid() { return lightGrid.get(); }
+			Water* getWater() { return water.get(); }
+			SceneUpdater* getSceneUpdater() { return sceneUpdater.get(); }
+			CRenderSettings* getSettings() { return settings; };
 
-    const shared_ptr<Typesetter>& getTypesetter(Text::Font font);
+			// returns area of interest that needs to be computed for next frame. slighly bigger than camera frustrum.
+			// rendering of primitives outside this area is not allowed, since objects outside this area are not guaranteed to
+			// be valid.
+			const Frustum* getUpdateFrustum() { return &updateFrustum; }
 
-    const RenderCaps* getRenderCaps() { return renderCaps.get(); }
+			RenderStats* getRenderStats() { return renderStats.get(); }
 
-    MaterialGenerator* getMaterialGenerator() { return materialGenerator.get(); }
+			ContentProvider* getContentProvider() { return contentProvider; }
+			MeshContentProvider* getMeshContentProvider() { return meshContentProvider; }
+			Lighting* getLighting() { return lighting; }
 
-    shared_ptr<VertexLayout>& getFastClusterLayout() { return fastClusterLayout; }
-    shared_ptr<VertexLayout>& getFastClusterShadowLayout() { return fastClusterShadowLayout; }
+			const shared_ptr<Typesetter>& getTypesetter(Text::Font font);
 
-    TextureAtlas* getGlyphAtlas() const { return glyphAtlas.get(); }
+			const RenderCaps* getRenderCaps() { return renderCaps.get(); }
 
-private:
-    Device* device;
+			MaterialGenerator* getMaterialGenerator() { return materialGenerator.get(); }
 
-	RenderCamera camera;
-	RenderCamera cameraCull;
-	RenderCamera cameraCullFrm;
+			shared_ptr<VertexLayout>& getFastClusterLayout() { return fastClusterLayout; }
+			shared_ptr<VertexLayout>& getFastClusterShadowLayout() { return fastClusterShadowLayout; }
 
-    int viewWidth, viewHeight;
-    
-    Frustum updateFrustum;
+			TextureAtlas* getGlyphAtlas() const { return glyphAtlas.get(); }
 
-    scoped_ptr<AdornRender> adorn;
-	scoped_ptr<SceneUpdater> sceneUpdater;
+		private:
+			Device* device;
 
-    scoped_ptr<VertexStreamer> vertexStreamer;
-    scoped_ptr<TextureCompositor> textureCompositor;
-    scoped_ptr<TextureManager> textureManager;
-    scoped_ptr<ShaderManager> shaderManager;
-    scoped_ptr<SceneManager> sceneManager;
-    scoped_ptr<FrameRateManager> frameRateManager;
-	scoped_ptr<EmitterShared> emitterShared;
+			RenderCamera camera;
+			RenderCamera cameraCull;
+			RenderCamera cameraCullFrm;
 
-    RBX::CRenderSettings* settings;
+			uint32_t viewWidth;
+			uint32_t viewHeight;
 
-    RBX::MeshContentProvider* meshContentProvider;
-    RBX::ContentProvider* contentProvider;
-    RBX::Lighting* lighting;
+			Frustum updateFrustum;
 
-    scoped_ptr<RenderCaps> renderCaps;
+			scoped_ptr<AdornRender> adorn;
+			scoped_ptr<SceneUpdater> sceneUpdater;
 
-    scoped_ptr<RBX::RenderStats> renderStats;
+			scoped_ptr<VertexStreamer> vertexStreamer;
+			scoped_ptr<TextureCompositor> textureCompositor;
+			scoped_ptr<TextureManager> textureManager;
+			scoped_ptr<ShaderManager> shaderManager;
+			scoped_ptr<SceneManager> sceneManager;
+			scoped_ptr<FrameRateManager> frameRateManager;
+			scoped_ptr<EmitterShared> emitterShared;
 
-    scoped_ptr<LightGrid> lightGrid;
-    scoped_ptr<Water> water;
+			RBX::CRenderSettings* settings;
 
-    shared_ptr<Typesetter> typesetters[Text::FONT_LAST];
-    scoped_ptr<TextureAtlas> glyphAtlas;
+			RBX::MeshContentProvider* meshContentProvider;
+			RBX::ContentProvider* contentProvider;
+			RBX::Lighting* lighting;
 
-    scoped_ptr<MaterialGenerator> materialGenerator;
+			scoped_ptr<RenderCaps> renderCaps;
 
-    shared_ptr<VertexLayout> fastClusterLayout;
-    shared_ptr<VertexLayout> fastClusterShadowLayout;
+			scoped_ptr<RBX::RenderStats> renderStats;
 
-    typedef boost::unordered_map<std::string, unsigned> FilenameCountdown;
-    FilenameCountdown assetsToReload;
-};
+			scoped_ptr<LightGrid> lightGrid;
+			scoped_ptr<Water> water;
 
-}
+			shared_ptr<Typesetter> typesetters[Text::FONT_LAST];
+			scoped_ptr<TextureAtlas> glyphAtlas;
+
+			scoped_ptr<MaterialGenerator> materialGenerator;
+
+			shared_ptr<VertexLayout> fastClusterLayout;
+			shared_ptr<VertexLayout> fastClusterShadowLayout;
+
+			typedef boost::unordered_map<std::string, unsigned> FilenameCountdown;
+			FilenameCountdown assetsToReload;
+		};
+
+	}
 }

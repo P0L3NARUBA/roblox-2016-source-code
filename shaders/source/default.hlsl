@@ -8,7 +8,7 @@
 BasicMaterialVertexOutput DepthOnlyVS(InstancedBasicMaterialAppData IN) {
     BasicMaterialVertexOutput OUT;
 
-    OUT.Position = mul(float4(IN.Position, 1.0), mul(ModelMatrixes[IN.InstanceID].Model, ViewProjection[0]));
+    OUT.Position = mul(mul(float4(IN.Position, 1.0), ModelMatrixes[IN.InstanceID].Model), ViewProjection[0]);
 
     return OUT;
 }
@@ -18,12 +18,13 @@ BasicMaterialVertexOutput BasicMaterialVS(InstancedBasicMaterialAppData IN) {
 
     float4x4 ModelMatrix = ModelMatrixes[IN.InstanceID].Model;
 
-    OUT.Position = mul(float4(IN.Position, 1.0), mul(ModelMatrix, ViewProjection[0]));
-
     OUT.UV = IN.UV;
     OUT.Color = IN.Color;
-    OUT.Normal = normalize(mul((float3x3)ModelMatrix, IN.Normal));
+    OUT.Normal = normalize(mul(IN.Normal, (float3x3)ModelMatrix));
+    OUT.WorldPosition = mul(float4(IN.Position, 1.0), ModelMatrix);
     OUT.MaterialID = IN.MaterialID;
+
+    OUT.Position = mul(OUT.WorldPosition, ViewProjection[0]);
 
     return OUT;
 }
@@ -33,19 +34,20 @@ MaterialVertexOutput MaterialVS(InstancedMaterialAppData IN) {
 
     float4x4 ModelMatrix = ModelMatrixes[IN.InstanceID].Model;
 
-    OUT.Position = mul(float4(IN.Position, 1.0), mul(ModelMatrix, ViewProjection[0]));
-
     OUT.UV = IN.UV;
     OUT.Color = IN.Color;
 
-    float3 Normal = normalize(mul((float3x3)ModelMatrix, IN.Normal));
-    float3 Tangent = normalize(mul((float3x3)ModelMatrix, IN.Tangent));
+    float3 Normal = normalize(mul(IN.Normal, (float3x3)ModelMatrix));
+    float3 Tangent = normalize(mul(IN.Tangent, (float3x3)ModelMatrix));
     Tangent = normalize(Tangent - dot(Tangent, Normal) * Normal);
 
     OUT.Tangent = Tangent;
     OUT.Bitangent = cross(Normal, Tangent);
     OUT.Normal = Normal;
+    OUT.WorldPosition = mul(float4(IN.Position, 1.0), ModelMatrix);
     OUT.MaterialID = IN.MaterialID;
+
+    OUT.Position = mul(OUT.WorldPosition, ViewProjection[0]);
 
     return OUT;
 }

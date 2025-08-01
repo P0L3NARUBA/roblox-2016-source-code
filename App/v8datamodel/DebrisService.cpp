@@ -18,36 +18,30 @@ REFLECTION_END();
 
 DebrisService::DebrisService(void)
 	:DescribedNonCreatable<DebrisService, Instance, sDebrisService>(sDebrisService)
-	,maxItems(1000)
-	,legacyMaxItems(false)
+	, maxItems(16384)
+	, legacyMaxItems(false)
 {
 }
 
-static void cleanup(weak_ptr<Instance> item)
-{
+static void cleanup(weak_ptr<Instance> item) {
 	if (shared_ptr<Instance> i = item.lock())
-		try
-		{
-			i->destroy();
-		}
-		catch (RBX::base_exception& e)
-		{
-			StandardOut::singleton()->print(MESSAGE_WARNING, e);
-		}
+		try {
+		i->destroy();
+	}
+	catch (RBX::base_exception& e) {
+		StandardOut::singleton()->print(MESSAGE_WARNING, e);
+	}
 }
 
-void DebrisService::cleanup()
-{
-	while ((int)queue.size() > maxItems)
-	{
+void DebrisService::cleanup() {
+	while (queue.size() > (size_t)maxItems) {
 		::cleanup(queue.front());
 		queue.pop();
 	}
 }
 
 
-void DebrisService::addItem(shared_ptr<Instance> item, double lifetime)
-{
+void DebrisService::addItem(shared_ptr<Instance> item, double lifetime) {
 	if (!item)
 		return;
 
@@ -62,31 +56,29 @@ void DebrisService::addItem(shared_ptr<Instance> item, double lifetime)
 	cleanup();
 }
 
-void DebrisService::setLegacyMaxItems(bool value)
-{
+void DebrisService::setLegacyMaxItems(bool value) {
 	legacyMaxItems = value;
 }
-void DebrisService::setMaxItems(int value)
-{
-	if(!legacyMaxItems){
+
+void DebrisService::setMaxItems(int value) {
+	if (!legacyMaxItems) {
 		RBX::Security::Context::current().requirePermission(RBX::Security::LocalUser, "DebrisService MaxItems is restricted");
 	}
 
-	if (value!=maxItems)
-	{
-		if (value<0)
+	if (value != maxItems) {
+		if (value < 0)
 			throw std::runtime_error("DebrisService MaxItems must be greater than 0");
+
 		maxItems = value;
+
 		raiseChanged(prop_MaxItems);
 		cleanup();
 	}
 }
 
 
-void DebrisService::onServiceProvider(ServiceProvider* oldProvider, ServiceProvider* newProvider)
-{
-	while ((int)queue.size()>0)
-	{
+void DebrisService::onServiceProvider(ServiceProvider* oldProvider, ServiceProvider* newProvider) {
+	while (queue.size() > (size_t)0u) {
 		::cleanup(queue.front());
 		queue.pop();
 	}

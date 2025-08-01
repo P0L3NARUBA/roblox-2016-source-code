@@ -90,7 +90,7 @@ void TopNErrorsPhysicsSender::step()
 	newMovingAssemblies.clear();
 
 	// Prepare the data needed to compute errors
-	const ModelInstance* characterModel = NULL;
+	const ModelInstance* characterModel = nullptr;
 	CoordinateFrame focus;
 	if (const Player* player = replicator.findTargetPlayer()) {
 		if (player->hasCharacterHead(focus)) {
@@ -183,7 +183,7 @@ int TopNErrorsPhysicsSender::sendPacket(int maxPackets, PacketPriority packetPri
 	int sentItemCount = 0;
 
     // Prepare the data needed to compute errors
-    const PartInstance* playerHead = NULL;
+    const PartInstance* playerHead = nullptr;
     CoordinateFrame focus;
     if (const Player* player = replicator.findTargetPlayer()) {
         playerHead = player->hasCharacterHead(focus);
@@ -306,7 +306,7 @@ int TopNErrorsPhysicsSender::sendPacket(int maxPackets, PacketPriority packetPri
 			if (replicator.isStreamingEnabled())
 				*bitStream << true; // done
 			else
-				replicator.serializeId(*bitStream, NULL);
+				replicator.serializeId(*bitStream, nullptr);
 
 			// Send ID_PHYSICS
 			replicator.rakPeer->Send(bitStream, packetPriority, UNRELIABLE, PHYSICS_CHANNEL, replicator.remotePlayerId, false);
@@ -325,7 +325,7 @@ int TopNErrorsPhysicsSender::sendPacket(int maxPackets, PacketPriority packetPri
 		if (replicator.isStreamingEnabled())
 			*bitStream << true; // done
 		else
-			replicator.serializeId(*bitStream, NULL);
+			replicator.serializeId(*bitStream, nullptr);
 
 		// Send ID_PHYSICS
 		replicator.rakPeer->Send(bitStream, packetPriority, UNRELIABLE, PHYSICS_CHANNEL, replicator.remotePlayerId, false);
@@ -683,7 +683,7 @@ bool TopNErrorsPhysicsSender::writeMovementHistory(RakNet::BitStream& bitStream,
 bool TopNErrorsPhysicsSender::isSleepingRootPrimitive(const PartInstance* part)
 {
 	const Primitive* prim = part->getConstPartPrimitive();
-	if(prim->getWorld() == NULL || !Assembly::isAssemblyRootPrimitive(prim))
+	if(prim->getWorld() == nullptr || !Assembly::isAssemblyRootPrimitive(prim))
 	{
 		return false;
 	}

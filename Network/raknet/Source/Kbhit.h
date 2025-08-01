@@ -59,7 +59,7 @@ static int kbhit(void)
 	FD_ZERO(&read_handles);
 	FD_SET(0, &read_handles);
 	timeout.tv_sec = timeout.tv_usec = 0;
-	status = select(0 + 1, &read_handles, NULL, NULL, &timeout);
+	status = select(0 + 1, &read_handles, nullptr, nullptr, &timeout);
 	if(status < 0)
 	{
 		printf("select() failed in kbhit()\n");

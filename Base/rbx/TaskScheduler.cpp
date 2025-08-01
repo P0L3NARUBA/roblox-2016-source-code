@@ -30,8 +30,8 @@ RBX::TaskScheduler::PriorityMethod TaskScheduler::priorityMethod = AccumulatedEr
     bool TaskScheduler::updateJobPriorityOnWake = false;
 #endif
 
-static const float minFrameDelta60Hz1every3 = 0.0159;
-static const float minFrameDelta60Hz2every3 = 0.0169;
+static const float minFrameDelta60Hz1every3 = 0.0159f;
+static const float minFrameDelta60Hz2every3 = 0.0169f;
 
 
 double TaskScheduler::getSchedulerDutyCyclePerThread() const 

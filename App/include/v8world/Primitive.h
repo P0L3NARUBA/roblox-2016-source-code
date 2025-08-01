@@ -25,10 +25,9 @@
 #include <boost/flyweight.hpp>
 
 namespace RBX {
-	enum NetworkOwnership
-	{
-		NetworkOwnership_Auto = 0, 
-		NetworkOwnership_Manual = 1 
+	enum NetworkOwnership {
+		NetworkOwnership_Auto = 0,
+		NetworkOwnership_Manual = 1
 	};
 
 	class Body;
@@ -41,11 +40,9 @@ namespace RBX {
 	class Joint;
 	struct RootPrimitiveOwnershipData;
 
-	class EdgeList
-	{
+	class EdgeList {
 	private:
-		struct Entry
-		{
+		struct Entry {
 			Edge* edge;
 			Primitive* other;
 		};
@@ -55,29 +52,30 @@ namespace RBX {
 
 	public:
 		EdgeList(Primitive* owner) : owner(owner)
-		{}
-
-		~EdgeList() {
-			RBXASSERT(list.size() == 0);
+		{
 		}
 
-		int size() const			{return list.size();}
+		~EdgeList() {
+			RBXASSERT(list.size() == 0u);
+		}
 
-		Edge* getEdge(int i) const
-		{
-			RBXASSERT_VERY_FAST(unsigned(i) < list.size());
+		size_t size() const { return list.size(); }
+
+		Edge* getEdge(size_t i) const {
+			RBXASSERT_VERY_FAST(i < list.size());
 			RBXASSERT_VERY_FAST(list[i].edge->otherPrimitive(owner) == list[i].other);
+
 			return list[i].edge;
 		}
 
-		Primitive* getOther(int i) const
-		{
-			RBXASSERT_VERY_FAST(unsigned(i) < list.size());
+		Primitive* getOther(size_t i) const {
+			RBXASSERT_VERY_FAST(i < list.size());
 			RBXASSERT_VERY_FAST(list[i].edge->otherPrimitive(owner) == list[i].other);
+
 			return list[i].other;
 		}
 
-		Edge* getFirst() const		{return (list.size() > 0) ? list[0].edge : NULL;}
+		Edge* getFirst() const { return (list.size() > 0u) ? list[0].edge : nullptr; }
 
 		Edge* getNext(const Primitive* p, Edge* e) const;
 
@@ -86,9 +84,9 @@ namespace RBX {
 	};
 
 	class Primitive : public IPipelined
-					, public SpanningNode
-					, public BodyPvSetter
-					, public BasicSpatialHashPrimitive
+		, public SpanningNode
+		, public BodyPvSetter
+		, public BasicSpatialHashPrimitive
 	{
 		template<class P, class C, class CM, int M> friend class SpatialHash;
 
@@ -96,8 +94,8 @@ namespace RBX {
 	public:
 		static bool allowSleep;
 
-		typedef enum {DYNAMICS_ENGINE, HUMANOID_ENGINE} EngineType;
-		typedef enum {DEFAULT_SIZE, TORSO_SIZE, ROOT_SIZE, SEAT_SIZE} SizeMultiplier;	// overweights torsos and seats to make them roots of the spanning tree
+		typedef enum { DYNAMICS_ENGINE, HUMANOID_ENGINE } EngineType;
+		typedef enum { DEFAULT_SIZE, TORSO_SIZE, ROOT_SIZE, SEAT_SIZE } SizeMultiplier;	// overweights torsos and seats to make them roots of the spanning tree
 
 		// bullet related
 		void updateBulletCollisionObject(void);
@@ -105,15 +103,15 @@ namespace RBX {
 		// Moved to public for CSG
 		Vector3 clipToSafeSize(const Vector3& newSize);
 
-	// WORLD access here
+		// WORLD access here
 	public:
-		int& worldIndexFunc() {return worldIndex;}
+		int32_t& worldIndexFunc() { return worldIndex; }
 
 	private:
 		void onChangedInKernel();
 
 		// For fuzzyExtents - when updated
-		static int fuzzyExtentsReset() {return -2;}	// out of synch with body -1;
+		static int32_t fuzzyExtentsReset() { return -2; } // out of synch with body -1;
 
 		Extents computeFuzzyExtents();
 		void setFixed(bool newAnchoredProperty, bool newDragging);
@@ -129,26 +127,26 @@ namespace RBX {
 		const Guid& getGuid() const;
 		void setGuid(const Guid& value);
 
-		unsigned int getSizeMultiplier() const;
+		size_t getSizeMultiplier() const;
 		void setSizeMultiplier(SizeMultiplier value);
 
 		void calculateSortSize();
-		unsigned int getSortSize();
+		size_t getSortSize();
 
-		World* getWorld() const						{return world;}
-		void setWorld(World* _world)				{world = _world;}
+		World* getWorld() const { return world; }
+		void setWorld(World* _world) { world = _world; }
 
 		// Clump
-		Clump* getClump();					
-		const Clump* getConstClump() const;					
+		Clump* getClump();
+		const Clump* getConstClump() const;
 		Assembly* getAssembly();
 		const Assembly* getConstAssembly() const;
 		Mechanism* getMechanism();
 		const Mechanism* getConstMechanism() const;
 
 		// Geometry
-		Geometry* getGeometry()						{return geometry;}
-		const Geometry* getConstGeometry() const	{return geometry;}
+		Geometry* getGeometry() { return geometry; }
+		const Geometry* getConstGeometry() const { return geometry; }
 
 		void resetGeometryType(Geometry::GeometryType geometryType);
 		void setGeometryType(Geometry::GeometryType geometryType);
@@ -156,12 +154,12 @@ namespace RBX {
 		Geometry::CollideType getCollideType() const;
 
 		// Body
-		Body* getBody()								{return body;}
-		const Body* getConstBody() const			{return body;}
+		Body* getBody() { return body; }
+		const Body* getConstBody() const { return body; }
 
 		// Class PartInstance
 		void setOwner(IMoving* set);
-		IMoving* getOwner() const					{return myOwner;}
+		IMoving* getOwner() const { return myOwner; }
 
 		// Access Mechanism Root
 		Primitive* getMechRoot();
@@ -173,13 +171,13 @@ namespace RBX {
 		bool isAncestorOf(Primitive* prim);
 
 		// Network
-		const RBX::SystemAddress getNetworkOwner() const {return networkOwner;}
-		void setNetworkOwner(const RBX::SystemAddress value) {networkOwner = value;}
+		const RBX::SystemAddress getNetworkOwner() const { return networkOwner; }
+		void setNetworkOwner(const RBX::SystemAddress value) { networkOwner = value; }
 
 		const NetworkOwnership getNetworkOwnershipRuleInternal() const { return networkOwnershipRule; }
 		void setNetworkOwnershipRuleInternal(NetworkOwnership value) { networkOwnershipRule = value; }
 
-		bool getNetworkIsSleeping() const				{return networkIsSleeping;}
+		bool getNetworkIsSleeping() const { return networkIsSleeping; }
 		void setNetworkIsSleeping(bool value, Time wakeupNow);
 
 		///////////////////////////////////////////////
@@ -207,31 +205,31 @@ namespace RBX {
 
 		// Density/Specific Gravity
 		void setSpecificGravity(float value);
-		float getSpecificGravity() const			{ return specificGravity; }
+		float getSpecificGravity() const { return specificGravity; }
 
 		// Dragging
 		void setDragging(bool value);
-		bool getDragging() const						{return dragging;}
+		bool getDragging() const { return dragging; }
 
 		// Anchored
 		void setAnchoredProperty(bool value);
-		bool getAnchoredProperty() const				{return anchoredProperty;}
+		bool getAnchoredProperty() const { return anchoredProperty; }
 
 		void updateMassValues(bool physicalPropertiesEnabled);
 		float getCalculateMass(bool physicalPropertiesEnabled);
 
 		// EngineType
 		void setEngineType(EngineType value);
-        EngineType getEngineType() const			{return engineType;}
+		EngineType getEngineType() const { return engineType; }
 
 		// Fixed
-		bool requestFixed() const						{return (dragging || anchoredProperty);}
-	
+		bool requestFixed() const { return (dragging || anchoredProperty); }
+
 		// Collide
 		void setPreventCollide(bool _preventCollide);
-		bool getPreventCollide() const					{return preventCollide;}
+		bool getPreventCollide() const { return preventCollide; }
 
-		bool getCanCollide() const						{return !dragging && !preventCollide;}
+		bool getCanCollide() const { return !dragging && !preventCollide; }
 
 		// CanThrottle
 		void setCanThrottle(bool value);
@@ -239,61 +237,63 @@ namespace RBX {
 
 		// PartMaterial
 		void setPartMaterial(PartMaterial _material);
-		PartMaterial getPartMaterial() const			{ return material; }
+		PartMaterial getPartMaterial() const { return material; }
 
 		// Friction
 		void setFriction(float _friction);
-		float getFriction()	const						{return friction;}
+		float getFriction()	const { return friction; }
 
 		// Elasticity
 		void setElasticity(float elasticity);
-		float getElasticity() const						{return elasticity;}
+		float getElasticity() const { return elasticity; }
 
 		void setPhysicalProperties(const PhysicalProperties& _physProp);
 		const PhysicalProperties& getPhysicalProperties() const { return customPhysicalProperties; }
 
 		// Buouyancy
-		void onBuoyancyChanged( bool value );
+		void onBuoyancyChanged(bool value);
 
 		// Parameters
-		void setGeometryParameter(const std::string& parameter, int value);
-		int getGeometryParameter(const std::string& parameter) const;
+		void setGeometryParameter(const std::string& parameter, size_t value);
+		size_t getGeometryParameter(const std::string& parameter) const;
 
 		// Size and Extents - local
 		void setSize(const G3D::Vector3& size);
-		const Vector3& getSize() const			{return geometry->getSize();}
+		const Vector3& getSize() const { return geometry->getSize(); }
 
-		virtual float getRadius() const			{return geometry->getRadius();}
+		virtual float getRadius() const { return geometry->getRadius(); }
 
-		float getPlanarSize() const				{return Math::planarSize(getSize());}
+		float getPlanarSize() const { return Math::planarSize(getSize()); }
 
 		Extents getExtentsLocal() const {
-			Vector3 halfSize = geometry->getSize() * 0.5;
+			Vector3 halfSize = geometry->getSize() * 0.5f;
+
 			return Extents(-halfSize, halfSize);
 		}
 
 		// World
 		Extents getExtentsWorld() const {
 			Extents local = getExtentsLocal();
-			return local.toWorldSpace(getCoordinateFrame()); 
+
+			return local.toWorldSpace(getCoordinateFrame());
 		}
 
-		const Extents& getFastFuzzyExtentsNoCompute()  {
+		const Extents& getFastFuzzyExtentsNoCompute() {
 			RBXASSERT_VERY_FAST(computeFuzzyExtents() == fuzzyExtents);
+
 			return fuzzyExtents;
 		}
 
 		const Extents& getFastFuzzyExtents();
 
-		static float squaredDistance(const Primitive& p0, const Primitive& p1)
-		{
+		static float squaredDistance(const Primitive& p0, const Primitive& p1) {
 			return (p0.getCoordinateFrame().translation - p1.getCoordinateFrame().translation).squaredMagnitude();
 		}
 
 		static bool aaBoxCollide(Primitive& p0, Primitive& p1)
 		{
-			return (	Extents::overlapsOrTouches(	p0.getFastFuzzyExtents(), 
-													p1.getFastFuzzyExtents())	);
+			return (Extents::overlapsOrTouches(p0.getFastFuzzyExtents(),
+				p1.getFastFuzzyExtents()));
 		}
 		///////////////////////////////////////////////////////////////
 
@@ -305,28 +305,23 @@ namespace RBX {
 		CoordinateFrame getFaceCoordInObject(NormalId objectFace) const;
 
 		void setSurfaceType(NormalId id, SurfaceType newSurfaceType);
-		SurfaceType getSurfaceType(NormalId id) const {return surfaceType[id];}
+		SurfaceType getSurfaceType(NormalId id) const { return surfaceType[id]; }
 
 		void setSurfaceData(NormalId id, const SurfaceData& newSurfaceData);
-		SurfaceData getSurfaceData(NormalId id) {
-			return surfaceData ? surfaceData[id] : SurfaceData::empty();
-		}
-		const SurfaceData& getConstSurfaceData(NormalId id) const {
-			return surfaceData ? surfaceData[id] : SurfaceData::empty();
-		}
+		SurfaceData getSurfaceData(NormalId id) { return surfaceData ? surfaceData[id] : SurfaceData::empty(); }
+		const SurfaceData& getConstSurfaceData(NormalId id) const { return surfaceData ? surfaceData[id] : SurfaceData::empty(); }
 
-		bool isGeometryOrthogonal( void ) const;
-        
-        bool computeIsGrounded( void ) const;
-        
+		bool isGeometryOrthogonal(void) const;
+
+		bool computeIsGrounded(void) const;
 
 		// JointK and Friction and Elasticity
 		float getJointK();
 
 		/////////////////////////////////////
 		// Global Primitive Stuff
-		static float	defaultElasticity()		{return 0.75;}
-		static float	defaultFriction()		{return 0.0;}
+		static float defaultElasticity() { return 0.75f; }
+		static float defaultFriction() { return 0.0f; }
 
 	private:
 		class RigidJoint* getFirstRigidAt(Joint* start);
@@ -341,33 +336,33 @@ namespace RBX {
 
 		bool hasAutoJoints() const;
 
-		bool hasEdge()						{return ((joints.size() >0) || (contacts.size() > 0));}
-		int getNumEdges() const				{return joints.size() + contacts.size();}
+		bool hasEdge() { return ((joints.size() > 0u) || (contacts.size() > 0u)); }
+		size_t getNumEdges() const { return joints.size() + contacts.size(); }
 		Edge* getFirstEdge() const;
-		Edge* getNextEdge(Edge* e) const; 
+		Edge* getNextEdge(Edge* e) const;
 
-		int getNumJoints() const			{return joints.size();}
+		size_t getNumJoints() const { return joints.size(); }
 		Joint* getFirstJoint();
 		Joint* getNextJoint(Joint* prev);
 		const Joint* getConstFirstJoint() const;
 		const Joint* getConstNextJoint(const Joint* prev) const;
-		Joint* getJoint(int id);
-		const Joint* getConstJoint(int id) const;
-		Primitive* getJointOther(int id)	{return joints.getOther(id);}
+		Joint* getJoint(size_t id);
+		const Joint* getConstJoint(size_t id) const;
+		Primitive* getJointOther(size_t id) { return joints.getOther(id); }
 
-		int getNumContacts() const			{return contacts.size();}
-		
+		size_t getNumContacts() const { return contacts.size(); }
+
 		Contact* getFirstContact();
 		static const bool hasGetFirstContact = true; // this is to simulate __if_exists(getFirstContact) EL
-		
+
 		Contact* getNextContact(Contact* prev);
-		Contact* getContact(int id);
-		Primitive* getContactOther(int id)	{return contacts.getOther(id);}
+		Contact* getContact(size_t id);
+		Primitive* getContactOther(size_t id) { return contacts.getOther(id); }
 
 		RigidJoint* getFirstRigid();
 		RigidJoint* getNextRigid(RigidJoint* prev);
 
-		static Joint* getJoint(Primitive* p0, Primitive* p1, int index = 0);
+		static Joint* getJoint(Primitive* p0, Primitive* p1, size_t index = 0u);
 		static Contact* getContact(Primitive* p0, Primitive* p1);
 
 		static Primitive* downstreamPrimitive(Joint* j);
@@ -381,49 +376,49 @@ namespace RBX {
 		/*override*/ SpanningEdge* getNextSpanningEdge(SpanningEdge* edge);
 
 	private:
-		World*					world;
-		Geometry*				geometry;
-		Body*					body;
-		IMoving*				myOwner;			// forward declared outside of engine
+		World* world;
+		Geometry* geometry;
+		Body* body;
+		IMoving* myOwner; // forward declared outside of engine
 
-		EdgeList				contacts;
-		EdgeList				joints;
+		EdgeList contacts;
+		EdgeList joints;
 
-		SystemAddress			networkOwner;
+		SystemAddress networkOwner;
 
-		Guid					guid;				// used for tree stuff
+		Guid guid; // used for tree stuff
 
-		unsigned int			sortSize;			// cached size value used for joint sorting	
+		size_t sortSize; // cached size value used for joint sorting	
 
-		int						worldIndex;			// For fast removal from the world primitives list
+		int32_t worldIndex; // For fast removal from the world primitives list
 
-		Extents					fuzzyExtents;
-		unsigned int			fuzzyExtentsStateId;
+		Extents fuzzyExtents;
+		size_t  fuzzyExtentsStateId;
 
-		float                   specificGravity;
-		float					jointK;
+		float specificGravity;
+		float jointK;
 
-		float					friction;
-		float					elasticity;
+		float friction;
+		float elasticity;
 
 		boost::flyweight<PhysicalProperties> customPhysicalProperties;
 
 		CompactEnum<PartMaterial, uint16_t> material;
 
 		// FIXED == (anchored || dragging);
-		bool					dragging;						// replicated
-		bool					anchoredProperty;				// replicated
-		bool					preventCollide;					// if dragging -> no collide
+		bool dragging;		   // replicated
+		bool anchoredProperty; // replicated
+		bool preventCollide;   // if dragging -> no collide
 
-		bool					networkIsSleeping;
-		bool					jointKDirty;
+		bool networkIsSleeping;
+		bool jointKDirty;
 
 		CompactEnum<NetworkOwnership, uint8_t> networkOwnershipRule;
 
 		CompactEnum<EngineType, uint8_t> engineType;
-		CompactEnum<SizeMultiplier, uint8_t> sizeMultiplier;		// tree stuff - overrides size/guid
+		CompactEnum<SizeMultiplier, uint8_t> sizeMultiplier; // tree stuff - overrides size/guid
 
-		CompactEnum<SurfaceType, uint8_t> surfaceType[6];		// for joints....
+		CompactEnum<SurfaceType, uint8_t> surfaceType[6]; // for joints....
 		SurfaceData* surfaceData;
 	};
 

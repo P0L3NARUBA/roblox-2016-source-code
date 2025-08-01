@@ -3,49 +3,45 @@
 #include "Resource.h"
 #include "Texture.h"
 
-namespace RBX
-{
-namespace Graphics
-{
+namespace RBX {
+	namespace Graphics {
 
-class Renderbuffer: public Resource
-{
-public:
-    ~Renderbuffer();
+		class Renderbuffer : public Resource {
+		public:
+			~Renderbuffer();
 
-	Texture::Format getFormat() const { return format; }
+			Texture::Format getFormat() const { return format; }
 
-	unsigned int getWidth() const { return width; }
-	unsigned int getHeight() const { return height; }
-    unsigned int getSamples() const { return samples; }
+			uint32_t getWidth() const { return width; }
+			uint32_t getHeight() const { return height; }
+			uint32_t getSamples() const { return samples; }
 
-protected:
-    Renderbuffer(Device* device, Texture::Format format, unsigned int width, unsigned int height, unsigned int samples);
+		protected:
+			Renderbuffer(Device* device, Texture::Format format, uint32_t width, uint32_t height, uint32_t samples);
 
-	Texture::Format format;
-    unsigned int width;
-    unsigned int height;
-    unsigned int samples;
-};
+			Texture::Format format;
+			uint32_t width;
+			uint32_t height;
+			uint32_t samples;
+		};
 
-class Framebuffer: public Resource
-{
-public:
-    ~Framebuffer();
+		class Framebuffer : public Resource {
+		public:
+			~Framebuffer();
 
-    virtual void download(void* data, unsigned int size) = 0;
+			virtual void download(void* data, uint32_t size) = 0;
 
-	unsigned int getWidth() const { return width; }
-	unsigned int getHeight() const { return height; }
-    unsigned int getSamples() const { return samples; }
+			uint32_t getWidth() const { return width; }
+			uint32_t getHeight() const { return height; }
+			uint32_t getSamples() const { return samples; }
 
-protected:
-	Framebuffer(Device* device, unsigned int width, unsigned int height, unsigned int samples);
+		protected:
+			Framebuffer(Device* device, uint32_t width, uint32_t height, uint32_t samples);
 
-    unsigned int width;
-    unsigned int height;
-    unsigned int samples;
-};
+			uint32_t width;
+			uint32_t height;
+			uint32_t samples;
+		};
 
-}
+	}
 }

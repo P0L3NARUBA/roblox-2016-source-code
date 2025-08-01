@@ -274,7 +274,7 @@ namespace RBX
 
 				setupTextures(visualEngine, technique);
 
-				technique.setConstant("LayerScale", layerScale);
+				//technique.setConstant("LayerScale", layerScale);
 
 				solidMaterial->addTechnique(technique);
 			}
@@ -285,7 +285,7 @@ namespace RBX
 
 				setupTextures(visualEngine, technique);
 
-				technique.setConstant("LayerScale", layerScale);
+				//technique.setConstant("LayerScale", layerScale);
 
 				solidMaterial->addTechnique(technique);
 			}
@@ -296,7 +296,7 @@ namespace RBX
 
 				setupTextures(visualEngine, technique);
 
-				technique.setConstant("LayerScale", layerScale);
+				//technique.setConstant("LayerScale", layerScale);
 
 				solidMaterial->addTechnique(technique);
 			}

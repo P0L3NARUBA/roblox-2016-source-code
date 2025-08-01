@@ -10,192 +10,186 @@
 #include "rbx/RunningAverage.h"
 #include <map>
 
-namespace RBX { 
+namespace RBX {
 	class RenderCaps;
 	class Log;
 
-enum SSAOLevel
-{
-	ssaoNone = 0,
-	ssaoFullBlank,
-	ssaoFull
-};
-
-struct THROTTLE_LOCKSTEP;
-
-class FrameRateManager
-{
-public:
-	FrameRateManager(void);
-	~FrameRateManager(void);
-
-	void configureFrameRateManager(CRenderSettings::FrameRateManagerMode mode, bool hasCharacter);
-	void setAggressivePerformance(bool value);
-
-	struct Metrics
-	{
-		bool AutoQuality;
-		int QualityLevel;
-		int NumberOfSettles;
-		double AverageSwitchesPerSettle;
-        double AverageFps;
+	enum SSAOLevel {
+		ssaoNone = 0,
+		ssaoFullBlank,
+		ssaoFull
 	};
 
-	// add to current frame counter.
-	void AddBlockQuota(int blocksInCluster, float sqDistanceToCamera, bool isInSpatialHash);
+	struct THROTTLE_LOCKSTEP;
 
-    bool getGBufferSetting();
+	class FrameRateManager {
+	public:
+		FrameRateManager(void);
+		~FrameRateManager(void);
 
-	SSAOLevel getSSAOLevel();
-    bool isSSAOSupported() { return mSSAOSupported; }
+		void configureFrameRateManager(CRenderSettings::FrameRateManagerMode mode, bool hasCharacter);
+		void setAggressivePerformance(bool value);
 
-	float getShadingDistance() const;
-	float getShadingSqDistance() const;
-    int getTextureAnisotropy() const;
+		struct Metrics {
+			bool AutoQuality;
+			uint32_t QualityLevel;
+			uint32_t NumberOfSettles;
+			double AverageSwitchesPerSettle;
+			double AverageFps;
+		};
 
-	int getPhysicsThrottling() const;
+		// add to current frame counter.
+		void AddBlockQuota(uint32_t blocksInCluster, float sqDistanceToCamera, bool isInSpatialHash);
 
-	float getLightGridRadius() const;
-	bool getLightingNonFixedEnabled() const;
-	unsigned getLightingChunkBudget() const;
-	
-	void SubmitCurrentFrame(double frameTime, double renderTime, double prepareTime, double bonusTime);
+		bool getGBufferSetting();
 
-	// adjusts quality to try to fit rendering to this timespan.
-	void ThrottleTo(double rendertime_ms);
+		SSAOLevel getSSAOLevel();
+		bool isSSAOSupported() { return mSSAOSupported; }
 
-	double getMetricValue(const std::string& metric);
+		float getShadingDistance() const;
+		float getShadingSqDistance() const;
+		uint32_t getTextureAnisotropy() const;
 
-	int GetRecomputeDistanceDelay() { return mRecomputeDistanceDelay; }
-    
-	float GetViewCullSqDistance();
-	float GetRenderCullSqDistance();
-    
-	double GetMaxNextViewCullDistance(); // farthest cull distance possible in next frame.
+		uint32_t getPhysicsThrottling() const;
 
-	int GetQualityLevel() { return mCurrentQualityLevel; }
+		float getLightGridRadius() const;
+		bool getLightingNonFixedEnabled() const;
+		unsigned getLightingChunkBudget() const;
 
-	bool IsBlockCullingEnabled() { return mBlockCullingEnabled; };
-	void SetBlockCullingEnabled(bool enabled) { mBlockCullingEnabled = enabled; };
+		void SubmitCurrentFrame(double frameTime, double renderTime, double prepareTime, double bonusTime);
 
-	// supply the framerate manager with some special information that can be
-	// used to formulate exceptions.
-	void Configure(const RenderCaps* renderCaps, CRenderSettings* settings);
+		// adjusts quality to try to fit rendering to this timespan.
+		void ThrottleTo(double rendertime_ms);
 
-	// after calling Configure, this gives our determination of the best
-	// possible quality we can acheive with certain features, and with current settings
-	CRenderSettings::AntialiasingMode getAntialiasingMode();
- 	void updateMaxSettings();
+		double getMetricValue(const std::string& metric);
 
-	double GetVisibleBlockTarget() const { return mBlockTarget; }; // smoothed block target
-	double GetVisibleBlockCounter() const { return mLastBlockCounter; }; 
+		uint32_t GetRecomputeDistanceDelay() { return mRecomputeDistanceDelay; }
 
-	float GetTargetFrameTimeForNextLevel() const; 
-	float GetTargetRenderTimeForNextLevel() const;
+		float GetViewCullSqDistance();
+		float GetRenderCullSqDistance();
 
-	// counter that indicates how many frames have elapsed with the block count in a stable state.
-	void ResetStableFramesCounter() { mStableFramesCounter = 0; };
-	const int& GetStableFramesCounter() { return mStableFramesCounter; };
+		double GetMaxNextViewCullDistance(); // farthest cull distance possible in next frame.
 
-	// returns overall particle throttle factor. Range ]0 .. 1] , 1 for full detail.
-	double GetParticleThrottleFactor();
+		uint32_t GetQualityLevel() { return mCurrentQualityLevel; }
 
-	double GetRenderTimeAverage();
-	double GetPrepareTimeAverage();
-	double GetFrameTimeAverage();
+		bool IsBlockCullingEnabled() { return mBlockCullingEnabled; };
+		void SetBlockCullingEnabled(bool enabled) { mBlockCullingEnabled = enabled; };
 
-	const WindowAverage<double,double>& GetRenderTimeStats();
-	const WindowAverage<double,double>& GetFrameTimeStats();
+		// supply the framerate manager with some special information that can be
+		// used to formulate exceptions.
+		void Configure(const RenderCaps* renderCaps, CRenderSettings* settings);
 
-	void StartCapturingMetrics();
-	Metrics GetMetrics();
+		// after calling Configure, this gives our determination of the best
+		// possible quality we can acheive with certain features, and with current settings
+		CRenderSettings::AntialiasingMode getAntialiasingMode();
+		void updateMaxSettings();
 
-	void PauseAutoAdjustment();
-	void ResumeAutoAdjustment();
-	
-	int GetQualityDelayUp() const { return mQualityDelayUp; }
-	int GetQualityDelayDown() const { return mQualityDelayDown; }
-	int GetBackoffCounter() const { return mBadBackoffFrameCounter; }
-	double GetBackoffAverage() const { return fastBackoffAverage.getStats().average; }
+		double GetVisibleBlockTarget() const { return mBlockTarget; }; // smoothed block target
+		double GetVisibleBlockCounter() const { return mLastBlockCounter; };
 
-protected:
-	bool mSSAOSupported;
+		float GetTargetFrameTimeForNextLevel() const;
+		float GetTargetRenderTimeForNextLevel() const;
 
-	bool mAdjustmentOn;
+		// counter that indicates how many frames have elapsed with the block count in a stable state.
+		void ResetStableFramesCounter() { mStableFramesCounter = 0u; };
+		const uint32_t& GetStableFramesCounter() { return mStableFramesCounter; };
 
-	CRenderSettings* mSettings;
-	const RenderCaps* mRenderCaps;
+		// returns overall particle throttle factor. Range ]0 .. 1] , 1 for full detail.
+		double GetParticleThrottleFactor();
 
-	bool mBlockCullingEnabled;
-	bool mAggressivePerformance;
+		double GetRenderTimeAverage();
+		double GetPrepareTimeAverage();
+		double GetFrameTimeAverage();
 
-	int mStableFramesCounter;
+		const WindowAverage<double, double>& GetRenderTimeStats();
+		const WindowAverage<double, double>& GetFrameTimeStats();
 
-	bool mThrottlingOn;
+		void StartCapturingMetrics();
+		Metrics GetMetrics();
 
-	int mCurrentQualityLevel;
-    unsigned mQualityCount[CRenderSettings::QualityLevelMax];
+		void PauseAutoAdjustment();
+		void ResumeAutoAdjustment();
 
-	int mQualityDelayUp;
-	int mQualityDelayDown;
-	int mRecomputeDistanceDelay;
+		uint32_t GetQualityDelayUp() const { return mQualityDelayUp; }
+		uint32_t GetQualityDelayDown() const { return mQualityDelayDown; }
+		uint32_t GetBackoffCounter() const { return mBadBackoffFrameCounter; }
+		double GetBackoffAverage() const { return fastBackoffAverage.getStats().average; }
 
-	bool mWasQualityUp;
-	int  mSwitchCounter;
+	protected:
+		bool mSSAOSupported;
 
-private:
-	float mSqDistance;
-	float mSqRenderDistance;
+		bool mAdjustmentOn;
 
-	void UpdateStats(double frameTime, double renderTime, double prepareTime);
-	void AdjustQuality(double frameTime, double renderTime, bool adjustmentOn, double bonusTime);
-	void StepQuality(bool direction, bool isBackOff);
-	void UpdateQualitySettings();
-    void SendQualityLevelStats();
-    float GetAvarageQuality();
+		CRenderSettings* mSettings;
+		const RenderCaps* mRenderCaps;
 
-	float GetTargetFrameTime(int level) const;
+		bool mBlockCullingEnabled;
+		bool mAggressivePerformance;
 
-	RBX::WindowAverage<double, double> frameTimeAverage;
-	RBX::WindowAverage<double, double> renderTimeAverage;
-	RBX::WindowAverage<double, double> prepareTimeAverage;
-	RBX::WindowAverage<double, double> frameTimeVarianceAverage;
+		uint32_t mStableFramesCounter;
 
-	RBX::WindowAverage<double, double> fastBackoffAverage;
+		bool mThrottlingOn;
 
-	int mBadBackoffFrameCounter;
+		uint32_t mCurrentQualityLevel;
+		uint32_t mQualityCount[CRenderSettings::QualityLevelMax];
 
-	Metrics mMetrics;
-	RBX::Timer<RBX::Time::Fast> mSettleTimer;
-	bool mIsStable;
-	bool mIsGatheringDistance;
-	int mBlockCounter;
-	int mBlockTarget;
-	int mLastBlockCounter;
+		uint32_t mQualityDelayUp;
+		uint32_t mQualityDelayDown;
+		uint32_t mRecomputeDistanceDelay;
 
-    class  AvgFpsCounter
-    {
-        public:
-            AvgFpsCounter(): timeSumSec(0), frameCnt(0) {}
+		bool mWasQualityUp;
+		uint32_t  mSwitchCounter;
 
-            void Update(double deltaTimeMs)
-            {
-                if (deltaTimeMs < 1000)
-                {
-                    timeSumSec += deltaTimeMs * 0.001;
-                    ++frameCnt;
-                }
-            }
+	private:
+		float mSqDistance;
+		float mSqRenderDistance;
 
-            double GetFPS() { return frameCnt ? 1.0 / (timeSumSec / frameCnt) : 0 ; }
-        private: 
-            double timeSumSec;
-            unsigned frameCnt;
-    };
+		void UpdateStats(double frameTime, double renderTime, double prepareTime);
+		void AdjustQuality(double frameTime, double renderTime, bool adjustmentOn, double bonusTime);
+		void StepQuality(bool direction, bool isBackOff);
+		void UpdateQualitySettings();
+		void SendQualityLevelStats();
+		float GetAvarageQuality();
 
-    AvgFpsCounter mFPSCounter;
-	
-	THROTTLE_LOCKSTEP* LockstepTable;
-};
+		float GetTargetFrameTime(uint32_t level) const;
+
+		RBX::WindowAverage<double, double> frameTimeAverage;
+		RBX::WindowAverage<double, double> renderTimeAverage;
+		RBX::WindowAverage<double, double> prepareTimeAverage;
+		RBX::WindowAverage<double, double> frameTimeVarianceAverage;
+
+		RBX::WindowAverage<double, double> fastBackoffAverage;
+
+		uint32_t mBadBackoffFrameCounter;
+
+		Metrics mMetrics;
+		RBX::Timer<RBX::Time::Fast> mSettleTimer;
+		bool mIsStable;
+		bool mIsGatheringDistance;
+		uint32_t mBlockCounter;
+		uint32_t mBlockTarget;
+		uint32_t mLastBlockCounter;
+
+		class  AvgFpsCounter {
+		public:
+			AvgFpsCounter() : timeSumSec(0.0), frameCnt(0u) {}
+
+			void Update(double deltaTimeMs) {
+				if (deltaTimeMs < 1000.0) {
+					timeSumSec += deltaTimeMs * 0.001;
+					++frameCnt;
+				}
+			}
+
+			double GetFPS() { return frameCnt ? 1.0f / (timeSumSec / frameCnt) : 0u; }
+		private:
+			double timeSumSec;
+			uint32_t frameCnt;
+		};
+
+		AvgFpsCounter mFPSCounter;
+
+		THROTTLE_LOCKSTEP* LockstepTable;
+	};
 
 } // namespaces

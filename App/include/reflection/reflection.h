@@ -8,11 +8,11 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits.hpp>
 
-#if defined RBX_PLATFORM_IOS
+/*#if defined RBX_PLATFORM_IOS
 #define NULL_FUNCTION_PTR typeof(NULL)
 #else
 #define NULL_FUNCTION_PTR int
-#endif
+#endif*/
 #define _PRISM_PYRAMID_
 
 #ifdef RBX_RCC_SECURITY
@@ -36,7 +36,7 @@ namespace RBX
 		class ClassRegistrar : boost::noncopyable
 		{
 			int x;
-			ClassRegistrar(int i):x(i)
+			ClassRegistrar(int i) :x(i)
 			{
 				// This call registers the class descriptor 
 				// in the reflection database
@@ -52,15 +52,15 @@ namespace RBX
 			// that is initialized in the main thread before any objects
 			// are created. Otherwise the reflection database
 			// can change at runtime, which would be a disaster
-			static ClassRegistrar registrar;	
+			static ClassRegistrar registrar;
 		};
 		// A CRTP class for implementing reflection. Must be a descendant of DescribedBase
 		template<
-			class Class, 
-				const char* const& sClassName, 
-			class BaseClass = DescribedBase, 
-				ClassDescriptor::Functionality functionality = Reflection::ClassDescriptor::PERSISTENT, 
-				Security::Permissions security = Security::None
+			class Class,
+			const char* const& sClassName,
+			class BaseClass = DescribedBase,
+			ClassDescriptor::Functionality functionality = Reflection::ClassDescriptor::PERSISTENT,
+			Security::Permissions security = Security::None
 		>
 		class RBXBaseClass Described : public BaseClass
 		{
@@ -83,22 +83,22 @@ namespace RBX
 				forceRegistration();
 			}
 			template<class Arg0>
-			inline Described(Arg0 arg0):BaseClass(arg0) {
+			inline Described(Arg0 arg0) :BaseClass(arg0) {
 				this->descriptor = &classDescriptor();
 				forceRegistration();
 			}
 			template<class Arg0, class Arg1>
-			inline Described(Arg0 arg0, Arg1 arg1):BaseClass(arg0, arg1) {
+			inline Described(Arg0 arg0, Arg1 arg1) : BaseClass(arg0, arg1) {
 				this->descriptor = &classDescriptor();
 				forceRegistration();
 			}
 			template<class Arg0, class Arg1, class Arg2>
-			inline Described(Arg0 arg0, Arg1 arg1, Arg2 arg2):BaseClass(arg0, arg1, arg2) {
+			inline Described(Arg0 arg0, Arg1 arg1, Arg2 arg2) : BaseClass(arg0, arg1, arg2) {
 				this->descriptor = &classDescriptor();
 				forceRegistration();
 			}
 			template<class Arg0, class Arg1, class Arg2, class Arg3>
-			inline Described(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3):BaseClass(arg0, arg1, arg2, arg3) {
+			inline Described(Arg0 arg0, Arg1 arg1, Arg2 arg2, Arg3 arg3) : BaseClass(arg0, arg1, arg2, arg3) {
 				this->descriptor = &classDescriptor();
 				forceRegistration();
 			}
@@ -120,8 +120,9 @@ namespace RBX
 				Get get;
 				Set set;
 			public:
-				GetSetImpl(Get get, Set set):get(get),set(set)
-				{}
+				GetSetImpl(Get get, Set set) :get(get), set(set)
+				{
+				}
 
 				/*implement*/ bool isReadOnly() const { return false; }
 				/*implement*/ bool isWriteOnly() const { return false; }
@@ -142,8 +143,9 @@ namespace RBX
 			{
 				Get get;
 			public:
-				GetImpl(Get get):get(get)
-				{}
+				GetImpl(Get get) :get(get)
+				{
+				}
 
 				/*implement*/ bool isReadOnly() const { return true; }
 				/*implement*/ bool isWriteOnly() const { return false; }
@@ -163,8 +165,9 @@ namespace RBX
 			{
 				Set set;
 			public:
-				SetImpl(Set set):set(set)
-				{}
+				SetImpl(Set set) :set(set)
+				{
+				}
 
 				/*implement*/ bool isReadOnly() const { return false; }
 				/*implement*/ bool isWriteOnly() const { return true; }
@@ -186,24 +189,22 @@ namespace RBX
 			{
 			}
 
+			// Partial specialization for read-only case
 			template<typename Get, typename Set>
-			static std::auto_ptr< typename Reflection::TypedPropertyDescriptor<V>::GetSet > getset(Get get, Set set)
-			{
+			static std::auto_ptr< typename Reflection::TypedPropertyDescriptor<V>::GetSet > getset(Get get, nullptr_t) {
+				return std::auto_ptr< typename Reflection::TypedPropertyDescriptor<V>::GetSet >(new GetImpl<Get>(get));
+			}
+
+			// Partial specialization for write-only case
+			template<typename Get, typename Set>
+			static std::auto_ptr< typename Reflection::TypedPropertyDescriptor<V>::GetSet > getset(nullptr_t, Set set) {
+				return std::auto_ptr< typename Reflection::TypedPropertyDescriptor<V>::GetSet >(new SetImpl<Set>(set));
+			}
+
+			template<typename Get, typename Set>
+			static std::auto_ptr< typename Reflection::TypedPropertyDescriptor<V>::GetSet > getset(Get get, Set set) {
 				return std::auto_ptr< typename Reflection::TypedPropertyDescriptor<V>::GetSet >(new GetSetImpl<Get, Set>(get, set));
 			}
-            
-            // Partial specialization for read-only case
-            template<typename Get, typename Set>
-            static std::auto_ptr< typename Reflection::TypedPropertyDescriptor<V>::GetSet > getset(Get get, NULL_FUNCTION_PTR set)
-            {
-                return std::auto_ptr< typename Reflection::TypedPropertyDescriptor<V>::GetSet >(new GetImpl<Get>(get));
-            }
-            // Partial specialization for write-only case
-            template<typename Get, typename Set>
-            static std::auto_ptr< typename Reflection::TypedPropertyDescriptor<V>::GetSet > getset(NULL_FUNCTION_PTR get, Set set)
-            {
-                return std::auto_ptr< typename Reflection::TypedPropertyDescriptor<V>::GetSet >(new SetImpl<Set>(set));
-            }
 		};
 
 		// This CRTP class puts an enum property declaration all together. 
@@ -216,10 +217,10 @@ namespace RBX
 			const EnumDesc<V>& enumDesc;
 		public:
 			template<typename Get, typename Set>
-			EnumPropDescriptor(const char* name, const char* category, Get get, Set set, PropertyDescriptor::Attributes flags = PropertyDescriptor::Attributes(), Security::Permissions security=Security::None)
+			EnumPropDescriptor(const char* name, const char* category, Get get, Set set, PropertyDescriptor::Attributes flags = PropertyDescriptor::Attributes(), Security::Permissions security = Security::None)
 				:EnumPropertyDescriptor(Class::classDescriptor(), EnumDesc<V>::singleton(), name, category, flags, security)
-				,getset(PropDescriptor<Class, V>::template getset<Get, Set>(get, set))
-				,enumDesc(EnumDesc<V>::singleton())
+				, getset(PropDescriptor<Class, V>::template getset<Get, Set>(get, set))
+				, enumDesc(EnumDesc<V>::singleton())
 			{
 				this->checkFlags();
 			}
@@ -232,11 +233,11 @@ namespace RBX
 				return getset->isWriteOnly();
 			}
 
-			/*implement*/ void getVariant(const DescribedBase* instance, Variant& value) const 
+			/*implement*/ void getVariant(const DescribedBase* instance, Variant& value) const
 			{
 				value = getEnumValue(instance);
 			}
-			/*implement*/ void setVariant(DescribedBase* instance, const Variant& value) const 
+			/*implement*/ void setVariant(DescribedBase* instance, const Variant& value) const
 			{
 				setEnumValue(instance, value.get<int>());
 			}
@@ -265,13 +266,13 @@ namespace RBX
 
 			/*implement*/ int getEnumValue(const DescribedBase* instance) const
 			{
-				return (int) getValue(instance);
+				return (int)getValue(instance);
 			}
 			/*implement*/ bool setEnumValue(DescribedBase* instance, int intValue) const
 			{
 				if (enumDesc.isValue(intValue))
 				{
-					setValue(instance, (V) intValue);
+					setValue(instance, (V)intValue);
 					return true;
 				}
 				else
@@ -358,7 +359,7 @@ namespace RBX
 								setValue(instance, e);
 								return;
 							}
-							if (sValue.size()==0)
+							if (sValue.size() == 0)
 							{
 								if (setIndexValue(instance, 0))
 									return;
@@ -389,8 +390,9 @@ namespace RBX
 
 		private:
 			RefType(const char* name)
-				:Type(name, "Ref", (T*)NULL)
-			{}
+				:Type(name, "Ref", (T*)nullptr)
+			{
+			}
 		};
 
 		template<class Class, typename RefClass>
@@ -401,14 +403,14 @@ namespace RBX
 			std::auto_ptr<typename TypedPropertyDescriptor<RefClass*>::GetSet> getset;
 		public:
 			template<typename Get, typename Set>
-			RefPropDescriptor(const char* name, const char* category, Get get, Set set, PropertyDescriptor::Attributes attributes = PropertyDescriptor::Attributes(), Security::Permissions security=Security::None)
+			RefPropDescriptor(const char* name, const char* category, Get get, Set set, PropertyDescriptor::Attributes attributes = PropertyDescriptor::Attributes(), Security::Permissions security = Security::None)
 				:RefPropertyDescriptor(
-				Class::classDescriptor(), 
-				RefType<RefClass*>::singleton(), 
-				name, category, 
-				attributes, security
+					Class::classDescriptor(),
+					RefType<RefClass*>::singleton(),
+					name, category,
+					attributes, security
 				)
-				,getset(PropDescriptor<Class, RefClass*>::template getset<Get, Set>(get, set))
+				, getset(PropDescriptor<Class, RefClass*>::template getset<Get, Set>(get, set))
 			{
 				this->checkFlags();
 			}
@@ -421,12 +423,12 @@ namespace RBX
 				return getset->isWriteOnly();
 			}
 
-			/*implement*/ void getVariant(const DescribedBase* instance, Variant& value) const 
+			/*implement*/ void getVariant(const DescribedBase* instance, Variant& value) const
 			{
 				shared_ptr<Reflection::DescribedBase> ref = shared_from(getValue(instance));
 				value = ref;
 			}
-			/*implement*/ void setVariant(DescribedBase* instance, const Variant& value) const 
+			/*implement*/ void setVariant(DescribedBase* instance, const Variant& value) const
 			{
 				shared_ptr<Reflection::DescribedBase> ref = value.get<shared_ptr<Reflection::DescribedBase> >();
 				setRefValue(instance, ref.get());
@@ -453,7 +455,7 @@ namespace RBX
 			}
 			/*implement*/ void setRefValue(DescribedBase* instance, DescribedBase* value) const {
 				// if value!=NULL then ensure it is the proper type. If value==NULL then it is OK
-				RefClass* v = value!=NULL ? boost::polymorphic_cast<RefClass*>(value) : NULL;
+				RefClass* v = value != nullptr ? boost::polymorphic_cast<RefClass*>(value) : nullptr;
 				setValue(instance, v);
 			}
 			/*implement*/ void setRefValueUnsafe(DescribedBase* instance, DescribedBase* value) const {
@@ -500,9 +502,9 @@ namespace RBX
 			static bool try_integral(FunctionDescriptor::Arguments& arguments, int& arg)
 			{
 				long a;
-				if (!arguments.getLong(index, a)) 
+				if (!arguments.getLong(index, a))
 					return false;
-				arg = (int) a;
+				arg = (int)a;
 				return true;
 			}
 
@@ -522,7 +524,7 @@ namespace RBX
 			static bool try_floating_point(FunctionDescriptor::Arguments& arguments, T& arg, typename boost::enable_if<boost::is_floating_point<T> >::type* dummy = 0)
 			{
 				double a;
-				if (!arguments.getDouble(index, a)) 
+				if (!arguments.getDouble(index, a))
 					return false;
 				arg = a;
 				return true;
@@ -626,9 +628,9 @@ namespace RBX
 			static bool try_enum(FunctionDescriptor::Arguments& arguments, T& arg, typename boost::enable_if<boost::is_enum<T> >::type* dummy = 0)
 			{
 				int a;
-				if (!arguments.getEnum(index, EnumDesc<T>::singleton(), a)) 
+				if (!arguments.getEnum(index, EnumDesc<T>::singleton(), a))
 					return false;
-				arg = (T) a;
+				arg = (T)a;
 				return true;
 			}
 
@@ -674,7 +676,7 @@ namespace RBX
 					Variant v;
 					// nil args return false, so we use the default
 					// See http://lua-users.org/wiki/TrailingNilParameters
-					if (arguments.getVariant(index, v))	
+					if (arguments.getVariant(index, v))
 						return v.convert<T>();
 				}
 
@@ -721,7 +723,7 @@ namespace RBX
 
 		// Specialization for void return types:
 		template<class Class1, class FunctionPtr1>
-		class Call0Helper<Class1,FunctionPtr1,void>
+		class Call0Helper<Class1, FunctionPtr1, void>
 		{
 		public:
 			static void call(Class1* o, FunctionPtr1 function, Variant& returnValue)
@@ -736,7 +738,7 @@ namespace RBX
 		class BoundFuncDesc<Class, Signature, 0> : public FuncDesc<Class>
 		{
 			typedef typename boost::function_traits<Signature>::result_type result_type;
-			typedef result_type (Class::*FunctionPtr)();
+			typedef result_type(Class::* FunctionPtr)();
 			FunctionPtr function;
 
 			void declareSignature()
@@ -748,14 +750,14 @@ namespace RBX
 		public:
 			BoundFuncDesc(FunctionPtr function, const char* name, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
+				, function(function)
 			{
 				declareSignature();
 			}
 
 			/*implement*/ void execute(Reflection::DescribedBase* instance, FunctionDescriptor::Arguments& arguments) const
 			{
-				Call0Helper<Class,FunctionPtr,result_type>::call(boost::polymorphic_downcast<Class*>(instance),function, arguments.returnValue);
+				Call0Helper<Class, FunctionPtr, result_type>::call(boost::polymorphic_downcast<Class*>(instance), function, arguments.returnValue);
 			}
 		};
 
@@ -774,7 +776,7 @@ namespace RBX
 
 		// Specialization for void return types:
 		template<class Class1, class FunctionPtr1, typename Arg1>
-		class Call1Helper<Class1,FunctionPtr1, Arg1, void>
+		class Call1Helper<Class1, FunctionPtr1, Arg1, void>
 		{
 		public:
 			static void call(Class1* o, FunctionPtr1 function, Variant& returnValue, const Arg1& arg1)
@@ -790,7 +792,7 @@ namespace RBX
 
 			typedef typename boost::function_traits<Signature>::result_type result_type;
 			typedef typename boost::function_traits<Signature>::arg1_type Arg1;
-			typedef result_type (Class::*FunctionPtr)(Arg1);
+			typedef result_type(Class::* FunctionPtr)(Arg1);
 			FunctionPtr function;
 
 			const boost::scoped_ptr<Arg1> default1;
@@ -804,26 +806,26 @@ namespace RBX
 		public:
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, Arg1 default1, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default1(new Arg1(default1))
+				, function(function)
+				, default1(new Arg1(default1))
 			{
 				declareSignature(arg1Name, default1);
 			}
 
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default1()
+				, function(function)
+				, default1()
 			{
 				declareSignature(arg1Name, Variant());
 			}
 
 			/*implement*/ void execute(Reflection::DescribedBase* instance, FunctionDescriptor::Arguments& arguments) const
 			{
-				Call1Helper<Class,FunctionPtr,Arg1,result_type>::call(boost::polymorphic_downcast<Class*>(instance), function, 
+				Call1Helper<Class, FunctionPtr, Arg1, result_type>::call(boost::polymorphic_downcast<Class*>(instance), function,
 					arguments.returnValue,
 					ArgHelper::getArg<Arg1, 1>(arguments, default1)
-					);
+				);
 			}
 		};
 
@@ -836,13 +838,13 @@ namespace RBX
 		public:
 			static void call(Class1* o, FunctionPtr1 function, Variant& returnValue, const Arg1& arg1, const Arg2& arg2)
 			{
-				returnValue = (o->*function)(arg1, arg2 );
+				returnValue = (o->*function)(arg1, arg2);
 			}
 		};
 
 		// Specialization for void return types:
 		template<class Class1, class FunctionPtr1, typename Arg1, typename Arg2>
-		class Call2Helper<Class1,FunctionPtr1, Arg1, Arg2, void>
+		class Call2Helper<Class1, FunctionPtr1, Arg1, Arg2, void>
 		{
 		public:
 			static void call(Class1* o, FunctionPtr1 function, Variant& returnValue, const Arg1& arg1, const Arg2& arg2)
@@ -859,7 +861,7 @@ namespace RBX
 			typedef typename boost::function_traits<Signature>::result_type result_type;
 			typedef typename boost::function_traits<Signature>::arg1_type Arg1;
 			typedef typename boost::function_traits<Signature>::arg2_type Arg2;
-			typedef result_type (Class::*FunctionPtr)(Arg1, Arg2);
+			typedef result_type(Class::* FunctionPtr)(Arg1, Arg2);
 			FunctionPtr function;
 
 			const boost::scoped_ptr<Arg1> default1;
@@ -876,37 +878,37 @@ namespace RBX
 		public:
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, Arg1 default1, const char* arg2Name, Arg2 default2, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default2(new Arg2(default2))
-				,default1(new Arg1(default1))
+				, function(function)
+				, default2(new Arg2(default2))
+				, default1(new Arg1(default1))
 			{
 				declareSignature(arg1Name, default1, arg2Name, default2);
 			}
 
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, Arg2 default2, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default2(new Arg2(default2))
-				,default1()
+				, function(function)
+				, default2(new Arg2(default2))
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, default2);
 			}
 
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default2()
-				,default1()
+				, function(function)
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant());
 			}
 
 			/*implement*/ void execute(Reflection::DescribedBase* instance, FunctionDescriptor::Arguments& arguments) const
 			{
-				Call2Helper<Class,FunctionPtr,Arg1, Arg2,result_type>::call(boost::polymorphic_downcast<Class*>(instance), 
+				Call2Helper<Class, FunctionPtr, Arg1, Arg2, result_type>::call(boost::polymorphic_downcast<Class*>(instance),
 					function,
-					arguments.returnValue, 
-					ArgHelper::getArg<Arg1, 1>(arguments, default1), 
+					arguments.returnValue,
+					ArgHelper::getArg<Arg1, 1>(arguments, default1),
 					ArgHelper::getArg<Arg2, 2>(arguments, default2));
 			}
 		};
@@ -921,13 +923,13 @@ namespace RBX
 		public:
 			static void call(Class1* o, FunctionPtr1 function, Variant& returnValue, const Arg1& arg1, const Arg2& arg2, const Arg3& arg3)
 			{
-				returnValue = (o->*function)(arg1, arg2, arg3 );
+				returnValue = (o->*function)(arg1, arg2, arg3);
 			}
 		};
 
 		// Specialization for void return types:
 		template<class Class1, class FunctionPtr1, typename Arg1, typename Arg2, typename Arg3>
-		class Call3Helper<Class1,FunctionPtr1, Arg1, Arg2, Arg3, void>
+		class Call3Helper<Class1, FunctionPtr1, Arg1, Arg2, Arg3, void>
 		{
 		public:
 			static void call(Class1* o, FunctionPtr1 function, Variant& returnValue, const Arg1& arg1, const Arg2& arg2, const Arg3& arg3)
@@ -946,7 +948,7 @@ namespace RBX
 			typedef typename boost::function_traits<Signature>::arg1_type Arg1;
 			typedef typename boost::function_traits<Signature>::arg2_type Arg2;
 			typedef typename boost::function_traits<Signature>::arg3_type Arg3;
-			typedef result_type (Class::*FunctionPtr)(Arg1, Arg2, Arg3);
+			typedef result_type(Class::* FunctionPtr)(Arg1, Arg2, Arg3);
 			FunctionPtr function;
 
 			const boost::scoped_ptr<Arg1> default1;
@@ -966,49 +968,49 @@ namespace RBX
 		public:
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, Arg1 default1, const char* arg2Name, Arg2 default2, const char* arg3Name, Arg3 default3, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default3(new Arg3(default3))
-				,default2(new Arg2(default2))
-				,default1(new Arg1(default1))
+				, function(function)
+				, default3(new Arg3(default3))
+				, default2(new Arg2(default2))
+				, default1(new Arg1(default1))
 			{
 				declareSignature(arg1Name, default1, arg2Name, default2, arg3Name, default3);
 			}
 
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, Arg2 default2, const char* arg3Name, Arg3 default3, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default3(new Arg3(default3))
-				,default2(new Arg2(default2))
-				,default1()
+				, function(function)
+				, default3(new Arg3(default3))
+				, default2(new Arg2(default2))
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, default2, arg3Name, default3);
 			}
 
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, Arg3 default3, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default3(new Arg3(default3))
-				,default2()
-				,default1()
+				, function(function)
+				, default3(new Arg3(default3))
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, default3);
 			}
 
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default3()
-				,default2()
-				,default1()
+				, function(function)
+				, default3()
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, Variant());
 			}
 
 			/*implement*/ void execute(Reflection::DescribedBase* instance, FunctionDescriptor::Arguments& arguments) const
 			{
-				Call3Helper<Class,FunctionPtr,Arg1,Arg2,Arg3,result_type>::call(boost::polymorphic_downcast<Class*>(instance),
+				Call3Helper<Class, FunctionPtr, Arg1, Arg2, Arg3, result_type>::call(boost::polymorphic_downcast<Class*>(instance),
 					function,
-					arguments.returnValue, 
+					arguments.returnValue,
 					ArgHelper::getArg<Arg1, 1>(arguments, default1),
 					ArgHelper::getArg<Arg2, 2>(arguments, default2),
 					ArgHelper::getArg<Arg3, 3>(arguments, default3));
@@ -1024,13 +1026,13 @@ namespace RBX
 		public:
 			static void call(Class1* o, FunctionPtr1 function, Variant& returnValue, const Arg1& arg1, const Arg2& arg2, const Arg3& arg3, const Arg4& arg4)
 			{
-				returnValue = (o->*function)(arg1, arg2, arg3, arg4 );
+				returnValue = (o->*function)(arg1, arg2, arg3, arg4);
 			}
 		};
 
 		// Specialization for void return types:
 		template<class Class1, class FunctionPtr1, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
-		class Call4Helper<Class1,FunctionPtr1, Arg1, Arg2, Arg3, Arg4, void>
+		class Call4Helper<Class1, FunctionPtr1, Arg1, Arg2, Arg3, Arg4, void>
 		{
 		public:
 			static void call(Class1* o, FunctionPtr1 function, Variant& returnValue, const Arg1& arg1, const Arg2& arg2, const Arg3& arg3, const Arg4& arg4)
@@ -1048,7 +1050,7 @@ namespace RBX
 			typedef typename boost::function_traits<Signature>::arg2_type Arg2;
 			typedef typename boost::function_traits<Signature>::arg3_type Arg3;
 			typedef typename boost::function_traits<Signature>::arg4_type Arg4;
-			typedef result_type (Class::*FunctionPtr)(Arg1, Arg2, Arg3, Arg4);
+			typedef result_type(Class::* FunctionPtr)(Arg1, Arg2, Arg3, Arg4);
 			FunctionPtr function;
 
 			const boost::scoped_ptr<Arg1> default1;
@@ -1071,67 +1073,67 @@ namespace RBX
 		public:
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, Arg1 default1, const char* arg2Name, Arg2 default2, const char* arg3Name, Arg3 default3, const char* arg4Name, Arg4 default4, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default4(new Arg4(default4))
-				,default3(new Arg3(default3))
-				,default2(new Arg2(default2))
-				,default1(new Arg1(default1))
+				, function(function)
+				, default4(new Arg4(default4))
+				, default3(new Arg3(default3))
+				, default2(new Arg2(default2))
+				, default1(new Arg1(default1))
 			{
 				declareSignature(arg1Name, default1, arg2Name, default2, arg3Name, default3, arg4Name, default4);
 			}
 
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, Arg2 default2, const char* arg3Name, Arg3 default3, const char* arg4Name, Arg4 default4, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default4(new Arg4(default4))
-				,default3(new Arg3(default3))
-				,default2(new Arg2(default2))
-				,default1()
+				, function(function)
+				, default4(new Arg4(default4))
+				, default3(new Arg3(default3))
+				, default2(new Arg2(default2))
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, default2, arg3Name, default3, arg4Name, default4);
 			}
 
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, Arg3 default3, const char* arg4Name, Arg4 default4, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default4(new Arg4(default4))
-				,default3(new Arg3(default3))
-				,default2()
-				,default1()
+				, function(function)
+				, default4(new Arg4(default4))
+				, default3(new Arg3(default3))
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, default3, arg4Name, default4);
 			}
 
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, const char* arg4Name, Arg4 default4, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default4(new Arg4(default4))
-				,default3()
-				,default2()
-				,default1()
+				, function(function)
+				, default4(new Arg4(default4))
+				, default3()
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, Variant(), arg4Name, default4);
 			}
 
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, const char* arg4Name, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default4()
-				,default3()
-				,default2()
-				,default1()
+				, function(function)
+				, default4()
+				, default3()
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, Variant(), arg4Name, Variant());
 			}
 
 			/*implement*/ void execute(Reflection::DescribedBase* instance, FunctionDescriptor::Arguments& arguments) const
 			{
-				Call4Helper<Class,FunctionPtr,Arg1,Arg2,Arg3,Arg4,result_type>::call(boost::polymorphic_downcast<Class*>(instance), 
+				Call4Helper<Class, FunctionPtr, Arg1, Arg2, Arg3, Arg4, result_type>::call(boost::polymorphic_downcast<Class*>(instance),
 					function,
 					arguments.returnValue,
-					ArgHelper::getArg<Arg1, 1>(arguments, default1), 
-					ArgHelper::getArg<Arg2, 2>(arguments, default2), 
-					ArgHelper::getArg<Arg3, 3>(arguments, default3), 
+					ArgHelper::getArg<Arg1, 1>(arguments, default1),
+					ArgHelper::getArg<Arg2, 2>(arguments, default2),
+					ArgHelper::getArg<Arg3, 3>(arguments, default3),
 					ArgHelper::getArg<Arg4, 4>(arguments, default4));
 
 			}
@@ -1146,13 +1148,13 @@ namespace RBX
 		public:
 			static void call(Class1* o, FunctionPtr1 function, Variant& returnValue, const Arg1& arg1, const Arg2& arg2, const Arg3& arg3, const Arg4& arg4, const Arg5& arg5)
 			{
-				returnValue = (o->*function)(arg1, arg2, arg3, arg4, arg5 );
+				returnValue = (o->*function)(arg1, arg2, arg3, arg4, arg5);
 			}
 		};
 
 		// Specialization for void return types:
 		template<class Class1, class FunctionPtr1, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5>
-		class Call5Helper<Class1,FunctionPtr1, Arg1, Arg2, Arg3, Arg4, Arg5, void>
+		class Call5Helper<Class1, FunctionPtr1, Arg1, Arg2, Arg3, Arg4, Arg5, void>
 		{
 		public:
 			static void call(Class1* o, FunctionPtr1 function, Variant& returnValue, const Arg1& arg1, const Arg2& arg2, const Arg3& arg3, const Arg4& arg4, const Arg5& arg5)
@@ -1171,7 +1173,7 @@ namespace RBX
 			typedef typename boost::function_traits<Signature>::arg3_type Arg3;
 			typedef typename boost::function_traits<Signature>::arg4_type Arg4;
 			typedef typename boost::function_traits<Signature>::arg5_type Arg5;
-			typedef result_type (Class::*FunctionPtr)(Arg1, Arg2, Arg3, Arg4, Arg5);
+			typedef result_type(Class::* FunctionPtr)(Arg1, Arg2, Arg3, Arg4, Arg5);
 			FunctionPtr function;
 
 			const boost::scoped_ptr<Arg1> default1;
@@ -1197,85 +1199,85 @@ namespace RBX
 		public:
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, Arg1 default1, const char* arg2Name, Arg2 default2, const char* arg3Name, Arg3 default3, const char* arg4Name, Arg4 default4, const char* arg5Name, Arg5 default5, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default5(new Arg5(default5))
-				,default4(new Arg4(default4))
-				,default3(new Arg3(default3))
-				,default2(new Arg2(default2))
-				,default1(new Arg1(default1))
+				, function(function)
+				, default5(new Arg5(default5))
+				, default4(new Arg4(default4))
+				, default3(new Arg3(default3))
+				, default2(new Arg2(default2))
+				, default1(new Arg1(default1))
 			{
 				declareSignature(arg1Name, default1, arg2Name, default2, arg3Name, default3, arg4Name, default4, arg5Name, default5);
 			}
 
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, Arg2 default2, const char* arg3Name, Arg3 default3, const char* arg4Name, Arg4 default4, const char* arg5Name, Arg5 default5, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default5(new Arg5(default5))
-				,default4(new Arg4(default4))
-				,default3(new Arg3(default3))
-				,default2(new Arg2(default2))
-				,default1()
+				, function(function)
+				, default5(new Arg5(default5))
+				, default4(new Arg4(default4))
+				, default3(new Arg3(default3))
+				, default2(new Arg2(default2))
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, default2, arg3Name, default3, arg4Name, default4, arg5Name, default5);
 			}
 
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, Arg3 default3, const char* arg4Name, Arg4 default4, const char* arg5Name, Arg5 default5, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default5(new Arg5(default5))
-				,default4(new Arg4(default4))
-				,default3(new Arg3(default3))
-				,default2()
-				,default1()
+				, function(function)
+				, default5(new Arg5(default5))
+				, default4(new Arg4(default4))
+				, default3(new Arg3(default3))
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, default3, arg4Name, default4, arg5Name, default5);
 			}
 
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, const char* arg4Name, Arg4 default4, const char* arg5Name, Arg5 default5, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default5(new Arg5(default5))
-				,default4(new Arg4(default4))
-				,default3()
-				,default2()
-				,default1()
+				, function(function)
+				, default5(new Arg5(default5))
+				, default4(new Arg4(default4))
+				, default3()
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, Variant(), arg4Name, default4, arg5Name, default5);
 			}
 
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, const char* arg4Name, const char* arg5Name, Arg5 default5, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default5(new Arg5(default5))
-				,default4()
-				,default3()
-				,default2()
-				,default1()
+				, function(function)
+				, default5(new Arg5(default5))
+				, default4()
+				, default3()
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, Variant(), arg4Name, Variant(), arg5Name, default5);
 			}
 
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, const char* arg4Name, const char* arg5Name, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default5()
-				,default4()
-				,default3()
-				,default2()
-				,default1()
+				, function(function)
+				, default5()
+				, default4()
+				, default3()
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, Variant(), arg4Name, Variant(), arg5Name, Variant());
 			}
 
 			/*implement*/ void execute(Reflection::DescribedBase* instance, FunctionDescriptor::Arguments& arguments) const
 			{
-				Call5Helper<Class,FunctionPtr,Arg1,Arg2,Arg3,Arg4,Arg5,result_type>::call(boost::polymorphic_downcast<Class*>(instance), 
-					function, 
+				Call5Helper<Class, FunctionPtr, Arg1, Arg2, Arg3, Arg4, Arg5, result_type>::call(boost::polymorphic_downcast<Class*>(instance),
+					function,
 					arguments.returnValue,
-					ArgHelper::getArg<Arg1, 1>(arguments, default1), 
-					ArgHelper::getArg<Arg2, 2>(arguments, default2), 
-					ArgHelper::getArg<Arg3, 3>(arguments, default3), 
-					ArgHelper::getArg<Arg4, 4>(arguments, default4), 
+					ArgHelper::getArg<Arg1, 1>(arguments, default1),
+					ArgHelper::getArg<Arg2, 2>(arguments, default2),
+					ArgHelper::getArg<Arg3, 3>(arguments, default3),
+					ArgHelper::getArg<Arg4, 4>(arguments, default4),
 					ArgHelper::getArg<Arg5, 5>(arguments, default5));
 
 			}
@@ -1296,7 +1298,7 @@ namespace RBX
 
 		// Specialization for void return types:
 		template<class Class1, class FunctionPtr1, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6>
-		class Call6Helper<Class1,FunctionPtr1, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, void>
+		class Call6Helper<Class1, FunctionPtr1, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, void>
 		{
 		public:
 			static void call(Class1* o, FunctionPtr1 function, Variant& returnValue, const Arg1& arg1, const Arg2& arg2, const Arg3& arg3, const Arg4& arg4, const Arg5& arg5, const Arg6& arg6)
@@ -1316,7 +1318,7 @@ namespace RBX
 			typedef typename boost::function_traits<Signature>::arg4_type Arg4;
 			typedef typename boost::function_traits<Signature>::arg5_type Arg5;
 			typedef typename boost::function_traits<Signature>::arg6_type Arg6;
-			typedef result_type (Class::*FunctionPtr)(Arg1, Arg2, Arg3, Arg4, Arg5, Arg6);
+			typedef result_type(Class::* FunctionPtr)(Arg1, Arg2, Arg3, Arg4, Arg5, Arg6);
 			FunctionPtr function;
 
 			const boost::scoped_ptr<Arg1> default1;
@@ -1345,105 +1347,105 @@ namespace RBX
 		public:
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, Arg1 default1, const char* arg2Name, Arg2 default2, const char* arg3Name, Arg3 default3, const char* arg4Name, Arg4 default4, const char* arg5Name, Arg5 default5, const char* arg6Name, Arg6 default6, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default6(new Arg6(default6))
-				,default5(new Arg5(default5))
-				,default4(new Arg4(default4))
-				,default3(new Arg3(default3))
-				,default2(new Arg2(default2))
-				,default1(new Arg1(default1))
+				, function(function)
+				, default6(new Arg6(default6))
+				, default5(new Arg5(default5))
+				, default4(new Arg4(default4))
+				, default3(new Arg3(default3))
+				, default2(new Arg2(default2))
+				, default1(new Arg1(default1))
 			{
 				declareSignature(arg1Name, default1, arg2Name, default2, arg3Name, default3, arg4Name, default4, arg5Name, default5, arg6Name, default6);
 			}
 
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, Arg2 default2, const char* arg3Name, Arg3 default3, const char* arg4Name, Arg4 default4, const char* arg5Name, Arg5 default5, const char* arg6Name, Arg6 default6, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default6(new Arg6(default6))
-				,default5(new Arg5(default5))
-				,default4(new Arg4(default4))
-				,default3(new Arg3(default3))
-				,default2(new Arg2(default2))
-				,default1()
+				, function(function)
+				, default6(new Arg6(default6))
+				, default5(new Arg5(default5))
+				, default4(new Arg4(default4))
+				, default3(new Arg3(default3))
+				, default2(new Arg2(default2))
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, default2, arg3Name, default3, arg4Name, default4, arg5Name, default5, arg6Name, default6);
 			}
 
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, Arg3 default3, const char* arg4Name, Arg4 default4, const char* arg5Name, Arg5 default5, const char* arg6Name, Arg6 default6, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default6(new Arg6(default6))
-				,default5(new Arg5(default5))
-				,default4(new Arg4(default4))
-				,default3(new Arg3(default3))
-				,default2()
-				,default1()
+				, function(function)
+				, default6(new Arg6(default6))
+				, default5(new Arg5(default5))
+				, default4(new Arg4(default4))
+				, default3(new Arg3(default3))
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, default3, arg4Name, default4, arg5Name, default5, arg6Name, default6);
 			}
 
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, const char* arg4Name, Arg4 default4, const char* arg5Name, Arg5 default5, const char* arg6Name, Arg6 default6, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default6(new Arg6(default6))
-				,default5(new Arg5(default5))
-				,default4(new Arg4(default4))
-				,default3()
-				,default2()
-				,default1()
+				, function(function)
+				, default6(new Arg6(default6))
+				, default5(new Arg5(default5))
+				, default4(new Arg4(default4))
+				, default3()
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, Variant(), arg4Name, default4, arg5Name, default5, arg6Name, default6);
 			}
 
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, const char* arg4Name, const char* arg5Name, Arg5 default5, const char* arg6Name, Arg6 default6, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default6(new Arg6(default6))
-				,default5(new Arg5(default5))
-				,default4()
-				,default3()
-				,default2()
-				,default1()
+				, function(function)
+				, default6(new Arg6(default6))
+				, default5(new Arg5(default5))
+				, default4()
+				, default3()
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, Variant(), arg4Name, Variant(), arg5Name, default5, arg6Name, default6);
 			}
 
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, const char* arg4Name, const char* arg5Name, const char* arg6Name, Arg6 default6, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default6(new Arg6(default6))
-				,default5()
-				,default4()
-				,default3()
-				,default2()
-				,default1()
+				, function(function)
+				, default6(new Arg6(default6))
+				, default5()
+				, default4()
+				, default3()
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, Variant(), arg4Name, Variant(), arg5Name, Variant(), arg6Name, default6);
 			}
 
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, const char* arg4Name, const char* arg5Name, const char* arg6Name, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default6()
-				,default5()
-				,default4()
-				,default3()
-				,default2()
-				,default1()
+				, function(function)
+				, default6()
+				, default5()
+				, default4()
+				, default3()
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, Variant(), arg4Name, Variant(), arg5Name, Variant(), arg6Name, Variant());
 			}
 
 			/*implement*/ void execute(Reflection::DescribedBase* instance, FunctionDescriptor::Arguments& arguments) const
 			{
-				Call6Helper<Class,FunctionPtr,Arg1,Arg2,Arg3,Arg4,Arg5,Arg6,result_type>::call(boost::polymorphic_downcast<Class*>(instance), 
-					function, 
+				Call6Helper<Class, FunctionPtr, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, result_type>::call(boost::polymorphic_downcast<Class*>(instance),
+					function,
 					arguments.returnValue,
 					ArgHelper::getArg<Arg1, 1>(arguments, default1),
-					ArgHelper::getArg<Arg2, 2>(arguments, default2), 
-					ArgHelper::getArg<Arg3, 3>(arguments, default3), 
-					ArgHelper::getArg<Arg4, 4>(arguments, default4), 
-					ArgHelper::getArg<Arg5, 5>(arguments, default5), 
+					ArgHelper::getArg<Arg2, 2>(arguments, default2),
+					ArgHelper::getArg<Arg3, 3>(arguments, default3),
+					ArgHelper::getArg<Arg4, 4>(arguments, default4),
+					ArgHelper::getArg<Arg5, 5>(arguments, default5),
 					ArgHelper::getArg<Arg6, 6>(arguments, default6));
 
 			}
@@ -1464,7 +1466,7 @@ namespace RBX
 
 		// Specialization for void return types:
 		template<class Class1, class FunctionPtr1, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6, typename Arg7>
-		class Call7Helper<Class1,FunctionPtr1, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, void>
+		class Call7Helper<Class1, FunctionPtr1, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, void>
 		{
 		public:
 			static void call(Class1* o, FunctionPtr1 function, Variant& returnValue, const Arg1& arg1, const Arg2& arg2, const Arg3& arg3, const Arg4& arg4, const Arg5& arg5, const Arg6& arg6, const Arg7& arg7)
@@ -1485,7 +1487,7 @@ namespace RBX
 			typedef typename boost::function_traits<Signature>::arg5_type Arg5;
 			typedef typename boost::function_traits<Signature>::arg6_type Arg6;
 			typedef typename boost::function_traits<Signature>::arg7_type Arg7;
-			typedef result_type (Class::*FunctionPtr)(Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7);
+			typedef result_type(Class::* FunctionPtr)(Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7);
 			FunctionPtr function;
 
 			const boost::scoped_ptr<Arg1> default1;
@@ -1517,127 +1519,127 @@ namespace RBX
 		public:
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, Arg1 default1, const char* arg2Name, Arg2 default2, const char* arg3Name, Arg3 default3, const char* arg4Name, Arg4 default4, const char* arg5Name, Arg5 default5, const char* arg6Name, Arg6 default6, const char* arg7Name, Arg7 default7, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default7(new Arg7(default7))
-				,default6(new Arg6(default6))
-				,default5(new Arg5(default5))
-				,default4(new Arg4(default4))
-				,default3(new Arg3(default3))
-				,default2(new Arg2(default2))
-				,default1(new Arg1(default1))
+				, function(function)
+				, default7(new Arg7(default7))
+				, default6(new Arg6(default6))
+				, default5(new Arg5(default5))
+				, default4(new Arg4(default4))
+				, default3(new Arg3(default3))
+				, default2(new Arg2(default2))
+				, default1(new Arg1(default1))
 			{
 				declareSignature(arg1Name, default1, arg2Name, default2, arg3Name, default3, arg4Name, default4, arg5Name, default5, arg6Name, default6, arg7Name, default7);
 			}
 
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, Arg2 default2, const char* arg3Name, Arg3 default3, const char* arg4Name, Arg4 default4, const char* arg5Name, Arg5 default5, const char* arg6Name, Arg6 default6, const char* arg7Name, Arg7 default7, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default7(new Arg7(default7))
-				,default6(new Arg6(default6))
-				,default5(new Arg5(default5))
-				,default4(new Arg4(default4))
-				,default3(new Arg3(default3))
-				,default2(new Arg2(default2))
-				,default1()
+				, function(function)
+				, default7(new Arg7(default7))
+				, default6(new Arg6(default6))
+				, default5(new Arg5(default5))
+				, default4(new Arg4(default4))
+				, default3(new Arg3(default3))
+				, default2(new Arg2(default2))
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, default2, arg3Name, default3, arg4Name, default4, arg5Name, default5, arg6Name, default6, arg7Name, default7);
 			}
 
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, Arg3 default3, const char* arg4Name, Arg4 default4, const char* arg5Name, Arg5 default5, const char* arg6Name, Arg6 default6, const char* arg7Name, Arg7 default7, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default7(new Arg7(default7))
-				,default6(new Arg6(default6))
-				,default5(new Arg5(default5))
-				,default4(new Arg4(default4))
-				,default3(new Arg3(default3))
-				,default2()
-				,default1()
+				, function(function)
+				, default7(new Arg7(default7))
+				, default6(new Arg6(default6))
+				, default5(new Arg5(default5))
+				, default4(new Arg4(default4))
+				, default3(new Arg3(default3))
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, default3, arg4Name, default4, arg5Name, default5, arg6Name, default6, arg7Name, default7);
 			}
 
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, const char* arg4Name, Arg4 default4, const char* arg5Name, Arg5 default5, const char* arg6Name, Arg6 default6, const char* arg7Name, Arg7 default7, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default7(new Arg7(default7))
-				,default6(new Arg6(default6))
-				,default5(new Arg5(default5))
-				,default4(new Arg4(default4))
-				,default3()
-				,default2()
-				,default1()
+				, function(function)
+				, default7(new Arg7(default7))
+				, default6(new Arg6(default6))
+				, default5(new Arg5(default5))
+				, default4(new Arg4(default4))
+				, default3()
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, Variant(), arg4Name, default4, arg5Name, default5, arg6Name, default6, arg7Name, default7);
 			}
 
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, const char* arg4Name, const char* arg5Name, Arg5 default5, const char* arg6Name, Arg6 default6, const char* arg7Name, Arg7 default7, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default7(new Arg7(default7))
-				,default6(new Arg6(default6))
-				,default5(new Arg5(default5))
-				,default4()
-				,default3()
-				,default2()
-				,default1()
+				, function(function)
+				, default7(new Arg7(default7))
+				, default6(new Arg6(default6))
+				, default5(new Arg5(default5))
+				, default4()
+				, default3()
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, Variant(), arg4Name, Variant(), arg5Name, default5, arg6Name, default6, arg7Name, default7);
 			}
 
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, const char* arg4Name, const char* arg5Name, const char* arg6Name, Arg6 default6, const char* arg7Name, Arg7 default7, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default7(new Arg7(default7))
-				,default6(new Arg6(default6))
-				,default5()
-				,default4()
-				,default3()
-				,default2()
-				,default1()
+				, function(function)
+				, default7(new Arg7(default7))
+				, default6(new Arg6(default6))
+				, default5()
+				, default4()
+				, default3()
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, Variant(), arg4Name, Variant(), arg5Name, Variant(), arg6Name, default6, arg7Name, default7);
 			}
 
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, const char* arg4Name, const char* arg5Name, const char* arg6Name, const char* arg7Name, Arg7 default7, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,default7(new Arg7(default7))
-				,default6()
-				,default5()
-				,default4()
-				,default3()
-				,default2()
-				,default1()
-				,function(function)
+				, default7(new Arg7(default7))
+				, default6()
+				, default5()
+				, default4()
+				, default3()
+				, default2()
+				, default1()
+				, function(function)
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, Variant(), arg4Name, Variant(), arg5Name, Variant(), arg6Name, Variant(), arg7Name, default7);
 			}
 
 			BoundFuncDesc(FunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, const char* arg4Name, const char* arg5Name, const char* arg6Name, const char* arg7Name, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:FuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default7()
-				,default6()
-				,default5()
-				,default4()
-				,default3()
-				,default2()
-				,default1()
+				, function(function)
+				, default7()
+				, default6()
+				, default5()
+				, default4()
+				, default3()
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, Variant(), arg4Name, Variant(), arg5Name, Variant(), arg6Name, Variant(), arg7Name, Variant());
 			}
 
 			/*implement*/ void execute(Reflection::DescribedBase* instance, FunctionDescriptor::Arguments& arguments) const
 			{
-				Call7Helper<Class,FunctionPtr,Arg1,Arg2,Arg3,Arg4,Arg5,Arg6,Arg7,result_type>::call(boost::polymorphic_downcast<Class*>(instance), 
-					function, 
+				Call7Helper<Class, FunctionPtr, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6, Arg7, result_type>::call(boost::polymorphic_downcast<Class*>(instance),
+					function,
 					arguments.returnValue,
-					ArgHelper::getArg<Arg1, 1>(arguments, default1), 
-					ArgHelper::getArg<Arg2, 2>(arguments, default2), 
-					ArgHelper::getArg<Arg3, 3>(arguments, default3), 
-					ArgHelper::getArg<Arg4, 4>(arguments, default4), 
-					ArgHelper::getArg<Arg5, 5>(arguments, default5), 
-					ArgHelper::getArg<Arg6, 6>(arguments, default6), 
+					ArgHelper::getArg<Arg1, 1>(arguments, default1),
+					ArgHelper::getArg<Arg2, 2>(arguments, default2),
+					ArgHelper::getArg<Arg3, 3>(arguments, default3),
+					ArgHelper::getArg<Arg4, 4>(arguments, default4),
+					ArgHelper::getArg<Arg5, 5>(arguments, default5),
+					ArgHelper::getArg<Arg6, 6>(arguments, default6),
 					ArgHelper::getArg<Arg7, 7>(arguments, default7));
 
 			}
@@ -1669,7 +1671,7 @@ namespace RBX
 		template <class Class, typename Signature, typename ReturnType>
 		class BoundYieldFuncDesc<Class, Signature, ReturnType, 0> : public YieldFuncDesc<Class>
 		{
-			typedef void (Class::*YieldFunctionPtr)(boost::function<void(ReturnType)> resumeFunction, boost::function<void(std::string)> errorFunction);
+			typedef void (Class::* YieldFunctionPtr)(boost::function<void(ReturnType)> resumeFunction, boost::function<void(std::string)> errorFunction);
 			YieldFunctionPtr function;
 
 			void declareSignature()
@@ -1680,7 +1682,7 @@ namespace RBX
 		public:
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
+				, function(function)
 			{
 				declareSignature();
 			}
@@ -1698,7 +1700,7 @@ namespace RBX
 		template <class Class, typename Signature>
 		class BoundYieldFuncDesc<Class, Signature, void, 0> : public YieldFuncDesc<Class>
 		{
-			typedef void (Class::*YieldFunctionPtr)(boost::function<void()> resumeFunction, boost::function<void(std::string)> errorFunction);
+			typedef void (Class::* YieldFunctionPtr)(boost::function<void()> resumeFunction, boost::function<void(std::string)> errorFunction);
 			YieldFunctionPtr function;
 
 			void declareSignature()
@@ -1709,7 +1711,7 @@ namespace RBX
 		public:
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
+				, function(function)
 			{
 				declareSignature();
 			}
@@ -1728,7 +1730,7 @@ namespace RBX
 		class BoundYieldFuncDesc<Class, Signature, ReturnType, 1> : public YieldFuncDesc<Class>
 		{
 			typedef typename boost::function_traits<Signature>::arg1_type Arg1;
-			typedef void (Class::*YieldFunctionPtr)(Arg1, boost::function<void(ReturnType)> resumeFunction, boost::function<void(std::string)> errorFunction);
+			typedef void (Class::* YieldFunctionPtr)(Arg1, boost::function<void(ReturnType)> resumeFunction, boost::function<void(std::string)> errorFunction);
 			YieldFunctionPtr function;
 
 			const boost::scoped_ptr<Arg1> default1;
@@ -1742,16 +1744,16 @@ namespace RBX
 		public:
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, Arg1 default1, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default1(new Arg1(default1))
+				, function(function)
+				, default1(new Arg1(default1))
 			{
 				declareSignature(arg1Name, default1);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default1()
+				, function(function)
+				, default1()
 			{
 				declareSignature(arg1Name, Variant());
 			}
@@ -1759,7 +1761,7 @@ namespace RBX
 			/*implement*/ void execute(Reflection::DescribedBase* instance, FunctionDescriptor::Arguments& arguments, boost::function<void(Variant)> resumeFunction, boost::function<void(std::string)> errorFunction) const
 			{
 				(boost::polymorphic_downcast<Class*>(instance)->*function)(
-					ArgHelper::getArg<Arg1, 1>(arguments, default1), 
+					ArgHelper::getArg<Arg1, 1>(arguments, default1),
 					boost::bind(&resume_adapter<ReturnType>, resumeFunction, _1), errorFunction);
 			}
 		};
@@ -1770,7 +1772,7 @@ namespace RBX
 		class BoundYieldFuncDesc<Class, Signature, void, 1> : public YieldFuncDesc<Class>
 		{
 			typedef typename boost::function_traits<Signature>::arg1_type Arg1;
-			typedef void (Class::*YieldFunctionPtr)(Arg1, boost::function<void(void)> resumeFunction, boost::function<void(std::string)> errorFunction);
+			typedef void (Class::* YieldFunctionPtr)(Arg1, boost::function<void(void)> resumeFunction, boost::function<void(std::string)> errorFunction);
 			YieldFunctionPtr function;
 
 			const boost::scoped_ptr<Arg1> default1;
@@ -1784,16 +1786,16 @@ namespace RBX
 		public:
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, Arg1 default1, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default1(new Arg1(default1))
+				, function(function)
+				, default1(new Arg1(default1))
 			{
 				declareSignature(arg1Name, default1);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default1()
+				, function(function)
+				, default1()
 			{
 				declareSignature(arg1Name, Variant());
 			}
@@ -1801,7 +1803,7 @@ namespace RBX
 			/*implement*/ void execute(Reflection::DescribedBase* instance, FunctionDescriptor::Arguments& arguments, boost::function<void(Variant)> resumeFunction, boost::function<void(std::string)> errorFunction) const
 			{
 				(boost::polymorphic_downcast<Class*>(instance)->*function)(
-					ArgHelper::getArg<Arg1, 1>(arguments, default1), 
+					ArgHelper::getArg<Arg1, 1>(arguments, default1),
 					boost::bind(resumeFunction, Variant()), errorFunction);
 			}
 		};
@@ -1813,7 +1815,7 @@ namespace RBX
 		{
 			typedef typename boost::function_traits<Signature>::arg1_type Arg1;
 			typedef typename boost::function_traits<Signature>::arg2_type Arg2;
-			typedef void (Class::*YieldFunctionPtr)(Arg1, Arg2, boost::function<void(ReturnType)> resumeFunction, boost::function<void(std::string)> errorFunction);
+			typedef void (Class::* YieldFunctionPtr)(Arg1, Arg2, boost::function<void(ReturnType)> resumeFunction, boost::function<void(std::string)> errorFunction);
 			YieldFunctionPtr function;
 
 			const boost::scoped_ptr<Arg1> default1;
@@ -1830,27 +1832,27 @@ namespace RBX
 		public:
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, Arg1 default1, const char* arg2Name, Arg2 default2, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default2(new Arg2(default2))
-				,default1(new Arg1(default1))
+				, function(function)
+				, default2(new Arg2(default2))
+				, default1(new Arg1(default1))
 			{
 				declareSignature(arg1Name, default1, arg2Name, default2);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, Arg2 default2, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default2(new Arg2(default2))
-				,default1()
+				, function(function)
+				, default2(new Arg2(default2))
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, default2);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default2()
-				,default1()
+				, function(function)
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant());
 			}
@@ -1858,8 +1860,8 @@ namespace RBX
 			/*implement*/ void execute(Reflection::DescribedBase* instance, FunctionDescriptor::Arguments& arguments, boost::function<void(Variant)> resumeFunction, boost::function<void(std::string)> errorFunction) const
 			{
 				(boost::polymorphic_downcast<Class*>(instance)->*function)(
-					ArgHelper::getArg<Arg1, 1>(arguments, default1), 
-					ArgHelper::getArg<Arg2, 2>(arguments, default2), 
+					ArgHelper::getArg<Arg1, 1>(arguments, default1),
+					ArgHelper::getArg<Arg2, 2>(arguments, default2),
 					boost::bind(&resume_adapter<ReturnType>, resumeFunction, _1), errorFunction);
 			}
 		};
@@ -1871,7 +1873,7 @@ namespace RBX
 		{
 			typedef typename boost::function_traits<Signature>::arg1_type Arg1;
 			typedef typename boost::function_traits<Signature>::arg2_type Arg2;
-			typedef void (Class::*YieldFunctionPtr)(Arg1, Arg2, boost::function<void(void)> resumeFunction, boost::function<void(std::string)> errorFunction);
+			typedef void (Class::* YieldFunctionPtr)(Arg1, Arg2, boost::function<void(void)> resumeFunction, boost::function<void(std::string)> errorFunction);
 			YieldFunctionPtr function;
 
 			const boost::scoped_ptr<Arg1> default1;
@@ -1888,27 +1890,27 @@ namespace RBX
 		public:
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, Arg1 default1, const char* arg2Name, Arg2 default2, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default2(new Arg2(default2))
-				,default1(new Arg1(default1))
+				, function(function)
+				, default2(new Arg2(default2))
+				, default1(new Arg1(default1))
 			{
 				declareSignature(arg1Name, default1, arg2Name, default2);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, Arg2 default2, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default2(new Arg2(default2))
-				,default1()
+				, function(function)
+				, default2(new Arg2(default2))
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, default2);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default2()
-				,default1()
+				, function(function)
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant());
 			}
@@ -1916,8 +1918,8 @@ namespace RBX
 			/*implement*/ void execute(Reflection::DescribedBase* instance, FunctionDescriptor::Arguments& arguments, boost::function<void(Variant)> resumeFunction, boost::function<void(std::string)> errorFunction) const
 			{
 				(boost::polymorphic_downcast<Class*>(instance)->*function)(
-					ArgHelper::getArg<Arg1, 1>(arguments, default1), 
-					ArgHelper::getArg<Arg2, 2>(arguments, default2), 
+					ArgHelper::getArg<Arg1, 1>(arguments, default1),
+					ArgHelper::getArg<Arg2, 2>(arguments, default2),
 					boost::bind(resumeFunction, Variant()), errorFunction);
 			}
 		};
@@ -1930,7 +1932,7 @@ namespace RBX
 			typedef typename boost::function_traits<Signature>::arg1_type Arg1;
 			typedef typename boost::function_traits<Signature>::arg2_type Arg2;
 			typedef typename boost::function_traits<Signature>::arg3_type Arg3;
-			typedef void (Class::*YieldFunctionPtr)(Arg1, Arg2, Arg3, boost::function<void(ReturnType)> resumeFunction, boost::function<void(std::string)> errorFunction);
+			typedef void (Class::* YieldFunctionPtr)(Arg1, Arg2, Arg3, boost::function<void(ReturnType)> resumeFunction, boost::function<void(std::string)> errorFunction);
 			YieldFunctionPtr function;
 
 			const boost::scoped_ptr<Arg1> default1;
@@ -1950,40 +1952,40 @@ namespace RBX
 		public:
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, Arg1 default1, const char* arg2Name, Arg2 default2, const char* arg3Name, Arg3 default3, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default3(new Arg3(default3))
-				,default2(new Arg2(default2))
-				,default1(new Arg1(default1))
+				, function(function)
+				, default3(new Arg3(default3))
+				, default2(new Arg2(default2))
+				, default1(new Arg1(default1))
 			{
 				declareSignature(arg1Name, default1, arg2Name, default2, arg3Name, default3);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, Arg2 default2, const char* arg3Name, Arg3 default3, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default3(new Arg3(default3))
-				,default2(new Arg2(default2))
-				,default1()
+				, function(function)
+				, default3(new Arg3(default3))
+				, default2(new Arg2(default2))
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, default2, arg3Name, default3);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, Arg3 default3, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default3(new Arg3(default3))
-				,default2()
-				,default1()
+				, function(function)
+				, default3(new Arg3(default3))
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, default3);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default3()
-				,default2()
-				,default1()
+				, function(function)
+				, default3()
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, Variant());
 			}
@@ -1991,9 +1993,9 @@ namespace RBX
 			/*implement*/ void execute(Reflection::DescribedBase* instance, FunctionDescriptor::Arguments& arguments, boost::function<void(Variant)> resumeFunction, boost::function<void(std::string)> errorFunction) const
 			{
 				(boost::polymorphic_downcast<Class*>(instance)->*function)(
-					ArgHelper::getArg<Arg1, 1>(arguments, default1), 
-					ArgHelper::getArg<Arg2, 2>(arguments, default2), 
-					ArgHelper::getArg<Arg3, 3>(arguments, default3), 
+					ArgHelper::getArg<Arg1, 1>(arguments, default1),
+					ArgHelper::getArg<Arg2, 2>(arguments, default2),
+					ArgHelper::getArg<Arg3, 3>(arguments, default3),
 					boost::bind(&resume_adapter<ReturnType>, resumeFunction, _1), errorFunction);
 			}
 		};
@@ -2006,7 +2008,7 @@ namespace RBX
 			typedef typename boost::function_traits<Signature>::arg1_type Arg1;
 			typedef typename boost::function_traits<Signature>::arg2_type Arg2;
 			typedef typename boost::function_traits<Signature>::arg3_type Arg3;
-			typedef void (Class::*YieldFunctionPtr)(Arg1, Arg2, Arg3, boost::function<void(void)> resumeFunction, boost::function<void(std::string)> errorFunction);
+			typedef void (Class::* YieldFunctionPtr)(Arg1, Arg2, Arg3, boost::function<void(void)> resumeFunction, boost::function<void(std::string)> errorFunction);
 			YieldFunctionPtr function;
 
 			const boost::scoped_ptr<Arg1> default1;
@@ -2026,40 +2028,40 @@ namespace RBX
 		public:
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, Arg1 default1, const char* arg2Name, Arg2 default2, const char* arg3Name, Arg3 default3, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default3(new Arg3(default3))
-				,default2(new Arg2(default2))
-				,default1(new Arg1(default1))
+				, function(function)
+				, default3(new Arg3(default3))
+				, default2(new Arg2(default2))
+				, default1(new Arg1(default1))
 			{
 				declareSignature(arg1Name, default1, arg2Name, default2, arg3Name, default3);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, Arg2 default2, const char* arg3Name, Arg3 default3, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default3(new Arg3(default3))
-				,default2(new Arg2(default2))
-				,default1()
+				, function(function)
+				, default3(new Arg3(default3))
+				, default2(new Arg2(default2))
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, default2, arg3Name, default3);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, Arg3 default3, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default3(new Arg3(default3))
-				,default2()
-				,default1()
+				, function(function)
+				, default3(new Arg3(default3))
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, default3);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default3()
-				,default2()
-				,default1()
+				, function(function)
+				, default3()
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, Variant());
 			}
@@ -2067,9 +2069,9 @@ namespace RBX
 			/*implement*/ void execute(Reflection::DescribedBase* instance, FunctionDescriptor::Arguments& arguments, boost::function<void(Variant)> resumeFunction, boost::function<void(std::string)> errorFunction) const
 			{
 				(boost::polymorphic_downcast<Class*>(instance)->*function)(
-					ArgHelper::getArg<Arg1, 1>(arguments, default1), 
-					ArgHelper::getArg<Arg2, 2>(arguments, default2), 
-					ArgHelper::getArg<Arg3, 3>(arguments, default3), 
+					ArgHelper::getArg<Arg1, 1>(arguments, default1),
+					ArgHelper::getArg<Arg2, 2>(arguments, default2),
+					ArgHelper::getArg<Arg3, 3>(arguments, default3),
 					boost::bind(resumeFunction, Variant()), errorFunction);
 			}
 		};
@@ -2082,7 +2084,7 @@ namespace RBX
 			typedef typename boost::function_traits<Signature>::arg2_type Arg2;
 			typedef typename boost::function_traits<Signature>::arg3_type Arg3;
 			typedef typename boost::function_traits<Signature>::arg4_type Arg4;
-			typedef void (Class::*YieldFunctionPtr)(Arg1, Arg2, Arg3, Arg4, boost::function<void(ReturnType)> resumeFunction, boost::function<void(std::string)> errorFunction);
+			typedef void (Class::* YieldFunctionPtr)(Arg1, Arg2, Arg3, Arg4, boost::function<void(ReturnType)> resumeFunction, boost::function<void(std::string)> errorFunction);
 			YieldFunctionPtr function;
 
 			const boost::scoped_ptr<Arg1> default1;
@@ -2104,55 +2106,55 @@ namespace RBX
 		public:
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, Arg1 default1, const char* arg2Name, Arg2 default2, const char* arg3Name, Arg3 default3, const char* arg4Name, Arg4 default4, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default4(new Arg4(default4))
-				,default3(new Arg3(default3))
-				,default2(new Arg2(default2))
-				,default1(new Arg1(default1))
+				, function(function)
+				, default4(new Arg4(default4))
+				, default3(new Arg3(default3))
+				, default2(new Arg2(default2))
+				, default1(new Arg1(default1))
 			{
 				declareSignature(arg1Name, default1, arg2Name, default2, arg3Name, default3, arg4Name, default4);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, Arg2 default2, const char* arg3Name, Arg3 default3, const char* arg4Name, Arg4 default4, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default4(new Arg4(default4))
-				,default3(new Arg3(default3))
-				,default2(new Arg2(default2))
-				,default1()
+				, function(function)
+				, default4(new Arg4(default4))
+				, default3(new Arg3(default3))
+				, default2(new Arg2(default2))
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, default2, arg3Name, default3, arg4Name, default4);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, Arg3 default3, const char* arg4Name, Arg4 default4, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default4(new Arg4(default4))
-				,default3(new Arg3(default3))
-				,default2()
-				,default1()
+				, function(function)
+				, default4(new Arg4(default4))
+				, default3(new Arg3(default3))
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, default3, arg4Name, default4);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, const char* arg4Name, Arg4 default4, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default4(new Arg4(default4))
-				,default3()
-				,default2()
-				,default1()
+				, function(function)
+				, default4(new Arg4(default4))
+				, default3()
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, Variant(), arg4Name, default4);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, const char* arg4Name, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default4()
-				,default3()
-				,default2()
-				,default1()
+				, function(function)
+				, default4()
+				, default3()
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, Variant(), arg4Name, Variant());
 			}
@@ -2160,10 +2162,10 @@ namespace RBX
 			/*implement*/ void execute(Reflection::DescribedBase* instance, FunctionDescriptor::Arguments& arguments, boost::function<void(Variant)> resumeFunction, boost::function<void(std::string)> errorFunction) const
 			{
 				(boost::polymorphic_downcast<Class*>(instance)->*function)(
-					ArgHelper::getArg<Arg1, 1>(arguments, default1), 
-					ArgHelper::getArg<Arg2, 2>(arguments, default2), 
-					ArgHelper::getArg<Arg3, 3>(arguments, default3), 
-					ArgHelper::getArg<Arg4, 4>(arguments, default4), 
+					ArgHelper::getArg<Arg1, 1>(arguments, default1),
+					ArgHelper::getArg<Arg2, 2>(arguments, default2),
+					ArgHelper::getArg<Arg3, 3>(arguments, default3),
+					ArgHelper::getArg<Arg4, 4>(arguments, default4),
 					boost::bind(&resume_adapter<ReturnType>, resumeFunction, _1), errorFunction);
 			}
 		};
@@ -2177,7 +2179,7 @@ namespace RBX
 			typedef typename boost::function_traits<Signature>::arg2_type Arg2;
 			typedef typename boost::function_traits<Signature>::arg3_type Arg3;
 			typedef typename boost::function_traits<Signature>::arg4_type Arg4;
-			typedef void (Class::*YieldFunctionPtr)(Arg1, Arg2, Arg3, Arg4, boost::function<void(void)> resumeFunction, boost::function<void(std::string)> errorFunction);
+			typedef void (Class::* YieldFunctionPtr)(Arg1, Arg2, Arg3, Arg4, boost::function<void(void)> resumeFunction, boost::function<void(std::string)> errorFunction);
 			YieldFunctionPtr function;
 
 			const boost::scoped_ptr<Arg1> default1;
@@ -2199,65 +2201,65 @@ namespace RBX
 		public:
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, Arg1 default1, const char* arg2Name, Arg2 default2, const char* arg3Name, Arg3 default3, const char* arg4Name, Arg4 default4, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default4(new Arg4(default4))
-				,default3(new Arg3(default3))
-				,default2(new Arg2(default2))
-				,default1(new Arg1(default1))
+				, function(function)
+				, default4(new Arg4(default4))
+				, default3(new Arg3(default3))
+				, default2(new Arg2(default2))
+				, default1(new Arg1(default1))
 			{
 				declareSignature(arg1Name, default1, arg2Name, default2, arg3Name, default3, arg4Name, default4);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, Arg2 default2, const char* arg3Name, Arg3 default3, const char* arg4Name, Arg4 default4, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default4(new Arg4(default4))
-				,default3(new Arg3(default3))
-				,default2(new Arg2(default2))
-				,default1()
+				, function(function)
+				, default4(new Arg4(default4))
+				, default3(new Arg3(default3))
+				, default2(new Arg2(default2))
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, default2, arg3Name, default3, arg4Name, default4);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, Arg3 default3, const char* arg4Name, Arg4 default4, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default4(new Arg4(default4))
-				,default3(new Arg3(default3))
-				,default2()
-				,default1()
+				, function(function)
+				, default4(new Arg4(default4))
+				, default3(new Arg3(default3))
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, default3, arg4Name, default4);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, const char* arg4Name, Arg4 default4, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default4(new Arg4(default4))
-				,default3()
-				,default2()
-				,default1()
+				, function(function)
+				, default4(new Arg4(default4))
+				, default3()
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, Variant(), arg4Name, default4);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, const char* arg4Name, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default4()
-				,default3()
-				,default2()
-				,default1()
+				, function(function)
+				, default4()
+				, default3()
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, Variant(), arg4Name, Variant());
 			}
 			/*implement*/ void execute(Reflection::DescribedBase* instance, FunctionDescriptor::Arguments& arguments, boost::function<void(Variant)> resumeFunction, boost::function<void(std::string)> errorFunction) const
 			{
 				(boost::polymorphic_downcast<Class*>(instance)->*function)(
-					ArgHelper::getArg<Arg1, 1>(arguments, default1), 
-					ArgHelper::getArg<Arg2, 2>(arguments, default2), 
-					ArgHelper::getArg<Arg3, 3>(arguments, default3), 
-					ArgHelper::getArg<Arg4, 4>(arguments, default4), 
+					ArgHelper::getArg<Arg1, 1>(arguments, default1),
+					ArgHelper::getArg<Arg2, 2>(arguments, default2),
+					ArgHelper::getArg<Arg3, 3>(arguments, default3),
+					ArgHelper::getArg<Arg4, 4>(arguments, default4),
 					boost::bind(resumeFunction, Variant()), errorFunction);
 			}
 		};
@@ -2271,7 +2273,7 @@ namespace RBX
 			typedef typename boost::function_traits<Signature>::arg3_type Arg3;
 			typedef typename boost::function_traits<Signature>::arg4_type Arg4;
 			typedef typename boost::function_traits<Signature>::arg5_type Arg5;
-			typedef void (Class::*YieldFunctionPtr)(Arg1, Arg2, Arg3, Arg4, Arg5, boost::function<void(ReturnType)> resumeFunction, boost::function<void(std::string)> errorFunction);
+			typedef void (Class::* YieldFunctionPtr)(Arg1, Arg2, Arg3, Arg4, Arg5, boost::function<void(ReturnType)> resumeFunction, boost::function<void(std::string)> errorFunction);
 			YieldFunctionPtr function;
 
 			const boost::scoped_ptr<Arg1> default1;
@@ -2295,72 +2297,72 @@ namespace RBX
 		public:
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, Arg1 default1, const char* arg2Name, Arg2 default2, const char* arg3Name, Arg3 default3, const char* arg4Name, Arg4 default4, const char* arg5Name, Arg4 default5, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default5(new Arg5(default5))
-				,default4(new Arg4(default4))
-				,default3(new Arg3(default3))
-				,default2(new Arg2(default2))
-				,default1(new Arg1(default1))
+				, function(function)
+				, default5(new Arg5(default5))
+				, default4(new Arg4(default4))
+				, default3(new Arg3(default3))
+				, default2(new Arg2(default2))
+				, default1(new Arg1(default1))
 			{
 				declareSignature(arg1Name, default1, arg2Name, default2, arg3Name, default3, arg4Name, default4, arg5Name, default5);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, Arg2 default2, const char* arg3Name, Arg3 default3, const char* arg4Name, Arg4 default4, const char* arg5Name, Arg4 default5, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default5(new Arg5(default5))
-				,default4(new Arg4(default4))
-				,default3(new Arg3(default3))
-				,default2(new Arg2(default2))
-				,default1()
+				, function(function)
+				, default5(new Arg5(default5))
+				, default4(new Arg4(default4))
+				, default3(new Arg3(default3))
+				, default2(new Arg2(default2))
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, default2, arg3Name, default3, arg4Name, default4, arg5Name, default5);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, Arg3 default3, const char* arg4Name, Arg4 default4, const char* arg5Name, Arg5 default5, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default5(new Arg5(default5))
-				,default4(new Arg4(default4))
-				,default3(new Arg3(default3))
-				,default2()
-				,default1()
+				, function(function)
+				, default5(new Arg5(default5))
+				, default4(new Arg4(default4))
+				, default3(new Arg3(default3))
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, default3, arg4Name, default4, arg5Name, default5);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, const char* arg4Name, Arg4 default4, const char* arg5Name, Arg4 default5, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default5(new Arg5(default5))
-				,default4(new Arg4(default4))
-				,default3()
-				,default2()
-				,default1()
+				, function(function)
+				, default5(new Arg5(default5))
+				, default4(new Arg4(default4))
+				, default3()
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, Variant(), arg4Name, default4, arg5Name, default5);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, const char* arg4Name, const char* arg5Name, Arg4 default5, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default5(new Arg5(default5))
-				,default4()
-				,default3()
-				,default2()
-				,default1()
+				, function(function)
+				, default5(new Arg5(default5))
+				, default4()
+				, default3()
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, Variant(), arg4Name, Variant(), arg5Name, default5);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, const char* arg4Name, const char* arg5Name, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default5()
-				,default4()
-				,default3()
-				,default2()
-				,default1()
+				, function(function)
+				, default5()
+				, default4()
+				, default3()
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, Variant(), arg4Name, Variant(), arg5Name, Variant());
 			}
@@ -2368,11 +2370,11 @@ namespace RBX
 			/*implement*/ void execute(Reflection::DescribedBase* instance, FunctionDescriptor::Arguments& arguments, boost::function<void(Variant)> resumeFunction, boost::function<void(std::string)> errorFunction) const
 			{
 				(boost::polymorphic_downcast<Class*>(instance)->*function)(
-					ArgHelper::getArg<Arg1, 1>(arguments, default1), 
-					ArgHelper::getArg<Arg2, 2>(arguments, default2), 
-					ArgHelper::getArg<Arg3, 3>(arguments, default3), 
+					ArgHelper::getArg<Arg1, 1>(arguments, default1),
+					ArgHelper::getArg<Arg2, 2>(arguments, default2),
+					ArgHelper::getArg<Arg3, 3>(arguments, default3),
 					ArgHelper::getArg<Arg4, 4>(arguments, default4),
-					ArgHelper::getArg<Arg5, 5>(arguments, default5), 
+					ArgHelper::getArg<Arg5, 5>(arguments, default5),
 					boost::bind(&resume_adapter<ReturnType>, resumeFunction, _1), errorFunction);
 			}
 		};
@@ -2387,7 +2389,7 @@ namespace RBX
 			typedef typename boost::function_traits<Signature>::arg3_type Arg3;
 			typedef typename boost::function_traits<Signature>::arg4_type Arg4;
 			typedef typename boost::function_traits<Signature>::arg5_type Arg5;
-			typedef void (Class::*YieldFunctionPtr)(Arg1, Arg2, Arg3, Arg4, Arg5, boost::function<void(void)> resumeFunction, boost::function<void(std::string)> errorFunction);
+			typedef void (Class::* YieldFunctionPtr)(Arg1, Arg2, Arg3, Arg4, Arg5, boost::function<void(void)> resumeFunction, boost::function<void(std::string)> errorFunction);
 			YieldFunctionPtr function;
 
 			const boost::scoped_ptr<Arg1> default1;
@@ -2411,72 +2413,72 @@ namespace RBX
 		public:
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, Arg1 default1, const char* arg2Name, Arg2 default2, const char* arg3Name, Arg3 default3, const char* arg4Name, Arg4 default4, const char* arg5Name, Arg4 default5, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default5(new Arg5(default5))
-				,default4(new Arg4(default4))
-				,default3(new Arg3(default3))
-				,default2(new Arg2(default2))
-				,default1(new Arg1(default1))
+				, function(function)
+				, default5(new Arg5(default5))
+				, default4(new Arg4(default4))
+				, default3(new Arg3(default3))
+				, default2(new Arg2(default2))
+				, default1(new Arg1(default1))
 			{
 				declareSignature(arg1Name, default1, arg2Name, default2, arg3Name, default3, arg4Name, default4, arg5Name, default5);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, Arg2 default2, const char* arg3Name, Arg3 default3, const char* arg4Name, Arg4 default4, const char* arg5Name, Arg4 default5, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default5(new Arg5(default5))
-				,default4(new Arg4(default4))
-				,default3(new Arg3(default3))
-				,default2(new Arg2(default2))
-				,default1()
+				, function(function)
+				, default5(new Arg5(default5))
+				, default4(new Arg4(default4))
+				, default3(new Arg3(default3))
+				, default2(new Arg2(default2))
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, default2, arg3Name, default3, arg4Name, default4, arg5Name, default5);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, Arg3 default3, const char* arg4Name, Arg4 default4, const char* arg5Name, Arg5 default5, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default5(new Arg5(default5))
-				,default4(new Arg4(default4))
-				,default3(new Arg3(default3))
-				,default2()
-				,default1()
+				, function(function)
+				, default5(new Arg5(default5))
+				, default4(new Arg4(default4))
+				, default3(new Arg3(default3))
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, default3, arg4Name, default4, arg5Name, default5);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, const char* arg4Name, Arg4 default4, const char* arg5Name, Arg4 default5, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default5(new Arg5(default5))
-				,default4(new Arg4(default4))
-				,default3()
-				,default2()
-				,default1()
+				, function(function)
+				, default5(new Arg5(default5))
+				, default4(new Arg4(default4))
+				, default3()
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, Variant(), arg4Name, default4, arg5Name, default5);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, const char* arg4Name, const char* arg5Name, Arg4 default5, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default5(new Arg5(default5))
-				,default4()
-				,default3()
-				,default2()
-				,default1()
+				, function(function)
+				, default5(new Arg5(default5))
+				, default4()
+				, default3()
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, Variant(), arg4Name, Variant(), arg5Name, default5);
 			}
 
 			BoundYieldFuncDesc(YieldFunctionPtr function, const char* name, const char* arg1Name, const char* arg2Name, const char* arg3Name, const char* arg4Name, const char* arg5Name, Security::Permissions security, Descriptor::Attributes attributes = Descriptor::Attributes())
 				:YieldFuncDesc<Class>(name, security, attributes)
-				,function(function)
-				,default5()
-				,default4()
-				,default3()
-				,default2()
-				,default1()
+				, function(function)
+				, default5()
+				, default4()
+				, default3()
+				, default2()
+				, default1()
 			{
 				declareSignature(arg1Name, Variant(), arg2Name, Variant(), arg3Name, Variant(), arg4Name, Variant(), arg5Name, Variant());
 			}
@@ -2484,11 +2486,11 @@ namespace RBX
 			/*implement*/ void execute(Reflection::DescribedBase* instance, FunctionDescriptor::Arguments& arguments, boost::function<void(Variant)> resumeFunction, boost::function<void(std::string)> errorFunction) const
 			{
 				(boost::polymorphic_downcast<Class*>(instance)->*function)(
-					ArgHelper::getArg<Arg1, 1>(arguments, default1), 
-					ArgHelper::getArg<Arg2, 2>(arguments, default2), 
-					ArgHelper::getArg<Arg3, 3>(arguments, default3), 
+					ArgHelper::getArg<Arg1, 1>(arguments, default1),
+					ArgHelper::getArg<Arg2, 2>(arguments, default2),
+					ArgHelper::getArg<Arg3, 3>(arguments, default3),
 					ArgHelper::getArg<Arg4, 4>(arguments, default4),
-					ArgHelper::getArg<Arg5, 5>(arguments, default5), 
+					ArgHelper::getArg<Arg5, 5>(arguments, default5),
 					boost::bind(resumeFunction, Variant()), errorFunction);
 			}
 		};
@@ -2499,7 +2501,7 @@ namespace RBX
 		template <class Class, typename Signature>
 		class CustomBoundFuncDesc<Class, Signature, 0> : public BoundFuncDesc<Class, Signature, 0>
 		{
-			typedef int (Class::*CustomFunctionPtr)(lua_State*);
+			typedef int (Class::* CustomFunctionPtr)(lua_State*);
 			CustomFunctionPtr customFunction;
 
 		public:
@@ -2519,7 +2521,7 @@ namespace RBX
 		template <class Class, typename Signature>
 		class CustomBoundFuncDesc<Class, Signature, 1> : public BoundFuncDesc<Class, Signature, 1>
 		{
-			typedef int (Class::*CustomFunctionPtr)(lua_State*);
+			typedef int (Class::* CustomFunctionPtr)(lua_State*);
 			CustomFunctionPtr customFunction;
 
 		public:
@@ -2539,7 +2541,7 @@ namespace RBX
 		template <class Class, typename Signature>
 		class CustomBoundFuncDesc<Class, Signature, 2> : public BoundFuncDesc<Class, Signature, 2>
 		{
-			typedef int (Class::*CustomFunctionPtr)(lua_State*);
+			typedef int (Class::* CustomFunctionPtr)(lua_State*);
 			CustomFunctionPtr customFunction;
 
 		public:
@@ -2559,7 +2561,7 @@ namespace RBX
 		template <class Class, typename Signature>
 		class CustomBoundFuncDesc<Class, Signature, 3> : public BoundFuncDesc<Class, Signature, 3>
 		{
-			typedef int (Class::*CustomFunctionPtr)(lua_State*);
+			typedef int (Class::* CustomFunctionPtr)(lua_State*);
 			CustomFunctionPtr customFunction;
 
 		public:
@@ -2579,7 +2581,7 @@ namespace RBX
 		template <class Class, typename Signature>
 		class CustomBoundFuncDesc<Class, Signature, 4> : public BoundFuncDesc<Class, Signature, 4>
 		{
-			typedef int (Class::*CustomFunctionPtr)(lua_State*);
+			typedef int (Class::* CustomFunctionPtr)(lua_State*);
 			CustomFunctionPtr customFunction;
 
 		public:

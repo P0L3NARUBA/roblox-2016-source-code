@@ -113,7 +113,7 @@ ClientReplicator::GCJob::GCJob(Replicator& replicator)
 : ReplicatorJob("Replicator GC Job", replicator, DataModelJob::Write)
 , numSorted(0)
 , numRegionToGC(0)
-, renderingDistance(NULL)
+, renderingDistance(nullptr)
 , renderingRegionDistance(0x7FFF)
 , gcRegionDistance(0x7FFF)
 , maxRegionDistance(0x7FFF)
@@ -353,7 +353,7 @@ TaskScheduler::StepResult ClientReplicator::GCJob::stepDataModelJob(const Stats&
                             if (partInstance)
                             {
                                 RBX::ScopedAssign<Instance*> assign(clientRep->removingInstance, partInstance.get());
-                                partInstance->setParent(NULL);
+                                partInstance->setParent(nullptr);
                             }
                         }
                     }
@@ -409,7 +409,7 @@ void ClientReplicator::GCJob::coarsePrimitiveMovement(Primitive* p, const Update
 
 void ClientReplicator::GCJob::gcRegion(const StreamRegion::Id& regionId, RegionRemovalItem* removeItem)
 {
-	DenseHashSet<Primitive*> found(NULL);
+	DenseHashSet<Primitive*> found(nullptr);
 	spatialHash->getPrimitivesOverlapping(StreamRegion::extentsFromRegionId(regionId), found);
 
 	for (DenseHashSet<Primitive*>::const_iterator iter = found.begin(); iter != found.end(); ++iter)

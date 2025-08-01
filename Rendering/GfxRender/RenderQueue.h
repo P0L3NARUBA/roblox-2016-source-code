@@ -3,32 +3,27 @@
 #include <vector>
 #include <cstdlib>
 
-namespace RBX
-{
-	namespace Graphics
-	{
+namespace RBX {
+	namespace Graphics {
 
 		class GeometryBatch;
 		class Technique;
 
-		class Renderable
-		{
+		class Renderable {
 		public:
 			virtual ~Renderable();
 
-			virtual unsigned int getWorldTransforms4x3(float* buffer, unsigned int maxTransforms, const void** cacheKey) const = 0;
+			virtual uint32_t getWorldTransforms4x3(float* buffer, uint32_t maxTransforms, const void** cacheKey) const = 0;
 
 		protected:
-			static bool useCache(const void** cacheKey, const void* value)
-			{
+			static bool useCache(const void** cacheKey, const void* value) {
 				if (*cacheKey == value) return true;
 				*cacheKey = value;
 				return false;
 			}
 		};
 
-		struct RenderOperation
-		{
+		struct RenderOperation {
 			const Renderable* renderable;
 			float distanceKey;
 
@@ -36,8 +31,7 @@ namespace RBX
 			const GeometryBatch* geometry;
 		};
 
-		class RenderQueueGroup
-		{
+		class RenderQueueGroup {
 		public:
 			enum SortMode
 			{
@@ -50,18 +44,15 @@ namespace RBX
 
 			void sort(SortMode mode);
 
-			void push(const RenderOperation& op)
-			{
+			void push(const RenderOperation& op) {
 				operations.push_back(op);
 			}
 
-			const RenderOperation& operator[](unsigned int index) const
-			{
+			const RenderOperation& operator[](uint32_t index) const {
 				return operations[index];
 			}
 
-			size_t size() const
-			{
+			size_t size() const {
 				return operations.size();
 			}
 
@@ -69,17 +60,14 @@ namespace RBX
 			std::vector<RenderOperation> operations;
 		};
 
-		class RenderQueue
-		{
+		class RenderQueue {
 		public:
-			enum Pass
-			{
+			enum Pass {
 				Pass_Default,
 				Pass_Shadows
 			};
 
-			enum Id
-			{
+			enum Id {
 				Id_Opaque,
 				Id_OpaqueDecals,
 				Id_TransparentDecals,
@@ -92,8 +80,7 @@ namespace RBX
 				Id_Count
 			};
 
-			enum Features
-			{
+			enum Features {
 				Features_Glow = 1 << 0
 			};
 
@@ -101,17 +88,16 @@ namespace RBX
 
 			void clear();
 
-			RenderQueueGroup& getGroup(Id id)
-			{
+			RenderQueueGroup& getGroup(Id id) {
 				return groups[id];
 			}
 
-			unsigned int getFeatures() const { return features; }
-			void setFeature(unsigned int feature) { features |= feature; }
+			uint32_t getFeatures() const { return features; }
+			void setFeature(uint32_t feature) { features |= feature; }
 
 		private:
 			RenderQueueGroup groups[Id_Count];
-			unsigned int features;
+			uint32_t features;
 		};
 
 	}

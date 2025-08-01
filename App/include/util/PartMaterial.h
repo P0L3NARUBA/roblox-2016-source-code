@@ -62,4 +62,22 @@ namespace RBX {
 		LEGACY_MATERIAL	= 0xFFFF, // should not be serialized
 	};
 
+	enum AlphaMode {
+		TRANSPARENCY,
+		OVERLAY,
+		TINT,
+	};
+
+	enum ResamplingMode {
+		CLOSEST,
+		LINEAR,
+		CUBIC,
+	};
+
+	enum TilingMode {
+		REGULAR,
+		ORGANIC,
+		ROTATED_ORGANIC,
+	};
+
 }

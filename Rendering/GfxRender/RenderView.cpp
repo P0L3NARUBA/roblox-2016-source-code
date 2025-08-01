@@ -42,7 +42,6 @@
 #include "GfxBase/FrameRateManager.h"
 #include "util/Profiling.h"
 #include "util/IMetric.h"
-#include "util/RobloxGoogleAnalytics.h"
 
 #include "TextureManager.h"
 #include "AdornRender.h"
@@ -118,16 +117,16 @@ FASTFLAGVARIABLE(RenderLowLatencyLoop, false)
 FASTFLAGVARIABLE(RenderUIAs3DInVR, true)
 
 // Studs-to-meters ratio
-const float kVRScale = 3.f;
+const float kVRScale = 3.0f;
 
 // Canvas size for 2D UI in VR
-const float kVRUICanvas = 720;
+const float kVRUICanvas = 720.0f;
 
 // Depth of 2D UI in studs
-const float kVRUIDepth = 3;
+const float kVRUIDepth = 3.0f;
 
 // Field of view of 2D UI in degrees
-const float kVRUIFOV = 50;
+const float kVRUIFOV = 50.0f;
 
 #ifdef _WIN32
 extern "C"
@@ -138,21 +137,16 @@ extern "C"
 #endif
 
 
-namespace RBX
-{
+namespace RBX {
 
-	void RenderView_InitModule()
-	{
-		class RenderViewFactory : public IViewBaseFactory
-		{
+	void RenderView_InitModule() {
+		class RenderViewFactory : public IViewBaseFactory {
 		public:
-			RenderViewFactory()
-			{
+			RenderViewFactory() {
 				ViewBase::RegisterFactory(CRenderSettings::Direct3D11, this);
 			}
 
-			ViewBase* Create(CRenderSettings::GraphicsMode mode, OSContext* context, CRenderSettings* renderSettings)
-			{
+			ViewBase* Create(CRenderSettings::GraphicsMode mode, OSContext* context, CRenderSettings* renderSettings) {
 				return new Graphics::RenderView(mode, context, renderSettings);
 			}
 		};
@@ -166,32 +160,28 @@ namespace RBX
 
 }
 
-namespace RBX
-{
-	namespace Graphics
-	{
+namespace RBX {
+	namespace Graphics {
 		double busyWaitLoop(double ms);
 
-		class FrameRateManagerStatsItem : public RBX::Stats::Item
-		{
-			int qualityLevel;
+		class FrameRateManagerStatsItem : public RBX::Stats::Item {
+			uint32_t qualityLevel;
 			bool autoQuality;
-			int numberOfSettles;
+			uint32_t numberOfSettles;
 			double averageSwitches;
 			double averageFPS;
 
 		public:
 			FrameRateManagerStatsItem()
-				: qualityLevel(0)
+				: qualityLevel(0u)
 				, autoQuality(false)
-				, numberOfSettles(0)
-				, averageSwitches(0)
-				, averageFPS(0)
+				, numberOfSettles(0u)
+				, averageSwitches(0.0)
+				, averageFPS(0.0)
 			{
 			}
 
-			static shared_ptr<FrameRateManagerStatsItem> create()
-			{
+			static shared_ptr<FrameRateManagerStatsItem> create() {
 				shared_ptr<FrameRateManagerStatsItem> result = RBX::Creatable<RBX::Instance>::create<FrameRateManagerStatsItem>();
 
 				result->createBoundChildItem("QualityLevel", result->qualityLevel);
@@ -203,8 +193,7 @@ namespace RBX
 				return result;
 			}
 
-			void updateData(FrameRateManager* frm)
-			{
+			void updateData(FrameRateManager* frm) {
 				RBX::FrameRateManager::Metrics metrics = frm->GetMetrics();
 
 				qualityLevel = metrics.QualityLevel;
@@ -215,20 +204,17 @@ namespace RBX
 			}
 		};
 
-		struct GraphicsModeTranslation
-		{
+		struct GraphicsModeTranslation {
 			CRenderSettings::GraphicsMode settingsItem;
 			Device::API api;
 		};
 
-		static const unsigned validGraphicsModes = 3;
-		static const GraphicsModeTranslation gGraphicsModesTranslation[validGraphicsModes] =
-		{
-			{ CRenderSettings::Direct3D11, Device::API_Direct3D11},
+		static const uint8_t validGraphicsModes = 1u;
+		static const GraphicsModeTranslation gGraphicsModesTranslation[validGraphicsModes] = {
+			{ CRenderSettings::Direct3D11, Device::API_Direct3D11 },
 		};
 
-		static CoordinateFrame computeVRFrame(const DeviceVR::Pose& pose)
-		{
+		static CoordinateFrame computeVRFrame(const DeviceVR::Pose& pose) {
 			CoordinateFrame result;
 			result.translation = Vector3(pose.position) * kVRScale;
 			result.rotation = G3D::Quat(pose.orientation).toRotationMatrix();
@@ -236,60 +222,55 @@ namespace RBX
 			return result;
 		}
 
-		static Vector2 computeCanvasSize(Device* device)
-		{
-			if (device->getVR())
-			{
+		static Vector2 computeCanvasSize(Device* device) {
+			if (device->getVR()) {
 				return Vector2(kVRUICanvas, kVRUICanvas);
 			}
-			else if (Framebuffer* framebuffer = device->getMainFramebuffer())
-			{
-				int viewScale = (device->getCaps().retina) ? 2 : 1;
+			else if (Framebuffer* framebuffer = device->getMainFramebuffer()) {
+				uint32_t viewScale = (device->getCaps().retina) ? 2u : 1u;
 
 				return Vector2(framebuffer->getWidth(), framebuffer->getHeight()) / viewScale;
 			}
-			else
-			{
+			else {
 				return Vector2();
 			}
 		}
 
 		RenderView::RenderView(CRenderSettings::GraphicsMode graphicsMode, OSContext* context, CRenderSettings* renderSettings)
-			: deltaMs(0)
-			, timestampMs(0)
-			, prepareTime(0)
-			, totalRenderTime(0)
-			, prepareAverage(15)
-			, performAverage(15)
-			, presentAverage(15)
-			, artificialDelay(0)
+			: deltaMs(0.0)
+			, timestampMs(0.0)
+			, prepareTime(0.0f)
+			, totalRenderTime(0.0f)
+			, prepareAverage(15.0)
+			, performAverage(15.0)
+			, presentAverage(15.0)
+			, artificialDelay(0.0)
 			, gpuAverage(15)
 			, lightingValid(false)
 			, doScreenshot(false)
 			, adornsEnabled(true)
-			, outlinesEnabled(false)
-			, fogEndCurrentFRM(10000)
-			, fogEndTargetFRM(10000)
+			, fogEndCurrentFRM(10000.0f)
+			, fogEndTargetFRM(10000.0f)
 			, frameDataCallback(FrameDataCallback())
 		{
 			FASTLOG1(FLog::ViewRbxInit, "RenderView created - %p", this);
 
 #if defined(_WIN32) && !defined(RBX_PLATFORM_DURANGO)
-			timeBeginPeriod(1);
+			timeBeginPeriod(1u);
 #endif
 
-			bool translatioFound = false;
-			for (unsigned i = 0; i < validGraphicsModes; ++i)
-			{
-				if (gGraphicsModesTranslation[i].settingsItem == graphicsMode)
-				{
+			bool translationFound = false;
+			for (uint8_t i = 0u; i < validGraphicsModes; ++i) {
+				if (gGraphicsModesTranslation[i].settingsItem == graphicsMode) {
 					device.reset(Device::create(gGraphicsModesTranslation[i].api, context->hWnd));
-					translatioFound = true;
+
+					translationFound = true;
+
 					break;
 				}
 			}
 
-			if (!translatioFound)
+			if (!translationFound)
 				throw RBX::runtime_error("Not supported graphics mode");
 
 			const DeviceCaps& caps = device->getCaps();
@@ -303,41 +284,36 @@ namespace RBX
 			visualEngine.reset(new VisualEngine(device.get(), renderSettings));
 		}
 
-		void RenderView::enableAdorns(bool enable)
-		{
+		void RenderView::enableAdorns(bool enable) {
 			adornsEnabled = enable;
 		}
 
-		void RenderView::initResources()
-		{
+		void RenderView::initResources() {
 			FASTLOG1(FLog::ViewRbxInit, "RenderView::initResources - %p", this);
 
 			FASTLOG(FLog::ViewRbxInit, "RenderView::initResources finish");
 		}
 
-		void RenderView::bindWorkspace(boost::shared_ptr<RBX::DataModel> dataModel)
-		{
+		void RenderView::bindWorkspace(boost::shared_ptr<RBX::DataModel> dataModel) {
 			if (this->dataModel == dataModel)
 				return;
 
 			FASTLOG2(FLog::ViewRbxInit, "BindWorkspace, new datamodel %p, old datamodel: %p", dataModel.get(), this->dataModel.get());
 
 			this->lightingValid = false;
+			this->skyboxValid = false;
 			this->doScreenshot = false;
 
-			if (this->dataModel)
-			{
-				if (frameRateManagerStatsItem)
-				{
-					frameRateManagerStatsItem->setParent(NULL);
+			if (this->dataModel) {
+				if (frameRateManagerStatsItem) {
+					frameRateManagerStatsItem->setParent(nullptr);
 					frameRateManagerStatsItem.reset();
 				}
 
 				lightingChangedConnection.disconnect();
 				screenshotConnection.disconnect();
 
-				if (TextService* textService = ServiceProvider::create<TextService>(this->dataModel.get()))
-				{
+				if (TextService* textService = ServiceProvider::create<TextService>(this->dataModel.get())) {
 					textService->clearTypesetters();
 				}
 
@@ -346,29 +322,26 @@ namespace RBX
 
 			this->dataModel = dataModel;
 
-			if (this->dataModel)
-			{
+			if (this->dataModel) {
 				visualEngine->bindWorkspace(dataModel);
 
 				Lighting* lighting = ServiceProvider::create<Lighting>(dataModel.get());
 				lightingChangedConnection = lighting->lightingChangedSignal.connect(boost::bind(&RenderView::invalidateLighting, this, _1));
 				screenshotConnection = this->dataModel->screenshotSignal.connect(boost::bind(&RenderView::onTakeScreenshot, this));
 
-				if (TextService* textService = ServiceProvider::create<TextService>(dataModel.get()))
-				{
-					for (Text::Font font = Text::FONT_LEGACY; font != Text::FONT_LAST; font = Text::Font(font + 1))
-					{
-						if (FFlag::TypesettersReleaseResources)
-						{
+				if (TextService* textService = ServiceProvider::create<TextService>(dataModel.get())) {
+					for (Text::Font font = Text::FONT_LEGACY; font != Text::FONT_LAST; font = Text::Font(font + 1)) {
+						if (FFlag::TypesettersReleaseResources) {
 							visualEngine->getTypesetter(font)->loadResources(visualEngine->getTextureManager(), visualEngine->getGlyphAtlas());
 						}
+
 						textService->registerTypesetter(TextService::FromTextFont(font), visualEngine->getTypesetter(font));
 					}
 				}
 
 				FrameRateManager* frm = visualEngine->getFrameRateManager();
-				if (frm)
-				{
+
+				if (frm) {
 					frm->StartCapturingMetrics();
 
 					RBX::Stats::StatsService* stats = RBX::ServiceProvider::create<RBX::Stats::StatsService>(this->dataModel.get());
@@ -379,8 +352,7 @@ namespace RBX
 					frameRateManagerStatsItem->updateData(frm);
 				}
 
-				if (visualEngine->getDevice()->getMainFramebuffer())
-				{
+				if (visualEngine->getDevice()->getMainFramebuffer()) {
 					this->dataModel->setInitialScreenSize(computeCanvasSize(visualEngine->getDevice()));
 				}
 
@@ -397,48 +369,37 @@ namespace RBX
 		}
 
 
-		RenderView::~RenderView(void)
-		{
+		RenderView::~RenderView(void) {
 			bindWorkspace(boost::shared_ptr<RBX::DataModel>());
 
-			sendFeatureLevelStats();
+			//sendFeatureLevelStats();
 
 #if defined(_WIN32) && !defined(RBX_PLATFORM_DURANGO)
-			timeEndPeriod(1);
+			timeEndPeriod(1u);
 #endif
 			FASTLOG(FLog::ViewRbxInit, "RenderView destroyed");
 		}
 
-		void RenderView::sendFeatureLevelStats()
-		{
-			if (visualEngine.get() && visualEngine.get()->getDevice())
-			{
-				std::string osAndFeatureLvl = SystemUtil::osPlatform() + " " + visualEngine.get()->getDevice()->getFeatureLevel();
-				RBX::RobloxGoogleAnalytics::trackEvent(GA_CATEGORY_GAME, "GraphicsFeatureLevel", osAndFeatureLvl.c_str());
-			}
-		}
-
-		void RenderView::onResize(int cx, int cy)
+		void RenderView::onResize(uint32_t cx, uint32_t cy)
 		{
 		}
 
-		FrameRateManager* RenderView::getFrameRateManager()
-		{
+		FrameRateManager* RenderView::getFrameRateManager() {
 			return visualEngine->getFrameRateManager();
 		}
 
-		RBX::Instance* RenderView::getWorkspace()
-		{
+		RBX::Instance* RenderView::getWorkspace() {
 			return dataModel->getWorkspace();
 		}
 
-		void RenderView::invalidateLighting(bool updateSkybox)
-		{
+		void RenderView::invalidateLighting(bool updateSkybox) {
 			lightingValid = false;
+
+			if (updateSkybox)
+				skyboxValid = false;
 		}
 
-		void RenderView::onTakeScreenshot()
-		{
+		void RenderView::onTakeScreenshot() {
 			doScreenshot = true;
 		}
 
@@ -450,78 +411,36 @@ namespace RBX
 			return result;
 		}
 
-		void RenderView::updateFog() {
-			//static const float TAU = 0.04f; // dampening factor as in:   exp( -x * TAU )
-
-			RBX::Lighting* lighting = ServiceProvider::create<RBX::Lighting>(dataModel.get());
-
-			visualEngine->getSceneManager()->setFog(lighting->getFogColor(), lighting->getFogDensity(), lighting->getFogSunInfluence(), lighting->getFogSkybox(), lighting->getFogAffectSkybox());
-
-			/*if (FFlag::RenderFixFog)
-			{
-				float currDeltaFRM = fogEndTargetFRM - fogEndCurrentFRM;
-				if (currDeltaFRM > 0)
-					fogEndCurrentFRM += currDeltaFRM * TAU;
-				else
-					fogEndCurrentFRM = fogEndTargetFRM;
-
-				float fogEnd = std::max(fogEndCurrentFRM, lighting->getFogEnd() * 0.5f);
-				float fogStart = G3D::clamp(lighting->getFogStart(), 0.0f, fogEnd - 0.1f);
-
-				visualEngine->getSceneManager()->setFog(lighting->getFogColor(), fogStart, fogEnd);
-			}
-			else
-			{
-				float frmEnd = this->fogEndTargetFRM;
-				float fogStart = lighting->getFogStart();
-				float fogEnd = lighting->getFogEnd();
-				float range = fogEnd - fogStart;
-
-				// set fog
-				fogEnd = std::min(fogEnd, frmEnd);
-				float currDelta = fogEnd - this->fogEndCurrentFRM;
-				fogEnd = this->fogEndCurrentFRM += currDelta * TAU;
-				if (frmEnd < lighting->getFogEnd() && currDelta < 0)
-				{
-					fogEnd = this->fogEndCurrentFRM = frmEnd; // force instant transition
-				}
-
-				fogEnd = this->fogEndCurrentFRM = std::max(fogEnd, lighting->getFogEnd() * 0.5f);
-				fogStart = fogEnd - range * (fogEnd / lighting->getFogEnd());
-
-				// Make sure fog range is not empty to avoid issues
-				fogStart = G3D::clamp(fogStart, 0.0f, fogEnd - 0.1f);
-
-				visualEngine->getSceneManager()->setFog(lighting->getFogColor(), fogStart, fogEnd);
-			}*/
-		}
-
 		void RenderView::updateLighting(Lighting* lighting) {
-			SceneManager* smgr = visualEngine->getSceneManager();
+			SceneManager* sceneManager = visualEngine->getSceneManager();
 
+			// Lighting
 			if (!lightingValid) {
-				Sky* sky = smgr->getSky();
-
-				if (lighting->sky) {
-					sky->setSkyBox(lighting->sky->getSkyboxRt(), lighting->sky->getSkyboxLf(), lighting->sky->getSkyboxBk(), lighting->sky->getSkyboxFt(), lighting->sky->getSkyboxUp(), lighting->sky->getSkyboxDn(), lighting->sky->getSkyboxHDRI());
-					sky->update(lighting->getSkyParameters(), lighting->sky->getNumStars(), lighting->sky->getDrawCelestialBodies(), lighting->sky->getUseHDRI());
-				}
-				else {
-					sky->setSkyBoxDefault();
-					sky->update(lighting->getSkyParameters(), 3000, true, true);
-				}
-
-				// Lighting
 				presetLighting(lighting);
 
 				lightingValid = true;
 			}
-		}
 
-		static void reportVRUsage(int placeId) {
-			std::string placeIdStr = format("%d", placeId);
+			// Skybox
+			if (!skyboxValid) {
+				shared_ptr<RBX::Sky> lightingSky = lighting->sky;
+				Sky* sky = sceneManager->getSky();
 
-			RobloxGoogleAnalytics::trackEventWithoutThrottling(GA_CATEGORY_GAME, "VR", placeIdStr.c_str());
+				if (lightingSky) {
+					sky->setSkyBox(lightingSky->getSkyboxRt(), lightingSky->getSkyboxLf(), lightingSky->getSkyboxBk(), lightingSky->getSkyboxFt(), lightingSky->getSkyboxUp(), lightingSky->getSkyboxDn(), lightingSky->getSkyboxHDRI());
+					sky->update(lighting->getSkyParameters(), lightingSky->getNumStars(), lightingSky->getDrawCelestialBodies(), lightingSky->getUseHDRI());
+				}
+				else {
+					sky->setSkyBoxDefault();
+					sky->update(lighting->getSkyParameters(), 3000u, true, true);
+				}
+
+				skyboxValid = true;
+			}
+
+			presetPostProcess(lighting);
+
+			presetProcessing(lighting);
 		}
 
 		void RenderView::updateVR() {
@@ -531,12 +450,6 @@ namespace RBX
 			RBXPROFILER_SCOPE("Render", "updateVR");
 
 			if (DeviceVR* vr = visualEngine->getDevice()->getVR()) {
-				// GA
-				if (dataModel && dataModel->getPlaceID()) {
-					static boost::once_flag flag = BOOST_ONCE_INIT;
-					boost::call_once(flag, boost::bind(&reportVRUsage, dataModel->getPlaceID()));
-				}
-
 				// Disable throttling for VR (ideally render job should control this...)
 				TaskScheduler::singleton().DataModel30fpsThrottle = false;
 
@@ -602,26 +515,22 @@ namespace RBX
 		}
 
 		const char* RenderView::getVRDeviceName() {
-			return device->getVR() ? "VR" : 0;
+			return device->getVR() ? "VR" : nullptr;
 		}
 
 		double RenderView::getMetricValue(const std::string& name) {
 			FrameRateManager* frm = visualEngine->getFrameRateManager();
 
-			if (name == "Delta Between Renders")
-			{
-				return frm != NULL ? frm->GetFrameTimeAverage() : 0.0;
+			if (name == "Delta Between Renders") {
+				return frm != nullptr ? frm->GetFrameTimeAverage() : 0.0;
 			}
-			else if (name == "Total Render")
-			{
-				return frm != NULL ? frm->GetRenderTimeAverage() : 0.0;
+			else if (name == "Total Render") {
+				return frm != nullptr ? frm->GetRenderTimeAverage() : 0.0;
 			}
-			else if (name == "Present Time")
-			{
+			else if (name == "Present Time") {
 				return presentAverage.getStats().average;
 			}
-			else if (name == "GPU Delay")
-			{
+			else if (name == "GPU Delay") {
 				return gpuAverage.getStats().average;
 			}
 
@@ -629,14 +538,14 @@ namespace RBX
 		}
 
 		std::string RenderView::getRenderStatsMetric(const std::string& name) {
-			if (name.compare(0, 15, "RenderStatsPass") == 0) {
+			if (name.compare(0u, 15u, "RenderStatsPass") == 0) {
 				RenderPassStats* stats =
 					(name == "RenderStatsPassScene") ? &visualEngine->getRenderStats()->passScene :
 					(name == "RenderStatsPassShadow") ? &visualEngine->getRenderStats()->passShadow :
 					(name == "RenderStatsPassUI") ? &visualEngine->getRenderStats()->passUI :
 					(name == "RenderStatsPass3dAdorns") ? &visualEngine->getRenderStats()->pass3DAdorns :
 					(name == "RenderStatsPassTotal") ? &visualEngine->getRenderStats()->passTotal :
-					NULL;
+					nullptr;
 
 				if (!stats) return "unknown pass";
 
@@ -689,7 +598,7 @@ namespace RBX
 				return RBX::format("fast %dc %dp mega %dc queue %dc",
 					stats->lastFrameFast.clusters, stats->lastFrameFast.parts,
 					stats->lastFrameMegaClusterChunks,
-					int(su->getUpdateQueueSize()));
+					int32_t(su->getUpdateQueueSize()));
 			}
 
 			if (name == "RenderStatsClusters") {
@@ -729,7 +638,7 @@ namespace RBX
 			if (name == "RenderStatsFRMTargetTime") {
 				FrameRateManager* frm = visualEngine->getFrameRateManager();
 
-				if (frm->GetQualityLevel() > 0 && frm->GetQualityLevel() < CRenderSettings::QualityLevelMax - 1)
+				if (frm->GetQualityLevel() > 0u && frm->GetQualityLevel() < CRenderSettings::QualityLevelMax - 1u)
 					return RBX::format("frame %.1f render %1.f throttle %u", frm->GetTargetFrameTimeForNextLevel(), frm->GetTargetRenderTimeForNextLevel(), frm->getPhysicsThrottling());
 				else
 					return RBX::format("frame n/a render n/a throttle %u", frm->getPhysicsThrottling());
@@ -742,10 +651,10 @@ namespace RBX
 				const TextureCompositorStats& stats = tc->getStatistics();
 
 				return RBX::format("%dM hq %d (%dM) lq %d (%dM) cache %d (%dM)",
-					config.budget / 1048576,
-					stats.liveHQCount, stats.liveHQSize / 1048576,
-					stats.liveLQCount, stats.liveLQSize / 1048576,
-					stats.orphanedCount, stats.orphanedSize / 1048576);
+					config.budget / 1048576u,
+					stats.liveHQCount, stats.liveHQSize / 1048576u,
+					stats.liveLQCount, stats.liveLQSize / 1048576u,
+					stats.orphanedCount, stats.orphanedSize / 1048576u);
 			}
 
 			if (name == "RenderStatsTM") {
@@ -753,8 +662,8 @@ namespace RBX
 
 				return RBX::format("queued %d live %d (%dM) cache %d (%dM)",
 					stats.queuedCount,
-					stats.liveCount, stats.liveSize / 1048576,
-					stats.orphanedCount, stats.orphanedSize / 1048576);
+					stats.liveCount, stats.liveSize / 1048576u,
+					stats.orphanedCount, stats.orphanedSize / 1048576u);
 			}
 
 			if (name == "RenderStatsLightGrid") {
@@ -806,14 +715,14 @@ namespace RBX
 			}
 
 			virtual std::string getMetric(const std::string& metric) const {
-				if (metric.compare(0, 11, "RenderStats") == 0)
+				if (metric.compare(0u, 11u, "RenderStats") == 0)
 					return view->getRenderStatsMetric(metric);
 				else
 					return parent->getMetric(metric);
 			}
 
 			virtual double getMetricValue(const std::string& metric) const {
-				if (metric.compare(0, 3, "FRM") == 0)
+				if (metric.compare(0u, 3u, "FRM") == 0)
 					return view->getFrameRateManager()->getMetricValue(metric);
 				else
 					return parent->getMetricValue(metric);
@@ -843,8 +752,8 @@ namespace RBX
 
 			visualEngine->reloadQueuedAssets();
 
-			double newtimeMs = Time::now(Time::Precise).timestampSeconds() * 1000;
-			if (timestampMs != 0) {
+			double newtimeMs = Time::now(Time::Precise).timestampSeconds() * 1000.0;
+			if (timestampMs != 0.0) {
 				deltaMs = (newtimeMs - timestampMs);
 			}
 			timestampMs = newtimeMs;
@@ -871,7 +780,6 @@ namespace RBX
 			Lighting* lighting = ServiceProvider::find<Lighting>(dataModel.get());
 			RBXASSERT(lighting);
 
-			updateFog();
 			visualEngine->getSceneManager()->trackLightingTimeOfDay(lighting->getGameTime());
 
 			Workspace* workspace = dataModel->getWorkspace();
@@ -907,14 +815,14 @@ namespace RBX
 
 					CoordinateFrame cframe = cameraobj->getRenderingCoordinateFrame();
 
-					float uiFovTan = tanf(G3D::toRadians(kVRUIFOV / 2));
+					float uiFovTan = tanf(G3D::toRadians(kVRUIFOV / 2.0f));
 					float uiDepth = kVRUIDepth;
-					float uiSize = uiDepth * uiFovTan * 2;
+					float uiSize = uiDepth * uiFovTan * 2.0f;
 
 					cframe.translation += cframe.lookVector() * uiDepth;
 					cframe.translation -= cframe.rightVector() * uiSize * 0.5f;
 					cframe.translation += cframe.upVector() * uiSize * 0.5f;
-					cframe.rotation *= Matrix3::fromDiagonal(Vector3(uiSize / viewport.width(), uiSize / viewport.height(), 1));
+					cframe.rotation *= Matrix3::fromDiagonal(Vector3(uiSize / viewport.width(), uiSize / viewport.height(), 1.0f));
 
 					AdornBillboarder adornView(adorn, viewport, cframe, /* alwaysOnTop= */ true);
 
@@ -929,7 +837,7 @@ namespace RBX
 
 			updateLighting(lighting);
 
-			float dt = frm->GetFrameTimeStats().getLatest() / 1000.f;
+			float dt = frm->GetFrameTimeStats().getLatest() / 1000.0f;
 
 			visualEngine->getWater()->update(dataModel.get(), dt);
 
@@ -937,25 +845,12 @@ namespace RBX
 
 			visualEngine->getTextureCompositor()->update(poi);
 
-			if (RBX::Lighting* Ligh = ServiceProvider::find<Lighting>(dataModel.get())) {
-				presetPostProcess(Ligh);
-			}
-
 			// Pass FRM configuration to shaders
 			GlobalShaderData& globalShaderData = visualEngine->getSceneManager()->writeGlobalShaderData();
 
 			float shadingDistance = std::max(frm->getShadingDistance(), 0.1f);
 			float fovCoefficient = visualEngine->getCamera().getProjectionMatrix()[1][1];
 			float outlineScaling = fovCoefficient * visualEngine->getViewHeight() * (10.0f / FInt::OutlineThickness) * (1.0f / 2.0f) / shadingDistance;
-
-			float brightnessMulFactor = outlinesEnabled ? (FInt::OutlineBrightnessMax - FInt::OutlineBrightnessMin) / 255.0f : 0.0f;
-			float brightnessAddFactor = outlinesEnabled ? FInt::OutlineBrightnessMin / 255.0f : 1.0f;
-
-			float shadowFade = powf(G3D::clamp(lighting->getSkyParameters().lightDirection.unit().y, 0.f, 1.f), 1.f / 4);
-			float shadowIntensity = shadowFade * (FInt::RenderShadowIntensity / 100.f);
-
-			/*globalShaderData.FadeDistance_GlowFactor = Vector4(shadingDistance, 1.f / shadingDistance, outlineScaling, globalShaderData.FadeDistance_GlowFactor.w);
-			globalShaderData.OutlineBrightness_ShadowInfo = Vector4(brightnessMulFactor, brightnessAddFactor, 0, shadowIntensity);*/
 
 			FASTLOG(FLog::ViewRbxBase, "Render prepare end");
 			prepareTime = timer.delta().msec();
@@ -967,17 +862,17 @@ namespace RBX
 
 			Framebuffer* fb = visualEngine->getDevice()->getMainFramebuffer();
 
-			static const unsigned lineWidth = 2;
-			unsigned w = fb->getWidth();
-			unsigned h = fb->getHeight();
+			static const uint32_t lineWidth = 2u;
+			uint32_t w = fb->getWidth();
+			uint32_t h = fb->getHeight();
 
-			Rect2D screen = Rect2D::xywh(0, 0, w, h);
-			Rect2D paddedScreen = Rect2D::xywh(lineWidth, lineWidth, w - lineWidth * 2, h - lineWidth * 2);
+			Rect2D screen = Rect2D::xywh(0.0f, 0.0f, w, h);
+			Rect2D paddedScreen = Rect2D::xywh(lineWidth, lineWidth, float(w - lineWidth * 2u), float(h - lineWidth * 2u));
 
-			videoFrameVertexStreamer->rectBlt(shared_ptr<Texture>(), Color4(1, 0, 0), screen.corner(3), paddedScreen.corner(3), screen.corner(0), paddedScreen.corner(0), Vector2::zero(), Vector2::zero(), BatchTextureType_Color, true);
-			videoFrameVertexStreamer->rectBlt(shared_ptr<Texture>(), Color4(1, 0, 0), paddedScreen.corner(2), screen.corner(2), paddedScreen.corner(1), screen.corner(1), Vector2::zero(), Vector2::zero(), BatchTextureType_Color, true);
-			videoFrameVertexStreamer->rectBlt(shared_ptr<Texture>(), Color4(1, 0, 0), paddedScreen.corner(0), paddedScreen.corner(1), screen.corner(0), screen.corner(1), Vector2::zero(), Vector2::zero(), BatchTextureType_Color, true);
-			videoFrameVertexStreamer->rectBlt(shared_ptr<Texture>(), Color4(1, 0, 0), screen.corner(3), screen.corner(2), paddedScreen.corner(3), paddedScreen.corner(2), Vector2::zero(), Vector2::zero(), BatchTextureType_Color, true);
+			videoFrameVertexStreamer->rectBlt(shared_ptr<Texture>(), Color4(1.0f, 0.0f, 0.0f), screen.corner(3), paddedScreen.corner(3), screen.corner(0), paddedScreen.corner(0), Vector2::zero(), Vector2::zero(), BatchTextureType_Color, true);
+			videoFrameVertexStreamer->rectBlt(shared_ptr<Texture>(), Color4(1.0f, 0.0f, 0.0f), paddedScreen.corner(2), screen.corner(2), paddedScreen.corner(1), screen.corner(1), Vector2::zero(), Vector2::zero(), BatchTextureType_Color, true);
+			videoFrameVertexStreamer->rectBlt(shared_ptr<Texture>(), Color4(1.0f, 0.0f, 0.0f), paddedScreen.corner(0), paddedScreen.corner(1), screen.corner(0), screen.corner(1), Vector2::zero(), Vector2::zero(), BatchTextureType_Color, true);
+			videoFrameVertexStreamer->rectBlt(shared_ptr<Texture>(), Color4(1.0f, 0.0f, 0.0f), screen.corner(3), screen.corner(2), paddedScreen.corner(3), paddedScreen.corner(2), Vector2::zero(), Vector2::zero(), BatchTextureType_Color, true);
 
 			videoFrameVertexStreamer->renderPrepare();
 			videoFrameVertexStreamer->render2D(context, w, h, visualEngine->getRenderStats()->passUI);
@@ -997,22 +892,22 @@ namespace RBX
 			if (!vrDebugTexture || vrDebugTexture->getWidth() != eyeFramebuffer->getWidth() || vrDebugTexture->getHeight() != eyeFramebuffer->getHeight())
 				vrDebugTexture = visualEngine->getDevice()->createTexture(Texture::Type_2D, Texture::Format_RGBA8, eyeFramebuffer->getWidth(), eyeFramebuffer->getHeight(), 1, 1, Texture::Usage_Renderbuffer);
 
-			int w = mainFramebuffer->getWidth();
-			int h = mainFramebuffer->getHeight();
+			uint32_t w = mainFramebuffer->getWidth();
+			uint32_t h = mainFramebuffer->getHeight();
 
-			int x = (w - h) / 2;
+			uint32_t x = (w - h) / 2u;
 
 			const float clearColor[4] = {};
 
 			context->copyFramebuffer(eyeFramebuffer, vrDebugTexture.get());
 
 			context->bindFramebuffer(mainFramebuffer);
-			context->clearFramebuffer(DeviceContext::Buffer_Color, clearColor, 1.f, 0);
+			context->clearFramebuffer(DeviceContext::Buffer_Color, clearColor, 1.0f, 0u);
 
-			vrVertexStreamer->rectBlt(vrDebugTexture, Color4(1, 1, 1),
+			vrVertexStreamer->rectBlt(vrDebugTexture, Color4(1.0f, 1.0f, 1.0f),
 				Vector2(x, h), Vector2(w - x, h),
-				Vector2(x, 0), Vector2(w - x, 0),
-				Vector2(0, 0), Vector2(1, 1), BatchTextureType_Color, false);
+				Vector2(x, 0.0f), Vector2(w - x, 0.0f),
+				Vector2(0.0f, 0.0f), Vector2(1.0f, 1.0f), BatchTextureType_Color, false);
 
 			vrVertexStreamer->renderPrepare();
 			vrVertexStreamer->render2D(context, w, h, visualEngine->getRenderStats()->passUI);
@@ -1020,8 +915,8 @@ namespace RBX
 		}
 
 		namespace {
-			const int g_MicroProfileFontTextureX = 1024;
-			const int g_MicroProfileFontTextureY = 9;
+			const uint32_t g_MicroProfileFontTextureX = 1024u;
+			const uint32_t g_MicroProfileFontTextureY = 9u;
 
 			const uint16_t g_MicroProfileFontDescription[] = {
 				0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,0x0ce,
@@ -1129,35 +1024,36 @@ namespace RBX
 				colorOrderBGR = device->getCaps().colorOrderBGR;
 
 				std::vector<VertexLayout::Element> elements;
-				elements.push_back(VertexLayout::Element(0, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
-				elements.push_back(VertexLayout::Element(0, 12u, VertexLayout::Format_Float2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture));
-				elements.push_back(VertexLayout::Element(0, 20u, VertexLayout::Format_Float4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Color));
+				elements.push_back(VertexLayout::Element(0u, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
+				elements.push_back(VertexLayout::Element(0u, 12u, VertexLayout::Format_Float2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture));
+				elements.push_back(VertexLayout::Element(0u, 20u, VertexLayout::Format_Float4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Color));
 
 				layout = device->createVertexLayout(elements);
 
-				const size_t fontSize = g_MicroProfileFontTextureX * g_MicroProfileFontTextureY * 4;
+				const uint32_t fontSize = g_MicroProfileFontTextureX * g_MicroProfileFontTextureY * 4u;
 
 				uint32_t* pUnpacked = (uint32_t*)alloca(fontSize);
 
-				int idx = 0;
-				int end = g_MicroProfileFontTextureX * g_MicroProfileFontTextureY / 8;
+				uint32_t idx = 0u;
+				uint32_t end = g_MicroProfileFontTextureX * g_MicroProfileFontTextureY / 8u;
 
-				for (int i = 0; i < end; i++) {
-					unsigned char pValue = g_MicroProfileFont[i];
-					for (int j = 0; j < 8; ++j) {
-						pUnpacked[idx++] = (pValue & 0x80) ? 0xffffffff : 0;
+				for (uint32_t i = 0u; i < end; i++) {
+					uint8_t pValue = g_MicroProfileFont[i];
+
+					for (uint32_t j = 0u; j < 8u; ++j) {
+						pUnpacked[idx++] = (pValue & 0x80u) ? 0xffffffff : 0u;
 						pValue <<= 1;
 					}
 				}
 
-				pUnpacked[idx - 1] = 0xffffffff;
+				pUnpacked[idx - 1u] = 0xffffffff;
 
-				fontTexture = device->createTexture(Texture::Type_2D, Texture::Format_RGBA8, g_MicroProfileFontTextureX, g_MicroProfileFontTextureY, 1, 1, Texture::Usage_Static);
+				fontTexture = device->createTexture(Texture::Type_2D, Texture::Format_RGBA8, g_MicroProfileFontTextureX, g_MicroProfileFontTextureY, 1u, 1u, Texture::Usage_Static);
 
-				fontTexture->upload(0, 0, TextureRegion(0, 0, g_MicroProfileFontTextureX, g_MicroProfileFontTextureY), pUnpacked, fontSize);
+				fontTexture->upload(0u, 0u, TextureRegion(0u, 0u, g_MicroProfileFontTextureX, g_MicroProfileFontTextureY), pUnpacked, fontSize);
 			}
 
-			void drawText(int x, int y, unsigned int color, const char* text, unsigned int length, unsigned int textWidth, unsigned int textHeight) override {
+			void drawText(int32_t x, int32_t y, uint32_t color, const char* text, uint32_t length, uint32_t textWidth, uint32_t textHeight) override {
 				const float fOffsetU = float(textWidth) / float(g_MicroProfileFontTextureX);
 
 				float fX = (float)x;
@@ -1169,14 +1065,14 @@ namespace RBX
 				if (!colorOrderBGR)
 					color = 0xff000000 | ((color & 0xff) << 16) | (color & 0xff00) | ((color >> 16) & 0xff);
 
-				for (uint32_t j = 0; j < length; ++j) {
+				for (uint32_t j = 0u; j < length; ++j) {
 					int16_t nOffset = g_MicroProfileFontDescription[uint8_t(*pStr++)];
 					float fOffset = float(nOffset) / float(g_MicroProfileFontTextureX);
 
-					Vertex v0 = { fX, fY, fOffset, 0.f, color };
-					Vertex v1 = { fX + textWidth, fY, fOffset + fOffsetU, 0.f, color };
-					Vertex v2 = { fX + textWidth, fY2, fOffset + fOffsetU, 1.f, color };
-					Vertex v3 = { fX, fY2, fOffset, 1.f, color };
+					Vertex v0 = { fX, fY, fOffset, 0.0f, color };
+					Vertex v1 = { fX + textWidth, fY, fOffset + fOffsetU, 0.0f, color };
+					Vertex v2 = { fX + textWidth, fY2, fOffset + fOffsetU, 1.0f, color };
+					Vertex v3 = { fX, fY2, fOffset, 1.0f, color };
 
 					quads.push_back(v0);
 					quads.push_back(v1);
@@ -1185,20 +1081,20 @@ namespace RBX
 					quads.push_back(v2);
 					quads.push_back(v3);
 
-					fX += textWidth + 1;
+					fX += textWidth + 1u;
 				}
 			}
 
-			void drawBox(int x0, int y0, int x1, int y1, unsigned int color0, unsigned int color1) override {
+			void drawBox(int32_t x0, int32_t y0, int32_t x1, int32_t y1, uint32_t color0, uint32_t color1) override {
 				if (!colorOrderBGR) {
-					color0 = ((color0 & 0xff) << 16) | ((color0 >> 16) & 0xff) | (0xff00ff00 & color0);
-					color1 = ((color1 & 0xff) << 16) | ((color1 >> 16) & 0xff) | (0xff00ff00 & color1);
+					color0 = ((color0 & 0xffu) << 16u) | ((color0 >> 16u) & 0xffu) | (0xff00ff00 & color0);
+					color1 = ((color1 & 0xffu) << 16u) | ((color1 >> 16u) & 0xffu) | (0xff00ff00 & color1);
 				}
 
-				Vertex v0 = { (float)x0, (float)y0, 2.f, 2.f, color0 };
-				Vertex v1 = { (float)x1, (float)y0, 2.f, 2.f, color0 };
-				Vertex v2 = { (float)x1, (float)y1, 2.f, 2.f, color1 };
-				Vertex v3 = { (float)x0, (float)y1, 2.f, 2.f, color1 };
+				Vertex v0 = { (float)x0, (float)y0, 2.0f, 2.0f, color0 };
+				Vertex v1 = { (float)x1, (float)y0, 2.0f, 2.0f, color0 };
+				Vertex v2 = { (float)x1, (float)y1, 2.0f, 2.0f, color1 };
+				Vertex v3 = { (float)x0, (float)y1, 2.0f, 2.0f, color1 };
 
 				quads.push_back(v0);
 				quads.push_back(v1);
@@ -1208,13 +1104,13 @@ namespace RBX
 				quads.push_back(v3);
 			}
 
-			void drawLine(unsigned int vertexCount, const float* vertexData, unsigned int color) override {
+			void drawLine(uint32_t vertexCount, const float* vertexData, uint32_t color) override {
 				if (!colorOrderBGR)
-					color = ((color & 0xff) << 16) | ((color >> 16) & 0xff) | (0xff00ff00 & color);
+					color = ((color & 0xffu) << 16u) | ((color >> 16u) & 0xffu) | (0xff00ff00 & color);
 
-				for (unsigned int i = 0; i + 1 < vertexCount; ++i) {
-					Vertex v0 = { vertexData[2 * i + 0], vertexData[2 * i + 1], 2.f, 2.f, color };
-					Vertex v1 = { vertexData[2 * i + 2], vertexData[2 * i + 3], 2.f, 2.f, color };
+				for (uint32_t i = 0u; i + 1u < vertexCount; ++i) {
+					Vertex v0 = { vertexData[2u * i + 0u], vertexData[2u * i + 1u], 2.0f, 2.0f, color };
+					Vertex v1 = { vertexData[2u * i + 2u], vertexData[2u * i + 3u], 2.0f, 2.0f, color };
 
 					lines.push_back(v0);
 					lines.push_back(v1);
@@ -1241,13 +1137,13 @@ namespace RBX
 					context->setBlendState(BlendState::Mode_AlphaBlend);
 					context->setDepthState(DepthState(DepthState::Function_Always, false));
 
-					context->bindTexture(0, fontTexture.get(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+					context->bindTexture(0u, fontTexture.get(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 
 					if (!quads.empty())
-						context->draw(quadsGeometry.get(), Geometry::Primitive_Triangles, 0, quads.size(), 0, quads.size());
+						context->draw(quadsGeometry.get(), Geometry::Primitive_Triangles, 0u, quads.size(), 0u, quads.size());
 
 					if (!lines.empty())
-						context->draw(linesGeometry.get(), Geometry::Primitive_Lines, 0, lines.size(), 0, lines.size());
+						context->draw(linesGeometry.get(), Geometry::Primitive_Lines, 0u, lines.size(), 0u, lines.size());
 				}
 
 				quads.clear();
@@ -1258,7 +1154,7 @@ namespace RBX
 			struct Vertex {
 				float x, y;
 				float u, v;
-				unsigned int color;
+				uint32_t color;
 			};
 
 			VisualEngine* visualEngine;
@@ -1282,9 +1178,9 @@ namespace RBX
 				if (vertices.empty()) return;
 
 				if (!vb || vb->getElementCount() < vertices.size()) {
-					size_t count = 1;
+					size_t count = 1u;
 					while (count < vertices.size())
-						count *= 2;
+						count *= 2u;
 
 					vb = visualEngine->getDevice()->createVertexBuffer(sizeof(Vertex), count, GeometryBuffer::Usage_Dynamic);
 					geometry = visualEngine->getDevice()->createGeometry(layout, vb, shared_ptr<IndexBuffer>());
@@ -1330,8 +1226,8 @@ namespace RBX
 
 			FASTLOG(FLog::ViewRbxBase, "Render perform start");
 
-			double performTime = 0;
-			double presentTime = 0;
+			double performTime = 0.0;
+			double presentTime = 0.0;
 
 			Adorn* adorn = visualEngine->getAdorn();
 
@@ -1349,7 +1245,7 @@ namespace RBX
 
 				visualEngine->getTextureManager()->processPendingRequests();
 
-				context->setDefaultAnisotropy(std::max(1, visualEngine->getFrameRateManager()->getTextureAnisotropy()));
+				context->setDefaultAnisotropy(std::max(1u, visualEngine->getFrameRateManager()->getTextureAnisotropy()));
 
 				visualEngine->getTextureCompositor()->render(context);
 
@@ -1365,7 +1261,7 @@ namespace RBX
 
 					visualEngine->getSceneManager()->renderBegin(context, cullCamera, vr->getEyeFramebuffer(0)->getWidth(), vr->getEyeFramebuffer(0)->getHeight());
 
-					for (int eye = 0; eye < 2; ++eye) {
+					for (size_t eye = 0u; eye < 2u; ++eye) {
 						RBXPROFILER_SCOPE("GPU", "Eye");
 
 						Framebuffer* eyeFB = vr->getEyeFramebuffer(eye);
@@ -1391,6 +1287,7 @@ namespace RBX
 
 				if (getAndClearDoScreenshot()) {
 					std::string screenshotFilename;
+
 					if (saveScreenshotToFile(screenshotFilename)) {
 						if (dataModel) {
 							dataModel->submitTask(boost::bind(&RBX::DataModel::ScreenshotReadyTask, weak_ptr<RBX::DataModel>(dataModel), screenshotFilename), RBX::DataModelJob::Write);
@@ -1434,46 +1331,50 @@ namespace RBX
 		RenderStats& RenderView::getRenderStats() { return *visualEngine->getRenderStats(); }
 
 		extern float bloomIntensity = 0.0f;
-		extern int bloomSize = 0;
+		extern uint32_t bloomSize = 0u;
+
 		extern float blurIntensity = 0.0f;
-		extern float brightness = 0.0f;
-		extern float contrast = 0.0f;
-		extern float grayscaleLevel = 0.0f;
+
+		extern float brightness = 1.0f;
+		extern float contrast = 1.0f;
+		extern float grayscaleLevel = 1.0f;
 		extern Color3 tintColor = Color3(1.0f, 1.0f, 1.0f);
 
-		void RenderView::presetLighting(RBX::Lighting* l, const RBX::Color3& extraAmbient, float skylightFactor) {
-			const G3D::LightingParameters& skyParameters = l->getSkyParameters();
-			SceneManager* smgr = visualEngine->getSceneManager();
+		void RenderView::presetLighting(RBX::Lighting* lighting) {
+			SceneManager* sceneManager = visualEngine->getSceneManager();
 
-			Vector3 topColorShift = Color3::toHSV(l->getSunColorShift());
+			Vector3 topColorShift = Color3::toHSV(lighting->getSunColorShift());
 			topColorShift.y = topColorShift.y * topColorShift.z;
 			topColorShift.z = 1.0f;
 
-			float globalBrightness = l->getSunBrightness();
+			const G3D::LightingParameters& skyParameters = lighting->getSkyParameters();
 
 			Vector3 keyDirection = -skyParameters.lightDirection.unit();
 			Color3 keyColor = skyParameters.lightColor * Color3::fromHSV(topColorShift);
 
-			Color3 ambientColor = l->getGlobalAmbient();
-			Color3 outdoorAmbientColor = l->getGlobalOutdoorAmbient();
+			Color3 ambientColor = lighting->getGlobalAmbient();
+			Color3 outdoorAmbientColor = lighting->getGlobalOutdoorAmbient();
 
-			Color3 keyLightColor = keyColor * globalBrightness;
+			Color3 keyLightColor = keyColor * lighting->getSunBrightness();
 
-			smgr->setLighting(ambientColor, outdoorAmbientColor, keyDirection, keyLightColor);
+			sceneManager->setLighting(ambientColor, outdoorAmbientColor, keyDirection, keyLightColor);
+			sceneManager->setFog(lighting->getFogColor(), lighting->getFogDensity(), lighting->getFogSunInfluence(), lighting->getFogSkybox(), lighting->getFogAffectSkybox());
 		}
 
-		void RenderView::presetPostProcess(RBX::Lighting* l) {
-			SceneManager* smgr = visualEngine->getSceneManager();
+		void RenderView::presetPostProcess(RBX::Lighting* lighting) {
+			SceneManager* sceneManager = visualEngine->getSceneManager();
 
 			bloomIntensity = 0.0f;
-			bloomSize = 0;
-			blurIntensity = 0.0f;
-			tintColor = Color3(1.0f, 1.0f, 1.0f);
-			grayscaleLevel = 0.0f;
-			contrast = 0.0f;
-			brightness = 0.0f;
+			bloomSize = 0u;
 
-			if (shared_ptr<const Instances> children = l->getChildren2()) {
+			blurIntensity = 0.0f;
+
+			tintColor = Color3(1.0f, 1.0f, 1.0f);
+			grayscaleLevel = 1.0f;
+			contrast = 1.0f;
+			brightness = 1.0f;
+
+			if (shared_ptr<const Instances> children = lighting->getChildren2()) {
 				Instances::const_iterator end = children->end();
 				for (Instances::const_iterator iter = children->begin(); iter != end; ++iter) {
 					std::string className = (*iter)->getClassNameStr();
@@ -1481,7 +1382,7 @@ namespace RBX
 					if (className == "BloomEffect") {
 						auto bloomEffectInstance = boost::dynamic_pointer_cast<BloomEffect>((*iter));
 
-						if (bloomEffectInstance && bloomEffectInstance->getEnabled() && bloomIntensity < bloomEffectInstance->getIntensity() && bloomSize < bloomEffectInstance->getSize()) {
+						if (bloomEffectInstance && bloomEffectInstance->getEnabled()/* && bloomIntensity < bloomEffectInstance->getIntensity() && bloomSize < bloomEffectInstance->getSize()*/) {
 							bloomIntensity = bloomEffectInstance->getIntensity();
 							bloomSize = bloomEffectInstance->getSize();
 						}
@@ -1489,7 +1390,7 @@ namespace RBX
 					else if (className == "BlurEffect") {
 						auto blurEffectInstance = boost::dynamic_pointer_cast<BlurEffect>((*iter));
 
-						if (blurEffectInstance && blurEffectInstance->getEnabled() && blurIntensity < blurEffectInstance->getSize()) {
+						if (blurEffectInstance && blurEffectInstance->getEnabled()/* && blurIntensity < blurEffectInstance->getSize()*/) {
 							blurIntensity = blurEffectInstance->getSize();
 						}
 					}
@@ -1497,18 +1398,22 @@ namespace RBX
 						auto colorCorrectionInstance = boost::dynamic_pointer_cast<ColorCorrectionEffect>((*iter));
 
 						if (colorCorrectionInstance && colorCorrectionInstance->getEnabled()) {
-							if (tintColor == Color3(1.0f, 1.0f, 1.0f)) {
-								tintColor = colorCorrectionInstance->getTintColor();
-							}
-							grayscaleLevel += colorCorrectionInstance->getSaturation();
-							brightness += colorCorrectionInstance->getBrightness();
-							contrast += colorCorrectionInstance->getContrast();
+							tintColor = colorCorrectionInstance->getTintColor();
+							grayscaleLevel = colorCorrectionInstance->getSaturation();
+							brightness = colorCorrectionInstance->getBrightness();
+							contrast = colorCorrectionInstance->getContrast();
 						}
 					}
 				}
 			}
 
-			smgr->setPostProcess(brightness, contrast, grayscaleLevel, blurIntensity, tintColor, bloomIntensity, bloomSize);
+			sceneManager->setPostProcess(brightness, contrast, grayscaleLevel, tintColor, blurIntensity, bloomIntensity, bloomSize);
+		}
+
+		void RenderView::presetProcessing(RBX::Lighting* lighting) {
+			SceneManager* sceneManager = visualEngine->getSceneManager();
+
+			sceneManager->setProcessing(std::pow(2.0f, lighting->getCameraExposure()), 2.2f);
 		}
 
 		static void waitForContent(RBX::ContentProvider* contentProvider) {
@@ -1528,8 +1433,8 @@ namespace RBX
 			}
 		}
 
-		static void modifyThumbnailCamera(VisualEngine* visualEngine, bool allowDolly, int recdepth = 1) {
-			if (recdepth > 10)
+		static void modifyThumbnailCamera(VisualEngine* visualEngine, bool allowDolly, uint32_t recdepth = 1u) {
+			if (recdepth > 10u)
 				return;
 
 			std::vector<CullableSceneNode*> nodes = visualEngine->getSceneManager()->getSpatialHashedScene()->getAllNodes();
@@ -1544,7 +1449,7 @@ namespace RBX
 
 			Extents screen;
 
-			for (unsigned int i = 0u; i < 8u; ++i) {
+			for (size_t i = 0u; i < 8u; ++i) {
 				Vector4 p = viewProj * Vector4(extents.getCorner(i), 1.0f);
 				Vector3 q = p.xyz() / p.w;
 
@@ -1555,7 +1460,7 @@ namespace RBX
 					Matrix4 view = visualEngine->getCameraMutable().getViewMatrix();
 					Matrix4 dolly = Matrix4::translation(0.0f, 0.0f, -1.0f - recdepth * recdepth);
 					visualEngine->getCameraMutable().setViewMatrix(dolly * view);
-					return modifyThumbnailCamera(visualEngine, true, recdepth + 1); // try once again
+					return modifyThumbnailCamera(visualEngine, true, recdepth + 1u); // try once again
 				}
 
 				screen.expandToContain(q);
@@ -1634,12 +1539,12 @@ namespace RBX
 			//visualEngine->getSceneUpdater()->setComputeLightingEnabled(true);
 		}
 
-		void RenderView::renderThumb(unsigned char* data, int width, int height, bool crop, bool allowDolly) {
+		void RenderView::renderThumb(unsigned char* data, uint32_t width, uint32_t height, bool crop, bool allowDolly) {
 			// will populate scenegraph, and trigger resource loads.
 			FASTLOG(FLog::ThumbnailRender, "Rendering thumbnail: populating scene graph, trigger resource load");
 			prepareSceneGraph();
 
-			visualEngine->getFrameRateManager()->SubmitCurrentFrame(1000, 1000, 1000, 0);
+			visualEngine->getFrameRateManager()->SubmitCurrentFrame(1000.0, 1000.0, 1000.0, 0.0);
 
 			// Run find visible objects once to fill in distance for LightGrid
 			visualEngine->getSceneManager()->computeMinimumSqDistance(visualEngine->getCamera());
@@ -1649,19 +1554,18 @@ namespace RBX
 			if (Camera* camera = dataModel->getWorkspace()->getCamera())
 				camera->setViewport(Vector2int16(width, height));
 
-			renderPrepareImpl(NULL, /* updateViewport= */ false);
+			renderPrepareImpl(nullptr, /* updateViewport= */ false);
 
-			if (crop) {
+			if (crop)
 				modifyThumbnailCamera(visualEngine.get(), allowDolly);
-			}
 
-			shared_ptr<Renderbuffer> color = visualEngine->getDevice()->createRenderbuffer(Texture::Format_RGBA16f, width, height, 1);
-			shared_ptr<Renderbuffer> depth = visualEngine->getDevice()->createRenderbuffer(Texture::Format_D32f, width, height, 1);
+			shared_ptr<Renderbuffer> color = visualEngine->getDevice()->createRenderbuffer(Texture::Format_RGBA16f, width, height, 1u);
+			shared_ptr<Renderbuffer> depth = visualEngine->getDevice()->createRenderbuffer(Texture::Format_D32f, width, height, 1u);
 			shared_ptr<Framebuffer> framebuffer = visualEngine->getDevice()->createFramebuffer(color, depth);
 
-			renderPerformImpl(0.f, framebuffer.get());
+			renderPerformImpl(0.0f, framebuffer.get());
 
-			framebuffer->download(data, width * height * 4);
+			framebuffer->download(data, width * height * 4u);
 		}
 
 		//
@@ -1692,8 +1596,8 @@ namespace RBX
 
 				boost::filesystem::path path = FileSystem::getUserDirectory(true, RBX::DirPicture) / name.str();
 
-				G3D::GImage image(framebuffer->getWidth(), framebuffer->getHeight(), 4);
-				framebuffer->download(image.byte(), image.width() * image.height() * 4);
+				G3D::GImage image(framebuffer->getWidth(), framebuffer->getHeight(), 4u);
+				framebuffer->download(image.byte(), image.width() * image.height() * 4u);
 
 				image.convertToRGB();
 
@@ -1761,7 +1665,7 @@ namespace RBX
 			}
 		}
 
-		std::pair<unsigned, unsigned> RenderView::setFrameDataCallback(const boost::function<void(void*)>& callback) {
+		std::pair<uint32_t, uint32_t> RenderView::setFrameDataCallback(const boost::function<void(void*)>& callback) {
 			Framebuffer* framebuffer = visualEngine->getDevice()->getMainFramebuffer();
 
 			if (callback && framebuffer) {
@@ -1772,7 +1676,7 @@ namespace RBX
 			else {
 				videoFrameVertexStreamer.reset();
 				frameDataCallback = FrameDataCallback();
-				return std::make_pair(0, 0);
+				return std::make_pair(0u, 0u);
 			}
 		}
 

@@ -212,8 +212,7 @@ namespace RBX
 
 		static const int HSIZE = kCELL_SIZE / 2;
 
-		static const OFFSETINFOV2 kAxisSideLookup[6] =
-		{
+		static const OFFSETINFOV2 kAxisSideLookup[6] = {
 			{	// PlusX
 				Vector3int16(HSIZE,  HSIZE, -HSIZE),
 				Vector3int16(HSIZE,  HSIZE,  HSIZE),
@@ -265,30 +264,29 @@ namespace RBX
 		};
 
 
-		struct CORNEROFFSET
-		{
+		struct CORNEROFFSET {
 			Vector3int16 posoffset;
 		};
 
 		static CORNEROFFSET CornerLookup[8] =
 		{
 			{ Vector3int16(-kCELL_SIZE / 2, -kCELL_SIZE / 2, -kCELL_SIZE / 2) },
-			{ Vector3int16(-kCELL_SIZE / 2, -kCELL_SIZE / 2, kCELL_SIZE / 2) },
-			{ Vector3int16(kCELL_SIZE / 2, -kCELL_SIZE / 2, kCELL_SIZE / 2) },
-			{ Vector3int16(kCELL_SIZE / 2, -kCELL_SIZE / 2, -kCELL_SIZE / 2) },
+			{ Vector3int16(-kCELL_SIZE / 2, -kCELL_SIZE / 2,  kCELL_SIZE / 2) },
+			{ Vector3int16( kCELL_SIZE / 2, -kCELL_SIZE / 2,  kCELL_SIZE / 2) },
+			{ Vector3int16( kCELL_SIZE / 2, -kCELL_SIZE / 2, -kCELL_SIZE / 2) },
 
-			{ Vector3int16(-kCELL_SIZE / 2, kCELL_SIZE / 2, -kCELL_SIZE / 2) },
-			{ Vector3int16(-kCELL_SIZE / 2, kCELL_SIZE / 2, kCELL_SIZE / 2) },
-			{ Vector3int16(kCELL_SIZE / 2, kCELL_SIZE / 2, kCELL_SIZE / 2) },
-			{ Vector3int16(kCELL_SIZE / 2, kCELL_SIZE / 2, -kCELL_SIZE / 2) },
+			{ Vector3int16(-kCELL_SIZE / 2,  kCELL_SIZE / 2, -kCELL_SIZE / 2) },
+			{ Vector3int16(-kCELL_SIZE / 2,  kCELL_SIZE / 2,  kCELL_SIZE / 2) },
+			{ Vector3int16( kCELL_SIZE / 2,  kCELL_SIZE / 2,  kCELL_SIZE / 2) },
+			{ Vector3int16( kCELL_SIZE / 2,  kCELL_SIZE / 2, -kCELL_SIZE / 2) },
 		};
 
 		struct MaterialTextureCoordinates
 		{
 			const Vector2int16 startPixel;
 			const Vector2int16 oneCellPixels;
-			const unsigned int xMask;
-			const unsigned int yMask;
+			const int16_t xMask;
+			const int16_t yMask;
 
 			MaterialTextureCoordinates(const Vector2int16& startPixel, const Vector2int16& endPixel, const Vector2int16& logicalCellSize)
 				: startPixel(startPixel)
@@ -301,8 +299,7 @@ namespace RBX
 				RBXASSERT((logicalCellSize.y & (logicalCellSize.y - 1)) == 0);
 			}
 
-			void calculateTextureCoordinates(const Vector2int16& cell, const Vector2int16& atlasOffset, Vector2int16* uvs) const
-			{
+			void calculateTextureCoordinates(const Vector2int16& cell, const Vector2int16& atlasOffset, Vector2int16* uvs) const {
 				Vector2int16 cellMod = Vector2int16(cell.x & xMask, cell.y & yMask) * oneCellPixels;
 
 				Vector2int16 uvMin = startPixel + cellMod + atlasOffset;
@@ -315,18 +312,15 @@ namespace RBX
 			}
 		};
 
-		struct TriangleMaterialTextureCoordinates
-		{
-			struct Triangle
-			{
+		struct TriangleMaterialTextureCoordinates {
+			struct Triangle {
 				Vector2int16 a, b, c, d;
 			};
 
 			boost::scoped_array<Triangle> table;
-			int mask;
+			int32_t mask;
 
-			TriangleMaterialTextureCoordinates(const Vector2int16& startPixel, const Vector2int16& endPixel, int cellCount, int tiling, bool inverse)
-			{
+			TriangleMaterialTextureCoordinates(const Vector2int16& startPixel, const Vector2int16& endPixel, int32_t cellCount, int32_t tiling, bool inverse) {
 				table.reset(new Triangle[cellCount * cellCount * tiling * tiling]);
 				mask = cellCount * tiling - 1;
 
@@ -344,32 +338,27 @@ namespace RBX
 				float triangleBaseTile = triangleBase / tiling;
 				Vector2 triangleSideTile = triangleSide / tiling;
 
-				for (int y = 0; y < cellCount * tiling; ++y)
-				{
-					for (int x = 0; x < cellCount * tiling; ++x)
-					{
+				for (int32_t y = 0; y < cellCount * tiling; ++y) {
+					for (int32_t x = 0; x < cellCount * tiling; ++x) {
 						Triangle& t = table[x + y * cellCount * tiling];
 
 						// figure out quad coordinates for this triangle and the inverse triangle pair
-						Vector2 quadStart = startPixelUv - Vector2(triangleBaseTile, 0) * x + triangleSideTile * y;
-						Vector2 quadEnd = quadStart - Vector2(triangleBaseTile, 0) + triangleSideTile;
+						Vector2 quadStart = startPixelUv - Vector2(triangleBaseTile, 0.0f) * x + triangleSideTile * y;
+						Vector2 quadEnd = quadStart - Vector2(triangleBaseTile, 0.0f) + triangleSideTile;
 
 						// special treatment for last big triangle - it moves to the right to conserve UV space
-						if (x / tiling == cellCount - 1 && y / tiling == cellCount - 1 && (x % tiling) + (y % tiling) + !inverse >= tiling)
-						{
+						if (x / tiling == cellCount - 1 && y / tiling == cellCount - 1 && (x % tiling) + (y % tiling) + !inverse >= tiling) {
 							quadStart.x += triangleBase * cellCount;
 							quadEnd.x += triangleBase * cellCount;
 						}
 
-						if (inverse)
-						{
+						if (inverse) {
 							t.a = Vector2int16(quadStart);
 							t.b = Vector2int16(quadStart - Vector2(triangleBaseTile, 0));
 							t.c = Vector2int16();
 							t.d = Vector2int16(quadStart + triangleSideTile);
 						}
-						else
-						{
+						else {
 							t.a = Vector2int16();
 							t.b = Vector2int16(quadStart - Vector2(triangleBaseTile, 0));
 							t.c = Vector2int16(quadEnd);
@@ -379,11 +368,10 @@ namespace RBX
 				}
 			}
 
-			void calculateTextureCoordinates(const Vector2int16& cell, const Vector2int16& atlasOffset, Vector2int16* uvs) const
-			{
-				int cellModX = mask - (cell.x & mask);
-				int cellModY = cell.y & mask;
-				int index = cellModX + cellModY * (mask + 1);
+			void calculateTextureCoordinates(const Vector2int16& cell, const Vector2int16& atlasOffset, Vector2int16* uvs) const {
+				int16_t cellModX = mask - (cell.x & mask);
+				int16_t cellModY = cell.y & mask;
+				int16_t index = cellModX + cellModY * (mask + 1);
 
 				uvs[0] = table[index].a + atlasOffset;
 				uvs[1] = table[index].b + atlasOffset;

@@ -8,8 +8,8 @@
 #include "CompactCFrame.h"
 #include "RakNetTime.h"
 
-namespace RBX { 
-	
+namespace RBX {
+
 	class Primitive;
 
 	class AssemblyItem : public boost::noncopyable
@@ -36,14 +36,14 @@ namespace RBX {
 		// TODO: Replace with intrusive list of AssemblyItem
 		G3D::Array<AssemblyItem*> buffer;
 
-		int currentElements;
+		size_t currentElements;
 
 	public:
-		RakNet::Time networkTime;				
+		RakNet::Time networkTime;
 		unsigned char networkHumanoidState;
 		bool hasVelocity;
 
-		void reset(int numElements = 0);
+		void reset(size_t numElements = 0u);
 
 		MechanismItem() {
 			reset();
@@ -53,9 +53,9 @@ namespace RBX {
 
 		AssemblyItem& appendAssembly();
 
-		int numAssemblies() const {return currentElements;}
+		size_t numAssemblies() const { return currentElements; }
 
-		AssemblyItem& getAssemblyItem(int i) const {
+		AssemblyItem& getAssemblyItem(size_t i) const {
 			RBXASSERT(i < currentElements);
 			return *buffer[i];
 		}

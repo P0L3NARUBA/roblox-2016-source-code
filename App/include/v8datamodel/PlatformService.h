@@ -2,8 +2,9 @@
 
 #include "V8Tree/Service.h"
 #include "V8Tree/Instance.h"
-#include <stdint.h>
 #include "v8datamodel/InputObject.h"
+
+#include <cstdint>
 
 namespace RBX {
 	extern const char* const sPlatformService;

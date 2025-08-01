@@ -466,7 +466,7 @@ void Accoutrement::downFrom_Equipped()
 				oldCharacter = Instance::fastDynamicCast<ModelInstance>(oldArm->getParent());
 			}
 		}
-		weld->setParent(NULL);
+		weld->setParent(nullptr);
 		weld.reset();
 	}
 

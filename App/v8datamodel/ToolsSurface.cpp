@@ -93,7 +93,7 @@ void DecalTool::onMouseHover(const shared_ptr<InputObject>& inputObject)
 		}
 		else
 		{
-			decal->setParent(NULL);
+			decal->setParent(nullptr);
 		}
 	}
 	else
@@ -118,7 +118,7 @@ shared_ptr<MouseCommand> DecalTool::onKeyDown(const shared_ptr<InputObject>& inp
 shared_ptr<MouseCommand> DecalTool::onCancelOperation()
 {
 	releaseCapture();
-	if (decal) decal.get()->setParent(NULL);
+	if (decal) decal.get()->setParent(nullptr);
 	return shared_ptr<MouseCommand>();
 }
 

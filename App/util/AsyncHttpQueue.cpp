@@ -76,7 +76,7 @@ void AsyncHttpQueue::resetStatsItem(ServiceProvider* provider)
 {
 	if (statsItem)
 	{
-		statsItem->setParent(NULL);
+		statsItem->setParent(nullptr);
 		statsItem.reset();
 	}
 

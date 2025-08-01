@@ -12,7 +12,7 @@ namespace RBX
 
 		struct GlobalShaderData {
 			/* Camera */
-			Matrix4 ViewProjection[2];
+			Matrix4 ViewProjection[2];	/* Index 0 = View Projection || Index 1 = Inverse View Projection */
 			Vector4 ViewRight;
 			Vector4 ViewUp;
 			Vector4 ViewDirection;
@@ -31,13 +31,16 @@ namespace RBX
 			Vector4 FogColor_Density;	/* x = Color.r,       y = Color.g,     z = Color.b,        w = Density */
 			Vector4 FogParams;			/* x = Sun Influence, y = Uses Skybox, z = Affects Skybox, w = 0.0     */
 
+			/* Misc */
+			Vector4 ViewportSize_ViewportScale;
+
 			static void define(Device* device);
 
 			void setCamera(const RenderCamera& camera);
 		};
 
 		struct GlobalProcessingData {
-			Vector4 TextureSize_ViewportScale;
+			Vector4 TextureSize_ViewportScale; /* xy = Viewport size || zw = 1.0f / Viewport size, or filter size */
 			Vector4 Exposure_Gamma_InverseGamma_Unused;
 			Vector4 Parameters1;
 			Vector4 Parameters2;

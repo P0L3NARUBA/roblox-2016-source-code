@@ -240,7 +240,7 @@ void PhysicsSender::sendTouches(PacketPriority packetPriority)
 		writeTouches(*bitStream, maxStreamSize, touchPairs);
 
 		// Packet "end" tag
-		replicator.serializeId(*bitStream, NULL);
+		replicator.serializeId(*bitStream, nullptr);
 
 		// Send ID_PHYSICS_TOUCHES
 		replicator.rakPeer->Send(bitStream, packetPriority, RELIABLE_ORDERED, PHYSICS_CHANNEL, replicator.remotePlayerId, false);
@@ -254,7 +254,7 @@ void PhysicsSender::sendTouches(PacketPriority packetPriority)
 	}
 };
 
-PhysicsSender::PhysicsSender(Replicator& replicator) : replicator(replicator), sendPacketsPerStep(DFInt::NumPhysicsPacketsPerStep), senderStats(NULL), touchPairsId(0)
+PhysicsSender::PhysicsSender(Replicator& replicator) : replicator(replicator), sendPacketsPerStep(DFInt::NumPhysicsPacketsPerStep), senderStats(nullptr), touchPairsId(0)
 {
 
 	physicsService = shared_from(ServiceProvider::find<PhysicsService>(&replicator));
@@ -348,7 +348,7 @@ void PhysicsSender::sendMechanismCFrames(RakNet::BitStream& bitStream, const Par
     // send each part's cframe if they are in streamed region
     const_cast<Mechanism*>(mechanism)->visitPrimitives(boost::bind(&PhysicsSender::sendChildPrimitiveCoordinateFrame, this, _1, &bitStream, &replicator, compressionType));
 
-	replicator.serializeId(bitStream, NULL); // token: done
+	replicator.serializeId(bitStream, nullptr); // token: done
 
     if (senderStats)
     {
@@ -492,18 +492,16 @@ void PhysicsSender::writeVelocity(RakNet::BitStream& bitStream, const Velocity& 
 
 void PhysicsSender::writeMotorAngles(RakNet::BitStream& bitStream, const Assembly* assembly, Compressor::CompressionType compressionType)
 {
-	tempMotorAngles.resize(0);
+	tempMotorAngles.resize(0u);
 	assembly->getPhysics(tempMotorAngles);
 
-	RBXASSERT(tempMotorAngles.size() < 255);
-
-	unsigned char compactNum = static_cast<unsigned char>(tempMotorAngles.size());
+	RBXASSERT(tempMotorAngles.size() < 255u);
+	
+	uint8_t compactNum = static_cast<uint8_t>(tempMotorAngles.size());
 	bitStream << compactNum;
 
-	for (int i = 0; i < tempMotorAngles.size(); ++i)
-	{
+	for (size_t i = 0u; i < tempMotorAngles.size(); ++i)
 		writeCompactCFrame(bitStream, tempMotorAngles[i], compressionType);
-	}
 }
 
 void PhysicsSender::writeCompactCFrame(RakNet::BitStream& bitStream, const CompactCFrame& cFrame, Compressor::CompressionType compressionType)
@@ -569,7 +567,7 @@ bool PhysicsSender::sendPhysicsData(RakNet::BitStream& bitStream, const PartInst
 	RBXASSERT(part);
 	if (part && Assembly::isAssemblyRootPrimitive(part->getConstPartPrimitive()))
 	{
-        senderStats = NULL;
+        senderStats = nullptr;
         if (replicator.settings().trackPhysicsDetails)
         {
             senderStats = &(replicator.replicatorStats.physicsSenderStats);
@@ -599,7 +597,7 @@ bool PhysicsSender::sendPhysicsData(RakNet::BitStream& bitStream, const PartInst
 					}
 					else
 					{
-						replicator.serializeId(bitStream, NULL); // token: done with this mechanism
+						replicator.serializeId(bitStream, nullptr); // token: done with this mechanism
 						return false;
 					}
 				}

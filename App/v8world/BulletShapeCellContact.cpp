@@ -70,7 +70,7 @@ BulletShapeCellContact::~BulletShapeCellContact()
 	RBXASSERT(polyConnectors.size() == 0);
 }
 
-ContactConnector* BulletShapeCellContact::getConnector(int i)	
+ContactConnector* BulletShapeCellContact::getConnector(size_t i)
 {
 	return polyConnectors[i];
 }
@@ -107,7 +107,7 @@ void BulletShapeCellContact::removeAllConnectorsFromKernel()
 
 void BulletShapeCellContact::putAllConnectorsInKernel()
 {
-	Kernel* kernel = NULL;
+	Kernel* kernel = nullptr;
 	for (size_t i = 0; i < polyConnectors.size(); ++i) {
 		if (!polyConnectors[i]->isInKernel())
 		{
@@ -140,7 +140,7 @@ void BulletShapeCellContact::invalidateContactCache()
 		btManifoldArray manifoldArray;
 		bulletNPAlgorithm->getAllContactManifolds(manifoldArray);
 
-		for (int i = 0; i < manifoldArray.size(); ++i)
+		for (size_t i = 0u; i < manifoldArray.size(); ++i)
             manifoldArray[i]->clearManifold();
 	}
 }
@@ -148,7 +148,7 @@ void BulletShapeCellContact::invalidateContactCache()
 bool BulletShapeCellContact::computeIsColliding(float overlapIgnored)
 {
 	updateClosestFeatures();
-	if (polyConnectors.size() > 0) 
+	if (polyConnectors.size() > 0u) 
 	{
 		float overlap = worstFeatureOverlap();
 		if (overlap > overlapIgnored) 
@@ -162,11 +162,11 @@ bool BulletShapeCellContact::computeIsColliding(float overlapIgnored)
 		btManifoldArray manifoldArray;
 		bulletNPAlgorithm->getAllContactManifolds(manifoldArray);
 
-		for (int i = 0; i < manifoldArray.size(); ++i)
+		for (size_t i = 0u; i < manifoldArray.size(); ++i)
 		{
 			btPersistentManifold* manifold = manifoldArray[i];
 
-			for (int j = 0; j < manifold->getNumContacts(); ++j)
+			for (size_t j = 0u; j < manifold->getNumContacts(); ++j)
 			{
 				btManifoldPoint& p = manifold->getContactPoint(j);
 
@@ -190,12 +190,12 @@ void BulletShapeCellContact::updateClosestFeatures()
 	deleteConnectors(polyConnectors);		// any remaining not matched
 
 	// set bullet's manifold point references back to roblox kernel connectors
-	for (size_t i = 0; i < newConnectors.size(); ++i)
+	for (size_t i = 0u; i < newConnectors.size(); ++i)
 	{
 		btManifoldArray manifoldArray;
 		bulletNPAlgorithm->getAllContactManifolds(manifoldArray);
-		int manIndex = newConnectors[i]->getBulletManifoldIndex();
-		int ptIndex = newConnectors[i]->getBulletPointCacheIndex();
+		size_t manIndex = newConnectors[i]->getBulletManifoldIndex();
+		size_t ptIndex = newConnectors[i]->getBulletPointCacheIndex();
 		manifoldArray[manIndex]->getContactPoint(ptIndex).m_userPersistentData = newConnectors[i];
 	}
 
@@ -295,12 +295,12 @@ void BulletShapeCellContact::updateContactPoints()
 
 // use a BulletShapeConnector to represent this connector (we don't need a specific BulletShapeCellConnector)
 BulletShapeCellConnector* BulletShapeCellContact::newBulletShapeCellConnector(btCollisionObject* bulletColObj0, btCollisionObject* bulletColObj1, 
-																	  btCollisionAlgorithm* algo, int manifoldIndex, int contactIndex)
+																	  btCollisionAlgorithm* algo, size_t manifoldIndex, size_t contactIndex)
 {
     if(contactParams)
     {
-		return new BulletShapeCellConnector(getPrimitive(0)->getBody(),
-											getPrimitive(1)->getBody(),
+		return new BulletShapeCellConnector(getPrimitive(0u)->getBody(),
+											getPrimitive(1u)->getBody(),
 											*contactParams,
 											bulletColObj0,
 											bulletColObj1,
@@ -329,12 +329,12 @@ void BulletShapeCellContact::findClosestBulletCellFeatures(BulletConnectorArray&
 	btManifoldArray manifoldArray;
 	computeManifoldsWithBulletNarrowPhase(manifoldArray);
 
-	int totalNumConnectors = 0;
-	for (int i = 0; i < manifoldArray.size(); i++)
+	size_t totalNumConnectors = 0u;
+	for (size_t i = 0u; i < manifoldArray.size(); i++)
 	{
 		btPersistentManifold* manifold = manifoldArray[i];
 
-		for (int j = 0; j < manifold->getNumContacts(); j++)
+		for (size_t j = 0u; j < manifold->getNumContacts(); j++)
 		{
 			btManifoldPoint& p = manifold->getContactPoint(j);
 

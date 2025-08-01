@@ -15,7 +15,7 @@ namespace RBX
 	namespace Reflection
 	{
 		template<typename T> class TypeRegistrar;
-	
+
 		// Types supported by the Reflection framework
 		class Type : public Descriptor
 		{
@@ -41,10 +41,10 @@ namespace RBX
 			}
 
 			bool operator==(const Type& right) const {
-				return this==&right;
+				return this == &right;
 			}
 			bool operator!=(const Type& right) const {
-				return this!=&right;
+				return this != &right;
 			}
 
 			template<class T>
@@ -56,23 +56,23 @@ namespace RBX
 			template<class T>
 			Type(const char* name, T* dummy)
 				:Descriptor(name, Descriptor::Attributes())
-				,tag(Name::lookup(name))
-				,isNumber(boost::is_arithmetic<T>::value)
-				,isFloat(boost::is_float<T>::value)
-				,isEnum(false)
+				, tag(Name::lookup(name))
+				, isNumber(boost::is_arithmetic<T>::value)
+				, isFloat(boost::is_float<T>::value)
+				, isEnum(false)
 			{
-                *isOutdated = false;
-                *isReplicable = true;
+				*isOutdated = false;
+				*isReplicable = true;
 				RBXASSERT(!this->tag.empty());
 				addToAllTypes();
 			}
 			template<class T>
 			Type(const char* name, const char* tag, T* dummy)
 				:Descriptor(name, Descriptor::Attributes())
-				,tag(Name::declare(tag))
-				,isNumber(boost::is_arithmetic<T>::value)
-				,isFloat(boost::is_float<T>::value)
-				,isEnum(false)
+				, tag(Name::declare(tag))
+				, isNumber(boost::is_arithmetic<T>::value)
+				, isFloat(boost::is_float<T>::value)
+				, isEnum(false)
 			{
 				RBXASSERT(!this->tag.empty());
 				addToAllTypes();
@@ -80,10 +80,10 @@ namespace RBX
 
 			Type(const char* name, const char* tag, bool isNumber, bool isFloat, bool isEnum)
 				:Descriptor(name, Descriptor::Attributes())
-				,tag(Name::declare(tag))
-				,isNumber(isNumber)
-				,isFloat(isFloat)
-				,isEnum(isEnum)
+				, tag(Name::declare(tag))
+				, isNumber(isNumber)
+				, isFloat(isFloat)
+				, isEnum(isEnum)
 			{
 				RBXASSERT(!this->tag.empty());
 				addToAllTypes();
@@ -103,11 +103,11 @@ namespace RBX
 			int x;
 
 			//// GCC does not generate the registrar variable defination & fails at Link Time. Force Construct by passing in an dummy arg to ctor. That works. WEIRD huh? 
-			TypeRegistrar(int i):x(i)
+			TypeRegistrar(int i) :x(i)
 			{
 				// This assertion is added to catch a nasty implicit use of boost::any with Variant objects.
 				// If you get a tricky link error, add your own assertion here
-				BOOST_STATIC_ASSERT((!boost::is_same<T, boost::any>::value)); 
+				BOOST_STATIC_ASSERT((!boost::is_same<T, boost::any>::value));
 				// This call registers the Type descriptor 
 				// in the reflection database
 				Type::getSingleton<T>();
@@ -118,7 +118,7 @@ namespace RBX
 			// that is initialized in the main thread before any objects
 			// are created. Otherwise the reflection database
 			// can change at runtime, which would be a disaster
-			static TypeRegistrar registrar;	
+			static TypeRegistrar registrar;
 		};
 
 		// Helper class
@@ -128,21 +128,21 @@ namespace RBX
 			friend class Type;
 		protected:
 			TType(const char* name)
-				:Type(name, (T*)NULL)
+				:Type(name, (T*)nullptr)
 			{
 			}
 			TType(const char* name, const char* tag)
-				:Type(name, tag, (T*)NULL)
+				:Type(name, tag, (T*)nullptr)
 			{
 			}
 		};
 
 		class Variant
 		{
-            struct Storage
-            {
-                char data[96];
-            };
+			struct Storage
+			{
+				char data[96];
+			};
 
 			const Type* _type;
 			rbx::placement_any<Storage> value;
@@ -151,12 +151,14 @@ namespace RBX
 			inline Variant()
 				: _type(&Type::singleton<void>())
 				, value()
-			{}
+			{
+			}
 
 			inline Variant(const Variant& other)
 				: _type(other._type)
 				, value(other.value)
-			{}
+			{
+			}
 
 			inline Variant& operator=(const Variant& rhs)
 			{
@@ -186,11 +188,11 @@ namespace RBX
 
 			inline bool isVoid() const
 			{
-				return *_type==Type::singleton<void>();
+				return *_type == Type::singleton<void>();
 			}
 			inline bool isFloat() const { return type().isFloat; }
 			inline bool isNumber() const { return type().isNumber; }
-			inline bool isString() const { return isType<std::string>();}
+			inline bool isString() const { return isType<std::string>(); }
 
 			template<class ValueType>
 			inline bool isType() const {
@@ -232,14 +234,14 @@ namespace RBX
 			template<typename T>
 			inline const T* tryCast() const {
 				if (!isType<T>())
-					return NULL;
+					return nullptr;
 				return reinterpret_cast<const T*>(value.getData());
 			}
 
 			template<typename T>
 			inline T* tryCast() {
 				if (!isType<T>())
-					return NULL;
+					return nullptr;
 				return reinterpret_cast<T*>(value.getData());
 			}
 
@@ -259,8 +261,8 @@ namespace RBX
 		{
 			ValueArray values;
 			Tuple() {}
-			Tuple(size_t count):values(count) {}
-			Tuple(const Tuple& other):values(other.values) {}
+			Tuple(size_t count) :values(count) {}
+			Tuple(const Tuple& other) :values(other.values) {}
 			//Tuple(const ValueArray& values):values(values) {}
 			Variant& at(size_t i) { return values[i]; }
 			const Variant& at(size_t i) const { return values[i]; }
@@ -303,7 +305,7 @@ namespace RBX
 		ValueType& RBX::Reflection::Variant::genericConvert()
 		{
 			ValueType* id = tryCast<ValueType>();
-			if (id!=NULL)
+			if (id != nullptr)
 				return *id;
 
 			if (_type->isType<std::string>())
@@ -317,7 +319,7 @@ namespace RBX
 				}
 			}
 
-			throw RBX::runtime_error("Unable to cast %s to %s", _type->tag.c_str(), Type::singleton<ValueType>().tag.c_str() );
-		}	
+			throw RBX::runtime_error("Unable to cast %s to %s", _type->tag.c_str(), Type::singleton<ValueType>().tag.c_str());
+		}
 	}
 }

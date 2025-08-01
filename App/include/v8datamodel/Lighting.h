@@ -3,6 +3,7 @@
 #include "V8Tree/Service.h"
 #include "util/g3dcore.h"
 #include "G3D/LightingParameters.h"
+#include "util/PostProcessing.h"
 #define BOOST_DATE_TIME_NO_LIB
 #include "boost/date_time/posix_time/posix_time.hpp"
 
@@ -48,8 +49,9 @@ namespace RBX {
 		static Reflection::PropDescriptor<Lighting, float>		 prop_FogSunInfluence;
 
 		/* Camera */
-		static Reflection::PropDescriptor<Lighting, bool>		 prop_CameraAutoExposure;
-		static Reflection::PropDescriptor<Lighting, float>		 prop_CameraExposure;
+		static Reflection::PropDescriptor<Lighting, bool>				prop_CameraAutoExposure;
+		static Reflection::PropDescriptor<Lighting, float>				prop_CameraExposure;
+		static Reflection::EnumPropDescriptor<Lighting, TonemapperMode> prop_CameraTonemapper;
 
 		/* Deprecated */
 		static Reflection::PropDescriptor<Lighting, G3D::Color3> prop_TopColorShift_deprecated;
@@ -143,6 +145,9 @@ namespace RBX {
 		float getCameraExposure() const { return cameraExposure; }
 		void setCameraExposure(float value);
 
+		TonemapperMode getCameraTonemapper() const { return cameraTonemapper; }
+		void setCameraTonemapper(TonemapperMode value);
+
 		/* Deprecated */
 		const G3D::Color3& getTopColorShift_deprecated() const { return topColorShift_deprecated; }
 		void setTopColorShift_deprecated(const G3D::Color3& value);
@@ -215,6 +220,7 @@ namespace RBX {
 		/* Camera */
 		bool cameraAutoExposure;
 		float cameraExposure;
+		TonemapperMode cameraTonemapper;
 
 		/* Deprecated */
 		Color3 topColorShift_deprecated;

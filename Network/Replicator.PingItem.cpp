@@ -34,7 +34,7 @@ Replicator::PingItem::PingItem(Replicator* replicator, RakNet::Time time, unsign
 
 bool Replicator::PingItem::write(RakNet::BitStream& bitStream) {
 #if !defined(RBX_STUDIO_BUILD)
-	VMProtectBeginVirtualization(NULL);
+	VMProtectBeginVirtualization(nullptr);
 #endif
 
     boost::scoped_ptr<unsigned int> moreStatsCopy(new unsigned int);

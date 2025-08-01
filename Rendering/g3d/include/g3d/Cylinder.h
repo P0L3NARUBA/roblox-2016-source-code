@@ -1,8 +1,8 @@
 /**
  @file Cylinder.h
-  
+
  @maintainer Morgan McGuire, http://graphics.cs.williams.edu
-  
+
  @created 2003-02-07
  @edited  2005-09-26
 
@@ -19,71 +19,71 @@
 
 namespace G3D {
 
-class Line;
-class AABox;
-/**
- Right cylinder
- */
-class Cylinder {
-private:
-	Vector3			p1;
-	Vector3			p2;
+	class Line;
+	class AABox;
+	/**
+	 Right cylinder
+	 */
+	class Cylinder {
+	private:
+		Vector3			p1;
+		Vector3			p2;
 
-	float           mRadius;
+		float           mRadius;
 
-public:
+	public:
 
-    /** Uninitialized */
-    Cylinder();
-	Cylinder(const Vector3& _p1, const Vector3& _p2, float _r);
+		/** Uninitialized */
+		Cylinder();
+		Cylinder(const Vector3& _p1, const Vector3& _p2, float _r);
 
-	
-	/** The line down the center of the Cylinder */
-	Line axis() const;
 
-    /** 
-      A reference frame in which the center of mass is at the origin and
-      the Y-axis is the cylinder's axis.  If the cylinder is transformed, this reference frame
-      may freely rotate around its axis.*/
-    void getReferenceFrame(class CoordinateFrame& cframe) const;
+		/** The line down the center of the Cylinder */
+		Line axis() const;
 
-    /** Returns point 0 or 1 */
-    inline const Vector3& point(int i) const {
-        debugAssert(i >= 0 && i <= 1);
-        return (i == 0) ? p1 : p2;
-    }
+		/**
+		  A reference frame in which the center of mass is at the origin and
+		  the Y-axis is the cylinder's axis.  If the cylinder is transformed, this reference frame
+		  may freely rotate around its axis.*/
+		void getReferenceFrame(class CoordinateFrame& cframe) const;
 
-    /**
-     Returns true if the point is inside the Cylinder or on its surface.
-     */
-    bool contains(const Vector3& p) const;
+		/** Returns point 0 or 1 */
+		inline const Vector3& point(int i) const {
+			debugAssert(i >= 0 && i <= 1);
+			return (i == 0) ? p1 : p2;
+		}
 
-    float area() const;
+		/**
+		 Returns true if the point is inside the Cylinder or on its surface.
+		 */
+		bool contains(const Vector3& p) const;
 
-    float volume() const;
+		float area() const;
 
-    float radius() const; 
+		float volume() const;
 
-    /** Center of mass */
-    inline Vector3 center() const {
-        return (p1 + p2) / 2.0f;
-    }
+		float radius() const;
 
-    inline float height() const {
-        return (p1 - p2).magnitude();
-    }
+		/** Center of mass */
+		inline Vector3 center() const {
+			return (p1 + p2) / 2.0f;
+		}
 
-    /**
-     Get close axis aligned bounding box.
-     With vertical world orientation, the top and bottom might not be very tight. */
-    void getBounds(AABox& out) const;
+		inline float height() const {
+			return (p1 - p2).magnitude();
+		}
 
-    /** Random world space point with outward facing normal. */
-    void getRandomSurfacePoint(Vector3& P, Vector3& N) const;
+		/**
+		 Get close axis aligned bounding box.
+		 With vertical world orientation, the top and bottom might not be very tight. */
+		void getBounds(AABox& out) const;
 
-    /** Point selected uniformly at random over the volume. */
-    Vector3 randomInteriorPoint() const;
-};
+		/** Random world space point with outward facing normal. */
+		void getRandomSurfacePoint(Vector3& P, Vector3& N) const;
+
+		/** Point selected uniformly at random over the volume. */
+		Vector3 randomInteriorPoint() const;
+	};
 
 } // namespace
 

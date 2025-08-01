@@ -307,7 +307,7 @@ void JointsService::onPostRemoveJoint(Joint* joint, std::vector<Primitive*>& pri
 void JointsService::onAutoJoin(Joint* joint)
 {
 	// Disabling ConcurrencyValidator:
-	// onAutoDestroy might be called as a result of setParent(NULL), so concurrencyValidator will think there's threading issue 
+	// onAutoDestroy might be called as a result of setParent(nullptr), so concurrencyValidator will think there's threading issue 
 	//WriteValidator validator(concurrencyValidator);
 
 	RBXASSERT(joint);
@@ -339,7 +339,7 @@ void JointsService::onAutoJoin(Joint* joint)
 void JointsService::onAutoDestroy(Joint* joint)
 {
 	// Disabling ConcurrencyValidator:
-	// onAutoDestroy might be called as a result of setParent(NULL) below, so concurrencyValidator will think there's threading issue 
+	// onAutoDestroy might be called as a result of setParent(nullptr) below, so concurrencyValidator will think there's threading issue 
 	//WriteValidator validator(concurrencyValidator);
 	RBXASSERT(joint);
 
@@ -348,7 +348,7 @@ void JointsService::onAutoDestroy(Joint* joint)
 
 	if (jointOwner)
 	{
-		static_cast<JointInstance*>(jointOwner)->setParent(NULL);
+		static_cast<JointInstance*>(jointOwner)->setParent(nullptr);
 	}
 }
 

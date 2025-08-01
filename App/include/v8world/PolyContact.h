@@ -11,7 +11,7 @@ namespace RBX {
 	//typedef RBX::FixedArray<PolyConnector*, 12> ConnectorArray;		// TODO - should only ever need 8
 	typedef RBX::FixedArray<PolyConnector*, CONTACT_ARRAY_SIZE> ConnectorArray;		// TODO - should only ever need 8
 
-	class PolyContact : public Contact 
+	class PolyContact : public Contact
 	{
 	private:
 		ConnectorArray polyConnectors;
@@ -27,9 +27,9 @@ namespace RBX {
 
 		// Contact
 		/*override*/ void deleteAllConnectors();
-		/*override*/ int numConnectors() const					{return polyConnectors.size();}
-		/*override*/ ContactConnector* getConnector(int i);
-		/*override*/ bool computeIsColliding(float overlapIgnored); 
+		/*override*/ size_t numConnectors() const { return polyConnectors.size(); }
+		/*override*/ ContactConnector* getConnector(size_t i);
+		/*override*/ bool computeIsColliding(float overlapIgnored);
 		/*override*/ bool stepContact();
 
 		/*implement*/ virtual void findClosestFeatures(ConnectorArray& newConnectors) = 0;
@@ -37,7 +37,8 @@ namespace RBX {
 	public:
 		PolyContact(Primitive* p0, Primitive* p1)
 			: Contact(p0, p1)
-		{}
+		{
+		}
 
 		~PolyContact();
 	};

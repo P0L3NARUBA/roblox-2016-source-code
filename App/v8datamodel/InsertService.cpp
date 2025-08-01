@@ -430,7 +430,7 @@ void InsertService::internalDelete(shared_ptr<Instance> instance)
     }
     if (Network::Players::backendProcessing(this))
     {
-        instance->setParent(NULL);
+        instance->setParent(nullptr);
     }
     else
     {

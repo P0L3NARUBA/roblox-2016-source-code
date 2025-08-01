@@ -29,9 +29,9 @@ namespace RBX {
 		CoordinateFrame getSurfaceCoordInBody(const size_t surfaceId) const override;
 		Vector3 getSurfaceNormalInBody(const size_t surfaceId) const override;
 		size_t getMostAlignedSurface(const Vector3& vecInWorld, const G3D::Matrix3& objectR) const override;
-		int getNumSurfaces() const override;
-		Vector3 getSurfaceVertInBody(const size_t surfaceId, const int vertId) const override;
-		int getNumVertsInSurface(const size_t surfaceId) const override;
+		size_t getNumSurfaces() const override;
+		Vector3 getSurfaceVertInBody(const size_t surfaceId, const size_t vertId) const override;
+		size_t getNumVertsInSurface(const size_t surfaceId) const override;
 		bool vertOverlapsFace(const Vector3& pointInBody, const size_t surfaceId) const override;
         bool findTouchingSurfacesConvex(const CoordinateFrame& myCf, size_t& myFaceId, const Geometry& otherGeom, const CoordinateFrame& otherCf, size_t& otherFaceId) const override;
         bool FacesOverlapped(const CoordinateFrame& myCf, size_t& myFaceId, const Geometry& otherGeom, const CoordinateFrame& otherCf, size_t& otherFaceId, float tol) const override;
@@ -41,10 +41,10 @@ namespace RBX {
 		bool collidesWithGroundPlane(const CoordinateFrame& c, float yHeight) const override;
 		bool setUpBulletCollisionData() override;
 
-		bool hitTestTerrain(const RbxRay& rayInMe, Vector3& localHitPoint, int& surfId, CoordinateFrame& surfCf) override;
+		bool hitTestTerrain(const RbxRay& rayInMe, Vector3& localHitPoint, int32_t& surfId, CoordinateFrame& surfCf) override;
 
         // Terrain specific API
-		bool castRay(const RbxRay& rayInMe, Vector3& localHitPoint, Vector3& surfaceNormal, unsigned char& surfaceMaterial, float maxDistance, bool ignoreWater);
+		bool castRay(const RbxRay& rayInMe, Vector3& localHitPoint, Vector3& surfaceNormal, uint8_t& surfaceMaterial, float maxDistance, bool ignoreWater);
 		bool findCellsInBoundingBox(const Vector3& min, const Vector3& max);
 
         void updateChunk(const Vector3int32& id);
@@ -55,7 +55,7 @@ namespace RBX {
         shared_ptr<btCollisionShape> getBulletChunkShape(const Vector3int32& id);
 		TerrainPartitionSmooth* getTerrainPartition() { return partition.get(); }
 
-		static PartMaterial getTriangleMaterial(btCollisionShape* collisionShape, unsigned int triangleIndex, const Vector3& localHitPoint);
+		static PartMaterial getTriangleMaterial(btCollisionShape* collisionShape, uint32_t triangleIndex, const Vector3& localHitPoint);
 
 	private:
         Primitive* myPrim;

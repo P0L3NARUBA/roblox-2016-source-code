@@ -117,7 +117,7 @@ namespace RBX {
         FilterInvisibleNonColliding filter; // invisible & non-colliding parts don't block mouse-clicks
 
         Vector3 hitPoint;
-        if (workspace->getWorld()->getContactManager()->getHit(searchRay, NULL, &filter, hitPoint) == NULL)
+        if (workspace->getWorld()->getContactManager()->getHit(searchRay, nullptr, &filter, hitPoint) == nullptr)
             return true;
         
         float wt = ray.direction().dot(hitPoint - ray.origin());
@@ -144,7 +144,7 @@ namespace RBX {
 
 	bool BillboardGui::askSetParent(const Instance* instance) const
 	{
-		return (Instance::fastDynamicCast<GuiBase2d>(instance) == NULL);
+		return (Instance::fastDynamicCast<GuiBase2d>(instance) == nullptr);
 	}
 
     void BillboardGui::onStepped(const Stepped& event)

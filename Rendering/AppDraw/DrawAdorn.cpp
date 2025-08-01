@@ -142,8 +142,7 @@ namespace RBX {
 		CoordinateFrame faceCoord = bodyCoord * prim.getConstGeometry()->getSurfaceCoordInBody(surfaceId);
 
 		Vector4 bounds(-1e10f, -1e10f, 1e10f, 1e10f);
-		for (int i = 0; i < prim.getConstGeometry()->getNumVertsInSurface(surfaceId); i++)
-		{
+		for (size_t i = 0u; i < prim.getConstGeometry()->getNumVertsInSurface(surfaceId); i++) {
 			Vector3 vertInBody = prim.getConstGeometry()->getSurfaceVertInBody(surfaceId, i);
 			Vector3 vertInWorld = bodyCoord.pointToWorldSpace(vertInBody);
 			Vector3 vertInFace = faceCoord.pointToObjectSpace(vertInWorld);
@@ -509,7 +508,7 @@ namespace RBX {
 		float						lineThickness)
 	{
 		std::vector<Vector3> polygonInPart;
-		for (int i = 0; i < PartInstance::getConstPrimitive(&partInst)->getConstGeometry()->getNumVertsInSurface(surfaceId); i++)
+		for (size_t i = 0u; i < PartInstance::getConstPrimitive(&partInst)->getConstGeometry()->getNumVertsInSurface(surfaceId); i++)
 			polygonInPart.push_back(PartInstance::getConstPrimitive(&partInst)->getConstGeometry()->getSurfaceVertInBody(surfaceId, i));
 
 		DrawAdorn::polygonRelativeToCoord(adorn, PartInstance::getConstPrimitive(&partInst)->getCoordinateFrame(), polygonInPart, color, lineThickness);

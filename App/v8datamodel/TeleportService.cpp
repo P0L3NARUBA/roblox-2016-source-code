@@ -174,7 +174,7 @@ void TeleportService::TeleportImpl(shared_ptr<const Reflection::ValueTable> tele
 	if (customTeleportLoadingGui)
 	{
 		customTeleportLoadingGui->destroyDescendantsOfType<LuaSourceContainer>();
-		customTeleportLoadingGui->setParent(NULL);
+		customTeleportLoadingGui->setParent(nullptr);
 	}
 
     if (requestingTeleport)
@@ -512,7 +512,7 @@ void TeleportService::ServerTeleport(shared_ptr<Instance> characterOrPlayerInsta
 		player->onTeleportInternal(TeleportState_RequestedFromServer, teleportInfo, customLoadingGUI);
 		if (customLoadingGUI)
 		{
-			customLoadingGUI->setParent(NULL);
+			customLoadingGUI->setParent(nullptr);
 		}
     }
     else

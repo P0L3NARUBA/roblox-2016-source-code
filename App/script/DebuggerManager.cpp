@@ -18,9 +18,9 @@
 FASTFLAGVARIABLE(LuaDebugger, false)
 FASTFLAGVARIABLE(LuaDebuggerBreakOnError, false)
 
-namespace RBX 
+namespace RBX
 {
-	namespace Scripting 
+	namespace Scripting
 	{
 		const char* const sDebuggerManager = "DebuggerManager";
 		const char* const sScriptDebugger = "ScriptDebugger";
@@ -38,10 +38,10 @@ namespace RBX
 		public:
 			PauseNowBreakpoint()
 			{
-				baseThread = NULL;
+				baseThread = nullptr;
 			}
 
-			virtual bool hitTest(lua_State* L, lua_Debug *ar)
+			virtual bool hitTest(lua_State* L, lua_Debug* ar)
 			{
 				return ar->event == LUA_HOOKLINE;
 			}
@@ -51,11 +51,11 @@ namespace RBX
 		{
 			bool hitPausedLine;
 		public:
-			StepInBreakpoint():hitPausedLine(false)
+			StepInBreakpoint() :hitPausedLine(false)
 			{
-				baseThread = NULL;
+				baseThread = nullptr;
 			}
-			virtual bool hitTest(lua_State* L, lua_Debug *ar)
+			virtual bool hitTest(lua_State* L, lua_Debug* ar)
 			{
 				if (baseThread && (baseThread != L))
 					return false;
@@ -78,12 +78,12 @@ namespace RBX
 			int depth;
 			bool readyForLine;
 		public:
-			StepOutBreakpoint():depth(0),readyForLine(false) 
+			StepOutBreakpoint() :depth(0), readyForLine(false)
 			{
-				baseThread = NULL;
+				baseThread = nullptr;
 			}
 
-			virtual bool hitTest(lua_State* L, lua_Debug *ar)
+			virtual bool hitTest(lua_State* L, lua_Debug* ar)
 			{
 				if (baseThread && (baseThread != L))
 					return false;
@@ -113,12 +113,12 @@ namespace RBX
 			int depth;
 			bool hitPausedLine;
 		public:
-			StepOverBreakpoint():depth(0),hitPausedLine(false) 
+			StepOverBreakpoint() :depth(0), hitPausedLine(false)
 			{
-				baseThread = NULL;
+				baseThread = nullptr;
 			}
 
-			virtual bool hitTest(lua_State* L, lua_Debug *ar)
+			virtual bool hitTest(lua_State* L, lua_Debug* ar)
 			{
 				if (baseThread && (baseThread != L))
 					return false;
@@ -134,7 +134,7 @@ namespace RBX
 
 				if (depth < 0)
 					// We stepped out, so all we are waiting for is the next line
-						return ar->event == LUA_HOOKLINE;
+					return ar->event == LUA_HOOKLINE;
 
 				RBXASSERT(depth >= 0);
 
@@ -159,7 +159,7 @@ using namespace Scripting;
 REFLECTION_BEGIN();
 static Reflection::BoundFuncDesc<DebuggerManager, shared_ptr<Instance>(shared_ptr<Instance>)> func_AddDebugger(&DebuggerManager::addDebugger_Reflection, "AddDebugger", "script", Security::None);
 static Reflection::BoundFuncDesc<DebuggerManager, void()> func_Enable(&DebuggerManager::enableDebugging, "EnableDebugging", Security::LocalUser);
-static Reflection::PropDescriptor<DebuggerManager, bool> prop_Enabled("DebuggingEnabled", category_Data, &DebuggerManager::getEnabled, NULL);
+static Reflection::PropDescriptor<DebuggerManager, bool> prop_Enabled("DebuggingEnabled", category_Data, &DebuggerManager::getEnabled, nullptr);
 static Reflection::BoundFuncDesc<DebuggerManager, void()> func_Resume(&DebuggerManager::resume, "Resume", Security::None);
 static Reflection::BoundFuncDesc<DebuggerManager, void()> func_StepOver(&DebuggerManager::stepOver, "StepOver", Security::None);
 static Reflection::BoundFuncDesc<DebuggerManager, void()> func_StepInto(&DebuggerManager::stepInto, "StepIn", Security::None);
@@ -185,11 +185,11 @@ static Reflection::BoundFuncDesc<ScriptDebugger, void(std::string, Reflection::V
 static Reflection::BoundFuncDesc<ScriptDebugger, void(std::string, Reflection::Variant, int)> func_SetUpvalue(&ScriptDebugger::setUpvalue, "SetUpvalue", "name", "value", "stackFrame", 0, Security::None);
 static Reflection::BoundFuncDesc<ScriptDebugger, void(std::string, Reflection::Variant)> func_SetGlobal(&ScriptDebugger::setGlobal, "SetGlobal", "name", "value", Security::None);
 // The Script property is read-only by design. If we want to make it writable, then we need to watch for changes and update DebuggerManager::debuggers
-const Reflection::RefPropDescriptor<ScriptDebugger, Instance> prop_Script("Script", category_Data, &ScriptDebugger::getScript, NULL, Reflection::PropertyDescriptor::UI);
+const Reflection::RefPropDescriptor<ScriptDebugger, Instance> prop_Script("Script", category_Data, &ScriptDebugger::getScript, nullptr, Reflection::PropertyDescriptor::UI);
 const Reflection::PropDescriptor<ScriptDebugger, std::string> prop_ScriptPath("ScriptPath", category_Data, &ScriptDebugger::getScriptPath, &ScriptDebugger::setScriptPath, Reflection::PropertyDescriptor::STREAMING);
-static Reflection::PropDescriptor<ScriptDebugger, bool> prop_IsDebugging("IsDebugging", category_Data, &ScriptDebugger::isDebugging, NULL, Reflection::PropertyDescriptor::UI);																	
-static Reflection::PropDescriptor<ScriptDebugger, bool> prop_IsPaused("IsPaused", category_Data, &ScriptDebugger::isPaused, NULL, Reflection::PropertyDescriptor::UI);																	
-static Reflection::PropDescriptor<ScriptDebugger, int> prop_CurrentLine("CurrentLine", category_Data, &ScriptDebugger::getCurrentLine, NULL, Reflection::PropertyDescriptor::UI);																	
+static Reflection::PropDescriptor<ScriptDebugger, bool> prop_IsDebugging("IsDebugging", category_Data, &ScriptDebugger::isDebugging, nullptr, Reflection::PropertyDescriptor::UI);
+static Reflection::PropDescriptor<ScriptDebugger, bool> prop_IsPaused("IsPaused", category_Data, &ScriptDebugger::isPaused, nullptr, Reflection::PropertyDescriptor::UI);
+static Reflection::PropDescriptor<ScriptDebugger, int> prop_CurrentLine("CurrentLine", category_Data, &ScriptDebugger::getCurrentLine, nullptr, Reflection::PropertyDescriptor::UI);
 static Reflection::EventDesc<ScriptDebugger, void(int)> event_EncounteredBreak(&ScriptDebugger::encounteredBreak, "EncounteredBreak", "line");
 static Reflection::EventDesc<ScriptDebugger, void()> event_Resuming(&ScriptDebugger::resuming, "Resuming");
 static Reflection::EventDesc<ScriptDebugger, void(shared_ptr<Instance>)> event_BreakpointAdded(&ScriptDebugger::breakpointAdded, "BreakpointAdded", "breakpoint");
@@ -198,8 +198,8 @@ static Reflection::EventDesc<ScriptDebugger, void(shared_ptr<Instance>)> event_W
 static Reflection::EventDesc<ScriptDebugger, void(shared_ptr<Instance>)> event_WatchRemoved(&ScriptDebugger::watchRemoved, "WatchRemoved", "watch");
 
 // The Line property is read-only by design. If we want to make it writable, then we need to watch for changes and update ScriptDebugger::breakpoints
-static Reflection::PropDescriptor<DebuggerBreakpoint, int> prop_Line("Line", category_Data, &DebuggerBreakpoint::getLine, NULL, Reflection::PropertyDescriptor::UI);																	
-Reflection::BoundProp<int> DebuggerBreakpoint::prop_Line_Data("line", category_Data, &DebuggerBreakpoint::line, Reflection::PropertyDescriptor::STREAMING);																	
+static Reflection::PropDescriptor<DebuggerBreakpoint, int> prop_Line("Line", category_Data, &DebuggerBreakpoint::getLine, nullptr, Reflection::PropertyDescriptor::UI);
+Reflection::BoundProp<int> DebuggerBreakpoint::prop_Line_Data("line", category_Data, &DebuggerBreakpoint::line, Reflection::PropertyDescriptor::STREAMING);
 Reflection::BoundProp<bool> DebuggerBreakpoint::prop_Enabled("IsEnabled", category_Data, &DebuggerBreakpoint::enabled);
 Reflection::BoundProp<std::string> DebuggerBreakpoint::prop_Condition("Condition", category_Data, &DebuggerBreakpoint::condition);
 
@@ -207,7 +207,7 @@ Reflection::BoundProp<std::string> DebuggerWatch::prop_Expression("Expression", 
 static Reflection::BoundFuncDesc<DebuggerWatch, void()> func_CheckExpressionSyntax(&DebuggerWatch::checkExpressionSyntax, "CheckSyntax", Security::None);
 REFLECTION_END();
 
-static DebuggerManager* gDebuggerManager = NULL;
+static DebuggerManager* gDebuggerManager = nullptr;
 static void doBasicSingleton()
 {
 	static shared_ptr<DebuggerManager> sing = Creatable<Instance>::create<DebuggerManager>();
@@ -227,12 +227,12 @@ DebuggerManager& DebuggerManager::singleton()
 }
 
 DebuggerManager::DebuggerManager(void)
-:enabled(false)
-,dataModel(NULL)
-,executionMode(ExecutionMode_Continue)
-,breakOnErrorMode(BreakOnErrorMode_Never)
-,resuming(false)
-,scriptAutoResume(true)
+	:enabled(false)
+	, dataModel(nullptr)
+	, executionMode(ExecutionMode_Continue)
+	, breakOnErrorMode(BreakOnErrorMode_Never)
+	, resuming(false)
+	, scriptAutoResume(true)
 {
 	setName(sDebuggerManager);
 }
@@ -241,8 +241,8 @@ DebuggerManager::~DebuggerManager(void)
 {
 }
 
-void DebuggerManager::setDataModel(RBX::DataModel *pDataModel)
-{	
+void DebuggerManager::setDataModel(RBX::DataModel* pDataModel)
+{
 	if (pDataModel == dataModel)
 		return;
 
@@ -264,7 +264,9 @@ void DebuggerManager::setDataModel(RBX::DataModel *pDataModel)
 }
 
 RBX::DataModel* DebuggerManager::getDataModel()
-{	return dataModel; }
+{
+	return dataModel;
+}
 
 void DebuggerManager::reset()
 {
@@ -312,7 +314,7 @@ shared_ptr<const Instances> DebuggerManager::getDebuggers_Reflection()
 	return result;
 }
 
-ScriptDebugger* DebuggerManager::findDebugger( lua_State* L )
+ScriptDebugger* DebuggerManager::findDebugger(lua_State* L)
 {
 	DebuggersLookup::const_iterator iter = debuggersLookup.find(L);
 	if (iter != debuggersLookup.end())
@@ -339,7 +341,7 @@ void DebuggerManager::verifyAddChild(const Instance* newChild) const
 }
 
 
-shared_ptr<Instance> DebuggerManager::addDebugger_Reflection( shared_ptr<Instance> script )
+shared_ptr<Instance> DebuggerManager::addDebugger_Reflection(shared_ptr<Instance> script)
 {
 	if (Script* s = Instance::fastDynamicCast<Script>(script.get()))
 		return addDebugger(s);
@@ -347,7 +349,7 @@ shared_ptr<Instance> DebuggerManager::addDebugger_Reflection( shared_ptr<Instanc
 }
 
 
-ScriptDebugger* DebuggerManager::findDebugger( Instance* script )
+ScriptDebugger* DebuggerManager::findDebugger(Instance* script)
 {
 	if (!debuggers.empty() && script)
 	{
@@ -355,10 +357,10 @@ ScriptDebugger* DebuggerManager::findDebugger( Instance* script )
 		if (iter != debuggers.end())
 			return iter->second;
 	}
-	return NULL;
+	return nullptr;
 }
 
-shared_ptr<ScriptDebugger> DebuggerManager::addDebugger( Instance* script )
+shared_ptr<ScriptDebugger> DebuggerManager::addDebugger(Instance* script)
 {
 	checkDebugging();
 
@@ -408,7 +410,7 @@ void DebuggerManager::populateForLookup(lua_State* L, ScriptDebugger* debugger)
 	debuggersLookup[L] = debugger;
 }
 
-void DebuggerManager::onChildRemoved( Instance*  child )
+void DebuggerManager::onChildRemoved(Instance* child)
 {
 	if (ScriptDebugger* debugger = Instance::fastDynamicCast<ScriptDebugger>(child))
 	{
@@ -416,7 +418,7 @@ void DebuggerManager::onChildRemoved( Instance*  child )
 
 		for (std::list<Lua::WeakThreadRef>::iterator iter = pausedThreads.begin(); iter != pausedThreads.end();)
 		{
-			if (debugger->isPausedThread(reinterpret_cast<uintptr_t>( iter->lock().get() )))
+			if (debugger->isPausedThread(reinterpret_cast<uintptr_t>(iter->lock().get())))
 			{
 				pausedThreads.erase(iter++);
 			}
@@ -432,7 +434,7 @@ void DebuggerManager::onChildRemoved( Instance*  child )
 			{
 				debuggersLookup.erase(iter++);
 			}
-			else 
+			else
 			{
 				++iter;
 			}
@@ -457,7 +459,7 @@ void DebuggerManager::addScriptDebugger(Instance* instance)
 	}
 }
 
-void DebuggerManager::onChildAdded( Instance*  child )
+void DebuggerManager::onChildAdded(Instance* child)
 {
 	Super::onChildAdded(child);
 	addScriptDebugger(child);
@@ -505,10 +507,10 @@ void DebuggerManager::resume()
 
 	pausedThreads.insert(pausedThreads.begin(), resumingPausedThreads.begin(), resumingPausedThreads.end());
 	resumingPausedThreads.clear();
-	
+
 	resuming = true;
 	bool evalLineHookForCurrentLine = false;
-	try 
+	try
 	{
 		while (!pausedThreads.empty())
 		{
@@ -537,7 +539,7 @@ void DebuggerManager::resume()
 						// if we have a special breakpoint without a baseThread, then set the current yielded thread
 						// this will make sure special breakpoint will handle instructions specific to this thread only
 						if (specialBreakpoint && !specialBreakpoint->baseThread)
-						{														
+						{
 							specialBreakpoint->baseThread = thread;
 							if (!dynamic_cast<StepOutBreakpoint*>(specialBreakpoint.get()))
 								break;
@@ -593,7 +595,7 @@ void DebuggerManager::stepOut()
 		resume();
 }
 
-void DebuggerManager::hook( lua_State* L, lua_Debug *ar )
+void DebuggerManager::hook(lua_State* L, lua_Debug* ar)
 {
 	if (ar->event == LUA_HOOKCOUNT)
 	{
@@ -605,7 +607,7 @@ void DebuggerManager::hook( lua_State* L, lua_Debug *ar )
 	}
 }
 
-void DebuggerManager::onHook(lua_State* L, lua_Debug *ar)
+void DebuggerManager::onHook(lua_State* L, lua_Debug* ar)
 {
 	ScriptDebugger* debugger = findDebugger(L);
 	if (!debugger)
@@ -660,15 +662,15 @@ void DebuggerManager::onHook(lua_State* L, lua_Debug *ar)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                      ScriptDebugger
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-ScriptDebugger::ScriptDebugger( Instance& script )
-:currentLine(0) 
-,breakpointHookData(NULL)
-,globalRawScriptPtr(NULL)
-,prevFuncTable(NULL)
-,prevRawScriptPtr(NULL)
-,ignoreDebuggerBreak(false)
-,currentThreadID(0)
-,rootThreadResumed(false)
+ScriptDebugger::ScriptDebugger(Instance& script)
+	:currentLine(0)
+	, breakpointHookData(nullptr)
+	, globalRawScriptPtr(nullptr)
+	, prevFuncTable(nullptr)
+	, prevRawScriptPtr(nullptr)
+	, ignoreDebuggerBreak(false)
+	, currentThreadID(0)
+	, rootThreadResumed(false)
 {
 	setName(RBX::format("%sDebugger", script.getName().c_str()));
 	setScript(&script);
@@ -676,7 +678,7 @@ ScriptDebugger::ScriptDebugger( Instance& script )
 
 ScriptDebugger::~ScriptDebugger()
 {
-    scriptStartedConnection.disconnect();
+	scriptStartedConnection.disconnect();
 	scriptStoppedConnection.disconnect();
 	scriptParentChangedConnection.disconnect();
 	scriptClonedConnection.disconnect();
@@ -692,7 +694,7 @@ shared_ptr<const Instances> ScriptDebugger::getBreakpoints_Reflection()
 }
 
 
-shared_ptr<DebuggerWatch> ScriptDebugger::addWatch( std::string expression )
+shared_ptr<DebuggerWatch> ScriptDebugger::addWatch(std::string expression)
 {
 	shared_ptr<DebuggerWatch> watch = Creatable<Instance>::create<DebuggerWatch>(expression);
 	watch->setParent(this);
@@ -700,7 +702,7 @@ shared_ptr<DebuggerWatch> ScriptDebugger::addWatch( std::string expression )
 }
 
 
-shared_ptr<Instance> ScriptDebugger::addWatch_Reflection( std::string expression )
+shared_ptr<Instance> ScriptDebugger::addWatch_Reflection(std::string expression)
 {
 	return addWatch(expression);
 }
@@ -715,23 +717,23 @@ shared_ptr<const Instances> ScriptDebugger::getWatches_Reflection()
 	return result;
 }
 
-Reflection::Variant ScriptDebugger::getWatchValue_Reflection( shared_ptr<Instance> instance )
+Reflection::Variant ScriptDebugger::getWatchValue_Reflection(shared_ptr<Instance> instance)
 {
 	if (DebuggerWatch* watch = Instance::fastDynamicCast<DebuggerWatch>(instance.get()))
 		return getWatchValue(watch);
 	throw std::runtime_error("bad watch argument");
 }
 
-static int setIndexInfo(lua_State * L)
+static int setIndexInfo(lua_State* L)
 {
 	RBX::StandardOut::singleton()->print(RBX::MESSAGE_INFO, "setIndexInfo");
 	return 0;
 }
 
-static int getIndexInfo(lua_State * L)
+static int getIndexInfo(lua_State* L)
 {
 	//check if there's a key value set?
-	const char * key = lua_tostring(L, 2);
+	const char* key = lua_tostring(L, 2);
 	if (!key)
 		return 0;
 
@@ -753,34 +755,34 @@ static int getIndexInfo(lua_State * L)
 	// Get the current stack frame
 	lua_pushstring(L, "frame");
 	lua_rawget(L, metatableIndex);
-	int frame = (int) lua_tointeger(L, -1);
+	int frame = (int)lua_tointeger(L, -1);
 
 	// Get the thread
 	lua_pushstring(L, "thread");
 	lua_rawget(L, metatableIndex);
-	lua_State * parentThread = lua_tothread(L, -1);
+	lua_State* parentThread = lua_tothread(L, -1);
 
 	//
 	// Check in locals first
 	//
 
 	// If we're examining the main thread we need to skip over the watch expression call, and the metatable __index call
-	if(parentThread == L)
+	if (parentThread == L)
 		frame += 2;
 
 	lua_Debug debugInfo;
 	memset(&debugInfo, 0, sizeof(lua_Debug));
-	if(lua_getstack(parentThread, frame, &debugInfo) == 1 && lua_getinfo(parentThread, "uf", &debugInfo))
+	if (lua_getstack(parentThread, frame, &debugInfo) == 1 && lua_getinfo(parentThread, "uf", &debugInfo))
 	{
 		int funcIndex = lua_gettop(parentThread);
 
 		// Look in the upvalues
-		if(debugInfo.nups > 0)
+		if (debugInfo.nups > 0)
 		{
-			for(int index = 1; index <= debugInfo.nups; ++index)
+			for (int index = 1; index <= debugInfo.nups; ++index)
 			{
-				const char * name = lua_getupvalue(parentThread, funcIndex, index);
-				if(name != NULL && strcmp(name, key) == 0)
+				const char* name = lua_getupvalue(parentThread, funcIndex, index);
+				if (name != nullptr && strcmp(name, key) == 0)
 				{
 					// Move the value across
 					lua_xmove(parentThread, L, 1);
@@ -790,17 +792,17 @@ static int getIndexInfo(lua_State * L)
 
 					// Don't bother removing the other stuff on the stack, lua will do it for us
 					return 1;
-				}	
+				}
 				lua_pop(parentThread, 1);
 			}
 		}
 
 		// Check in the locals
 		int index = 1;
-		const char * name;
-		while( (name = lua_getlocal(parentThread, &debugInfo, index++)) != NULL)
+		const char* name;
+		while ((name = lua_getlocal(parentThread, &debugInfo, index++)) != nullptr)
 		{
-			if(strcmp(name, key) == 0)
+			if (strcmp(name, key) == 0)
 			{
 				// Move the value across
 				lua_xmove(parentThread, L, 1);
@@ -829,7 +831,7 @@ static int getIndexInfo(lua_State * L)
 	}
 }
 
-static void setEvalThreadEnvironment(lua_State * parentThread, lua_State* evalThread, int stackDepth)
+static void setEvalThreadEnvironment(lua_State* parentThread, lua_State* evalThread, int stackDepth)
 {
 	int functionIndex = lua_gettop(evalThread);
 	lua_checkstack(evalThread, 6);
@@ -870,7 +872,7 @@ static void setEvalThreadEnvironment(lua_State * parentThread, lua_State* evalTh
 	lua_pushstring(evalThread, "env");
 	lua_Debug debugInfo;
 	memset(&debugInfo, 0, sizeof(lua_Debug));
-	if(lua_getstack(parentThread, stackDepth, &debugInfo) == 1 && lua_getinfo(parentThread, "f", &debugInfo))
+	if (lua_getstack(parentThread, stackDepth, &debugInfo) == 1 && lua_getinfo(parentThread, "f", &debugInfo))
 	{
 		int funcIndex = lua_gettop(parentThread);
 		lua_getfenv(parentThread, funcIndex);
@@ -900,7 +902,7 @@ Reflection::Variant DebuggerManager::readWatchValue(std::string expression, int 
 	RBXASSERT_BALLANCED_LUA_STACK(L);
 
 	lua_State* evalThread = lua_newthread(L);
-	lua_sethook(evalThread, NULL, 0, 0);	// Prevent re-entrancy
+	lua_sethook(evalThread, nullptr, 0, 0);	// Prevent re-entrancy
 
 	Lua::ScopedPopper pop(L, 1);
 
@@ -940,7 +942,7 @@ Reflection::Variant DebuggerManager::readWatchValue(std::string expression, int 
 	return result;
 }
 
-Reflection::Variant ScriptDebugger::getWatchValue( DebuggerWatch* watch, int stackFrame )
+Reflection::Variant ScriptDebugger::getWatchValue(DebuggerWatch* watch, int stackFrame)
 {
 	Reflection::Variant result;
 
@@ -981,7 +983,7 @@ Reflection::Variant ScriptDebugger::getKeyValue(std::string key, int stackFrame)
 }
 
 template<class R>
-void ScriptDebugger::withPausedThreadHook( lua_State* L, lua_Debug *ar, boost::function<R(lua_State* L, lua_Debug *ar)> f, R& r, shared_ptr<std::string>& error)
+void ScriptDebugger::withPausedThreadHook(lua_State* L, lua_Debug* ar, boost::function<R(lua_State* L, lua_Debug* ar)> f, R& r, shared_ptr<std::string>& error)
 {
 	RBXASSERT(ar->event == LUA_HOOKLINE);
 	RBXASSERT(currentLine == ar->currentline);
@@ -1005,7 +1007,7 @@ void ScriptDebugger::withPausedThreadHook( lua_State* L, lua_Debug *ar, boost::f
 
 
 template<class R>
-R ScriptDebugger::withPausedThread( boost::function<R(lua_State* L, lua_Debug *ar)> f )
+R ScriptDebugger::withPausedThread(boost::function<R(lua_State* L, lua_Debug* ar)> f)
 {
 	// When pausedThread is set, then Lua stack is not usable.
 	// Therefore, we resume the thread back into the hook and run our code there.
@@ -1047,11 +1049,11 @@ R ScriptDebugger::withPausedThread( boost::function<R(lua_State* L, lua_Debug *a
 		throw std::runtime_error("Cannot perform this operation unless the thread is paused");
 }
 
-void ScriptDebugger::debuggerBreak( lua_State* L, lua_Debug *ar )
+void ScriptDebugger::debuggerBreak(lua_State* L, lua_Debug* ar)
 {
 	if (ignoreDebuggerBreak)
 	{
-		StandardOut::singleton()->print(MESSAGE_WARNING, "Breakpoints are not supported for the executed script code");	
+		StandardOut::singleton()->print(MESSAGE_WARNING, "Breakpoints are not supported for the executed script code");
 		return;
 	}
 
@@ -1087,7 +1089,7 @@ void ScriptDebugger::debuggerBreak( lua_State* L, lua_Debug *ar )
 
 	breakpointHookData = ar;
 	encounteredBreak(currentLine);
-	breakpointHookData = NULL;
+	breakpointHookData = nullptr;
 
 	if (pausedThread.empty())
 	{
@@ -1104,7 +1106,7 @@ void ScriptDebugger::debuggerBreak( lua_State* L, lua_Debug *ar )
 	}
 }
 
-bool ScriptDebugger::handleHook(lua_State* L, lua_Debug *ar)
+bool ScriptDebugger::handleHook(lua_State* L, lua_Debug* ar)
 {
 	if (hookFunction)
 	{
@@ -1166,7 +1168,7 @@ shared_ptr<Reflection::ValueMap> ScriptDebugger::readGlobals(lua_State* L)
 		{
 			const char* name = lua_tostring(L, -2);
 			RBXASSERT(result->find(name) == result->end());
-			
+
 			Reflection::Variant value;
 			Lua::LuaArguments::get(L, -1, value, false);
 			(*result)[name] = value;
@@ -1190,7 +1192,7 @@ shared_ptr<Reflection::ValueMap> ScriptDebugger::readUpvalues(int stackIndex, lu
 	shared_ptr<Reflection::ValueMap> arguments = rbx::make_shared<Reflection::ValueMap>();
 
 	RBXASSERT_BALLANCED_LUA_STACK(L);
-	int result = lua_getinfo(L, "fu", &ar);	
+	int result = lua_getinfo(L, "fu", &ar);
 	RBXASSERT(result);
 	// stack contains current function
 
@@ -1212,23 +1214,23 @@ shared_ptr<Reflection::ValueMap> ScriptDebugger::readUpvalues(int stackIndex, lu
 	return arguments;
 }
 
-static const char *traverseGlobals(lua_State *L, const TValue *o) 
+static const char* traverseGlobals(lua_State* L, const TValue* o)
 {
-  Table *globalTable = hvalue(gt(L));
-  if (globalTable)
-  {
-	  int tableSize = sizenode(globalTable);
-	  while (tableSize--) 
-	  {
-		  Node *node = gnode(globalTable, tableSize);
-		  if (luaO_rawequalObj(o, gval(node)) && ttisstring(gkey(node)))
-			  return getstr(tsvalue(gkey(node)));
-	  }
-  }
-  return NULL;
+	Table* globalTable = hvalue(gt(L));
+	if (globalTable)
+	{
+		int tableSize = sizenode(globalTable);
+		while (tableSize--)
+		{
+			Node* node = gnode(globalTable, tableSize);
+			if (luaO_rawequalObj(o, gval(node)) && ttisstring(gkey(node)))
+				return getstr(tsvalue(gkey(node)));
+		}
+	}
+	return nullptr;
 }
 
-static void populateFunctionName(lua_State *L, ScriptDebugger::FunctionInfo& funcInfo)
+static void populateFunctionName(lua_State* L, ScriptDebugger::FunctionInfo& funcInfo)
 {
 	StkId func = L->top - 1;
 	if (func && isLfunction(func))
@@ -1246,7 +1248,7 @@ std::vector<ScriptDebugger::FunctionInfo> ScriptDebugger::readStack(lua_State* L
 {
 	std::vector<FunctionInfo> result;
 
-	for (int frame=0; ; ++frame)
+	for (int frame = 0; ; ++frame)
 	{
 		lua_Debug ar;
 		if (lua_getstack(L, frame, &ar) == 0)
@@ -1279,7 +1281,7 @@ std::vector<ScriptDebugger::FunctionInfo> ScriptDebugger::readStack(lua_State* L
 }
 
 
-bool ScriptDebugger::onLineHook( lua_State* L, lua_Debug *ar )
+bool ScriptDebugger::onLineHook(lua_State* L, lua_Debug* ar)
 {
 	if (currentLine > 0)
 	{
@@ -1290,7 +1292,7 @@ bool ScriptDebugger::onLineHook( lua_State* L, lua_Debug *ar )
 		return false;
 	}
 
-	DebuggerBreakpoint* bp = NULL;
+	DebuggerBreakpoint* bp = nullptr;
 	if (hasDifferentScriptInstances(L))
 	{
 		lua_getinfo(L, "f", ar);
@@ -1376,19 +1378,19 @@ void ScriptDebugger::verifyAddChild(const Instance* newChild) const
 	throw std::runtime_error("Only DebuggerWatch and DebuggerBreakpoint can be children of ScriptDebugger");
 }
 
-void ScriptDebugger::verifySetParent( const Instance* newParent ) const
+void ScriptDebugger::verifySetParent(const Instance* newParent) const
 {
 	if (newParent && !Instance::fastDynamicCast<DebuggerManager>(newParent))
 		throw std::runtime_error("ScriptDebugger must be a child of DebuggerManager");
 }
 
-shared_ptr<Instance> ScriptDebugger::setBreakpoint_Reflection( int line )
+shared_ptr<Instance> ScriptDebugger::setBreakpoint_Reflection(int line)
 {
 	return setBreakpoint(line);
 }
 
 
-DebuggerBreakpoint* ScriptDebugger::findBreakpoint( int line )
+DebuggerBreakpoint* ScriptDebugger::findBreakpoint(int line)
 {
 	if (!breakpoints.empty())
 	{
@@ -1396,10 +1398,10 @@ DebuggerBreakpoint* ScriptDebugger::findBreakpoint( int line )
 		if (iter != breakpoints.end())
 			return (iter->second);
 	}
-	return NULL;
+	return nullptr;
 }
 
-shared_ptr<DebuggerBreakpoint> ScriptDebugger::setBreakpoint( int line )
+shared_ptr<DebuggerBreakpoint> ScriptDebugger::setBreakpoint(int line)
 {
 	if (DebuggerBreakpoint* breakpoint = findBreakpoint(line))
 	{
@@ -1412,7 +1414,7 @@ shared_ptr<DebuggerBreakpoint> ScriptDebugger::setBreakpoint( int line )
 	return breakpoint;
 }
 
-void ScriptDebugger::onChildRemoved( Instance* child )
+void ScriptDebugger::onChildRemoved(Instance* child)
 {
 	if (DebuggerBreakpoint* breakpoint = Instance::fastDynamicCast<DebuggerBreakpoint>(child))
 	{
@@ -1428,7 +1430,7 @@ void ScriptDebugger::onChildRemoved( Instance* child )
 	Super::onChildRemoved(child);
 }
 
-void ScriptDebugger::onChildAdded( Instance* child )
+void ScriptDebugger::onChildAdded(Instance* child)
 {
 	if (DebuggerBreakpoint* breakpoint = Instance::fastDynamicCast<DebuggerBreakpoint>(child))
 	{
@@ -1446,7 +1448,7 @@ void ScriptDebugger::onChildAdded( Instance* child )
 	Super::onChildAdded(child);
 }
 
-void ScriptDebugger::setScript( Instance* value )
+void ScriptDebugger::setScript(Instance* value)
 {
 	if (Script* scriptPtr = Instance::fastDynamicCast<Script>(value))
 	{
@@ -1462,10 +1464,10 @@ void ScriptDebugger::setScript( Instance* value )
 	}
 
 	// add signal so we can clone debugger on script clone
-	scriptClonedConnection = value->onDemandWrite()->instanceClonedSignal.connect(boost::bind(&ScriptDebugger::onScriptCloned, this, _1)); 
+	scriptClonedConnection = value->onDemandWrite()->instanceClonedSignal.connect(boost::bind(&ScriptDebugger::onScriptCloned, this, _1));
 }
 
-void ScriptDebugger::setScript( Script* value )
+void ScriptDebugger::setScript(Script* value)
 {
 	if (!value)
 		throw std::runtime_error("Cannot attach debugger to a null script");
@@ -1513,7 +1515,7 @@ void ScriptDebugger::setScript(ModuleScript* value)
 	scriptParentChangedConnection = value->ancestryChangedSignal.connect(boost::bind(&ScriptDebugger::onScriptParentChanged, this, _2));
 }
 
-void ScriptDebugger::onScriptStarting( lua_State* L )
+void ScriptDebugger::onScriptStarting(lua_State* L)
 {
 	if (!FFlag::LuaDebugger)
 		return;
@@ -1546,10 +1548,10 @@ void ScriptDebugger::onScriptStopped()
 	pausedThread.reset();
 	errorThread.reset();
 	currentLine = 0;
-	breakpointHookData = NULL;
-	globalRawScriptPtr = NULL;
-	prevFuncTable = NULL;
-    prevRawScriptPtr = NULL;
+	breakpointHookData = nullptr;
+	globalRawScriptPtr = nullptr;
+	prevFuncTable = nullptr;
+	prevRawScriptPtr = nullptr;
 	rootThreadResumed = false;
 	currentThreadID = 0;
 	pausedThreads.clear();
@@ -1564,7 +1566,7 @@ void ScriptDebugger::onScriptParentChanged(shared_ptr<RBX::Instance> newParent)
 		// now reset debugger data
 		onScriptStopped();
 		// do the cleanup
-		setParent(NULL);
+		setParent(nullptr);
 	}
 	else
 	{
@@ -1597,7 +1599,7 @@ ScriptContext::Result ScriptDebugger::resumeThread(lua_State* thread, bool evalL
 	if (!isPausedThread(reinterpret_cast<uintptr_t>(thread)) || isErrorThread(reinterpret_cast<uintptr_t>(thread)))
 	{
 		specialBreakpoint.reset();
-		breakpointHookData = NULL;
+		breakpointHookData = nullptr;
 		errorThread.reset();
 		pausedThreads.erase(reinterpret_cast<uintptr_t>(thread));
 		return result;
@@ -1643,7 +1645,7 @@ bool ScriptDebugger::isErrorThread(long threadID)
 
 bool ScriptDebugger::isRootThread(long threadID)
 {
-	if (!rootThread.empty() && (threadID == reinterpret_cast<uintptr_t>( rootThread.lock().get())))
+	if (!rootThread.empty() && (threadID == reinterpret_cast<uintptr_t>(rootThread.lock().get())))
 		return true;
 	return false;
 }
@@ -1684,10 +1686,10 @@ static bool doSetLocal(std::string valueName, const Reflection::Variant& value, 
 		{
 			RBXASSERT_BALLANCED_LUA_STACK(L);
 			int count = Lua::LuaArguments::push(value, L);
-            RBXASSERT(count > 0);
+			RBXASSERT(count > 0);
 			const char* name2 = lua_setlocal(L, &ar, n);
 			RBXASSERT(strcmp(name, name2) == 0);
-			lua_pop(L, count-1);
+			lua_pop(L, count - 1);
 			foundIt = true;
 			break;
 		}
@@ -1697,7 +1699,7 @@ static bool doSetLocal(std::string valueName, const Reflection::Variant& value, 
 	return foundIt;
 }
 
-void ScriptDebugger::setLocal( std::string name, Reflection::Variant value, int stackFrame)
+void ScriptDebugger::setLocal(std::string name, Reflection::Variant value, int stackFrame)
 {
 	if (!withPausedThread<bool>(boost::bind(&doSetLocal, name, boost::cref(value), stackFrame, _1)))
 		throw std::runtime_error(RBX::format("Bad local %s", name.c_str()));
@@ -1710,7 +1712,7 @@ static bool doSetUpvalue(std::string valueName, const Reflection::Variant& value
 		throw std::runtime_error("stackIndex out of range");
 
 	RBXASSERT_BALLANCED_LUA_STACK(L);
-	int result = lua_getinfo(L, "fu", &ar);	
+	int result = lua_getinfo(L, "fu", &ar);
 	RBXASSERT(result);
 	// stack contains current function
 
@@ -1723,8 +1725,8 @@ static bool doSetUpvalue(std::string valueName, const Reflection::Variant& value
 		{
 			RBXASSERT_BALLANCED_LUA_STACK(L);
 			int count = Lua::LuaArguments::push(value, L);
-            RBXASSERT(count > 0);
-            lua_pop(L, count-1); // We only want 1 value on the stack (strip out tuples)
+			RBXASSERT(count > 0);
+			lua_pop(L, count - 1); // We only want 1 value on the stack (strip out tuples)
 
 			const char* name2 = lua_setupvalue(L, -2, n);
 			RBXASSERT(strcmp(name, name2) == 0);
@@ -1739,7 +1741,7 @@ static bool doSetUpvalue(std::string valueName, const Reflection::Variant& value
 	return foundIt;
 }
 
-void ScriptDebugger::setUpvalue( std::string name, Reflection::Variant value, int stackFrame)
+void ScriptDebugger::setUpvalue(std::string name, Reflection::Variant value, int stackFrame)
 {
 	if (!withPausedThread<bool>(boost::bind(&doSetUpvalue, name, boost::cref(value), stackFrame, _1)))
 		throw std::runtime_error(RBX::format("Bad upvalue %s", name.c_str()));
@@ -1758,7 +1760,7 @@ static bool doSetGlobal(std::string valueName, const Reflection::Variant& value,
 	return true;
 }
 
-void ScriptDebugger::setGlobal( std::string name, Reflection::Variant value)
+void ScriptDebugger::setGlobal(std::string name, Reflection::Variant value)
 {
 	if (!withPausedThread<bool>(boost::bind(&doSetGlobal, name, boost::cref(value), _1)))
 		throw std::runtime_error(RBX::format("Bad global %s", name.c_str()));
@@ -1799,7 +1801,7 @@ void ScriptDebugger::pause()
 {
 	if (isPaused())
 		return;
-	
+
 	specialBreakpoint.reset(new PauseNowBreakpoint());
 	updateHook();
 }
@@ -1825,7 +1827,7 @@ RBX::Instance* ScriptDebugger::getScriptForLuaState(lua_State* L)
 	RBXASSERT(lua_isnil(L, -1) || lua_isfunction(L, -1));
 	if (lua_isnil(L, -1) || lua_iscfunction(L, -1))
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	Lua::ScopedPopper pop(L, 2);
@@ -1839,12 +1841,12 @@ RBX::Instance* ScriptDebugger::getScriptForLuaState(lua_State* L)
 	if (varResult.isType<boost::shared_ptr<RBX::Instance> >())
 		return varResult.get<boost::shared_ptr<RBX::Instance> >().get();
 
-	return NULL;
+	return nullptr;
 }
 
 bool ScriptDebugger::hasDifferentScriptInstances(lua_State* L)
 {
-	Closure* func  = curr_func(L);
+	Closure* func = curr_func(L);
 	// verify if function environment is different
 	if (prevFuncTable != func->c.env)
 	{
@@ -1867,7 +1869,7 @@ static std::string getHashString(RBX::Instance* pInstance)
 {
 	if (Script* scriptPtr = Instance::fastDynamicCast<Script>(pInstance))
 		return scriptPtr->requestHash();
-	
+
 	if (ModuleScript* moduleScriptPtr = Instance::fastDynamicCast<ModuleScript>(pInstance))
 		return moduleScriptPtr->requestHash();
 
@@ -1879,24 +1881,24 @@ static std::string getHashString(RBX::Instance* pInstance)
 Following is an example, showing generated script path
 
 DataModel
-    Workspace
-	    Script*
-        Model
-          Part
-          Part
-          Script**
-        Model
-          Model
-             Script***
-             Script
-          Script****
+	Workspace
+		Script*
+		Model
+		  Part
+		  Part
+		  Script**
+		Model
+		  Model
+			 Script***
+			 Script
+		  Script****
 
 Script*    : 0|0 (1st child of datamodel --> 1st child of workspace)
 Script**   : 0|1|2
 Script***  : 0|2|0|0
 Script**** : 0|2|1
 
-With Hash string, 
+With Hash string,
 Script*    : 0|0-Hash_String
 Script**   : 0|1|2-Hash_String
 Script***  : 0|2|0|0-Hash_String
@@ -1905,7 +1907,7 @@ Script**** : 0|2|1-Hash_String
 Scripts will be retrieved using datamodel and the hiereachy saved.
 */
 std::string ScriptDebugger::getScriptPath() const
-{ 
+{
 	if (!script)
 		return "";
 
@@ -1916,7 +1918,7 @@ std::string ScriptDebugger::getScriptPath() const
 	while (pParent)
 	{
 		childIndices.push_back(pParent->findChildIndex(pChild));
-		
+
 		pChild = pParent;
 		pParent = pChild->getParent();
 	}
@@ -1937,7 +1939,7 @@ std::string ScriptDebugger::getScriptPath() const
 void ScriptDebugger::setScriptPath(std::string scriptPath)
 {
 	RBX::Instance* pParent = RBX::DataModel::get(RBX::Scripting::DebuggerManager::singleton().getDataModel());
-	RBX::Instance* pChild = NULL;
+	RBX::Instance* pChild = nullptr;
 
 	std::string childPath(scriptPath), savedHashString;
 
@@ -1973,7 +1975,7 @@ void ScriptDebugger::setScriptPath(std::string scriptPath)
 	setScript(pChild);
 }
 
-void ScriptDebugger::updateRootThread(ScriptDebugger* scriptDebugger, lua_State *L)
+void ScriptDebugger::updateRootThread(ScriptDebugger* scriptDebugger, lua_State* L)
 {
 	// set root thread if it's not there
 	if (L && scriptDebugger && scriptDebugger->rootThread.empty())
@@ -1981,7 +1983,7 @@ void ScriptDebugger::updateRootThread(ScriptDebugger* scriptDebugger, lua_State 
 
 }
 
-void ScriptDebugger::setLuaHook(ScriptDebugger* scriptDebugger, int hookMask, lua_State *L)
+void ScriptDebugger::setLuaHook(ScriptDebugger* scriptDebugger, int hookMask, lua_State* L)
 {
 	if (L && (L->hookmask != hookMask))
 	{
@@ -2042,11 +2044,11 @@ void ScriptDebugger::handleError(lua_State* thread)
 	// get error message and read stack information
 	std::string errorMessage = RBX::Lua::safe_lua_tostring(thread, -1);
 	Stack stack = readStack(thread);
-	
+
 	// cleanup stack (for a C function currentline can be -1, so we cannot break there)
 	if (stack.size() > 0 && stack[0].currentline < 0)
 		stack.erase(stack.begin());
-	
+
 	handleError(errorMessage, stack);
 }
 
@@ -2066,7 +2068,7 @@ void ScriptDebugger::handleError(std::string errorMessage, const Stack& stack)
 			errorMessage = errorMessage.substr(stop + 1);
 		}
 	}
-	
+
 	if (stack.size() > 0)
 		currentLine = stack[0].currentline;
 
@@ -2145,14 +2147,14 @@ boost::shared_ptr<ScriptDebugger> ScriptDebugger::createClone(boost::shared_ptr<
 //                                                      DebuggerBreakpoint
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 DebuggerBreakpoint::DebuggerBreakpoint(void)
-:enabled(true)
-,line(0)
+	:enabled(true)
+	, line(0)
 {
 }
 
-DebuggerBreakpoint::DebuggerBreakpoint( int line )
-:enabled(true)
-,line(line)
+DebuggerBreakpoint::DebuggerBreakpoint(int line)
+	:enabled(true)
+	, line(line)
 {
 	RBXASSERT(line > 0);
 	setName(RBX::format("Breakpoint%d", line));
@@ -2171,13 +2173,13 @@ DebuggerWatch::DebuggerWatch(std::string expression)
 	setName(sDebuggerWatch);
 }
 
-void DebuggerBreakpoint::verifySetParent( const Instance* newParent ) const
+void DebuggerBreakpoint::verifySetParent(const Instance* newParent) const
 {
 	if (newParent && !Instance::fastDynamicCast<ScriptDebugger>(newParent))
 		throw std::runtime_error("Breakpoints must be a child of ScriptDebugger");
 }
 
-void DebuggerWatch::verifySetParent( const Instance* newParent ) const
+void DebuggerWatch::verifySetParent(const Instance* newParent) const
 {
 	if (newParent && !Instance::fastDynamicCast<ScriptDebugger>(newParent))
 		throw std::runtime_error("DebuggerWatch must be a child of ScriptDebugger");
@@ -2192,7 +2194,7 @@ void DebuggerWatch::checkExpressionSyntax()
 	const std::string code = "return " + expression;
 	bool error;
 	error = LuaVM::load(L, ProtectedString::fromTrustedSource(code), "") == LUA_ERRSYNTAX;
-	Lua::ScopedPopper pop(L, 1);	
+	Lua::ScopedPopper pop(L, 1);
 	if (error)
 	{
 		std::string err = Lua::safe_lua_tostring(L, -1);

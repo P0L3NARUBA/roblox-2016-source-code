@@ -18,116 +18,94 @@
 #include "v8world/Primitive.h"
 #include "v8datamodel/PartCookie.h"
 
-namespace
-{
-	void updateCookie(RBX::PartInstance* part)
-	{
+namespace {
+	void updateCookie(RBX::PartInstance* part) {
 		if (part)
 			part->setCookie(RBX::PartCookie::compute(part));
 	}
 }
 
-namespace RBX
-{	
-	GfxBinding::~GfxBinding()
-	{
+namespace RBX {
+	GfxBinding::~GfxBinding() {
 		RBXASSERT(!isBound());
 	}
 
-		// connects property change event listeners.
-	void GfxBinding::bindProperties(const shared_ptr<RBX::PartInstance>& part)
-	{
+	// connects property change event listeners.
+	void GfxBinding::bindProperties(const shared_ptr<RBX::PartInstance>& part) {
 		updateCookie(part.get());
 		connections.push_back(part->combinedSignal.connect(boost::bind(&GfxPart::onCombinedSignal, this, _1, _2)));
 		part->visitChildren(boost::bind(&GfxPart::onChildAdded, this, _1));
 	}
 
-		
-	void GfxBinding::zombify()
-	{
+	void GfxBinding::zombify() {
 		unbind();
 
 		invalidateEntity();
 	}
 
-	void GfxBinding::unbind()
-	{
-		if(partInstance)
-		{
-			partInstance->setGfxPart(NULL);
+	void GfxBinding::unbind() {
+		if (partInstance) {
+			partInstance->setGfxPart(nullptr);
 		}
 
-		for(size_t i = 0; i < connections.size(); ++i)
-		{
+		for (size_t i = 0u; i < connections.size(); ++i) {
 			connections[i].disconnect();
 		}
+
 		connections.clear();
 	}
 
- 
-	bool GfxBinding::isBound()
-	{ 
-		return !connections.empty(); 
+
+	bool GfxBinding::isBound() {
+		return !connections.empty();
 	}
 
-	void GfxBinding::onChildAdded(const shared_ptr<Instance>& child)
-	{
-		if (DataModelMesh* specShape = Instance::fastDynamicCast<DataModelMesh>(child.get())) 
-		{
+	void GfxBinding::onChildAdded(const shared_ptr<Instance>& child) {
+		if (DataModelMesh* specShape = Instance::fastDynamicCast<DataModelMesh>(child.get())) {
 			connections.push_back(specShape->propertyChangedSignal.connect(boost::bind(&GfxPart::onSpecialShapeChangedEx, this)));
 			onSpecialShapeChangedEx();
 		}
-		else if (DecalTexture* tex = Instance::fastDynamicCast<DecalTexture>(child.get())) 
-		{
+		else if (DecalTexture* tex = Instance::fastDynamicCast<DecalTexture>(child.get())) {
 			connections.push_back(tex->propertyChangedSignal.connect(boost::bind(&GfxPart::onTexturePropertyChanged, this, _1)));
 			updateCookie(partInstance.get());
 			invalidateEntity();
 		}
-		else if (Decal* decal = Instance::fastDynamicCast<Decal>(child.get())) 
-		{
+		else if (Decal* decal = Instance::fastDynamicCast<Decal>(child.get())) {
 			connections.push_back(decal->propertyChangedSignal.connect(boost::bind(&GfxPart::onDecalPropertyChanged, this, _1)));
 			updateCookie(partInstance.get());
 			invalidateEntity();
 		}
 	}
 
-	void GfxBinding::onChildRemoved(const shared_ptr<Instance>& child)
-	{
-		if (Instance::fastDynamicCast<DataModelMesh>(child.get())) 
-		{
+	void GfxBinding::onChildRemoved(const shared_ptr<Instance>& child) {
+		if (Instance::fastDynamicCast<DataModelMesh>(child.get())) {
 			// todo: need a disconnect for propertyChangedEvents...
 			onSpecialShapeChangedEx();
 		}
-		else if (Instance::fastDynamicCast<DecalTexture>(child.get())) 
-		{
+		else if (Instance::fastDynamicCast<DecalTexture>(child.get())) {
 			// todo: need a disconnect for propertyChangedEvents...
 			updateCookie(partInstance.get());
 			invalidateEntity();
 		}
-		else if (Instance::fastDynamicCast<Decal>(child.get())) 
-		{
+		else if (Instance::fastDynamicCast<Decal>(child.get())) {
 			// todo: need a disconnect for propertyChangedEvents...
 			updateCookie(partInstance.get());
 			invalidateEntity();
 		}
 	}
 
-	bool GfxBinding::isInWorkspace(RBX::Instance* part)
-	{
+	bool GfxBinding::isInWorkspace(RBX::Instance* part) {
 		Instance* ws = Workspace::findWorkspace(part);
 		return ws && part->isDescendantOf(ws);
 	}
 
-	void GfxBinding::onAncestorChanged(const shared_ptr<Instance>& ancestor)
-	{
+	void GfxBinding::onAncestorChanged(const shared_ptr<Instance>& ancestor) {
 		// Remove me from the scene if I am being removed from the Workspace
-		if (partInstance && !isInWorkspace(partInstance.get()))
-		{
+		if (partInstance && !isInWorkspace(partInstance.get())) {
 			// will cause a delete on next updateEntity()
 			zombify();
 		}
-		else
-		{
+		else {
 			// part was removed from its ancestor (potentially deleted, or moved to a different cluster)
 			updateCookie(partInstance.get());
 			invalidateEntity();
@@ -135,49 +113,44 @@ namespace RBX
 	}
 
 
-	void GfxBinding::onSpecialShapeChangedEx()
-	{
+	void GfxBinding::onSpecialShapeChangedEx() {
 		updateCookie(partInstance.get());
 		onSpecialShapeChanged();
 	}
 
 
-	void GfxBinding::onPropertyChanged(const Reflection::PropertyDescriptor* descriptor)
-	{
-		if (*descriptor==PartInstance::prop_CFrame)
-		{
+	void GfxBinding::onPropertyChanged(const Reflection::PropertyDescriptor* descriptor) {
+		if (*descriptor == PartInstance::prop_CFrame) {
 			onCoordinateFrameChanged();
-		} 
-		else if (*descriptor==PartInstance::prop_Anchored)
-		{
+		}
+		else if (*descriptor == PartInstance::prop_Anchored) {
 			//partInstance->getGfxPart()->onClumpChanged();
-		} 
-		else if (*descriptor==PartInstance::prop_Size)
-		{
+		}
+		else if (*descriptor == PartInstance::prop_Size) {
 			onSizeChanged();
-		} 
-		else if (*descriptor==PartInstance::prop_Transparency || *descriptor==PartInstance::prop_LocalTransparencyModifier) {
+		}
+		else if (*descriptor == PartInstance::prop_Transparency || *descriptor == PartInstance::prop_LocalTransparencyModifier) {
 			onTransparencyChanged();
 		}
-		else if (*descriptor==PartInstance::prop_renderMaterial) {
+		else if (*descriptor == PartInstance::prop_renderMaterial) {
 			invalidateEntity();
 		}
-		else if (*descriptor==BasicPartInstance::prop_shapeXml) {
+		else if (*descriptor == BasicPartInstance::prop_shapeXml) {
 			invalidateEntity();
 		}
-		else if (*descriptor==ExtrudedPartInstance::prop_styleXml) {
+		else if (*descriptor == ExtrudedPartInstance::prop_styleXml) {
 			invalidateEntity();
 		}
 #ifdef _PRISM_PYRAMID_
-		else if (*descriptor==PrismInstance::prop_sidesXML) {
+		else if (*descriptor == PrismInstance::prop_sidesXML) {
 			invalidateEntity();
-		}		
+		}
 		//else if (*descriptor==PrismInstance::prop_slices) {
 		//	invalidateEntity();
 		//}
-		else if (*descriptor==PyramidInstance::prop_sidesXML) {
+		else if (*descriptor == PyramidInstance::prop_sidesXML) {
 			invalidateEntity();
-		}		
+		}
 		//else if (*descriptor==PyramidInstance::prop_slices) {
 		//	invalidateEntity();
 		//}
@@ -185,72 +158,60 @@ namespace RBX
 		else if (Surface::isSurfaceDescriptor(*descriptor)) {
 			invalidateEntity();
 		}
-		else if(*descriptor==PartInstance::prop_Color)
-		{
+		else if (*descriptor == PartInstance::prop_Color) {
 			invalidateEntity();
 		}
-		else if (*descriptor == PartOperation::desc_MeshData)
-		{
+		else if (*descriptor == PartOperation::desc_MeshData) {
 			invalidateEntity();
 		}
-		else if (*descriptor == PartOperation::desc_UsePartColor)
-		{
+		else if (*descriptor == PartOperation::desc_UsePartColor) {
 			invalidateEntity();
 		}
-		else if (*descriptor == PartOperation::desc_FormFactor)
-		{
+		else if (*descriptor == PartOperation::desc_FormFactor) {
 			invalidateEntity();
 		}
 	}
 
-	void GfxBinding::onTexturePropertyChanged(const Reflection::PropertyDescriptor* descriptor)
-	{
-		if (*descriptor==FaceInstance::prop_Face)
-		{
+	void GfxBinding::onTexturePropertyChanged(const Reflection::PropertyDescriptor* descriptor) {
+		if (*descriptor == FaceInstance::prop_Face) {
 			updateCookie(partInstance.get());
 			invalidateEntity();
 		}
-		else if (*descriptor==DecalTexture::prop_Texture)
-		{
+		else if (*descriptor == DecalTexture::prop_Texture) {
 			updateCookie(partInstance.get());
 			invalidateEntity();
 		}
-		else if (*descriptor==DecalTexture::prop_Specular)
+		else if (*descriptor == DecalTexture::prop_Specular)
 			invalidateEntity();
-		else if (*descriptor==DecalTexture::prop_Shiny)
+		else if (*descriptor == DecalTexture::prop_Shiny)
 			invalidateEntity();
-		else if (*descriptor==DecalTexture::prop_StudsPerTileU)
+		else if (*descriptor == DecalTexture::prop_StudsPerTileU)
 			invalidateEntity();
-		else if (*descriptor==DecalTexture::prop_StudsPerTileV)
+		else if (*descriptor == DecalTexture::prop_StudsPerTileV)
 			invalidateEntity();
-		else if (*descriptor==DecalTexture::prop_Transparency || *descriptor==Decal::prop_LocalTransparencyModifier )
+		else if (*descriptor == DecalTexture::prop_Transparency || *descriptor == Decal::prop_LocalTransparencyModifier)
 			invalidateEntity();
 	}
 
-	void GfxBinding::onDecalPropertyChanged(const Reflection::PropertyDescriptor* descriptor)
-	{
-		if (*descriptor==FaceInstance::prop_Face)
-		{
+	void GfxBinding::onDecalPropertyChanged(const Reflection::PropertyDescriptor* descriptor) {
+		if (*descriptor == FaceInstance::prop_Face) {
 			updateCookie(partInstance.get());
 			invalidateEntity();
 		}
-		else if (*descriptor==RBX::Decal::prop_Texture)
-		{
+		else if (*descriptor == RBX::Decal::prop_Texture) {
 			updateCookie(partInstance.get());
 			invalidateEntity();
 		}
-		else if (*descriptor==RBX::Decal::prop_Specular)
+		else if (*descriptor == RBX::Decal::prop_Specular)
 			invalidateEntity();
-		else if (*descriptor==RBX::Decal::prop_Shiny)
+		else if (*descriptor == RBX::Decal::prop_Shiny)
 			invalidateEntity();
-		else if (*descriptor==RBX::Decal::prop_Transparency || *descriptor==Decal::prop_LocalTransparencyModifier)
+		else if (*descriptor == RBX::Decal::prop_Transparency || *descriptor == Decal::prop_LocalTransparencyModifier)
 			invalidateEntity();
 	}
 
-	void GfxBinding::onCombinedSignal(Instance::CombinedSignalType type, const Instance::ICombinedSignalData* data)
-	{
-		switch(type)
-		{
+	void GfxBinding::onCombinedSignal(Instance::CombinedSignalType type, const Instance::ICombinedSignalData* data) {
+		switch (type) {
 		case Instance::OUTFIT_CHANGED:
 			onOutfitChanged();
 			break;
@@ -269,29 +230,24 @@ namespace RBX
 		case Instance::PROPERTY_CHANGED:
 			onPropertyChanged(boost::polymorphic_downcast<const Instance::PropertyChangedSignalData*>(data)->propertyDescriptor);
 			break;
-        default:
-            break;
+		default:
+			break;
 		}
 	}
 
-	void GfxBinding::onOutfitChanged()
-	{
+	void GfxBinding::onOutfitChanged() {
 		invalidateEntity();
 	}
 
-	void GfxBinding::onHumanoidChanged()
-	{
+	void GfxBinding::onHumanoidChanged() {
 		updateCookie(partInstance.get());
 		invalidateEntity();
 	}
 
-	void GfxBinding::cleanupStaleConnections()
-	{
-		for(size_t i = connections.size(); i != 0; --i)
-		{
-			if(!connections[i-1].connected())
-			{
-				connections.erase(connections.begin()+ (i -1)); // remove dead connection.
+	void GfxBinding::cleanupStaleConnections() {
+		for (size_t i = connections.size(); i != 0u; --i) {
+			if (!connections[i - 1u].connected()) {
+				connections.erase(connections.begin() + (i - 1u)); // remove dead connection.
 			}
 		}
 	}
@@ -300,8 +256,7 @@ namespace RBX
 	{
 		// nb: specifically ignore baseclass impl. we don't want to call setGfxPart.
 
-		for(size_t i = 0; i < connections.size(); ++i)
-		{
+		for (size_t i = 0u; i < connections.size(); ++i) {
 			connections[i].disconnect();
 		}
 		connections.clear();

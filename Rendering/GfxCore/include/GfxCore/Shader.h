@@ -5,13 +5,10 @@
 #include <vector>
 #include <string>
 
-namespace RBX
-{
-	namespace Graphics
-	{
+namespace RBX {
+	namespace Graphics {
 
-		class VertexShader : public Resource
-		{
+		class VertexShader : public Resource {
 		public:
 			~VertexShader();
 
@@ -21,8 +18,7 @@ namespace RBX
 			VertexShader(Device* device);
 		};
 
-		class FragmentShader : public Resource
-		{
+		class FragmentShader : public Resource {
 		public:
 			~FragmentShader();
 
@@ -32,8 +28,7 @@ namespace RBX
 			FragmentShader(Device* device);
 		};
 
-		class ComputeShader : public Resource
-		{
+		class ComputeShader : public Resource {
 		public:
 			~ComputeShader();
 
@@ -43,8 +38,7 @@ namespace RBX
 			ComputeShader(Device* device);
 		};
 
-		class GeometryShader : public Resource
-		{
+		class GeometryShader : public Resource {
 		public:
 			~GeometryShader();
 
@@ -54,15 +48,14 @@ namespace RBX
 			GeometryShader(Device* device);
 		};
 
-		class ShaderProgram : public Resource
-		{
+		class ShaderProgram : public Resource {
 		public:
 			~ShaderProgram();
 
-			virtual int getConstantHandle(const char* name) const = 0;
+			//virtual int getConstantHandle(const char* name) const = 0;
 
-			virtual unsigned int getMaxWorldTransforms() const = 0;
-			virtual unsigned int getSamplerMask() const = 0;
+			virtual uint32_t getMaxWorldTransforms() const = 0;
+			virtual uint32_t getSamplerMask() const = 0;
 
 			static void dumpToFLog(const std::string& text, int channel);
 
@@ -77,13 +70,12 @@ namespace RBX
 			shared_ptr<GeometryShader> geometryShader;
 		};
 
-		struct ShaderGlobalConstant
-		{
+		struct ShaderGlobalConstant {
 			const char* name;
-			unsigned int offset;
-			unsigned int size;
+			uint32_t offset;
+			uint32_t size;
 
-			ShaderGlobalConstant(const char* name, unsigned int offset, unsigned int size);
+			ShaderGlobalConstant(const char* name, uint32_t offset, uint32_t size);
 		};
 
 	}

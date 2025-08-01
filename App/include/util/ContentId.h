@@ -26,9 +26,13 @@ namespace RBX {
 
 		// Constructors are explicit to encourage you to use static constructors above if the string isn't a fully qualified URL
 		explicit ContentId(const char* id)
-			:id(id) { CorrectBackslash(this->id); }
+			:id(id) {
+			CorrectBackslash(this->id);
+		}
 		explicit ContentId(const std::string& id)
-			:id(id) { CorrectBackslash(this->id); }
+			:id(id) {
+			CorrectBackslash(this->id);
+		}
 		ContentId() {}
 
 		void clear()
@@ -42,7 +46,7 @@ namespace RBX {
 		const std::string& toString() const {
 			return id;
 		}
-		
+
 		void convertToLegacyContent(const std::string& baseUrl);
 		void convertAssetId(const std::string& baseUrl, int universeId);
 		bool reconstructUrl(const std::string& baseUrl, const char* const paths[], const int pathCount);
@@ -52,21 +56,21 @@ namespace RBX {
 		std::string getAssetName() const;
 		std::string getUnConvertedAssetName() const;
 
-		bool isNull() const { return id.size()==0; }
-		bool isAsset() const { return id.compare(0, 11, "rbxasset://") == 0; }
-		bool isAssetId() const { return id.compare(0, 13, "rbxassetid://") == 0; }
-		bool isHttp() const { return id.compare(0, 4, "http") == 0; }
-		bool isFile() const { return id.compare(0, 7, "file://") == 0; }
-		bool isRbxHttp() const { return id.compare(0, 10, "rbxhttp://") == 0; }
-		bool isAppContent() const { return id.compare(0, 9, "rbxapp://") == 0; }
+		bool isNull() const { return id.size() == 0u; }
+		bool isAsset() const { return id.compare(0u, 11u, "rbxasset://") == 0u; }
+		bool isAssetId() const { return id.compare(0u, 13u, "rbxassetid://") == 0u; }
+		bool isHttp() const { return id.compare(0u, 4u, "http") == 0u; }
+		bool isFile() const { return id.compare(0u, 7u, "file://") == 0u; }
+		bool isRbxHttp() const { return id.compare(0u, 10u, "rbxhttp://") == 0u; }
+		bool isAppContent() const { return id.compare(0u, 9u, "rbxapp://") == 0u; }
 		bool isNamedAsset() const;
 		bool isConvertedNamedAsset() const;
 
 		friend bool operator<(const ContentId& a, const ContentId& b);
 		friend bool operator==(const ContentId& a, const ContentId& b);
 		friend bool operator!=(const ContentId& a, const ContentId& b);
-        
-    private:
+
+	private:
 		static void CorrectBackslash(std::string& id);
 
 		std::string id;

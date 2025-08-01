@@ -15,22 +15,22 @@ float4 BloomDownsamplePS( BasicVertexOutput IN ) : SV_TARGET {
     float x = srcTexelSize.x;
     float y = srcTexelSize.y;
 
-    float3 a = MainTexture.Sample(MainSampler, float2(texCoord.x - x * 2.0, texCoord.y + y * 2.0));
-    float3 b = MainTexture.Sample(MainSampler, float2(texCoord.x          , texCoord.y + y * 2.0));
-    float3 c = MainTexture.Sample(MainSampler, float2(texCoord.x + x * 2.0, texCoord.y + y * 2.0));
+    float3 a = MainTexture.SampleLevel(MainSampler, float2(texCoord.x - x * 2.0, texCoord.y + y * 2.0), Parameters1.y);
+    float3 b = MainTexture.SampleLevel(MainSampler, float2(texCoord.x          , texCoord.y + y * 2.0), Parameters1.y);
+    float3 c = MainTexture.SampleLevel(MainSampler, float2(texCoord.x + x * 2.0, texCoord.y + y * 2.0), Parameters1.y);
 
-    float3 d = MainTexture.Sample(MainSampler, float2(texCoord.x - x * 2.0, texCoord.y          ));
-    float3 e = MainTexture.Sample(MainSampler, float2(texCoord.x          , texCoord.y          ));
-    float3 f = MainTexture.Sample(MainSampler, float2(texCoord.x + x * 2.0, texCoord.y          ));
+    float3 d = MainTexture.SampleLevel(MainSampler, float2(texCoord.x - x * 2.0, texCoord.y          ), Parameters1.y);
+    float3 e = MainTexture.SampleLevel(MainSampler, float2(texCoord.x          , texCoord.y          ), Parameters1.y);
+    float3 f = MainTexture.SampleLevel(MainSampler, float2(texCoord.x + x * 2.0, texCoord.y          ), Parameters1.y);
 
-    float3 g = MainTexture.Sample(MainSampler, float2(texCoord.x - x * 2.0, texCoord.y - y * 2.0));
-    float3 h = MainTexture.Sample(MainSampler, float2(texCoord.x          , texCoord.y - y * 2.0));
-    float3 i = MainTexture.Sample(MainSampler, float2(texCoord.x + x * 2.0, texCoord.y - y * 2.0));
+    float3 g = MainTexture.SampleLevel(MainSampler, float2(texCoord.x - x * 2.0, texCoord.y - y * 2.0), Parameters1.y);
+    float3 h = MainTexture.SampleLevel(MainSampler, float2(texCoord.x          , texCoord.y - y * 2.0), Parameters1.y);
+    float3 i = MainTexture.SampleLevel(MainSampler, float2(texCoord.x + x * 2.0, texCoord.y - y * 2.0), Parameters1.y);
 
-    float3 j = MainTexture.Sample(MainSampler, float2(texCoord.x - x      , texCoord.y + y      ));
-    float3 k = MainTexture.Sample(MainSampler, float2(texCoord.x + x      , texCoord.y + y      ));
-    float3 l = MainTexture.Sample(MainSampler, float2(texCoord.x - x      , texCoord.y - y      ));
-    float3 m = MainTexture.Sample(MainSampler, float2(texCoord.x + x      , texCoord.y - y      ));
+    float3 j = MainTexture.SampleLevel(MainSampler, float2(texCoord.x - x      , texCoord.y + y      ), Parameters1.y);
+    float3 k = MainTexture.SampleLevel(MainSampler, float2(texCoord.x + x      , texCoord.y + y      ), Parameters1.y);
+    float3 l = MainTexture.SampleLevel(MainSampler, float2(texCoord.x - x      , texCoord.y - y      ), Parameters1.y);
+    float3 m = MainTexture.SampleLevel(MainSampler, float2(texCoord.x + x      , texCoord.y - y      ), Parameters1.y);
 
     float3 downsample = e * 0.125;
     downsample += (a + c + g + i) * 0.03125;
@@ -46,17 +46,17 @@ float4 BloomUpsamplePS( BasicVertexOutput IN ) : SV_TARGET {
     float x = filterRadius.x;
     float y = filterRadius.y;
 
-    float3 a = MainTexture.Sample(MainSampler, float2(texCoord.x - x, texCoord.y + y));
-    float3 b = MainTexture.Sample(MainSampler, float2(texCoord.x    , texCoord.y + y));
-    float3 c = MainTexture.Sample(MainSampler, float2(texCoord.x + x, texCoord.y + y));
+    float3 a = MainTexture.SampleLevel(MainSampler, float2(texCoord.x - x, texCoord.y + y), Parameters1.y);
+    float3 b = MainTexture.SampleLevel(MainSampler, float2(texCoord.x    , texCoord.y + y), Parameters1.y);
+    float3 c = MainTexture.SampleLevel(MainSampler, float2(texCoord.x + x, texCoord.y + y), Parameters1.y);
 
-    float3 d = MainTexture.Sample(MainSampler, float2(texCoord.x - x, texCoord.y    ));
-    float3 e = MainTexture.Sample(MainSampler, float2(texCoord.x    , texCoord.y    ));
-    float3 f = MainTexture.Sample(MainSampler, float2(texCoord.x + x, texCoord.y    ));
+    float3 d = MainTexture.SampleLevel(MainSampler, float2(texCoord.x - x, texCoord.y    ), Parameters1.y);
+    float3 e = MainTexture.SampleLevel(MainSampler, float2(texCoord.x    , texCoord.y    ), Parameters1.y);
+    float3 f = MainTexture.SampleLevel(MainSampler, float2(texCoord.x + x, texCoord.y    ), Parameters1.y);
 
-    float3 g = MainTexture.Sample(MainSampler, float2(texCoord.x - x, texCoord.y - y));
-    float3 h = MainTexture.Sample(MainSampler, float2(texCoord.x    , texCoord.y - y));
-    float3 i = MainTexture.Sample(MainSampler, float2(texCoord.x + x, texCoord.y - y));
+    float3 g = MainTexture.SampleLevel(MainSampler, float2(texCoord.x - x, texCoord.y - y), Parameters1.y);
+    float3 h = MainTexture.SampleLevel(MainSampler, float2(texCoord.x    , texCoord.y - y), Parameters1.y);
+    float3 i = MainTexture.SampleLevel(MainSampler, float2(texCoord.x + x, texCoord.y - y), Parameters1.y);
 
     float3 upsample = e * 4.0;
     upsample += (b + d + f + h) * 2.0;

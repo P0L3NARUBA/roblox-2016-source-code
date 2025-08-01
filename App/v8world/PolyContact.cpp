@@ -12,10 +12,10 @@ PolyContact::~PolyContact()
 {
 	deleteConnectors(polyConnectors);
 
-	RBXASSERT(polyConnectors.size() == 0);
+	RBXASSERT(polyConnectors.size() == 0u);
 }
 
-ContactConnector* PolyContact::getConnector(int i)	
+ContactConnector* PolyContact::getConnector(size_t i)
 {
 	return polyConnectors[i];
 }
@@ -30,7 +30,7 @@ void PolyContact::deleteConnectors(ConnectorArray& deleteConnectors)
 {
 	removeAllConnectorsFromKernel();
 
-	for (size_t i = 0; i < deleteConnectors.size(); ++i) {
+	for (size_t i = 0u; i < deleteConnectors.size(); ++i) {
 		RBXASSERT(!deleteConnectors[i]->isInKernel());
 		delete deleteConnectors[i];
 	}
@@ -41,8 +41,8 @@ void PolyContact::deleteConnectors(ConnectorArray& deleteConnectors)
 
 void PolyContact::removeAllConnectorsFromKernel()
 {
-	Kernel* kernel = NULL;
-	for (size_t i = 0; i < polyConnectors.size(); ++i) {
+	Kernel* kernel = nullptr;
+	for (size_t i = 0u; i < polyConnectors.size(); ++i) {
 		if (polyConnectors[i]->isInKernel()) {
 			kernel = kernel ? kernel : getKernel();		// small optimization - getKernel walks the IPipelines
 			kernel->removeConnector(polyConnectors[i]);
@@ -52,8 +52,8 @@ void PolyContact::removeAllConnectorsFromKernel()
 
 void PolyContact::putAllConnectorsInKernel()
 {
-	Kernel* kernel = NULL;
-	for (size_t i = 0; i < polyConnectors.size(); ++i) {
+	Kernel* kernel = nullptr;
+	for (size_t i = 0u; i < polyConnectors.size(); ++i) {
 		if (!polyConnectors[i]->isInKernel() &&
 			 polyConnectors[i]->getContactPoint().length < -ContactConnector::overlapGoal()) {
 			kernel = kernel ? kernel : getKernel();		// small optimization - getKernel walks the IPipelines
@@ -81,7 +81,7 @@ bool PolyContact::computeIsColliding(float overlapIgnored)
 {
 	if (Primitive::aaBoxCollide(*getPrimitive(0), *getPrimitive(1))) {
 		updateClosestFeatures();
-		if (polyConnectors.size() > 0) {
+		if (polyConnectors.size() > 0u) {
 			float overlap = worstFeatureOverlap();
 			if (overlap > overlapIgnored) {
 				return true;
@@ -99,20 +99,20 @@ void PolyContact::updateClosestFeatures()
 
 	matchClosestFeatures(newConnectors);	// new Connectors is now the deal!
 
-	RBXASSERT(newConnectors.size() <= 10);
+	RBXASSERT(newConnectors.size() <= 10u);
 
 	deleteConnectors(polyConnectors);		// any remaining not matched
 
 	polyConnectors = newConnectors;			// transfer over the pointers
 
-	RBXASSERT(polyConnectors.size() <= 10);
+	RBXASSERT(polyConnectors.size() <= 10u);
 }
 
 float PolyContact::worstFeatureOverlap()
 {
 	float worstOverlap = -FLT_MAX;		// i.e. not overlapping
-	RBXASSERT(polyConnectors.size() > 0);
-	for (size_t i = 0; i < polyConnectors.size(); ++i) {				// may not have any overlapping features!
+	RBXASSERT(polyConnectors.size() > 0u);
+	for (size_t i = 0u; i < polyConnectors.size(); ++i) {				// may not have any overlapping features!
 		float overlap = polyConnectors[i]->computeOverlap();				// computeLength returns negative
 		worstOverlap = std::max(worstOverlap, overlap);
 	}
@@ -122,7 +122,7 @@ float PolyContact::worstFeatureOverlap()
 // TODO - turn optimizer back on here after fixed
 void PolyContact::matchClosestFeatures(ConnectorArray& newConnectors)
 {
-	for (size_t i = 0; i < newConnectors.size(); ++i) {
+	for (size_t i = 0u; i < newConnectors.size(); ++i) {
 		if (PolyConnector* match = matchClosestFeature(newConnectors[i])) {
 			delete newConnectors[i];
 			newConnectors.replace(i, match);
@@ -132,19 +132,19 @@ void PolyContact::matchClosestFeatures(ConnectorArray& newConnectors)
 
 PolyConnector* PolyContact::matchClosestFeature(PolyConnector* newConnector)
 {
-	for (size_t i = 0; i < polyConnectors.size(); ++i) {
+	for (size_t i = 0u; i < polyConnectors.size(); ++i) {
 		PolyConnector* answer = polyConnectors[i];
 		if (PolyConnector::match(answer, newConnector)) {
 			polyConnectors.fastRemove(i);
 			return answer;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 void PolyContact::updateContactPoints()
 {
-	for (size_t i = 0; i < polyConnectors.size(); ++i)
+	for (size_t i = 0u; i < polyConnectors.size(); ++i)
 		polyConnectors[i]->updateContactPoint();
 }
 

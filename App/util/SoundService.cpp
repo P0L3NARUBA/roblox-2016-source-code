@@ -469,7 +469,7 @@ void SoundService::onServiceProvider(ServiceProvider* oldProvider, ServiceProvid
 	soundJob.reset();
 
 	if (statsItem) {
-		statsItem->setParent(NULL);
+		statsItem->setParent(nullptr);
 		statsItem.reset();
 	}
 

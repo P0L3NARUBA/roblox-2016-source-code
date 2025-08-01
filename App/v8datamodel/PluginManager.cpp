@@ -18,8 +18,8 @@
 
 const char* const RBX::sPluginManager = "PluginManager";
 const char* const RBX::sPlugin = "Plugin";
-const char *const RBX::sToolbar = "Toolbar";
-const char *const RBX::sButton = "Button";
+const char* const RBX::sToolbar = "Toolbar";
+const char* const RBX::sButton = "Button";
 
 using namespace RBX;
 
@@ -32,17 +32,17 @@ static Reflection::BoundFuncDesc<Plugin, shared_ptr<Instance>()> func_getMouseLu
 static Reflection::BoundFuncDesc<Plugin, void(bool)> func_activate(&Plugin::activate, "Activate", "exclusiveMouse", Security::Plugin);
 static Reflection::BoundFuncDesc<Plugin, shared_ptr<Instance>(std::string)> func_createToolbar(&Plugin::createToolbar, "CreateToolbar", "name", Security::Plugin);
 static Reflection::BoundFuncDesc<Plugin, void(std::string, Reflection::Variant)> func_setSetting(&Plugin::setSetting, "SetSetting",
-    "key", "value", Security::Plugin);
+	"key", "value", Security::Plugin);
 static Reflection::BoundFuncDesc<Plugin, Reflection::Variant(std::string)> func_getSetting(&Plugin::getSetting, "GetSetting",
-    "key", Security::Plugin);
+	"key", Security::Plugin);
 static Reflection::BoundFuncDesc<Plugin, int()> func_getStudioUserId(&Plugin::getStudioUserId, "GetStudioUserId", Security::Plugin);
 static Reflection::EventDesc<Plugin, void() > desc_Plugin_Deactivation(&Plugin::deactivationSignal, "Deactivation", Security::Plugin);
 static Reflection::BoundFuncDesc<Plugin, void(void)> func_saveSelectedToRoblox(&Plugin::saveSelectedToRoblox, "SaveSelectedToRoblox", Security::Plugin);
 
 //CSG
-static Reflection::BoundFuncDesc<Plugin, shared_ptr<Instance>( shared_ptr<const Instances> )> plugin_Union( &Plugin::csgUnion, "Union", "objects", Security::Plugin );
-static Reflection::BoundFuncDesc<Plugin, shared_ptr<const Instances>( shared_ptr<const Instances> )> plugin_Negate( &Plugin::csgNegate, "Negate", "objects", Security::Plugin );
-static Reflection::BoundFuncDesc<Plugin, shared_ptr<const Instances>( shared_ptr<const Instances> )> plugin_Separate( &Plugin::csgSeparate, "Separate", "objects", Security::Plugin );
+static Reflection::BoundFuncDesc<Plugin, shared_ptr<Instance>(shared_ptr<const Instances>)> plugin_Union(&Plugin::csgUnion, "Union", "objects", Security::Plugin);
+static Reflection::BoundFuncDesc<Plugin, shared_ptr<const Instances>(shared_ptr<const Instances>)> plugin_Negate(&Plugin::csgNegate, "Negate", "objects", Security::Plugin);
+static Reflection::BoundFuncDesc<Plugin, shared_ptr<const Instances>(shared_ptr<const Instances>)> plugin_Separate(&Plugin::csgSeparate, "Separate", "objects", Security::Plugin);
 
 static Reflection::BoundYieldFuncDesc<Plugin, int(std::string) > func_promptForExistingAssetId(&Plugin::promptForExistingAssetId, "PromptForExistingAssetId", "assetType", Security::Plugin);
 
@@ -56,8 +56,8 @@ static Reflection::BoundFuncDesc<Plugin, void(shared_ptr<RBX::Instance>, int)>	f
 static Reflection::BoundFuncDesc<PluginManager, void(std::string) > func_exportPlace(&PluginManager::exportPlace, "ExportPlace", "filePath", "", Security::Plugin);
 static Reflection::BoundFuncDesc<PluginManager, void(std::string) > func_exportSelection(&PluginManager::exportSelection, "ExportSelection", "filePath", "", Security::Plugin);
 
-static Reflection::PropDescriptor<Plugin, bool> prop_CollisionActive("CollisionEnabled", category_Data, &Plugin::isCollisionOn, NULL, Reflection::PropertyDescriptor::UI);
-static Reflection::PropDescriptor<Plugin, float> prop_GridSize("GridSize", category_Data, &Plugin::getGridSize, NULL, Reflection::PropertyDescriptor::UI);
+static Reflection::PropDescriptor<Plugin, bool> prop_CollisionActive("CollisionEnabled", category_Data, &Plugin::isCollisionOn, nullptr, Reflection::PropertyDescriptor::UI);
+static Reflection::PropDescriptor<Plugin, float> prop_GridSize("GridSize", category_Data, &Plugin::getGridSize, nullptr, Reflection::PropertyDescriptor::UI);
 static Reflection::BoundFuncDesc<Plugin, AdvArrowTool::JointCreationMode(void)> func_getJoinMode(&Plugin::getJoinMode, "GetJoinMode", Security::Plugin);
 REFLECTION_END();
 
@@ -67,7 +67,7 @@ namespace
 		shared_ptr<Instance> descendant)
 	{
 		shared_ptr<Script> script = Instance::fastSharedDynamicCast<Script>(descendant);
-		if (script != NULL && !script->isDisabled())
+		if (script != nullptr && !script->isDisabled())
 		{
 			std::map<std::string, shared_ptr<Instance> > extraGlobals;
 			extraGlobals["script"] = script;
@@ -76,12 +76,12 @@ namespace
 #if defined(RBX_STUDIO_BUILD)
 			try {
 				scriptContext->executeInNewThreadWithExtraGlobals(
-                    Security::StudioPlugin,
+					Security::StudioPlugin,
 					script->getEmbeddedCodeSafe(),
 					script->getFullName().c_str(),
 					extraGlobals);
 			}
-			catch (std::exception &e)
+			catch (std::exception& e)
 			{
 				StandardOut::singleton()->print(MESSAGE_ERROR, e.what());
 			}
@@ -91,25 +91,25 @@ namespace
 }
 
 Button::Button() : isDeleted(false),
-	active(false)
+active(false)
 {
 
 }
 
-void Button::setToolbar(Toolbar *toolbar)
+void Button::setToolbar(Toolbar* toolbar)
 {
 	this->toolbar = toolbar;
 }
 
 void Button::setActive(bool value)
 {
-	if (isDeleted) 
+	if (isDeleted)
 		return;
 
 	if (value)
 		toolbar->reset();
 
-	if(!value && active && PluginManager::singleton()->getActivePlugin(toolbar->getDataModel()))
+	if (!value && active && PluginManager::singleton()->getActivePlugin(toolbar->getDataModel()))
 		PluginManager::singleton()->DeactivatePlugins();
 
 	active = value;
@@ -147,9 +147,9 @@ void Button::processIconLoaded(ContentId contentId, AsyncHttpQueue::RequestResul
 }
 
 Toolbar::Toolbar()
-	: host(NULL)
-	, dataModel(NULL)
-	, id(NULL)
+	: host(nullptr)
+	, dataModel(nullptr)
+	, id(nullptr)
 	, isDeleted(false)
 {
 }
@@ -175,7 +175,7 @@ shared_ptr<Instance> Toolbar::createButton(std::string text, std::string tooltip
 		path = ContentProvider::getAssetFile("textures/chatBubble_bot_notifyGray_dotDotDot.png");
 	}
 
-	void *buttonId = host->createButton(id, text, tooltip, path);
+	void* buttonId = host->createButton(id, text, tooltip, path);
 	b->SetId(buttonId);
 	b->setToolbar(this);
 	b->setHost(host);
@@ -204,7 +204,7 @@ shared_ptr<Instance> Toolbar::createButton(std::string text, std::string tooltip
 	return b;
 }
 
-Button *Toolbar::getButton(void *id)
+Button* Toolbar::getButton(void* id)
 {
 	buttonsIter i = buttonsMap.find(id);
 	if (i != buttonsMap.end())
@@ -212,12 +212,12 @@ Button *Toolbar::getButton(void *id)
 		return i->second.get();
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 void Toolbar::reset()
 {
-	for (buttonsIter i = buttonsMap.begin(); i != buttonsMap.end();i ++)
+	for (buttonsIter i = buttonsMap.begin(); i != buttonsMap.end(); i++)
 	{
 		i->second->setActive(false);
 	}
@@ -225,7 +225,7 @@ void Toolbar::reset()
 
 void Toolbar::markDeleted()
 {
-	for (buttonsIter i = buttonsMap.begin(); i != buttonsMap.end();i ++)
+	for (buttonsIter i = buttonsMap.begin(); i != buttonsMap.end(); i++)
 	{
 		i->second->markDeleted();
 	}
@@ -243,7 +243,7 @@ Plugin::~Plugin()
 {
 }
 
-void Plugin::setDataModel(DataModel *dm)
+void Plugin::setDataModel(DataModel* dm)
 {
 	dataModel = dm;
 	luaMouse = Creatable<Instance>::create<PluginMouse>();
@@ -258,7 +258,7 @@ shared_ptr<Instance> Plugin::createToolbar(std::string name)
 
 void Plugin::saveSelectedToRoblox()
 {
-    pluginManager->getStudioHost()->uiAction("saveToRobloxAction");
+	pluginManager->getStudioHost()->uiAction("saveToRobloxAction");
 }
 
 shared_ptr<Instance> Plugin::getMouseLua()
@@ -268,7 +268,7 @@ shared_ptr<Instance> Plugin::getMouseLua()
 
 void Plugin::setSetting(std::string key, Reflection::Variant variant)
 {
-    pluginManager->getStudioHost()->setSetting(assetId, key, variant);
+	pluginManager->getStudioHost()->setSetting(assetId, key, variant);
 }
 
 Reflection::Variant Plugin::getSetting(std::string key)
@@ -310,17 +310,17 @@ void Plugin::activate(bool exclusiveMouse)
 {
 	pluginManager->activate(this, dataModel);
 	setActive(true);
-    
+
 	if (exclusiveMouse)
 	{
 		tool = exclusiveMouse;
-		Workspace *ws = dataModel->getWorkspace();
+		Workspace* ws = dataModel->getWorkspace();
 		ws->setNullMouseCommand();
 	}
 }
 
-void Plugin::setActive(bool state) 
-{ 
+void Plugin::setActive(bool state)
+{
 	active = state;
 	if (!state)
 	{
@@ -340,7 +340,7 @@ void Plugin::openScriptDoc(shared_ptr<RBX::Instance> script, int lineNumber)
 
 // PluginManager
 PluginManager::PluginManager()
-	: currentDataModel(NULL)
+	: currentDataModel(nullptr)
 {
 }
 
@@ -428,20 +428,20 @@ int PluginManager::createPlugin(lua_State* L)
 	return 1;
 }
 
-void PluginManager::deletePlugins(DataModel *dataModel)
+void PluginManager::deletePlugins(DataModel* dataModel)
 {
-	RBX::Plugin *activePlugin = getActivePlugin(dataModel);
-	if (activePlugin) 
+	RBX::Plugin* activePlugin = getActivePlugin(dataModel);
+	if (activePlugin)
 	{
-		activate(NULL, dataModel);
+		activate(nullptr, dataModel);
 	}
 
 	deleteStudioUI(dataModel);
-	
+
 	state.erase(dataModel);
 }
 
-void PluginManager::deleteStudioUI(DataModel *dataModel)
+void PluginManager::deleteStudioUI(DataModel* dataModel)
 {
 	stateIter iter = state.find(dataModel);
 	if (iter != state.end())
@@ -450,34 +450,34 @@ void PluginManager::deleteStudioUI(DataModel *dataModel)
 	}
 }
 
-Plugin *PluginManager::getActivePlugin(DataModel *dataModel) 
+Plugin* PluginManager::getActivePlugin(DataModel* dataModel)
 {
 	stateIter iter = state.find(dataModel);
 	if (iter != state.end())
 	{
 		return iter->second.active;
-	} 
+	}
 	else
 	{
-		return NULL;
+		return nullptr;
 	}
 }
 
 
 void PluginManager::DeactivatePlugins()
 {
-	activate(NULL, currentDataModel);
+	activate(nullptr, currentDataModel);
 	allPluginsDeactivatedSignal();
 }
 
-void PluginManager::activate(Plugin *plugin, DataModel *dataModel)
+void PluginManager::activate(Plugin* plugin, DataModel* dataModel)
 {
-	if (plugin != NULL)
+	if (plugin != nullptr)
 	{
 		stateIter iter = state.find(plugin->getDataModel());
 		RBXASSERT(iter != state.end());
 
-		for (StateDataEntry::toolbarsIter i = iter->second.toolbars.begin();i != iter->second.toolbars.end();i ++)
+		for (StateDataEntry::toolbarsIter i = iter->second.toolbars.begin(); i != iter->second.toolbars.end(); i++)
 		{
 			i->second->reset();
 		}
@@ -486,21 +486,21 @@ void PluginManager::activate(Plugin *plugin, DataModel *dataModel)
 		for (pluginsIter i = pluginlist.begin(); i != pluginlist.end(); ++i)
 		{
 			(*i)->setActive(false);
-			(*i)->deactivationSignal();		
+			(*i)->deactivationSignal();
 		}
 
 		iter->second.setActivePlugin(plugin);
 	}
 	else
 	{
-		Plugin *active = getActivePlugin(dataModel);
+		Plugin* active = getActivePlugin(dataModel);
 		if (active)
 		{
 			stateIter iter = state.find(dataModel);
 			if (iter != state.end())
 			{
-				iter->second.active = NULL;
-			} 
+				iter->second.active = nullptr;
+			}
 
 			active->setActive(false);
 			active->deactivationSignal();
@@ -508,7 +508,7 @@ void PluginManager::activate(Plugin *plugin, DataModel *dataModel)
 	}
 }
 
-shared_ptr<Instance> PluginManager::StateDataEntry::getToolbar(std::string name, IStudioPluginHost *host, DataModel* dataModel)
+shared_ptr<Instance> PluginManager::StateDataEntry::getToolbar(std::string name, IStudioPluginHost* host, DataModel* dataModel)
 {
 	toolbarsIter iter = toolbars.find(name);
 	if (iter == toolbars.end())
@@ -529,17 +529,17 @@ shared_ptr<Instance> PluginManager::StateDataEntry::getToolbar(std::string name,
 	return iter->second;
 }
 
-void PluginManager::StateDataEntry::fireButtonClick(void *id)
+void PluginManager::StateDataEntry::fireButtonClick(void* id)
 {
-	for (toolbarsIter i = toolbars.begin();i != toolbars.end(); i++)
+	for (toolbarsIter i = toolbars.begin(); i != toolbars.end(); i++)
 	{
-		if (i->second.get() == NULL)
+		if (i->second.get() == nullptr)
 		{
 			continue;
 		}
 
-		Button *btn = i->second->getButton(id);
-		if (btn) 
+		Button* btn = i->second->getButton(id);
+		if (btn)
 		{
 			btn->clickSignal();
 			break;
@@ -547,11 +547,11 @@ void PluginManager::StateDataEntry::fireButtonClick(void *id)
 	}
 }
 
-void PluginManager::StateDataEntry::disableStudioUI(bool hide, IStudioPluginHost *host)
+void PluginManager::StateDataEntry::disableStudioUI(bool hide, IStudioPluginHost* host)
 {
 	FASTLOG(FLog::Plugins, "PluginManager::StateDataEntry::disableStudioUI");
 	std::vector<void*> t;
-	for (toolbarsIter i = toolbars.begin();i != toolbars.end(); i++)
+	for (toolbarsIter i = toolbars.begin(); i != toolbars.end(); i++)
 	{
 		t.push_back(i->second->getId());
 		FASTLOG1(FLog::Plugins, "PluginManager::StateDataEntry::disableStudioUI - Toolbar %p", i->second->getId());
@@ -560,11 +560,11 @@ void PluginManager::StateDataEntry::disableStudioUI(bool hide, IStudioPluginHost
 	hidden = hide;
 }
 
-void PluginManager::StateDataEntry::hideStudioUI(bool hide, IStudioPluginHost *host)
+void PluginManager::StateDataEntry::hideStudioUI(bool hide, IStudioPluginHost* host)
 {
 	FASTLOG(FLog::Plugins, "PluginManager::StateDataEntry::hideStudioUI");
 	std::vector<void*> t;
-	for (toolbarsIter i = toolbars.begin();i != toolbars.end(); i++)
+	for (toolbarsIter i = toolbars.begin(); i != toolbars.end(); i++)
 	{
 		t.push_back(i->second->getId());
 		FASTLOG1(FLog::Plugins, "PluginManager::StateDataEntry::hideStudioUI - Toolbar %p", i->second->getId());
@@ -573,10 +573,10 @@ void PluginManager::StateDataEntry::hideStudioUI(bool hide, IStudioPluginHost *h
 	hidden = hide;
 }
 
-void PluginManager::StateDataEntry::deleteStudioUI(IStudioPluginHost *host)
+void PluginManager::StateDataEntry::deleteStudioUI(IStudioPluginHost* host)
 {
 	std::vector<void*> t;
-	for (toolbarsIter i = toolbars.begin();i != toolbars.end(); i++)
+	for (toolbarsIter i = toolbars.begin(); i != toolbars.end(); i++)
 	{
 		t.push_back(i->second->getId());
 	}
@@ -585,44 +585,44 @@ void PluginManager::StateDataEntry::deleteStudioUI(IStudioPluginHost *host)
 		return;
 	}
 	host->deleteToolbars(t);
-	for (toolbarsIter i = toolbars.begin();i != toolbars.end(); i++)
+	for (toolbarsIter i = toolbars.begin(); i != toolbars.end(); i++)
 	{
 		i->second->markDeleted();
 	}
 	toolbars.erase(toolbars.begin(), toolbars.end());
 }
 
-shared_ptr<Instance> PluginManager::createToolbar(Plugin *plugin, std::string name)
+shared_ptr<Instance> PluginManager::createToolbar(Plugin* plugin, std::string name)
 {
-	stateIter iter = state.find(plugin->getDataModel());	
+	stateIter iter = state.find(plugin->getDataModel());
 	RBXASSERT(iter != state.end());
 	return iter->second.getToolbar(name, studioHost, plugin->getDataModel());
 }
 
-void PluginManager::buttonClick(DataModel *dataModel, void *id)
+void PluginManager::buttonClick(DataModel* dataModel, void* id)
 {
-	stateIter iter = state.find(dataModel);	
+	stateIter iter = state.find(dataModel);
 	RBXASSERT(iter != state.end());
 
 	// The click event is exposed in LUA, which in turn may try to change the
 	// datamodel. Grab a write lock before propagating the click.
-	if (iter != state.end()) 
+	if (iter != state.end())
 	{
 		RBX::DataModel::LegacyLock lock(dataModel, DataModelJob::Write);
 		iter->second.fireButtonClick(id);
 	}
 }
 
-void PluginManager::disableStudioUI(DataModel *dataModel, bool hide)
+void PluginManager::disableStudioUI(DataModel* dataModel, bool hide)
 {
 	stateIter iter = state.find(dataModel);
 	if (iter != state.end())
 	{
-        iter->second.disableStudioUI(hide, studioHost);
+		iter->second.disableStudioUI(hide, studioHost);
 	}
 }
 
-void PluginManager::hideStudioUI(DataModel *dataModel, bool hide)
+void PluginManager::hideStudioUI(DataModel* dataModel, bool hide)
 {
 	stateIter iter = state.find(dataModel);
 	if (iter != state.end())
@@ -673,12 +673,12 @@ void PluginManager::fireDragEnterEvent(DataModel* dataModel, shared_ptr<const RB
 {
 	if (!dataModel)
 		return;
-	
+
 	if (RBX::Plugin* activePlugin = getActivePlugin(dataModel))
 	{
 		RBX::DataModel::LegacyLock lock(dataModel, DataModelJob::Write);
 		shared_ptr<InputObject> input = Creatable<Instance>::create<InputObject>(InputObject::TYPE_MOUSEMOVEMENT, InputObject::INPUT_STATE_CHANGE, Vector3(location.x, location.y, 0), Vector3::zero(), dataModel);
 		ServiceProvider::find<UserInputService>(dataModel)->setCurrentMousePosition(input);
 		activePlugin->getMouse()->fireDragEnterEvent(instances, input);
-	}			
+	}
 }

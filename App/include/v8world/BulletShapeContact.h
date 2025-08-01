@@ -14,7 +14,7 @@ class btConvexHullShape;
 namespace RBX {
 	class PolyConnector;
 	class BulletShapeConnector;
-	class BulletShapeContact : public Contact 
+	class BulletShapeContact : public Contact
 	{
 	public:
 		typedef RBX::FixedArray<BulletShapeConnector*, BULLET_CONTACT_ARRAY_SIZE> BulletConnectorArray;
@@ -32,17 +32,16 @@ namespace RBX {
 		void matchClosestFeatures(BulletConnectorArray& newConnectors);
 		BulletShapeConnector* matchClosestFeature(BulletShapeConnector* newConnector);
 		void deleteConnectors(BulletConnectorArray& deleteConnectors);
-		BulletShapeConnector* newBulletShapeConnector(btCollisionObject* bulletColObj0, btCollisionObject* bulletColObj1,
-													  btCollisionAlgorithm* algo, int manifoldIndex, int contactIndex, bool swapped);
+		BulletShapeConnector* newBulletShapeConnector(btCollisionObject* bulletColObj0, btCollisionObject* bulletColObj1, btCollisionAlgorithm* algo, size_t manifoldIndex, size_t contactIndex, bool swapped);
 		void updateContactPoints();
 		void computeManifoldsWithBulletNarrowPhase(btManifoldArray& manifoldArray);
 
 		// Contact
-        void deleteAllConnectors() override;
-		int numConnectors() const override					{return polyConnectors.size();}
-        ContactConnector* getConnector(int i) override;
-        bool computeIsColliding(float overlapIgnored) override;
-        bool stepContact() override;
+		void deleteAllConnectors() override;
+		size_t numConnectors() const override { return polyConnectors.size(); }
+		ContactConnector* getConnector(size_t i) override;
+		bool computeIsColliding(float overlapIgnored) override;
+		bool stepContact() override;
 
 		void invalidateContactCache() override;
 

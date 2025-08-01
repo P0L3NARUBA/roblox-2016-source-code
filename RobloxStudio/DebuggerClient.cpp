@@ -1043,7 +1043,7 @@ void DebuggerClient::syncScriptWithTextEditor(const BreakpointDetails& textEditB
 	//delete existing breakpoints
 	RBX::Scripting::ScriptDebugger::Breakpoints breakpoints = m_spDebugger->getBreakpoints();
 	for (RBX::Scripting::ScriptDebugger::Breakpoints::iterator iter = breakpoints.begin(); iter != breakpoints.end(); ++iter)
-		(iter->second)->setParent(NULL);
+		(iter->second)->setParent(nullptr);
 
 	//recreate all the breakpoints again!
 	boost::shared_ptr<RBX::Scripting::DebuggerBreakpoint> spBreakpoint;
@@ -1087,7 +1087,7 @@ void DebuggerClient::toggleBreakpoint(int breakpointLine)
 	else
 	{
 		STUDIO_EMIT_SIGNAL DebuggerClientManager::Instance().breakpointRemoved(shared_from(pBreakpoint));
-		pBreakpoint->setParent(NULL);
+		pBreakpoint->setParent(nullptr);
 	}
 
 	//update state in text editor also

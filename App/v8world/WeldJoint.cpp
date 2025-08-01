@@ -77,7 +77,7 @@ void ManualWeldJoint::setCell(const Vector3int16& pos)
 
 bool ManualWeldJoint::isTouchingTerrain(Primitive* terrain, Primitive* prim)
 {
-	for (int i = 0; i < prim->getNumContacts(); ++i)
+	for (size_t i = 0u; i < prim->getNumContacts(); ++i)
 		if (prim->getContactOther(i) == terrain)
 			if (prim->getContact(i)->computeIsCollidingUi(kTerrainBreakOverlap))
 				return true;

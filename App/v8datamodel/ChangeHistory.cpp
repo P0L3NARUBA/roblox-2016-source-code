@@ -490,7 +490,7 @@ public:
 		{
 			case Delete:
 				//RBX::StandardOut::singleton()->printf(RBX::MESSAGE_INFO, "ChangeHistoryService Delete %s 0x%X\n", instance->getName().c_str(), instance.get());
-				instance->setParent(NULL);
+				instance->setParent(nullptr);
 				break;
 			case Change:
 			{
@@ -526,7 +526,7 @@ public:
 				break;
 			case Create:
 				//RBX::StandardOut::singleton()->printf(RBX::MESSAGE_INFO, "ChangeHistoryService Un-Create %s 0x%X\n", instance->getName().c_str(), instance.get());
-				instance->setParent(NULL);
+				instance->setParent(nullptr);
 				break;
             default:
                 break;
@@ -1177,7 +1177,7 @@ void ChangeHistoryService::onServiceProvider(ServiceProvider* oldProvider, Servi
 
         if ( statsItem ) 
         {
-			statsItem->setParent(NULL);
+			statsItem->setParent(nullptr);
 			statsItem.reset();
 		}
 	}

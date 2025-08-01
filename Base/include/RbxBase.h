@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
 #ifdef _DEBUG
 // This will catch some really nasty bugs:

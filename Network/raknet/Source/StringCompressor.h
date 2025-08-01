@@ -63,7 +63,7 @@ public:
 	
 	/// Writes input to output, uncompressed.  Takes care of the null terminator for you.
 	/// \param[out] output A block of bytes to receive the output
-	/// \param[in] maxCharsToWrite Size, in bytes, of \a output .  A NULL terminator will always be appended to the output string.  If the maxCharsToWrite is not large enough, the string will be truncated.
+	/// \param[in] maxCharsToWrite Size, in bytes, of \a output .  A nullptr terminator will always be appended to the output string.  If the maxCharsToWrite is not large enough, the string will be truncated.
 	/// \param[in] input The bitstream containing the compressed string
 	/// \param[in] languageID Which language to use
 	bool DecodeString( char *output, int maxCharsToWrite, RakNet::BitStream *input, uint8_t languageId=0 );

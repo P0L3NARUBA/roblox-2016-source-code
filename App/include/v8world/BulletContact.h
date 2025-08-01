@@ -32,8 +32,8 @@ public:
 	
 	// Contact
 	void deleteAllConnectors() override;
-	int numConnectors() const override;
-	ContactConnector* getConnector(int i) override;
+	size_t numConnectors() const override;
+	ContactConnector* getConnector(size_t i) override;
 
 	bool computeIsColliding(float overlapIgnored) override;
 	bool stepContact() override;
@@ -57,8 +57,8 @@ public:
 
     // Contact
     void deleteAllConnectors() override;
-    int numConnectors() const override;
-    ContactConnector* getConnector(int i) override;
+    size_t numConnectors() const override;
+    ContactConnector* getConnector(size_t i) override;
     
     bool computeIsColliding(float overlapIgnored) override;
     bool stepContact() override;

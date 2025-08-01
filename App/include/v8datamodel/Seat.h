@@ -161,7 +161,7 @@ class SeatImpl : public ActionStation<Base>
 
 		void destroyOtherWeld(shared_ptr<Instance> child, Weld* childWeld) {
 			if ((child.get() != childWeld) && isChildSeatWeld(child.get())) {
-				child->setParent(NULL);
+				child->setParent(nullptr);
 			}
 		}
 
@@ -200,7 +200,7 @@ class SeatImpl : public ActionStation<Base>
 		void findAndDestroySeatWeldInternal()
 		{
 			while (Weld* weld = findSeatWeld()) {
-				weld->setParent(NULL);
+				weld->setParent(nullptr);
 			}
 		}
 
@@ -217,7 +217,7 @@ class SeatImpl : public ActionStation<Base>
 					if (Humanoid* h = humanoidFromWeld(weld)){
 						h->setSit(false);
 					}
-					weld->setParent(NULL);
+					weld->setParent(nullptr);
 				}
 			}
 			disabled = _value;

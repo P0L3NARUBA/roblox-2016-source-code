@@ -433,7 +433,7 @@ void GuiBuilder::removeCustomStat(const std::string& name)
 		{
 			shared_ptr<TextDisplay> item = itr->second.item;
 
-			item->setParent(NULL);
+			item->setParent(nullptr);
 			item->setVisible(false);
 
 			customStatsCont.erase(itr);
@@ -482,7 +482,7 @@ shared_ptr<TopMenuBar> GuiBuilder::buildChatHud()
 void GuiBuilder::removeSafeChatMenu()
 {
 	if(safeChatMenu)
-		safeChatMenu->setParent(NULL);
+		safeChatMenu->setParent(nullptr);
 }
 	
 void GuiBuilder::addSafeChatMenu()
@@ -503,7 +503,7 @@ void GuiBuilder::nextNetworkStats()
     GuiItem* item = Instance::fastDynamicCast<GuiItem>(dataModel->getGuiRoot()->findFirstChildByName("NetworkStats2"));
     if (item)
     {
-        item->setParent(NULL);
+        item->setParent(nullptr);
     }
     dataModel->getGuiRoot()->addGuiItem(buildNetworkStats2(false));
 }

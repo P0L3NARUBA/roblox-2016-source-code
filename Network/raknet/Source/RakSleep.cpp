@@ -33,7 +33,7 @@ void RakSleep(unsigned int ms)
 	struct timeval now;
 	int rt;
 
-	gettimeofday(&now,NULL);
+	gettimeofday(&now,nullptr);
 
 	long seconds = ms/1000;
 	long nanoseconds = (ms - seconds * 1000) * 1000000;

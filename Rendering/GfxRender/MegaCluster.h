@@ -112,8 +112,8 @@ namespace RBX
 				// equivalent parts for purposes of estimate FRM culling
 				static const int kApproximateQuadsPerPart = 12;
 
-				unsigned int solidQuads;
-				unsigned int waterQuads;
+				uint32_t solidQuads;
+				uint32_t waterQuads;
 
 				bool solidDirty;
 				bool waterDirty;
@@ -122,7 +122,7 @@ namespace RBX
 				RenderEntity* solidEntity;
 				RenderEntity* waterEntity;
 
-				ChunkData() : solidEntity(NULL), waterEntity(NULL), solidQuads(0), waterQuads(0), solidDirty(false), waterDirty(false)
+				ChunkData() : solidEntity(nullptr), waterEntity(nullptr), solidQuads(0u), waterQuads(0u), solidDirty(false), waterDirty(false)
 				{
 				}
 			};

@@ -236,17 +236,17 @@ namespace RBX {
 		// returns the 0-based index of the color
 		size_t getClosestRenderingPaletteIndex() const; // closest "supported" palette index by the GFX engine.
 		size_t getClosestPaletteIndex() const; // closest palette index from the _whole_ palette list.
-		static const size_t paletteSize = 128; // supported by UI and data model.
-		static const size_t paletteSizeMSB = 7;	// == log2(paletteSize)
+		static const size_t paletteSize = 128u; // supported by UI and data model.
+		static const size_t paletteSizeMSB = 7u;	// == log2(paletteSize)
 
 		static void setRenderingSupportedPaletteSize(size_t maxSupportedColors);
 
 		// Constructor/Factory
-		BrickColor(Number number):number(number) {
+		BrickColor(Number number) :number(number) {
 		}
-		BrickColor():number(brick_194) {
+		BrickColor() :number(brick_194) {
 		}
-		explicit BrickColor(int number);
+		explicit BrickColor(int32_t number);
 		static BrickColor closest(G3D::Color3uint8 color);
 		static BrickColor closest(G3D::Color4uint8 color);
 		static BrickColor closest(G3D::Color3 color);
@@ -309,20 +309,20 @@ namespace RBX {
 		const std::string& name() const;
 
 		// returns the number as an int, not an ARGB
-		int asInt() const { return number; }
+		int32_t asInt() const { return number; }
 
 		// Comparison
 		bool operator==(const BrickColor& other) const {
-			return number==other.number;
+			return number == other.number;
 		}
 		bool operator!=(const BrickColor& other) const {
-			return number!=other.number;
+			return number != other.number;
 		}
 		bool operator>(const BrickColor& other) const {
-			return number>other.number;
+			return number > other.number;
 		}
 		bool operator<(const BrickColor& other) const {
-			return number<other.number;
+			return number < other.number;
 		}
 
 

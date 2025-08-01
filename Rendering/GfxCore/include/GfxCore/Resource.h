@@ -3,35 +3,32 @@
 #include "rbx/boost.hpp"
 #include "rbx/Debug.h"
 
-namespace RBX
-{
-namespace Graphics
-{
+namespace RBX {
+	namespace Graphics {
 
-class Device;
+		class Device;
 
-class Resource: boost::noncopyable
-{
-    friend class Device;
+		class Resource : boost::noncopyable {
+			friend class Device;
 
-public:
-    explicit Resource(Device* device);
-    virtual ~Resource();
+		public:
+			explicit Resource(Device* device);
+			virtual ~Resource();
 
-    virtual void onDeviceLost();
-    virtual void onDeviceRestored();
+			virtual void onDeviceLost();
+			virtual void onDeviceRestored();
 
-	const std::string& getDebugName() const { return debugName; }
-    void setDebugName(const std::string& value);
+			const std::string& getDebugName() const { return debugName; }
+			void setDebugName(const std::string& value);
 
-protected:
-    Device* device;
+		protected:
+			Device* device;
 
-    Resource* prev;
-    Resource* next;
+			Resource* prev;
+			Resource* next;
 
-    std::string debugName;
-};
+			std::string debugName;
+		};
 
-}
+	}
 }

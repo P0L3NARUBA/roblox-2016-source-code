@@ -32,7 +32,7 @@
 
 
 #ifdef __APPLE__
-#include <stdint.h>
+#include <cstdint>
 typedef  float float4 __attribute__ ((vector_size(16)));
 #else
 #define float4 __m128

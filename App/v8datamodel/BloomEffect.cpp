@@ -5,8 +5,8 @@ namespace RBX {
 
 	const char* const sBloomEffect = "BloomEffect";
 
-	Reflection::PropDescriptor<BloomEffect, float> BloomEffect::prop_Intensity("Intensity", category_Appearance, &BloomEffect::getIntensity, &BloomEffect::setIntensity);
-	Reflection::PropDescriptor<BloomEffect, int>   BloomEffect::prop_Size("Size", category_Appearance, &BloomEffect::getSize, &BloomEffect::setSize);
+	Reflection::PropDescriptor<BloomEffect, float>   BloomEffect::prop_Intensity("Intensity", category_Appearance, &BloomEffect::getIntensity, &BloomEffect::setIntensity);
+	Reflection::PropDescriptor<BloomEffect, int32_t> BloomEffect::prop_Size("Size", category_Appearance, &BloomEffect::getSize, &BloomEffect::setSize);
 
 	Reflection::PropDescriptor<BloomEffect, TextureId> BloomEffect::prop_DirtMask("Texture", "Dirt Mask", &BloomEffect::getDirtMask, &BloomEffect::setDirtMask);
 	Reflection::PropDescriptor<BloomEffect, bool>      BloomEffect::prop_UseDirtMask("Use", "Dirt Mask", &BloomEffect::getUseDirtMask, &BloomEffect::setUseDirtMask);
@@ -14,7 +14,7 @@ namespace RBX {
 	BloomEffect::BloomEffect()
 		:DescribedCreatable<BloomEffect, PostEffect, sBloomEffect>("BloomEffect")
 		, intensity(1.0f)
-		, size(5)
+		, size(5u)
 		, useDirtMask(false)
 	{
 	}
@@ -32,7 +32,7 @@ namespace RBX {
 		}
 	}
 
-	void BloomEffect::setSize(int value) {
+	void BloomEffect::setSize(int32_t value) {
 		value = std::min(std::max(value, 0), 6);
 
 		if (size != value) {

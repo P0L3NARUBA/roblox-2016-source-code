@@ -230,10 +230,9 @@ void Math::lerpArray(const G3D::Array<float>& before,
 {
 	RBXASSERT(before.size() == after.size());
 	RBXASSERT(before.size() == answer.size());
-	for (int i = 0; i < before.size(); ++i)
-	{
+
+	for (size_t i = 0u; i < before.size(); ++i)
 		answer[i] = G3D::lerp(before[i], after[i], alpha);
-	}
 }
 
 bool Math::lessThan(const Vector3& min, const Vector3& max)

@@ -53,9 +53,9 @@ void parseCommaSeparated(const std::string s, Array<std::string>& array, bool st
     } while (begin < s.length());
 
     if (stripQuotes) {
-        for (int i = 0; i < array.length(); ++i) {
+        for (size_t i = 0; i < array.length(); ++i) {
             std::string& t = array[i];
-            int L = t.length();
+            size_t L = t.length();
             if ((L > 1) && (t[0] == quote) && (t[L - 1] == quote)) {
                 if ((L > 6)  && (t[1] == quote) && (t[2] == quote) && (t[L - 3] == quote) && (t[L - 2] == quote)) {
                     // Triple-quote

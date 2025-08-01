@@ -48,25 +48,25 @@ static const PropDescriptor<Motor, float/**/> prop_CurrentAngle("CurrentAngle", 
 REFLECTION_END();
 
 
-const char *const RBX::sJointInstance = "JointInstance";
-const char *const RBX::sSnap = "Snap";
-const char *const RBX::sWeld = "Weld";
-const char *const RBX::sManualSurfaceJointInstance = "ManualSurfaceJointInstance";
-const char *const RBX::sManualWeld = "ManualWeld";
-const char *const RBX::sManualGlue = "ManualGlue";
-const char *const RBX::sGlue = "Glue";
-const char *const RBX::sRotate = "Rotate";
-const char *const RBX::sDynamicRotate = "DynamicRotate";
-const char *const RBX::sRotateP = "RotateP";
-const char *const RBX::sRotateV = "RotateV";
-const char *const RBX::sMotor = "Motor";
-const char *const RBX::sMotor6D = "Motor6D";
+const char* const RBX::sJointInstance = "JointInstance";
+const char* const RBX::sSnap = "Snap";
+const char* const RBX::sWeld = "Weld";
+const char* const RBX::sManualSurfaceJointInstance = "ManualSurfaceJointInstance";
+const char* const RBX::sManualWeld = "ManualWeld";
+const char* const RBX::sManualGlue = "ManualGlue";
+const char* const RBX::sGlue = "Glue";
+const char* const RBX::sRotate = "Rotate";
+const char* const RBX::sDynamicRotate = "DynamicRotate";
+const char* const RBX::sRotateP = "RotateP";
+const char* const RBX::sRotateV = "RotateV";
+const char* const RBX::sMotor = "Motor";
+const char* const RBX::sMotor6D = "Motor6D";
 
 
 /////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
 
-JointInstance::JointInstance(Joint* joint) 
+JointInstance::JointInstance(Joint* joint)
 	: joint(joint)
 {
 	FASTLOG2(FLog::JointInstanceLifetime, "Joint Instance created: %p, joint: %p", this, joint);
@@ -105,7 +105,7 @@ XmlElement* JointInstance::writeXml(const boost::function<bool(Instance*)>& isIn
 		// Don't write if one of the parts isn't being written.
 		// If both aren't being written, then write this, because
 		// we are presumably writing out just this joint explicitly
-		return NULL;	
+		return NULL;
 	}
 
 	return Super::writeXml(isInScope, creatorRole);
@@ -137,7 +137,7 @@ void JointInstance::render3dAdorn(Adorn* adorn)
 {
 	RBXASSERT(shouldRender3dAdorn());
 
-    if (PartInstance::showSpanningTree && Joint::isSpanningTreeJoint(joint) &&
+	if (PartInstance::showSpanningTree && Joint::isSpanningTreeJoint(joint) &&
 		(joint->inSpanningTree() || Joint::isSpringJoint(joint)))			// remove "inSpanningTree" to show all spanning joints
 	{
 		Primitive* p0 = getPart0() ? getPart0()->getPartPrimitive() : NULL;
@@ -146,29 +146,29 @@ void JointInstance::render3dAdorn(Adorn* adorn)
 		Vector3 pt0 = p0 ? p0->getCoordinateFrame().translation : Vector3::zero();
 		Vector3 pt1 = p1 ? p1->getCoordinateFrame().translation : Vector3::zero();
 
-        Color3 color = Joint::isSpringJoint(joint) ? ( joint->inSpanningTree() ? Color3::green() : Color3::blue() ) : Color3::cyan();
+		Color3 color = Joint::isSpringJoint(joint) ? (joint->inSpanningTree() ? Color3::green() : Color3::blue()) : Color3::cyan();
 
-        CoordinateFrame world;
-        DrawAdorn::lineSegmentRelativeToCoord(adorn, world, pt0, pt1, color, 0.08);
+		CoordinateFrame world;
+		DrawAdorn::lineSegmentRelativeToCoord(adorn, world, pt0, pt1, color, 0.08);
 	}
 }
 
-PartInstance* JointInstance::getPart0Dangerous() const 
+PartInstance* JointInstance::getPart0Dangerous() const
 {
 	return part[0].lock().get();
 }
 
-PartInstance* JointInstance::getPart1Dangerous() const 
+PartInstance* JointInstance::getPart1Dangerous() const
 {
 	return part[1].lock().get();
 }
 
-PartInstance* JointInstance::getPart0() 
+PartInstance* JointInstance::getPart0()
 {
 	return part[0].lock().get();
 }
 
-PartInstance* JointInstance::getPart1() 
+PartInstance* JointInstance::getPart1()
 {
 	return part[1].lock().get();
 }
@@ -186,10 +186,10 @@ void JointInstance::setPart1(PartInstance* value)
 }
 
 
-bool JointInstance::askSetParent(const Instance* instance) const 
+bool JointInstance::askSetParent(const Instance* instance) const
 {
-	return (	instance->getDescriptor()==JointsService::classDescriptor()
-			||	instance->getDescriptor()==PartInstance::classDescriptor()	);
+	return (instance->getDescriptor() == JointsService::classDescriptor()
+		|| instance->getDescriptor() == PartInstance::classDescriptor());
 }
 
 World* JointInstance::computeWorld()
@@ -236,12 +236,12 @@ void JointInstance::handleWorldChanged()
 		// TODO: In future, we should consider Joints automatically registering inside Primitives even outside of the World
 		shared_ptr<PartInstance> lock1(part[0].lock());
 		shared_ptr<PartInstance> lock2(part[1].lock());
-		if(lock1.get() == NULL)
+		if (lock1.get() == NULL)
 		{
 			FASTLOG1(FLog::JointInstanceLifetime, "JointInstance %p has empty primitive0 on world add", this);
 			joint->setPrimitive(0, NULL);
 		}
-		if(lock2.get() == NULL)
+		if (lock2.get() == NULL)
 		{
 			FASTLOG1(FLog::JointInstanceLifetime, "JointInstance %p has empty primitive1 on world add", this);
 			joint->setPrimitive(1, NULL);
@@ -313,7 +313,7 @@ Snap::Snap(Joint* joint)
 	this->setName(snapName);
 	RBXASSERT(joint->getJointType() == Joint::SNAP_JOINT);
 	//RBXASSERT(joint->getJointCoord(0) == CoordinateFrame());		
-	RBXASSERT(Math::isAxisAligned(joint->getJointCoord(0).rotation));		
+	RBXASSERT(Math::isAxisAligned(joint->getJointCoord(0).rotation));
 }
 
 Snap::Snap()
@@ -334,7 +334,7 @@ Weld::Weld(Joint* joint)
 {
 	this->setName(weldName);
 	RBXASSERT(joint->getJointType() == Joint::WELD_JOINT);
-//	RBXASSERT(joint->getJointCoord(0) == CoordinateFrame());		
+	//	RBXASSERT(joint->getJointCoord(0) == CoordinateFrame());		
 	RBXASSERT(Math::isAxisAligned(joint->getJointCoord(0).rotation));
 }
 
@@ -369,22 +369,22 @@ void ManualSurfaceJointInstance::render3dAdorn(Adorn* adorn)
 void ManualSurfaceJointInstance::setSurface0(int surfId)
 {
 	Joint::JointType jt = joint ? joint->getJointType() : Joint::NO_JOINT;
-	
-	if(jt == Joint::MANUAL_WELD_JOINT)
+
+	if (jt == Joint::MANUAL_WELD_JOINT)
 	{
 		ManualWeldJoint* mWJ = static_cast<ManualWeldJoint*>(joint);
-		
-		if(surfId != mWJ->getSurface0())
+
+		if (surfId != mWJ->getSurface0())
 		{
 			mWJ->setSurface0((size_t)surfId);
 			raiseChanged(prop_Surface0);
 		}
 	}
-	else if(jt == Joint::MANUAL_GLUE_JOINT)
+	else if (jt == Joint::MANUAL_GLUE_JOINT)
 	{
 		ManualGlueJoint* mGJ = static_cast<ManualGlueJoint*>(joint);
-		
-		if(surfId != mGJ->getSurface0())
+
+		if (surfId != mGJ->getSurface0())
 		{
 			mGJ->setSurface0((size_t)surfId);
 			raiseChanged(prop_Surface0);
@@ -395,22 +395,22 @@ void ManualSurfaceJointInstance::setSurface0(int surfId)
 void ManualSurfaceJointInstance::setSurface1(int surfId)
 {
 	Joint::JointType jt = joint ? joint->getJointType() : Joint::NO_JOINT;
-	
-	if(jt == Joint::MANUAL_WELD_JOINT)
+
+	if (jt == Joint::MANUAL_WELD_JOINT)
 	{
 		ManualWeldJoint* mWJ = static_cast<ManualWeldJoint*>(joint);
 
-		if(surfId != mWJ->getSurface1())
+		if (surfId != mWJ->getSurface1())
 		{
 			mWJ->setSurface1((size_t)surfId);
 			raiseChanged(prop_Surface1);
 		}
 	}
-	else if(jt == Joint::MANUAL_GLUE_JOINT)
+	else if (jt == Joint::MANUAL_GLUE_JOINT)
 	{
 		ManualGlueJoint* mGJ = static_cast<ManualGlueJoint*>(joint);
-		
-		if(surfId != mGJ->getSurface1())
+
+		if (surfId != mGJ->getSurface1())
 		{
 			mGJ->setSurface1((size_t)surfId);
 			raiseChanged(prop_Surface1);
@@ -421,14 +421,14 @@ void ManualSurfaceJointInstance::setSurface1(int surfId)
 int ManualSurfaceJointInstance::getSurface0(void) const
 {
 	Joint::JointType jt = joint ? joint->getJointType() : Joint::NO_JOINT;
-	
+
 	int surfId = -1;
-	if(jt == Joint::MANUAL_WELD_JOINT)
+	if (jt == Joint::MANUAL_WELD_JOINT)
 	{
 		ManualWeldJoint* mWJ = static_cast<ManualWeldJoint*>(joint);
 		surfId = (int)mWJ->getSurface0();
 	}
-	else if(jt == Joint::MANUAL_GLUE_JOINT)
+	else if (jt == Joint::MANUAL_GLUE_JOINT)
 	{
 		ManualGlueJoint* mGJ = static_cast<ManualGlueJoint*>(joint);
 		surfId = (int)mGJ->getSurface0();
@@ -440,14 +440,14 @@ int ManualSurfaceJointInstance::getSurface0(void) const
 int ManualSurfaceJointInstance::getSurface1(void) const
 {
 	Joint::JointType jt = joint ? joint->getJointType() : Joint::NO_JOINT;
-	
+
 	int surfId = -1;
-	if(jt == Joint::MANUAL_WELD_JOINT)
+	if (jt == Joint::MANUAL_WELD_JOINT)
 	{
 		ManualWeldJoint* mWJ = static_cast<ManualWeldJoint*>(joint);
 		surfId = (int)mWJ->getSurface1();
 	}
-	else if(jt == Joint::MANUAL_GLUE_JOINT)
+	else if (jt == Joint::MANUAL_GLUE_JOINT)
 	{
 		ManualGlueJoint* mGJ = static_cast<ManualGlueJoint*>(joint);
 		surfId = (int)mGJ->getSurface1();
@@ -461,7 +461,7 @@ ManualWeld::ManualWeld(Joint* joint)
 {
 	this->setName("ManualWeld");
 	RBXASSERT(joint->getJointType() == Joint::MANUAL_WELD_JOINT);
-//	RBXASSERT(joint->getJointCoord(0) == CoordinateFrame());		
+	//	RBXASSERT(joint->getJointCoord(0) == CoordinateFrame());		
 	RBXASSERT(Math::isAxisAligned(joint->getJointCoord(0).rotation));
 }
 
@@ -480,31 +480,29 @@ void ManualWeld::render3dAdorn(Adorn* adorn)
 {
 	Super::render3dAdorn(adorn);
 
-	const Primitive* p0 = getPart0() ? getPart0()->getConstPartPrimitive() : NULL;
-	const Primitive* p1 = getPart1() ? getPart1()->getConstPartPrimitive() : NULL;
+	const Primitive* p0 = getPart0() ? getPart0()->getConstPartPrimitive() : nullptr;
+	const Primitive* p1 = getPart1() ? getPart1()->getConstPartPrimitive() : nullptr;
 
 	if (p0 && p1)
 	{
 		Workspace* workspace = ServiceProvider::find<Workspace>(this);
-		if(!workspace)
+		if (!workspace)
 			return;
 		ServiceClient< Selection > selection(workspace);
 		// Only render the weld joints if one of its parents is selected
-		if( selection && (selection->isSelected(getPart0()) || selection->isSelected(getPart1()) || selection->isSelected(this)) )
+		if (selection && (selection->isSelected(getPart0()) || selection->isSelected(getPart1()) || selection->isSelected(this)))
 		{
 			const ManualWeldJoint* manWeldJoint = manualWeldJointConst();
 			size_t s0 = manWeldJoint->getSurface0();
 			size_t s1 = manWeldJoint->getSurface1();
 
-			if(s0 != (size_t)-1 && s1 != (size_t)-1)
-			{
+			if (s0 != (size_t)-1 && s1 != (size_t)-1) {
 				std::vector<Vector3> polygon1;
-				for( int i = 0; i < p1->getConstGeometry()->getNumVertsInSurface(s1); i++ )
-				{
+				for (size_t i = 0u; i < p1->getConstGeometry()->getNumVertsInSurface(s1); i++) {
 					Vector3 p1VertInWorld = p1->getCoordinateFrame().pointToWorldSpace(p1->getConstGeometry()->getSurfaceVertInBody(s1, i));
 					polygon1.push_back(p0->getCoordinateFrame().pointToObjectSpace(p1VertInWorld));
 				}
-				
+
 				std::vector<Vector3> intersectPolyInP0 = p0->getConstGeometry()->polygonIntersectionWithFace(polygon1, s0);
 
 				DrawAdorn::polygonRelativeToCoord(adorn, p0->getCoordinateFrame(), intersectPolyInP0, Color3::white(), 0.1);
@@ -542,25 +540,23 @@ void ManualGlue::render3dAdorn(Adorn* adorn)
 	if (p0 && p1)
 	{
 		Workspace* workspace = ServiceProvider::find<Workspace>(this);
-		if(!workspace)
+		if (!workspace)
 			return;
 		ServiceClient< Selection > selection(workspace);
 		// Only render the Glue joints if one of its parents is selected
-		if(selection && (selection->isSelected(getPart0()) || selection->isSelected(getPart1()) || selection->isSelected(this)))
+		if (selection && (selection->isSelected(getPart0()) || selection->isSelected(getPart1()) || selection->isSelected(this)))
 		{
 			const ManualGlueJoint* manGlueJoint = manualGlueJointConst();
 			size_t s0 = manGlueJoint->getSurface0();
 			size_t s1 = manGlueJoint->getSurface1();
 
-			if(s0 != (size_t)-1 && s1 != (size_t)-1)
-			{
+			if (s0 != (size_t)-1 && s1 != (size_t)-1) {
 				std::vector<Vector3> polygon1;
-				for( int i = 0; i < p1->getConstGeometry()->getNumVertsInSurface(s1); i++ )
-				{
+				for (size_t i = 0u; i < p1->getConstGeometry()->getNumVertsInSurface(s1); i++) {
 					Vector3 p1VertInWorld = p1->getCoordinateFrame().pointToWorldSpace(p1->getConstGeometry()->getSurfaceVertInBody(s1, i));
 					polygon1.push_back(p0->getCoordinateFrame().pointToObjectSpace(p1VertInWorld));
 				}
-				
+
 				std::vector<Vector3> intersectPolyInP0 = p0->getConstGeometry()->polygonIntersectionWithFace(polygon1, s0);
 
 				DrawAdorn::polygonRelativeToCoord(adorn, p0->getCoordinateFrame(), intersectPolyInP0, Color3::brown(), 0.1);
@@ -579,7 +575,8 @@ Glue::Glue(Joint* joint)
 
 Glue::Glue()
 	:DescribedCreatable<Glue, JointInstance, sGlue>(new GlueJoint())
-{}
+{
+}
 
 
 GlueJoint* Glue::glueJoint()
@@ -618,8 +615,9 @@ Rotate::Rotate(Joint* joint)
 
 
 Rotate::Rotate()
-:DescribedCreatable<Rotate, JointInstance, sRotate>(new RotateJoint())
-{}
+	:DescribedCreatable<Rotate, JointInstance, sRotate>(new RotateJoint())
+{
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -640,13 +638,15 @@ void DynamicRotate::setBaseAngle(float value)
 
 
 DynamicRotate::DynamicRotate()
-:DescribedNonCreatable<DynamicRotate, JointInstance, sDynamicRotate>()
-{}
+	:DescribedNonCreatable<DynamicRotate, JointInstance, sDynamicRotate>()
+{
+}
 
 
 DynamicRotate::DynamicRotate(Joint* joint)
 	:DescribedNonCreatable<DynamicRotate, JointInstance, sDynamicRotate>(joint)
-{}
+{
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -658,8 +658,9 @@ RotateP::RotateP(Joint* joint)
 }
 
 RotateP::RotateP()
-:DescribedCreatable<RotateP, DynamicRotate, sRotateP>(new RotatePJoint())
-{}
+	:DescribedCreatable<RotateP, DynamicRotate, sRotateP>(new RotatePJoint())
+{
+}
 
 
 
@@ -670,8 +671,9 @@ RotateV::RotateV(Joint* joint)
 }
 
 RotateV::RotateV()
-:DescribedCreatable<RotateV, DynamicRotate, sRotateV>(new RotateVJoint())
-{}
+	:DescribedCreatable<RotateV, DynamicRotate, sRotateV>(new RotateVJoint())
+{
+}
 
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -693,7 +695,7 @@ Motor::Motor()
 
 // spectial protected constructor for Motor6D
 Motor::Motor(Joint* joint, int)
- 	:DescribedCreatable<Motor, JointInstance, sMotor>(joint)
+	:DescribedCreatable<Motor, JointInstance, sMotor>(joint)
 {
 }
 
@@ -765,7 +767,7 @@ void Motor::setCurrentAngleUi(float value)		// note - setting this is a "command
 /*implement*/ const std::string& Motor::getParentName()
 {
 	PartInstance* p = getPart0();
-	if(p)
+	if (p)
 	{
 		return p->getName();
 	}
@@ -777,7 +779,7 @@ void Motor::setCurrentAngleUi(float value)		// note - setting this is a "command
 /*implement*/ const std::string& Motor::getPartName()
 {
 	PartInstance* p = getPart1();
-	if(p)
+	if (p)
 	{
 		return p->getName();
 	}
@@ -793,16 +795,16 @@ void Motor::setCurrentAngleUi(float value)		// note - setting this is a "command
 
 /*implement*/ void Motor::setIsAnimatedJoint(bool val)
 {
-    isAnimatedJoint = val;
-    PartInstance* part = getPart1();
-    if(part)
-    {
-        Primitive* prim = part->getPartPrimitive();
-        if (Assembly* a = prim->getAssembly())
-        {
-            a->setAnimationControlled(val);
-        }
-    }
+	isAnimatedJoint = val;
+	PartInstance* part = getPart1();
+	if (part)
+	{
+		Primitive* prim = part->getPartPrimitive();
+		if (Assembly* a = prim->getAssembly())
+		{
+			a->setAnimationControlled(val);
+		}
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////////////

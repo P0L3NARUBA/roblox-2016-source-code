@@ -37,7 +37,7 @@ float4 MaterialPS(MaterialVertexOutput IN) : SV_TARGET {
     int4   MaterialParametersB = int4(MaterialsData[MaterialIndex].ClearcoatEnabled_AlbedoMode_NormalMapEnabled_EmissiveMode);
     float4 MaterialParametersC =      MaterialsData[MaterialIndex].IndexOfRefraction_EmissiveFactor_ParallaxFactor_ParallaxOffset;
 
-    float3 ViewDirection = normalize(CameraPosition.xyz - IN.Position.xyz);
+    float3 ViewDirection = normalize(CameraPosition.xyz - IN.WorldPosition.xyz);
     float3 UVW = float3(IN.UV, MaterialIndex);
     float IOR = MaterialParametersC.x;
 
@@ -82,13 +82,11 @@ float4 MaterialPS(MaterialVertexOutput IN) : SV_TARGET {
     Metalness = 1.0 - Metalness;
 
     float3 Normal = (MaterialParametersB.y == 1) ? normalize(mul(float3x3(IN.Tangent, IN.Bitangent, IN.Normal), NormalMapTexture.Sample(NormalMapSampler, UVW) * 2.0 - 1.0)) : IN.Normal;
-	float uNDV = dot(Normal, ViewDirection);
-	float NDV = saturate(uNDV * 0.5 + 0.5); // Multiply-add is a single instruction so we do this instead of (+ 1.0) / 2.0
-    float3 Reflect = reflect(-ViewDirection, Normal);
+	float NDV = saturate(dot(Normal, ViewDirection));
 
     float AmbientDiffuseFactor = AmbientColor_EnvDiffuse.w * Metalness;
     float AmbientSpecularFactor = OutdoorAmbientColor_EnvSpecular.w;
-    float OutdoorContribution = 1.0; // Not sure how this is going to work with indoor/outdoor cubemapping. Manual indoor defining, maybe?
+    float OutdoorContribution = 1.0; // This isn't going to work as a global variable, but it'll be like this until environment map instances are a thing.
 
     float3 AmbientContribution = OutdoorAmbientColor_EnvSpecular.rgb;
 
@@ -105,9 +103,10 @@ float4 MaterialPS(MaterialVertexOutput IN) : SV_TARGET {
 		}
 
 		if (AmbientSpecularFactor > 0.0) {
-			float2 envBRDF = EnvironmentBRDFTexture.Sample(EnvironmentBRDFSampler, float2(Roughness, saturate(uNDV))).xy;
-		    float3 F = Fresnel(NDV, F0ToIOR(Albedo.rgb), float3(0.0, 0.0, 0.0), IOR, Metalness);
-			float3 BRDF = (F * envBRDF.x + envBRDF.y);
+			float2 EnvironmentBRDF = EnvironmentBRDFTexture.Sample(EnvironmentBRDFSampler, float2(Roughness, NDV)).xy;
+		    float3 Fresnel = FresnelCombined(NDV, F0ToIOR(Albedo.rgb), float3(0.0, 0.0, 0.0), IOR, Metalness);
+            float3 Reflect = reflect(-ViewDirection, Normal);
+			float3 BRDF = Fresnel * EnvironmentBRDF.x + EnvironmentBRDF.y;
 
             float EnvRoughness = Roughness * MAX_REFLECTION_LOD;
 

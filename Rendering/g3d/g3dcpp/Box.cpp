@@ -164,7 +164,7 @@ bool Box::culledBy(
 
     // See if there is one plane for which all of the
 	// vertices are in the negative half space.
-    for (int p = 0; p < plane.size(); ++p) {
+    for (size_t p = 0u; p < plane.size(); ++p) {
 
 		// Only test planes that are not masked
 		if ((inMask & 1) != 0) {
@@ -221,7 +221,7 @@ bool Box::culledBy(
 
     // See if there is one plane for which all of the
 	// vertices are in the negative half space.
-    for (int p = 0; p < plane.size(); ++p) {
+    for (size_t p = 0u; p < plane.size(); ++p) {
 
 		// Only test planes that are not masked
 		if ((inMask & 1) != 0) {

@@ -8,27 +8,23 @@
 #include "VisualEngine.h"
 #include "GfxBase/FrameRateManager.h"
 
-namespace RBX
-{
-	namespace Graphics
-	{
+namespace RBX {
+	namespace Graphics {
 
-		CullableSceneNode::CullableSceneNode(VisualEngine* visualEngine, CullMode cullMode, unsigned int flags)
+		CullableSceneNode::CullableSceneNode(VisualEngine* visualEngine, CullMode cullMode, uint32_t flags)
 			: visualEngine(visualEngine)
 			, cullMode(cullMode)
 			, flags(flags)
-			, blockCount(1)
-			, sqDistanceToFocus(0)
+			, blockCount(1u)
+			, sqDistanceToFocus(0.0f)
 		{
 		}
 
-		CullableSceneNode::~CullableSceneNode()
-		{
+		CullableSceneNode::~CullableSceneNode() {
 			visualEngine->getSceneManager()->getSpatialHashedScene()->internalRemoveChild(this);
 		}
 
-		bool CullableSceneNode::updateIsCulledByFRM()
-		{
+		bool CullableSceneNode::updateIsCulledByFRM() {
 			if (worldBounds.isNull())
 				return true;
 
@@ -55,8 +51,7 @@ namespace RBX
 		{
 		}
 
-		void CullableSceneNode::updateWorldBounds(const Extents& aabb)
-		{
+		void CullableSceneNode::updateWorldBounds(const Extents& aabb) {
 			worldBounds = aabb;
 
 			if (aabb.isNull())

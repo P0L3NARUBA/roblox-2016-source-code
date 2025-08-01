@@ -1,5 +1,5 @@
 #pragma once 
-#include <stdint.h>
+#include <cstdint>
 #include "Security/FuzzyTokens.h"
 #include "Security/RandomConstant.h"
 

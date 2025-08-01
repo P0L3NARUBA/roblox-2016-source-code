@@ -66,7 +66,7 @@ void KeyframeSequence::removeKeyframe(shared_ptr<Instance> keyframe)
 {
 	if (keyframe != NULL) {
 		if(keyframe->getParent() == this){
-			keyframe->setParent(NULL);
+			keyframe->setParent(nullptr);
 		}
 	}
 }

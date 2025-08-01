@@ -26,22 +26,22 @@ namespace RBX {
 	class BuoyancyContact : public Contact
 	{
 	public:
-		static const int MAX_CONNECTORS = 8;
+		static const size_t MAX_CONNECTORS = 8u;
 		static float waterViscosity;
 		static const float waterDensity;
 
 		typedef RBX::FixedArray<BuoyancyConnector*, MAX_CONNECTORS> ConnectorArray;
 
-		static Geometry::GeometryType determineGeometricType( Primitive *prim );
-		static BuoyancyContact* create( Primitive* p0, Primitive *p1 );
-		
-		BuoyancyContact( Primitive* p0, Primitive* p1 );
+		static Geometry::GeometryType determineGeometricType(Primitive* prim);
+		static BuoyancyContact* create(Primitive* p0, Primitive* p1);
+
+		BuoyancyContact(Primitive* p0, Primitive* p1);
 		~BuoyancyContact();
 
 		virtual Geometry::GeometryType getType() = 0;
 
 		ContactType getContactType() const override { return Contact_Buoyancy; }
-	
+
 		void onPrimitiveContactParametersChanged() override;
 
 	private:
@@ -53,44 +53,44 @@ namespace RBX {
 		ConnectorArray connectors;
 		Primitive* floaterPrim;
 
-        Voxel::Grid* voxelGrid;
-        Voxel2::Grid* smoothGrid;
+		Voxel::Grid* voxelGrid;
+		Voxel2::Grid* smoothGrid;
 
 		float radius;
 		float fullSurfaceArea;
 		Vector3 fullBuoyancy;
 
-		bool worldPosUnderWater( const Vector3& pos );
-		bool isTouchingWater( Primitive* prim );
+		bool worldPosUnderWater(const Vector3& pos);
+		bool isTouchingWater(Primitive* prim);
 
-		Voxel::Cell getWaterCell( Vector3int16 pos );
-		bool cellHasWater( Vector3int16 pos );
+		Voxel::Cell getWaterCell(Vector3int16 pos);
+		bool cellHasWater(Vector3int16 pos);
 
-		bool hasDistanceSubmergedUnderWater( const Vector3& worldpos, float& waterLevel, const Vector3& searchEnd );
-		bool worldPosAboveWater( const Vector3& worldpos, int minY, float& waterLevel );
-		Vector3 cellVelocity( const Vector3& worldpos );
+		bool hasDistanceSubmergedUnderWater(const Vector3& worldpos, float& waterLevel, const Vector3& searchEnd);
+		bool worldPosAboveWater(const Vector3& worldpos, int minY, float& waterLevel);
+		Vector3 cellVelocity(const Vector3& worldpos);
 
 		void removeAllConnectorsFromKernel();
 		void putAllConnectorsInKernel();
-		void computeExtentsWaterBand( const Extents& extents, float& floatDistance, float& sinkDistance );
+		void computeExtentsWaterBand(const Extents& extents, float& floatDistance, float& sinkDistance);
 		void updateConnectors();
 
 		// Contact API
 		void deleteAllConnectors() override;
-		int numConnectors() const override					{ return connectors.size(); }
-		ContactConnector* getConnector( int i ) override	{ return connectors[i]; }
+		size_t numConnectors() const override { return connectors.size(); }
+		ContactConnector* getConnector(size_t i) override { return connectors[i]; }
 		bool stepContact() override;
 		bool computeIsColliding(float overlapIgnored) override;
 		bool computeIsCollidingUi(float overlapIgnored) override; // override to always return false so can build underwater; shouldn't affect HumanoidState code
 
 		// Buoyancy Shape API 
-		virtual Vector3 getWaterVelocity(int i);
+		virtual Vector3 getWaterVelocity(size_t i);
 		virtual void createConnectors() = 0;
 		virtual void updateWaterBand() = 0;
 		virtual void updateSubmergeRatio();
 		virtual void getSurfaceAreaInDirection(const Vector3& relativeVelocity, float& crossArea, float& tangentArea) = 0;
 		virtual void initializeCrossSections() = 0;
-		virtual Vector3 getCrossSections(int i, const Vector3& velocity) = 0;
+		virtual Vector3 getCrossSections(size_t i, const Vector3& velocity) = 0;
 	};
 
 	///////////////////////////////////////////////////////////////////////////////////////
@@ -104,15 +104,15 @@ namespace RBX {
 
 		bool computeIsColliding(float overlapIgnored);
 		void createConnectors();
-		Vector3 getWaterVelocity(int i);
+		Vector3 getWaterVelocity(size_t i);
 		void updateWaterBand();
 		void updateSubmergeRatio();
 		void getSurfaceAreaInDirection(const Vector3& relativeVelocity, float& crossArea, float& tangentArea);
 		void initializeCrossSections();
-		virtual Vector3 getCrossSections(int, const Vector3&);
+		virtual Vector3 getCrossSections(size_t, const Vector3&);
 
 	public:
-		BuoyancyBallContact( Primitive* p0, Primitive* p1 ) : BuoyancyContact(p0, p1) {}
+		BuoyancyBallContact(Primitive* p0, Primitive* p1) : BuoyancyContact(p0, p1) {}
 		Geometry::GeometryType getType() { return Geometry::GEOMETRY_BALL; }
 	};
 
@@ -130,9 +130,9 @@ namespace RBX {
 		void updateWaterBand();
 		virtual void getSurfaceAreaInDirection(const Vector3& relativeVelocity, float& crossSectionArea, float& tangentSurfaceAread);
 		virtual void initializeCrossSections();
-		Vector3 getCrossSections( int i, const Vector3& velocity );
+		Vector3 getCrossSections(size_t i, const Vector3& velocity);
 	public:
-		BuoyancyBoxContact( Primitive* p0, Primitive* p1 );
+		BuoyancyBoxContact(Primitive* p0, Primitive* p1);
 		Geometry::GeometryType getType() { return Geometry::GEOMETRY_BLOCK; }
 	};
 
@@ -146,7 +146,7 @@ namespace RBX {
 		void initializeCrossSections();
 
 	public:
-		BuoyancyCylinderContact( Primitive* p0, Primitive* p1 ) : BuoyancyBoxContact(p0, p1) {}
+		BuoyancyCylinderContact(Primitive* p0, Primitive* p1) : BuoyancyBoxContact(p0, p1) {}
 		Geometry::GeometryType getType() { return Geometry::GEOMETRY_CYLINDER; }
 	};
 
@@ -161,7 +161,7 @@ namespace RBX {
 		void initializeCrossSections();
 
 	public:
-		BuoyancyWedgeContact( Primitive* p0, Primitive* p1 ) : BuoyancyBoxContact(p0, p1) {}
+		BuoyancyWedgeContact(Primitive* p0, Primitive* p1) : BuoyancyBoxContact(p0, p1) {}
 		Geometry::GeometryType getType() { return Geometry::GEOMETRY_WEDGE; }
 	};
 
@@ -175,7 +175,7 @@ namespace RBX {
 		void initializeCrossSections();
 
 	public:
-		BuoyancyCornerWedgeContact( Primitive* p0, Primitive* p1 ) : BuoyancyBoxContact(p0, p1) {}
+		BuoyancyCornerWedgeContact(Primitive* p0, Primitive* p1) : BuoyancyBoxContact(p0, p1) {}
 		Geometry::GeometryType getType() { return Geometry::GEOMETRY_CORNERWEDGE; }
 	};
 }

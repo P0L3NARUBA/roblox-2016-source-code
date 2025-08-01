@@ -8,10 +8,8 @@
 #include "Util.h"
 #include "VertexStreamer.h"
 
-namespace RBX
-{
-	namespace Graphics
-	{
+namespace RBX {
+	namespace Graphics {
 
 		RenderEntity::RenderEntity(RenderNode* node, const GeometryBatch& geometry, const shared_ptr<Material>& material, RenderQueue::Id renderQueueId, unsigned char lodMask)
 			: node(node)
@@ -26,13 +24,11 @@ namespace RBX
 		{
 		}
 
-		void RenderEntity::updateRenderQueue(RenderQueue& queue, const RenderCamera& camera, unsigned int lodIndex, RenderQueue::Pass pass)
-		{
+		void RenderEntity::updateRenderQueue(RenderQueue& queue, const RenderCamera& camera, uint32_t lodIndex, RenderQueue::Pass pass) {
 			const shared_ptr<Material>& m = material;
 
-			if (const Technique* technique = m->getBestTechnique(lodIndex, pass))
-			{
-				float distanceKey = (renderQueueId == RenderQueue::Id_Transparent) ? getViewDepth(camera) : 0.f;
+			if (const Technique* technique = m->getBestTechnique(lodIndex, pass)) {
+				float distanceKey = (renderQueueId == RenderQueue::Id_Transparent) ? getViewDepth(camera) : 0.0f;
 
 				RenderOperation rop = { this, distanceKey, technique, &geometry };
 
@@ -40,11 +36,10 @@ namespace RBX
 			}
 		}
 
-		unsigned int RenderEntity::getWorldTransforms4x3(float* buffer, unsigned int maxTransforms, const void** cacheKey) const
-		{
-			if (useCache(cacheKey, node)) return 0;
+		uint32_t RenderEntity::getWorldTransforms4x3(float* buffer, uint32_t maxTransforms, const void** cacheKey) const {
+			if (useCache(cacheKey, node)) return 0u;
 
-			RBXASSERT(maxTransforms >= 1);
+			RBXASSERT(maxTransforms >= 1u);
 
 			const CoordinateFrame& cframe = node->getCoordinateFrame();
 
@@ -60,82 +55,68 @@ namespace RBX
 			return 1;
 		}
 
-		float RenderEntity::getViewDepth(const RenderCamera& camera) const
-		{
+		float RenderEntity::getViewDepth(const RenderCamera& camera) const {
 			return computeViewDepth(camera, node->getCoordinateFrame().translation);
 		}
 
-		float RenderEntity::computeViewDepth(const RenderCamera& camera, const Vector3& position, float offset)
-		{
+		float RenderEntity::computeViewDepth(const RenderCamera& camera, const Vector3& position, float offset) {
 			float result = (position - camera.getPosition()).dot(camera.getDirection()) + offset;
 
-			return Math::isNan(result) ? 0 : result;
+			return Math::isNan(result) ? 0.0f : result;
 		}
 
-		RenderNode::RenderNode(VisualEngine* visualEngine, CullMode cullMode, unsigned int flags)
+		RenderNode::RenderNode(VisualEngine* visualEngine, CullMode cullMode, uint32_t flags)
 			: CullableSceneNode(visualEngine, cullMode, flags)
 		{
 		}
 
-		RenderNode::~RenderNode()
-		{
+		RenderNode::~RenderNode() {
 			// delete all entities
-			for (size_t i = 0; i < entities.size(); ++i)
-			{
+			for (size_t i = 0u; i < entities.size(); ++i) {
 				delete entities[i];
 			}
 		}
 
-		void RenderNode::addEntity(RenderEntity* entity)
-		{
+		void RenderNode::addEntity(RenderEntity* entity) {
 			RBXASSERT(entity);
 			entities.push_back(entity);
 		}
 
-		void RenderNode::removeEntity(RenderEntity* entity)
-		{
+		void RenderNode::removeEntity(RenderEntity* entity) {
 			std::vector<RenderEntity*>::iterator it = std::find(entities.begin(), entities.end(), entity);
 			RBXASSERT(it != entities.end());
 
 			entities.erase(it);
 		}
 
-		void RenderNode::updateRenderQueue(RenderQueue& queue, const RenderCamera& camera, RenderQueue::Pass pass)
-		{
+		void RenderNode::updateRenderQueue(RenderQueue& queue, const RenderCamera& camera, RenderQueue::Pass pass) {
 			if (updateIsCulledByFRM())
 				return;
 
 			FrameRateManager* frm = getVisualEngine()->getFrameRateManager();
 
-			unsigned int lodIndex = frm->getGBufferSetting() ? 0 : getSqDistanceToFocus() < frm->getShadingSqDistance() ? 1 : 2;
+			uint32_t lodIndex = frm->getGBufferSetting() ? 0u : getSqDistanceToFocus() < frm->getShadingSqDistance() ? 1u : 2u;
 
-			unsigned int lodMask = 1 << lodIndex;
+			uint32_t lodMask = 1u << lodIndex;
 
 			// Add all entities
-			for (size_t i = 0; i < entities.size(); ++i)
-			{
+			for (size_t i = 0u; i < entities.size(); ++i)
 				if (entities[i]->getLodMask() & lodMask)
 					entities[i]->updateRenderQueue(queue, camera, lodIndex, pass);
-			}
 
 			// Render bounding box
 			if (getVisualEngine()->getSettings()->getDebugShowBoundingBoxes())
-			{
 				debugRenderBoundingBox();
-			}
 		}
 
-		void RenderNode::debugRenderBoundingBox()
-		{
+		void RenderNode::debugRenderBoundingBox() {
 			VertexStreamer* vs = getVisualEngine()->getVertexStreamer();
 			const Extents& b = getWorldBounds();
 
-			if (!b.isNull())
-			{
-				static const int edges[12][2] = { {0, 2}, {2, 6}, {6, 4}, {4, 0}, {1, 3}, {3, 7}, {7, 5}, {5, 1}, {0, 1}, {2, 3}, {4, 5}, {6, 7} };
+			if (!b.isNull()) {
+				static const uint32_t edges[12][2] = { {0u, 2u}, {2u, 6u}, {6u, 4u}, {4u, 0u}, {1u, 3u}, {3u, 7u}, {7u, 5u}, {5u, 1u}, {0u, 1u}, {2u, 3u}, {4u, 5u}, {6u, 7u} };
 
-				for (int edge = 0; edge < 12; ++edge)
-				{
+				for (size_t edge = 0u; edge < 12u; ++edge) {
 					Vector3 e0 = b.getCorner(edges[edge][0]);
 					Vector3 e1 = b.getCorner(edges[edge][1]);
 

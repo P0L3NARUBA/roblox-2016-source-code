@@ -7,16 +7,12 @@ struct ID3D11Buffer;
 struct ID3D11DeviceContext;
 struct D3D11_INPUT_ELEMENT_DESC;
 
-namespace RBX
-{
-	namespace Graphics
-	{
-
+namespace RBX {
+	namespace Graphics {
 		class ShaderProgramD3D11;
 		class VertexShaderD3D11;
 
-		class VertexLayoutD3D11 : public VertexLayout
-		{
+		class VertexLayoutD3D11 : public VertexLayout {
 		public:
 			VertexLayoutD3D11(Device* device, const std::vector<Element>& elements);
 			~VertexLayoutD3D11();
@@ -31,8 +27,7 @@ namespace RBX
 			std::vector<weak_ptr<VertexShaderD3D11>> shaders; // shaders having this vertex declaration
 		};
 
-		template <typename Base> class GeometryBufferD3D11 : public Base
-		{
+		template <typename Base> class GeometryBufferD3D11 : public Base {
 		public:
 			GeometryBufferD3D11(Device* device, size_t elementSize, size_t elementCount, GeometryBuffer::Usage usage);
 			~GeometryBufferD3D11();
@@ -40,12 +35,12 @@ namespace RBX
 			virtual void* lock(GeometryBuffer::LockMode mode);
 			virtual void unlock();
 
-			virtual void upload(unsigned int offset, const void* data, unsigned int size);
+			virtual void upload(uint32_t offset, const void* data, size_t size);
 
 			ID3D11Buffer* getObject() const { return object; }
 
 		protected:
-			void create(unsigned bindFlags);
+			void create(uint32_t bindFlags);
 
 		private:
 			ID3D11Buffer* object;
@@ -54,27 +49,24 @@ namespace RBX
 		};
 
 
-		class VertexBufferD3D11 : public GeometryBufferD3D11<VertexBuffer>
-		{
+		class VertexBufferD3D11 : public GeometryBufferD3D11<VertexBuffer> {
 		public:
 			VertexBufferD3D11(Device* device, size_t elementSize, size_t elementCount, Usage usage);
 			~VertexBufferD3D11();
 		};
 
-		class IndexBufferD3D11 : public GeometryBufferD3D11<IndexBuffer>
-		{
+		class IndexBufferD3D11 : public GeometryBufferD3D11<IndexBuffer> {
 		public:
 			IndexBufferD3D11(Device* device, size_t elementSize, size_t elementCount, Usage usage);
 			~IndexBufferD3D11();
 		};
 
-		class GeometryD3D11 : public Geometry
-		{
+		class GeometryD3D11 : public Geometry {
 		public:
-			GeometryD3D11(Device* device, const shared_ptr<VertexLayout>& layout, const std::vector<shared_ptr<VertexBuffer> >& vertexBuffers, const shared_ptr<IndexBuffer>& indexBuffer, unsigned int baseVertexIndex);
+			GeometryD3D11(Device* device, const shared_ptr<VertexLayout>& layout, const std::vector<shared_ptr<VertexBuffer> >& vertexBuffers, const shared_ptr<IndexBuffer>& indexBuffer, uint32_t baseVertexIndex);
 			~GeometryD3D11();
 
-			void draw(Geometry::Primitive primitive, unsigned int offset, unsigned int count, unsigned int indexRangeBegin, unsigned int indexRangeEnd, VertexLayoutD3D11** layoutCache, GeometryD3D11** geometryCache, ShaderProgramD3D11** programCache);
+			void draw(Geometry::Primitive primitive, uint32_t offset, uint32_t count, uint32_t indexRangeBegin, uint32_t indexRangeEnd, VertexLayoutD3D11** layoutCache, GeometryD3D11** geometryCache, ShaderProgramD3D11** programCache);
 
 		private:
 		};

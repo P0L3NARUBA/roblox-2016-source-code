@@ -21,7 +21,7 @@ const char *const sPVInstance = "PVInstance";
 // legacy stuff - old offset
 
 REFLECTION_BEGIN();
-static const Reflection::PropDescriptor<PVInstance, CoordinateFrame> desc_CoordFrame("CoordinateFrame", category_Data, NULL, &PVInstance::setPVGridOffsetLegacy, Reflection::PropertyDescriptor::UI);
+static const Reflection::PropDescriptor<PVInstance, CoordinateFrame> desc_CoordFrame("CoordinateFrame", category_Data, nullptr, &PVInstance::setPVGridOffsetLegacy, Reflection::PropertyDescriptor::UI);
 REFLECTION_END();
 
 PVInstance::PVInstance(const char* name) :

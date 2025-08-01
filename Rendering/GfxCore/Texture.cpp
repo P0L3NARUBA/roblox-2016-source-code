@@ -4,58 +4,54 @@
 
 FASTFLAGVARIABLE(GraphicsTextureCommitChanges, false)
 
-namespace RBX
-{
-	namespace Graphics
-	{
+namespace RBX {
+	namespace Graphics {
 
-		struct FormatDescription
-		{
-			unsigned char bpp;
+		struct FormatDescription {
+			uint32_t bpp;
 			bool compressed;
 			bool depth;
 		};
 
-		static const FormatDescription gTextureFormats[Texture::Format_Count] =
-		{
-			{ 8,  false, false }, /* R8         */
-			{ 16, false, false }, /* RG8        */
-			{ 32, false, false }, /* RGBA8      */
-			{ 16, false, false }, /* BGR5A1     */
-			{ 32, false, false }, /* R11G11B10f */
-			{ 32, false, false }, /* RG16       */
-			{ 32, false, false }, /* RG16f      */
-			{ 64, false, false }, /* RGBA16f    */
+		static const FormatDescription gTextureFormats[Texture::Format_Count] = {
+			{ 8u,  false, false }, /* R8         */
+			{ 16u, false, false }, /* RG8        */
+			{ 32u, false, false }, /* RGBA8      */
+			{ 16u, false, false }, /* BGR5A1     */
+			{ 32u, false, false }, /* R11G11B10f */
+			{ 32u, false, false }, /* RG16       */
+			{ 32u, false, false }, /* RG16f      */
+			{ 64u, false, false }, /* RGBA16f    */
 
-			{ 4,  true,  false }, /* BC1        */
-			{ 4,  true,  false }, /* BC1_sRGB   */
-			{ 8,  true,  false }, /* BC2        */
-			{ 8,  true,  false }, /* BC2_sRGB   */
-			{ 8,  true,  false }, /* BC3        */
-			{ 8,  true,  false }, /* BC3_sRGB   */
-			{ 4,  true,  false }, /* BC4        */
-			{ 8,  true,  false }, /* BC5        */
-			{ 8,  true,  false }, /* BC6f       */
-			{ 8,  true,  false }, /* BC7        */
-			{ 8,  true,  false }, /* BC7_sRGB   */
+			{ 4u,  true,  false }, /* BC1        */
+			{ 4u,  true,  false }, /* BC1_sRGB   */
+			{ 8u,  true,  false }, /* BC2        */
+			{ 8u,  true,  false }, /* BC2_sRGB   */
+			{ 8u,  true,  false }, /* BC3        */
+			{ 8u,  true,  false }, /* BC3_sRGB   */
+			{ 4u,  true,  false }, /* BC4        */
+			{ 8u,  true,  false }, /* BC5        */
+			{ 8u,  true,  false }, /* BC6f       */
+			{ 8u,  true,  false }, /* BC7        */
+			{ 8u,  true,  false }, /* BC7_sRGB   */
 
-			{ 16, false, true  }, /* D16        */
-			{ 32, false, true  }, /* D24S8      */
-			{ 32, false, true  }, /* D32f       */
-			{ 64, false, true  }, /* D32fS8X24  */
+			{ 16u, false, true  }, /* D16        */
+			{ 32u, false, true  }, /* D24S8      */
+			{ 32u, false, true  }, /* D32f       */
+			{ 64u, false, true  }, /* D32fS8X24  */
 		};
 
 		TextureRegion::TextureRegion()
-			: x(0)
-			, y(0)
-			, z(0)
-			, width(0)
-			, height(0)
-			, depth(0)
+			: x(0u)
+			, y(0u)
+			, z(0u)
+			, width(0u)
+			, height(0u)
+			, depth(0u)
 		{
 		}
 
-		TextureRegion::TextureRegion(unsigned int x, unsigned int y, unsigned int z, unsigned int width, unsigned int height, unsigned int depth)
+		TextureRegion::TextureRegion(uint32_t x, uint32_t y, uint32_t z, uint32_t width, uint32_t height, uint32_t depth)
 			: x(x)
 			, y(y)
 			, z(z)
@@ -65,17 +61,17 @@ namespace RBX
 		{
 		}
 
-		TextureRegion::TextureRegion(unsigned int x, unsigned int y, unsigned int width, unsigned int height)
+		TextureRegion::TextureRegion(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
 			: x(x)
 			, y(y)
-			, z(0)
+			, z(0u)
 			, width(width)
 			, height(height)
-			, depth(1)
+			, depth(1u)
 		{
 		}
 
-		Texture::Texture(Device* device, Type type, Format format, unsigned int width, unsigned int height, unsigned int depth, unsigned int mipLevels, Usage usage)
+		Texture::Texture(Device* device, Type type, Format format, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevels, Usage usage)
 			: Resource(device)
 			, type(type)
 			, format(format)
@@ -85,83 +81,71 @@ namespace RBX
 			, mipLevels(mipLevels)
 			, usage(usage)
 		{
-			RBXASSERT(width > 0 && height > 0 && depth > 0);
-			RBXASSERT(mipLevels > 0 && mipLevels <= getMaxMipCount(width, height, depth));
-			RBXASSERT(type == Type_3D || depth == 1);
+			RBXASSERT(width > 0u && height > 0u && depth > 0u);
+			RBXASSERT(mipLevels > 0u && mipLevels <= getMaxMipCount(width, height, depth));
+			RBXASSERT(type == Type_3D || depth == 1u);
 
-			if (usage != Usage_Renderbuffer)
-			{
+			if (usage != Usage_Renderbuffer) {
 				RBXPROFILER_COUNTER_ADD("memory/gpu/texture", getTextureSize(type, format, width, height, depth, mipLevels));
 			}
 		}
 
-		Texture::~Texture()
-		{
-			if (usage != Usage_Renderbuffer)
-			{
+		Texture::~Texture() {
+			if (usage != Usage_Renderbuffer) {
 				RBXPROFILER_COUNTER_SUB("memory/gpu/texture", getTextureSize(type, format, width, height, depth, mipLevels));
 			}
 		}
 
-		bool Texture::isFormatCompressed(Format format)
-		{
+		bool Texture::isFormatCompressed(Format format) {
 			return gTextureFormats[format].compressed;
 		}
 
-		bool Texture::isFormatDepth(Format format)
-		{
+		bool Texture::isFormatDepth(Format format) {
 			return gTextureFormats[format].depth;
 		}
 
-		unsigned int Texture::getFormatBits(Format format)
-		{
+		uint32_t Texture::getFormatBits(Format format) {
 			return gTextureFormats[format].bpp;
 		}
 
-		unsigned int Texture::getImageSize(Format format, unsigned int width, unsigned int height)
-		{
+		uint32_t Texture::getImageSize(Format format, uint32_t width, uint32_t height) {
 			const FormatDescription& desc = gTextureFormats[format];
 
-			switch (format)
-			{
+			switch (format) {
 			case Format_BC1:
 			case Format_BC2:
 			case Format_BC3:
 				return std::max(1u, ((width + 3u) / 4u)) * std::max(1u, ((height + 3u) / 4u)) * (desc.bpp * 16u / 8u);
 
 			default:
-				return width * height * (desc.bpp / 8);
+				return width * height * (desc.bpp / 8u);
 			}
 		}
 
-		unsigned int Texture::getTextureSize(Type type, Format format, unsigned int width, unsigned int height, unsigned int depth, unsigned int mipLevels)
-		{
-			unsigned int result = 0;
+		uint32_t Texture::getTextureSize(Type type, Format format, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevels) {
+			uint32_t result = 0u;
 
-			for (unsigned int mip = 0; mip < mipLevels; ++mip)
+			for (uint32_t mip = 0u; mip < mipLevels; ++mip)
 				result += Texture::getImageSize(format, Texture::getMipSide(width, mip), Texture::getMipSide(height, mip)) * Texture::getMipSide(depth, mip);
 
-			return result * (type == Texture::Type_Cube ? 6 : 1);
+			return result * (type == Texture::Type_Cube ? 6u : 1u);
 		}
 
-		unsigned int Texture::getMipSide(unsigned int value, unsigned int mip)
-		{
-			unsigned int result = value >> mip;
+		uint32_t Texture::getMipSide(uint32_t value, uint32_t mip) {
+			uint32_t result = value >> mip;
 
-			return result ? result : 1;
+			return result ? result : 1u;
 		}
 
-		unsigned int Texture::getMaxMipCount(unsigned int width, unsigned int height, unsigned int depth)
-		{
-			unsigned int result = 0;
+		uint32_t Texture::getMaxMipCount(uint32_t width, uint32_t height, uint32_t depth) {
+			uint32_t result = 0u;
 
-			while (width || height || depth)
-			{
+			while (width || height || depth) {
 				result++;
 
-				width /= 2;
-				height /= 2;
-				depth /= 2;
+				width /= 2u;
+				height /= 2u;
+				depth /= 2u;
 			}
 
 			return result;

@@ -8,143 +8,142 @@ LOGGROUP(DeviceLost)
 LOGGROUP(ViewRbxBase)
 LOGGROUP(ViewRbxInit)
 
-namespace RBX
-{
+namespace RBX {
 	class Lighting;
-    class DataModel;
-    class PlatformService;
+	class DataModel;
+	class PlatformService;
 }
 
-namespace RBX
-{
-namespace Graphics
-{
+namespace RBX {
+	namespace Graphics {
 
-class Device;
-class VisualEngine;
-class FrameRateManagerStatsItem;
-class SSAO;
-class Framebuffer;
-class VertexStreamer;
-class DeviceContext;
-class Texture;
-class ProfilerRenderer;
+		class Device;
+		class VisualEngine;
+		class FrameRateManagerStatsItem;
+		class SSAO;
+		class Framebuffer;
+		class VertexStreamer;
+		class DeviceContext;
+		class Texture;
+		class ProfilerRenderer;
 
-class RenderView
-    : public ViewBase
-    , public IRenderHooks
-{
-public:
-    RenderView(CRenderSettings::GraphicsMode mode, OSContext* context, CRenderSettings* renderSettings);
-    ~RenderView();
+		class RenderView
+			: public ViewBase
+			, public IRenderHooks
+		{
+		public:
+			RenderView(CRenderSettings::GraphicsMode mode, OSContext* context, CRenderSettings* renderSettings);
+			~RenderView();
 
-    void bindWorkspace(boost::shared_ptr<RBX::DataModel> dataModel);
-    void initResources();
+			void bindWorkspace(boost::shared_ptr<RBX::DataModel> dataModel);
+			void initResources();
 
-    void renderPrepare(IMetric* metric);
-    void renderPerform(double timeRenderJob);
+			void renderPrepare(IMetric* metric);
+			void renderPerform(double timeRenderJob);
 
-    void onResize(int cx, int cy);
-    void buildGui(bool buildInGameGui = true);
+			void onResize(uint32_t cx, uint32_t cy);
+			void buildGui(bool buildInGameGui = true);
 
-    void updateVR();
-	void enableVR(bool enabled);
-	const char* getVRDeviceName();
+			void updateVR();
+			void enableVR(bool enabled);
+			const char* getVRDeviceName();
 
-    void renderThumb(unsigned char* data, int width, int height, bool crop, bool allowDolly);
+			void renderThumb(unsigned char* data, uint32_t width, uint32_t height, bool crop, bool allowDolly);
 
-    bool getAndClearDoScreenshot();
+			bool getAndClearDoScreenshot();
 
-	bool exportScene(const std::string& filePath, ExporterSaveType saveType, ExporterFormat format);
-    bool exportSceneThumbJSON(ExporterSaveType saveType, ExporterFormat format, bool encodeBase64, std::string& strOut);
+			bool exportScene(const std::string& filePath, ExporterSaveType saveType, ExporterFormat format);
+			bool exportSceneThumbJSON(ExporterSaveType saveType, ExporterFormat format, bool encodeBase64, std::string& strOut);
 
-	void suspendView();
-	void resumeView();
+			void suspendView();
+			void resumeView();
 
-    RBX::Instance* getWorkspace();
+			RBX::Instance* getWorkspace();
 
-    RenderStats & getRenderStats();
+			RenderStats& getRenderStats();
 
-    RBX::DataModel* getDataModel() { return dataModel.get(); }
-    FrameRateManager* getFrameRateManager();
+			RBX::DataModel* getDataModel() { return dataModel.get(); }
+			FrameRateManager* getFrameRateManager();
 
-    virtual double getMetricValue(const std::string& s);
+			virtual double getMetricValue(const std::string& s);
 
-    VisualEngine& getVisualEngine() { return *visualEngine; }
+			VisualEngine& getVisualEngine() { return *visualEngine; }
 
-    // Debug/Profiling hooks
-    void reloadShaders();
-    void captureMetrics(RenderMetrics& metrics);
-    void enableAdorns(bool enable);
-    void queueAssetReload(const std::string& filePath);
-	void immediateAssetReload(const std::string& filePath);
-    void printScene();
-    
-    std::string getRenderStatsMetric(const std::string& name);
+			// Debug/Profiling hooks
+			void reloadShaders();
+			void captureMetrics(RenderMetrics& metrics);
+			void enableAdorns(bool enable);
+			void queueAssetReload(const std::string& filePath);
+			void immediateAssetReload(const std::string& filePath);
+			void printScene();
 
-    virtual void garbageCollect();
+			std::string getRenderStatsMetric(const std::string& name);
 
-    virtual std::pair<unsigned, unsigned> setFrameDataCallback(const boost::function<void(void*)>& callback);
+			virtual void garbageCollect();
 
-private:
-    void onWorkspaceDescendantAdded(shared_ptr<RBX::Instance> descendant);
-    void updateLighting(Lighting* lighting);
-    void updateFog();
-    void invalidateLighting(bool updateSkybox);
-    void onTakeScreenshot();
-    bool saveScreenshotToFile(std::string& /*output*/ filename);
-    void prepareSceneGraph();
-    void sendFeatureLevelStats();
-    void drawRecordingFrame(DeviceContext* context);
-    void drawProfiler(DeviceContext* context);
-    void drawVRWindow(DeviceContext* context);
+			virtual std::pair<uint32_t, uint32_t> setFrameDataCallback(const boost::function<void(void*)>& callback);
 
-    void presetLighting(RBX::Lighting* l, const RBX::Color3& extraAmbient = RBX::Color3(0, 0, 0), float skylightFactor = 1);
-    void presetPostProcess(RBX::Lighting* l);
+		private:
+			void onWorkspaceDescendantAdded(shared_ptr<RBX::Instance> descendant);
+			void updateLighting(Lighting* lighting);
+			//void updateFog();
+			void invalidateLighting(bool updateSkybox);
+			void onTakeScreenshot();
+			bool saveScreenshotToFile(std::string& /*output*/ filename);
+			void prepareSceneGraph();
+			//void sendFeatureLevelStats();
+			void drawRecordingFrame(DeviceContext* context);
+			void drawProfiler(DeviceContext* context);
+			void drawVRWindow(DeviceContext* context);
 
-    void renderPrepareImpl(IMetric* metric, bool updateViewport);
-	void renderPerformImpl(double timeRenderJob, Framebuffer* mainFramebuffer);
+			void presetLighting(RBX::Lighting* lighting);
+			void presetPostProcess(RBX::Lighting* lighting);
+			void presetProcessing(RBX::Lighting* lighting);
 
-    scoped_ptr<Device> device;
-    scoped_ptr<VisualEngine> visualEngine;
+			void renderPrepareImpl(IMetric* metric, bool updateViewport);
+			void renderPerformImpl(double timeRenderJob, Framebuffer* mainFramebuffer);
 
-    double  deltaMs;
-    double  timestampMs;
-    float   prepareTime;
-	float   totalRenderTime;
-    double  artificialDelay;
+			scoped_ptr<Device> device;
+			scoped_ptr<VisualEngine> visualEngine;
 
-    RBX::WindowAverage<double, double> prepareAverage;
-    RBX::WindowAverage<double, double> performAverage;
-    RBX::WindowAverage<double, double> presentAverage;
-    RBX::WindowAverage<double, double> gpuAverage;
+			double  deltaMs;
+			double  timestampMs;
+			float   prepareTime;
+			float   totalRenderTime;
+			double  artificialDelay;
 
-    rbx::signal<void(std::string)> screenshotFinishedSignal;
+			RBX::WindowAverage<double, double> prepareAverage;
+			RBX::WindowAverage<double, double> performAverage;
+			RBX::WindowAverage<double, double> presentAverage;
+			RBX::WindowAverage<double, double> gpuAverage;
 
-    boost::shared_ptr<RBX::DataModel> dataModel;
+			rbx::signal<void(std::string)> screenshotFinishedSignal;
 
-    rbx::signals::scoped_connection lightingChangedConnection;
-    bool lightingValid;
+			boost::shared_ptr<RBX::DataModel> dataModel;
 
-    rbx::signals::scoped_connection screenshotConnection;
-    bool doScreenshot;
+			rbx::signals::scoped_connection lightingChangedConnection;
+			bool lightingValid;
+			bool skyboxValid;
 
-    bool adornsEnabled;
+			rbx::signals::scoped_connection screenshotConnection;
+			bool doScreenshot;
 
-    bool outlinesEnabled;
-    float fogEndCurrentFRM;
-    float fogEndTargetFRM;
+			bool adornsEnabled;
 
-    typedef boost::function<void(void*)> FrameDataCallback;
-    FrameDataCallback frameDataCallback;
-    scoped_ptr<VertexStreamer> videoFrameVertexStreamer;
+			bool outlinesEnabled;
+			float fogEndCurrentFRM;
+			float fogEndTargetFRM;
 
-	scoped_ptr<ProfilerRenderer> profilerRenderer;
+			typedef boost::function<void(void*)> FrameDataCallback;
+			FrameDataCallback frameDataCallback;
+			scoped_ptr<VertexStreamer> videoFrameVertexStreamer;
 
-    boost::shared_ptr<FrameRateManagerStatsItem> frameRateManagerStatsItem;
+			scoped_ptr<ProfilerRenderer> profilerRenderer;
 
-    scoped_ptr<VertexStreamer> vrVertexStreamer;
-	shared_ptr<Texture> vrDebugTexture;
-};
-}
+			boost::shared_ptr<FrameRateManagerStatsItem> frameRateManagerStatsItem;
+
+			scoped_ptr<VertexStreamer> vrVertexStreamer;
+			shared_ptr<Texture> vrDebugTexture;
+		};
+	}
 }

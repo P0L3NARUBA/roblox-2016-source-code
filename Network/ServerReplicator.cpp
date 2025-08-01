@@ -161,7 +161,7 @@ DYNAMIC_FASTFLAGVARIABLE(HashConfigP7, false)
 DYNAMIC_FASTINTVARIABLE(HashConfigP9, 100)
 
 namespace {
-uint32_t getSecurityMask(const std::string& maskString, const char match, bool* configError = NULL)
+uint32_t getSecurityMask(const std::string& maskString, const char match, bool* configError = nullptr)
 {
     uint32_t result = 0;
     uint32_t mask = (1<<31);
@@ -330,7 +330,7 @@ ServerReplicator::ServerReplicator(RakNet::SystemAddress systemAddress, Server* 
 	, numPartsOwned(0)
 	, remoteProtocolVersion(NETWORK_PROTOCOL_VERSION)
     , placeAuthenticationState(PlaceAuthenticationState_Init)
-	, pendingCharaterRequest(NULL)
+	, pendingCharaterRequest(nullptr)
 	, startTime(Time::nowFast())
 {
     generateSchema(this, FFlag::DebugForceRegenerateSchemaBitStream);
@@ -353,9 +353,9 @@ ServerReplicator::ServerReplicator(RakNet::SystemAddress systemAddress, Server* 
 	setBasicFilteringEnabled(true);
 
 	lightingService = ServiceProvider::find<Lighting>(server);
-	globalShadowsDescriptor = lightingService ? lightingService->getDescriptor().findPropertyDescriptor("GlobalShadows") : NULL;
-	outdoorAmbientDescriptor = lightingService ? lightingService->getDescriptor().findPropertyDescriptor("OutdoorAmbient") : NULL;
-	outlinesDescriptor = lightingService ? lightingService->getDescriptor().findPropertyDescriptor("Outlines") : NULL;
+	globalShadowsDescriptor = lightingService ? lightingService->getDescriptor().findPropertyDescriptor("GlobalShadows") : nullptr;
+	outdoorAmbientDescriptor = lightingService ? lightingService->getDescriptor().findPropertyDescriptor("OutdoorAmbient") : nullptr;
+	outlinesDescriptor = lightingService ? lightingService->getDescriptor().findPropertyDescriptor("Outlines") : nullptr;
 
 	canTimeout = false;
 }
@@ -366,7 +366,7 @@ ServerReplicator::~ServerReplicator()
 
 void ServerReplicator::setBasicFilteringEnabled( bool value )
 {
-	basicFilter.reset(value ? new NetworkFilter(this) : NULL);
+	basicFilter.reset(value ? new NetworkFilter(this) : nullptr);
 }
 
 
@@ -406,7 +406,7 @@ const PartInstance* ServerReplicator::readPlayerSimulationRegion(Region2::Weight
 			return head;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 
@@ -787,7 +787,7 @@ void ServerReplicator::sendTop(RakNet::RakPeerInterface *peer)
 
 	for (TopReplConts::iterator iter = topReplicationContainers.begin(); iter!=end; ++iter)
 	{
-		RBXASSERT(*iter!=NULL);
+		RBXASSERT(*iter!=nullptr);
 		bool canReplicate = topRepContSync || canReplicateInstance(*iter, remoteProtocolVersion);
 
 		if (topRepContSync)
@@ -2419,7 +2419,7 @@ void ServerReplicator::processRequestCharacter(Instance* instance, RBX::Guid::Da
 	{
 		FASTLOG(FLog::Error, "RequestCharacter - RemotePlayer is null");
 		StandardOut::singleton()->printf(MESSAGE_SENSITIVE, "RequestCharacter - RemotePlayer is null. %s", RakNetAddressToString(remotePlayerId).c_str());
-		throw std::runtime_error("remotePlayer is NULL");
+		throw std::runtime_error("remotePlayer is nullptr");
 	}
 
 	if (remotePlayer.get() != instance)
@@ -2645,7 +2645,7 @@ void ServerReplicator::writeChangedRefProperty(const Instance* instance,
 		if (pendingCharaterRequest && (pendingCharaterRequest == instance) && (desc.name == "Character"))
 		{
 			RobloxGoogleAnalytics::trackUserTiming(GA_CATEGORY_GAME, "ProcessRequestCharacterTime", (Time::nowFast()-pendingCharacterRequestStartTime).msec(), "Replicate");
-			pendingCharaterRequest = NULL; 
+			pendingCharaterRequest = nullptr; 
 		}
 	}
 }
