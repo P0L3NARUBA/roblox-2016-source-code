@@ -32,10 +32,9 @@ DirectX 9 and OpenGL is unsupported.
 
 1. [Libraries Used](#libraries-used)
 2. [Tools Used](#tools-used)
-3. [Contributors / Credits](#contributors--credits)
-4. [Current Goals](#current-goals)
-5. [Current Issues](#current-issues)
-6. [Todo List](#todo-list)
+3. [Current Goals](#current-goals)
+4. [Current Issues](#current-issues)
+5. [Todo List](#todo-list)
 
 ## Libraries Used
 
@@ -56,17 +55,12 @@ DirectX 9 and OpenGL is unsupported.
 - [gSOAP](/RCCService/gSOAP/gsoap-2.7) = 2.7.10
 - [RakNet](/Network/raknet) = 5
 - [Mesa](/RCCService/Mesa-7.8.1) = 7.8.1
-- [TBB](/TBB_4_1) = 4.1
 
 ## Tools Used
 
 - [HxD](https://mh-nexus.de/en/downloads.php?product=HxD20)
 - [ILSpy](https://github.com/icsharpcode/ILSpy/releases)
 - [rbxsigner](/Tools/rbxsigner) = *unknown*
-
-## Contributors / Credits
-
-See **[CONTRIBUTORS.md](/CONTRIBUTORS.md)**
 
 ## Current Goals
 

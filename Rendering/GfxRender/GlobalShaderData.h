@@ -53,7 +53,7 @@ namespace RBX
 			Vector4 AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode;
 			Vector4 IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset; // Index of Refraction does not apply to metallic materials
 
-			Vector4 CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_unused;
+			Vector4 CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_CCIndexOfRefraction;
 		};
 
 		/* Albedo modes:

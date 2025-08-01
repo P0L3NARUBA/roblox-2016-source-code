@@ -50,7 +50,7 @@ struct MaterialData {
 };
 
 cbuffer MaterialData : register(b1) {
-    MaterialData MaterialsData[1024];
+    MaterialData MaterialsData[256];
 };
 
 #endif
