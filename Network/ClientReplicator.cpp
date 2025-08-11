@@ -355,7 +355,7 @@ namespace RBX { namespace Network {
             }
             if (isLuaLockFail)
             {
-                RBX::Security::setHackFlagVmp<LINE_RAND4>(RBX::Security::hackFlag4, HATE_DLL_INJECTION);
+            //    RBX::Security::setHackFlagVmp<LINE_RAND4>(RBX::Security::hackFlag4, HATE_DLL_INJECTION);
             }
             if (isHsceUnitFail)
             {

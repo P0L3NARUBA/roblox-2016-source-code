@@ -2035,7 +2035,7 @@ void CheatHandlingServerReplicator::processHashStats(unsigned int hashStats)
             | getSecurityMask(DFString::US30605p2, kGoldReportChar, &configError);
         if (hashStats & mask)
         {
-          players->onRemoteSysStats(remotePlayer->getUserID(), "1920x1200", "hector");
+            players->onRemoteSysStats(remotePlayer->getUserID(), "1920x1200", "hector");
         }
         mask |= getSecurityMask(DFString::US30605p2, kReportChar, &configError);
         if (hashStats & mask)
@@ -2062,7 +2062,7 @@ void CheatHandlingServerReplicator::processGoldHashStats(unsigned int hashStats)
         unsigned int mask = getSecurityMask(DFString::US30605p2, kGoldKickChar, &configError);
         if (hashStats & mask)
         {
-         players->onRemoteSysStats(remotePlayer->getUserID(), "1920x1200", "ghector");
+            players->onRemoteSysStats(remotePlayer->getUserID(), "1920x1200", "ghector");
         }
         mask |= getSecurityMask(DFString::US30605p2, kGoldReportChar, &configError);
         if (hashStats & mask)
@@ -2084,7 +2084,7 @@ void CheatHandlingServerReplicator::processGoldHashStats(unsigned int hashStats)
 
 #if defined(RBX_RCC_SECURITY)
 void CheatHandlingServerReplicator::processSendStats(unsigned int sendStats, unsigned int extraStats) {
-    unsigned int maskedSendStats = sendStats & ~sendStatsMask;
+	unsigned int maskedSendStats = sendStats & ~sendStatsMask;
 	if (maskedSendStats)
 	{
 #if defined(_DEBUG) || defined(_NOOPT)
@@ -2093,13 +2093,17 @@ void CheatHandlingServerReplicator::processSendStats(unsigned int sendStats, uns
 		doRemoteSysStats(maskedSendStats, HATE_IMPOSSIBLE_ERROR, "impala", "Impossible Error (31)");
 		if (maskedSendStats && ((maskedSendStats & HATE_IMPOSSIBLE_ERROR) == 0))
 		{
-			doRemoteSysStats(maskedSendStats, HATE_CE_ASM, "robert", "WriteCopy changed (30)");
-			doRemoteSysStats(maskedSendStats, HATE_NEW_AV_CHECK, "moded", "Stealth Edit Revival (29)");
+			// Not the perfect fix but should prevent it from false triggering.
+			// FFLags can trigger one of these (robert iirc)
+			// If I figure out more in the future I'll fix it
+
+			//doRemoteSysStats(maskedSendStats,  HATE_CE_ASM, "robert", "WriteCopy changed (30)");
+			//doRemoteSysStats(maskedSendStats,  HATE_NEW_AV_CHECK, "moded", "Stealth Edit Revival (29)");
 			doRemoteSysStats(maskedSendStats, HATE_HASH_FUNCTION_CHANGED, "booing", "Tried to modify hash function (28)");
 
 			doRemoteSysStats(maskedSendStats, HATE_RETURN_CHECK, "bobby", "Function Return Check Failed (27)");
 			doRemoteSysStats(maskedSendStats, HATE_VERB_SNATCH, "vera", "Tried to get build tools (26)");
-			doDelayedSysStats(maskedSendStats, HATE_VEH_HOOK, "vegah", "VEH used (25)");
+			//doDelayedSysStats(maskedSendStats, HATE_VEH_HOOK, "vegah", "VEH used (25)");
 			doRemoteSysStats(maskedSendStats, HATE_HSCE_HASH_CHANGED, "fisher", "HumanoidState::computeEvent changed (24)");
 
 			// Disabled since discord is injecting their own DLLs and causing kicks.
@@ -2125,7 +2129,7 @@ void CheatHandlingServerReplicator::processSendStats(unsigned int sendStats, uns
 
 			doRemoteSysStats(maskedSendStats, HATE_CONST_CHANGED, "lance", "Const Changed (7)");
 			doRemoteSysStats(maskedSendStats, HATE_INVALID_BYTECODE, "jack", "Invalid bytecode (6)");
-			doRemoteSysStats(maskedSendStats, HATE_MEMORY_HASH_CHANGED, "imogen", "Memory hash changed (5)");
+			//doRemoteSysStats(maskedSendStats,  HATE_MEMORY_HASH_CHANGED, "imogen", "Memory hash changed (5)");
 			doRemoteSysStats(maskedSendStats, HATE_ILLEGAL_SCRIPTS, "ivan", "Illegal scripts (4)");
 
 			doRemoteSysStats(maskedSendStats, HATE_SIGNATURE, "omar", "Bad signature (3)");
@@ -2133,25 +2137,25 @@ void CheatHandlingServerReplicator::processSendStats(unsigned int sendStats, uns
 			doRemoteSysStats(maskedSendStats, HATE_XXHASH_BROKEN, "lafayette", "xxhash broken (1)");
 			doRemoteSysStats(maskedSendStats, HATE_CHEATENGINE_OLD, "murdle", "Cheat Engine Stable Methods (0)");
 		}
-        sendStatsMask |= sendStats;
+		sendStatsMask |= sendStats;
 
 	}
 
-    unsigned int maskedExtraStats = extraStats & ~extraStatsMask;
-    if (maskedExtraStats)
-    {
-        doRemoteSysStats(maskedExtraStats, SCORN_IMPOSSIBLE_ERROR, "impala", "Scorn Impossible Error (31:12)", ::DFString::US30605p5);
-        if (maskedExtraStats && ((maskedExtraStats & SCORN_IMPOSSIBLE_ERROR) == 0))
-        {
-            doRemoteSysStats(maskedExtraStats, SCORN_REPLICATE_PROP, "tochigi", "Scorn Replication (11:0)", ::DFString::US30605p5);
-        }
-        extraStatsMask |= extraStats;
-    }
+	unsigned int maskedExtraStats = extraStats & ~extraStatsMask;
+	if (maskedExtraStats)
+	{
+		doRemoteSysStats(maskedExtraStats, SCORN_IMPOSSIBLE_ERROR, "impala", "Scorn Impossible Error (31:12)", ::DFString::US30605p5);
+		if (maskedExtraStats && ((maskedExtraStats & SCORN_IMPOSSIBLE_ERROR) == 0))
+		{
+			doRemoteSysStats(maskedExtraStats, SCORN_REPLICATE_PROP, "tochigi", "Scorn Replication (11:0)", ::DFString::US30605p5);
+		}
+		extraStatsMask |= extraStats;
+	}
 
-    if ((kickTimeSec > 0) && (Time::nowFastSec() > kickTimeSec))
-    {
-        players->onRemoteSysStats(remotePlayer->getUserID(), "1920x1200", kickName);
-    }
+	if ((kickTimeSec > 0) && (Time::nowFastSec() > kickTimeSec))
+	{
+		players->onRemoteSysStats(remotePlayer->getUserID(), "1920x1200", kickName);
+	}
 }
 #endif
 
