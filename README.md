@@ -313,7 +313,7 @@ DirectX 9 and OpenGL is unsupported.
 
 ## Todo List
 
-- Redo how parts are added to the render queue.
+- Add geometry generation.
 - Get solid parts rendering again.
 - Get materials working again.
 - Get local lighting working again.
