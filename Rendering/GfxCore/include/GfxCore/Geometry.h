@@ -11,13 +11,10 @@ namespace RBX {
 		public:
 			enum Semantic {
 				Semantic_Position,
-				Semantic_Tangent,
-				Semantic_Bitangent,
-				Semantic_Normal,
-				Semantic_Color,
 				Semantic_Texture,
-				Semantic_InstanceID,
-				Semantic_MaterialID,
+				Semantic_Color,
+				Semantic_Tangent,
+				Semantic_Normal,
 
 				Semantic_Count
 			};
@@ -44,15 +41,16 @@ namespace RBX {
 			};
 
 			struct Element {
-				uint32_t stream;
-				uint32_t offset;
-
-				Format format;
-				Input input;
-				Semantic semantic;
+				Semantic semanticName;
 				uint32_t semanticIndex;
 
-				Element(uint32_t stream, uint32_t offset, Format format, Input input, Semantic semantic, uint32_t semanticIndex = 0);
+				Format format;
+				uint32_t offset;
+
+				Input inputClass;
+				uint32_t stepRate;
+
+				Element(Semantic semanticName, uint32_t semanticIndex, Format format, uint32_t offset, Input inputClass, uint32_t stepRate = 0u);
 			};
 
 			~VertexLayout();
@@ -129,38 +127,41 @@ namespace RBX {
 
 			~Geometry();
 
+			/*void updateBuffers(const std::shared_ptr<VertexBuffer>& newVertexBuffer, const std::shared_ptr<IndexBuffer>& newIndexbuffer) {
+				vertexBuffer = newVertexBuffer;
+				indexBuffer = newIndexbuffer;
+			};*/
+
 		protected:
-			Geometry(Device* device, const shared_ptr<VertexLayout>& layout, const std::vector<shared_ptr<VertexBuffer> >& vertexBuffers, const shared_ptr<IndexBuffer>& indexBuffer, unsigned int baseVertexIndex);
+			Geometry(Device* device, const shared_ptr<VertexLayout>& layout, const shared_ptr<VertexBuffer>& vertexBuffer, const shared_ptr<IndexBuffer>& indexBuffer);
 
 			shared_ptr<VertexLayout> layout;
-			std::vector<shared_ptr<VertexBuffer>> vertexBuffers;
+			shared_ptr<VertexBuffer> vertexBuffer;
 			shared_ptr<IndexBuffer> indexBuffer;
-			uint32_t baseVertexIndex;
 		};
 
 		class GeometryBatch {
 		public:
-			GeometryBatch(const shared_ptr<Geometry>& geometry, Geometry::Primitive primitive, uint32_t count, uint32_t indexRangeSize);
-			GeometryBatch(const shared_ptr<Geometry>& geometry, Geometry::Primitive primitive, uint32_t offset, uint32_t count, uint32_t indexRangeBegin, uint32_t indexRangeEnd);
+			GeometryBatch();
+			GeometryBatch(const shared_ptr<Geometry>& geometry, Geometry::Primitive primitive, uint32_t vertexCount, uint32_t vertexOffset);
+			GeometryBatch(const shared_ptr<Geometry>& geometry, Geometry::Primitive primitive, uint32_t vertexCount, uint32_t vertexOffset, uint32_t indexOffset);
 
 			Geometry* getGeometry() const { return geometry.get(); }
-
 			Geometry::Primitive getPrimitive() const { return primitive; }
-			uint32_t getOffset() const { return offset; }
-			uint32_t getCount() const { return count; }
 
-			uint32_t getIndexRangeBegin() const { return indexRangeBegin; }
-			uint32_t getIndexRangeEnd() const { return indexRangeEnd; }
+			uint32_t getVertexCount() const { return vertexCount; }
+			uint32_t getVerexOffset() const { return vertexOffset; }
+			uint32_t getIndexOffset() const { return indexOffset; }
+
 		private:
 			shared_ptr<Geometry> geometry;
 
 			Geometry::Primitive primitive;
-			uint32_t offset;
-			uint32_t count;
 
-			uint32_t indexRangeBegin;
-			uint32_t indexRangeEnd;
+			uint32_t vertexCount;
+			uint32_t vertexOffset;
+			uint32_t indexOffset;
 		};
-
+		
 	}
 }

@@ -1,19 +1,22 @@
 #pragma once
 
-#include <vector>
-#include <cstdlib>
+#include "util/G3DCore.h"
+#include "GlobalShaderData.h"
+
+#include <unordered_map>
 
 namespace RBX {
 	namespace Graphics {
 
 		class GeometryBatch;
 		class Technique;
+		struct InstancedModels;
 
 		class Renderable {
 		public:
 			virtual ~Renderable();
 
-			virtual uint32_t getWorldTransforms4x3(float* buffer, uint32_t maxTransforms, const void** cacheKey) const = 0;
+			//virtual Matrix4 getWorldTransforms(float* buffer, const void** cacheKey) const = 0;
 
 		protected:
 			static bool useCache(const void** cacheKey, const void* value) {
@@ -24,11 +27,9 @@ namespace RBX {
 		};
 
 		struct RenderOperation {
-			const Renderable* renderable;
-			float distanceKey;
-
-			const Technique* technique;
 			const GeometryBatch* geometry;
+			const Technique* technique;
+			const InstancedModels* models;
 		};
 
 		class RenderQueueGroup {
@@ -84,19 +85,42 @@ namespace RBX {
 				Features_Glow = 1 << 0
 			};
 
+			enum Flag {
+				Flag_Opaque = 1u << 0u,
+				Flag_Transparent = 1u << 1u,
+				Flag_DepthPrepass = 1u << 2u,
+				Flag_ShadowPass = 1u << 3u,
+
+				Flag_Max = (Flag_Opaque | Flag_Transparent | Flag_DepthPrepass | Flag_ShadowPass) + 1u,
+			};
+
 			RenderQueue();
 
 			void clear();
 
-			RenderQueueGroup& getGroup(Id id) {
-				return groups[id];
+			RenderQueueGroup& getGroup(uint8_t flag) {
+				return groups[flag];
 			}
+
+			static uint8_t getIndex(Flag flag) {
+				switch (flag) {
+				default:
+				case (Flag_Opaque):
+					return 0u;
+				case (Flag_Transparent):
+					return 1u;
+				case (Flag_DepthPrepass):
+					return 2u;
+				case (Flag_ShadowPass):
+					return 3u;
+				}
+			};
 
 			uint32_t getFeatures() const { return features; }
 			void setFeature(uint32_t feature) { features |= feature; }
 
 		private:
-			RenderQueueGroup groups[Id_Count];
+			RenderQueueGroup groups[4];
 			uint32_t features;
 		};
 

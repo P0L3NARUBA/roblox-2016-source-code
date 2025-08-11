@@ -2,6 +2,8 @@
 #define EPSILON ( 0.0001 )
 #define INV_EPSILON ( 1.0 - EPSILON )
 
+#define GRAYSCALE float3(0.2126, 0.7152, 0.0722)
+
 #ifndef EXCLUDE_COMMON
 #define EXCLUDE_COMMON
 
@@ -30,10 +32,8 @@
     TextureCubeArray<##type> name##Texture : register(t##slot); \
     SamplerState name##Sampler : register(s##slot)
 
-struct BasicAppData /* size 36 */ {
+struct BasicAppData /* size 12 */ {
     float3 Position : POSITION; // size 12, offset 0
-    float2 UV       : TEXCOORD; // size 8, offset 12
-    float4 Color    : COLOR;    // size 16, offset 20
 };
 
 struct BasicMaterialAppData /* size 48 */ {
@@ -44,66 +44,58 @@ struct BasicMaterialAppData /* size 48 */ {
 };
 
 struct MaterialAppData /* size 60 */ {
-    float3 Position  : POSITION;    // size 12, offset 0
-    float2 UV        : TEXCOORD;    // size 8, offset 12
-    float4 Color     : COLOR;       // size 16, offset 20
-    float3 Normal    : NORMAL;      // size 12, offset 36
-    float3 Tangent   : TANGENT;     // size 12, offset 48
+    float3 Position  : POSITION; // size 12, offset 0
+    float2 UV        : TEXCOORD; // size 8, offset 12
+    float4 Color     : COLOR;    // size 16, offset 20
+    float3 Normal    : NORMAL;   // size 12, offset 36
+    float3 Tangent   : TANGENT;  // size 12, offset 48
 };
 
-struct InstancedBasicAppData /* size 44 */ {
-    float3 Position : POSITION;         // size 12, offset 0
-    float2 UV       : TEXCOORD0;        // size 8, offset 12
-    float4 Color    : COLOR;            // size 16, offset 20
-    uint InstanceID : SV_InstanceID;    // size 4, offset 36
-    uint MaterialID : MATERIALID;       // size 4, offset 40
+struct InstancedBasicAppData /* size 16 */ {
+    float3 Position : POSITION;      // size 12, offset 0
+    uint InstanceID : SV_InstanceID; // size 4, offset 12
 };
 
-struct InstancedBasicMaterialAppData /* size 56 */ {
-    float3 Position : POSITION;         // size 12, offset 0
-    float2 UV       : TEXCOORD0;        // size 8, offset 12
-    float4 Color    : COLOR;            // size 16, offset 20
-    float3 Normal   : NORMAL;           // size 12, offset 36
-    uint InstanceID : SV_InstanceID;    // size 4, offset 48
-    uint MaterialID : MATERIALID;       // size 4, offset 52
+struct InstancedBasicMaterialAppData /* size 52 */ {
+    float3 Position : POSITION;      // size 12, offset 0
+    float2 UV       : TEXCOORD;      // size 8, offset 12
+    float4 Color    : COLOR;         // size 16, offset 20
+    float3 Normal   : NORMAL;        // size 12, offset 36
+    uint InstanceID : SV_InstanceID; // size 4, offset 48
 };
 
-struct InstancedMaterialAppData /* size 68 */ {
-    float3 Position : POSITION;         // size 12, offset 0
-    float2 UV       : TEXCOORD0;        // size 8,  offset 12
-    float4 Color    : COLOR;            // size 16, offset 20
-    float3 Normal   : NORMAL;           // size 12, offset 36
-    float3 Tangent  : TANGENT;          // size 12, offset 48
-    uint InstanceID : SV_InstanceID;    // size 4,  offset 60
-    uint MaterialID : MATERIALID;       // size 4,  offset 64
+struct InstancedMaterialAppData /* size 64 */ {
+    float3 Position : POSITION;      // size 12, offset 0
+    float2 UV       : TEXCOORD;      // size 8,  offset 12
+    float4 Color    : COLOR;         // size 16, offset 20
+    float3 Normal   : NORMAL;        // size 12, offset 36
+    float3 Tangent  : TANGENT;       // size 12, offset 48
+    uint InstanceID : SV_InstanceID; // size 4,  offset 60
 };
 
-struct BasicVertexOutput /* size 64 */ {
+struct BasicVertexOutput /* size 24 */ {
+    centroid float4 Position : SV_POSITION; // size 16, offset 0
+    float2 UV                : TEXCOORD;    // size 8, offset 16
+};
+
+struct BasicMaterialVertexOutput /* size 72 */ {
     centroid float4 Position : SV_POSITION;    // size 16, offset 0
-    float2 UV                : TEXCOORD0;      // size 12, offset 16
-    float4 Color             : COLOR;          // size 16, offset 28
-    float4 WorldPosition     : WORLD_POSITION; // size 16, offset 44
-    uint MaterialID          : MATERIALID;     // size 4,  offset 60
-};
-
-struct BasicMaterialVertexOutput /* size 76 */ {
-    centroid float4 Position : SV_POSITION;    // size 16, offset 0
-    float2 UV                : TEXCOORD0;      // size 12, offset 16
+    float2 UV                : TEXCOORD;       // size 12, offset 16
     float4 Color             : COLOR;          // size 16, offset 28
     float3 Normal            : NORMAL;         // size 12, offset 44
-    float4 WorldPosition     : WORLD_POSITION; // size 16, offset 56
-    uint MaterialID          : MATERIALID;     // size 4,  offset 72
+    float3 WorldPosition     : WORLD_POSITION; // size 12, offset 56
+    uint MaterialID          : MATERIALID;     // size 4,  offset 68
 };
 
-struct MaterialVertexOutput /* size 100 */ {
+struct MaterialVertexOutput /* size 96 */ {
     centroid float4 Position : SV_POSITION;    // size 16, offset 0
-    float2 UV                : TEXCOORD0;      // size 12, offset 16
+    float2 UV                : TEXCOORD;       // size 12, offset 16
     float4 Color             : COLOR;          // size 16, offset 28
     float3 Tangent           : TANGENT;        // size 12, offset 44
     float3 Bitangent         : BINORMAL;       // size 12, offset 56
     float3 Normal            : NORMAL;         // size 12, offset 68
-    float4 WorldPosition     : WORLD_POSITION; // size 16, offset 80
-    uint MaterialID          : MATERIALID;     // size 4,  offset 96
+    float3 WorldPosition     : WORLD_POSITION; // size 12, offset 80
+    uint MaterialID          : MATERIALID;     // size 4,  offset 92
 };
 
 #endif

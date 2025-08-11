@@ -38,9 +38,6 @@
     <ClCompile Include="Image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LightGrid.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="LightObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -260,6 +257,12 @@
     <ClCompile Include="freetype\src\base\ftfstype.c">
       <Filter>Freetype\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Bloom.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshInstancer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AdornRender.h">
@@ -275,9 +278,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Image.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LightGrid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LightObject.h">
@@ -407,6 +407,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SuperCluster.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bloom.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshInstancer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

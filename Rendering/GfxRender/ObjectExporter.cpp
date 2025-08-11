@@ -275,20 +275,20 @@ namespace RBX
 			return name + format("%i", nameCount[name]);
 		}
 
-		void ObjectExporter::processPart(PartInstance* part, Decal* decal)
-		{
+		void ObjectExporter::processPart(PartInstance* part, Decal* decal) {
+			return;
 			// early out for fully transparent objects
-			if (part->getTransparencyUi() >= 1)
+			/*if (part->getTransparencyUi() >= 1)
 				return;
 
 			GeometryGenerator count;
 			Humanoid* humanoid = SceneUpdater::getHumanoid(part);
 			HumanoidIdentifier humanoidIdentifier(humanoid);
-			const HumanoidIdentifier* hi = humanoidIdentifier.humanoid ? &humanoidIdentifier : NULL;
+			const HumanoidIdentifier* hi = humanoidIdentifier.humanoid ? &humanoidIdentifier : nullptr;
 
 			// Material flags
 			bool ignoreDecals = false;
-			unsigned int materialFlags = MaterialGenerator::createFlags(false, part, hi, ignoreDecals);
+			unsigned int materialFlags = MaterialGenerator::createFlags(false, part, ignoreDecals);
 
 			if (ignoreDecals && decal)
 				return;
@@ -323,7 +323,7 @@ namespace RBX
 				else
 					partName = getUniqueModelName(part->getName());
 
-				MaterialGenerator::Result materialResult = visualEngine->getMaterialGenerator()->createMaterial(part, decal, hi, materialFlags);
+				MaterialGenerator::Result materialResult = visualEngine->getMaterialGenerator()->createMaterial(part, decal, materialFlags);
 				if (!materialResult.material)
 					return;
 
@@ -364,12 +364,12 @@ namespace RBX
 				Vector2int16 plasticSpecular = Vector2int16(0, 0);//MaterialGenerator::getSpecular(PLASTIC_MATERIAL);
 				static const float div255 = 1.0f / 255.0f;
 				bool mergeByMat = visualEngine->getSettings()->getObjExportMergeByMaterial();
-				/*float specularIntensity = (mergeByMat ? plasticSpecular.x : model.vertices[0].extra.g) * div255;
-				float specularPower = (mergeByMat ? plasticSpecular.y : model.vertices[0].extra.b);*/
+				float specularIntensity = (mergeByMat ? plasticSpecular.x : model.vertices[0].extra.g) * div255;
+				float specularPower = (mergeByMat ? plasticSpecular.y : model.vertices[0].extra.b);
 
 				model.material = getMutualMaterial(ExporterMaterial(matName, vertColor, 0.0f, 0.0f, tex));
 
-				// TEXTURES 
+				// TEXTURES
 				// We want to hashmap textures so we dont save the same textures on disc
 				if (tex.get()) {
 					TexFiles::iterator texIt = textureMap.find(tex.get());
@@ -384,7 +384,7 @@ namespace RBX
 
 						model.vertices[i].Position += model.vertices[i].Normal * offset;
 					}
-			}
+			}*/
 		}
 
 		void ObjectExporter::processInstance(Instance* instance) {
@@ -801,7 +801,7 @@ namespace RBX
 			exportFile << "}";
 		}
 
-		void ObjectExporterObj::exportIndices(std::ostream& exportFile, const char* keyWord, const uint16_t* indices, uint32_t startIndex, uint32_t offset) {
+		void ObjectExporterObj::exportIndices(std::ostream& exportFile, const char* keyWord, const uint32_t* indices, uint32_t startIndex, uint32_t offset) {
 			exportFile << keyWord << " ";
 
 			for (size_t i = 0u; i < 3u; ++i) {

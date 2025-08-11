@@ -41,20 +41,22 @@ float4 MaterialPS(MaterialVertexOutput IN) : SV_TARGET {
     float3 UVW = float3(IN.UV, MaterialIndex);
     float IOR = MaterialParametersC.x;
 
-    /*if (MaterialParametersC.z > 0.0) {
+    if (MaterialParametersC.z > 0.0)
         UVW.xy = ParallaxOcclusionMapping(HeightMapTexture, HeightMapSampler, UVW, ViewDirection, MaterialParametersC.z, MaterialParametersC.w);
-    }*/
 
     float4 Albedo = IN.Color;
 
+    /* Transparency */
     if (MaterialParametersB.x == 1) {
         Albedo *= AlbedoTexture.Sample(AlbedoSampler, UVW);
     }
+    /* Overlay */
     else if (MaterialParametersB.x == 2) {
         float4 AlbedoMap = AlbedoTexture.Sample(AlbedoSampler, UVW);
 
         Albedo.rgb = lerp(Albedo.rgb, AlbedoMap.rgb, AlbedoMap.a);
     }
+    /* Tinting */
     else if (MaterialParametersB.x == 3) {
         float4 AlbedoMap = AlbedoTexture.Sample(AlbedoSampler, UVW);
 
@@ -81,7 +83,11 @@ float4 MaterialPS(MaterialVertexOutput IN) : SV_TARGET {
 
     Metalness = 1.0 - Metalness;
 
-    float3 Normal = (MaterialParametersB.y == 1) ? normalize(mul(float3x3(IN.Tangent, IN.Bitangent, IN.Normal), NormalMapTexture.Sample(NormalMapSampler, UVW) * 2.0 - 1.0)) : IN.Normal;
+    float3 Normal = IN.Normal;
+
+    if (MaterialParametersB.y == 1)
+        Normal = normalize(mul(NormalMapTexture.Sample(NormalMapSampler, UVW) * 2.0 - 1.0, float3x3(IN.Tangent, IN.Bitangent, Normal)));
+
 	float NDV = saturate(dot(Normal, ViewDirection));
 
     float AmbientDiffuseFactor = AmbientColor_EnvDiffuse.w * Metalness;
@@ -90,33 +96,31 @@ float4 MaterialPS(MaterialVertexOutput IN) : SV_TARGET {
 
     float3 AmbientContribution = OutdoorAmbientColor_EnvSpecular.rgb;
 
-	if (AmbientDiffuseFactor + AmbientSpecularFactor > 0.0) {
-		if (AmbientDiffuseFactor > 0.0) {
-			float3 OutdoorDiffuse = IrradianceCubemapsTexture.Sample(IrradianceCubemapsSampler, float4(Normal, 0.0));
-			float4 IndoorDiffuse  = IrradianceCubemapsTexture.Sample(IrradianceCubemapsSampler, float4(Normal, 1.0));
+	if (AmbientDiffuseFactor > 0.0) {
+		float3 OutdoorDiffuse = IrradianceCubemapsTexture.Sample(IrradianceCubemapsSampler, float4(Normal, 0.0)).rgb;
+		float4 IndoorDiffuse  = IrradianceCubemapsTexture.Sample(IrradianceCubemapsSampler, float4(Normal, 1.0));
 
-            // The alpha channel in the indoor cubemap represents how visible the sky is.
-            // By doing it this way, we avoid having to re-render the indoor cubemap when the sky changes.
-            float SkylightContribution = max(OutdoorContribution, IndoorDiffuse.a);
+        // The alpha channel in the indoor cubemap represents how visible the sky is.
+        // By doing it this way, we avoid having to re-render the indoor cubemap when the sky changes.
+        float SkylightContribution = max(OutdoorContribution, IndoorDiffuse.a);
 
-			AmbientContribution += (OutdoorDiffuse * SkylightContribution + IndoorDiffuse.rgb * (1.0 - SkylightContribution)) * Albedo.rgb * AmbientDiffuseFactor;
-		}
+		AmbientContribution += (OutdoorDiffuse * SkylightContribution + IndoorDiffuse.rgb * (1.0 - SkylightContribution)) * Albedo.rgb * AmbientDiffuseFactor;
+	}
 
-		if (AmbientSpecularFactor > 0.0) {
-			float2 EnvironmentBRDF = EnvironmentBRDFTexture.Sample(EnvironmentBRDFSampler, float2(Roughness, NDV)).xy;
-		    float3 Fresnel = FresnelCombined(NDV, F0ToIOR(Albedo.rgb), float3(0.0, 0.0, 0.0), IOR, Metalness);
-            float3 Reflect = reflect(-ViewDirection, Normal);
-			float3 BRDF = Fresnel * EnvironmentBRDF.x + EnvironmentBRDF.y;
+	if (AmbientSpecularFactor > 0.0) {
+		float2 EnvironmentBRDF = EnvironmentBRDFTexture.Sample(EnvironmentBRDFSampler, float2(Roughness, NDV)).xy;
+		float3 Fresnel = FresnelCombined(NDV, F0ToIOR(Albedo.rgb), float3(0.0, 0.0, 0.0), IOR, Metalness);
+        float3 Reflect = reflect(-ViewDirection, Normal);
+		float3 BRDF = Fresnel * EnvironmentBRDF.x + EnvironmentBRDF.y;
 
-            float EnvRoughness = Roughness * MAX_REFLECTION_LOD;
+        float EnvRoughness = Roughness * MAX_REFLECTION_LOD;
 
-			float3 OutdoorSpecular = OutdoorCubemapTexture.SampleLevel(OutdoorCubemapSampler, Reflect, EnvRoughness);
-			float4 IndoorSpecular  = IndoorCubemapsTexture.SampleLevel(IndoorCubemapsSampler, float4(Reflect, 0.0), EnvRoughness);
+		float3 OutdoorSpecular = OutdoorCubemapTexture.SampleLevel(OutdoorCubemapSampler, Reflect, EnvRoughness);
+		float4 IndoorSpecular  = IndoorCubemapsTexture.SampleLevel(IndoorCubemapsSampler, float4(Reflect, 0.0), EnvRoughness);
 
-            float SkylightContribution = max(OutdoorContribution, IndoorSpecular.a);
+        float SkylightContribution = max(OutdoorContribution, IndoorSpecular.a);
 
-			AmbientContribution += (OutdoorSpecular * SkylightContribution + IndoorSpecular.rgb * (1.0 - SkylightContribution)) * BRDF * AmbientSpecularFactor;
-		}
+		AmbientContribution += (OutdoorSpecular * SkylightContribution + IndoorSpecular.rgb * (1.0 - SkylightContribution)) * BRDF * AmbientSpecularFactor;
 	}
 
     float3 TotalLight = float3(0.0, 0.0, 0.0);

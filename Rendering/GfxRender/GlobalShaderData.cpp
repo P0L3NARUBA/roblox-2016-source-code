@@ -4,6 +4,7 @@
 #include "GfxCore/Device.h"
 
 #include "RenderCamera.h"
+#include "LightObject.h"
 
 namespace RBX
 {
@@ -35,20 +36,20 @@ namespace RBX
 			device->defineGlobalMaterialData(sizeof(GlobalMaterialData));
 		}
 
-		void ModelMatrixes::define(Device* device) {
-			device->defineInstancedModelMatrixes(sizeof(ModelMatrix) * 8192u, sizeof(ModelMatrix));
+		void InstancedModels::define(Device* device) {
+			device->defineInstancedModels(sizeof(InstancedModel) * MAX_INSTANCES, sizeof(InstancedModel));
 		}
 
 		void GlobalLightList::define(Device* device) {
-			device->defineGlobalLightList(sizeof(GPULight) * 1024u, sizeof(GPULight));
+			device->defineGlobalLightList(sizeof(GPULight) * MAX_LIGHTS, sizeof(GPULight));
 		}
 
-		void GlobalLightList::populateList(const std::vector<LightObject*> lights) {
+		size_t GlobalLightList::populateList(const std::vector<LightObject*> lights) {
 			LightList.clear();
 
-			size_t maxSize = std::min(lights.size(), 1024u);
+			size_t lightCount = std::min(lights.size(), MAX_LIGHTS);
 
-			for (size_t i = 0u; i < maxSize; ++i) {
+			for (size_t i = 0u; i < lightCount; ++i) {
 				LightObject* light = lights[i];
 				GPULight gpuLight;
 
@@ -72,6 +73,8 @@ namespace RBX
 				
 				LightList.push_back(gpuLight);
 			}
+
+			return lightCount;
 		};
 	}
 }

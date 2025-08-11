@@ -112,8 +112,8 @@ namespace RBX {
 			float qn = znear * q;
 
 			projection[2][2] = q;
-			projection[2][3] = qn;
-			projection[3][2] = -1.0f;
+			projection[3][2] = qn;
+			projection[2][3] = -1.0f;
 			projection[3][3] = 0.0f;
 
 			updateViewProjection();

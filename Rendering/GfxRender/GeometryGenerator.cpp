@@ -160,23 +160,21 @@ namespace RBX {
 		}
 
 		static inline void fillVertex(
-			InstancedMaterialVertex& r,
+			MaterialVertex& r,
 			const Vector3& Position,
 			const Vector2& UV,
 			const Color4& Color,
 			const Vector3& Normal,
-			const Vector3& Tangent = Vector3(),
-			uint32_t MaterialID = 0u)
+			const Vector3& Tangent = Vector3())
 		{
 			r.Position = Position;
 			r.UV = UV;
 			r.Color = Color;
 			r.Normal = Normal;
 			r.Tangent = Tangent;
-			r.MaterialID = MaterialID;
 		}
 
-		static inline void fillQuadIndices(uint16_t* r, size_t offset, uint32_t i00, uint32_t i10, uint32_t i01, uint32_t i11) {
+		static inline void fillQuadIndices(uint32_t* r, size_t offset, uint32_t i00, uint32_t i10, uint32_t i01, uint32_t i11) {
 			r[0] = offset + i00;
 			r[1] = offset + i10;
 			r[2] = offset + i01;
@@ -318,21 +316,8 @@ namespace RBX {
 			return Color4(1.0f, 1.0f, 1.0f, alpha);
 		}
 
-		static Color4 getColor(PartInstance* part, Decal* decal, DataModelMesh* specialShape, const GeometryGenerator::Options& options, uint32_t randomSeed, bool isBlock) {
-			Color4 color = getBaseColor(part, decal, specialShape, options);
-
-			/*Color4uint8 diffuse = getBaseColor(part, decal, specialShape, options);
-
-			Color4uint8 color =
-				(isBlock && (options.flags & GeometryGenerator::Flag_RandomizeBlockAppearance))
-				? Color4uint8(
-					(diffuse.r & 0xf8) | (randomSeed & 7),
-					(diffuse.g & 0xf8) | (randomSeed & 7),
-					(diffuse.b & 0xf8) | (randomSeed & 7),
-					diffuse.a)
-				: diffuse;*/
-
-			return (options.flags & GeometryGenerator::Flag_DiffuseColorBGRA) ? Color4(color.b, color.g, color.r, color.a) : color;
+		static Color4 getColor(PartInstance* part, Decal* decal, DataModelMesh* specialShape, const GeometryGenerator::Options& options) {
+			return getBaseColor(part, decal, specialShape, options);
 		}
 
 		/*static Color4uint8 getExtra(PartInstance* part, const GeometryGenerator::Options& options)
@@ -539,11 +524,11 @@ namespace RBX {
 
 			if (!mVertices) return;
 
-			Color4 color = getColor(part, decal, specialShape, options, 0u, false);
+			Color4 color = getColor(part, decal, specialShape, options);
 			Vector3 scale = getMeshScale(part, specialShape, humanoidIdentifier);
 
 			const CoordinateFrame& cframe = options.cframe;
-			InstancedMaterialVertex* vertices = mVertices;
+			MaterialVertex* vertices = mVertices;
 			Vector3 offset = specialShape ? specialShape->getOffset() : Vector3::zero();
 
 			SpecialShape* shape = Instance::fastDynamicCast<SpecialShape>(specialShape);
@@ -556,7 +541,7 @@ namespace RBX {
 				float headCylinderExtents = 0.625f * (scale.y - scale.x);
 
 				for (size_t i = 0u; i < vertexCount; ++i) {
-					InstancedMaterialVertex& v = vertices[vertexOffset + i];
+					MaterialVertex& v = vertices[vertexOffset + i];
 					const FileMeshVertexNormalTexture3d& sv = data->vnts[i];
 
 					float headY = (sv.vy > 0.0f) ? (sv.vy * scale.x + headCylinderExtents) : (sv.vy * scale.x - headCylinderExtents);
@@ -574,7 +559,7 @@ namespace RBX {
 			}
 			else {
 				for (size_t i = 0u; i < vertexCount; ++i) {
-					InstancedMaterialVertex& v = vertices[vertexOffset + i];
+					MaterialVertex& v = vertices[vertexOffset + i];
 					const FileMeshVertexNormalTexture3d& sv = data->vnts[i];
 
 					Vector3 Position;
@@ -596,7 +581,7 @@ namespace RBX {
 				extendBounds(mBboxMin, mBboxMax, aabb.high());
 			}
 
-			uint16_t* indices = mIndices;
+			uint32_t* indices = mIndices;
 
 			for (size_t i = 0u; i < faceCount; ++i) {
 				indices[indexOffset + i * 3u + 0u] = vertexOffset + data->faces[i].a;
@@ -668,7 +653,7 @@ namespace RBX {
 
 			if (!mVertices) return;
 
-			Color4 color = getColor(part, decal, nullptr, options, randomSeed, true);
+			Color4 color = getColor(part, decal, nullptr, options);
 			//Color4uint8 extra = getExtra(part, options);
 
 			PartMaterial renderMaterial = part->getRenderMaterial();
@@ -743,8 +728,8 @@ namespace RBX {
 
 			uint32_t vertexCounter = 0u;
 			uint32_t faceCounter = 0u;
-			InstancedMaterialVertex* vertices = mVertices;
-			uint16_t* indices = mIndices;
+			MaterialVertex* vertices = mVertices;
+			uint32_t* indices = mIndices;
 
 			struct CAPDESC {
 				Vector3 start[4];
@@ -803,7 +788,7 @@ namespace RBX {
 
 					//float outlineOffset = face == 0u ? capRightOutlineOffset : capLeftOutlineOffset;
 
-					fillVertex(vertices[vertexOffset + vertexCounter], outPos, (mainUV + surfaceOffset) * surfaceTiling, color, normal, tangents[face], materialId);
+					fillVertex(vertices[vertexOffset + vertexCounter], outPos, (mainUV + surfaceOffset) * surfaceTiling, color, normal, tangents[face]);
 					vertexCounter++;
 
 					unsigned prevVertexCounter = vertexCounter;
@@ -819,7 +804,7 @@ namespace RBX {
 							Vector2 mainUV = (verticalRotateDecal<vertical>(normal2d.yx()) * capDesc.normal2dToUV + Vector2(1.0f, 1.0f)) * 0.5f * mainMultiplier;
 
 							Vector3 normal = options.cframe.vectorToWorldSpace(verticalRotate<vertical>(fanPoint));
-							fillVertex(vertices[vertexOffset + vertexCounter], outPos, (mainUV + surfaceOffset) * surfaceTiling, color, normal, tangents[face], materialId);
+							fillVertex(vertices[vertexOffset + vertexCounter], outPos, (mainUV + surfaceOffset) * surfaceTiling, color, normal, tangents[face]);
 
 							vertexCounter++;
 							unitPos += unitDirV;
@@ -880,7 +865,7 @@ namespace RBX {
 								/*Vector4 edgeDistances = Vector4(NO_OUTLINES, NO_OUTLINES,
 									capLeftOutlineOffset + (iV == 0u ? 0u : genSize.x), capRightOutlineOffset + (iV == 0 ? genSize.x : 0));*/
 
-								fillVertex(vertices[vertexOffset + vertexCounter], outPos, mainUV * surfaceTiling, color, worldNormal, tangents[face], materialId);
+								fillVertex(vertices[vertexOffset + vertexCounter], outPos, mainUV * surfaceTiling, color, worldNormal, tangents[face]);
 
 								vertexCounter++;
 								unitPosV += unitDirV;
@@ -948,7 +933,7 @@ namespace RBX {
 
 			if (!mVertices) return;
 
-			Color4 color = getColor(part, decal, nullptr, options, randomSeed, true);
+			Color4 color = getColor(part, decal, nullptr, options);
 
 			PartMaterial renderMaterial = part->getRenderMaterial();
 
@@ -1020,8 +1005,8 @@ namespace RBX {
 			};
 
 			uint32_t faceCounter = 0u;
-			InstancedMaterialVertex* vertices = mVertices;
-			uint16_t* indices = mIndices;
+			MaterialVertex* vertices = mVertices;
+			uint32_t* indices = mIndices;
 			Vector3 scale = size * (radius / primaryDimension);
 
 			uint32_t vertexCounter = 0u;
@@ -1066,7 +1051,7 @@ namespace RBX {
 
 							Vector3 tangent = (worldNormal * dot(tangents[face], worldNormal) - tangents[face]).direction();
 
-							fillVertex(vertices[vertexOffset + vertexCounter], options.cframe.translation + worldOffset + center, mainCoordsV * surfaceTiling, color, worldNormal, tangent, materialId);
+							fillVertex(vertices[vertexOffset + vertexCounter], options.cframe.translation + worldOffset + center, mainCoordsV * surfaceTiling, color, worldNormal, tangent);
 
 							vertexCounter++;
 							worlsPosV += worldDirV;
@@ -1167,7 +1152,7 @@ namespace RBX {
 
 			if (!mVertices) return;
 
-			Color4 color = getColor(part, decal, nullptr, options, randomSeed, true);
+			Color4 color = getColor(part, decal, nullptr, options);
 			//Color4uint8 extra = getExtra(part, options);
 
 			PartMaterial renderMaterial = part->getRenderMaterial();
@@ -1237,8 +1222,8 @@ namespace RBX {
 				 axisZ, -axisX, -axisX,
 			};
 
-			InstancedMaterialVertex* vertices = mVertices;
-			uint16_t* indices = mIndices;
+			MaterialVertex* vertices = mVertices;
+			uint32_t* indices = mIndices;
 
 			if (decal) {
 				// Note: this table is almost identical to the facesDesc below, with the exception of bottom face.
@@ -1293,10 +1278,10 @@ namespace RBX {
 						outUvs[1] = outUvs[0];
 				}
 
-				fillVertex(vertices[vertexOffset + 0], corners[faces[face][0]], outUvs[0], color, normals[face], tangents[face], materialId);
-				fillVertex(vertices[vertexOffset + 1], corners[faces[face][1]], outUvs[1], color, normals[face], tangents[face], materialId);
-				fillVertex(vertices[vertexOffset + 2], corners[faces[face][2]], outUvs[2], color, normals[face], tangents[face], materialId);
-				fillVertex(vertices[vertexOffset + 3], corners[faces[face][3]], outUvs[3], color, normals[face], tangents[face], materialId);
+				fillVertex(vertices[vertexOffset + 0], corners[faces[face][0]], outUvs[0], color, normals[face], tangents[face]);
+				fillVertex(vertices[vertexOffset + 1], corners[faces[face][1]], outUvs[1], color, normals[face], tangents[face]);
+				fillVertex(vertices[vertexOffset + 2], corners[faces[face][2]], outUvs[2], color, normals[face], tangents[face]);
+				fillVertex(vertices[vertexOffset + 3], corners[faces[face][3]], outUvs[3], color, normals[face], tangents[face]);
 
 				fillQuadIndices(&indices[indexOffset], vertexOffset, 0u, 1u, 2u, 3u);
 
@@ -1461,10 +1446,10 @@ namespace RBX {
 							//nextEdge1.y += wdesc.studOffset0 * TESSELATION_PIECE;
 						}
 
-						fillVertex(vertices[vertexOffset + faceCounter * 4u + 0u], start0 + offset0, uvs[0] * surfaceTiling, color, normals[face], tangents[face], materialId);
-						fillVertex(vertices[vertexOffset + faceCounter * 4u + 1u], start1 + offset1, uvs[1] * surfaceTiling, color, normals[face], tangents[face], materialId);
-						fillVertex(vertices[vertexOffset + faceCounter * 4u + 2u], start0 + nextOffset0, uvs[2] * surfaceTiling, color, normals[face], tangents[face], materialId);
-						fillVertex(vertices[vertexOffset + faceCounter * 4u + 3u], start1 + nextOffset1, uvs[3] * surfaceTiling, color, normals[face], tangents[face], materialId);
+						fillVertex(vertices[vertexOffset + faceCounter * 4u + 0u], start0 + offset0, uvs[0] * surfaceTiling, color, normals[face], tangents[face]);
+						fillVertex(vertices[vertexOffset + faceCounter * 4u + 1u], start1 + offset1, uvs[1] * surfaceTiling, color, normals[face], tangents[face]);
+						fillVertex(vertices[vertexOffset + faceCounter * 4u + 2u], start0 + nextOffset0, uvs[2] * surfaceTiling, color, normals[face], tangents[face]);
+						fillVertex(vertices[vertexOffset + faceCounter * 4u + 3u], start1 + nextOffset1, uvs[3] * surfaceTiling, color, normals[face], tangents[face]);
 
 						uvs[0].y = uvs[2].y;
 						uvs[1].y = uvs[3].y;
@@ -1522,10 +1507,10 @@ namespace RBX {
 						Vector2 uvStuds2 = Vector2(uvStuds[2].x, studsAtlasInfo.offsetY + texMultiplier * studsAtlasInfo.scaleY);
 						Vector2 uvStuds3 = Vector2(uvStuds[3].x, studsAtlasInfo.offsetY + texMultiplier * studsAtlasInfo.scaleY);
 
-						fillVertex(vertices[vertexOffset + faceCounter * 4u + 0u], start0 + offset0, uvs[0] * surfaceTiling, color, normals[face], tangents[face], materialId);
-						fillVertex(vertices[vertexOffset + faceCounter * 4u + 1u], start1 + offset1, uvs[1] * surfaceTiling, color, normals[face], tangents[face], materialId);
-						fillVertex(vertices[vertexOffset + faceCounter * 4u + 2u], corners[desc.end0], uv2 * surfaceTiling, color, normals[face], tangents[face], materialId);
-						fillVertex(vertices[vertexOffset + faceCounter * 4u + 3u], corners[desc.end1], uv3 * surfaceTiling, color, normals[face], tangents[face], materialId);
+						fillVertex(vertices[vertexOffset + faceCounter * 4u + 0u], start0 + offset0, uvs[0] * surfaceTiling, color, normals[face], tangents[face]);
+						fillVertex(vertices[vertexOffset + faceCounter * 4u + 1u], start1 + offset1, uvs[1] * surfaceTiling, color, normals[face], tangents[face]);
+						fillVertex(vertices[vertexOffset + faceCounter * 4u + 2u], corners[desc.end0], uv2 * surfaceTiling, color, normals[face], tangents[face]);
+						fillVertex(vertices[vertexOffset + faceCounter * 4u + 3u], corners[desc.end1], uv3 * surfaceTiling, color, normals[face], tangents[face]);
 
 						fillQuadIndices(&indices[indexOffset + faceCounter * 6u], vertexOffset + faceCounter * 4u, 0u, 1u, 2u, 3u);
 						faceCounter++;
@@ -1567,22 +1552,15 @@ namespace RBX {
 
 					facesIgnoreTiling[face] = IsNoSurface(surface) || ignoreMaterialsStuds;
 					if (facesIgnoreTiling[face])
+
 						quads += 1u;
 					else {
 						const FACEDESC& desc = facesDesc[face];
 						quads += desc.dirZ ? tesselatedExtents.z : tesselatedExtents.y;
 					}
 
-					//if (surface == NO_SURFACE_NO_OUTLINES)
 					noBlanks = false;
 				}
-			}
-
-			if (quads > 32768u / 4u) {
-				// We do not allow a part to generate more than 32768 vertices
-				// This is both to ensure that we never exceed 16-bit index limit even if we had some vertices before, and to avoid potential issues with negative size components
-				RBXASSERT(false);
-				return;
 			}
 
 			mVertexCount += quads * 4u;
@@ -1590,7 +1568,7 @@ namespace RBX {
 
 			if (!mVertices) return;
 
-			Color4 color = getColor(part, decal, nullptr, options, randomSeed, true);
+			Color4 color = getColor(part, decal, nullptr, options);
 
 			const CoordinateFrame& cframe = options.cframe;
 
@@ -1618,19 +1596,14 @@ namespace RBX {
 
 			PartMaterial renderMaterial = part->getRenderMaterial();
 
-			uint32_t materialId = MaterialGenerator::getMaterialId(renderMaterial);
-
 			Vector2 surfaceOffset = getSurfaceOffset(size, randomSeed, renderMaterial);
 			float surfaceTiling = decal ? 1.0f : getSurfaceTiling(renderMaterial);
 
-			Vector3 normalOffset =
-				(options.flags & Flag_RandomizeBlockAppearance)
-				? kNormalOffsetTable[(randomSeed >> 3u) & 31u]
-				: Vector3(0.0f, 0.0f, 0.0f);
+			Vector3 normalOffset = Vector3(0.0f, 0.0f, 0.0f);
 
 			Vector3 normals[6] = {
-				 normalize(normalOffset + axisX), normalize(normalOffset + axisY), normalize(normalOffset + axisZ),
-				 normalize(normalOffset - axisX), normalize(normalOffset - axisY), normalize(normalOffset - axisZ),
+				 normalize(axisX), normalize(axisY), normalize(axisZ),
+				 normalize(-axisX), normalize(-axisY), normalize(-axisZ),
 			};
 
 			Vector3 tangents[6] = {
@@ -1638,8 +1611,8 @@ namespace RBX {
 				 axisZ, -axisX, -axisX,
 			};
 
-			InstancedMaterialVertex* vertices = mVertices;
-			unsigned short* indices = mIndices;
+			MaterialVertex* vertices = mVertices;
+			uint32_t* indices = mIndices;
 
 			if (decal) {
 				// Note: this table is almost identical to the facesDesc below, with the exception of bottom face.
@@ -1717,24 +1690,15 @@ namespace RBX {
 						Vector2(0.0f, studsAtlasInfo.offsetY + studsAtlasInfo.scaleY),
 					};
 
-					/*Vector4 startEdgeOffset = noBlanks ? Vector4() : computeOutlineOffsetPart((NormalId)face, part);
-
-					Vector4 edgeOffset = startEdgeOffset;
-
-					Vector4 edge0 = Vector4(0, uTiling, 0, quadLength);
-					Vector4 edge1 = Vector4(uTiling, 0, 0, quadLength);*/
-
 					Vector3 worldDir = facesDir[face] * TESSELATION_PIECE;
 
 					for (size_t quad = 0u; quad < quadNumber - 1u; quad++) {
 						Vector3 nextOffset = offset + worldDir;
 
-						//Vector4 nextEdgeOffset = edgeOffset + Vector4(0, 0, TESSELATION_PIECE, -TESSELATION_PIECE);
-
-						fillVertex(vertices[vertexOffset + faceCounter * 4 + 0], start0 + offset, uvs[0] * surfaceTiling, color, normals[face], tangents[face], materialId);
-						fillVertex(vertices[vertexOffset + faceCounter * 4 + 1], start1 + offset, uvs[1] * surfaceTiling, color, normals[face], tangents[face], materialId);
-						fillVertex(vertices[vertexOffset + faceCounter * 4 + 2], start0 + nextOffset, uvs[2] * surfaceTiling, color, normals[face], tangents[face], materialId);
-						fillVertex(vertices[vertexOffset + faceCounter * 4 + 3], start1 + nextOffset, uvs[3] * surfaceTiling, color, normals[face], tangents[face], materialId);
+						fillVertex(vertices[vertexOffset + faceCounter * 4 + 0], start0 + offset, uvs[0] * surfaceTiling, color, normals[face], tangents[face]);
+						fillVertex(vertices[vertexOffset + faceCounter * 4 + 1], start1 + offset, uvs[1] * surfaceTiling, color, normals[face], tangents[face]);
+						fillVertex(vertices[vertexOffset + faceCounter * 4 + 2], start0 + nextOffset, uvs[2] * surfaceTiling, color, normals[face], tangents[face]);
+						fillVertex(vertices[vertexOffset + faceCounter * 4 + 3], start1 + nextOffset, uvs[3] * surfaceTiling, color, normals[face], tangents[face]);
 
 						uvs[0].y = uvs[2].y;
 						uvs[1].y = uvs[3].y;
@@ -1761,10 +1725,10 @@ namespace RBX {
 
 						//Vector4 finalEdgeOffset = startEdgeOffset + Vector4(0, 0, quadLength, -quadLength);
 
-						fillVertex(vertices[vertexOffset + faceCounter * 4u + 0u], start0 + offset, uvs[0] * surfaceTiling, color, normals[face], tangents[face], materialId);
-						fillVertex(vertices[vertexOffset + faceCounter * 4u + 1u], start1 + offset, uvs[1] * surfaceTiling, color, normals[face], tangents[face], materialId);
-						fillVertex(vertices[vertexOffset + faceCounter * 4u + 2u], corners[desc.end0], uv2 * surfaceTiling, color, normals[face], tangents[face], materialId);
-						fillVertex(vertices[vertexOffset + faceCounter * 4u + 3u], corners[desc.end1], uv3 * surfaceTiling, color, normals[face], tangents[face], materialId);
+						fillVertex(vertices[vertexOffset + faceCounter * 4u + 0u], start0 + offset, uvs[0] * surfaceTiling, color, normals[face], tangents[face]);
+						fillVertex(vertices[vertexOffset + faceCounter * 4u + 1u], start1 + offset, uvs[1] * surfaceTiling, color, normals[face], tangents[face]);
+						fillVertex(vertices[vertexOffset + faceCounter * 4u + 2u], corners[desc.end0], uv2* surfaceTiling, color, normals[face], tangents[face]);
+						fillVertex(vertices[vertexOffset + faceCounter * 4u + 3u], corners[desc.end1], uv3* surfaceTiling, color, normals[face], tangents[face]);
 
 						fillQuadIndices(&indices[indexOffset + faceCounter * 6u], vertexOffset + faceCounter * 4u, 0u, 1u, 2u, 3u);
 						faceCounter++;
@@ -1789,7 +1753,7 @@ namespace RBX {
 
 			if (!mVertices) return;
 
-			Color4 color = getColor(part, decal, nullptr, options, randomSeed, false);
+			Color4 color = getColor(part, decal, nullptr, options);
 
 			const CoordinateFrame& cframe = options.cframe;
 
@@ -1821,8 +1785,8 @@ namespace RBX {
 				 Vector3(0.0f, 0.0f, 1.0f), -Vector3(1.0f, 0.0f, 0.0f), -Vector3(1.0f, 0.0f, 0.0f),
 			};
 
-			InstancedMaterialVertex* vertices = mVertices;
-			uint16_t* indices = mIndices;
+			MaterialVertex* vertices = mVertices;
+			uint32_t* indices = mIndices;
 
 			static const FACEDESC facesDesc[] = {
 				{ 6u, 7u, 4u, 5u, false, true,  }, // Face 0
@@ -1895,9 +1859,33 @@ namespace RBX {
 			}
 		}
 
+		GeometryGenerator::GeometryPair generateBlock() {
+			GeometryGenerator::GeometryPair geometry;
+
+			return geometry;
+		}
+
+		GeometryGenerator::GeometryPair generateSphere() {
+			GeometryGenerator::GeometryPair geometry;
+
+			return geometry;
+		}
+
+		GeometryGenerator::GeometryPair generateCylinder() {
+			GeometryGenerator::GeometryPair geometry;
+
+			return geometry;
+		}
+
+		GeometryGenerator::GeometryPair generateWedge(bool corner) {
+			GeometryGenerator::GeometryPair geometry;
+
+			return geometry;
+		}
+
 		struct TrussQuadBuilder {
-			InstancedMaterialVertex* vertices;
-			uint16_t* indices;
+			MaterialVertex* vertices;
+			uint32_t* indices;
 			uint32_t vertexOffset;
 			uint32_t indexOffset;
 
@@ -1910,7 +1898,7 @@ namespace RBX {
 			Vector2 surfaceOffset;
 			float surfaceTiling;
 
-			TrussQuadBuilder(InstancedMaterialVertex* vertices, uint16_t* indices, uint32_t vertexOffset, uint32_t indexOffset, Vector3* bboxMin, Vector3* bboxMax, const Vector3& size, PartInstance* part, const GeometryGenerator::Options& options, uint32_t randomSeed) {
+			TrussQuadBuilder(MaterialVertex* vertices, uint32_t* indices, uint32_t vertexOffset, uint32_t indexOffset, Vector3* bboxMin, Vector3* bboxMax, const Vector3& size, PartInstance* part, const GeometryGenerator::Options& options, uint32_t randomSeed) {
 				this->vertices = vertices;
 				this->indices = indices;
 				this->vertexOffset = vertexOffset;
@@ -1918,7 +1906,7 @@ namespace RBX {
 				this->bboxMin = bboxMin;
 				this->bboxMax = bboxMax;
 
-				color = getColor(part, nullptr, nullptr, options, randomSeed, false);
+				color = getColor(part, nullptr, nullptr, options);
 
 				cframe = options.cframe;
 
@@ -2081,7 +2069,7 @@ namespace RBX {
 			case BALL_PART:
 				return addSphere(part->getPartSizeXml(), Vector3::zero(), part, decal, options, randomSeed, ignoreMaterialsStuds);
 			case CYLINDER_PART:
-				return addCylinder<false>(part->getPartSizeXml(), Vector3::zero(), part, decal, options, randomSeed, ignoreMaterialsStuds);
+				return addCylinder<true>(part->getPartSizeXml(), Vector3::zero(), part, decal, options, randomSeed, ignoreMaterialsStuds);
 			case TRUSS_PART:
 				return addTruss(static_cast<ExtrudedPartInstance*>(part)->getVisualTrussStyle(), part->getPartSizeXml(), part, decal, options, randomSeed);
 			case WEDGE_PART:
@@ -2111,7 +2099,7 @@ namespace RBX {
 
 			AsyncHttpQueue::RequestResult reqResult;
 			boost::shared_ptr<AssetType> meshData = boost::static_pointer_cast<AssetType>(mcp->requestContent(meshFile, ContentProvider::PRIORITY_MESH, true, reqResult));
-
+			
 			switch (reqResult) {
 			case AsyncHttpQueue::Succeeded:
 				return meshData;
@@ -2156,7 +2144,7 @@ namespace RBX {
 			if (FFlag::StudioCSGAssets && !FFlag::CSGLoadBlocking) {
 				if (PartOperation* operation = part->fastDynamicCast<PartOperation>()) {
 					if (operation->hasAsset()) {
-						shared_ptr<PartOperationAsset> partOperationAsset = fetchMesh<SolidModelContentProvider, PartOperationAsset, ContentId>(operation->getAssetId(), part, asyncResult);
+						boost::shared_ptr<PartOperationAsset> partOperationAsset = fetchMesh<SolidModelContentProvider, PartOperationAsset, ContentId>(operation->getAssetId(), part, asyncResult);
 
 						if (partOperationAsset)
 							return Resources(partOperationAsset->getRenderMesh());
@@ -2178,7 +2166,7 @@ namespace RBX {
 		{
 		}
 
-		GeometryGenerator::GeometryGenerator(InstancedMaterialVertex* vertices, uint16_t* indices, uint32_t vertexOffset)
+		GeometryGenerator::GeometryGenerator(MaterialVertex* vertices, uint32_t* indices, uint32_t vertexOffset)
 			: mVertices(vertices)
 			, mIndices(indices)
 			, mVertexCount(vertexOffset)
@@ -2206,6 +2194,44 @@ namespace RBX {
 			mBboxMax = max;
 		}
 
+		GeometryGenerator::GeometryPair GeometryGenerator::generateBlock() {
+			return GeometryPair();
+		};
+
+		GeometryGenerator::GeometryPair GeometryGenerator::generateSphere() {
+			return GeometryPair();
+		};
+
+		GeometryGenerator::GeometryPair GeometryGenerator::generateCylinder() {
+			return GeometryPair();
+		};
+
+		GeometryGenerator::GeometryPair GeometryGenerator::generateWedge(bool corner) {
+			return GeometryPair();
+		};
+
+		GeometryGenerator::GeometryPair GeometryGenerator::generateGeometry(PartInstance* part) {
+			switch (part->getPartType()) {
+			case BALL_PART:
+				return generateSphere();
+			case BLOCK_PART:
+				return generateBlock();
+			case CYLINDER_PART:
+				return generateCylinder();
+			case WEDGE_PART:
+				return generateWedge(false);
+			case CORNERWEDGE_PART:
+				return generateWedge(true);
+			case TRUSS_PART:
+			case PYRAMID_PART:
+			case PARALLELRAMP_PART:
+			case RIGHTANGLERAMP_PART:
+			case OPERATION_PART:
+			default:
+				return GeometryPair();
+			}
+		}
+
 		void GeometryGenerator::addInstance(PartInstance* part, Decal* decal, const Options& options, const Resources& resources, const HumanoidIdentifier* humanoidIdentifier /*=NULL*/) {
 			addPartImpl(part, decal, options, resources, humanoidIdentifier, /* ignoreMaterialsStuds= */ false);
 
@@ -2214,24 +2240,7 @@ namespace RBX {
 		}
 
 		static bool shouldRandomizeColor(VisualEngine* visualEngine, const PartInstance& part, Decal* decal) {
-			bool randomizeColor = false;
-			/*if (Lighting* lighting = visualEngine->getLighting())
-				randomizeColor = lighting->getOutlines_deprecated();
-
-			if (randomizeColor) {
-				if (decal && decal->isA<DecalTexture>())
-					randomizeColor = false;
-				else {
-					randomizeColor = false;
-					for (size_t i = 0u; i < NORM_UNDEFINED; ++i)
-						if (part.getSurfaceType((NormalId)i) != NO_SURFACE_NO_OUTLINES) {
-							randomizeColor = true;
-							break;
-						}
-				}
-			}*/
-
-			return randomizeColor;
+			return false;
 		}
 
 		GeometryGenerator::Options::Options(VisualEngine* visualEngine, const PartInstance& part, Decal* decal, const CoordinateFrame& localTransform, uint32_t materialFlags, const Vector4& uvOffsetScale) {
@@ -2354,11 +2363,11 @@ namespace RBX {
 
 			if (!mVertices) return;
 
-			InstancedMaterialVertex* vertices = mVertices;
-			unsigned short* indices = mIndices;
+			MaterialVertex* vertices = mVertices;
+			uint32_t* indices = mIndices;
 
 			Vector3 size = part->getPartSizeXml();
-			RBX::Color4 partColor = getColor(part, decal, nullptr, options, randomSeed, true);
+			RBX::Color4 partColor = getColor(part, decal, nullptr, options);
 			//const RBX::Color4uint8& extra = getExtra(part, options);
 
 			bool isNegate = part->fastDynamicCast<NegateOperation>() != 0;
@@ -2554,8 +2563,8 @@ namespace RBX {
 
 			if (!mVertices) return;
 
-			InstancedMaterialVertex* vertices = mVertices;
-			unsigned short* indices = mIndices;
+			MaterialVertex* vertices = mVertices;
+			uint32_t* indices = mIndices;
 
 			Vector3 axisX = Vector3(cframe.rotation[0][0], cframe.rotation[1][0], cframe.rotation[2][0]);
 			Vector3 axisY = Vector3(cframe.rotation[0][1], cframe.rotation[1][1], cframe.rotation[2][1]);
@@ -2645,8 +2654,8 @@ namespace RBX {
 
 			if (!mVertices) return;
 
-			InstancedMaterialVertex* vertices = mVertices;
-			unsigned short* indices = mIndices;
+			MaterialVertex* vertices = mVertices;
+			uint32_t* indices = mIndices;
 
 			//const RBX::Color4uint8& extra = getExtra(part, options);
 			const CoordinateFrame& cframe = options.cframe;

@@ -67,12 +67,12 @@ DirectX 9 and OpenGL is unsupported.
 ### Modern Engine Features
 
 - [x] HDR color buffer
-- [ ] Tonemapping
-  - [ ] Legacy
-  - [ ] Reinhard Simple
-  - [ ] ACES
-  - [ ] [Khronos PBR Neutral](https://github.com/KhronosGroup/ToneMapping/blob/main/PBR_Neutral/README.md#pbr-neutral-specification)
-  - [ ] AgX
+- [x] Tonemapping
+  - [x] Legacy
+  - [x] Reinhard Simple
+  - [x] ACES
+  - [x] [Khronos PBR Neutral](https://github.com/KhronosGroup/ToneMapping/blob/main/PBR_Neutral/README.md#pbr-neutral-specification)
+  - [x] AgX
 - [ ] Local pixel lights
 - [ ] Directional light shadow-mapping
   - [ ] Cascades
@@ -81,6 +81,7 @@ DirectX 9 and OpenGL is unsupported.
   - [ ] Tinting
 - [ ] [Moment shadow map filtering](https://github.com/TheRealMJP/Shadows/blob/master/Shadows/MSM.hlsl)
 - [ ] Glass material with real-time refraction
+- [ ] Order-Independent transparency (OIT)
 - [ ] PBR lighting model
   - [x] Metalness texture workflow
   - [x] GGX specular model
@@ -307,26 +308,33 @@ DirectX 9 and OpenGL is unsupported.
 
 - Outdoor Ambient does nothing.
 - Occasional lights consisting of garbage data and getting past all legitimacy checks may result in buggy visuals.
-- Outdoor environment map generation is broken, as well as lacking highlight reconstruction.
-- Inconsistent exception when trying to open places. Can only be circumvented with a debugger attached to catch them.
+- Outdoor environment map generation.
 - Undo and redo does not respect proper Color3 values on instances and will instead snap to the nearest BrickColor value.
 
 ## Todo List
 
-- Fix all internal matrix math to be row-major, as it is all currently column-major despite both C++ and HLSL using row-major
+- Redo how parts are added to the render queue.
 - Get solid parts rendering again.
-- Get local lighting working again.
-- Get directional light shadows working
 - Get materials working again.
+- Get local lighting working again.
+- Get directional light shadows working.
+- Implement Early-Z pass.
 - Get cubemap filtering and skybox working.
 - Get bloom working again.
 - Get transparent parts rendering again.
 - Add fog.
-- Implement Early-Z pass.
 - Get local light shadows working.
+- Add Environment Map instance.
+- Add environment map capture functionality.
+- Transition all fullscreen passes to compute shaders.
+  - Tonemapping
+  - Bloom
+  - Blur
+  - Cubemap filtering
 - Implement XeGTAO.
+- Make studio camera move and rotate smoothly.
+- Remove light grid code.
 - Add DDS DXT10 Header support.
-- Add tonemapping enums.
 - Add 32-bit Integer Vector classes for continuity with HLSL Integer Vectors.
 - Change render scheduling to a command list.
 - Implement double buffering for improved and more consistent performance.
@@ -340,7 +348,7 @@ DirectX 9 and OpenGL is unsupported.
   - `short` --> `int16_t`
   - `int/long` --> `int32_t`
   - `long long` --> `int64_t`
-- Make x64 actually compilable. (May as well remove x86 support while we're at it. Probably going to have to upgrade the libraries at the same time too.)
+- Make x64 actually compilable. (May as well remove x86 support while we're at it. Most likely will have to upgrade the libraries at the same time as well.)
 - Replace NULL/0 pointers with actual nullptr pointers.
 - Upgrade to VS 2022 build tools.
 - Upgrade to C++17.

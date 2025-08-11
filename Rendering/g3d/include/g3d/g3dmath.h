@@ -343,6 +343,9 @@ namespace G3D {
 		return log2((double)x);
 	}
 
+	inline double log2(uint32_t x) {
+		return log2((double)x);
+	}
 
 	/**
 	 * True if num is a power of two.

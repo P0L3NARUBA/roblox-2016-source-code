@@ -6,7 +6,6 @@
 #include "FastCluster.h"
 #include "SuperCluster.h"
 #include "SpatialHashedScene.h"
-#include "LightGrid.h"
 #include "LightObject.h"
 #include "ParticleEmitter.h"
 #include "ExplosionEmitter.h"
@@ -92,6 +91,7 @@ namespace RBX {
 			mSeenFastClusters.reserve(FAST_CLUSTER_PRIORITY_INVALIDATE_BUDGET);
 
 			FASTLOG(FLog::ViewRbxInit, "SceneUpdater bind - start");
+
 			// Find stuff to render:
 			dataModel->getWorkspace()->visitDescendants(boost::bind(&SceneUpdater::onWorkspaceDescendantAdded, this, _1));
 			workspaceDescendantAddedConnection = dataModel->getWorkspace()->onDemandWrite()->descendantAddedSignal.connect(boost::bind(&SceneUpdater::onWorkspaceDescendantAdded, this, _1));
@@ -105,11 +105,11 @@ namespace RBX {
 
 			FASTLOG(FLog::ViewRbxInit, "SceneUpdater bind - end");
 
-			if (FFlag::NoRandomColorsWithoutOutlines) {
+			/*if (FFlag::NoRandomColorsWithoutOutlines) {
 				RBX::Lighting* lighting = ServiceProvider::find<Lighting>(dataModel.get());
 				if (lighting)
 					propertyChangedSignal = lighting->propertyChangedSignal.connect(boost::bind(&SceneUpdater::onPropertyChanged, this, _1));
-			}
+			}*/
 		}
 
 		SceneUpdater::~SceneUpdater()
@@ -656,23 +656,21 @@ namespace RBX {
 			FASTLOG(FLog::GfxClusters, "Scene updater finish");
 		}
 
-		void SceneUpdater::updatePerform() {
+		/*void SceneUpdater::updatePerform() {
 			computeLightingPerform();
-		}
+		}*/
 
 		void SceneUpdater::terrainCellChanged(const Voxel::CellChangeInfo& info) {
 			// info.position is in terrain voxel coordinates; convert to studs before using
-			G3D::Vector3 terrainCoordInStuds = Voxel::cellToWorld_center(info.position);
+			/*G3D::Vector3 terrainCoordInStuds = Voxel::cellToWorld_center(info.position);
 
-			if (LightGrid* lgrid = mVisualEngine->getLightGrid()) {
-				if (mLightingActive) {
-					lgrid->invalidatePoint(terrainCoordInStuds, LightGridChunk::Dirty_OccupancyAndDependents | LightGridChunk::Dirty_HighPriority);
-				}
-			}
+			if (LightGrid* lgrid = mVisualEngine->getLightGrid())
+				if (mLightingActive)
+					lgrid->invalidatePoint(terrainCoordInStuds, LightGridChunk::Dirty_OccupancyAndDependents | LightGridChunk::Dirty_HighPriority);*/
 		}
 
 		void SceneUpdater::onTerrainRegionChanged(const Voxel2::Region& region) {
-			if (LightGrid* lgrid = mVisualEngine->getLightGrid()) {
+			/*if (LightGrid* lgrid = mVisualEngine->getLightGrid()) {
 				if (mLightingActive) {
 					Vector3 begin = Voxel::cellSpaceToWorldSpace(region.begin().toVector3());
 					Vector3 end = Voxel::cellSpaceToWorldSpace(region.end().toVector3());
@@ -680,10 +678,10 @@ namespace RBX {
 					lgrid->invalidateExtents(Extents(begin, end), LightGridChunk::Dirty_OccupancyAndDependents);
 					lgrid->invalidatePoint((begin + end) / 2.0f, LightGridChunk::Dirty_HighPriority);
 				}
-			}
+			}*/
 		}
 
-		void SceneUpdater::lightingInvalidateOccupancy(const RBX::Extents& extents, const RBX::Vector3& highPriorityPoint, bool isFixed) {
+		/*void SceneUpdater::lightingInvalidateOccupancy(const RBX::Extents& extents, const RBX::Vector3& highPriorityPoint, bool isFixed) {
 			if (LightGrid* lgrid = mVisualEngine->getLightGrid()) {
 				if (mLightingActive && (isFixed || lgrid->getNonFixedPartsEnabled())) {
 					lgrid->invalidateExtents(extents, LightGridChunk::Dirty_OccupancyAndDependents);
@@ -726,13 +724,6 @@ namespace RBX {
 			bool bulkExecution = mSettings->getEagerBulkExecution();
 
 			GlobalShaderData& globalShaderData = mVisualEngine->getSceneManager()->writeGlobalShaderData();
-
-			// Dummy setup so that light grid sampling still works without the grid
-			/*globalShaderData.LightConfig0 = Vector4();
-			globalShaderData.LightConfig1 = Vector4();
-			globalShaderData.LightConfig2 = Vector4();
-			globalShaderData.LightConfig3 = Vector4(-1, -1, -1, 0);
-			globalShaderData.LightBorder = Vector4(0, 0, 0, 1);*/
 
 			if (!computeLightingEnabled)
 				return;
@@ -786,7 +777,7 @@ namespace RBX {
 
 				// Relocate the grid if focus point moved far enough
 				// Note: we can skip updating chunk contents (filling with dummy color and uploading) if lighting is not active
-				mLightgridMoved = lgrid->updateGridCenter(mFocusPoint, /* skipChunkUpdates= */ !mLightingActive);
+				mLightgridMoved = lgrid->updateGridCenter(mFocusPoint, !mLightingActive);
 
 				mOccupancyPartCache.clear();
 				mLgridchunksToUpdate.clear();
@@ -958,20 +949,13 @@ namespace RBX {
 				RBX::Vector3 gridTextureSpaceCenter = gridCenter * gridTextureScale + gridTextureOffset;
 				RBX::Vector3 gridTextureSpaceRadius = gridRadiusEffective * gridTextureScale;
 
-				// Note: the parameters have swizzle .yxz pre-applied so that we can avoid doing it in PS (helps ps_2_0 and GLSLES)
-				/*globalShaderData.LightConfig0 = Vector4(gridTextureScale.y, gridTextureScale.x, gridTextureScale.z, 0);
-				globalShaderData.LightConfig1 = Vector4(gridTextureOffset.y, gridTextureOffset.x, gridTextureOffset.z, 0);
-				globalShaderData.LightConfig2 = Vector4(gridTextureSpaceCenter.y, gridTextureSpaceCenter.x, gridTextureSpaceCenter.z, 0);
-				globalShaderData.LightConfig3 = Vector4(gridTextureSpaceRadius.y, gridTextureSpaceRadius.x, gridTextureSpaceRadius.z, 0);
-				globalShaderData.LightBorder = Vector4(borderColor.r / 255.f, borderColor.g / 255.f, borderColor.b / 255.f, borderColor.a / 255.f);*/
-
 				// Update grid settings from FRM
 				// Make sure it's at the end so that FastCluster updates and lighting updates see the same value during one frame
 				lgrid->setNonFixedPartsEnabled(mVisualEngine->getFrameRateManager()->getLightingNonFixedEnabled());
 
 				mLightingComputeAverage.sample(timer.delta().msec());
 			}
-		}
+		}*/
 
 		void SceneUpdater::checkFastClusters()
 		{
@@ -1082,12 +1066,12 @@ namespace RBX {
 		}
 
 		uint32_t SceneUpdater::getLightOldestAge() {
-			if (LightGrid* lgrid = mVisualEngine->getLightGrid()) {
+			/*if (LightGrid* lgrid = mVisualEngine->getLightGrid()) {
 				LightGridChunk* chunk = lgrid->findOldestChunk();
 
 				if (chunk)
 					return chunk->age;
-			}
+			}*/
 
 			return 0u;
 		}
@@ -1097,7 +1081,7 @@ namespace RBX {
 				FastCluster*& cluster = mHumanoidClusters[humanoid];
 
 				if (!cluster)
-					cluster = new FastCluster(mVisualEngine, humanoid, NULL, false);
+					cluster = new FastCluster(mVisualEngine, humanoid, nullptr, false);
 
 				cluster->addPart(part);
 
@@ -1199,8 +1183,8 @@ namespace RBX {
 			size_t chunkBudget = mVisualEngine->getFrameRateManager()->getLightingChunkBudget();
 
 			if (mSettings->getEagerBulkExecution()) {
-				RBX::Vector3int32 chunkCount = mVisualEngine->getLightGrid()->getChunkCount();
-				chunkBudget = chunkCount.x * chunkCount.y * chunkCount.z * kLightGridChunkSizeY;
+				//RBX::Vector3int32 chunkCount = mVisualEngine->getLightGrid()->getChunkCount();
+				//chunkBudget = chunkCount.x * chunkCount.y * chunkCount.z * kLightGridChunkSizeY;
 			}
 
 			return chunkBudget;

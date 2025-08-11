@@ -569,9 +569,9 @@ namespace RBX {
 				}
 			}
 
-			D3D_SHADER_MACRO  macroDX11 = { "DX11", "1" };
+			D3D_SHADER_MACRO macroDX11 = { "DX11", "1" };
 			macros.push_back(macroDX11);
-			D3D_SHADER_MACRO  macroEnd = {};
+			D3D_SHADER_MACRO macroEnd = {};
 			macros.push_back(macroEnd);
 
 			std::string sourceFolder = "";
@@ -602,8 +602,6 @@ namespace RBX {
 		static void translateShaderProfile(const std::string& originalTarget, DeviceD3D11::ShaderProfile shaderProfile, std::string& targetOut) {
 			switch (shaderProfile) {
 			case DeviceD3D11::shaderProfile_DX11: {
-				/*std::string shaderType = originalTarget.substr(0, 2);
-				targetOut = shaderType + "_5_1";*/
 				targetOut = originalTarget; // what's the point of specifying the target profile in shader.json if we're just gonna override it anyways?
 				return;
 			}
@@ -616,7 +614,7 @@ namespace RBX {
 			TypeD3DCompile D3DCompile = loadShaderCompiler();
 			RBXASSERT(D3DCompile);
 
-			unsigned int flags = D3DCOMPILE_PACK_MATRIX_ROW_MAJOR;
+			uint32_t flags = D3DCOMPILE_PACK_MATRIX_ROW_MAJOR;
 
 			std::string realTarget;
 			translateShaderProfile(target, device11->getShaderProfile(), realTarget);
@@ -647,43 +645,6 @@ namespace RBX {
 			return static_cast<VertexShaderD3D11*>(vertexShader.get())->getMaxWorldTransforms();
 		}
 
-		/*void ShaderProgramD3D11::setWorldTransforms4x3(const float* data, size_t matrixCount) {
-			static_cast<VertexShaderD3D11*>(vertexShader.get())->setWorldTransforms4x3(data, matrixCount);
-		}
-
-		int ShaderProgramD3D11::getConstantHandle(const char* name) const {
-			int vs = static_cast<VertexShaderD3D11*>(vertexShader.get())->findUniform(name);
-			int fs = static_cast<FragmentShaderD3D11*>(fragmentShader.get())->findUniform(name);
-
-			RBXASSERT(vs >= -1 && fs >= -1);
-
-			if (vs < 0 && fs < 0)
-				return -1;
-			else
-				return (vs + 1) | ((fs + 1) << 16);
-		}
-
-		void ShaderProgramD3D11::setConstant(int handle, const float* data, size_t vectorCount) {
-			if (handle < 0)
-				return;
-
-			int vs = (handle & 0xffff) - 1;
-			int fs = (handle >> 16) - 1;
-
-			if (vs >= 0) {
-				static_cast<VertexShaderD3D11*>(vertexShader.get())->setConstant(vs, data, vectorCount);
-			}
-
-			if (fs >= 0) {
-				static_cast<FragmentShaderD3D11*>(fragmentShader.get())->setConstant(fs, data, vectorCount);
-			}
-		}
-
-		void ShaderProgramD3D11::uploadConstantBuffers() {
-			static_cast<VertexShaderD3D11*>(vertexShader.get())->updateConstantBuffers();
-			static_cast<FragmentShaderD3D11*>(fragmentShader.get())->updateConstantBuffers();
-		}*/
-
 		unsigned int ShaderProgramD3D11::getSamplerMask() const {
 			return static_cast<FragmentShaderD3D11*>(fragmentShader.get())->getSamplerMask();
 		}
@@ -694,18 +655,6 @@ namespace RBX {
 			FragmentShaderD3D11* fs = static_cast<FragmentShaderD3D11*>(fragmentShader.get());
 			ID3D11VertexShader* vsObject = vs->getObject();
 			ID3D11PixelShader* fsObject = fs->getObject();
-
-			/*for (auto& cb : vs->getCBuffers())
-			{
-				ID3D11Buffer* buffer = cb->getObject();
-				context11->VSSetConstantBuffers(cb->getRegisterId(), 1, &buffer);
-			}
-
-			for (auto& cb : fs->getCBuffers())
-			{
-				ID3D11Buffer* buffer = cb->getObject();
-				context11->PSSetConstantBuffers(cb->getRegisterId(), 1, &buffer);
-			}*/
 
 			if (!vsObject)
 				throw std::runtime_error("Vertex shader object is null");

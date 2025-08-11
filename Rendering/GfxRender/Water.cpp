@@ -5,7 +5,6 @@
 #include "SceneManager.h"
 #include "ShaderManager.h"
 #include "TextureManager.h"
-#include "LightGrid.h"
 #include "Material.h"
 #include "GfxCore/Device.h"
 #include "EnvMap.h"
@@ -233,7 +232,7 @@ namespace RBX
 
 		static void setupTechnique(Technique& technique, VisualEngine* visualEngine, const TextureRef& nm0, const TextureRef& nm1)
 		{
-			LightGrid* lightGrid = visualEngine->getLightGrid();
+			//LightGrid* lightGrid = visualEngine->getLightGrid();
 
 			technique.setRasterizerState(RasterizerState(RasterizerState::Cull_None, 4));
 
@@ -241,11 +240,11 @@ namespace RBX
 			technique.setTexture(1, nm1, SamplerState::Filter_Linear);
 			technique.setTexture(2, visualEngine->getSceneManager()->getEnvMap()->getOutdoorTexture(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 
-			if (lightGrid)
+			/*if (lightGrid)
 			{
 				technique.setTexture(3, lightGrid->getTexture(), SamplerState::Filter_Linear);
 				technique.setTexture(4, lightGrid->getLookupTexture(), SamplerState::Filter_Point);
-			}
+			}*/
 		}
 
 		const shared_ptr<Material>& Water::getLegacyMaterial()

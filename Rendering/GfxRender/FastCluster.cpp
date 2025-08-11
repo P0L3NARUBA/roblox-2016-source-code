@@ -59,7 +59,7 @@ namespace RBX {
 			}
 
 			~FastClusterMeshGenerator() {
-				visualEngine->getMaterialGenerator()->invalidateCompositCache();
+				//visualEngine->getMaterialGenerator()->invalidateCompositCache();
 			}
 
 			const HumanoidIdentifier& getHumanoidIdentifier() {
@@ -76,11 +76,11 @@ namespace RBX {
 			}
 
 			void addInstance(size_t boneIndex, RBX::PartInstance* part, RBX::Decal* decal, uint32_t materialFlags, RenderQueue::Id renderQueue, RBX::AsyncResult* asyncResult) {
-				RBXASSERT(boneIndex < bones.size());
+				/*RBXASSERT(boneIndex < bones.size());
 
 				const HumanoidIdentifier* hi = humanoidIdentifier.humanoid ? &humanoidIdentifier : nullptr;
 
-				MaterialGenerator::Result material = visualEngine->getMaterialGenerator()->createMaterial(part, decal, hi, materialFlags);
+				MaterialGenerator::Result material = visualEngine->getMaterialGenerator()->createMaterial(part, decal, materialFlags);
 
 				if (!material.material)
 					return;
@@ -96,7 +96,7 @@ namespace RBX {
 					if (decal) {
 						uint32_t opaqueMaterialFlags = materialFlags & ~MaterialGenerator::Flag_Transparent;
 
-						mg.decalMaterialOpaque = visualEngine->getMaterialGenerator()->createMaterial(part, decal, hi, opaqueMaterialFlags).material;
+						mg.decalMaterialOpaque = visualEngine->getMaterialGenerator()->createMaterial(part, decal, opaqueMaterialFlags).material;
 					}
 				}
 				else
@@ -142,12 +142,12 @@ namespace RBX {
 				// add batch instance
 				BatchInstance bi = { part, decal, batch.bones.size() - 1, material.uvOffsetScale, resources };
 
-				batch.instances.push_back(bi);
+				batch.instances.push_back(bi);*/
 			}
 
 			unsigned int finalize(FastCluster* cluster, FastClusterSharedGeometry& sharedGeometry) {
-				InstancedMaterialVertex* sharedVertexData = nullptr;
-				uint16_t* sharedIndexData = nullptr;
+				MaterialVertex* sharedVertexData = nullptr;
+				uint32_t* sharedIndexData = nullptr;
 				uint32_t sharedVertexOffset = 0u;
 				uint32_t sharedIndexOffset = 0u;
 
@@ -185,8 +185,8 @@ namespace RBX {
 				if (sharedVertexCount > 0u && sharedIndexCount > 0u) {
 					setupSharedGeometry(sharedGeometry, sharedVertexCount, sharedIndexCount, cluster->isFW());
 
-					sharedVertexData = static_cast<InstancedMaterialVertex*>(sharedGeometry.vertexBuffer->lock(GeometryBuffer::Lock_Discard));
-					sharedIndexData = static_cast<unsigned short*>(sharedGeometry.indexBuffer->lock(GeometryBuffer::Lock_Discard));
+					sharedVertexData = static_cast<MaterialVertex*>(sharedGeometry.vertexBuffer->lock(GeometryBuffer::Lock_Discard));
+					sharedIndexData = static_cast<uint32_t*>(sharedGeometry.indexBuffer->lock(GeometryBuffer::Lock_Discard));
 				}
 				else
 					sharedGeometry.reset();
@@ -224,7 +224,7 @@ namespace RBX {
 						Extents bounds = generateBatchGeometry(mg, batch, sharedVertexData + geometryBaseVertex, sharedIndexData + sharedIndexOffset, vertexOffset, instanceVertexCount, cluster->isFW());
 
 						// create geometry batch
-						GeometryBatch geometryBatch(geometry, Geometry::Primitive_Triangles, sharedIndexOffset, batch.counter.getIndexCount(), vertexOffset, vertexOffset + batch.counter.getVertexCount());
+						GeometryBatch geometryBatch(geometry, Geometry::Primitive_Triangles, sharedIndexOffset, batch.counter.getIndexCount(), vertexOffset);
 
 						// setup entity
 						uint8_t lodMask = (groupEnd - groupBegin > 1u) ? ((1u << 0u) | (1u << 1u)) : 0xffu;
@@ -237,7 +237,7 @@ namespace RBX {
 						if (mg.renderQueue == RenderQueue::Id_Transparent && cluster->getHumanoidKey())
 							queueId = RenderQueue::Id_TransparentCasters;
 
-						cluster->addEntity(new FastClusterEntity(cluster, geometryBatch, mg.material, mg.decalMaterialOpaque, queueId, lodMask, batch.bones, bounds, mg.materialFeatures));
+						//cluster->addEntity(new FastClusterEntity(cluster, geometryBatch, mg.material, mg.decalMaterialOpaque, queueId, lodMask, batch.bones, bounds, mg.materialFeatures));
 
 						// update buffer offsets
 						sharedVertexOffset += batch.counter.getVertexCount();
@@ -252,10 +252,10 @@ namespace RBX {
 						const Batch& batch = *batches[groupBegin].second;
 
 						// create geometry batch
-						GeometryBatch geometryBatch(geometry, Geometry::Primitive_Triangles, groupIndexOffset, sharedIndexOffset - groupIndexOffset, groupVertexOffset - geometryBaseVertex, sharedVertexOffset - geometryBaseVertex);
+						GeometryBatch geometryBatch(geometry, Geometry::Primitive_Triangles, groupIndexOffset, sharedIndexOffset - groupIndexOffset, groupVertexOffset - geometryBaseVertex);
 
 						// setup entity
-						cluster->addEntity(new FastClusterEntity(cluster, geometryBatch, mg.material, mg.decalMaterialOpaque, mg.renderQueue, /* lodMask= */ 1 << 2, batch.bones, groupBounds, mg.materialFeatures));
+						//cluster->addEntity(new FastClusterEntity(cluster, geometryBatch, mg.material, mg.decalMaterialOpaque, mg.renderQueue, /* lodMask= */ uint8_t(1u << 2u), batch.bones, groupBounds, mg.materialFeatures));
 					}
 
 					// Move to next batch portion
@@ -351,11 +351,11 @@ namespace RBX {
 				if (!p) {
 					std::vector<VertexLayout::Element> elements;
 
-					elements.push_back(VertexLayout::Element(0u, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
+					/*elements.push_back(VertexLayout::Element(0u, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
 					elements.push_back(VertexLayout::Element(0u, 12u, VertexLayout::Format_Float2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture));
 					elements.push_back(VertexLayout::Element(0u, 20u, VertexLayout::Format_Float4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Color));
 					elements.push_back(VertexLayout::Element(0u, 36u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Normal));
-					elements.push_back(VertexLayout::Element(0u, 48u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Tangent));
+					elements.push_back(VertexLayout::Element(0u, 48u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Tangent));*/
 
 					//bool useShaders = visualEngine->getRenderCaps()->getSkinningBoneCount() > 0;
 
@@ -376,7 +376,7 @@ namespace RBX {
 			void setupSharedGeometry(FastClusterSharedGeometry& sharedGeometry, uint32_t vertexCount, uint32_t indexCount, bool isFW) {
 				// Create vertex buffer
 				if (!sharedGeometry.vertexBuffer || !canUseBuffer(sharedGeometry.vertexBuffer->getElementCount(), vertexCount))
-					sharedGeometry.vertexBuffer = visualEngine->getDevice()->createVertexBuffer(sizeof(InstancedMaterialVertex), vertexCount, GeometryBuffer::Usage_Static);
+					sharedGeometry.vertexBuffer = visualEngine->getDevice()->createVertexBuffer(sizeof(MaterialVertex), vertexCount, GeometryBuffer::Usage_Static);
 
 				// Create index buffer
 				if (!sharedGeometry.indexBuffer || !canUseBuffer(sharedGeometry.indexBuffer->getElementCount(), indexCount))
@@ -399,7 +399,7 @@ namespace RBX {
 					return part->getCoordinateFrame();
 			}
 
-			Extents generateBatchGeometry(const MaterialGroup& mg, const Batch& batch, InstancedMaterialVertex* vbptr, uint16_t* ibptr, uint32_t vertexOffset, std::vector<uint32_t>& instanceVertexCount, bool isFW) {
+			Extents generateBatchGeometry(const MaterialGroup& mg, const Batch& batch, MaterialVertex* vbptr, uint32_t* ibptr, uint32_t vertexOffset, std::vector<uint32_t>& instanceVertexCount, bool isFW) {
 				RBXPROFILER_SCOPE("Render", "generateBatchGeometry");
 
 				instanceVertexCount.reserve(batch.instances.size());
@@ -409,7 +409,7 @@ namespace RBX {
 				Vector3 boundsMin = Vector3::maxFinite();
 				Vector3 boundsMax = Vector3::minFinite();
 
-				const HumanoidIdentifier* hi = humanoidIdentifier.humanoid ? &humanoidIdentifier : NULL;
+				const HumanoidIdentifier* hi = humanoidIdentifier.humanoid ? &humanoidIdentifier : nullptr;
 
 				for (size_t i = 0u; i < batch.instances.size(); ++i) {
 					const BatchInstance& bi = batch.instances[i];
@@ -452,7 +452,7 @@ namespace RBX {
 					MaterialGroup* ml = lhs.first;
 					MaterialGroup* mr = rhs.first;
 
-					return (ml->materialResultFlags & MaterialGenerator::Result_PlasticLOD) > (mr->materialResultFlags & MaterialGenerator::Result_PlasticLOD);
+					return (ml->materialResultFlags & MaterialGenerator::Result_UsesTexture) > (mr->materialResultFlags & MaterialGenerator::Result_UsesTexture);
 				}
 			};
 		};
@@ -487,20 +487,20 @@ namespace RBX {
 			, localBoundsCenter(localBounds.center())
 			, sortKeyOffset(0.0f)
 		{
-			if (decalMaterialOpaque) {
+			/*if (decalMaterialOpaque) {
 				if (const Technique* technique = decalMaterialOpaque->getBestTechnique(0u, RenderQueue::Pass_Default))
 					decalTexture = technique->getTexture(MaterialGenerator::getDiffuseMapStage());
 
 				// if decal we want to offset slightly sort key
 				sortKeyOffset = -0.01f;
-			}
+			}*/
 		}
 
 		FastClusterEntity::~FastClusterEntity()
 		{
 		}
 
-		uint32_t FastClusterEntity::getWorldTransforms4x3(float* buffer, uint32_t maxTransforms, const void** cacheKey) const {
+		/*uint32_t FastClusterEntity::getWorldTransforms4x3(float* buffer, uint32_t maxTransforms, const void** cacheKey) const {
 			if (useCache(cacheKey, this)) return 0u;
 
 			RBXASSERT(bones.size() <= maxTransforms);
@@ -523,7 +523,7 @@ namespace RBX {
 			}
 
 			return bones.size();
-		}
+		}*/
 
 		void FastClusterEntity::updateRenderQueue(RenderQueue& queue, const RenderCamera& camera, uint32_t lodIndex, RenderQueue::Pass pass) {
 			TextureRef::Status decalStatus = decalTexture.getStatus();
@@ -891,7 +891,7 @@ namespace RBX {
 
 				// Material flags
 				bool ignoreDecals = false;
-				uint32_t materialFlags = MaterialGenerator::createFlags(!fw, part.instance, &hi, ignoreDecals);
+				uint32_t materialFlags = MaterialGenerator::createFlags(part.instance, !fw);
 				bool partTransparent = (part.instance->getTransparencyUi() > 0.0f);
 
 				// add a new bone if necessary
@@ -999,12 +999,12 @@ namespace RBX {
 			}*/
 		}
 
-		void FastCluster::invalidateLighting(const Extents& bbox) {
+		/*void FastCluster::invalidateLighting(const Extents& bbox) {
 			if (humanoid) return;
 
 			if (!bbox.isNull())
 				getVisualEngine()->getSceneUpdater()->lightingInvalidateOccupancy(bbox, bbox.center(), fw);
-		}
+		}*/
 
 		void FastCluster::unbind() {
 			FASTLOG3(FLog::RenderFastCluster, "FastCluster[%p]: unbind (%d parts, %d own connections)", this, parts.size(), connections.size());

@@ -37,10 +37,11 @@ namespace RBX {
 		class SceneUpdater;
 		class SceneManager;
 		class TextureAtlas;
+		class MeshInstancer;
 
 		class MaterialGenerator;
 
-		class LightGrid;
+		//class LightGrid;
 
 		class AdornRender;
 		class VertexStreamer;
@@ -87,9 +88,10 @@ namespace RBX {
 			EmitterShared* getEmitterSharedState() { return emitterShared.get(); }
 
 			ShaderManager* getShaderManager() { return shaderManager.get(); }
-			LightGrid* getLightGrid() { return lightGrid.get(); }
+			//LightGrid* getLightGrid() { return lightGrid.get(); }
 			Water* getWater() { return water.get(); }
 			SceneUpdater* getSceneUpdater() { return sceneUpdater.get(); }
+			MeshInstancer* getMeshInstancer() { return meshInstancer.get(); }
 			CRenderSettings* getSettings() { return settings; };
 
 			// returns area of interest that needs to be computed for next frame. slighly bigger than camera frustrum.
@@ -128,6 +130,7 @@ namespace RBX {
 
 			scoped_ptr<AdornRender> adorn;
 			scoped_ptr<SceneUpdater> sceneUpdater;
+			scoped_ptr<MeshInstancer> meshInstancer;
 
 			scoped_ptr<VertexStreamer> vertexStreamer;
 			scoped_ptr<TextureCompositor> textureCompositor;
@@ -147,7 +150,7 @@ namespace RBX {
 
 			scoped_ptr<RBX::RenderStats> renderStats;
 
-			scoped_ptr<LightGrid> lightGrid;
+			//scoped_ptr<LightGrid> lightGrid;
 			scoped_ptr<Water> water;
 
 			shared_ptr<Typesetter> typesetters[Text::FONT_LAST];

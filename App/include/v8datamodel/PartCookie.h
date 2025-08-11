@@ -32,14 +32,14 @@ namespace RBX {
 	inline DataModelMesh* getSpecialShape(PartInstance* part)
 	{
 		if ((part->getCookie() & PartCookie::HAS_SPECIALSHAPE) == 0)
-			return NULL;
+			return nullptr;
 
 		if (!part->getChildren())
-			return NULL;
+			return nullptr;
 
 		const Instances& children = *part->getChildren();
 
-		DataModelMesh* result = NULL;
+		DataModelMesh* result = nullptr;
 
 		for (size_t i = 0; i < children.size(); ++i)
 			if (DataModelMesh* specialShape = children[i]->fastDynamicCast<DataModelMesh>())
@@ -63,7 +63,7 @@ namespace RBX {
 			}
 		}
 
-		return NULL;
+		return nullptr;
 	}
 
 	inline FileMesh* getFileMesh(PartInstance* part)
@@ -76,7 +76,7 @@ namespace RBX {
 		if (part->getCookie() & PartCookie::IS_HUMANOID_PART)
 			return Humanoid::modelIsCharacter(part->getParent());
 		else
-			return NULL;
+			return nullptr;
 	}
 
 	inline float getPartReflectance(PartInstance* part)

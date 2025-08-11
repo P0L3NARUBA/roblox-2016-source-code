@@ -72,14 +72,27 @@ namespace RBX {
 				boost::shared_ptr<CSGMesh> csgMeshData;
 			};
 
+			struct GeometryPair {
+				GeometryPair()
+					: vertices(0u)
+					, indices(0u)
+				{
+				}
+
+				std::vector<MaterialVertex> vertices;
+				std::vector<uint32_t> indices;
+			};
+
 			static Resources fetchResources(PartInstance* part, const HumanoidIdentifier* hi, uint32_t flags, AsyncResult* asyncResult);
 
 			GeometryGenerator();
-			GeometryGenerator(InstancedMaterialVertex* vertices, uint16_t* indices, uint32_t vertexOffset = 0u);
+			GeometryGenerator(MaterialVertex* vertices, uint32_t* indices, uint32_t vertexOffset = 0u);
 
 			void reset();
 			void resetBounds();
 			void resetBounds(const Vector3& min, const Vector3& max);
+
+			GeometryPair generateGeometry(PartInstance* part);
 
 			void addInstance(PartInstance* part, Decal* decal, const Options& options, const Resources& resources, const HumanoidIdentifier* humanoidIdentifier = nullptr);
 			void addCSGPrimitive(PartInstance* part);
@@ -100,8 +113,8 @@ namespace RBX {
 		private:
 			Vector3 mBboxMin, mBboxMax;
 
-			InstancedMaterialVertex* mVertices;
-			uint16_t* mIndices;
+			MaterialVertex* mVertices;
+			uint32_t* mIndices;
 
 			uint32_t mVertexCount;
 			uint32_t mIndexCount;
@@ -119,6 +132,11 @@ namespace RBX {
 			void addFileMesh(FileMeshData* data, DataModelMesh* specialShape, PartInstance* part, Decal* decal, const HumanoidIdentifier* humanoidIdentifier, const Options& options);
 			void addOperation(PartInstance* part, Decal* decal, const Options& options, const Resources& resources, uint32_t randomSeed);
 			void addOperationDecompositionDebug(PartOperation* operation, PartInstance* part, Decal* decal, const Options& options, uint32_t randomSeed);
+
+			GeometryPair generateBlock();
+			GeometryPair generateSphere();
+			GeometryPair generateCylinder();
+			GeometryPair generateWedge(bool corner);
 
 			void fillDecompShapeDebug(PartOperation* operation, PartInstance* part, const Options& options);
 			void fillBlockShapeDebug(PartInstance* part, const Options& options);

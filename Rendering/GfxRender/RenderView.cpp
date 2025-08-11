@@ -45,7 +45,6 @@
 
 #include "TextureManager.h"
 #include "AdornRender.h"
-#include "LightGrid.h"
 #include "MaterialGenerator.h"
 #include "GeometryGenerator.h"
 //#include "Vertex.h"
@@ -667,12 +666,12 @@ namespace RBX {
 			}
 
 			if (name == "RenderStatsLightGrid") {
-				SceneUpdater* su = visualEngine->getSceneUpdater();
+				/*SceneUpdater* su = visualEngine->getSceneUpdater();
 				const RBX::WindowAverage<double, double>::Stats& stats = su->getLightingTimeStats();
 
 				if (su->isLightingActive())
 					return RBX::format("%d (occupancy %d, oldest: %d), %.1f ms (std: %.1f)", su->getLastLightingUpdates(), su->getLastOccupancyUpdates(), su->getLightOldestAge(), stats.average, sqrt(stats.variance));
-				else
+				else*/
 					return "inactive";
 			}
 
@@ -841,12 +840,12 @@ namespace RBX {
 
 			visualEngine->getWater()->update(dataModel.get(), dt);
 
-			visualEngine->getSceneUpdater()->updatePrepare(0, *visualEngine->getUpdateFrustum());
+			//visualEngine->getSceneUpdater()->updatePrepare(0, *visualEngine->getUpdateFrustum());
 
 			visualEngine->getTextureCompositor()->update(poi);
 
 			// Pass FRM configuration to shaders
-			GlobalShaderData& globalShaderData = visualEngine->getSceneManager()->writeGlobalShaderData();
+			//GlobalShaderData& globalShaderData = visualEngine->getSceneManager()->writeGlobalShaderData();
 
 			float shadingDistance = std::max(frm->getShadingDistance(), 0.1f);
 			float fovCoefficient = visualEngine->getCamera().getProjectionMatrix()[1][1];
@@ -1024,9 +1023,9 @@ namespace RBX {
 				colorOrderBGR = device->getCaps().colorOrderBGR;
 
 				std::vector<VertexLayout::Element> elements;
-				elements.push_back(VertexLayout::Element(0u, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
+				/*elements.push_back(VertexLayout::Element(0u, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
 				elements.push_back(VertexLayout::Element(0u, 12u, VertexLayout::Format_Float2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture));
-				elements.push_back(VertexLayout::Element(0u, 20u, VertexLayout::Format_Float4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Color));
+				elements.push_back(VertexLayout::Element(0u, 20u, VertexLayout::Format_Float4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Color));*/
 
 				layout = device->createVertexLayout(elements);
 
@@ -1129,7 +1128,7 @@ namespace RBX {
 
 					shaderData.setCamera(camera);
 
-					context->updateGlobalConstants(&shaderData, sizeof(GlobalShaderData));
+					context->updateGlobalConstantData(&shaderData, sizeof(GlobalShaderData));
 
 					context->bindProgram(program.get());
 
@@ -1140,10 +1139,10 @@ namespace RBX {
 					context->bindTexture(0u, fontTexture.get(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 
 					if (!quads.empty())
-						context->draw(quadsGeometry.get(), Geometry::Primitive_Triangles, 0u, quads.size(), 0u, quads.size());
+						context->draw(quadsGeometry.get(), Geometry::Primitive_Triangles, 0u, quads.size(), 0u);
 
 					if (!lines.empty())
-						context->draw(linesGeometry.get(), Geometry::Primitive_Lines, 0u, lines.size(), 0u, lines.size());
+						context->draw(linesGeometry.get(), Geometry::Primitive_Lines, 0u, lines.size(), 0u);
 				}
 
 				quads.clear();
@@ -1339,6 +1338,7 @@ namespace RBX {
 		extern float contrast = 1.0f;
 		extern float grayscaleLevel = 1.0f;
 		extern Color3 tintColor = Color3(1.0f, 1.0f, 1.0f);
+		extern TonemapperMode tonemapper = ACES;
 
 		void RenderView::presetLighting(RBX::Lighting* lighting) {
 			SceneManager* sceneManager = visualEngine->getSceneManager();
@@ -1364,38 +1364,39 @@ namespace RBX {
 		void RenderView::presetPostProcess(RBX::Lighting* lighting) {
 			SceneManager* sceneManager = visualEngine->getSceneManager();
 
+			grayscaleLevel = 1.0f;
+			contrast = 1.0f;
+			brightness = 1.0f;
+			tintColor = Color3(1.0f, 1.0f, 1.0f);
+			tonemapper = ACES;
+
 			bloomIntensity = 0.0f;
 			bloomSize = 0u;
 
 			blurIntensity = 0.0f;
 
-			tintColor = Color3(1.0f, 1.0f, 1.0f);
-			grayscaleLevel = 1.0f;
-			contrast = 1.0f;
-			brightness = 1.0f;
-
+			// really feel like there's a better way to do this
 			if (shared_ptr<const Instances> children = lighting->getChildren2()) {
 				Instances::const_iterator end = children->end();
+
 				for (Instances::const_iterator iter = children->begin(); iter != end; ++iter) {
 					std::string className = (*iter)->getClassNameStr();
 
 					if (className == "BloomEffect") {
-						auto bloomEffectInstance = boost::dynamic_pointer_cast<BloomEffect>((*iter));
+						auto bloomEffectInstance = boost::dynamic_pointer_cast<BloomEffect>(*iter);
 
-						if (bloomEffectInstance && bloomEffectInstance->getEnabled()/* && bloomIntensity < bloomEffectInstance->getIntensity() && bloomSize < bloomEffectInstance->getSize()*/) {
+						if (bloomEffectInstance && bloomEffectInstance->getEnabled())
 							bloomIntensity = bloomEffectInstance->getIntensity();
 							bloomSize = bloomEffectInstance->getSize();
-						}
 					}
 					else if (className == "BlurEffect") {
-						auto blurEffectInstance = boost::dynamic_pointer_cast<BlurEffect>((*iter));
+						auto blurEffectInstance = boost::dynamic_pointer_cast<BlurEffect>(*iter);
 
-						if (blurEffectInstance && blurEffectInstance->getEnabled()/* && blurIntensity < blurEffectInstance->getSize()*/) {
+						if (blurEffectInstance && blurEffectInstance->getEnabled())
 							blurIntensity = blurEffectInstance->getSize();
-						}
 					}
 					else if (className == "ColorCorrectionEffect") {
-						auto colorCorrectionInstance = boost::dynamic_pointer_cast<ColorCorrectionEffect>((*iter));
+						auto colorCorrectionInstance = boost::dynamic_pointer_cast<ColorCorrectionEffect>(*iter);
 
 						if (colorCorrectionInstance && colorCorrectionInstance->getEnabled()) {
 							tintColor = colorCorrectionInstance->getTintColor();
@@ -1407,7 +1408,9 @@ namespace RBX {
 				}
 			}
 
-			sceneManager->setPostProcess(brightness, contrast, grayscaleLevel, tintColor, blurIntensity, bloomIntensity, bloomSize);
+			tonemapper = lighting->getCameraTonemapper();
+
+			sceneManager->setPostProcess(brightness, contrast, grayscaleLevel, tintColor, tonemapper, blurIntensity, bloomIntensity, bloomSize);
 		}
 
 		void RenderView::presetProcessing(RBX::Lighting* lighting) {

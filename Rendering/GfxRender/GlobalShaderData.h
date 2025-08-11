@@ -1,14 +1,12 @@
 #pragma once
 
 #include "Util/G3DCore.h"
-#include "LightObject.h"
 
-namespace RBX
-{
-	namespace Graphics
-	{
+namespace RBX {
+	namespace Graphics {
 		class Device;
 		class RenderCamera;
+		class LightObject;
 
 		struct GlobalShaderData {
 			/* Camera */
@@ -28,8 +26,8 @@ namespace RBX
 			Vector4 KeyCascade[4];
 
 			/* Fog */
-			Vector4 FogColor_Density;	/* x = Color.r,       y = Color.g,     z = Color.b,        w = Density */
-			Vector4 FogParams;			/* x = Sun Influence, y = Uses Skybox, z = Affects Skybox, w = 0.0     */
+			Vector4 FogColor_Density; /* x = Color.r,       y = Color.g,     z = Color.b,        w = Density */
+			Vector4 FogParams;		  /* x = Sun Influence, y = Uses Skybox, z = Affects Skybox, w = 0.0     */
 
 			/* Misc */
 			Vector4 ViewportSize_ViewportScale;
@@ -59,8 +57,8 @@ namespace RBX
 		/* Albedo modes:
 		0 - No albedo map
 		1 - Albedo alpha defines transparency
-		2 - Albedo alpha defines overlay
-		3 - Albedo alpha defines tinting */
+		2 - Albedo alpha defines how much the albedo should overlay over the base color
+		3 - Albedo alpha defines how much the base color should tint */
 
 		/* Emission modes:
 		0 - No emission
@@ -75,22 +73,24 @@ namespace RBX
 		};
 
 		struct CubemapInfo {
-			Matrix4 OrientedBoundingBox;
-			Vector4 Position_Size; // Size of -1.0 means box mode, while anything above 0.0 means sphere mode
+			Matrix4 Matrix; // Scale and rotation in first 3 rows, translation in last row.
 		};
 
 		struct CubemapsInfo {
-			std::vector<CubemapInfo> Cubemap;
+			std::vector<CubemapInfo> Cubemaps;
 
 			static void define(Device* device);
 		};
 
-		struct ModelMatrix {
+		struct InstancedModel {
 			Matrix4 Model;
+			Color4 Color;
+			uint32_t MaterialID;
+			uint32_t padding[3];
 		};
 
-		struct ModelMatrixes {
-			std::vector<ModelMatrix> Model;
+		struct InstancedModels {
+			std::vector<InstancedModel> Models;
 
 			static void define(Device* device);
 		};
@@ -114,7 +114,7 @@ namespace RBX
 
 			static void define(Device* device);
 
-			void populateList(const std::vector<LightObject*> lights);
+			size_t populateList(const std::vector<LightObject*> lights);
 		};
 	}
 }

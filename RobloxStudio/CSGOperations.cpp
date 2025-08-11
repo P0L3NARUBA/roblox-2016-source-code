@@ -236,8 +236,8 @@ bool RBX::CSGOperations::recalculateMesh(shared_ptr<PartOperation> partOperation
 }
 
 bool RBX::CSGOperations::createPartMesh(PartInstance* part, CSGMesh* modelData) {
-	std::vector<Graphics::InstancedMaterialVertex> vertices;
-	std::vector<uint16_t> indices;
+	std::vector<Graphics::MaterialVertex> vertices;
+	std::vector<uint32_t> indices;
 
 	std::vector<CSGVertex> meshVertices;
 	std::vector<uint32_t> meshIndices;

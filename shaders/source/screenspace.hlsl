@@ -1,11 +1,10 @@
 #include "common.hlsli"
 
-BasicVertexOutput PassThroughVS( BasicAppData IN ) {
+BasicVertexOutput PassThroughVS(BasicAppData IN) {
     BasicVertexOutput OUT;
 	
-    OUT.UV = IN.UV;
-	OUT.UV.y = 1.0 - OUT.UV.y;
-	OUT.Color = IN.Color;
+    OUT.UV = IN.Position;
+	//OUT.UV.y = 1.0 - OUT.UV.y;
     OUT.Position = float4(IN.Position, 1.0);
 
     return OUT;
@@ -13,8 +12,8 @@ BasicVertexOutput PassThroughVS( BasicAppData IN ) {
 
 TEX_DECLARE2D(float4, Main, 0);
 
-float4 PassThroughPS( BasicVertexOutput IN ) : SV_TARGET {
-	return MainTexture.Sample(MainSampler, IN.UV) * IN.Color;
+float4 PassThroughPS(BasicVertexOutput IN) : SV_TARGET {
+	return MainTexture.Sample(MainSampler, IN.UV);
 }
 
 /*float4 gauss(float samples, float2 uv)

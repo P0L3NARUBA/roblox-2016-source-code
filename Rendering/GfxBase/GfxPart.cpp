@@ -44,13 +44,11 @@ namespace RBX {
 	}
 
 	void GfxBinding::unbind() {
-		if (partInstance) {
+		if (partInstance)
 			partInstance->setGfxPart(nullptr);
-		}
 
-		for (size_t i = 0u; i < connections.size(); ++i) {
+		for (size_t i = 0u; i < connections.size(); ++i)
 			connections[i].disconnect();
-		}
 
 		connections.clear();
 	}
@@ -120,56 +118,36 @@ namespace RBX {
 
 
 	void GfxBinding::onPropertyChanged(const Reflection::PropertyDescriptor* descriptor) {
-		if (*descriptor == PartInstance::prop_CFrame) {
+		if (*descriptor == PartInstance::prop_CFrame)
 			onCoordinateFrameChanged();
-		}
-		else if (*descriptor == PartInstance::prop_Anchored) {
-			//partInstance->getGfxPart()->onClumpChanged();
-		}
-		else if (*descriptor == PartInstance::prop_Size) {
+		else if (*descriptor == PartInstance::prop_renderMaterial)
+			onMaterialChanged();
+		else if (*descriptor == PartInstance::prop_Color)
+			onColorChanged();
+		else if (*descriptor == PartInstance::prop_Size)
 			onSizeChanged();
-		}
-		else if (*descriptor == PartInstance::prop_Transparency || *descriptor == PartInstance::prop_LocalTransparencyModifier) {
+		else if (*descriptor == PartInstance::prop_Transparency || *descriptor == PartInstance::prop_LocalTransparencyModifier)
 			onTransparencyChanged();
-		}
-		else if (*descriptor == PartInstance::prop_renderMaterial) {
+		else if (*descriptor == BasicPartInstance::prop_shapeXml)
 			invalidateEntity();
-		}
-		else if (*descriptor == BasicPartInstance::prop_shapeXml) {
+		else if (*descriptor == ExtrudedPartInstance::prop_styleXml)
 			invalidateEntity();
-		}
-		else if (*descriptor == ExtrudedPartInstance::prop_styleXml) {
+		else if (*descriptor == PrismInstance::prop_sidesXML)
 			invalidateEntity();
-		}
-#ifdef _PRISM_PYRAMID_
-		else if (*descriptor == PrismInstance::prop_sidesXML) {
+		/*else if (*descriptor == PrismInstance::prop_slices)
+			invalidateEntity();*/
+		else if (*descriptor == PyramidInstance::prop_sidesXML)
 			invalidateEntity();
-		}
-		//else if (*descriptor==PrismInstance::prop_slices) {
-		//	invalidateEntity();
-		//}
-		else if (*descriptor == PyramidInstance::prop_sidesXML) {
+		/*else if (*descriptor == PyramidInstance::prop_slices)
+			invalidateEntity();*/
+		/*else if (Surface::isSurfaceDescriptor(*descriptor))
+			invalidateEntity();*/
+		else if (*descriptor == PartOperation::desc_MeshData)
 			invalidateEntity();
-		}
-		//else if (*descriptor==PyramidInstance::prop_slices) {
-		//	invalidateEntity();
-		//}
-#endif //_PRISM_PYRAMID_
-		else if (Surface::isSurfaceDescriptor(*descriptor)) {
+		else if (*descriptor == PartOperation::desc_UsePartColor)
 			invalidateEntity();
-		}
-		else if (*descriptor == PartInstance::prop_Color) {
+		else if (*descriptor == PartOperation::desc_FormFactor)
 			invalidateEntity();
-		}
-		else if (*descriptor == PartOperation::desc_MeshData) {
-			invalidateEntity();
-		}
-		else if (*descriptor == PartOperation::desc_UsePartColor) {
-			invalidateEntity();
-		}
-		else if (*descriptor == PartOperation::desc_FormFactor) {
-			invalidateEntity();
-		}
 	}
 
 	void GfxBinding::onTexturePropertyChanged(const Reflection::PropertyDescriptor* descriptor) {
@@ -181,10 +159,10 @@ namespace RBX {
 			updateCookie(partInstance.get());
 			invalidateEntity();
 		}
-		else if (*descriptor == DecalTexture::prop_Specular)
+		/*else if (*descriptor == DecalTexture::prop_Specular)
 			invalidateEntity();
 		else if (*descriptor == DecalTexture::prop_Shiny)
-			invalidateEntity();
+			invalidateEntity();*/
 		else if (*descriptor == DecalTexture::prop_StudsPerTileU)
 			invalidateEntity();
 		else if (*descriptor == DecalTexture::prop_StudsPerTileV)
@@ -202,10 +180,10 @@ namespace RBX {
 			updateCookie(partInstance.get());
 			invalidateEntity();
 		}
-		else if (*descriptor == RBX::Decal::prop_Specular)
+		/*else if (*descriptor == RBX::Decal::prop_Specular)
 			invalidateEntity();
 		else if (*descriptor == RBX::Decal::prop_Shiny)
-			invalidateEntity();
+			invalidateEntity();*/
 		else if (*descriptor == RBX::Decal::prop_Transparency || *descriptor == Decal::prop_LocalTransparencyModifier)
 			invalidateEntity();
 	}
@@ -252,13 +230,12 @@ namespace RBX {
 		}
 	}
 
-	/*override*/ void GfxAttachment::unbind()
-	{
+	/*override*/ void GfxAttachment::unbind() {
 		// nb: specifically ignore baseclass impl. we don't want to call setGfxPart.
 
-		for (size_t i = 0u; i < connections.size(); ++i) {
+		for (size_t i = 0u; i < connections.size(); ++i)
 			connections[i].disconnect();
-		}
+
 		connections.clear();
 	}
 

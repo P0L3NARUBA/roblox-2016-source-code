@@ -41,7 +41,7 @@ namespace G3D {
 	Matrix4::Matrix4(const class CoordinateFrame& cframe) {
 		for (size_t r = 0u; r < 3u; ++r) {
 			for (size_t c = 0u; c < 3u; ++c)
-				elt[r][c] = cframe.rotation[r][c];
+				elt[r][c] = cframe.rotation[c][r];
 
 			elt[3][r] = cframe.translation[r];
 		}

@@ -61,7 +61,7 @@ namespace RBX {
 			void defineGlobalProcessingData(size_t dataSize);
 			size_t getProcessingDataSize() const { return processingDataSize; }
 			void defineGlobalMaterialData(size_t dataSize);
-			void defineInstancedModelMatrixes(size_t dataSize, size_t elementSize);
+			void defineInstancedModels(size_t dataSize, size_t elementSize);
 			void defineGlobalLightList(size_t dataSize, size_t elementSize);
 
 			void clearStates();
@@ -71,11 +71,20 @@ namespace RBX {
 			void invalidateCachedGeometry();
 			void invalidateCachedTexture(Texture* texture);
 
-			virtual void updateGlobalConstants(const void* data, size_t dataSize);
+			virtual void updateGlobalConstantData(const void* data, size_t dataSize);
+			virtual void setGlobalConstantData();
+
 			virtual void updateGlobalProcessingData(const void* data, size_t dataSize);
+			virtual void setGlobalProcessingData();
+
 			virtual void updateGlobalMaterialData(const void* data, size_t dataSize);
-			virtual void updateInstancedModelMatrixes(const void* data, size_t dataSize);
+			virtual void setGlobalMaterialData();
+
+			virtual void updateInstancedModels(const void* data, size_t dataSize);
+			virtual void setInstancedModels();
+
 			virtual void updateGlobalLightList(const void* data, size_t dataSize);
+			virtual void setGlobalLightList();
 
 			virtual void setDefaultAnisotropy(uint32_t value);
 
@@ -96,7 +105,8 @@ namespace RBX {
 			virtual void setBlendState(const BlendState& state);
 			virtual void setDepthState(const DepthState& state);
 
-			virtual void drawImpl(Geometry* geometry, Geometry::Primitive primitive, uint32_t offset, uint32_t count, uint32_t indexRangeBegin, uint32_t indexRangeEnd);
+			virtual void drawImpl(Geometry* geometry, Geometry::Primitive primitive, uint32_t vertexCount, uint32_t vertexOffset, uint32_t indexOffset);
+			virtual void drawInstancedImpl(Geometry* geometry, Geometry::Primitive primitive, uint32_t instanceCount, uint32_t vertexCount, uint32_t vertexOffset, uint32_t indexOffset);
 
 			void beginQuery(ID3D11Query* query);
 			void endQuery(ID3D11Query* query);
@@ -133,9 +143,9 @@ namespace RBX {
 			size_t materialDataSize;
 
 			/* Structured Buffers */
-			ID3D11Buffer* instancedModelMatrixesBuffer;
+			ID3D11Buffer* instancedModelsBuffer;
 			ID3D11Buffer* globalsLightListBuffer;
-			ID3D11ShaderResourceView* instancedModelMatrixesResource;
+			ID3D11ShaderResourceView* instancedModelsResource;
 			ID3D11ShaderResourceView* globalsLightListResource;
 
 			uint32_t defaultAnisotropy;
@@ -198,7 +208,7 @@ namespace RBX {
 			virtual void defineGlobalConstants(size_t dataSize);
 			virtual void defineGlobalProcessingData(size_t dataSize);
 			virtual void defineGlobalMaterialData(size_t dataSize);
-			virtual void defineInstancedModelMatrixes(size_t dataSize, size_t elementSize);
+			virtual void defineInstancedModels(size_t dataSize, size_t elementSize);
 			virtual void defineGlobalLightList(size_t dataSize, size_t elementSize);
 
 			virtual std::string getAPIName() { return "DirectX 11"; }
@@ -224,7 +234,7 @@ namespace RBX {
 
 			virtual shared_ptr<Renderbuffer> createRenderbuffer(Texture::Format format, uint32_t width, uint32_t height, uint32_t samples);
 
-			virtual shared_ptr<Geometry> createGeometryImpl(const shared_ptr<VertexLayout>& layout, const std::vector<shared_ptr<VertexBuffer> >& vertexBuffers, const shared_ptr<IndexBuffer>& indexBuffer, unsigned int baseVertexIndex);
+			virtual shared_ptr<Geometry> createGeometryImpl(const shared_ptr<VertexLayout>& layout, const shared_ptr<VertexBuffer>& vertexBuffers, const shared_ptr<IndexBuffer>& indexBuffer, uint32_t baseVertexIndex);
 
 			virtual shared_ptr<Framebuffer> createFramebufferImpl(const std::vector<shared_ptr<Renderbuffer> >& color, const shared_ptr<Renderbuffer>& depth);
 

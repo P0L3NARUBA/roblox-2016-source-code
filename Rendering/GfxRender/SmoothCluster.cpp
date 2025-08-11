@@ -13,7 +13,6 @@
 #include "Material.h"
 #include "ShaderManager.h"
 #include "TextureManager.h"
-#include "LightGrid.h"
 #include "SceneManager.h"
 #include "VisualEngine.h"
 #include "EnvMap.h"
@@ -66,7 +65,7 @@ namespace RBX
 			{
 			}
 
-			unsigned int getWorldTransforms4x3(float* buffer, unsigned int maxTransforms, const void** cacheKey) const override
+			/*unsigned int getWorldTransforms4x3(float* buffer, unsigned int maxTransforms, const void** cacheKey) const override
 			{
 				if (useCache(cacheKey, constantTable))
 				{
@@ -80,7 +79,7 @@ namespace RBX
 				memcpy(buffer, &unpackInfo, 4 * sizeof(float));
 
 				return constantTable->size() / 4 / 3;
-			}
+			}*/
 
 		private:
 			std::vector<float>* constantTable;
@@ -89,12 +88,12 @@ namespace RBX
 
 		SmoothClusterBase::SmoothClusterBase(VisualEngine* visualEngine, const boost::shared_ptr<PartInstance>& part)
 			: visualEngine(visualEngine)
-			, grid(NULL)
+			, grid(nullptr)
 		{
 			RBXASSERT(part->getPartType() == MEGACLUSTER_PART);
 			partInstance = part;
 
-			RBXASSERT(partInstance->getGfxPart() == NULL);
+			RBXASSERT(partInstance->getGfxPart() == nullptr);
 			partInstance->setGfxPart(this);
 
 			MegaClusterInstance* mci = boost::polymorphic_downcast<MegaClusterInstance*>(part.get());
@@ -177,7 +176,7 @@ namespace RBX
 
 			vbuf->upload(0, vertices, vertexSize * vertexCount);
 
-			RenderEntity* solidEntity = NULL;
+			RenderEntity* solidEntity = nullptr;
 
 			if (!solidIndices.empty())
 			{
@@ -210,10 +209,10 @@ namespace RBX
 
 				using namespace Voxel2::Mesher;
 
-				elements.push_back(VertexLayout::Element(0, offsetof(GraphicsVertexPacked, position), VertexLayout::Format_Short4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
+				/*elements.push_back(VertexLayout::Element(0, offsetof(GraphicsVertexPacked, position), VertexLayout::Format_Short4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
 				elements.push_back(VertexLayout::Element(0, offsetof(GraphicsVertexPacked, normal), VertexLayout::Format_UByte4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Normal));
 				elements.push_back(VertexLayout::Element(0, offsetof(GraphicsVertexPacked, material0), VertexLayout::Format_UByte4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture, 0));
-				elements.push_back(VertexLayout::Element(0, offsetof(GraphicsVertexPacked, material1), VertexLayout::Format_UByte4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture, 1));
+				elements.push_back(VertexLayout::Element(0, offsetof(GraphicsVertexPacked, material1), VertexLayout::Format_UByte4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture, 1));*/
 
 				vertexLayout = visualEngine->getDevice()->createVertexLayout(elements);
 				RBXASSERT(vertexLayout);
@@ -233,7 +232,7 @@ namespace RBX
 		static void setupTextures(VisualEngine* visualEngine, Technique& technique)
 		{
 			TextureManager* tm = visualEngine->getTextureManager();
-			LightGrid* lightGrid = visualEngine->getLightGrid();
+			//LightGrid* lightGrid = visualEngine->getLightGrid();
 			SceneManager* sceneManager = visualEngine->getSceneManager();
 
 			int lodIndex = technique.getLodIndex();
@@ -248,11 +247,11 @@ namespace RBX
 
 			technique.setTexture(3, sceneManager->getEnvMap()->getOutdoorTexture(), SamplerState::Filter_Linear);
 
-			if (lightGrid)
+			/*if (lightGrid)
 			{
 				technique.setTexture(4, lightGrid->getTexture(), SamplerState::Filter_Linear);
 				technique.setTexture(5, lightGrid->getLookupTexture(), SamplerState(SamplerState::Filter_Point, SamplerState::Address_Clamp));
-			}
+			}*/
 
 			technique.setTexture(6, sceneManager->getShadowMapAtlas(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 		}

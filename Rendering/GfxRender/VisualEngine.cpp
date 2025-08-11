@@ -11,7 +11,6 @@
 #include "ShaderManager.h"
 #include "TextureManager.h"
 #include "TextureCompositor.h"
-#include "LightGrid.h"
 #include "Water.h"
 #include "EmitterShared.h"
 #include "MaterialGenerator.h"
@@ -23,6 +22,7 @@
 #include "SceneUpdater.h"
 #include "SmoothCluster.h"
 #include "TextureAtlas.h"
+#include "MeshInstancer.h"
 
 #include "GfxBase/Typesetter.h"
 
@@ -65,7 +65,7 @@ namespace RBX {
 			GlobalMaterialData::define(device);
 			GlobalLightList::define(device);
 
-			ModelMatrixes::define(device);
+			InstancedModels::define(device);
 
 			// load shaders
 			shaderManager.reset(new ShaderManager(this));
@@ -74,30 +74,7 @@ namespace RBX {
 			// initialize texture manager
 			textureManager.reset(new TextureManager(this));
 
-			// create light grid - disabled because we're using high quality local lighting now
-			/*LightGrid::TextureMode gridTextureMode =
-				device->getShadingLanguage() == "glsles"
-				? LightGrid::Texture_2D
-				:
-					(device->getCaps().supportsShaders && device->getCaps().supportsTexture3D)
-					? LightGrid::Texture_3D
-					: LightGrid::Texture_None;*/
-
-					// Note: if there is no texture support we still create a 4x4x4 texture
-					// We would really like the height to be constant since anything above the height does not cast shadows, so this affects ceiling heights
-					// Having XZ size of 2x2 does not really let us have an efficient sliding window - a character is often too close to one of the edges
-					// 3x3 is an option, but it's easier to go with 4x4 for now.
-					/*Vector3int32 gridSize =
-						(gridTextureMode != LightGrid::Texture_None && renderCaps->getVidMemSize() > 100*1024*1024)
-						? Vector3int32(8, 4, 8) // 8x4x8 chunks take 16 Mb of VRAM
-						: Vector3int32(4, 4, 4);
-
-					LightGrid* lgrid = LightGrid::create(this, gridSize, gridTextureMode);
-					RBXASSERT(lgrid);
-
-					lightGrid.reset(lgrid);*/
-
-					// load fonts
+			// load fonts
 			if (FFlag::UseDynamicTypesetterUTF8) {
 				glyphAtlas.reset(new TextureAtlas(this, 2048u, 2048u));
 
@@ -197,27 +174,24 @@ namespace RBX {
 				meshContentProvider->setCacheSize(settings->getMeshCacheSize());
 				ServiceProvider::create<SolidModelContentProvider>(dm.get());
 
-				RBXASSERT(!sceneUpdater);
-				sceneUpdater.reset(new SceneUpdater(dm, this));
+				//sceneUpdater.reset(new SceneUpdater(dm, this));
+				meshInstancer.reset(new MeshInstancer(dm, this));
 
 				adorn.reset(new AdornRender(this, dm.get()));
-
-				/*if (lightGrid)
-				{
-					// Clear the grid and do an initial upload of all chunks to ensure texture has correct data
-					lightGrid->lightingClearAll();
-					lightGrid->lightingUploadAll();
-					lightGrid->lightingUploadCommit();
-				}*/
 			}
 			else {
 				contentProvider = nullptr;
 				meshContentProvider = nullptr;
 				lighting = nullptr;
 
-				if (sceneUpdater) {
+				/*if (sceneUpdater) {
 					sceneUpdater->unbind();
 					sceneUpdater.reset();
+				}*/
+
+				if (meshInstancer) {
+					meshInstancer->unbind();
+					meshInstancer.reset();
 				}
 
 				adorn.reset();

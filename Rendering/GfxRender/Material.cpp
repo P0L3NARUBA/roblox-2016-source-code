@@ -41,27 +41,6 @@ namespace RBX {
 			textures[stage] = tu;
 		}
 
-		/*void Technique::setConstant(int handle, const Vector4& value)
-		{
-			if (handle < 0)
-				return;
-
-			for (size_t i = 0; i < constants.size(); ++i)
-				if (constants[i].handle == handle)
-				{
-					constants[i].value = value;
-					return;
-				}
-
-			Constant c = { handle, value };
-			constants.push_back(c);
-		}
-
-		void Technique::setConstant(const char* name, const Vector4& value)
-		{
-			setConstant(program->getConstantHandle(name), value);
-		}*/
-
 		void Technique::apply(DeviceContext* context) const {
 			context->setRasterizerState(rasterizerState);
 			context->setDepthState(depthState);
@@ -69,29 +48,13 @@ namespace RBX {
 
 			context->bindProgram(program.get());
 
-			uint32_t mask = 0u;
-			uint32_t samplerMask = program->getSamplerMask();
-
 			for (size_t i = 0u; i < textures.size(); ++i) {
 				const TextureUnit& tu = textures[i];
 				const shared_ptr<Texture>& tex = tu.texture.getTexture();
 
-				if (tex && (samplerMask & (1u << i))) {
-					mask |= 1u << i;
-
+				if (tex)
 					context->bindTexture(i, tex.get(), tu.state);
-				}
 			}
-
-			/*for (size_t i = 0; i < constants.size(); ++i)
-			{
-				const Constant& c = constants[i];
-
-				context->setConstant(c.handle, &c.value.x, 1);
-			}*/
-
-			// Verify that we set all samplers that the shader expected
-			RBXASSERT((samplerMask & mask) == samplerMask);
 		}
 
 		const TextureRef& Technique::getTexture(uint32_t stage) const {

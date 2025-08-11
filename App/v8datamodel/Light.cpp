@@ -132,7 +132,7 @@ namespace RBX {
 	}
 
 	bool Light::askSetParent(const Instance* parent) const {
-		return Instance::isA<PartInstance>(parent);
+		return true;//Instance::isA<PartInstance>(parent);
 	}
 
 	bool Light::askAddChild(const Instance* instance) const {

@@ -8,6 +8,8 @@
 #include <string>
 #include <boost/function.hpp>
 
+#define MAX_INSTANCES 1024u
+#define MAX_LIGHTS 1024u
 
 namespace RBX {
 	namespace Graphics {
@@ -31,11 +33,20 @@ namespace RBX {
 
 			virtual void setDefaultAnisotropy(uint32_t value) = 0;
 
-			virtual void updateGlobalConstants(const void* data, size_t dataSize) = 0;
+			virtual void updateGlobalConstantData(const void* data, size_t dataSize) = 0;
+			virtual void setGlobalConstantData() = 0;
+
 			virtual void updateGlobalProcessingData(const void* data, size_t dataSize) = 0;
+			virtual void setGlobalProcessingData() = 0;
+
 			virtual void updateGlobalMaterialData(const void* data, size_t dataSize) = 0;
-			virtual void updateInstancedModelMatrixes(const void* data, size_t dataSize) = 0;
+			virtual void setGlobalMaterialData() = 0;
+
+			virtual void updateInstancedModels(const void* data, size_t dataSize) = 0;
+			virtual void setInstancedModels() = 0;
+
 			virtual void updateGlobalLightList(const void* data, size_t dataSize) = 0;
+			virtual void setGlobalLightList() = 0;
 
 			virtual void bindFramebuffer(Framebuffer* buffer) = 0;
 			virtual void clearFramebuffer(uint32_t mask, const float color[4], float depth, uint32_t stencil) = 0;
@@ -54,8 +65,11 @@ namespace RBX {
 			virtual void setBlendState(const BlendState& state) = 0;
 			virtual void setDepthState(const DepthState& state) = 0;
 
-			void draw(Geometry* geometry, Geometry::Primitive primitive, uint32_t offset, uint32_t count, uint32_t indexRangeBegin, uint32_t indexRangeEnd);
+			void draw(Geometry* geometry, Geometry::Primitive primitive, uint32_t vertexCount, uint32_t vertexOffset, uint32_t indexOffset);
 			void draw(const GeometryBatch& geometryBatch);
+
+			void drawInstanced(Geometry* geometry, Geometry::Primitive primitive, uint32_t instanceCount, uint32_t vertexCount, uint32_t vertexOffset, uint32_t indexOffset);
+			void drawInstanced(const GeometryBatch& geometryBatch, uint32_t instanceCount);
 
 			virtual void pushDebugMarkerGroup(const char* text) = 0;
 			virtual void popDebugMarkerGroup() = 0;
@@ -64,7 +78,8 @@ namespace RBX {
 		protected:
 			DeviceContext();
 
-			virtual void drawImpl(Geometry* geometry, Geometry::Primitive primitive, uint32_t offset, uint32_t count, uint32_t indexRangeBegin, uint32_t indexRangeEnd) = 0;
+			virtual void drawImpl(Geometry* geometry, Geometry::Primitive primitive, uint32_t vertexCount, uint32_t vertexOffset, uint32_t indexOffset) = 0;
+			virtual void drawInstancedImpl(Geometry* geometry, Geometry::Primitive primitive, uint32_t instanceCount, uint32_t vertexCount, uint32_t vertexOffset, uint32_t indexOffset) = 0;
 		};
 
 		struct DeviceCaps {
@@ -157,7 +172,7 @@ namespace RBX {
 			virtual void defineGlobalConstants(size_t dataSize) = 0;
 			virtual void defineGlobalProcessingData(size_t dataSize) = 0;
 			virtual void defineGlobalMaterialData(size_t dataSize) = 0;
-			virtual void defineInstancedModelMatrixes(size_t dataSize, size_t elementSize) = 0;
+			virtual void defineInstancedModels(size_t dataSize, size_t elementSize) = 0;
 			virtual void defineGlobalLightList(size_t dataSize, size_t elementSize) = 0;
 
 			virtual std::string getAPIName() = 0;
@@ -180,7 +195,6 @@ namespace RBX {
 			virtual shared_ptr<VertexLayout> createVertexLayout(const std::vector<VertexLayout::Element>& elements) = 0;
 
 			shared_ptr<Geometry> createGeometry(const shared_ptr<VertexLayout>& layout, const shared_ptr<VertexBuffer>& vertexBuffer, const shared_ptr<IndexBuffer>& indexBuffer, uint32_t baseVertexIndex = 0);
-			shared_ptr<Geometry> createGeometry(const shared_ptr<VertexLayout>& layout, const std::vector<shared_ptr<VertexBuffer> >& vertexBuffers, const shared_ptr<IndexBuffer>& indexBuffer, uint32_t baseVertexIndex = 0);
 
 			virtual shared_ptr<Texture> createTexture(Texture::Type type, Texture::Format format, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevels, Texture::Usage usage) = 0;
 
@@ -202,7 +216,7 @@ namespace RBX {
 
 			Device();
 
-			virtual shared_ptr<Geometry> createGeometryImpl(const shared_ptr<VertexLayout>& layout, const std::vector<shared_ptr<VertexBuffer> >& vertexBuffers, const shared_ptr<IndexBuffer>& indexBuffer, uint32_t baseVertexIndex) = 0;
+			virtual shared_ptr<Geometry> createGeometryImpl(const shared_ptr<VertexLayout>& layout, const shared_ptr<VertexBuffer>& vertexBuffers, const shared_ptr<IndexBuffer>& indexBuffer, uint32_t baseVertexIndex) = 0;
 			virtual shared_ptr<Framebuffer> createFramebufferImpl(const std::vector<shared_ptr<Renderbuffer> >& color, const shared_ptr<Renderbuffer>& depth) = 0;
 
 			void fireDeviceLost();

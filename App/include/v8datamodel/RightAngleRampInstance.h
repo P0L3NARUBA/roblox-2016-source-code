@@ -6,25 +6,21 @@
 #include "V8DataModel/BasicPartInstance.h"
 #include "reflection/reflection.h"
 
-#ifdef _PRISM_PYRAMID_
-
 namespace RBX {
 
-extern const char* const sRightAngleRamp;
+	extern const char* const sRightAngleRamp;
 
-class RightAngleRampInstance
-	: public DescribedNonCreatable<RightAngleRampInstance, PartInstance, sRightAngleRamp>
-{
+	class RightAngleRampInstance
+		: public DescribedNonCreatable<RightAngleRampInstance, PartInstance, sRightAngleRamp>
+	{
 	public:
 
 		RightAngleRampInstance();
 		~RightAngleRampInstance();
-	 
+
 		/*override*/ virtual PartType getPartType() const { return RIGHTANGLERAMP_PART; }
 
 
-};
+	};
 
 } // namespace
-
-#endif // _PRISM_PYRAMID_

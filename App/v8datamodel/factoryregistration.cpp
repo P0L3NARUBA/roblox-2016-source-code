@@ -57,13 +57,11 @@
 #include "v8datamodel/HandleAdornment.h"
 #include "util/CellID.h"
 
-#ifdef _PRISM_PYRAMID_
 #include "V8DataModel/PrismInstance.h"
 #include "V8DataModel/PyramidInstance.h"
 #include "V8DataModel/ParallelRampInstance.h"
 #include "V8DataModel/RightAngleRampInstance.h"
 #include "V8DataModel/CornerWedgeInstance.h"
-#endif
 
 #include "V8DataModel/Explosion.h"
 #include "V8DataModel/FaceInstance.h"
@@ -535,14 +533,11 @@ RBX_REGISTER_CLASS(PluginManager);
 RBX_REGISTER_CLASS(Plugin);
 RBX_REGISTER_CLASS(Toolbar);
 RBX_REGISTER_CLASS(RBX::Button);
-//Conditional parts here
-#ifdef _PRISM_PYRAMID_
 RBX_REGISTER_CLASS(PrismInstance);
 RBX_REGISTER_CLASS(PyramidInstance);
 RBX_REGISTER_CLASS(ParallelRampInstance);
 RBX_REGISTER_CLASS(RightAngleRampInstance);
 RBX_REGISTER_CLASS(CornerWedgeInstance);
-#endif // _PRISM_PYRAMID_
 RBX_REGISTER_CLASS(CustomEvent);
 RBX_REGISTER_CLASS(CustomEventReceiver);
 //RBX_REGISTER_CLASS(PropertyInstance);
@@ -657,10 +652,8 @@ RBX_REGISTER_ENUM(KeyframeSequence::Priority);
 RBX_REGISTER_ENUM(SocialService::StuffType);
 RBX_REGISTER_ENUM(PersonalServerService::PrivilegeType);
 RBX_REGISTER_ENUM(ExtrudedPartInstance::VisualTrussStyle);
-#ifdef _PRISM_PYRAMID_
 RBX_REGISTER_ENUM(PrismInstance::NumSidesEnum);
 RBX_REGISTER_ENUM(PyramidInstance::NumSidesEnum);
-#endif
 RBX_REGISTER_ENUM(FriendService::FriendStatus);
 RBX_REGISTER_ENUM(FriendService::FriendEventType);
 RBX_REGISTER_ENUM(Handles::VisualStyle);

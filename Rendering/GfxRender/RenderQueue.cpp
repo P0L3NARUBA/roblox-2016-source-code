@@ -20,7 +20,7 @@ namespace RBX {
 
 		struct RenderOperationCompareByDistance {
 			bool operator()(const RenderOperation& lhs, const RenderOperation& rhs) const {
-				return lhs.distanceKey > rhs.distanceKey;
+				return false;//lhs.distanceKey > rhs.distanceKey;
 			}
 		};
 
@@ -55,10 +55,8 @@ namespace RBX {
 		}
 
 		void RenderQueue::clear() {
-			for (size_t id = 0u; id < Id_Count; ++id)
-				groups[id].clear();
-
-			features = 0u;
+			for (size_t flag = 0u; flag < Flag_Max; ++flag)
+				groups[flag].clear();
 		}
 
 	}

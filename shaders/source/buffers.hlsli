@@ -59,8 +59,7 @@ cbuffer MaterialData : register(b1) {
 #define CUBEMAP_PARALLAX_GUARD
 
 struct CubemapInfo {
-	float4x4 OrientedBoundingBox;
-	float4 Position_Size;
+	float4x4 Matrix; // Scale and rotation in first 3 rows, translation in last row.
 };
 
 StructuredBuffer<CubemapInfo> CubemapsInfo : register(t29);
@@ -70,11 +69,14 @@ StructuredBuffer<CubemapInfo> CubemapsInfo : register(t29);
 #if defined(INSTANCED) && !defined(INSTANCED_GUARD)
 #define INSTANCED_GUARD
 
-struct ModelMatrix {
+struct InstancedModel {
     float4x4 Model;
+    float4 Color;
+    uint MaterialID;
+    uint padding[3];
 };
 
-StructuredBuffer<ModelMatrix> ModelMatrixes : register(t30);
+StructuredBuffer<InstancedModel> InstancedModels : register(t30);
 
 #endif
 

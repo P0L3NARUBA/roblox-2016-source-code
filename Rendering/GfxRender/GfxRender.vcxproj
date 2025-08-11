@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AdornRender.cpp" />
+    <ClCompile Include="Bloom.cpp" />
     <ClCompile Include="CullableSceneNode.cpp" />
     <ClCompile Include="CustomEmitter.cpp" />
     <ClCompile Include="Emitter.cpp" />
@@ -177,13 +178,13 @@
     <ClCompile Include="GeometryGenerator.cpp" />
     <ClCompile Include="GlobalShaderData.cpp" />
     <ClCompile Include="Image.cpp" />
-    <ClCompile Include="LightGrid.cpp" />
     <ClCompile Include="LightObject.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="MaterialGenerator.cpp" />
     <ClCompile Include="MegaCluster.cpp" />
     <ClCompile Include="ObjectExporter.cpp" />
     <ClCompile Include="ParticleEmitter.cpp" />
+    <ClCompile Include="MeshInstancer.cpp" />
     <ClCompile Include="RenderCamera.cpp" />
     <ClCompile Include="RenderNode.cpp" />
     <ClCompile Include="RenderQueue.cpp" />
@@ -213,6 +214,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AdornRender.h" />
+    <ClInclude Include="Bloom.h" />
     <ClInclude Include="CullableSceneNode.h" />
     <ClInclude Include="CustomEmitter.h" />
     <ClInclude Include="Emitter.h" />
@@ -229,13 +231,13 @@
     <ClInclude Include="GeometryGenerator.h" />
     <ClInclude Include="GlobalShaderData.h" />
     <ClInclude Include="Image.h" />
-    <ClInclude Include="LightGrid.h" />
     <ClInclude Include="LightObject.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="MaterialGenerator.h" />
     <ClInclude Include="MegaCluster.h" />
     <ClInclude Include="ObjectExporter.h" />
     <ClInclude Include="ParticleEmitter.h" />
+    <ClInclude Include="MeshInstancer.h" />
     <ClInclude Include="RenderCamera.h" />
     <ClInclude Include="RenderNode.h" />
     <ClInclude Include="RenderQueue.h" />

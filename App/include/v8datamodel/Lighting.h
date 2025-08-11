@@ -31,6 +31,8 @@ namespace RBX {
 		/* Sun */
 		static Reflection::PropDescriptor<Lighting, float>		 prop_SunBrightness;
 		static Reflection::PropDescriptor<Lighting, G3D::Color3> prop_SunColorShift;
+		static Reflection::PropDescriptor<Lighting, float>		 prop_SunDiffuseFactor;
+		static Reflection::PropDescriptor<Lighting, float>		 prop_SunSpecularFactor;
 		static Reflection::PropDescriptor<Lighting, bool>		 prop_SunShadows;
 
 		/* Environment */
@@ -99,6 +101,12 @@ namespace RBX {
 
 		const G3D::Color3& getSunColorShift() const { return sunColorShift; }
 		void setSunColorShift(const G3D::Color3& value);
+
+		float getSunDiffuseFactor() const { return sunDiffuseFactor; }
+		void setSunDiffuseFactor(float value);
+
+		float getSunSpecularFactor() const { return sunSpecularFactor; }
+		void setSunSpecularFactor(float value);
 
 		bool getSunShadows() const { return sunShadows; }
 		void setSunShadows(bool value);
@@ -182,8 +190,7 @@ namespace RBX {
 		/*override*/ void onChildChanged(Instance* instance, const PropertyChanged& event);
 		/*override*/ bool askAddChild(const Instance* instance) const;
 	private:
-		void onPropChanged(const Reflection::PropertyDescriptor&)
-		{
+		void onPropChanged(const Reflection::PropertyDescriptor&) {
 			fireLightingChanged(false);
 		}
 		void fireLightingChanged(bool skyboxChanged);
@@ -200,6 +207,8 @@ namespace RBX {
 		/* Sun */
 		float sunBrightness;
 		Color3 sunColorShift;
+		float sunDiffuseFactor;
+		float sunSpecularFactor;
 		bool sunShadows;
 
 		/* Environment */

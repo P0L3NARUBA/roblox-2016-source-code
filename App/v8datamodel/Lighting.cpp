@@ -37,6 +37,8 @@ namespace RBX {
 	/* Sun */
 	Reflection::PropDescriptor<Lighting, float>		  Lighting::prop_SunBrightness("Brightness", "Sun", &Lighting::getSunBrightness, &Lighting::setSunBrightness);
 	Reflection::PropDescriptor<Lighting, G3D::Color3> Lighting::prop_SunColorShift("Color Shift", "Sun", &Lighting::getSunColorShift, &Lighting::setSunColorShift);
+	Reflection::PropDescriptor<Lighting, float>		  Lighting::prop_SunDiffuseFactor("Diffuse Factor", "Sun", &Lighting::getSunDiffuseFactor, &Lighting::setSunDiffuseFactor);
+	Reflection::PropDescriptor<Lighting, float>		  Lighting::prop_SunSpecularFactor("Specular Factor", "Sun", &Lighting::getSunSpecularFactor, &Lighting::setSunSpecularFactor);
 	Reflection::PropDescriptor<Lighting, bool>		  Lighting::prop_SunShadows("Cast Shadows", "Sun", &Lighting::getSunShadows, &Lighting::setSunShadows);
 
 	/* Environment */
@@ -80,6 +82,8 @@ namespace RBX {
 
 		, sunBrightness(1.0f)
 		, sunColorShift(G3D::Color3(1.0f, 1.0f, 1.0f))
+		, sunDiffuseFactor(1.0f)
+		, sunSpecularFactor(1.0f)
 		, sunShadows(true)
 
 		, globalAmbient(G3D::Color3(0.0f, 0.0f, 0.0f))
@@ -222,6 +226,26 @@ namespace RBX {
 		if (sunColorShift != value) {
 			sunColorShift = value;
 			this->raisePropertyChanged(prop_SunColorShift);
+			fireLightingChanged(false);
+		}
+	}
+
+	void Lighting::setSunDiffuseFactor(float value) {
+		value = std::min(std::max(value, 0.0f), 1.0f);
+
+		if (sunDiffuseFactor != value) {
+			sunDiffuseFactor = value;
+			this->raisePropertyChanged(prop_SunDiffuseFactor);
+			fireLightingChanged(false);
+		}
+	}
+
+	void Lighting::setSunSpecularFactor(float value) {
+		value = std::min(std::max(value, 0.0f), 1.0f);
+
+		if (sunSpecularFactor != value) {
+			sunSpecularFactor = value;
+			this->raisePropertyChanged(prop_SunSpecularFactor);
 			fireLightingChanged(false);
 		}
 	}

@@ -27,9 +27,9 @@ namespace RBX {
 			: visualEngine(visualEngine)
 		{
 			std::vector<VertexLayout::Element> elements;
-			elements.push_back(VertexLayout::Element(0u, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
+			/*elements.push_back(VertexLayout::Element(0u, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
 			elements.push_back(VertexLayout::Element(0u, 12u, VertexLayout::Format_Float2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture));
-			elements.push_back(VertexLayout::Element(0u, 20u, VertexLayout::Format_Float4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Color));
+			elements.push_back(VertexLayout::Element(0u, 20u, VertexLayout::Format_Float4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Color));*/
 
 			vertexLayout = visualEngine->getDevice()->createVertexLayout(elements);
 
@@ -157,7 +157,7 @@ namespace RBX {
 
 			shaderData.setCamera(camera);
 
-			context->updateGlobalConstants(&shaderData, sizeof(GlobalShaderData));
+			context->updateGlobalConstantData(&shaderData, sizeof(GlobalShaderData));
 
 			context->bindProgram(shaderProgram.get());
 
@@ -209,7 +209,7 @@ namespace RBX {
 				}
 
 				// Render!
-				context->draw(geometry.get(), currChunk.primitive, currChunk.vertexStart, currChunk.vertexCount, 0u, 0u);
+				context->draw(geometry.get(), currChunk.primitive, currChunk.vertexStart, currChunk.vertexCount, 0u);
 
 				stats.batches++;
 				stats.faces += currChunk.vertexCount / 3u;
@@ -258,12 +258,12 @@ namespace RBX {
 			if (prepareChunk(texptr, Geometry::Primitive_Triangles, 6u, CS_ScreenSpace, batchTexType, ignoreTexture)) {
 				float z = 0.0f;
 				
-				vertexData.push_back(BasicVertex(Vector3(x0y1.x, x0y1.y, z), Vector2(tex0.x, tex1.y), color4));
+				/*vertexData.push_back(BasicVertex(Vector3(x0y1.x, x0y1.y, z), Vector2(tex0.x, tex1.y), color4));
 				vertexData.push_back(BasicVertex(Vector3(x1y0.x, x1y0.y, z), Vector2(tex1.x, tex0.y), color4));
 				vertexData.push_back(BasicVertex(Vector3(x0y0.x, x0y0.y, z), Vector2(tex0.x, tex0.y), color4));
 				vertexData.push_back(BasicVertex(Vector3(x0y1.x, x0y1.y, z), Vector2(tex0.x, tex1.y), color4));
 				vertexData.push_back(BasicVertex(Vector3(x1y1.x, x1y1.y, z), Vector2(tex1.x, tex1.y), color4));
-				vertexData.push_back(BasicVertex(Vector3(x1y0.x, x1y0.y, z), Vector2(tex1.x, tex0.y), color4));
+				vertexData.push_back(BasicVertex(Vector3(x1y0.x, x1y0.y, z), Vector2(tex1.x, tex0.y), color4));*/
 			}
 		}
 
@@ -272,12 +272,12 @@ namespace RBX {
 			const Vector2& tex0, const Vector2& tex1, int32_t zIndex, bool alwaysOnTop)
 		{
 			if (prepareChunk(texptr, Geometry::Primitive_Triangles, 6u, alwaysOnTop || zIndex >= 0 ? CS_WorldSpaceNoDepth : CS_WorldSpace, batchTexType, false, zIndex, alwaysOnTop)) {
-				vertexData.push_back(BasicVertex(Vector3(x0y1), Vector2(tex0.x, tex1.y), color4));
+				/*vertexData.push_back(BasicVertex(Vector3(x0y1), Vector2(tex0.x, tex1.y), color4));
 				vertexData.push_back(BasicVertex(Vector3(x1y0), Vector2(tex1.x, tex0.y), color4));
 				vertexData.push_back(BasicVertex(Vector3(x0y0), Vector2(tex0.x, tex0.y), color4));
 				vertexData.push_back(BasicVertex(Vector3(x0y1), Vector2(tex0.x, tex1.y), color4));
 				vertexData.push_back(BasicVertex(Vector3(x1y1), Vector2(tex1.x, tex1.y), color4));
-				vertexData.push_back(BasicVertex(Vector3(x1y0), Vector2(tex1.x, tex0.y), color4));
+				vertexData.push_back(BasicVertex(Vector3(x1y0), Vector2(tex1.x, tex0.y), color4));*/
 			}
 		}
 
@@ -286,7 +286,7 @@ namespace RBX {
 				RBXASSERT(icount % 3u == 0u);
 				//todo: we currently just ignore the nice indexing work done. todo: support indexing.
 				for (size_t i = 0u; i < icount; ++i) {
-					vertexData.push_back(BasicVertex(Vector3(v[indices[i]], 0.0f), Vector2(), color4));
+					//vertexData.push_back(BasicVertex(Vector3(v[indices[i]], 0.0f), Vector2(), color4));
 				}
 			}
 		}
@@ -296,7 +296,7 @@ namespace RBX {
 				RBXASSERT(icount % 3u == 0u);
 				//todo: we currently just ignore the nice indexing work done. todo: support indexing.
 				for (size_t i = 0u; i < icount; ++i) {
-					vertexData.push_back(BasicVertex(Vector3(cframe.pointToWorldSpace(v[indices[i]])), Vector2(), color4));
+					//vertexData.push_back(BasicVertex(Vector3(cframe.pointToWorldSpace(v[indices[i]])), Vector2(), color4));
 				}
 			}
 		}
@@ -305,15 +305,15 @@ namespace RBX {
 			if (prepareChunk(shared_ptr<Texture>(), Geometry::Primitive_Lines, 2, CS_ScreenSpace, BatchTextureType_Color)) {
 				float z = 0.0f;
 				
-				vertexData.push_back(BasicVertex(Vector3(x1, y1, z), Vector2(), color4));
-				vertexData.push_back(BasicVertex(Vector3(x2, y2, z), Vector2(), color4));
+				/*vertexData.push_back(BasicVertex(Vector3(x1, y1, z), Vector2(), color4));
+				vertexData.push_back(BasicVertex(Vector3(x2, y2, z), Vector2(), color4));*/
 			}
 		}
 
 		void VertexStreamer::line3d(float x1, float y1, float z1, float x2, float y2, float z2, const Color4& color4) {
 			if (prepareChunk(shared_ptr<Texture>(), Geometry::Primitive_Lines, 2, CS_WorldSpace, BatchTextureType_Color)) {
-				vertexData.push_back(BasicVertex(Vector3(x1, y1, z1), Vector2(), color4));
-				vertexData.push_back(BasicVertex(Vector3(x2, y2, z2), Vector2(), color4));
+				/*vertexData.push_back(BasicVertex(Vector3(x1, y1, z1), Vector2(), color4));
+				vertexData.push_back(BasicVertex(Vector3(x2, y2, z2), Vector2(), color4));*/
 			}
 		}
 

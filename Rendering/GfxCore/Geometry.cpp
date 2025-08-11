@@ -5,13 +5,13 @@
 namespace RBX {
 	namespace Graphics {
 
-		VertexLayout::Element::Element(uint32_t stream, uint32_t offset, Format format, Input input, Semantic semantic, uint32_t semanticIndex)
-			: stream(stream)
-			, offset(offset)
-			, format(format)
-			, input(input)
-			, semantic(semantic)
+		VertexLayout::Element::Element(Semantic semanticName, uint32_t semanticIndex, Format format, uint32_t offset, Input inputClass, uint32_t stepRate)
+			: semanticName(semanticName)
 			, semanticIndex(semanticIndex)
+			, format(format)
+			, offset(offset)
+			, inputClass(inputClass)
+			, stepRate(stepRate)
 		{
 		}
 
@@ -57,12 +57,11 @@ namespace RBX {
 			RBXPROFILER_COUNTER_SUB("memory/gpu/indexbuffer", elementSize * elementCount);
 		}
 
-		Geometry::Geometry(Device* device, const shared_ptr<VertexLayout>& layout, const std::vector<shared_ptr<VertexBuffer> >& vertexBuffers, const shared_ptr<IndexBuffer>& indexBuffer, uint32_t baseVertexIndex)
+		Geometry::Geometry(Device* device, const shared_ptr<VertexLayout>& layout, const shared_ptr<VertexBuffer>& vertexBuffer, const shared_ptr<IndexBuffer>& indexBuffer)
 			: Resource(device)
 			, layout(layout)
-			, vertexBuffers(vertexBuffers)
+			, vertexBuffer(vertexBuffer)
 			, indexBuffer(indexBuffer)
-			, baseVertexIndex(baseVertexIndex)
 		{
 		}
 
@@ -80,26 +79,33 @@ namespace RBX {
 			}
 		}
 
-		GeometryBatch::GeometryBatch(const shared_ptr<Geometry>& geometry, Geometry::Primitive primitive, uint32_t count, uint32_t indexRangeSize)
-			: geometry(geometry)
-			, primitive(primitive)
-			, offset(0u)
-			, count(count)
-			, indexRangeBegin(0u)
-			, indexRangeEnd(indexRangeSize)
+		GeometryBatch::GeometryBatch()
+			: geometry(nullptr)
+			, primitive(Geometry::Primitive_Triangles)
+			, vertexCount(0u)
+			, vertexOffset(0u)
+			, indexOffset(0u)
 		{
-			RBXASSERT(geometry && isCountValid(primitive, count));
 		}
 
-		GeometryBatch::GeometryBatch(const shared_ptr<Geometry>& geometry, Geometry::Primitive primitive, uint32_t offset, uint32_t count, uint32_t indexRangeBegin, uint32_t indexRangeEnd)
+		GeometryBatch::GeometryBatch(const shared_ptr<Geometry>& geometry, Geometry::Primitive primitive, uint32_t vertexCount, uint32_t vertexOffset)
 			: geometry(geometry)
 			, primitive(primitive)
-			, offset(offset)
-			, count(count)
-			, indexRangeBegin(indexRangeBegin)
-			, indexRangeEnd(indexRangeEnd)
+			, vertexCount(vertexCount)
+			, vertexOffset(vertexOffset)
+			, indexOffset(0u)
 		{
-			RBXASSERT(geometry && isCountValid(primitive, count) && indexRangeBegin <= indexRangeEnd);
+			RBXASSERT(geometry && isCountValid(primitive, vertexCount));
+		}
+
+		GeometryBatch::GeometryBatch(const shared_ptr<Geometry>& geometry, Geometry::Primitive primitive, uint32_t vertexCount, uint32_t vertexOffset, uint32_t indexOffset)
+			: geometry(geometry)
+			, primitive(primitive)
+			, vertexCount(vertexCount)
+			, vertexOffset(vertexOffset)
+			, indexOffset(indexOffset)
+		{
+			RBXASSERT(geometry && isCountValid(primitive, vertexCount));
 		}
 
 	}

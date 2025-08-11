@@ -148,13 +148,13 @@ namespace RBX
 		LightObject::LightObject(VisualEngine* visualEngine)
 			: Super(visualEngine, CullMode_SpatialHash, Flags_LightObject)
 			, type(Type_None)
-			, brightness(0)
-			, range(0)
-			, outerAngle(0)
-			, innerAngle(0)
-			, attenuation(0)
-			, diffuseFactor(0)
-			, specularFactor(0)
+			, brightness(0.0f)
+			, range(0.0f)
+			, outerAngle(0.0f)
+			, innerAngle(0.0f)
+			, attenuation(0.0f)
+			, diffuseFactor(0.0f)
+			, specularFactor(0.0f)
 			, dirty(false)
 		{
 		}
@@ -447,11 +447,9 @@ namespace RBX
 			dirty = false;
 		}
 
-		void LightObject::invalidateLighting(const Extents& bbox)
-		{
-			if (!bbox.isNull())
-			{
-				getVisualEngine()->getSceneUpdater()->lightingInvalidateLocal(bbox);
+		void LightObject::invalidateLighting(const Extents& bbox) {
+			if (!bbox.isNull()) {
+				//getVisualEngine()->getSceneUpdater()->lightingInvalidateLocal(bbox);
 			}
 		}
 

@@ -14,19 +14,15 @@ float4 SkyFacePS(BasicVertexOutput IN) : SV_TARGET {
 }
 
 #else
-struct SkyAppData {
-    float3 Position  : POSITION;
-};
-
 struct SkyVertexOutput {
     centroid float4 Position : SV_POSITION;
              float3 UVW      : TEXCOORD;
 };
 
-SkyVertexOutput SkyVS(SkyAppData IN) {
+SkyVertexOutput SkyVS(BasicAppData IN) {
     SkyVertexOutput OUT;
 
-    OUT.Position = mul(float4(IN.Position * 10000.0, 1.0), ViewProjection[0]);
+    OUT.Position = mul(float4(IN.Position + CameraPosition.xyz, 1.0), ViewProjection[0]);
     OUT.Position.z = 0.0;
 
     OUT.UVW = IN.Position;
@@ -78,8 +74,7 @@ float4 SkyIrradiancePS(SkyVertexOutput IN) : SV_TARGET {
 
     Irradiance = PI * Irradiance * (1.0 / float(Samples));
 
-    //return float4(Irradiance, 1.0);
-    return float4(IN.UVW, 1.0);
+    return float4(Irradiance, 1.0);
 }
 
 #elif CONVOLUTION
@@ -132,6 +127,7 @@ float4 SkyConvolutionPS(SkyVertexOutput IN) : SV_TARGET {
     float3 V = R;
 
     float Roughness = ViewportSize_ViewportScale.y;
+
     float Roughness2 = Roughness * Roughness;
     
     float3 Convolution = float3(0.0, 0.0, 0.0);
@@ -163,14 +159,15 @@ float4 SkyConvolutionPS(SkyVertexOutput IN) : SV_TARGET {
         }
     }
 
-    return float4(IN.UVW, 1.0);//Convolution / TotalWeight, 1.0);
+    return float4(Convolution / TotalWeight, 1.0);
 }
 
 #else
 TEX_DECLARECUBE(float3, Skybox, 0);
 
 float4 SkyPS(SkyVertexOutput IN) : SV_TARGET {
-    return float4(IN.UVW, 1.0);//SkyboxTexture.Sample(SkyboxSampler, IN.UVW), 1.0);
+    return float4(max(IN.UVW, 0.0), 1.0);
+    //return float4(SkyboxTexture.SampleLevel(SkyboxSampler, IN.UVW, 0.0), 1.0);
 }
 
 #endif

@@ -104,7 +104,7 @@ namespace RBX {
 		}
 
 		RenderbufferD3D11::RenderbufferD3D11(Device* device, const shared_ptr<TextureD3D11>& owner, uint32_t cubeIndex, uint32_t mipIndex)
-			: Renderbuffer(device, owner->getFormat(), owner->getWidth(), owner->getHeight(), 1u)
+			: Renderbuffer(device, owner->getFormat(), owner->getWidth() / (uint32_t)pow(2u, mipIndex), owner->getHeight() / (uint32_t)pow(2u, mipIndex), 1u)
 			, object(nullptr)
 			, owner(owner)
 		{

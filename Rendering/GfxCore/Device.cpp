@@ -16,12 +16,20 @@ namespace RBX {
 		{
 		}
 
-		void DeviceContext::draw(Geometry* geometry, Geometry::Primitive primitive, uint32_t offset, uint32_t count, uint32_t indexRangeBegin, uint32_t indexRangeEnd) {
-			drawImpl(geometry, primitive, offset, count, indexRangeBegin, indexRangeEnd);
+		void DeviceContext::draw(Geometry* geometry, Geometry::Primitive primitive, uint32_t vertexCount, uint32_t vertexOffset, uint32_t indexOffset) {
+			drawImpl(geometry, primitive, vertexCount, vertexOffset, indexOffset);
 		}
 
 		void DeviceContext::draw(const GeometryBatch& geometryBatch) {
-			drawImpl(geometryBatch.getGeometry(), geometryBatch.getPrimitive(), geometryBatch.getOffset(), geometryBatch.getCount(), geometryBatch.getIndexRangeBegin(), geometryBatch.getIndexRangeEnd());
+			drawImpl(geometryBatch.getGeometry(), geometryBatch.getPrimitive(), geometryBatch.getVertexCount(), geometryBatch.getVerexOffset(), geometryBatch.getIndexOffset());
+		}
+
+		void DeviceContext::drawInstanced(Geometry* geometry, Geometry::Primitive primitive, uint32_t instanceCount, uint32_t vertexCount, uint32_t vertexOffset, uint32_t indexOffset) {
+			drawInstancedImpl(geometry, primitive, instanceCount, vertexCount, vertexOffset, indexOffset);
+		}
+
+		void DeviceContext::drawInstanced(const GeometryBatch& geometryBatch, uint32_t instanceCount) {
+			drawInstancedImpl(geometryBatch.getGeometry(), geometryBatch.getPrimitive(), instanceCount, geometryBatch.getVertexCount(), geometryBatch.getVerexOffset(), geometryBatch.getIndexOffset());
 		}
 
 		void DeviceCaps::dumpToFLog(int channel) const {
@@ -66,14 +74,7 @@ namespace RBX {
 		}
 
 		shared_ptr<Geometry> Device::createGeometry(const shared_ptr<VertexLayout>& layout, const shared_ptr<VertexBuffer>& vertexBuffer, const shared_ptr<IndexBuffer>& indexBuffer, uint32_t baseVertexIndex) {
-			std::vector<shared_ptr<VertexBuffer> > vertexBuffers;
-			vertexBuffers.push_back(vertexBuffer);
-
-			return createGeometryImpl(layout, vertexBuffers, indexBuffer, baseVertexIndex);
-		}
-
-		shared_ptr<Geometry> Device::createGeometry(const shared_ptr<VertexLayout>& layout, const std::vector<shared_ptr<VertexBuffer> >& vertexBuffers, const shared_ptr<IndexBuffer>& indexBuffer, uint32_t baseVertexIndex) {
-			return createGeometryImpl(layout, vertexBuffers, indexBuffer, baseVertexIndex);
+			return createGeometryImpl(layout, vertexBuffer, indexBuffer, baseVertexIndex);
 		}
 
 		shared_ptr<Framebuffer> Device::createFramebuffer(const shared_ptr<Renderbuffer>& color, const shared_ptr<Renderbuffer>& depth) {

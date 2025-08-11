@@ -11,7 +11,7 @@ namespace RBX {
 	namespace Graphics {
 		struct BufferUsageD3D11 {
 			D3D11_USAGE usage;
-			unsigned int cpuAccess;
+			uint32_t cpuAccess;
 		};
 
 		static const BufferUsageD3D11 gBufferUsageD3D11[GeometryBuffer::Usage_Count] = {
@@ -38,13 +38,10 @@ namespace RBX {
 
 		static const LPCSTR gVertexLayoutSemanticD3D11[VertexLayout::Semantic_Count] = {
 			"POSITION",
-			"TANGENT",
-			"BINORMAL",
-			"NORMAL",
-			"COLOR",
 			"TEXCOORD",
-			"SV_InstanceID",
-			"MATERIALID",
+			"COLOR",
+			"TANGENT",
+			"NORMAL",
 		};
 
 		static const D3D11_PRIMITIVE_TOPOLOGY gGeometryPrimitiveD3D11[Geometry::Primitive_Count] = {
@@ -66,13 +63,15 @@ namespace RBX {
 				const Element& e = elements[i];
 				D3D11_INPUT_ELEMENT_DESC e11 = {};
 
-				e11.InputSlot = e.stream;
-				e11.AlignedByteOffset = e.offset;
-				e11.SemanticName = gVertexLayoutSemanticD3D11[e.semantic];
-				e11.Format = gVertexLayoutFormatD3D11[e.format];
-				e11.InputSlotClass = gVertexInputD3D11[e.input];
-				e11.InstanceDataStepRate = 0u;
+				e11.SemanticName = gVertexLayoutSemanticD3D11[e.semanticName];
 				e11.SemanticIndex = e.semanticIndex;
+
+				e11.Format = gVertexLayoutFormatD3D11[e.format];
+				e11.InputSlot = 0u;
+				e11.AlignedByteOffset = e.offset;
+
+				e11.InputSlotClass = gVertexInputD3D11[e.inputClass];
+				e11.InstanceDataStepRate = e.stepRate;
 
 				elements11.push_back(e11);
 			}
@@ -81,6 +80,7 @@ namespace RBX {
 		VertexLayoutD3D11::~VertexLayoutD3D11() {
 			for (size_t i = 0u; i < shaders.size(); ++i) {
 				shared_ptr<VertexShaderD3D11> vertexShader = shaders[i].lock();
+
 				if (vertexShader)
 					vertexShader->removeLayout(this);
 			}
@@ -99,8 +99,7 @@ namespace RBX {
 		{
 		}
 
-		template <typename Base> void GeometryBufferD3D11<Base>::create(uint32_t bindFlags)
-		{
+		template <typename Base> void GeometryBufferD3D11<Base>::create(uint32_t bindFlags) {
 			ID3D11Device* device11 = static_cast<DeviceD3D11*>(device)->getDevice11();
 
 			D3D11_BUFFER_DESC bd = {};
@@ -112,6 +111,7 @@ namespace RBX {
 			bd.StructureByteStride = 0u;
 
 			HRESULT hr = device11->CreateBuffer(&bd, nullptr, &object);
+
 			if (FAILED(hr))
 				throw RBX::runtime_error("Couldn't create geometry buffer: %x", hr);
 		}
@@ -125,15 +125,15 @@ namespace RBX {
 		template <typename Base> void* GeometryBufferD3D11<Base>::lock(GeometryBuffer::LockMode mode) {
 			RBXASSERT(!locked);
 
-			if (usage == Usage::Usage_Static) {
+			if (usage == Usage::Usage_Static)
 				locked = new char[elementSize * elementCount];
-			}
 			else {
 				ID3D11DeviceContext* context11 = static_cast<DeviceD3D11*>(device)->getImmediateContext11();
 				D3D11_MAP mapMode = gLockModeD3D11[mode];
 
 				D3D11_MAPPED_SUBRESOURCE resource;
 				HRESULT hr = context11->Map(object, 0u, mapMode, 0u, &resource);
+
 				if (FAILED(hr)) {
 					FASTLOG2(FLog::Graphics, "Failed to lock VB (size %d): %x", elementCount * elementSize, hr);
 					return nullptr;
@@ -162,8 +162,7 @@ namespace RBX {
 			locked = nullptr;
 		}
 
-		template <typename Base> void GeometryBufferD3D11<Base>::upload(uint32_t offset, const void* data, size_t size)
-		{
+		template <typename Base> void GeometryBufferD3D11<Base>::upload(uint32_t offset, const void* data, size_t size) {
 			ID3D11DeviceContext* context11 = static_cast<DeviceD3D11*>(device)->getImmediateContext11();
 
 			D3D11_BOX box = {};
@@ -190,8 +189,8 @@ namespace RBX {
 		IndexBufferD3D11::IndexBufferD3D11(Device* device, size_t elementSize, size_t elementCount, Usage usage)
 			: GeometryBufferD3D11<IndexBuffer>(device, elementSize, elementCount, usage)
 		{
-			/*if (elementSize != 2u && elementSize != 4u)
-				throw RBX::runtime_error("Invalid element size: %d", (int)elementSize);*/
+			if (elementSize != 1u && elementSize != 2u && elementSize != 4u)
+				throw RBX::runtime_error("Invalid element size: %d", (int)elementSize);
 
 			create(D3D11_BIND_INDEX_BUFFER);
 		}
@@ -200,8 +199,8 @@ namespace RBX {
 		{
 		}
 
-		GeometryD3D11::GeometryD3D11(Device* device, const shared_ptr<VertexLayout>& layout, const std::vector<shared_ptr<VertexBuffer> >& vertexBuffers, const shared_ptr<IndexBuffer>& indexBuffer, uint32_t baseVertexIndex)
-			: Geometry(device, layout, vertexBuffers, indexBuffer, baseVertexIndex)
+		GeometryD3D11::GeometryD3D11(Device* device, const shared_ptr<VertexLayout>& layout, const shared_ptr<VertexBuffer>& vertexBuffer, const shared_ptr<IndexBuffer>& indexBuffer)
+			: Geometry(device, layout, vertexBuffer, indexBuffer)
 		{
 		}
 
@@ -209,52 +208,101 @@ namespace RBX {
 			static_cast<DeviceD3D11*>(device)->getImmediateContextD3D11()->invalidateCachedGeometry();
 		}
 
-		void GeometryD3D11::draw(Geometry::Primitive primitive, uint32_t offset, uint32_t count, uint32_t indexRangeBegin, uint32_t indexRangeEnd, VertexLayoutD3D11** layoutCache, GeometryD3D11** geometryCache, ShaderProgramD3D11** programCache) {
-			RBXASSERT(*programCache);
-
-			ID3D11Device* device11 = static_cast<DeviceD3D11*>(device)->getDevice11();
+		void GeometryD3D11::draw(Geometry::Primitive primitive, uint32_t vertexCount, uint32_t vertexOffset, uint32_t indexOffset, VertexLayoutD3D11** layoutCache, GeometryD3D11** geometryCache, ShaderProgramD3D11** programCache) {
 			ID3D11DeviceContext* context11 = static_cast<DeviceD3D11*>(device)->getImmediateContext11();
+
+			context11->IASetPrimitiveTopology(gGeometryPrimitiveD3D11[primitive]);
 
 			if (*layoutCache != layout.get()) {
 				auto* vertexLayout = static_cast<VertexLayoutD3D11*>(layout.get());
 				*layoutCache = vertexLayout;
 
-				ID3D11InputLayout* inputLayout11 = (*programCache)->getInputLayout11(vertexLayout);
-
-				context11->IASetInputLayout(inputLayout11);
+				context11->IASetInputLayout((*programCache)->getInputLayout11(vertexLayout));
 			}
 
 			if (*geometryCache != this) {
 				*geometryCache = this;
 
-				for (size_t i = 0u; i < vertexBuffers.size(); ++i) {
-					auto* vb = static_cast<VertexBufferD3D11*>(vertexBuffers[i].get());
+				/* Vertex Buffer */
+				{
+					auto* vb = static_cast<VertexBufferD3D11*>(vertexBuffer.get());
 					ID3D11Buffer* vb11 = vb->getObject();
 					size_t offsetVB = 0u;
 					size_t stride = vb->getElementSize();
 
-					context11->IASetVertexBuffers(i, 1u, &vb11, &stride, &offsetVB);
+					context11->IASetVertexBuffers(0u, 1u, &vb11, &stride, &offsetVB);
 				}
 
+				/* Index Buffer */
 				if (indexBuffer) {
-					DXGI_FORMAT format = indexBuffer->getElementSize() == 2u ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT;
+					DXGI_FORMAT format;
+
+					switch (indexBuffer->getElementSize()) {
+					case (1u):
+						format = DXGI_FORMAT_R8_UINT;
+					case (2u):
+						format = DXGI_FORMAT_R16_UINT;
+					default:
+						format = DXGI_FORMAT_R32_UINT;
+					}
 
 					context11->IASetIndexBuffer(static_cast<IndexBufferD3D11*>(indexBuffer.get())->getObject(), format, 0u);
 				}
 			}
 
-			//(*programCache)->uploadConstantBuffers();
+			if (indexBuffer)
+				context11->DrawIndexed(vertexCount, indexOffset, vertexOffset);
+			else
+				context11->Draw(vertexCount, vertexOffset);
+		}
+
+		void GeometryD3D11::drawInstanced(Geometry::Primitive primitive, uint32_t instanceCount, uint32_t vertexCount, uint32_t vertexOffset, uint32_t indexOffset, VertexLayoutD3D11** layoutCache, GeometryD3D11** geometryCache, ShaderProgramD3D11** programCache) {
+			ID3D11DeviceContext* context11 = static_cast<DeviceD3D11*>(device)->getImmediateContext11();
 
 			context11->IASetPrimitiveTopology(gGeometryPrimitiveD3D11[primitive]);
 
-			if (indexBuffer) {
-				context11->DrawIndexed(count, offset, baseVertexIndex);
-			}
-			else {
-				context11->Draw(count, offset);
-			}
-		}
+			if (*layoutCache != layout.get()) {
+				auto* vertexLayout = static_cast<VertexLayoutD3D11*>(layout.get());
+				*layoutCache = vertexLayout;
 
+				context11->IASetInputLayout((*programCache)->getInputLayout11(vertexLayout));
+			}
+
+			if (*geometryCache != this) {
+				*geometryCache = this;
+
+				/* Vertex Buffer */
+				{
+					auto* vb = static_cast<VertexBufferD3D11*>(vertexBuffer.get());
+					ID3D11Buffer* vb11 = vb->getObject();
+					size_t offsetVB = 0u;
+					size_t stride = vb->getElementSize();
+
+					context11->IASetVertexBuffers(0u, 1u, &vb11, &stride, &offsetVB);
+				}
+
+				/* Index Buffer */
+				if (indexBuffer) {
+					DXGI_FORMAT format;
+
+					switch (indexBuffer->getElementSize()) {
+					case (1u):
+						format = DXGI_FORMAT_R8_UINT;
+					case (2u):
+						format = DXGI_FORMAT_R16_UINT;
+					default:
+						format = DXGI_FORMAT_R32_UINT;
+					}
+
+					context11->IASetIndexBuffer(static_cast<IndexBufferD3D11*>(indexBuffer.get())->getObject(), format, 0u);
+				}
+			}
+
+			if (indexBuffer)
+				context11->DrawIndexedInstanced(vertexCount, instanceCount, indexOffset, vertexOffset, 0u);
+			else
+				context11->DrawInstanced(vertexCount, instanceCount, vertexOffset, 0u);
+		}
 
 	}
 }

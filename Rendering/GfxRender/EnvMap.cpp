@@ -17,17 +17,11 @@
 
 static const float MATH_PI = 3.14159265359f;
 
-static const uint32_t outdoorCubemapSize = 1024u;
-static const uint32_t indoorCubemapSize = 512u;
-static const uint32_t irradianceCubemapSize = 32u;
-
 namespace RBX {
 	namespace Graphics {
 
 		EnvMap::EnvMap(VisualEngine* ve) : Resource(ve->getDevice()) {
 			visualEngine = ve;
-			dirtyState = VeryDirty;
-			updateStep = 0u;
 			envmapLastRealTime = 0.0;
 			envmapLastTimeOfDay = 0.0;
 			setDebugName("Global envmap");
@@ -38,8 +32,8 @@ namespace RBX {
 			indoorTextures = device->createTexture(Texture::Type_Cube_Array, Texture::Format_RGBA16f, indoorCubemapSize, indoorCubemapSize, indoorCubemapCount, cubemapMips, Texture::Usage_Renderbuffer);
 			irradianceTextures = device->createTexture(Texture::Type_Cube_Array, Texture::Format_RGBA16f, irradianceCubemapSize, irradianceCubemapSize, indoorCubemapCount + 1u, 1u, Texture::Usage_Renderbuffer);
 
-			intermediateOutdoorTexture = device->createTexture(Texture::Type_Cube, Texture::Format_R11G11B10f, outdoorCubemapSize, outdoorCubemapSize, 1u, cubemapMips, Texture::Usage_Renderbuffer);
-			intermediateIndoorTexture = device->createTexture(Texture::Type_Cube, Texture::Format_RGBA16f, indoorCubemapSize, indoorCubemapSize, 1u, cubemapMips, Texture::Usage_Renderbuffer);
+			intermediateOutdoorTexture = device->createTexture(Texture::Type_Cube, Texture::Format_R11G11B10f, outdoorCubemapSize, outdoorCubemapSize, 1u, 11u, Texture::Usage_Renderbuffer);
+			intermediateIndoorTexture = device->createTexture(Texture::Type_Cube, Texture::Format_RGBA16f, indoorCubemapSize, indoorCubemapSize, 1u, 10u, Texture::Usage_Renderbuffer);
 
 			for (uint32_t i = 0u; i < 6u; ++i) {
 				CubemapFace cubemapFace;
@@ -62,7 +56,7 @@ namespace RBX {
 					cubemapFace.mips[m] = device->createFramebuffer(rb);
 				}
 
-				inFaces[i] = cubemapFace;
+				inFaces.push_back(cubemapFace);
 			}
 
 			for (uint32_t i = 0u; i < indoorCubemapTextureCount + 6u; ++i) {
@@ -93,8 +87,7 @@ namespace RBX {
 
 
 		void EnvMap::update(DeviceContext* context, double gameTime) {
-			// prepare the envmap
-			if (outdoorTexture.getTexture()) {
+			if ((updateRequired || visualEngine->getSettings()->getEagerBulkExecution()) && outdoorTexture.getTexture() && intermediateOutdoorTexture.getTexture()) {
 				double realTime = RBX::Time::nowFastSec();
 
 				//if (visualEngine->getSettings()->getEagerBulkExecution() || fabs(envmapLastTimeOfDay - gameTime) > kEnvmapGameTimePeriod || fabs(envmapLastRealTime - realTime) > kEnvmapRealtimePeriod) {
@@ -102,6 +95,8 @@ namespace RBX {
 				envmapLastRealTime = realTime;
 
 				fullUpdate(context);
+
+				updateRequired = false;
 				//}
 			}
 		}
@@ -166,13 +161,13 @@ namespace RBX {
 			updateStep++;
 		}*/
 
-		static Matrix4 lookAt(Vector3 dir, Vector3 up) {
+		static Matrix4 lookAt(Vector3 direction, Vector3 up) {
 			Matrix4 result = Matrix4::identity();
-			Vector3 rt = cross(up, -1.0f * dir);
+			Vector3 right = cross(up, -1.0f * direction);
 
-			result.setRow(0u, Vector4(rt, 0.0f));
+			result.setRow(0u, Vector4(right, 0.0f));
 			result.setRow(1u, Vector4(up, 0.0f));
-			result.setRow(2u, Vector4(dir, 0.0f));
+			result.setRow(2u, Vector4(direction, 0.0f));
 
 			return result;
 		}
@@ -202,10 +197,10 @@ namespace RBX {
 
 		/* IBL Specular Convolution */
 		void EnvMap::faceConvolution(DeviceContext* context, Sky* sky, CubemapFace cubemapFace, GlobalShaderData globalShaderData) {
-			for (uint32_t m = 1u; m < cubemapMips; ++m) {
-				globalShaderData.ViewportSize_ViewportScale = Vector4(globalShaderData.ViewportSize_ViewportScale.x, float(m / cubemapMips), 0.0f, 0.0f);
+			for (uint32_t m = 0u; m < cubemapMips; ++m) {
+				globalShaderData.ViewportSize_ViewportScale = Vector4(globalShaderData.ViewportSize_ViewportScale.x, (float)m / (float)cubemapMips, 0.0f, 0.0f);
 
-				context->updateGlobalConstants(&globalShaderData, sizeof(globalShaderData));
+				context->updateGlobalConstantData(&globalShaderData, sizeof(globalShaderData));
 				context->bindFramebuffer(cubemapFace.mips[m].get());
 
 				sky->RenderSkyboxEnvMapBox(context);
@@ -222,7 +217,7 @@ namespace RBX {
 			uint32_t width = texture->getWidth();
 			uint32_t height = texture->getHeight();
 
-			globalShaderData.ViewportSize_ViewportScale = Vector4(width, 0.0f, 0.0f, 0.0f);
+			globalShaderData.ViewportSize_ViewportScale = Vector4(width, height, 0.0f, 0.0f);
 
 			RenderCamera cam;
 			cam.setProjectionPerspective(MATH_PI / 2.0f, 1.0f, 0.1f, 10.0f);
@@ -235,7 +230,7 @@ namespace RBX {
 
 					globalShaderData.setCamera(cam);
 
-					context->updateGlobalConstants(&globalShaderData, sizeof(globalShaderData));
+					context->updateGlobalConstantData(&globalShaderData, sizeof(globalShaderData));
 					context->bindFramebuffer(intermediateOutFaces[i].get());
 
 					sky->RenderSkyboxEnvMapBox(context);
@@ -249,31 +244,30 @@ namespace RBX {
 				}
 			}
 
-			for (uint32_t i = 0u; i < 6u; ++i) {
+			// TODO: Find some other way to copy faces, this is expensive. May not even be required.
+			/*for (uint32_t i = 0u; i < 6u; ++i) {
 				context->copyFramebuffer(intermediateOutFaces[i].get(), outdoorTexture.getTexture().get());
-			}
+			}*/
 
 			intermediateOutdoorTexture.getTexture().get()->generateMipmaps();
 
+			context->bindTexture(0u, texture, SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Wrap));
+
 			/* Irradiance - Diffuse */
 			setFilter(context, "Irradiance");
-
-			context->bindTexture(0u, texture, SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Wrap));
 
 			for (uint32_t i = 0u; i < 6u; ++i) {
 				cam.setViewMatrix(view[i]);
 
 				globalShaderData.setCamera(cam);
 
-				context->updateGlobalConstants(&globalShaderData, sizeof(globalShaderData));
+				context->updateGlobalConstantData(&globalShaderData, sizeof(globalShaderData));
 
 				faceIrradiance(context, sky, i);
 			}
 
 			/* Convolution - Specular */
 			setFilter(context, "Convolution");
-
-			context->bindTexture(0u, texture, SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Wrap));
 
 			for (uint32_t i = 0u; i < 6u; ++i) {
 				cam.setViewMatrix(view[i]);

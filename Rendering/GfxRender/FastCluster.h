@@ -30,9 +30,6 @@ namespace RBX
 				RenderQueue::Id renderQueueId, uint8_t lodMask, const std::vector<uint32_t>& bones, const Extents& localBounds, uint32_t extraFeatures);
 			~FastClusterEntity() override;
 
-			// Renderable overrides
-			uint32_t getWorldTransforms4x3(float* buffer, uint32_t maxTransforms, const void** cacheKey) const override;
-
 			// RenderNode overrides
 			void updateRenderQueue(RenderQueue& queue, const RenderCamera& camera, uint32_t lodIndex, RenderQueue::Pass pass) override;
 			float getViewDepth(const RenderCamera& camera) const override;

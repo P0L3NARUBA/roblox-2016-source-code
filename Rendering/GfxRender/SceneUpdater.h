@@ -17,18 +17,18 @@ namespace RBX {
 	class Humanoid;
 	class MegaClusterInstance;
 
-	namespace Voxel { struct DataModelPartCache; }
+	//namespace Voxel { struct DataModelPartCache; }
 }
 
 namespace RBX {
 	namespace Graphics {
-		using RBX::Voxel::DataModelPartCache;
+		//using RBX::Voxel::DataModelPartCache;
 		class VisualEngine;
 		class FastCluster;
 		class SuperCluster;
 		template <class Cluster> class SpatialGrid;
 		struct SpatialGridIndex;
-		struct LightGridChunk;
+		//struct LightGridChunk;
 
 		class SceneUpdater :
 			public Voxel::CellChangeListener,
@@ -70,7 +70,7 @@ namespace RBX {
 			void invalidateAllFastClusters();
 
 			void updatePrepare(uint32_t currentFrameNum, const RBX::Frustum& updateFrustum);
-			void updatePerform();
+			//void updatePerform();
 
 			void notifyWaitingForAssets(RBX::GfxPart* part, const std::vector<RBX::ContentId>& ids);
 
@@ -83,7 +83,7 @@ namespace RBX {
 
 			size_t getUpdateQueueSize() const;
 
-			void setComputeLightingEnabled(bool value);
+			//void setComputeLightingEnabled(bool value);
 
 			// struct and typedef visible for testing
 			struct MegaClusterChunk {
@@ -125,10 +125,10 @@ namespace RBX {
 			void updateWaitingParts(bool bulkExecution);
 			void updateInvalidatedFastClusters(bool bulkExecution);
 			void checkFastClusters();
-			void computeLightingPrepare();
-			void computeLightingPerform();
+			//void computeLightingPrepare();
+			//void computeLightingPerform();
 
-			void onPropertyChanged(const RBX::Reflection::PropertyDescriptor* descriptor);
+			//void onPropertyChanged(const RBX::Reflection::PropertyDescriptor* descriptor);
 
 			void updateMegaClusters(bool bulkExecution);
 
@@ -170,8 +170,8 @@ namespace RBX {
 			static RBX::Humanoid* getHumanoid(RBX::PartInstance* part);
 			bool checkAddSeenFastClusters(const SpatialGridIndex& index);
 
-			void lightingInvalidateOccupancy(const RBX::Extents& extents, const RBX::Vector3& highPriorityPoint, bool isFixed);
-			void lightingInvalidateLocal(const RBX::Extents& extents);
+			//void lightingInvalidateOccupancy(const RBX::Extents& extents, const RBX::Vector3& highPriorityPoint, bool isFixed);
+			//void lightingInvalidateLocal(const RBX::Extents& extents);
 
 			RBX::WindowAverage<double, double>::Stats getLightingTimeStats();
 			uint32_t getLastOccupancyUpdates() const { return mLastOccupancyUpdates; }
@@ -190,13 +190,13 @@ namespace RBX {
 			typedef std::map<void*, FastCluster*> HumanoidClusterMap;
 			HumanoidClusterMap mHumanoidClusters;
 			scoped_ptr<FastGridSC> mFastGridSC;
-
+			
 			GfxPartSet mAttachments;
 
 			std::vector<SpatialGridIndex> mSeenFastClusters;
 
 			bool seenIndexBefore(const SpatialGridIndex& index);
-			void checkAndActivateLighting();
+			//void checkAndActivateLighting();
 
 			RBX::WindowAverage<double, double> mLightingComputeAverage;
 			uint32_t mLastOccupancyUpdates;
@@ -207,10 +207,10 @@ namespace RBX {
 
 			bool computeLightingEnabled;
 
-			std::vector<DataModelPartCache> mOccupancyPartCache;
-			std::vector<std::pair<LightGridChunk*, uint32_t>> mLgridchunksToUpdate; // .first = chunk, .second = cached chunk's dirty flags
+			//std::vector<DataModelPartCache> mOccupancyPartCache;
+			//std::vector<std::pair<LightGridChunk*, uint32_t>> mLgridchunksToUpdate; // .first = chunk, .second = cached chunk's dirty flags
 			Vector3 mFocusPoint;
-			bool    mLightgridMoved;
+			//bool    mLightgridMoved;
 			size_t getChunkBudget();
 
 			Vector3 pointOfInterest;

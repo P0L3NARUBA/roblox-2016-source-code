@@ -28,32 +28,41 @@ namespace RBX {
 			const shared_ptr<Material>& m = material;
 
 			if (const Technique* technique = m->getBestTechnique(lodIndex, pass)) {
-				float distanceKey = (renderQueueId == RenderQueue::Id_Transparent) ? getViewDepth(camera) : 0.0f;
-
-				RenderOperation rop = { this, distanceKey, technique, &geometry };
+				RenderOperation rop = { &geometry, technique, nullptr };
 
 				queue.getGroup(renderQueueId).push(rop);
 			}
 		}
 
-		uint32_t RenderEntity::getWorldTransforms4x3(float* buffer, uint32_t maxTransforms, const void** cacheKey) const {
+		/*uint32_t RenderEntity::getWorldTransforms4x3(float* buffer, uint32_t maxTransforms, const void** cacheKey) const {
 			if (useCache(cacheKey, node)) return 0u;
 
 			RBXASSERT(maxTransforms >= 1u);
 
 			const CoordinateFrame& cframe = node->getCoordinateFrame();
 
-			memcpy(&buffer[0], cframe.rotation[0], sizeof(float) * 3.0f);
-			buffer[3] = cframe.translation.x;
+			buffer[0] = cframe.rotation[0][0];
+			buffer[1] = cframe.rotation[1][0];
+			buffer[2] = cframe.rotation[2][0];
+			buffer[3] = 0.0f;
 
-			memcpy(&buffer[4], cframe.rotation[1], sizeof(float) * 3.0f);
-			buffer[7] = cframe.translation.y;
+			buffer[4] = cframe.rotation[0][1];
+			buffer[5] = cframe.rotation[1][1];
+			buffer[6] = cframe.rotation[2][1];
+			buffer[7] = 0.0f;
 
-			memcpy(&buffer[8], cframe.rotation[2], sizeof(float) * 3.0f);
-			buffer[11] = cframe.translation.z;
+			buffer[8] = cframe.rotation[0][2];
+			buffer[9] = cframe.rotation[1][2];
+			buffer[10] = cframe.rotation[2][2];
+			buffer[11] = 0.0f;
+
+			buffer[12] = cframe.translation.x;
+			buffer[13] = cframe.translation.y;
+			buffer[14] = cframe.translation.z;
+			buffer[15] = 1.0f;
 
 			return 1;
-		}
+		}*/
 
 		float RenderEntity::getViewDepth(const RenderCamera& camera) const {
 			return computeViewDepth(camera, node->getCoordinateFrame().translation);
@@ -72,9 +81,8 @@ namespace RBX {
 
 		RenderNode::~RenderNode() {
 			// delete all entities
-			for (size_t i = 0u; i < entities.size(); ++i) {
+			for (size_t i = 0u; i < entities.size(); ++i)
 				delete entities[i];
-			}
 		}
 
 		void RenderNode::addEntity(RenderEntity* entity) {

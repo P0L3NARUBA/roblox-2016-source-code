@@ -6,25 +6,21 @@
 #include "V8DataModel/BasicPartInstance.h"
 #include "reflection/reflection.h"
 
-#ifdef _PRISM_PYRAMID_
-
 namespace RBX {
 
-extern const char* const sCornerWedge;
+	extern const char* const sCornerWedge;
 
-class CornerWedgeInstance
-	: public DescribedCreatable<CornerWedgeInstance, PartInstance, sCornerWedge>
-{
+	class CornerWedgeInstance
+		: public DescribedCreatable<CornerWedgeInstance, PartInstance, sCornerWedge>
+	{
 	public:
 
 		CornerWedgeInstance();
 		~CornerWedgeInstance();
-	 
+
 		/*override*/ virtual PartType getPartType() const { return CORNERWEDGE_PART; }
 
 
-};
+	};
 
 } // namespace
-
-#endif // _PRISM_PYRAMID_

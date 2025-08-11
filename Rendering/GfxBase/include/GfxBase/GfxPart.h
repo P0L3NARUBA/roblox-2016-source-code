@@ -39,6 +39,8 @@ namespace RBX {
 		virtual void updateEntity(bool assetsUpdated = false) {};
 		virtual void updateChunk(const SpatialRegion::Id& pos, bool isWaterChunk) {};
 		virtual void onCoordinateFrameChanged() {};
+		virtual void onMaterialChanged() { invalidateEntity(); };
+		virtual void onColorChanged() { invalidateEntity(); };
 		virtual void onSizeChanged() { invalidateEntity(); };
 		virtual void onTransparencyChanged() { invalidateEntity(); };
 		virtual void onSpecialShapeChanged() { invalidateEntity(); }

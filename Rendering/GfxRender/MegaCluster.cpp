@@ -18,7 +18,6 @@
 #include "Material.h"
 #include "ShaderManager.h"
 #include "TextureManager.h"
-#include "LightGrid.h"
 #include "SceneManager.h"
 #include "VisualEngine.h"
 
@@ -1765,15 +1764,15 @@ namespace RBX
 
 				if (isWater)
 				{
-					elements.push_back(VertexLayout::Element(0, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
-					elements.push_back(VertexLayout::Element(0, 12u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Normal));
+					/*elements.push_back(VertexLayout::Element(0, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
+					elements.push_back(VertexLayout::Element(0, 12u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Normal));*/
 				}
 				else
 				{
-					elements.push_back(VertexLayout::Element(0, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
+					/*elements.push_back(VertexLayout::Element(0, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
 					elements.push_back(VertexLayout::Element(0, 12u, VertexLayout::Format_Float2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture));
 					elements.push_back(VertexLayout::Element(0, 20u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Normal));
-					elements.push_back(VertexLayout::Element(0, 32u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Tangent));
+					elements.push_back(VertexLayout::Element(0, 32u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Tangent));*/
 				}
 
 				vertexLayout = visualEngine->getDevice()->createVertexLayout(elements);
@@ -1837,7 +1836,7 @@ namespace RBX
 		static void setupTextures(VisualEngine* visualEngine, Technique& technique)
 		{
 			TextureManager* tm = visualEngine->getTextureManager();
-			LightGrid* lightGrid = visualEngine->getLightGrid();
+			//LightGrid* lightGrid = visualEngine->getLightGrid();
 			SceneManager* sceneManager = visualEngine->getSceneManager();
 
 			technique.setTexture(0, tm->load(ContentId(MegaCluster::kTerrainTexClose + kTextureExtension), TextureManager::Fallback_White), SamplerState::Filter_Linear);
@@ -1845,11 +1844,11 @@ namespace RBX
 			technique.setTexture(2, tm->load(ContentId(MegaCluster::kTerrainTexNormals + kTextureExtension), TextureManager::Fallback_NormalMap), SamplerState::Filter_Linear);
 			technique.setTexture(3, tm->load(ContentId(MegaCluster::kTerrainTexSpecular + kTextureExtension), TextureManager::Fallback_Black), SamplerState::Filter_Linear);
 
-			if (lightGrid)
+			/*if (lightGrid)
 			{
 				technique.setTexture(4, lightGrid->getTexture(), SamplerState::Filter_Linear);
 				technique.setTexture(5, lightGrid->getLookupTexture(), SamplerState(SamplerState::Filter_Point, SamplerState::Address_Clamp));
-			}
+			}*/
 
 			//technique.setTexture(6, sceneManager->getShadowMap(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 		}

@@ -55,18 +55,22 @@ namespace RBX {
 			: device(device)
 			, device11(static_cast<DeviceD3D11*>(device)->getDevice11())
 			, globalDataSize(0u)
+			, processingDataSize(0u)
 			, defaultAnisotropy(1u)
 			, cachedProgram(nullptr)
 			, cachedVertexLayout(nullptr)
 			, cachedGeometry(nullptr)
 			, cachedFramebuffer(nullptr)
 			, cachedRasterizerState(RasterizerState::Cull_None)
-			, cachedBlendState(BlendState::Mode_None)
 			, cachedDepthState(DepthState::Function_Always, false)
+			, cachedBlendState(BlendState::Mode_None)
 			, globalsConstantBuffer(nullptr)
 			, globalsProcessingDataBuffer(nullptr)
 			, globalsMaterialDataBuffer(nullptr)
+			, instancedModelsBuffer(nullptr)
 			, globalsLightListBuffer(nullptr)
+			, instancedModelsResource(nullptr)
+			, globalsLightListResource(nullptr)
 			, d3d9(nullptr)
 		{
 			immediateContext11 = deviceContext11;
@@ -105,8 +109,8 @@ namespace RBX {
 			ReleaseCheck(globalsConstantBuffer);
 			ReleaseCheck(globalsProcessingDataBuffer);
 			ReleaseCheck(globalsMaterialDataBuffer);
-			ReleaseCheck(instancedModelMatrixesBuffer);
-			ReleaseCheck(instancedModelMatrixesResource);
+			ReleaseCheck(instancedModelsBuffer);
+			ReleaseCheck(instancedModelsResource);
 			ReleaseCheck(globalsLightListBuffer);
 			ReleaseCheck(globalsLightListResource);
 
@@ -188,9 +192,9 @@ namespace RBX {
 				throw std::runtime_error("Failed to create global material data buffer.");
 		}
 
-		void DeviceContextD3D11::defineInstancedModelMatrixes(size_t dataSize, size_t elementSize) {
-			RBXASSERT(instancedModelMatrixesBuffer == nullptr);
-			if (instancedModelMatrixesBuffer)
+		void DeviceContextD3D11::defineInstancedModels(size_t dataSize, size_t elementSize) {
+			RBXASSERT(instancedModelsBuffer == nullptr);
+			if (instancedModelsBuffer)
 				return;
 
 			D3D11_BUFFER_DESC bd = {};
@@ -201,7 +205,7 @@ namespace RBX {
 			bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 			bd.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
 
-			HRESULT hr = device11->CreateBuffer(&bd, nullptr, &instancedModelMatrixesBuffer);
+			HRESULT hr = device11->CreateBuffer(&bd, nullptr, &instancedModelsBuffer);
 			//RBXASSERT(SUCCEEDED(hr));
 			if (FAILED(hr))
 				throw std::runtime_error("Failed to create instanced model matrix buffer.");
@@ -210,12 +214,12 @@ namespace RBX {
 			srvd.Format = DXGI_FORMAT_UNKNOWN;
 			srvd.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
 			srvd.Buffer.FirstElement = 0u;
-			srvd.Buffer.NumElements = 8192u;
+			srvd.Buffer.NumElements = MAX_INSTANCES;
 
-			hr = device11->CreateShaderResourceView(instancedModelMatrixesBuffer, &srvd, &instancedModelMatrixesResource);
+			hr = device11->CreateShaderResourceView(instancedModelsBuffer, &srvd, &instancedModelsResource);
 			//RBXASSERT(SUCCEEDED(hr));
 			if (FAILED(hr))
-				throw std::runtime_error("Failed to create instanced model matrix SRV.");
+				throw std::runtime_error("Failed to create instanced model matrix shader resource view.");
 		}
 
 		void DeviceContextD3D11::defineGlobalLightList(size_t dataSize, size_t elementSize) {
@@ -240,20 +244,22 @@ namespace RBX {
 			srvd.Format = DXGI_FORMAT_UNKNOWN;
 			srvd.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
 			srvd.Buffer.FirstElement = 0u;
-			srvd.Buffer.NumElements = 1024u;
+			srvd.Buffer.NumElements = MAX_LIGHTS;
 
 			hr = device11->CreateShaderResourceView(globalsLightListBuffer, &srvd, &globalsLightListResource);
 			//RBXASSERT(SUCCEEDED(hr));
 			if (FAILED(hr))
-				throw std::runtime_error("Failed to create global light list SRV.");
+				throw std::runtime_error("Failed to create global light list shader resource view.");
 		}
 
-		void DeviceContextD3D11::updateGlobalConstants(const void* data, size_t dataSize) {
+		void DeviceContextD3D11::updateGlobalConstantData(const void* data, size_t dataSize) {
 			if (dataSize != globalDataSize)
 				throw std::runtime_error("Globals constant size mismatch.");
 
 			immediateContext11->UpdateSubresource(globalsConstantBuffer, 0u, nullptr, data, 0u, 0u);
+		}
 
+		void DeviceContextD3D11::setGlobalConstantData() {
 			immediateContext11->VSSetConstantBuffers(0u, 1u, &globalsConstantBuffer);
 			immediateContext11->PSSetConstantBuffers(0u, 1u, &globalsConstantBuffer);
 		}
@@ -263,7 +269,9 @@ namespace RBX {
 				throw std::runtime_error("Processing constant size mismatch.");
 
 			immediateContext11->UpdateSubresource(globalsProcessingDataBuffer, 0u, nullptr, data, 0u, 0u);
+		}
 
+		void DeviceContextD3D11::setGlobalProcessingData() {
 			immediateContext11->PSSetConstantBuffers(0u, 1u, &globalsProcessingDataBuffer);
 		}
 
@@ -272,22 +280,26 @@ namespace RBX {
 				throw std::runtime_error("Material constant size mismatch.");
 
 			immediateContext11->UpdateSubresource(globalsMaterialDataBuffer, 0u, nullptr, data, 0u, 0u);
+		}
 
+		void DeviceContextD3D11::setGlobalMaterialData() {
 			immediateContext11->PSSetConstantBuffers(1u, 1u, &globalsMaterialDataBuffer);
 		}
 
-		void DeviceContextD3D11::updateInstancedModelMatrixes(const void* data, size_t dataSize) {
+		void DeviceContextD3D11::updateInstancedModels(const void* data, size_t dataSize) {
 			D3D11_MAPPED_SUBRESOURCE mappedResource2;
-			HRESULT hr = immediateContext11->Map(instancedModelMatrixesBuffer, 0u, D3D11_MAP_WRITE_DISCARD, 0u, &mappedResource2);
+			HRESULT hr = immediateContext11->Map(instancedModelsBuffer, 0u, D3D11_MAP_WRITE_DISCARD, 0u, &mappedResource2);
 			//RBXASSERT(SUCCEEDED(hr));
 			if (FAILED(hr))
-				throw std::runtime_error("Mapping instanced model matrix resource failed.");
+				throw std::runtime_error("Mapping instanced models resource failed.");
 
 			memcpy(mappedResource2.pData, data, dataSize);
 
-			immediateContext11->Unmap(instancedModelMatrixesBuffer, 0u);
+			immediateContext11->Unmap(instancedModelsBuffer, 0u);
+		}
 
-			immediateContext11->VSSetShaderResources(30u, 1u, &instancedModelMatrixesResource);
+		void DeviceContextD3D11::setInstancedModels() {
+			immediateContext11->VSSetShaderResources(30u, 1u, &instancedModelsResource);
 		}
 
 		void DeviceContextD3D11::updateGlobalLightList(const void* data, size_t dataSize) {
@@ -300,7 +312,9 @@ namespace RBX {
 			memcpy(mappedResource2.pData, data, dataSize);
 
 			immediateContext11->Unmap(globalsLightListBuffer, 0u);
+		}
 
+		void DeviceContextD3D11::setGlobalLightList() {
 			immediateContext11->PSSetShaderResources(31u, 1u, &globalsLightListResource);
 		}
 
@@ -604,16 +618,18 @@ namespace RBX {
 			}
 		}
 
-		void DeviceContextD3D11::drawImpl(Geometry* geometry, Geometry::Primitive primitive, uint32_t offset, uint32_t count, uint32_t indexRangeBegin, uint32_t indexRangeEnd) {
-			static_cast<GeometryD3D11*>(geometry)->draw(primitive, offset, count, indexRangeBegin, indexRangeEnd, &cachedVertexLayout, &cachedGeometry, &cachedProgram);
+		void DeviceContextD3D11::drawImpl(Geometry* geometry, Geometry::Primitive primitive, uint32_t vertexCount, uint32_t vertexOffset, uint32_t indexOffset) {
+			static_cast<GeometryD3D11*>(geometry)->draw(primitive, vertexCount, vertexOffset, indexOffset, &cachedVertexLayout, &cachedGeometry, &cachedProgram);
+		}
+
+		void DeviceContextD3D11::drawInstancedImpl(Geometry* geometry, Geometry::Primitive primitive, uint32_t instanceCount, uint32_t vertexCount, uint32_t vertexOffset, uint32_t indexOffset) {
+			static_cast<GeometryD3D11*>(geometry)->drawInstanced(primitive, instanceCount, vertexCount, vertexOffset, indexOffset, &cachedVertexLayout, &cachedGeometry, &cachedProgram);
 		}
 
 		void DeviceContextD3D11::bindProgram(ShaderProgram* program) {
 			if (cachedProgram != program) {
 				cachedProgram = static_cast<ShaderProgramD3D11*>(program);
 				cachedProgram->bind();
-
-				cachedVertexLayout = nullptr; // VertexLayout is per vertex shader
 			}
 		}
 

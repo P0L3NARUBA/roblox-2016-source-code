@@ -203,11 +203,11 @@ namespace RBX {
 			immediateContext->defineGlobalMaterialData(dataSize);
 		}
 
-		void DeviceD3D11::defineInstancedModelMatrixes(size_t dataSize, size_t elementSize) {
+		void DeviceD3D11::defineInstancedModels(size_t dataSize, size_t elementSize) {
 			if (dataSize % 16u != 0u)
 				throw std::runtime_error("Instanced model matrix buffer is not 16 byte aligned.");
 
-			immediateContext->defineInstancedModelMatrixes(dataSize, elementSize);
+			immediateContext->defineInstancedModels(dataSize, elementSize);
 		}
 
 		void DeviceD3D11::defineGlobalLightList(size_t dataSize, size_t elementSize) {
@@ -315,8 +315,8 @@ namespace RBX {
 			return shared_ptr<VertexLayout>(new VertexLayoutD3D11(this, elements));
 		}
 
-		shared_ptr<Geometry> DeviceD3D11::createGeometryImpl(const shared_ptr<VertexLayout>& layout, const std::vector<shared_ptr<VertexBuffer> >& vertexBuffers, const shared_ptr<IndexBuffer>& indexBuffer, unsigned int baseVertexIndex) {
-			return shared_ptr<Geometry>(new GeometryD3D11(this, layout, vertexBuffers, indexBuffer, baseVertexIndex));
+		shared_ptr<Geometry> DeviceD3D11::createGeometryImpl(const shared_ptr<VertexLayout>& layout, const shared_ptr<VertexBuffer>& vertexBuffers, const shared_ptr<IndexBuffer>& indexBuffer, uint32_t baseVertexIndex) {
+			return shared_ptr<Geometry>(new GeometryD3D11(this, layout, vertexBuffers, indexBuffer));
 		}
 
 		shared_ptr<Framebuffer> DeviceD3D11::createFramebufferImpl(const std::vector<shared_ptr<Renderbuffer> >& color, const shared_ptr<Renderbuffer>& depth) {

@@ -144,9 +144,9 @@ namespace RBX {
 				: visualEngine(visualEngine)
 			{
 				std::vector<VertexLayout::Element> elements;
-				elements.push_back(VertexLayout::Element(0u, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
+				/*elements.push_back(VertexLayout::Element(0u, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
 				elements.push_back(VertexLayout::Element(0u, 12u, VertexLayout::Format_Float2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture));
-				elements.push_back(VertexLayout::Element(0u, 20u, VertexLayout::Format_Float4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Color));
+				elements.push_back(VertexLayout::Element(0u, 20u, VertexLayout::Format_Float4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Color));*/
 
 				layout = visualEngine->getDevice()->createVertexLayout(elements);
 			}
@@ -198,7 +198,7 @@ namespace RBX {
 					const FileMeshVertexNormalTexture3d& v = data->vnts[i];
 
 					vbptr[i].Position = Vector3(v.vx, v.vy, v.vz);
-					vbptr[i].UV = Vector2(v.tu, v.tv);
+					//vbptr[i].UV = Vector2(v.tu, v.tv);
 				}
 
 				vbuf->unlock();
@@ -293,7 +293,7 @@ namespace RBX {
 				GlobalShaderData globalData;
 				globalData.setCamera(orthoCamera);
 
-				context->updateGlobalConstants(&globalData, sizeof(globalData));
+				context->updateGlobalConstantData(&globalData, sizeof(globalData));
 
 				context->setRasterizerState(caps.requiresRenderTargetFlipping ? RasterizerState::Cull_Front : RasterizerState::Cull_Back);
 				context->setDepthState(DepthState(DepthState::Function_Always, false));

@@ -59,66 +59,36 @@ namespace RBX {
 		}
 
 		static shared_ptr<Geometry> createCube(Device* device) {
-			std::vector<VertexLayout::Element> elements;
-			elements.push_back(VertexLayout::Element(0u, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
+			shared_ptr<VertexLayout> layout = device->createVertexLayout(BasicVertex::getVertexLayout());
 
-			shared_ptr<VertexLayout> layout = device->createVertexLayout(elements);
+			BasicVertex vertices[] = {
+				BasicVertex(Vector3(-1.0f,  1.0f, -1.0f)),
+				BasicVertex(Vector3( 1.0f,  1.0f, -1.0f)),
+				BasicVertex(Vector3(-1.0f,  1.0f,  1.0f)),
+				BasicVertex(Vector3( 1.0f,  1.0f,  1.0f)),
+				BasicVertex(Vector3(-1.0f, -1.0f, -1.0f)),
+				BasicVertex(Vector3( 1.0f, -1.0f, -1.0f)),
+				BasicVertex(Vector3( 1.0f, -1.0f,  1.0f)),
+				BasicVertex(Vector3(-1.0f, -1.0f,  1.0f)),
+			};
 
-			Vector3 vertices[] = {
-				Vector3(-1.0f,  1.0f, -1.0f), /* 3 - -     */
-				Vector3(-1.0f, -1.0f, -1.0f), /* - - -  -X */
-				Vector3(-1.0f, -1.0f,  1.0f), /* 2 - 1     */
-
-				Vector3(-1.0f, -1.0f,  1.0f), /* 1 - 2     */
-				Vector3(-1.0f,  1.0f,  1.0f), /* - - -  -X */
-				Vector3(-1.0f,  1.0f, -1.0f), /* - - 3     */
-
-				Vector3( 1.0f,  1.0f, -1.0f), /* 3 - -     */
-				Vector3( 1.0f, -1.0f, -1.0f), /* - - -   X */
-				Vector3( 1.0f, -1.0f,  1.0f), /* 2 - 1     */
-
-				Vector3( 1.0f, -1.0f,  1.0f), /* 1 - 2     */
-				Vector3( 1.0f,  1.0f,  1.0f), /* - - -   X */
-				Vector3( 1.0f,  1.0f, -1.0f), /* - - 3     */
-
-				Vector3( 1.0f, -1.0f, -1.0f), /* 3 - -     */
-				Vector3(-1.0f, -1.0f, -1.0f), /* - - -  -Y */
-				Vector3(-1.0f, -1.0f,  1.0f), /* 2 - 1     */
-
-				Vector3(-1.0f, -1.0f,  1.0f), /* 1 - 2     */
-				Vector3( 1.0f, -1.0f,  1.0f), /* - - -  -Y */
-				Vector3( 1.0f, -1.0f, -1.0f), /* - - 3     */
-
-				Vector3( 1.0f,  1.0f, -1.0f), /* 3 - -     */
-				Vector3(-1.0f,  1.0f, -1.0f), /* - - -   Y */
-				Vector3(-1.0f,  1.0f,  1.0f), /* 2 - 1     */
-
-				Vector3(-1.0f,  1.0f,  1.0f), /* 1 - 2     */
-				Vector3( 1.0f,  1.0f,  1.0f), /* - - -   Y */
-				Vector3( 1.0f,  1.0f, -1.0f), /* - - 3     */
-
-				Vector3( 1.0f, -1.0f, -1.0f), /* 3 - -     */
-				Vector3(-1.0f, -1.0f, -1.0f), /* - - -  -Z */
-				Vector3(-1.0f,  1.0f, -1.0f), /* 2 - 1     */
-
-				Vector3(-1.0f,  1.0f, -1.0f), /* 1 - 2     */
-				Vector3( 1.0f,  1.0f, -1.0f), /* - - -  -Z */
-				Vector3( 1.0f, -1.0f, -1.0f), /* - - 3     */
-
-				Vector3( 1.0f, -1.0f,  1.0f), /* 3 - -     */
-				Vector3(-1.0f, -1.0f,  1.0f), /* - - -   Z */
-				Vector3(-1.0f,  1.0f,  1.0f), /* 2 - 1     */
-
-				Vector3(-1.0f,  1.0f,  1.0f), /* 1 - 2     */
-				Vector3( 1.0f,  1.0f,  1.0f), /* - - -   Z */
-				Vector3( 1.0f, -1.0f,  1.0f), /* - - 3     */
+			uint8_t indices[] = {
+				3u, 2u,
+				6u, 7u,
+				4u, 2u,
+				0u, 3u,
+				1u, 6u,
+				5u, 4u,
+				1u, 0u,
 			};
 
 			shared_ptr<VertexBuffer> vb = device->createVertexBuffer(sizeof(Vector3), ARRAYSIZE(vertices), GeometryBuffer::Usage_Static);
+			shared_ptr<IndexBuffer>  ib = device->createIndexBuffer(sizeof(uint8_t), ARRAYSIZE(indices), GeometryBuffer::Usage_Static);
 
 			vb->upload(0u, vertices, sizeof(vertices));
-
-			return device->createGeometry(layout, vb, shared_ptr<IndexBuffer>());
+			ib->upload(0u, indices, sizeof(indices));
+			
+			return device->createGeometry(layout, vb, ib);
 		}
 
 		/*void Sky::StarData::resize(Sky* sky, unsigned int count, bool dynamic)
@@ -148,13 +118,13 @@ namespace RBX {
 			, starTwinkleCounter(0)
 			, readyState(false)*/
 		{
-			cube.reset(new GeometryBatch(createCube(visualEngine->getDevice()), Geometry::Primitive_Triangles, 36u, 36u));
+			cube.reset(new GeometryBatch(createCube(visualEngine->getDevice()), Geometry::Primitive_TriangleStrip, 14u, 8u, 14u));
 
 			// preload default skybox so that we can show it even while fetching custom skies over HTTP
 			//if (!FFlag::DebugRenderDownloadAssets)
 			loadSkyBoxDefault();
 
-			// preload sun/mon
+			// preload sun/moon
 			sun = visualEngine->getTextureManager()->load(ContentId("rbxasset://sky/sun.dds"), TextureManager::Fallback_BlackTransparent);
 			moon = visualEngine->getTextureManager()->load(ContentId("rbxasset://sky/moon.dds"), TextureManager::Fallback_BlackTransparent);
 		}
@@ -164,6 +134,9 @@ namespace RBX {
 		}
 
 		void Sky::update(const G3D::LightingParameters& lighting, uint32_t starCount, bool drawCelestialBodies, bool useHDRI) {
+			SceneManager* sceneManager = visualEngine->getSceneManager();
+			EnvMap* envMap = sceneManager->getEnvMap();
+
 			skyColor = lighting.skyAmbient;
 			skyColor2 = lighting.skyAmbient2;
 
@@ -175,6 +148,8 @@ namespace RBX {
 
 			moonPosition = (lighting.physicallyCorrect ? lighting.trueMoonPosition : lighting.moonPosition);
 			moonColor = Color3(G3D::min((1.0f - lighting.skyAmbient[1]) + 0.1f, 1.0f));
+
+			envMap->setUpdateRequired(true);
 
 			/*if (!drawCelestialBodies || starCount == 0)
 			{

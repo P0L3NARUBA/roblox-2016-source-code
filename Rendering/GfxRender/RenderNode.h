@@ -22,9 +22,6 @@ namespace RBX {
 			// Rendering support
 			virtual void updateRenderQueue(RenderQueue& queue, const RenderCamera& camera, uint32_t lodIndex, RenderQueue::Pass pass);
 
-			// Renderable overrides
-			uint32_t getWorldTransforms4x3(float* buffer, uint32_t maxTransforms, const void** cacheKey) const override;
-
 			// Extension points
 			virtual float getViewDepth(const RenderCamera& camera) const;
 

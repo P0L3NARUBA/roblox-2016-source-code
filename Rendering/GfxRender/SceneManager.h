@@ -41,6 +41,7 @@ namespace RBX {
 					, contrast(1.0f)
 					, grayscaleLevel(1.0f)
 					, tintColor(Color3::white())
+					, tonemapper(ACES)
 
 					, blurIntensity(0.0f)
 
@@ -53,6 +54,7 @@ namespace RBX {
 				float contrast;
 				float grayscaleLevel;
 				Color3 tintColor;
+				TonemapperMode tonemapper;
 
 				float blurIntensity;
 
@@ -101,7 +103,7 @@ namespace RBX {
 
 			void setFog(const Color3& color, float density, float sunInfluence, bool usesSkybox, bool affectsSkybox);
 			void setLighting(const Color3& ambient, const Color3& outdoorAmbient, const Vector3& keyDirection, const Color3& keyColor);
-			void setPostProcess(float brightness, float contrast, float grayscaleLevel, const Color3& tintColor, float blurIntensity, float bloomIntensity, uint32_t bloomSize);
+			void setPostProcess(float brightness, float contrast, float grayscaleLevel, const Color3& tintColor, TonemapperMode tonemapper, float blurIntensity, float bloomIntensity, uint32_t bloomSize);
 			void setProcessing(float exposure, float gamma);
 
 			const GeometryBatch& getFullscreenTriangle() const { return *fullscreenTriangle; }
@@ -159,8 +161,6 @@ namespace RBX {
 			GlobalShaderData globalShaderData;
 			GlobalProcessingData globalProcessingData;
 			GlobalLightList globalLightList;
-
-			ModelMatrixes modelMatrixes;
 
 			scoped_ptr<GeometryBatch> fullscreenTriangle;
 

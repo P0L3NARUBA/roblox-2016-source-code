@@ -29,6 +29,7 @@ float2 ParallaxOcclusionMapping(Texture2DArray<float> Texture, SamplerState Samp
     return PrevTexCoords * Weight + CurrentTexCoords.xy * (1.0 - Weight);
 }
 
+// may not even end up using this
 float3 ParallaxCorrectionAABB(float3 Position, float3 Reflect, float3 CubemapPosition, float3 CubemapMin, float3 CubemapMax) {
     float3 FirstPlaneIntersect = (CubemapMax - Position) / Reflect;
     float3 SecondPlaneIntersect = (CubemapMin - Position) / Reflect;
@@ -38,9 +39,9 @@ float3 ParallaxCorrectionAABB(float3 Position, float3 Reflect, float3 CubemapPos
     return (Position + Reflect * Distance) - CubemapPosition;
 }
 
-float3 ParallaxCorrectionOBB(float3 Position, float3 Reflect, float3 CubemapPosition, float3x3 CubemapMatrix) {
-    float3 Ray = mul(CubemapMatrix, Reflect);
-    float3 LocalPosition = mul(CubemapMatrix, Position);
+float3 ParallaxCorrectionOBB(float3 Position, float3 Reflect, float3 CubemapPosition, float3x4 CubemapMatrix) {
+    float3 Ray = mul(Reflect, CubemapMatrix);
+    float3 LocalPosition = mul(Position, CubemapMatrix);
 
     float3 Unitary = float3(1.0, 1.0, 1.0);
     float3 FirstPlaneIntersect  = (Unitary - LocalPosition) / Ray;

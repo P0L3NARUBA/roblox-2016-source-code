@@ -345,9 +345,9 @@ namespace RBX
 			, currentTextureType(BatchTextureType_Color)
 		{
 			std::vector<VertexLayout::Element> elements;
-			elements.push_back(VertexLayout::Element(0u, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
+			/*elements.push_back(VertexLayout::Element(0u, 0u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position));
 			elements.push_back(VertexLayout::Element(0u, 12u, VertexLayout::Format_Float2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture));
-			elements.push_back(VertexLayout::Element(0u, 20u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Normal));
+			elements.push_back(VertexLayout::Element(0u, 20u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Normal));*/
 
 			shared_ptr<VertexLayout> layout = visualEngine->getDevice()->createVertexLayout(elements);
 
@@ -455,7 +455,7 @@ namespace RBX
 			if (!typesetter)
 				return Vector2::zero();
 
-			return typesetter->measure(s, size, availableSpace, NULL);
+			return typesetter->measure(s, size, availableSpace, nullptr);
 		}
 
 		TextureProxyBaseRef AdornRender::createTextureProxy(const ContentId& id, bool& waiting, bool bBlocking, const std::string& context)
@@ -878,8 +878,8 @@ namespace RBX
 				context->draw(*mesh.batch);
 
 				stats.batches++;
-				stats.faces += mesh.batch->getCount() / 3u;
-				stats.vertices += mesh.batch->getIndexRangeEnd() - mesh.batch->getIndexRangeBegin();
+				stats.faces += mesh.batch->getVertexCount() / 3u;
+				stats.vertices += mesh.batch->getVertexCount();
 			}
 		}
 

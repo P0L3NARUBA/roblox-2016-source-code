@@ -11,6 +11,10 @@ static const uint32_t cubemapMips = 6u;
 static const uint32_t indoorCubemapCount = 4u;
 static const uint32_t indoorCubemapTextureCount = 6u * indoorCubemapCount;
 
+static const uint32_t outdoorCubemapSize = 1024u;
+static const uint32_t indoorCubemapSize = 512u;
+static const uint32_t irradianceCubemapSize = 32u;
+
 namespace RBX {
 	namespace Graphics {
 
@@ -33,15 +37,19 @@ namespace RBX {
 			void update(DeviceContext* context, double gameTime);
 			//void markDirty(bool veryDirty = false);
 
+			void setUpdateRequired(bool value) {
+				updateRequired = value;
+			}
+
 		private:
 
-			enum DirtyState {
+			/*enum DirtyState {
 				Ready,       // ready for business
 				Dirty,       // update has been scheduled
 				BusyDirty,   // update has been scheduled but another update is already in progress
 				DirtyWait,   // full update has been scheduled, but waiting for the sky to finish loading 
 				VeryDirty,   // full update has been scheduled,
-			};
+			};*/
 
 			struct CubemapFace {
 				shared_ptr<Framebuffer> mips[cubemapMips];
@@ -56,17 +64,16 @@ namespace RBX {
 			TextureRef intermediateOutdoorTexture; // Intermediate outdoor cubemap texture
 			TextureRef intermediateIndoorTexture; // Intermediate indoor cubemap texture
 
-			CubemapFace				outFaces[6u]; // Outdoor cubemap framebuffers
-			CubemapFace				inFaces[indoorCubemapTextureCount]; // Indoor cubemaps framebuffers
-			shared_ptr<Framebuffer> irradianceFaces[indoorCubemapTextureCount + 6u]; // Irradiance cubemap framebuffers
+			CubemapFace				 outFaces[6]; // Outdoor cubemap framebuffers
+			std::vector<CubemapFace> inFaces; // Indoor cubemaps framebuffers
+			shared_ptr<Framebuffer>  irradianceFaces[indoorCubemapTextureCount + 6u]; // Irradiance cubemap framebuffers
 
-			shared_ptr<Framebuffer> intermediateOutFaces[6u]; // Irradiance cubemap framebuffers
-			shared_ptr<Framebuffer> intermediateInFaces[6u]; // Irradiance cubemap framebuffers
+			shared_ptr<Framebuffer> intermediateOutFaces[11]; // Intermediate outdoor cubemap framebuffers
+			shared_ptr<Framebuffer> intermediateInFaces[10]; // Intermediate indoor cubemap framebuffers
 
-			uint32_t   updateStep;
-			DirtyState dirtyState;
-			double     envmapLastTimeOfDay;
-			double     envmapLastRealTime;
+			bool   updateRequired;
+			double envmapLastTimeOfDay;
+			double envmapLastRealTime;
 
 			void setFilter(DeviceContext* context, std::string type);
 

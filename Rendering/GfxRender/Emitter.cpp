@@ -79,11 +79,11 @@ namespace RBX {
 
 		static const VertexLayout::Element kVertexDecl[] =
 		{
-			VertexLayout::Element(0, offsetof(ParticleVertex, x),      VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Position, 0),
-			VertexLayout::Element(0, offsetof(ParticleVertex, scaleRotLifeq), VertexLayout::Format_Short4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture,  0),
+			VertexLayout::Element(VertexLayout::Semantic_Position, 0, VertexLayout::Format_Float3, offsetof(ParticleVertex, x), VertexLayout::Input_Vertex, 0),
+			/*VertexLayout::Element(0, offsetof(ParticleVertex, scaleRotLifeq), VertexLayout::Format_Short4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture,  0),
 			VertexLayout::Element(0, offsetof(ParticleVertex, disp),   VertexLayout::Format_Short2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture,  1),
 			VertexLayout::Element(0, offsetof(ParticleVertex, cline),  VertexLayout::Format_Short2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture,  2),
-			VertexLayout::Element(0, offsetof(ParticleVertex, color),  VertexLayout::Format_UByte4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture,  3),
+			VertexLayout::Element(0, offsetof(ParticleVertex, color),  VertexLayout::Format_UByte4, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture,  3),*/
 		};
 
 		/*
@@ -194,7 +194,7 @@ namespace RBX {
 			sharedState->init(ve);
 
 			geom = dev->createGeometry(sharedState->vlayout, sharedState->vbuf, sharedState->ibuf, 0);
-			batch.reset(new GeometryBatch(geom, Geometry::Primitive_Triangles, 0, 0, 0, 0));
+			batch.reset(new GeometryBatch(geom, Geometry::Primitive_Triangles, 0u, 0u, 0u));
 
 			plist.reserve(60);
 			emissionCounter = 0;
@@ -451,13 +451,15 @@ namespace RBX {
 			//teq->setConstant("modulateColor", lerp(modulateColor, modulateColor / emissionRateMul, brightenOnThrottle));
 			//teq->setConstant("zOffset", Vector4(zOffset, 0, 0, 0));
 
-			*batch = GeometryBatch(geom, Geometry::Primitive_Triangles, 6u * startIndex / 4u, 6u * visiblePCount, startIndex, startIndex + 4u * visiblePCount);
+			//*batch = GeometryBatch(geom, Geometry::Primitive_Triangles, 6u * startIndex / 4u, 6u * visiblePCount, startIndex, startIndex + 4u * visiblePCount);
+			*batch = GeometryBatch(geom, Geometry::Primitive_Triangles, 0u, 0u, 0u);
 
 			RenderOperation rop = {};
-			rop.renderable = nullptr;
-			rop.distanceKey = RenderEntity::computeViewDepth(cam, cframe.translation, -0.1f - zOffset);
+			//rop.renderable = nullptr;
+			//rop.distanceKey = RenderEntity::computeViewDepth(cam, cframe.translation, -0.1f - zOffset);
 			rop.geometry = this->batch.get();
 			rop.technique = teq.get();
+			rop.models = nullptr;
 
 			rq.getGroup(rq.Id_Transparent).push(rop);
 

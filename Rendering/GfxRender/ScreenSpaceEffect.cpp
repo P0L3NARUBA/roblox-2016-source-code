@@ -16,8 +16,8 @@ namespace RBX {
 
 			if (program) {
 				context->setRasterizerState(RasterizerState::Cull_None);
-				context->setBlendState(blendState);
 				context->setDepthState(DepthState(DepthState::Function_Always, false));
+				context->setBlendState(blendState);
 
 				context->bindProgram(program);
 			}
