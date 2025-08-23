@@ -28,8 +28,8 @@ DYNAMIC_FASTFLAGVARIABLE(ExtendedCrashInfluxReporting, false)
 
 DumpErrorUploader::DumpErrorUploader(bool backgroundUpload, const std::string& crashCounterNamePrefix)
 {
-	if (backgroundUpload)
-		thread.reset(new RBX::worker_thread(boost::bind(&DumpErrorUploader::run, _data), "ErrorUploader"));
+	//if (backgroundUpload)
+	//	thread.reset(new RBX::worker_thread(boost::bind(&DumpErrorUploader::run, _data), "ErrorUploader"));
 
 	this->crashCounterNamePrefix = crashCounterNamePrefix;
 }

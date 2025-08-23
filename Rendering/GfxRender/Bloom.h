@@ -8,11 +8,15 @@ namespace RBX {
 		class Bloom {
 		public:
 			struct Data {
-				shared_ptr<Texture> bloomBuffer;
-				std::vector<shared_ptr<Framebuffer>> bloomFBs;
+				std::shared_ptr<Texture>     bloomTexture;
+				std::shared_ptr<Framebuffer> bloomFB;
 
-				std::vector<uint32_t> width;
-				std::vector<uint32_t> height;
+				std::vector<std::shared_ptr<Texture>>     bloomTextures;
+				std::vector<std::shared_ptr<Framebuffer>> bloomFBs;
+
+				uint32_t width;
+				uint32_t height;
+				float aspectRatio;
 			};
 
 			Bloom(VisualEngine* visualEngine);
@@ -20,10 +24,10 @@ namespace RBX {
 			bool valid() { return data.get() != nullptr; }
 
 			float getIntensity() const { return intensity; }
-			Texture* getTexture() const { return data->bloomBuffer.get(); }
+			const std::shared_ptr<Texture>& getTexture() const { return data->bloomTexture; }
 
 			void update(uint32_t width, uint32_t height, float newIntensity, uint32_t newSize);
-			void render(DeviceContext* context, Texture* source, GlobalProcessingData globalProcessingData);
+			void render(DeviceContext* context, const std::shared_ptr<Texture>& source, GlobalProcessingData globalProcessingData);
 
 			Data* createData(uint32_t width, uint32_t height);
 
@@ -32,7 +36,7 @@ namespace RBX {
 
 		private:
 			VisualEngine* visualEngine;
-			scoped_ptr<Data> data;
+			std::unique_ptr<Data> data;
 			
 			bool error;
 			float intensity;

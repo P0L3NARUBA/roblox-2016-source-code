@@ -146,12 +146,12 @@ namespace RBX
 			RenderEntity* createSolidGeometry(const SpatialRegion::Id& pos, unsigned int* outQuads);
 			RenderEntity* createWaterGeometry(const SpatialRegion::Id& pos, unsigned int* outQuads);
 
-			RenderEntity* createGeometry(RenderNode* node, const shared_ptr<VertexBuffer>& vbuf, const shared_ptr<IndexBuffer>& ibuf, const shared_ptr<Material>& material, RenderQueue::Id renderQueueId, bool isWater);
+			RenderEntity* createGeometry(RenderNode* node, const std::shared_ptr<VertexBuffer>& vbuf, const std::shared_ptr<IndexBuffer>& ibuf, const std::shared_ptr<Material>& material, RenderQueue::Id renderQueueId, bool isWater);
 
-			const shared_ptr<VertexLayout>& getVertexLayout(bool isWater);
-			const shared_ptr<IndexBuffer>& getSharedIB();
+			const std::shared_ptr<VertexLayout>& getVertexLayout(bool isWater);
+			const std::shared_ptr<IndexBuffer>& getSharedIB();
 
-			const shared_ptr<Material>& getSolidMaterial();
+			const std::shared_ptr<Material>& getSolidMaterial();
 
 			VisualEngine* visualEngine;
 
@@ -163,10 +163,10 @@ namespace RBX
 
 			Voxel::ChunkMap<ChunkData> chunks;
 
-			shared_ptr<IndexBuffer> sharedIB;
-			shared_ptr<VertexLayout> vertexLayouts[2];
+			std::shared_ptr<IndexBuffer> sharedIB;
+			std::shared_ptr<VertexLayout> vertexLayouts[2];
 
-			shared_ptr<Material> solidMaterial;
+			std::shared_ptr<Material> solidMaterial;
 		};
 
 	}

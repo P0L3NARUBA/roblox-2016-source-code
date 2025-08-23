@@ -50,20 +50,20 @@ namespace RBX
 			}
 		};
 
-		static GeometryBatch* createBatch(Device* device, const shared_ptr<VertexLayout>& layout, const std::vector<AdornVertex>& vertices, const std::vector<unsigned short>& indices)
+		static GeometryBatch* createBatch(Device* device, const std::shared_ptr<VertexLayout>& layout, const std::vector<AdornVertex>& vertices, const std::vector<unsigned short>& indices)
 		{
-			shared_ptr<VertexBuffer> vbuf = device->createVertexBuffer(sizeof(AdornVertex), vertices.size(), GeometryBuffer::Usage_Static);
+			std::shared_ptr<VertexBuffer> vbuf = device->createVertexBuffer(sizeof(AdornVertex), vertices.size(), GeometryBuffer::Usage_Static);
 
 			vbuf->upload(0, &vertices[0], vertices.size() * sizeof(AdornVertex));
 
-			shared_ptr<IndexBuffer> ibuf = device->createIndexBuffer(sizeof(unsigned short), indices.size(), GeometryBuffer::Usage_Static);
+			std::shared_ptr<IndexBuffer> ibuf = device->createIndexBuffer(sizeof(unsigned short), indices.size(), GeometryBuffer::Usage_Static);
 
 			ibuf->upload(0, &indices[0], indices.size() * sizeof(unsigned short));
 
 			return new GeometryBatch(device->createGeometry(layout, vbuf, ibuf), Geometry::Primitive_Triangles, indices.size(), vertices.size());
 		}
 
-		static GeometryBatch* createBox(Device* device, const shared_ptr<VertexLayout>& layout)
+		static GeometryBatch* createBox(Device* device, const std::shared_ptr<VertexLayout>& layout)
 		{
 			IndexBox box(-Vector3::one(), Vector3::one());
 
@@ -93,7 +93,7 @@ namespace RBX
 			return createBatch(device, layout, vertices, indices);
 		}
 
-		static GeometryBatch* createCylinderX(Device* device, const shared_ptr<VertexLayout>& layout, int sides, bool zeroNormalBottom)
+		static GeometryBatch* createCylinderX(Device* device, const std::shared_ptr<VertexLayout>& layout, int sides, bool zeroNormalBottom)
 		{
 			std::vector<AdornVertex> vertices;
 			std::vector<unsigned short> indices;
@@ -148,7 +148,7 @@ namespace RBX
 			return createBatch(device, layout, vertices, indices);
 		}
 
-		static GeometryBatch* createSphere(Device* device, const shared_ptr<VertexLayout>& layout)
+		static GeometryBatch* createSphere(Device* device, const std::shared_ptr<VertexLayout>& layout)
 		{
 			const int sidesU = 18;
 			const int sidesV = 9;
@@ -214,7 +214,7 @@ namespace RBX
 			return createBatch(device, layout, vertices, indices);
 		}
 
-		static GeometryBatch* createCone(Device* device, const shared_ptr<VertexLayout>& layout)
+		static GeometryBatch* createCone(Device* device, const std::shared_ptr<VertexLayout>& layout)
 		{
 			const int sides = 12;
 
@@ -259,7 +259,7 @@ namespace RBX
 			return createBatch(device, layout, vertices, indices);
 		}
 
-		static GeometryBatch* createTorus(Device* device, const shared_ptr<VertexLayout>& layout)
+		static GeometryBatch* createTorus(Device* device, const std::shared_ptr<VertexLayout>& layout)
 		{
 			const int sides = 12;
 
@@ -313,7 +313,7 @@ namespace RBX
 			{
 			}
 
-			const shared_ptr<Texture>& getTexture() const { return texture.getTexture(); }
+			const std::shared_ptr<Texture>& getTexture() const { return texture.getTexture(); }
 
 			virtual G3D::Vector2 getOriginalSize()
 			{
@@ -349,7 +349,7 @@ namespace RBX
 			elements.push_back(VertexLayout::Element(0u, 12u, VertexLayout::Format_Float2, VertexLayout::Input_Vertex, VertexLayout::Semantic_Texture));
 			elements.push_back(VertexLayout::Element(0u, 20u, VertexLayout::Format_Float3, VertexLayout::Input_Vertex, VertexLayout::Semantic_Normal));*/
 
-			shared_ptr<VertexLayout> layout = visualEngine->getDevice()->createVertexLayout(elements);
+			std::shared_ptr<VertexLayout> layout = visualEngine->getDevice()->createVertexLayout(elements);
 
 			batchBox.reset(createBox(visualEngine->getDevice(), layout));
 			batchCylinderX.reset(createCylinderX(visualEngine->getDevice(), layout, 12, false));
@@ -434,9 +434,9 @@ namespace RBX
 			if (!typesetter)
 				return Vector2::zero();
 
-			const shared_ptr<Texture>& tex = typesetter->getTexture();
+			const std::shared_ptr<Texture>& tex = typesetter->getTexture();
 
-			shared_ptr<Texture> oldTexture = tex;
+			std::shared_ptr<Texture> oldTexture = tex;
 			oldTexture.swap(currentTexture);
 			currentTextureType = BatchTextureType_Font;
 
@@ -759,12 +759,12 @@ namespace RBX
 
 		void AdornRender::render(DeviceContext* context, RenderPassStats& stats)
 		{
-			shared_ptr<Texture> defaultTexture = visualEngine->getTextureManager()->getFallbackTexture(TextureManager::Fallback_White);
+			std::shared_ptr<Texture> defaultTexture = visualEngine->getTextureManager()->getFallbackTexture(TextureManager::Fallback_White);
 			RBXASSERT(defaultTexture);
 
 			PIX_SCOPE(context, "AR::Adorns");
 
-			context->bindTexture(0, defaultTexture.get(), SamplerState::Filter_Linear);
+			context->bindTexture(0, defaultTexture);
 
 			context->setDepthState(DepthState(DepthState::Function_GreaterEqual, true));
 			context->setRasterizerState(RasterizerState::Cull_Back);
@@ -779,12 +779,12 @@ namespace RBX
 
 		void AdornRender::renderNoDepth(DeviceContext* context, RenderPassStats& stats, int renderIndex)
 		{
-			shared_ptr<Texture> defaultTexture = visualEngine->getTextureManager()->getFallbackTexture(TextureManager::Fallback_White);
+			std::shared_ptr<Texture> defaultTexture = visualEngine->getTextureManager()->getFallbackTexture(TextureManager::Fallback_White);
 			RBXASSERT(defaultTexture);
 
 			PIX_SCOPE(context, "AR::Adorns");
 
-			context->bindTexture(0, defaultTexture.get(), SamplerState::Filter_Linear);
+			context->bindTexture(0, defaultTexture);
 
 			context->setRasterizerState(RasterizerState::Cull_Back);
 			context->setBlendState(BlendState::Mode_AlphaBlend);

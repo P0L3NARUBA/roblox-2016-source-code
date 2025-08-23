@@ -5,7 +5,7 @@
 
 #include <map>
 
-#include <boost/unordered_map.hpp>
+#include <unordered_map>
 
 struct ID3D11Device;
 struct ID3D11DeviceContext;
@@ -99,7 +99,9 @@ namespace RBX {
 			//virtual void setWorldTransforms4x3(const float* data, size_t matrixCount);
 			//virtual void setConstant(int handle, const float* data, size_t vectorCount);
 
-			virtual void bindTexture(uint32_t stage, Texture* texture, const SamplerState& state);
+			virtual void bindTexture(uint32_t stage, const std::shared_ptr<Texture>& texture);
+			virtual void bindTextures(std::vector<Texture::TextureStage> textureStages);
+			virtual void bindSamplers();
 
 			virtual void setRasterizerState(const RasterizerState& state);
 			virtual void setBlendState(const BlendState& state);
@@ -119,17 +121,6 @@ namespace RBX {
 			ID3D11DeviceContext* getContextDX11();
 
 		protected:
-			struct TextureUnit {
-				TextureD3D11* texture;
-				SamplerState samplerState;
-
-				TextureUnit()
-					: texture(nullptr)
-					, samplerState(SamplerState::Filter_Point)
-				{
-				}
-			};
-
 			Device* device;
 			ID3D11Device* device11;
 			ID3D11DeviceContext* immediateContext11;
@@ -155,21 +146,20 @@ namespace RBX {
 			VertexLayoutD3D11* cachedVertexLayout;
 			GeometryD3D11* cachedGeometry;
 
-			TextureUnit cachedTextureUnits[32];
+			std::vector<TextureD3D11*>		 cachedTextures;
+			std::vector<ID3D11SamplerState*> cachedSamplers;
 
 			RasterizerState cachedRasterizerState;
 			BlendState cachedBlendState;
 			DepthState cachedDepthState;
 
-			typedef boost::unordered_map<RasterizerState, ID3D11RasterizerState*, StateHasher<RasterizerState>> RasterizerStateHash;
-			typedef boost::unordered_map<BlendState, ID3D11BlendState*, StateHasher<BlendState>> BlendStateHash;
-			typedef boost::unordered_map<DepthState, ID3D11DepthStencilState*, StateHasher<DepthState>> DepthStateHash;
-			typedef boost::unordered_map<SamplerState, ID3D11SamplerState*, StateHasher<SamplerState>> SamplerStateHash;
+			typedef std::unordered_map<RasterizerState, ID3D11RasterizerState*, StateHasher<RasterizerState>> RasterizerStateHash;
+			typedef std::unordered_map<BlendState, ID3D11BlendState*, StateHasher<BlendState>> BlendStateHash;
+			typedef std::unordered_map<DepthState, ID3D11DepthStencilState*, StateHasher<DepthState>> DepthStateHash;
 
 			RasterizerStateHash rasterizerStateHash;
 			BlendStateHash blendStateHash;
 			DepthStateHash depthStateHash;
-			SamplerStateHash samplerStateHash;
 
 			template <class tHash, class tState>
 			void checkDuplicates(const tHash& hash, tState* state) {
@@ -226,17 +216,17 @@ namespace RBX {
 			virtual shared_ptr<ShaderProgram> createShaderProgram(const shared_ptr<ComputeShader>& computeShader);
 			virtual shared_ptr<ShaderProgram> createShaderProgramFFP();
 
-			virtual shared_ptr<VertexBuffer> createVertexBuffer(size_t elementSize, size_t elementCount, GeometryBuffer::Usage usage);
-			virtual shared_ptr<IndexBuffer> createIndexBuffer(size_t elementSize, size_t elementCount, GeometryBuffer::Usage usage);
-			virtual shared_ptr<VertexLayout> createVertexLayout(const std::vector<VertexLayout::Element>& elements);
+			virtual std::shared_ptr<VertexBuffer> createVertexBuffer(size_t elementSize, size_t elementCount, GeometryBuffer::Usage usage);
+			virtual std::shared_ptr<IndexBuffer> createIndexBuffer(size_t elementSize, size_t elementCount, GeometryBuffer::Usage usage);
+			virtual std::shared_ptr<VertexLayout> createVertexLayout(const std::vector<VertexLayout::Element>& elements);
 
-			virtual shared_ptr<Texture> createTexture(Texture::Type type, Texture::Format format, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevels, Texture::Usage usage);
+			virtual std::shared_ptr<Texture> createTexture(Texture::Type type, Texture::Format format, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevels, Texture::Usage usage);
 
-			virtual shared_ptr<Renderbuffer> createRenderbuffer(Texture::Format format, uint32_t width, uint32_t height, uint32_t samples);
+			virtual std::shared_ptr<Renderbuffer> createRenderbuffer(Texture::Format format, uint32_t width, uint32_t height, uint32_t samples);
 
-			virtual shared_ptr<Geometry> createGeometryImpl(const shared_ptr<VertexLayout>& layout, const shared_ptr<VertexBuffer>& vertexBuffers, const shared_ptr<IndexBuffer>& indexBuffer, uint32_t baseVertexIndex);
+			virtual std::shared_ptr<Geometry> createGeometryImpl(const std::shared_ptr<VertexLayout>& layout, const std::shared_ptr<VertexBuffer>& vertexBuffers, const std::shared_ptr<IndexBuffer>& indexBuffer, uint32_t baseVertexIndex);
 
-			virtual shared_ptr<Framebuffer> createFramebufferImpl(const std::vector<shared_ptr<Renderbuffer> >& color, const shared_ptr<Renderbuffer>& depth);
+			virtual std::shared_ptr<Framebuffer> createFramebufferImpl(const std::vector<std::shared_ptr<Renderbuffer>>& color, const std::shared_ptr<Renderbuffer>& depth);
 
 			virtual const DeviceCaps& getCaps() const { return caps; }
 
@@ -261,9 +251,9 @@ namespace RBX {
 
 			ID3D11Device* device11;
 			IDXGISwapChain* swapChain11;
-			scoped_ptr<DeviceContextD3D11> immediateContext;
+			std::unique_ptr<DeviceContextD3D11> immediateContext;
 
-			scoped_ptr<FramebufferD3D11> mainFramebuffer;
+			std::unique_ptr<FramebufferD3D11> mainFramebuffer;
 
 			void createMainFramebuffer(uint32_t width, uint32_t height);
 
@@ -276,7 +266,7 @@ namespace RBX {
 			ID3D11Query* disjointQuery;
 			bool frameTimeQueryIssued;
 
-			scoped_ptr<DeviceVRD3D11> vr;
+			std::unique_ptr<DeviceVRD3D11> vr;
 			bool vrEnabled;
 
 			// these functions are platform-dependent

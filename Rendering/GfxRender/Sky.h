@@ -28,7 +28,7 @@ namespace RBX {
 
 			void update(const G3D::LightingParameters& lighting, uint32_t starCount, bool drawCelestialBodies, bool useHDRI);
 
-			void render(DeviceContext* context, const RenderCamera& camera, Texture* texture, bool drawStars = true);
+			void render(DeviceContext* context, const RenderCamera& camera, const std::shared_ptr<Texture>& texture, bool drawStars = true);
 
 			void RenderSkyboxEnvMapCube(DeviceContext* context, uint32_t face, uint32_t targetSize);
 
@@ -66,12 +66,12 @@ namespace RBX {
 
 			VisualEngine* visualEngine;
 
-			shared_ptr<VertexLayout> layout;
+			std::shared_ptr<VertexLayout> layout;
 
-			scoped_ptr<GeometryBatch> cube;
+			std::unique_ptr<GeometryBatch> cube;
 
-			TextureRef skybox[6];
-			TextureRef skyboxHDRI;
+			std::array<std::shared_ptr<Texture>, 6u> skybox;
+			std::shared_ptr<Texture> skyboxHDRI;
 
 			Color3 skyColor;
 			Color3 skyColor2;
@@ -81,11 +81,11 @@ namespace RBX {
 
 			Vector3 sunPosition;
 			Color4 sunColor;
-			TextureRef sun;
+			std::shared_ptr<Texture> sun;
 
 			Vector3 moonPosition;
 			Color4 moonColor;
-			TextureRef moon;
+			std::shared_ptr<Texture> moon;
 
 			/*Brightness starLight;
 			StarData starsNormal;

@@ -789,7 +789,7 @@ namespace G3D {
 		}
 
 		inline T& operator[](int32_t n) {
-			debugAssertM(n < num, format("Array index out of bounds. n = %d, size() = %d", n, num));
+			debugAssertM(n < static_cast<int32_t>(num), format("Array index out of bounds. n = %d, size() = %d", n, num));
 			return data[n];
 		}
 
@@ -803,7 +803,7 @@ namespace G3D {
 		}
 
 		inline const T& operator[](int32_t n) const {
-			debugAssert((n < num));
+			debugAssert(n < static_cast<int32_t>(num));
 			debugAssert(data != nullptr);
 			return data[n];
 		}
@@ -833,7 +833,7 @@ namespace G3D {
 		/** Returns element lastIndex() */
 		inline T& last() {
 			debugAssert(num > 0u);
-			debugAssert(data != nullptrr);
+			debugAssert(data != nullptr);
 			return data[num - 1u];
 		}
 

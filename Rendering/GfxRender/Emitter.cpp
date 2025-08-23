@@ -453,16 +453,6 @@ namespace RBX {
 
 			//*batch = GeometryBatch(geom, Geometry::Primitive_Triangles, 6u * startIndex / 4u, 6u * visiblePCount, startIndex, startIndex + 4u * visiblePCount);
 			*batch = GeometryBatch(geom, Geometry::Primitive_Triangles, 0u, 0u, 0u);
-
-			RenderOperation rop = {};
-			//rop.renderable = nullptr;
-			//rop.distanceKey = RenderEntity::computeViewDepth(cam, cframe.translation, -0.1f - zOffset);
-			rop.geometry = this->batch.get();
-			rop.technique = teq.get();
-			rop.models = nullptr;
-
-			rq.getGroup(rq.Id_Transparent).push(rop);
-
 		}
 
 		static Vector3 f3rand(G3D::Random& rnd, Vector3 ext)
@@ -679,11 +669,11 @@ namespace RBX {
 			TextureRef colorStripTexture = !a.colorStripTexture.empty() ? gettex(sharedState->visualEngine, a.colorStripTexture, context) : black;
 			TextureRef alphaStripTexture = !a.alphaStripTexture.empty() ? gettex(sharedState->visualEngine, a.alphaStripTexture, context) : black;
 
-			teq->setTexture(0, particleTexture, SamplerState(SamplerState::Filter_Linear));
+			teq->setTexture(0, particleTexture.getTexture());
 			if (!enableCurves)
 			{
-				teq->setTexture(1, colorStripTexture, SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
-				teq->setTexture(2, alphaStripTexture, SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+				teq->setTexture(1, colorStripTexture.getTexture());
+				teq->setTexture(2, alphaStripTexture.getTexture());
 			}
 
 			this->colorStripTex = colorStripTexture;

@@ -8,6 +8,8 @@
 
 #include "TextureRef.h"
 
+using std::unique_ptr;
+
 namespace RBX {
 	namespace Graphics {
 
@@ -110,81 +112,61 @@ namespace RBX {
 
 			void onDeviceLost();
 
-			/*struct GBuffer {
-				shared_ptr<Texture> mainColor;
-				shared_ptr<Framebuffer> mainFB;
-
-				shared_ptr<Texture> gbufferColor;
-				shared_ptr<Framebuffer> gbufferColorFB;
-
-				shared_ptr<Texture> gbufferDepth;
-				shared_ptr<Framebuffer> gbufferDepthFB;
-
-				shared_ptr<Framebuffer> gbufferFB;
-			};*/
-
-			struct Main {
-				shared_ptr<Texture> mainColor;
-				shared_ptr<Texture> mainDepth;
-				shared_ptr<Framebuffer> mainFB;
+			struct RenderTarget {
+				std::shared_ptr<Texture> color;
+				std::shared_ptr<Texture> depth;
+				std::shared_ptr<Framebuffer> framebuffer;
 			};
 
-			const TextureRef& getShadowMapAtlas() const { return shadowMapAtlas; }
-			const TextureRef& getShadowMapArray() const { return shadowMapArray; }
+			const std::shared_ptr<Texture>& getShadowMapAtlas() const { return shadowMapAtlas; }
+			const std::shared_ptr<Texture>& getShadowMapArray() const { return shadowMapArray; }
 
-			const TextureRef& getAmbientOcclusion() const { return ambientOcclusion; }
-
-			/*GBuffer* getGBuffer() const { return gbuffer.get(); }
-			const TextureRef& getGBufferColor() const { return gbufferColor; }
-			const TextureRef& getGBufferDepth() const { return gbufferDepth; }
-
-			const TextureRef& getShadowMap() const { return shadowMapTexture; }*/
+			const std::shared_ptr<Texture>& getAmbientOcclusion() const { return ambientOcclusion; }
 
 		private:
 			VisualEngine* visualEngine;
 
 			Vector3 pointOfInterest;
 
-			float sqMinPartDistance;
+			float   sqMinPartDistance;
 			Vector3 sqMinDistanceCenter;
 
-			scoped_ptr<SpatialHashedScene> spatialHashedScene;
+			unique_ptr<SpatialHashedScene> spatialHashedScene;
 
 			std::vector<CullableSceneNode*> renderNodes;
-			scoped_ptr<RenderQueue> renderQueue;
-			scoped_ptr<RenderQueue> shadowRenderQueue;
+
+			unique_ptr<RenderQueue> renderQueue;
+			unique_ptr<RenderQueue> shadowRenderQueue;
 
 			bool skyEnabled;
 
 			Color4 clearColor;
 
-			GlobalShaderData globalShaderData;
+			GlobalShaderData     globalShaderData;
 			GlobalProcessingData globalProcessingData;
-			GlobalLightList globalLightList;
+			GlobalLightList      globalLightList;
 
-			scoped_ptr<GeometryBatch> fullscreenTriangle;
+			unique_ptr<GeometryBatch> fullscreenTriangle;
 
-			scoped_ptr<Sky> sky;
-
-			scoped_ptr<Main> main;
-			TextureRef mainColor;
-			TextureRef mainDepth;
+			unique_ptr<Sky> sky;
+			
+			unique_ptr<RenderTarget> main;
+			unique_ptr<RenderTarget> msaa;
 
 			/*scoped_ptr<GBuffer> gbuffer;
 			TextureRef gbufferColor;
 			TextureRef gbufferDepth;*/
 
-			scoped_ptr<SSAO> ssao;
-			scoped_ptr<MSAA> msaa;
-			scoped_ptr<Bloom> bloom;
-			scoped_ptr<Blur> blur;
-			scoped_ptr<EnvMap> envMap;
-			scoped_ptr<ImageProcess> imageProcess;
+			unique_ptr<SSAO>         ssao;
+			unique_ptr<Bloom>        bloom;
+			unique_ptr<Blur>         blur;
+			unique_ptr<EnvMap>       envMap;
+			unique_ptr<ImageProcess> imageProcess;
 
-			TextureRef shadowMapAtlas;
-			TextureRef shadowMapArray;
+			std::shared_ptr<Texture> shadowMapAtlas;
+			std::shared_ptr<Texture> shadowMapArray;
 
-			TextureRef ambientOcclusion;
+			std::shared_ptr<Texture> ambientOcclusion;
 
 			/*scoped_ptr<ShadowMap> shadowMaps[3];
 			float shadowMapTexelSize;
@@ -197,11 +179,11 @@ namespace RBX {
 			//bool   gbufferError;
 			bool   msaaError;
 
-			struct ShadowValues {
+			/*struct ShadowValues {
 				float intensity;
 			};
 
-			/*ShadowValues unsetAndGetShadowValues(DeviceContext* context);
+			ShadowValues unsetAndGetShadowValues(DeviceContext* context);
 			void restoreShadows(DeviceContext* context, const ShadowValues& shadowValues);*/
 
 			void updateMain(uint32_t width, uint32_t height);

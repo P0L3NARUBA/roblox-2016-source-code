@@ -14,9 +14,9 @@ class ShaderProgram;
 struct EmitterShared
 {
     VisualEngine*               visualEngine;
-    shared_ptr< VertexBuffer >  vbuf;
-    shared_ptr< IndexBuffer >   ibuf;
-    shared_ptr< VertexLayout >  vlayout;
+    std::shared_ptr< VertexBuffer >  vbuf;
+    std::shared_ptr< IndexBuffer >   ibuf;
+    std::shared_ptr< VertexLayout >  vlayout;
     shared_ptr<ShaderProgram>   shaders[5];
     G3D::Random                 rnd;
     bool                        colorBGR;

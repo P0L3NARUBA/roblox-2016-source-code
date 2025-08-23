@@ -15,22 +15,20 @@ Only Studio is verified functioning and the one recommended to use.
 
 Supported graphics APIs are:
 
-- DirectX 11
+- DirectX 11.1
+- Vulkan 1.2 (Not currently implemented.)
 
-DirectX 9 and OpenGL is unsupported.
+DirectX 9/10 and OpenGL is unsupported.
 
 **To build from the source, refer to [BUILDING.md](/BUILDING.md)**
 
 - Make sure to read them properly so you don't face any issues.
 
-**Having any problems? You can get help at [our discord server](https://www.discord.gg/rVrYHdrbsp) or at the [issues page](https://github.com/P0L3NARUBA/roblox-2016-source-code/issues)**
-
-**Want to play the game in no time? Check out [Releases](https://github.com/P0L3NARUBA/roblox-2016-source-code/releases/)**\
-**NOTE:** You may need [Rocknet](https://github.com/P0L3NARUBA/Rocknet/tree/main) to launch the game.
+**Having any problems? You can get help at [our discord server](https://www.discord.gg/rVrYHdrbsp) or on the [issues page](https://github.com/P0L3NARUBA/roblox-2016-source-code/issues)**
 
 ## Table of Contents
 
-1. [Libraries Used](#libraries-used)
+   [Libraries Used](#libraries-used)
 2. [Tools Used](#tools-used)
 3. [Current Goals](#current-goals)
 4. [Current Issues](#current-issues)
@@ -49,8 +47,6 @@ DirectX 9 and OpenGL is unsupported.
 - [w3c-libwww](/Contribs/w3c-libwww-5.4.0) = 5.4.0
 - [curl](/Contribs/windows/x86/curl/curl-7.43.0) = 7.43.0
 - [zlib](/Contribs/windows/x86/zlib/zlib-1.2.8) = 1.2.8
-- [glsl-optimizer](/Rendering/ShaderCompiler/glsl-optimizer) = *unknown*
-- [hlsl2glslfork](/Rendering/ShaderCompiler/hlsl2glslfork) = *unknown*
 - [mojoshader](/Rendering/ShaderCompiler/mojoshader) = *unknown*
 - [gSOAP](/RCCService/gSOAP/gsoap-2.7) = 2.7.10
 - [RakNet](/Network/raknet) = 5
@@ -195,23 +191,16 @@ DirectX 9 and OpenGL is unsupported.
 
 - [x] Color3uint8
   - [x] Color3.fromRGB()
-- [ ] R15
+- [ ] R15 character support
 - [x] :Connect() and :Wait()
-- [ ] Fix keyboard shortcuts
-  - [ ] Reset character keybind
-  - [ ] Chat keybind
-  - [ ] Windows key on WindowsClient
 - [x] New fonts
-- [ ] Adding Cyrillic & Non-Latin language support
+- [x] Support for newer mesh formats
+- [ ] Cyrillic & Non-Latin language support
   - [ ] UTF/Unicode support
 - [ ] New Lua version
-- [ ] Improving profanity filter
-- [x] New fonts
-- [x] Support for newer mesh versions
+- [ ] Improved profanity and swear word filter  
 - [ ] Implement PVInstance class
 - [ ] Dark Mode for Studio
-- [x] Change the location of unrelated files inside **content\fonts** folder.
-- [ ] Making bootstrappers functional as intended
 - [ ] 64-bit support
 
 ### Projects that successfully build with Visual Studio 2022 **VERIFIED: [26/59]**
@@ -306,16 +295,20 @@ DirectX 9 and OpenGL is unsupported.
 
 ## Current Issues
 
-- Outdoor Ambient does nothing.
-- Occasional lights consisting of garbage data and getting past all legitimacy checks may result in buggy visuals.
-- Outdoor environment map generation.
+- Visuals are completely black.
+- Environment map generation output is black.
 - Undo and redo does not respect proper Color3 values on instances and will instead snap to the nearest BrickColor value.
 
 ## Todo List
 
 - Add geometry generation.
+  - Sphere
+  - Cylinder
+  - Wedge
+  - Corner wedge
 - Get solid parts rendering again.
 - Get materials working again.
+- Add DDS DXT10 Header support.
 - Get local lighting working again.
 - Get directional light shadows working.
 - Implement Early-Z pass.
@@ -334,7 +327,6 @@ DirectX 9 and OpenGL is unsupported.
 - Implement XeGTAO.
 - Make studio camera move and rotate smoothly.
 - Remove light grid code.
-- Add DDS DXT10 Header support.
 - Add 32-bit Integer Vector classes for continuity with HLSL Integer Vectors.
 - Change render scheduling to a command list.
 - Implement double buffering for improved and more consistent performance.
@@ -351,7 +343,7 @@ DirectX 9 and OpenGL is unsupported.
 - Make x64 actually compilable. (May as well remove x86 support while we're at it. Most likely will have to upgrade the libraries at the same time as well.)
 - Replace NULL/0 pointers with actual nullptr pointers.
 - Upgrade to VS 2022 build tools.
-- Upgrade to C++17.
+- Upgrade to C++17/C++20.
 - Upgrade to Qt 5/6. (Qt 4.8.5, the version we're currently using, is from 2011!!)
 - Minimise dependency use. (E.g. use the Standard library instead of Boost.)
 - Upgrade to Boost 1.88.0. (Boost 1.56.0, the version we're currently using, is from 2014!!)

@@ -100,11 +100,11 @@ namespace RBX {
 			enum { kNumCachePoints = 32 };
 		private:
 			EmitterShared* sharedState;
-			shared_ptr<Geometry>        geom;
+			std::shared_ptr<Geometry>        geom;
 			std::vector<Particle>       plist;
 			G3D::CoordinateFrame        cframe;
 			G3D::CoordinateFrame        prevCframe;
-			shared_ptr<GeometryBatch>   batch;
+			std::shared_ptr<GeometryBatch>   batch;
 			float                       clock;
 			float                       emissionCounter;
 

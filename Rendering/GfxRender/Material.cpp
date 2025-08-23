@@ -29,16 +29,11 @@ namespace RBX {
 			blendState = state;
 		}
 
-		void Technique::setTexture(uint32_t stage, const TextureRef& texture, const SamplerState& state) {
-			if (stage >= textures.size()) {
-				TextureUnit dummy = { TextureRef(), SamplerState::Filter_Point };
+		void Technique::setTexture(uint32_t stage, const std::shared_ptr<Texture>& texture) {
+			if (stage >= textures.size())
+				textures.resize(stage + 1u, Texture::TextureStage(0u, nullptr));
 
-				textures.resize(stage + 1u, dummy);
-			}
-
-			TextureUnit tu = { texture, state };
-
-			textures[stage] = tu;
+			textures[stage] = Texture::TextureStage(stage, texture);
 		}
 
 		void Technique::apply(DeviceContext* context) const {
@@ -47,23 +42,11 @@ namespace RBX {
 			context->setBlendState(blendState);
 
 			context->bindProgram(program.get());
-
-			for (size_t i = 0u; i < textures.size(); ++i) {
-				const TextureUnit& tu = textures[i];
-				const shared_ptr<Texture>& tex = tu.texture.getTexture();
-
-				if (tex)
-					context->bindTexture(i, tex.get(), tu.state);
-			}
+			context->bindTextures(textures);
 		}
 
-		const TextureRef& Technique::getTexture(uint32_t stage) const {
-			if (stage < textures.size())
-				return textures[stage].texture;
-			else {
-				static const TextureRef dummy;
-				return dummy;
-			}
+		std::shared_ptr<Texture> Technique::getTexture(uint32_t stage) const {
+			return stage < textures.size() ? textures[stage].texture : nullptr;
 		}
 
 		Material::Material()

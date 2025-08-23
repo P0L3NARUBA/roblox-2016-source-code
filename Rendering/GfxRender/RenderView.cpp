@@ -35,6 +35,7 @@
 
 #include "SceneManager.h"
 #include "SceneUpdater.h"
+#include "MeshInstancer.h"
 
 #include "TextureCompositor.h"
 
@@ -46,7 +47,7 @@
 #include "TextureManager.h"
 #include "AdornRender.h"
 #include "MaterialGenerator.h"
-#include "GeometryGenerator.h"
+//#include "GeometryGenerator.h"
 //#include "Vertex.h"
 
 #if !defined(RBX_PLATFORM_DURANGO)
@@ -592,12 +593,12 @@ namespace RBX {
 
 			if (name == "RenderStatsGeometryGen") {
 				RBX::RenderStats* stats = visualEngine->getRenderStats();
-				SceneUpdater* su = visualEngine->getSceneUpdater();
+				//SceneUpdater* su = visualEngine->getSceneUpdater();
 
 				return RBX::format("fast %dc %dp mega %dc queue %dc",
 					stats->lastFrameFast.clusters, stats->lastFrameFast.parts,
 					stats->lastFrameMegaClusterChunks,
-					int32_t(su->getUpdateQueueSize()));
+					0);//int32_t(su->getUpdateQueueSize()));
 			}
 
 			if (name == "RenderStatsClusters") {
@@ -841,6 +842,7 @@ namespace RBX {
 			visualEngine->getWater()->update(dataModel.get(), dt);
 
 			//visualEngine->getSceneUpdater()->updatePrepare(0, *visualEngine->getUpdateFrustum());
+			visualEngine->getMeshInstancer()->updateClusters();
 
 			visualEngine->getTextureCompositor()->update(poi);
 
@@ -868,10 +870,10 @@ namespace RBX {
 			Rect2D screen = Rect2D::xywh(0.0f, 0.0f, w, h);
 			Rect2D paddedScreen = Rect2D::xywh(lineWidth, lineWidth, float(w - lineWidth * 2u), float(h - lineWidth * 2u));
 
-			videoFrameVertexStreamer->rectBlt(shared_ptr<Texture>(), Color4(1.0f, 0.0f, 0.0f), screen.corner(3), paddedScreen.corner(3), screen.corner(0), paddedScreen.corner(0), Vector2::zero(), Vector2::zero(), BatchTextureType_Color, true);
-			videoFrameVertexStreamer->rectBlt(shared_ptr<Texture>(), Color4(1.0f, 0.0f, 0.0f), paddedScreen.corner(2), screen.corner(2), paddedScreen.corner(1), screen.corner(1), Vector2::zero(), Vector2::zero(), BatchTextureType_Color, true);
-			videoFrameVertexStreamer->rectBlt(shared_ptr<Texture>(), Color4(1.0f, 0.0f, 0.0f), paddedScreen.corner(0), paddedScreen.corner(1), screen.corner(0), screen.corner(1), Vector2::zero(), Vector2::zero(), BatchTextureType_Color, true);
-			videoFrameVertexStreamer->rectBlt(shared_ptr<Texture>(), Color4(1.0f, 0.0f, 0.0f), screen.corner(3), screen.corner(2), paddedScreen.corner(3), paddedScreen.corner(2), Vector2::zero(), Vector2::zero(), BatchTextureType_Color, true);
+			videoFrameVertexStreamer->rectBlt(std::shared_ptr<Texture>(), Color4(1.0f, 0.0f, 0.0f), screen.corner(3), paddedScreen.corner(3), screen.corner(0), paddedScreen.corner(0), Vector2::zero(), Vector2::zero(), BatchTextureType_Color, true);
+			videoFrameVertexStreamer->rectBlt(std::shared_ptr<Texture>(), Color4(1.0f, 0.0f, 0.0f), paddedScreen.corner(2), screen.corner(2), paddedScreen.corner(1), screen.corner(1), Vector2::zero(), Vector2::zero(), BatchTextureType_Color, true);
+			videoFrameVertexStreamer->rectBlt(std::shared_ptr<Texture>(), Color4(1.0f, 0.0f, 0.0f), paddedScreen.corner(0), paddedScreen.corner(1), screen.corner(0), screen.corner(1), Vector2::zero(), Vector2::zero(), BatchTextureType_Color, true);
+			videoFrameVertexStreamer->rectBlt(std::shared_ptr<Texture>(), Color4(1.0f, 0.0f, 0.0f), screen.corner(3), screen.corner(2), paddedScreen.corner(3), paddedScreen.corner(2), Vector2::zero(), Vector2::zero(), BatchTextureType_Color, true);
 
 			videoFrameVertexStreamer->renderPrepare();
 			videoFrameVertexStreamer->render2D(context, w, h, visualEngine->getRenderStats()->passUI);
@@ -889,7 +891,7 @@ namespace RBX {
 				vrVertexStreamer.reset(new VertexStreamer(visualEngine.get()));
 
 			if (!vrDebugTexture || vrDebugTexture->getWidth() != eyeFramebuffer->getWidth() || vrDebugTexture->getHeight() != eyeFramebuffer->getHeight())
-				vrDebugTexture = visualEngine->getDevice()->createTexture(Texture::Type_2D, Texture::Format_RGBA8, eyeFramebuffer->getWidth(), eyeFramebuffer->getHeight(), 1, 1, Texture::Usage_Renderbuffer);
+				vrDebugTexture = visualEngine->getDevice()->createTexture(Texture::Type_2D, Texture::Format_RGBA8, eyeFramebuffer->getWidth(), eyeFramebuffer->getHeight(), 1, 1, Texture::Usage_Colorbuffer);
 
 			uint32_t w = mainFramebuffer->getWidth();
 			uint32_t h = mainFramebuffer->getHeight();
@@ -1048,7 +1050,6 @@ namespace RBX {
 				pUnpacked[idx - 1u] = 0xffffffff;
 
 				fontTexture = device->createTexture(Texture::Type_2D, Texture::Format_RGBA8, g_MicroProfileFontTextureX, g_MicroProfileFontTextureY, 1u, 1u, Texture::Usage_Static);
-
 				fontTexture->upload(0u, 0u, TextureRegion(0u, 0u, g_MicroProfileFontTextureX, g_MicroProfileFontTextureY), pUnpacked, fontSize);
 			}
 
@@ -1136,7 +1137,7 @@ namespace RBX {
 					context->setBlendState(BlendState::Mode_AlphaBlend);
 					context->setDepthState(DepthState(DepthState::Function_Always, false));
 
-					context->bindTexture(0u, fontTexture.get(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+					context->bindTexture(0u, fontTexture);
 
 					if (!quads.empty())
 						context->draw(quadsGeometry.get(), Geometry::Primitive_Triangles, 0u, quads.size(), 0u);
@@ -1163,17 +1164,17 @@ namespace RBX {
 			std::vector<Vertex> quads;
 			std::vector<Vertex> lines;
 
-			shared_ptr<Texture> fontTexture;
+			std::shared_ptr<Texture> fontTexture;
 
-			shared_ptr<VertexLayout> layout;
+			std::shared_ptr<VertexLayout> layout;
 
-			shared_ptr<VertexBuffer> quadsVB;
-			shared_ptr<Geometry> quadsGeometry;
+			std::shared_ptr<VertexBuffer> quadsVB;
+			std::shared_ptr<Geometry> quadsGeometry;
 
-			shared_ptr<VertexBuffer> linesVB;
-			shared_ptr<Geometry> linesGeometry;
+			std::shared_ptr<VertexBuffer> linesVB;
+			std::shared_ptr<Geometry> linesGeometry;
 
-			void updateBuffer(shared_ptr<VertexBuffer>& vb, shared_ptr<Geometry>& geometry, const std::vector<Vertex>& vertices) {
+			void updateBuffer(std::shared_ptr<VertexBuffer>& vb, std::shared_ptr<Geometry>& geometry, const std::vector<Vertex>& vertices) {
 				if (vertices.empty()) return;
 
 				if (!vb || vb->getElementCount() < vertices.size()) {
@@ -1182,7 +1183,7 @@ namespace RBX {
 						count *= 2u;
 
 					vb = visualEngine->getDevice()->createVertexBuffer(sizeof(Vertex), count, GeometryBuffer::Usage_Dynamic);
-					geometry = visualEngine->getDevice()->createGeometry(layout, vb, shared_ptr<IndexBuffer>());
+					geometry = visualEngine->getDevice()->createGeometry(layout, vb, std::shared_ptr<IndexBuffer>());
 				}
 
 				void* locked = vb->lock(VertexBuffer::Lock_Discard);
@@ -1562,9 +1563,9 @@ namespace RBX {
 			if (crop)
 				modifyThumbnailCamera(visualEngine.get(), allowDolly);
 
-			shared_ptr<Renderbuffer> color = visualEngine->getDevice()->createRenderbuffer(Texture::Format_RGBA16f, width, height, 1u);
-			shared_ptr<Renderbuffer> depth = visualEngine->getDevice()->createRenderbuffer(Texture::Format_D32f, width, height, 1u);
-			shared_ptr<Framebuffer> framebuffer = visualEngine->getDevice()->createFramebuffer(color, depth);
+			std::shared_ptr<Renderbuffer> color = visualEngine->getDevice()->createRenderbuffer(Texture::Format_RGBA16f, width, height, 1u);
+			std::shared_ptr<Renderbuffer> depth = visualEngine->getDevice()->createRenderbuffer(Texture::Format_D32f, width, height, 1u);
+			std::shared_ptr<Framebuffer> framebuffer = visualEngine->getDevice()->createFramebuffer(color, depth);
 
 			renderPerformImpl(0.0f, framebuffer.get());
 

@@ -37,7 +37,7 @@ namespace RBX {
 			FASTLOG5(channel, "Caps: Framebuffer %d (%d MRT, %d MSAA) Stencil %d 32bIdx %d", supportsFramebuffer, maxDrawBuffers, maxSamples, supportsStencil, supportsIndex32);
 			FASTLOG4(channel, "Caps: Texture: DXT %d PVR %d ETC1 %d Half %d", supportsTextureDXT, supportsTexturePVR, supportsTextureETC1, supportsTextureHalfFloat);
 			FASTLOG3(channel, "Caps: Texture: 3D %d NPOT %d PartialMips %d", supportsTexture3D, supportsTextureNPOT, supportsTexturePartialMipChain);
-			FASTLOG2(channel, "Caps: Texture: Size %d Units %d", maxTextureSize, maxTextureUnits);
+			//FASTLOG2(channel, "Caps: Texture: Size %d Units %d", maxTextureSize, maxTextureUnits);
 			FASTLOG3(channel, "Caps: ColorBGR %d HalfPixelOffset %d RTFlip %d", colorOrderBGR, needsHalfPixelOffset, requiresRenderTargetFlipping);
 			FASTLOG1(channel, "Caps: Retina %d", retina);
 		}
@@ -73,18 +73,18 @@ namespace RBX {
 			}
 		}
 
-		shared_ptr<Geometry> Device::createGeometry(const shared_ptr<VertexLayout>& layout, const shared_ptr<VertexBuffer>& vertexBuffer, const shared_ptr<IndexBuffer>& indexBuffer, uint32_t baseVertexIndex) {
+		std::shared_ptr<Geometry> Device::createGeometry(const std::shared_ptr<VertexLayout>& layout, const std::shared_ptr<VertexBuffer>& vertexBuffer, const std::shared_ptr<IndexBuffer>& indexBuffer, uint32_t baseVertexIndex) {
 			return createGeometryImpl(layout, vertexBuffer, indexBuffer, baseVertexIndex);
 		}
 
-		shared_ptr<Framebuffer> Device::createFramebuffer(const shared_ptr<Renderbuffer>& color, const shared_ptr<Renderbuffer>& depth) {
-			std::vector<shared_ptr<Renderbuffer> > colors;
+		std::shared_ptr<Framebuffer> Device::createFramebuffer(const std::shared_ptr<Renderbuffer>& color, const std::shared_ptr<Renderbuffer>& depth) {
+			std::vector<std::shared_ptr<Renderbuffer>> colors;
 			colors.push_back(color);
 
 			return createFramebufferImpl(colors, depth);
 		}
 
-		shared_ptr<Framebuffer> Device::createFramebuffer(const std::vector<shared_ptr<Renderbuffer> >& color, const shared_ptr<Renderbuffer>& depth) {
+		std::shared_ptr<Framebuffer> Device::createFramebuffer(const std::vector<std::shared_ptr<Renderbuffer>>& color, const std::shared_ptr<Renderbuffer>& depth) {
 			return createFramebufferImpl(color, depth);
 		}
 

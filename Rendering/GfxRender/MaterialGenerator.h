@@ -42,13 +42,13 @@ namespace RBX {
 			};
 
 			struct Result {
-				explicit Result(const shared_ptr<Material>& material = shared_ptr<Material>(), uint32_t key = 0u)
+				explicit Result(const std::shared_ptr<Material>& material = std::shared_ptr<Material>(), uint32_t key = 0u)
 					: material(material)
 					, key(key)
 				{
 				}
 
-				shared_ptr<Material> material;
+				std::shared_ptr<Material> material;
 				uint32_t key;
 			};
 
@@ -81,22 +81,22 @@ namespace RBX {
 				TexturedMaterialCache();
 			};
 
-			shared_ptr<Material> renderMaterialCache[2];
+			std::shared_ptr<Material> renderMaterialCache[2];
 			TexturedMaterialCache texturedMaterialCache[Flag_CacheMask]; // an entry for each supported flag combination
 
 			std::pair<Humanoid*, TextureCompositor::JobHandle> compositCache;
 
-			TextureRef albedoTextures;	 /* R: Albedo.r,   G: Albedo.g,   B: Albedo.b,			A: Alpha/Factor	*/
-			TextureRef emissiveTextures; /* R: Emissive.r, G: Emissive.g, B: Emissive.b,		A: Factor		*/
-			TextureRef matValueTextures; /* R: Roughness,  G: Metalness,  B: Ambient Occlusion,	A: Unused		*/
+			std::shared_ptr<Texture> albedoTextures;   /* R: Albedo.r,   G: Albedo.g,   B: Albedo.b,		  A: Alpha/Factor */
+			std::shared_ptr<Texture> emissiveTextures; /* R: Emissive.r, G: Emissive.g, B: Emissive.b,		  A: Factor		  */
+			std::shared_ptr<Texture> matValueTextures; /* R: Roughness,  G: Metalness,  B: Ambient Occlusion, A: Unused		  */
 
-			TextureRef normalTextures; /* R: Normal.x, G: Normal.y, B: Normal.z, A: Unused */
-			TextureRef heightTextures; /* R: Height,   G: --------, B: --------, A: ------ */
+			std::shared_ptr<Texture> normalTextures; /* R: Normal.x, G: Normal.y, B: Normal.z, A: Unused */
+			std::shared_ptr<Texture> heightTextures; /* R: Height,   G: --------, B: --------, A: ------ */
 			// We have the height texture separate rather than pack it with another texture, like the material value or normal map textures.
 			// This is to avoid excessive memory bandwith use because it's sampled multiple times with our parallax occlusion mapping system.
 
-			TextureRef clearcoatATextures; /* R: ClearcoatTint.r,     G: ClearcoatTint.g,   B: ClearcoatTint.b,   A: Clearcoat Factor  */
-			TextureRef clearcoatBTextures; /* R: Clearcoat Roughness, G: ClearcoatNormal.x, B: ClearcoatNormal.y, A: ClearcoatNormal.z */
+			std::shared_ptr<Texture> clearcoatATextures; /* R: ClearcoatTint.r,     G: ClearcoatTint.g,   B: ClearcoatTint.b,   A: Clearcoat Factor  */
+			std::shared_ptr<Texture> clearcoatBTextures; /* R: Clearcoat Roughness, G: ClearcoatNormal.x, B: ClearcoatNormal.y, A: ClearcoatNormal.z */
 
 			GlobalMaterialData globalMaterialData;
 

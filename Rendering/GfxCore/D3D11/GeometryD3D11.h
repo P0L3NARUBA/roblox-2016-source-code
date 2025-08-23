@@ -41,6 +41,7 @@ namespace RBX {
 
 		protected:
 			void create(uint32_t bindFlags);
+			void createWithData(const void* initialData, uint32_t bindFlags);
 
 		private:
 			ID3D11Buffer* object;
@@ -63,7 +64,7 @@ namespace RBX {
 
 		class GeometryD3D11 : public Geometry {
 		public:
-			GeometryD3D11(Device* device, const shared_ptr<VertexLayout>& layout, const shared_ptr<VertexBuffer>& vertexBuffer, const shared_ptr<IndexBuffer>& indexBuffer);
+			GeometryD3D11(Device* device, const std::shared_ptr<VertexLayout>& layout, const std::shared_ptr<VertexBuffer>& vertexBuffer, const std::shared_ptr<IndexBuffer>& indexBuffer);
 			~GeometryD3D11();
 
 			void draw(Geometry::Primitive primitive, uint32_t vertexCount, uint32_t vertexOffset, uint32_t indexOffset, VertexLayoutD3D11** layoutCache, GeometryD3D11** geometryCache, ShaderProgramD3D11** programCache);

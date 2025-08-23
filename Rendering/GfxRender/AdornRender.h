@@ -127,7 +127,7 @@ private:
 
     float currentHeight;
     CoordinateFrame currentCFrame;
-    shared_ptr<Texture> currentTexture;
+    std::shared_ptr<Texture> currentTexture;
     BatchTextureType currentTextureType;
 
     rbx::signal<void()>& getUnbindResourcesSignal();

@@ -3,6 +3,7 @@
 #include "Resource.h"
 
 #include <vector>
+#include <array>
 
 namespace RBX {
 	namespace Graphics {
@@ -95,6 +96,8 @@ namespace RBX {
 			uint32_t elementSize;
 			uint32_t elementCount;
 			Usage usage;
+
+			size_t dataSize;
 		};
 
 		class VertexBuffer : public GeometryBuffer {
@@ -127,24 +130,27 @@ namespace RBX {
 
 			~Geometry();
 
-			/*void updateBuffers(const std::shared_ptr<VertexBuffer>& newVertexBuffer, const std::shared_ptr<IndexBuffer>& newIndexbuffer) {
+			void updateBuffers(const std::shared_ptr<VertexBuffer>& newVertexBuffer, const std::shared_ptr<IndexBuffer>& newIndexbuffer) {
+				vertexBuffer.reset();
+				indexBuffer.reset();
+
 				vertexBuffer = newVertexBuffer;
 				indexBuffer = newIndexbuffer;
-			};*/
+			};
 
 		protected:
-			Geometry(Device* device, const shared_ptr<VertexLayout>& layout, const shared_ptr<VertexBuffer>& vertexBuffer, const shared_ptr<IndexBuffer>& indexBuffer);
+			Geometry(Device* device, const std::shared_ptr<VertexLayout>& layout, const std::shared_ptr<VertexBuffer>& vertexBuffer, const std::shared_ptr<IndexBuffer>& indexBuffer);
 
-			shared_ptr<VertexLayout> layout;
-			shared_ptr<VertexBuffer> vertexBuffer;
-			shared_ptr<IndexBuffer> indexBuffer;
+			std::shared_ptr<VertexLayout> layout;
+			std::shared_ptr<VertexBuffer> vertexBuffer;
+			std::shared_ptr<IndexBuffer> indexBuffer;
 		};
 
 		class GeometryBatch {
 		public:
 			GeometryBatch();
-			GeometryBatch(const shared_ptr<Geometry>& geometry, Geometry::Primitive primitive, uint32_t vertexCount, uint32_t vertexOffset);
-			GeometryBatch(const shared_ptr<Geometry>& geometry, Geometry::Primitive primitive, uint32_t vertexCount, uint32_t vertexOffset, uint32_t indexOffset);
+			GeometryBatch(const std::shared_ptr<Geometry>& geometry, Geometry::Primitive primitive, uint32_t vertexCount, uint32_t vertexOffset);
+			GeometryBatch(const std::shared_ptr<Geometry>& geometry, Geometry::Primitive primitive, uint32_t indexCount, uint32_t vertexOffset, uint32_t indexOffset);
 
 			Geometry* getGeometry() const { return geometry.get(); }
 			Geometry::Primitive getPrimitive() const { return primitive; }
@@ -154,7 +160,7 @@ namespace RBX {
 			uint32_t getIndexOffset() const { return indexOffset; }
 
 		private:
-			shared_ptr<Geometry> geometry;
+			std::shared_ptr<Geometry> geometry;
 
 			Geometry::Primitive primitive;
 

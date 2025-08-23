@@ -51,34 +51,21 @@ namespace  RBX {
 			const std::string&  s,
 			float size,
 			const Vector2& availableSpace = Vector2::zero(),
-			bool* textFits = NULL
+			bool* textFits = nullptr
 			) const = 0;
 
         virtual void loadResources(RBX::Graphics::TextureManager* textureManager, RBX::Graphics::TextureAtlas* glyphAtlas) = 0;
 		virtual void releaseResources() = 0;
-		virtual const shared_ptr<Graphics::Texture>& getTexture() const = 0;
+		virtual const std::shared_ptr<Graphics::Texture>& getTexture() const = 0;
 
-		static bool isCharNonWhitespace(char c)
-		{
-			return (c >= '!' && c <='~');
-		}
-		static bool isCharWhitespace(char c)
-		{
-			return (c == ' ' || c == '\t' || c == '\n');
-		}
-		static bool isCharSupported(char c)
-		{
-			return isCharNonWhitespace(c) || isCharWhitespace(c);
-		}
-		static bool isStringSupported(std::string& stringToCheck)
-		{
+		static bool isCharNonWhitespace(char c) { return (c >= '!' && c <='~'); }
+		static bool isCharWhitespace(char c) { return (c == ' ' || c == '\t' || c == '\n'); }
+		static bool isCharSupported(char c) { return isCharNonWhitespace(c) || isCharWhitespace(c); }
+		static bool isStringSupported(std::string& stringToCheck) {
 			for (std::string::iterator iter = stringToCheck.begin(); iter != stringToCheck.end(); ++iter)
-			{
 				if (!isCharSupported(*iter))
-				{
 					return false;
-				}
-			}
+
 			return true;
 		}
 	};

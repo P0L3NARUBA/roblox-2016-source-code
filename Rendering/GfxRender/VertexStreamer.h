@@ -37,12 +37,12 @@ namespace RBX {
 
 			void cleanUpFrameData();
 
-			void rectBlt(const shared_ptr<Texture>& texptr, const Color4& color4, const Vector2& x0y0, const Vector2& x1y0, const Vector2& x0y1, const Vector2& x1y1, const Vector2& tex0, const Vector2& tex1, BatchTextureType batchTexType, bool ignoreTexture = false);
+			void rectBlt(const std::shared_ptr<Texture>& texptr, const Color4& color4, const Vector2& x0y0, const Vector2& x1y0, const Vector2& x0y1, const Vector2& x1y1, const Vector2& tex0, const Vector2& tex1, BatchTextureType batchTexType, bool ignoreTexture = false);
 
 			void line(float x1, float y1, float x2, float y2, const Color4& color4);
 			void line3d(float x1, float y1, float z1, float x2, float y2, float z2, const Color4& color4);
 
-			void spriteBlt3D(const shared_ptr<Texture>& texptr, const Color4& color4, BatchTextureType batchTexType, const Vector3& x0y0, const Vector3& x1y0, const Vector3& x0y1, const Vector3& x1y1, const Vector2& tex0, const Vector2& tex1, int32_t zIndex, bool alwaysOnTop);
+			void spriteBlt3D(const std::shared_ptr<Texture>& texptr, const Color4& color4, BatchTextureType batchTexType, const Vector3& x0y0, const Vector3& x1y0, const Vector3& x0y1, const Vector3& x1y1, const Vector2& tex0, const Vector2& tex1, int32_t zIndex, bool alwaysOnTop);
 
 			void triangleList2d(const Color4& color4, const Vector2* v, uint32_t vcount, const short* i, uint32_t icount);
 			void triangleList(const Color4& color4, const CoordinateFrame& cframe, const Vector3* v, uint32_t vcount, const short* i, uint32_t icount);
@@ -56,7 +56,7 @@ namespace RBX {
 			};
 
 			struct VertexChunk {
-				VertexChunk(const shared_ptr<Texture>& texture, Geometry::Primitive primitive, uint32_t vertexStart, uint32_t vertexCount, BatchTextureType batchTexType, int32_t zIndex, bool forceTop)
+				VertexChunk(const std::shared_ptr<Texture>& texture, Geometry::Primitive primitive, uint32_t vertexStart, uint32_t vertexCount, BatchTextureType batchTexType, int32_t zIndex, bool forceTop)
 					: texture(texture)
 					, primitive(primitive)
 					, vertexStart(vertexStart)
@@ -71,7 +71,7 @@ namespace RBX {
 				{
 				}
 
-				shared_ptr<Texture> texture;
+				std::shared_ptr<Texture> texture;
 				Geometry::Primitive primitive;
 
 				uint32_t vertexStart;
@@ -92,11 +92,11 @@ namespace RBX {
 
 			G3D::Array<BasicVertex> vertexData;
 			G3D::Array<VertexChunk*> worldSpaceZDepthLayers[Adorn::maximumZIndex + 1];
-			shared_ptr<VertexBuffer> vertexBuffer;
-			shared_ptr<VertexLayout> vertexLayout;
-			shared_ptr<Geometry> geometry;
+			std::shared_ptr<VertexBuffer> vertexBuffer;
+			std::shared_ptr<VertexLayout> vertexLayout;
+			std::shared_ptr<Geometry> geometry;
 
-			VertexChunk* prepareChunk(const shared_ptr<Texture>& texPtr, Geometry::Primitive primitive, uint32_t vertexCount, CoordinateSpace coordinateSpace, BatchTextureType batchTextureType, bool ignoreTexture = false, int32_t zIndex = -1, bool forceTop = false);
+			VertexChunk* prepareChunk(const std::shared_ptr<Texture>& texPtr, Geometry::Primitive primitive, uint32_t vertexCount, CoordinateSpace coordinateSpace, BatchTextureType batchTextureType, bool ignoreTexture = false, int32_t zIndex = -1, bool forceTop = false);
 			void renderInternal(DeviceContext* context, CoordinateSpace coordinateSpace, const RenderCamera& camera, RenderPassStats& stats, int32_t renderIndex = -1);
 		};
 	}

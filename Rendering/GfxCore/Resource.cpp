@@ -4,6 +4,12 @@
 
 namespace RBX {
 	namespace Graphics {
+		Resource::Resource()
+			: device(nullptr)
+			, prev(nullptr)
+			, next(nullptr)
+		{
+		}
 
 		Resource::Resource(Device* device)
 			: device(device)

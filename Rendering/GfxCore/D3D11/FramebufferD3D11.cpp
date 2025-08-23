@@ -8,69 +8,96 @@
 namespace RBX {
 	namespace Graphics {
 		static ID3D11View* createRenderTargetView(ID3D11Device* device11, Texture::Format format, Texture::Type type, ID3D11Resource* texture, uint32_t cubeIndex, uint32_t mipIndex, uint32_t samples) {
-			HRESULT hr = E_FAIL;
-
 			if (Texture::isFormatDepth(format)) {
-				RBXASSERT(type == Texture::Type_2D);
-
-				ID3D11DepthStencilView* depthStencilView = nullptr;
-
 				D3D11_DEPTH_STENCIL_VIEW_DESC descDSV = {};
-
-				if (samples > 1u) {
-					RBXASSERT(mipIndex == 0u);
-					descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
-				}
-				else {
-					descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-					descDSV.Texture2D.MipSlice = mipIndex;
-				}
-
 				descDSV.Flags = 0u;
-				descDSV.Format = DXGI_FORMAT_UNKNOWN;
-
-				hr = device11->CreateDepthStencilView(texture, &descDSV, &depthStencilView);
-				RBXASSERT(SUCCEEDED(hr));
-
-				return depthStencilView;
-			}
-			else {
-				D3D11_RENDER_TARGET_VIEW_DESC descRTV = {};
+				descDSV.Format = TextureD3D11::getInternalFormat(format);
 
 				switch (type) {
 				case Texture::Type_2D: {
-					if (samples > 1u) {
-						RBXASSERT(mipIndex == 0u);
-						descRTV.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
-					}
-					else {
-						descRTV.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-						descRTV.Texture2D.MipSlice = mipIndex;
-					}
+					descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+					descDSV.Texture2D.MipSlice = mipIndex;
 
-					descRTV.Format = DXGI_FORMAT_UNKNOWN;
+					break;
+				}
+				case Texture::Type_2DMS: {
+					descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
+
+					break;
+				}
+				case Texture::Type_2DMS_Array: {
+					descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMSARRAY;
+					descDSV.Texture2DMSArray.ArraySize = 1u;
+					descDSV.Texture2DMSArray.FirstArraySlice = cubeIndex;
+
 					break;
 				}
 				case Texture::Type_2D_Array:
 				case Texture::Type_Cube:
 				case Texture::Type_Cube_Array: {
-					RBXASSERT(samples == 1u);
+					descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
+					descDSV.Texture2DArray.ArraySize = 1u;
+					descDSV.Texture2DArray.FirstArraySlice = cubeIndex;
+					descDSV.Texture2DArray.MipSlice = mipIndex;
 
+					break;
+				}
+				default: {
+					RBXASSERT(false);
+
+					break;
+				}
+				}
+
+				ID3D11DepthStencilView* depthStencilView = nullptr;
+				HRESULT hr = device11->CreateDepthStencilView(texture, &descDSV, &depthStencilView);
+
+				if (FAILED(hr))
+					throw RBX::runtime_error("Error creating depth stencil view: %x", hr);
+
+				return depthStencilView;
+			}
+			else {
+				D3D11_RENDER_TARGET_VIEW_DESC descRTV = {};
+				descRTV.Format = TextureD3D11::getInternalFormat(format);
+
+				switch (type) {
+				case Texture::Type_2D: {
+					descRTV.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+					descRTV.Texture2D.MipSlice = mipIndex;
+
+					break;
+				}
+				case Texture::Type_2DMS: {
+					descRTV.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
+
+					break;
+				}
+				case Texture::Type_2DMS_Array: {
+					descRTV.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMSARRAY;
+					descRTV.Texture2DMSArray.ArraySize = 1u;
+					descRTV.Texture2DMSArray.FirstArraySlice = cubeIndex;
+
+					break;
+				}
+				case Texture::Type_2D_Array:
+				case Texture::Type_Cube:
+				case Texture::Type_Cube_Array: {
 					descRTV.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
 					descRTV.Texture2DArray.ArraySize = 1u;
 					descRTV.Texture2DArray.FirstArraySlice = cubeIndex;
 					descRTV.Texture2DArray.MipSlice = mipIndex;
-					descRTV.Format = DXGI_FORMAT_UNKNOWN;
+
 					break;
 				}
 				default:
 					RBXASSERT(false);
+
 					break;
 				}
 
 				ID3D11RenderTargetView* renderTargetView = nullptr;
-
-				hr = device11->CreateRenderTargetView(texture, &descRTV, &renderTargetView);
+				HRESULT hr = device11->CreateRenderTargetView(texture, &descRTV, &renderTargetView);
 
 				if (FAILED(hr))
 					throw RBX::runtime_error("Error creating render target view: %x", hr);
@@ -79,7 +106,7 @@ namespace RBX {
 			}
 		}
 
-		ID3D11Texture2D* createRenderTexture(ID3D11Device* device11, uint32_t width, uint32_t height, uint32_t samples, Texture::Format format) {
+		static ID3D11Texture2D* createRenderTexture(ID3D11Device* device11, uint32_t width, uint32_t height, uint32_t samples, Texture::Format format) {
 			bool isDepth = Texture::isFormatDepth(format);
 
 			D3D11_TEXTURE2D_DESC descDepth = {};
@@ -87,7 +114,7 @@ namespace RBX {
 			descDepth.Height = height;
 			descDepth.MipLevels = 1u;
 			descDepth.ArraySize = 1u;
-			descDepth.Format = static_cast<DXGI_FORMAT>(TextureD3D11::getInternalFormat(format));
+			descDepth.Format = TextureD3D11::getInternalFormat(format);
 			descDepth.SampleDesc.Count = samples;
 			descDepth.SampleDesc.Quality = 0u;
 			descDepth.Usage = D3D11_USAGE_DEFAULT;
@@ -96,21 +123,21 @@ namespace RBX {
 			descDepth.MiscFlags = 0u;
 
 			ID3D11Texture2D* rtTexture = nullptr;
-			HRESULT hr = device11->CreateTexture2D(&descDepth, nullptr, &rtTexture);
-			if (FAILED(hr))
-				throw RBX::runtime_error("Error creating render target texture: %x", hr);
+
+			if (FAILED(device11->CreateTexture2D(&descDepth, nullptr, &rtTexture)))
+				throw RBX::runtime_error("Error creating render target texture.");
 
 			return rtTexture;
 		}
 
-		RenderbufferD3D11::RenderbufferD3D11(Device* device, const shared_ptr<TextureD3D11>& owner, uint32_t cubeIndex, uint32_t mipIndex)
-			: Renderbuffer(device, owner->getFormat(), owner->getWidth() / (uint32_t)pow(2u, mipIndex), owner->getHeight() / (uint32_t)pow(2u, mipIndex), 1u)
+		RenderbufferD3D11::RenderbufferD3D11(Device* device, const std::shared_ptr<TextureD3D11>& owner, uint32_t cubeIndex, uint32_t mipIndex, uint32_t samples)
+			: Renderbuffer(device, owner->getFormat(), Texture::getMipSide(owner->getWidth(), mipIndex), Texture::getMipSide(owner->getHeight(), mipIndex), samples)
 			, object(nullptr)
 			, owner(owner)
 		{
 			ID3D11Device* device11 = static_cast<DeviceD3D11*>(device)->getDevice11();
 
-			object = createRenderTargetView(device11, owner->getFormat(), owner->getType(), owner->getObject(), cubeIndex, mipIndex, 1u);
+			object = createRenderTargetView(device11, owner->getFormat(), owner->getType(), owner->getObject(), cubeIndex, mipIndex, samples);
 
 			// Destructor does not Release() the object, no need to AddRef()
 			texture = owner->getObject();
@@ -125,7 +152,7 @@ namespace RBX {
 
 			if (Texture::isFormatDepth(format)) {
 				D3D11_DEPTH_STENCIL_VIEW_DESC descDSV = {};
-				descDSV.Format = static_cast<DXGI_FORMAT>(TextureD3D11::getInternalFormat(format));
+				descDSV.Format = TextureD3D11::getInternalFormat(format);
 				descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 
 				ID3D11DepthStencilView* depthStencilView = nullptr;
@@ -136,7 +163,7 @@ namespace RBX {
 			}
 			else {
 				D3D11_RENDER_TARGET_VIEW_DESC descRTV = {};
-				descRTV.Format = static_cast<DXGI_FORMAT>(TextureD3D11::getInternalFormat(format));
+				descRTV.Format = TextureD3D11::getInternalFormat(format);
 				descRTV.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 
 				ID3D11RenderTargetView* renderTargetView = nullptr;
@@ -146,6 +173,7 @@ namespace RBX {
 				object = renderTargetView;
 			}
 		}
+
 
 		RenderbufferD3D11::RenderbufferD3D11(Device* device, Texture::Format format, uint32_t width, uint32_t height, uint32_t samples)
 			: Renderbuffer(device, format, width, height, samples)
@@ -162,7 +190,7 @@ namespace RBX {
 				ReleaseCheck(texture);
 		}
 
-		FramebufferD3D11::FramebufferD3D11(Device* device, const std::vector<shared_ptr<Renderbuffer>>& color, const shared_ptr<Renderbuffer>& depth)
+		FramebufferD3D11::FramebufferD3D11(Device* device, const std::vector<std::shared_ptr<Renderbuffer>>& color, const std::shared_ptr<Renderbuffer>& depth)
 			: Framebuffer(device, 0u, 0u, 0u)
 			, color(color)
 			, depth(depth)
@@ -174,8 +202,6 @@ namespace RBX {
 
 			for (size_t i = 0u; i < color.size(); ++i) {
 				RenderbufferD3D11* buffer = static_cast<RenderbufferD3D11*>(color[i].get());
-				RBXASSERT(buffer);
-				RBXASSERT(!Texture::isFormatDepth(buffer->getFormat()));
 
 				if (i == 0u) {
 					width = buffer->getWidth();
@@ -183,19 +209,22 @@ namespace RBX {
 					samples = buffer->getSamples();
 				}
 				else {
-					RBXASSERT(width == buffer->getWidth());
-					RBXASSERT(height == buffer->getHeight());
-					RBXASSERT(samples == buffer->getSamples());
+					if (width != buffer->getWidth() || height != buffer->getHeight())
+						throw RBX::runtime_error("Unsupported framebuffer configuration: Mismatched color resolution.");
+
+					if (samples != buffer->getSamples())
+						throw RBX::runtime_error("Unsupported framebuffer configuration: Mismatched color samples.");
 				}
 			}
 
 			if (depth) {
 				RenderbufferD3D11* buffer = static_cast<RenderbufferD3D11*>(depth.get());
-				RBXASSERT(Texture::isFormatDepth(buffer->getFormat()));
 
-				RBXASSERT(width == buffer->getWidth());
-				RBXASSERT(height == buffer->getHeight());
-				RBXASSERT(samples == buffer->getSamples());
+				if (width != buffer->getWidth() || height != buffer->getHeight())
+					throw RBX::runtime_error("Unsupported framebuffer configuration: Mismatched depth resolution.");
+
+				if (samples != buffer->getSamples())
+					throw RBX::runtime_error("Unsupported framebuffer configuration: Mismatched depth samples.");
 			}
 		}
 

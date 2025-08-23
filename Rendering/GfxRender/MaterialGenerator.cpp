@@ -231,15 +231,15 @@ namespace RBX {
 		}
 
 		void MaterialGenerator::assignMaterialTextures(VisualEngine* visualEngine, Technique& technique) const {
-			technique.setTexture(10u, albedoTextures, SamplerState::Filter_Anisotropic);
-			technique.setTexture(11u, emissiveTextures, SamplerState::Filter_Anisotropic);
-			technique.setTexture(12u, matValueTextures, SamplerState::Filter_Anisotropic);
+			technique.setTexture(10u, albedoTextures);
+			technique.setTexture(11u, emissiveTextures);
+			technique.setTexture(12u, matValueTextures);
 
-			technique.setTexture(13u, normalTextures, SamplerState::Filter_Anisotropic);
-			technique.setTexture(14u, heightTextures, SamplerState::Filter_Anisotropic);
+			technique.setTexture(13u, normalTextures);
+			technique.setTexture(14u, heightTextures);
 
-			technique.setTexture(15u, clearcoatATextures, SamplerState::Filter_Anisotropic);
-			technique.setTexture(16u, clearcoatBTextures, SamplerState::Filter_Anisotropic);
+			technique.setTexture(15u, clearcoatATextures);
+			technique.setTexture(16u, clearcoatBTextures);
 		}
 
 		static void setupCommonTextures(VisualEngine* visualEngine, Technique& technique) {
@@ -247,23 +247,23 @@ namespace RBX {
 			SceneManager* sceneManager = visualEngine->getSceneManager();
 
 			/* Shadow Maps */
-			technique.setTexture(0u, sceneManager->getShadowMapAtlas(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
-			technique.setTexture(1u, sceneManager->getShadowMapArray(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+			technique.setTexture(0u, sceneManager->getShadowMapAtlas());
+			technique.setTexture(1u, sceneManager->getShadowMapArray());
 
 			/* Environment BRDF */
-			technique.setTexture(2u, tm->load(ContentId("rbxasset://textures/brdfLUT" + kTextureExtension), TextureManager::Fallback_None), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+			technique.setTexture(2u, tm->load(ContentId("rbxasset://textures/brdfLUT" + kTextureExtension), TextureManager::Fallback_None).getTexture());
 
 			/* Area Light LTCs */
-			technique.setTexture(3u, tm->load(ContentId("rbxasset://textures/ltc1LUT" + kTextureExtension), TextureManager::Fallback_None), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
-			technique.setTexture(4u, tm->load(ContentId("rbxasset://textures/ltc2LUT" + kTextureExtension), TextureManager::Fallback_None), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+			technique.setTexture(3u, tm->load(ContentId("rbxasset://textures/ltc1LUT" + kTextureExtension), TextureManager::Fallback_None).getTexture());
+			technique.setTexture(4u, tm->load(ContentId("rbxasset://textures/ltc2LUT" + kTextureExtension), TextureManager::Fallback_None).getTexture());
 
 			/* Ambient Occlusion */
-			technique.setTexture(5u, sceneManager->getAmbientOcclusion(), SamplerState(SamplerState::Filter_Point, SamplerState::Address_Clamp));
+			technique.setTexture(5u, sceneManager->getAmbientOcclusion());
 
 			/* Cubemaps */
-			technique.setTexture(6u, sceneManager->getEnvMap()->getOutdoorTexture(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Wrap));
-			technique.setTexture(7u, sceneManager->getEnvMap()->getIndoorTextures(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Wrap));
-			technique.setTexture(8u, sceneManager->getEnvMap()->getIrradianceTextures(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Wrap));
+			technique.setTexture(6u, sceneManager->getEnvMap()->getOutdoorTexture());
+			technique.setTexture(7u, sceneManager->getEnvMap()->getIndoorTextures());
+			technique.setTexture(8u, sceneManager->getEnvMap()->getIrradianceTextures());
 		}
 
 		void MaterialGenerator::setupMaterialTextures(VisualEngine* ve, Technique& technique, PartMaterial renderMaterial) {
@@ -274,7 +274,7 @@ namespace RBX {
 		}
 
 		void MaterialGenerator::createTextureArrays(VisualEngine* visualEngine) {
-			if (albedoTextures.getStatus() == TextureRef::Status_Null) {
+			if (!albedoTextures) {
 				Device* device = visualEngine->getDevice();
 
 				albedoTextures = device->createTexture(Texture::Type_2D_Array, Texture::Format_BC7_sRGB, 1024u, 1024u, 48u, 11u, Texture::Usage_Static);
@@ -314,7 +314,7 @@ namespace RBX {
 				return MaterialGenerator::Result(renderMaterialCache[cacheKey], cacheKey);
 
 			// Create material
-			shared_ptr<Material> material(new Material());
+			std::shared_ptr<Material> material(new Material());
 
 			TextureManager* tm = visualEngine->getTextureManager();
 
@@ -440,7 +440,7 @@ namespace RBX {
 			case ASPHALT_MATERIAL: {
 				data.RoughnessOverride_MetalnessOverride_AmbientOcclusionFactor_unused = Vector4(-1.0f, 0.0f, 1.0f, 0.0f);
 				data.AlbedoMode_NormalMapEnabled_ClearcoatEnabled_EmissionMode = Vector4(3.0f, 1.0f, 0.0f, 0.0f);
-				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.635f, 0.0f, 0.05f, 0.0f);
+				data.IndexOfRefraction_EmissionFactor_ParallaxFactor_ParallaxOffset = Vector4(1.635f, 0.0f, 0.025f, 0.0f);
 
 				data.CCNormalsEnabled_CCFactorOverride_CCRoughnessOverride_CCIndexOfRefraction = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
 			}

@@ -19,9 +19,10 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Main|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PreferredToolArchitecture>x86</PreferredToolArchitecture>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Main|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -45,7 +46,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Main|Win32'">
     <OutDir>$(SolutionDir)Rendering\ShaderCompiler\</OutDir>
     <IntDir>$(SolutionDir)Rendering\ShaderCompiler\$(Configuration)</IntDir>
-    <LinkIncremental>false</LinkIncremental>
+    <LinkIncremental>true</LinkIncremental>
     <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Main|x64'">
@@ -62,8 +63,17 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader />
-      <WarningLevel>TurnOffAllWarnings</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <UseStandardPreprocessor>true</UseStandardPreprocessor>
+      <StringPooling>true</StringPooling>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
     </ClCompile>
     <Link>
       <OutputFile>$(ProjectName).exe</OutputFile>
@@ -88,7 +98,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <OutputFile>$(ProjectName)_x64.exe</OutputFile>
+      <OutputFile>$(ProjectName).exe</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -98,22 +108,6 @@
   <ItemGroup>
     <ClCompile Include="md5\md5.c" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="mojoshader\mojoshader.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Main|Win32'">CompileAsCpp</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Main|x64'">CompileAsCpp</CompileAs>
-    </ClCompile>
-    <ClCompile Include="mojoshader\mojoshader_common.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Main|Win32'">CompileAsCpp</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Main|x64'">CompileAsCpp</CompileAs>
-    </ClCompile>
-    <ClCompile Include="mojoshader\mojoshader_lexer.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Main|Win32'">CompileAsCpp</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Main|x64'">CompileAsCpp</CompileAs>
-    </ClCompile>
-    <ClCompile Include="mojoshader\mojoshader_preprocessor.c">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Main|Win32'">CompileAsCpp</CompileAs>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Main|x64'">CompileAsCpp</CompileAs>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="md5\md5.h" />

@@ -26,7 +26,7 @@ namespace RBX
 
 		class FastClusterEntity : public RenderEntity {
 		public:
-			FastClusterEntity(FastCluster* cluster, const GeometryBatch& geometry, const shared_ptr<Material>& material, const shared_ptr<Material>& decalMaterialOpaque,
+			FastClusterEntity(FastCluster* cluster, const GeometryBatch& geometry, const std::shared_ptr<Material>& material, const std::shared_ptr<Material>& decalMaterialOpaque,
 				RenderQueue::Id renderQueueId, uint8_t lodMask, const std::vector<uint32_t>& bones, const Extents& localBounds, uint32_t extraFeatures);
 			~FastClusterEntity() override;
 
@@ -36,7 +36,7 @@ namespace RBX
 
 		private:
 			TextureRef decalTexture;
-			shared_ptr<Material> decalMaterialOpaque;
+			std::shared_ptr<Material> decalMaterialOpaque;
 
 			uint32_t extraFeatures;
 
@@ -66,8 +66,8 @@ namespace RBX
 
 			void reset();
 
-			shared_ptr<VertexBuffer> vertexBuffer;
-			shared_ptr<IndexBuffer> indexBuffer;
+			std::shared_ptr<VertexBuffer> vertexBuffer;
+			std::shared_ptr<IndexBuffer> indexBuffer;
 		};
 
 		class FastCluster : public RenderNode {

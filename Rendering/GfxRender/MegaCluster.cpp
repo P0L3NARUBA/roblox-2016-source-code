@@ -1659,16 +1659,16 @@ namespace RBX
 
 		RenderEntity* MegaCluster::createSolidGeometry(const SpatialRegion::Id& pos, unsigned int* outQuads)
 		{
-			const shared_ptr<IndexBuffer>& ibuf = getSharedIB();
+			const std::shared_ptr<IndexBuffer>& ibuf = getSharedIB();
 			unsigned int facesInIB = ibuf->getElementCount() / 6;
 
 			unsigned int quads = countQuads<SolidTerrainRenderPredicate<RenderArea>, RenderArea>(&renderArea, pos, facesInIB);
 
 			*outQuads = quads;
 
-			if (quads == 0) return NULL;
+			if (quads == 0) return nullptr;
 
-			shared_ptr<VertexBuffer> vbuf;
+			std::shared_ptr<VertexBuffer> vbuf;
 
 			if (useShaders)
 			{
@@ -1702,7 +1702,7 @@ namespace RBX
 
 		RenderEntity* MegaCluster::createWaterGeometry(const SpatialRegion::Id& pos, unsigned int* outQuads)
 		{
-			const shared_ptr<IndexBuffer>& ibuf = getSharedIB();
+			const std::shared_ptr<IndexBuffer>& ibuf = getSharedIB();
 			unsigned int facesInIB = ibuf->getElementCount() / 6;
 
 			unsigned int quads = countQuads<WaterRenderPredicate<RenderArea>, RenderArea>(&renderArea, pos, facesInIB);
@@ -1711,7 +1711,7 @@ namespace RBX
 
 			if (quads == 0) return NULL;
 
-			shared_ptr<VertexBuffer> vbuf;
+			std::shared_ptr<VertexBuffer> vbuf;
 
 			if (useShaders)
 			{
@@ -1740,23 +1740,23 @@ namespace RBX
 				vbuf->unlock();
 			}
 
-			shared_ptr<Material> material = visualEngine->getWater()->getLegacyMaterial();
+			std::shared_ptr<Material> material = visualEngine->getWater()->getLegacyMaterial();
 
 			return createGeometry(updateChunkNode(pos), vbuf, ibuf, material, RenderQueue::Id_TransparentUnsorted, true);
 		}
 
-		RenderEntity* MegaCluster::createGeometry(RenderNode* node, const shared_ptr<VertexBuffer>& vbuf, const shared_ptr<IndexBuffer>& ibuf, const shared_ptr<Material>& material, RenderQueue::Id renderQueueId, bool isWater)
+		RenderEntity* MegaCluster::createGeometry(RenderNode* node, const std::shared_ptr<VertexBuffer>& vbuf, const std::shared_ptr<IndexBuffer>& ibuf, const std::shared_ptr<Material>& material, RenderQueue::Id renderQueueId, bool isWater)
 		{
 			unsigned int quadCount = vbuf->getElementCount() / 4;
 
-			shared_ptr<Geometry> geometry = visualEngine->getDevice()->createGeometry(getVertexLayout(isWater), vbuf, ibuf);
+			std::shared_ptr<Geometry> geometry = visualEngine->getDevice()->createGeometry(getVertexLayout(isWater), vbuf, ibuf);
 
 			return new RenderEntity(node, GeometryBatch(geometry, Geometry::Primitive_Triangles, quadCount * 6, quadCount * 4), material, renderQueueId);
 		}
 
-		const shared_ptr<VertexLayout>& MegaCluster::getVertexLayout(bool isWater)
+		const std::shared_ptr<VertexLayout>& MegaCluster::getVertexLayout(bool isWater)
 		{
-			shared_ptr<VertexLayout>& vertexLayout = isWater ? vertexLayouts[1] : vertexLayouts[0];
+			std::shared_ptr<VertexLayout>& vertexLayout = isWater ? vertexLayouts[1] : vertexLayouts[0];
 
 			if (!vertexLayout)
 			{
@@ -1782,9 +1782,9 @@ namespace RBX
 			return vertexLayout;
 		}
 
-		template <typename T> static shared_ptr<IndexBuffer> generateQuadIB(Device* device, unsigned int quads)
+		template <typename T> static std::shared_ptr<IndexBuffer> generateQuadIB(Device* device, unsigned int quads)
 		{
-			shared_ptr<IndexBuffer> ibuf = device->createIndexBuffer(sizeof(T), quads * 6, GeometryBuffer::Usage_Static);
+			std::shared_ptr<IndexBuffer> ibuf = device->createIndexBuffer(sizeof(T), quads * 6, GeometryBuffer::Usage_Static);
 
 			T* indices = static_cast<T*>(ibuf->lock());
 
@@ -1808,7 +1808,7 @@ namespace RBX
 			return ibuf;
 		}
 
-		const shared_ptr<IndexBuffer>& MegaCluster::getSharedIB()
+		const std::shared_ptr<IndexBuffer>& MegaCluster::getSharedIB()
 		{
 			if (sharedIB)
 				return sharedIB;
@@ -1839,10 +1839,10 @@ namespace RBX
 			//LightGrid* lightGrid = visualEngine->getLightGrid();
 			SceneManager* sceneManager = visualEngine->getSceneManager();
 
-			technique.setTexture(0, tm->load(ContentId(MegaCluster::kTerrainTexClose + kTextureExtension), TextureManager::Fallback_White), SamplerState::Filter_Linear);
-			technique.setTexture(1, tm->load(ContentId(MegaCluster::kTerrainTexFar + kTextureExtension), TextureManager::Fallback_White), SamplerState::Filter_Linear);
-			technique.setTexture(2, tm->load(ContentId(MegaCluster::kTerrainTexNormals + kTextureExtension), TextureManager::Fallback_NormalMap), SamplerState::Filter_Linear);
-			technique.setTexture(3, tm->load(ContentId(MegaCluster::kTerrainTexSpecular + kTextureExtension), TextureManager::Fallback_Black), SamplerState::Filter_Linear);
+			technique.setTexture(0, tm->load(ContentId(MegaCluster::kTerrainTexClose + kTextureExtension), TextureManager::Fallback_White).getTexture());
+			technique.setTexture(1, tm->load(ContentId(MegaCluster::kTerrainTexFar + kTextureExtension), TextureManager::Fallback_White).getTexture());
+			technique.setTexture(2, tm->load(ContentId(MegaCluster::kTerrainTexNormals + kTextureExtension), TextureManager::Fallback_NormalMap).getTexture());
+			technique.setTexture(3, tm->load(ContentId(MegaCluster::kTerrainTexSpecular + kTextureExtension), TextureManager::Fallback_Black).getTexture());
 
 			/*if (lightGrid)
 			{
@@ -1853,12 +1853,12 @@ namespace RBX
 			//technique.setTexture(6, sceneManager->getShadowMap(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 		}
 
-		const shared_ptr<Material>& MegaCluster::getSolidMaterial()
+		const std::shared_ptr<Material>& MegaCluster::getSolidMaterial()
 		{
 			if (solidMaterial)
 				return solidMaterial;
 
-			solidMaterial = shared_ptr<Material>(new Material());
+			solidMaterial = std::shared_ptr<Material>(new Material());
 
 			if (shared_ptr<ShaderProgram> program = visualEngine->getShaderManager()->getProgram("MegaClusterHQVS", "MegaClusterHQGBufferFS"))
 			{

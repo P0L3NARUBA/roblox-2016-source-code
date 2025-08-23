@@ -1002,11 +1002,11 @@ bool Application::ParseArguments(const char* argv)
 			initializeCrashReporter();
 			logManager.EnableImmediateCrashUpload(false);
 
-			LogManager::ReportEvent(EVENTLOG_INFORMATION_TYPE, "Uploading dmp");
+			//LogManager::ReportEvent(EVENTLOG_INFORMATION_TYPE, "Uploading dmp");
 
-			std::string dmpHandlerUrl = GetDmpUrl(GetBaseURL(), true);
-			dumpErrorUploader.reset(new DumpErrorUploader(false, "WindowsClient"));
-			dumpErrorUploader->Upload(dmpHandlerUrl);
+			//std::string dmpHandlerUrl = GetDmpUrl(GetBaseURL(), true);
+			//dumpErrorUploader.reset(new DumpErrorUploader(false, "WindowsClient"));
+			//dumpErrorUploader->Upload(dmpHandlerUrl);
 			return false;
 		}
 

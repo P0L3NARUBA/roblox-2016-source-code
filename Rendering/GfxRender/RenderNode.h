@@ -12,7 +12,7 @@ namespace RBX {
 
 		class RenderEntity : public Renderable {
 		public:
-			RenderEntity(RenderNode* node, const GeometryBatch& geometry, const shared_ptr<Material>& material, RenderQueue::Id renderQueueId, unsigned char lodMask = 0xff);
+			RenderEntity(RenderNode* node, const GeometryBatch& geometry, const std::shared_ptr<Material>& material, RenderQueue::Id renderQueueId, unsigned char lodMask = 0xff);
 			virtual ~RenderEntity();
 
 			RenderNode* getNode() const { return node; }
@@ -34,7 +34,7 @@ namespace RBX {
 			unsigned char lodMask;
 
 			GeometryBatch geometry;
-			shared_ptr<Material> material;
+			std::shared_ptr<Material> material;
 		};
 
 		class RenderNode : public CullableSceneNode {

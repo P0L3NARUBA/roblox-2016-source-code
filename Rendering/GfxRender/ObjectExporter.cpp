@@ -166,10 +166,10 @@ namespace RBX
 
 			// get the texture first
 			TextureRef texRef = visualEngine->getTextureManager()->load(ContentId(MegaCluster::kTerrainTexClose + ".dds"), TextureManager::Fallback_White);
-			boost::shared_ptr<Texture> tex = texRef.getTexture();
+			std::shared_ptr<Texture> tex = texRef.getTexture();
 
 			ExporterMaterial solidMaterial("TerrainSolid", Color4uint8(255, 255, 255, 255), 0, 0, tex);
-			ExporterMaterial waterMaterial("TerrainWater", Color4uint8(0, 0, 255, 255), 0, 0, shared_ptr<Texture>());
+			ExporterMaterial waterMaterial("TerrainWater", Color4uint8(0, 0, 255, 255), 0, 0, std::shared_ptr<Texture>());
 
 			bool needToOutputTerrainTex = false;
 			std::vector<MegaCluster::TerrainVertexFFP> vertArray;
@@ -211,8 +211,8 @@ namespace RBX
 		{
 			using namespace Voxel2::Mesher;
 
-			ExporterMaterial solidMaterial("TerrainSolid", Color4uint8(77, 80, 36, 255), 0, 0, shared_ptr<Texture>());
-			ExporterMaterial waterMaterial("TerrainWater", Color4uint8(51, 134, 158, 255), 0, 0, shared_ptr<Texture>());
+			ExporterMaterial solidMaterial("TerrainSolid", Color4uint8(77, 80, 36, 255), 0, 0, std::shared_ptr<Texture>());
+			ExporterMaterial waterMaterial("TerrainWater", Color4uint8(51, 134, 158, 255), 0, 0, std::shared_ptr<Texture>());
 
 			Voxel2::Grid* grid = megaCluster->getSmoothGrid();
 

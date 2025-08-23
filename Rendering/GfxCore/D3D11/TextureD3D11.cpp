@@ -4,11 +4,13 @@
 #include "DeviceD3D11.h"
 #include "HeadersD3D11.h"
 
+#include "../../App/include/util/standardout.h"
+
 LOGGROUP(Graphics)
 
 namespace RBX {
 	namespace Graphics {
-		static const DXGI_FORMAT gTextureFormatD3D11[Texture::Format_Count] = {
+		static const std::array<DXGI_FORMAT, Texture::Format_Count> gTextureFormatD3D11 = {
 			DXGI_FORMAT_R8_UNORM,
 			DXGI_FORMAT_R8G8_UNORM,
 			DXGI_FORMAT_R8G8B8A8_UNORM,
@@ -36,26 +38,85 @@ namespace RBX {
 			DXGI_FORMAT_D32_FLOAT_S8X24_UINT,
 		};
 
-		struct TextureUsageD3D11 {
-			D3D11_USAGE usage;
-			unsigned int cpuAccess;
-			unsigned int bindFlags;
-			unsigned int misc;
+		static const std::array<DXGI_FORMAT, Texture::Format_Count> gTextureFormatDepthDescD3D11 = {
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+
+			DXGI_FORMAT_R16_TYPELESS,
+			DXGI_FORMAT_R24G8_TYPELESS,
+			DXGI_FORMAT_R32_TYPELESS,
+			DXGI_FORMAT_R32G8X24_TYPELESS,
 		};
 
-		static const TextureUsageD3D11 gTextureUsageD3D11[Texture::Usage_Count] = {
-			{ D3D11_USAGE_DEFAULT, 0u, D3D11_BIND_SHADER_RESOURCE, 0u}, // Static
-			{ D3D11_USAGE_DEFAULT, 0u, D3D11_BIND_SHADER_RESOURCE, 0u}, //{ D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_SHADER_RESOURCE, 0}, // Dynamic
-			{ D3D11_USAGE_IMMUTABLE, 0u, D3D11_BIND_SHADER_RESOURCE, 0u}, // Immutable
-			{ D3D11_USAGE_DEFAULT, 0u, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET, D3D11_RESOURCE_MISC_GENERATE_MIPS} // Renderbuffer
+		static const std::array<DXGI_FORMAT, Texture::Format_Count> gTextureFormatDepthViewD3D11 = {
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+			DXGI_FORMAT_UNKNOWN,
+
+			DXGI_FORMAT_R16_UNORM,
+			DXGI_FORMAT_R24_UNORM_X8_TYPELESS,
+			DXGI_FORMAT_R32_FLOAT,
+			DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS,
 		};
+
+		struct TextureUsageD3D11 {
+			D3D11_USAGE usage;
+			uint32_t cpuAccess;
+			uint32_t bindFlags;
+			uint32_t misc;
+		};
+
+		static const std::array<TextureUsageD3D11, Texture::Usage_Count> gTextureUsageD3D11 = { {
+			{ D3D11_USAGE_DEFAULT, 0u, D3D11_BIND_SHADER_RESOURCE, 0u },														   // Static
+			{ D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE, D3D11_BIND_SHADER_RESOURCE, 0u },									   // Dynamic
+			{ D3D11_USAGE_IMMUTABLE, 0u, D3D11_BIND_SHADER_RESOURCE, 0u },														   // Immutable
+			{ D3D11_USAGE_DEFAULT, 0u, D3D11_BIND_RENDER_TARGET, 0u },															   // Colorbuffer
+			{ D3D11_USAGE_DEFAULT, 0u, D3D11_BIND_DEPTH_STENCIL, 0u },															   // Depthbuffer
+			{ D3D11_USAGE_DEFAULT, 0u, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE, D3D11_RESOURCE_MISC_GENERATE_MIPS }, // Colortexture
+			{ D3D11_USAGE_DEFAULT, 0u, D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE, 0u },								   // Depthtexture
+		} };
 
 		static ID3D11Resource* createTexture(ID3D11Device* device11, Texture::Type type, Texture::Format format, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevels, const TextureUsageD3D11& textureUsage) {
 			ID3D11Resource* result = nullptr;
-
-			DXGI_FORMAT format11 = gTextureFormatD3D11[format];
-
 			HRESULT hr;
+
+			DXGI_FORMAT format11 = (Texture::isFormatDepth(format) && (textureUsage.bindFlags & D3D11_BIND_SHADER_RESOURCE)) ? gTextureFormatDepthDescD3D11[format] : gTextureFormatD3D11[format];
+
 			switch (type) {
 			case Texture::Type_1D:
 			case Texture::Type_1D_Array: {
@@ -71,18 +132,25 @@ namespace RBX {
 				desc.MiscFlags = textureUsage.misc;
 
 				hr = device11->CreateTexture1D(&desc, nullptr, reinterpret_cast<ID3D11Texture1D**>(&result));
+
 				break;
 			}
 			case Texture::Type_2D:
+			case Texture::Type_2DMS:
 			case Texture::Type_Cube: {
 				D3D11_TEXTURE2D_DESC desc = {};
+				uint32_t msaaCount = (type == Texture::Type_2DMS) ? 4u : 1u;
+				uint32_t msaaQuality = 0u;
+
+				if (type == Texture::Type_2DMS && FAILED(device11->CheckMultisampleQualityLevels(format11, msaaCount, &msaaQuality)))
+					throw RBX::runtime_error("Unsupported multisampling level for 2D texture.");
 
 				desc.Width = width;
 				desc.Height = height;
 				desc.MipLevels = mipLevels;
 				desc.Format = format11;
-				desc.SampleDesc.Count = 1u;
-				desc.SampleDesc.Quality = 0u;
+				desc.SampleDesc.Count = msaaCount;
+				desc.SampleDesc.Quality = msaaQuality ? D3D11_STANDARD_MULTISAMPLE_PATTERN : 0u;
 				desc.ArraySize = (type == Texture::Type_Cube) ? 6u : 1u;
 				desc.Usage = textureUsage.usage;
 				desc.BindFlags = textureUsage.bindFlags;
@@ -90,18 +158,25 @@ namespace RBX {
 				desc.MiscFlags = textureUsage.misc | ((type == Texture::Type_Cube) ? D3D11_RESOURCE_MISC_TEXTURECUBE : 0u);
 
 				hr = device11->CreateTexture2D(&desc, nullptr, reinterpret_cast<ID3D11Texture2D**>(&result));
+
 				break;
 			}
 			case Texture::Type_2D_Array:
+			case Texture::Type_2DMS_Array:
 			case Texture::Type_Cube_Array: {
 				D3D11_TEXTURE2D_DESC desc = {};
+				uint32_t msaaCount = (type == Texture::Type_2DMS_Array) ? 4u : 1u;
+				uint32_t msaaQuality = 0u;
+
+				if (type == Texture::Type_2DMS_Array && FAILED(device11->CheckMultisampleQualityLevels(format11, msaaCount, &msaaQuality)))
+					throw RBX::runtime_error("Unsupported multisampling level for 2D texture array.");
 
 				desc.Width = width;
 				desc.Height = height;
 				desc.MipLevels = mipLevels;
 				desc.Format = format11;
-				desc.SampleDesc.Count = 1u;
-				desc.SampleDesc.Quality = 0u;
+				desc.SampleDesc.Count = msaaCount;
+				desc.SampleDesc.Quality = msaaQuality ? D3D11_STANDARD_MULTISAMPLE_PATTERN : 0u;
 				desc.ArraySize = ((type == Texture::Type_Cube_Array) ? 6u : 1u) * depth;
 				desc.Usage = textureUsage.usage;
 				desc.BindFlags = textureUsage.bindFlags;
@@ -109,6 +184,7 @@ namespace RBX {
 				desc.MiscFlags = textureUsage.misc | ((type == Texture::Type_Cube_Array) ? D3D11_RESOURCE_MISC_TEXTURECUBE : 0u);
 
 				hr = device11->CreateTexture2D(&desc, nullptr, reinterpret_cast<ID3D11Texture2D**>(&result));
+
 				break;
 			}
 			case Texture::Type_3D: {
@@ -125,6 +201,7 @@ namespace RBX {
 				desc.MiscFlags = textureUsage.misc;
 
 				hr = device11->CreateTexture3D(&desc, nullptr, reinterpret_cast<ID3D11Texture3D**>(&result));
+
 				break;
 			}
 			default:
@@ -139,7 +216,7 @@ namespace RBX {
 
 		static ID3D11ShaderResourceView* createSRV(ID3D11Device* device11, ID3D11Resource* resource, Texture::Type type, Texture::Format format, uint32_t mipLevels, uint32_t arraySize) {
 			D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-			srvDesc.Format = gTextureFormatD3D11[format];
+			srvDesc.Format = Texture::isFormatDepth(format) ? gTextureFormatDepthViewD3D11[format] : gTextureFormatD3D11[format];
 
 			switch (type) {
 			case Texture::Type_1D: {
@@ -165,12 +242,24 @@ namespace RBX {
 
 				break;
 			}
+			case Texture::Type_2DMS: {
+				srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
+
+				break;
+			}
 			case Texture::Type_2D_Array: {
 				srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
 				srvDesc.Texture2DArray.MipLevels = mipLevels;
 				srvDesc.Texture2DArray.MostDetailedMip = 0u;
 				srvDesc.Texture2DArray.FirstArraySlice = 0u;
 				srvDesc.Texture2DArray.ArraySize = arraySize;
+
+				break;
+			}
+			case Texture::Type_2DMS_Array: {
+				srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMSARRAY;
+				srvDesc.Texture2DMSArray.FirstArraySlice = 0u;
+				srvDesc.Texture2DMSArray.ArraySize = arraySize;
 
 				break;
 			}
@@ -199,13 +288,20 @@ namespace RBX {
 			}
 			}
 
-			ID3D11ShaderResourceView* SRV;
+			ID3D11ShaderResourceView* SRV = nullptr;
 			HRESULT hr = device11->CreateShaderResourceView(resource, &srvDesc, &SRV);
 
 			if (FAILED(hr))
 				throw RBX::runtime_error("Error creating shader resource view: %x", hr);
 
 			return SRV;
+		}
+
+		TextureD3D11::TextureD3D11()
+			: Texture()
+			, object(nullptr)
+			, objectSRV(nullptr)
+		{
 		}
 
 		TextureD3D11::TextureD3D11(Device* device, Type type, Format format, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevels, Usage usage)
@@ -216,7 +312,9 @@ namespace RBX {
 			ID3D11Device* device11 = static_cast<DeviceD3D11*>(device)->getDevice11();
 
 			object = createTexture(device11, type, format, width, height, depth, mipLevels, gTextureUsageD3D11[usage]);
-			objectSRV = createSRV(device11, object, type, format, mipLevels, depth);
+
+			if (gTextureUsageD3D11[usage].bindFlags & D3D11_BIND_SHADER_RESOURCE)
+				objectSRV = createSRV(device11, object, type, format, mipLevels, depth);
 		}
 
 		void TextureD3D11::upload(uint32_t index, uint32_t mip, const TextureRegion& region, const void* data, size_t size) {
@@ -342,23 +440,20 @@ namespace RBX {
 		{
 		}
 
-		shared_ptr<Renderbuffer> TextureD3D11::getRenderbuffer(uint32_t index, uint32_t mip) {
+		std::shared_ptr<Renderbuffer> TextureD3D11::getRenderbuffer(uint32_t index, uint32_t mip) {
 			RBXASSERT(mip < mipLevels);
 
-			weak_ptr<Renderbuffer>& slot = renderbuffers[std::make_pair(index, mip)];
-			shared_ptr<Renderbuffer> result = slot.lock();
+			std::weak_ptr<Renderbuffer>& slot = renderbuffers[std::make_pair(index, mip)];
+			std::shared_ptr<Renderbuffer> result = slot.lock();
 
 			if (!result) {
 				Type type = getType();
 
-				// TODO: Add Texture1D and Texture1DArray support
-				if (type != Type_2D && type != Type_2D_Array && type != Type_Cube && type != Type_Cube_Array) {
+				// TODO: Add Texture1D, Texture1DArray, and Texture3D support
+				if (type == Type_1D || type == Type_1D_Array || type == Type_3D)
 					throw std::runtime_error("Tried to create a renderbuffer for an unsupported texture type.");
 
-					return shared_ptr<Renderbuffer>();
-				}
-
-				result.reset(new RenderbufferD3D11(device, shared_from_this(), index, mip));
+				result.reset(new RenderbufferD3D11(device, shared_from_this(), index, mip, (type == Type_2DMS || type == Type_2DMS_Array) ? 4u : 1u));
 
 				slot = result;
 			}
@@ -366,7 +461,7 @@ namespace RBX {
 			return result;
 		}
 
-		unsigned int TextureD3D11::getInternalFormat(Texture::Format format) {
+		DXGI_FORMAT TextureD3D11::getInternalFormat(Texture::Format format) {
 			return gTextureFormatD3D11[format];
 		}
 
@@ -375,7 +470,7 @@ namespace RBX {
 		}
 
 		void TextureD3D11::generateMipmaps() {
-			RBXASSERT(usage == Texture::Usage_Renderbuffer);
+			RBXASSERT(usage == Texture::Usage_Colorbuffer);
 
 			ID3D11DeviceContext* context11 = static_cast<DeviceD3D11*>(device)->getImmediateContext11();
 

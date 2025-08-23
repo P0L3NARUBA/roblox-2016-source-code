@@ -11,7 +11,7 @@
    
     { "name": "DepthOnlyVS",     "source": "default.hlsl", "target": "vs_5_0", "entrypoint": "DepthOnlyVS" },
     { "name": "BasicMaterialVS", "source": "default.hlsl", "target": "vs_5_0", "entrypoint": "BasicMaterialVS" },
-    { "name": "MaterialVS",      "source": "default.hlsl", "target": "vs_5_0", "entrypoint": "MaterialVS" },
+    { "name": "MaterialVS",      "source": "default.hlsl", "target": "vs_5_0", "entrypoint": "BasicMaterialVS" },
     { "name": "BlankFS",         "source": "default.hlsl", "target": "ps_5_0", "entrypoint": "BlankPS" },
     { "name": "FallbackFS",      "source": "default.hlsl", "target": "ps_5_0", "entrypoint": "DefaultPS" },
 

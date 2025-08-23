@@ -71,7 +71,7 @@ namespace RBX {
 			if (!vertexBuffer || vertexBuffer->getElementCount() < bufferSize) {
 				vertexBuffer = visualEngine->getDevice()->createVertexBuffer(sizeof(BasicVertex), bufferSize, GeometryBuffer::Usage_Dynamic);
 
-				geometry = visualEngine->getDevice()->createGeometry(vertexLayout, vertexBuffer, shared_ptr<IndexBuffer>());
+				geometry = visualEngine->getDevice()->createGeometry(vertexLayout, vertexBuffer, std::shared_ptr<IndexBuffer>());
 			}
 
 			if (vertexData.size() > 0u) {
@@ -139,7 +139,7 @@ namespace RBX {
 				return;
 
 			// Get resources
-			shared_ptr<Texture> defaultTexture = visualEngine->getTextureManager()->getFallbackTexture(TextureManager::Fallback_White);
+			std::shared_ptr<Texture> defaultTexture = visualEngine->getTextureManager()->getFallbackTexture(TextureManager::Fallback_White);
 			RBXASSERT(defaultTexture);
 
 			static const SamplerState defaultSamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp);
@@ -177,7 +177,7 @@ namespace RBX {
 
 			stats.passChanges++;
 
-			Texture* currentTexture = nullptr;
+			std::shared_ptr<Texture> currentTexture = nullptr;
 
 			size_t arraySize = coordinateSpace == CS_WorldSpaceNoDepth ? worldSpaceZDepthLayers[renderIndex].size() : chunks[coordinateSpace].size();
 
@@ -187,7 +187,7 @@ namespace RBX {
 				if (currChunk.index >= 0)
 					context->setDepthState(DepthState(currChunk.alwaysOnTop ? DepthState::Function_Always : DepthState::Function_GreaterEqual, false));
 
-				Texture* texture = currChunk.texture.get();
+				std::shared_ptr<Texture> texture = currChunk.texture;
 
 				// Change texture
 				if (texture != currentTexture || i == 0u) {
@@ -203,9 +203,9 @@ namespace RBX {
 					}
 
 					if (currChunk.batchTextureType == BatchTextureType_Font && FFlag::UseDynamicTypesetterUTF8)
-						context->bindTexture(0u, texture ? texture : defaultTexture.get(), wrapSamplerState);
+						context->bindTexture(0u, texture ? texture : defaultTexture);
 					else
-						context->bindTexture(0u, texture ? texture : defaultTexture.get(), defaultSamplerState);
+						context->bindTexture(0u, texture ? texture : defaultTexture);
 				}
 
 				// Render!
@@ -217,13 +217,13 @@ namespace RBX {
 			}
 		}
 
-		VertexStreamer::VertexChunk* VertexStreamer::prepareChunk(const shared_ptr<Texture>& texture, Geometry::Primitive primitive, uint32_t vertexCount, CoordinateSpace coordinateSpace, BatchTextureType batchTexType, bool ignoreTexture, int32_t zIndex, bool forceTop) {
+		VertexStreamer::VertexChunk* VertexStreamer::prepareChunk(const std::shared_ptr<Texture>& texture, Geometry::Primitive primitive, uint32_t vertexCount, CoordinateSpace coordinateSpace, BatchTextureType batchTexType, bool ignoreTexture, int32_t zIndex, bool forceTop) {
 			uint32_t vertexStart = vertexData.size();
 
 			if (vertexStart + vertexCount > kVertexBufferMaxCount)
 				return nullptr;
 
-			const shared_ptr<Texture>& actualTexture = ignoreTexture ? visualEngine->getTextureManager()->getFallbackTexture(TextureManager::Fallback_White) : texture;
+			const std::shared_ptr<Texture>& actualTexture = ignoreTexture ? visualEngine->getTextureManager()->getFallbackTexture(TextureManager::Fallback_White) : texture;
 			G3D::Array<VertexChunk>& orderedChunks = chunks[coordinateSpace];
 
 			bool newsection = true;
@@ -251,7 +251,7 @@ namespace RBX {
 		}
 
 		void VertexStreamer::rectBlt(
-			const shared_ptr<Texture>& texptr, const Color4& color4,
+			const std::shared_ptr<Texture>& texptr, const Color4& color4,
 			const Vector2& x0y0, const Vector2& x1y0, const Vector2& x0y1, const Vector2& x1y1,
 			const Vector2& tex0, const Vector2& tex1, BatchTextureType batchTexType, bool ignoreTexture)
 		{
@@ -267,7 +267,7 @@ namespace RBX {
 			}
 		}
 
-		void VertexStreamer::spriteBlt3D(const shared_ptr<Texture>& texptr, const Color4& color4, BatchTextureType batchTexType,
+		void VertexStreamer::spriteBlt3D(const std::shared_ptr<Texture>& texptr, const Color4& color4, BatchTextureType batchTexType,
 			const Vector3& x0y0, const Vector3& x1y0, const Vector3& x0y1, const Vector3& x1y1,
 			const Vector2& tex0, const Vector2& tex1, int32_t zIndex, bool alwaysOnTop)
 		{
@@ -282,7 +282,7 @@ namespace RBX {
 		}
 
 		void VertexStreamer::triangleList2d(const Color4& color4, const Vector2* v, uint32_t vcount, const short* indices, uint32_t icount) {
-			if (prepareChunk(shared_ptr<Texture>(), Geometry::Primitive_Triangles, icount, CS_ScreenSpace, BatchTextureType_Color)) {
+			if (prepareChunk(std::shared_ptr<Texture>(), Geometry::Primitive_Triangles, icount, CS_ScreenSpace, BatchTextureType_Color)) {
 				RBXASSERT(icount % 3u == 0u);
 				//todo: we currently just ignore the nice indexing work done. todo: support indexing.
 				for (size_t i = 0u; i < icount; ++i) {
@@ -292,7 +292,7 @@ namespace RBX {
 		}
 
 		void VertexStreamer::triangleList(const Color4& color4, const CoordinateFrame& cframe, const Vector3* v, uint32_t vcount, const short* indices, uint32_t icount) {
-			if (prepareChunk(shared_ptr<Texture>(), Geometry::Primitive_Triangles, icount, CS_WorldSpace, BatchTextureType_Color)) {
+			if (prepareChunk(std::shared_ptr<Texture>(), Geometry::Primitive_Triangles, icount, CS_WorldSpace, BatchTextureType_Color)) {
 				RBXASSERT(icount % 3u == 0u);
 				//todo: we currently just ignore the nice indexing work done. todo: support indexing.
 				for (size_t i = 0u; i < icount; ++i) {
@@ -302,7 +302,7 @@ namespace RBX {
 		}
 
 		void VertexStreamer::line(float x1, float y1, float x2, float y2, const Color4& color4) {
-			if (prepareChunk(shared_ptr<Texture>(), Geometry::Primitive_Lines, 2, CS_ScreenSpace, BatchTextureType_Color)) {
+			if (prepareChunk(std::shared_ptr<Texture>(), Geometry::Primitive_Lines, 2, CS_ScreenSpace, BatchTextureType_Color)) {
 				float z = 0.0f;
 				
 				/*vertexData.push_back(BasicVertex(Vector3(x1, y1, z), Vector2(), color4));
@@ -311,7 +311,7 @@ namespace RBX {
 		}
 
 		void VertexStreamer::line3d(float x1, float y1, float z1, float x2, float y2, float z2, const Color4& color4) {
-			if (prepareChunk(shared_ptr<Texture>(), Geometry::Primitive_Lines, 2, CS_WorldSpace, BatchTextureType_Color)) {
+			if (prepareChunk(std::shared_ptr<Texture>(), Geometry::Primitive_Lines, 2, CS_WorldSpace, BatchTextureType_Color)) {
 				/*vertexData.push_back(BasicVertex(Vector3(x1, y1, z1), Vector2(), color4));
 				vertexData.push_back(BasicVertex(Vector3(x2, y2, z2), Vector2(), color4));*/
 			}

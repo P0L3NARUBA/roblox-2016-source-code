@@ -35,7 +35,7 @@ namespace RBX {
 		static const uint32_t kStarTwinkleRate = 40u;
 
 		static TextureRef::Status getCombinedStatus(const TextureRef(&textures)[6]) {
-			for (uint32_t i = 0u; i < 6u; ++i) {
+			for (size_t i = 0u; i < 6u; ++i) {
 				TextureRef::Status status = textures[i].getStatus();
 
 				if (status != TextureRef::Status_Loaded)
@@ -58,21 +58,19 @@ namespace RBX {
 			}
 		}
 
-		static shared_ptr<Geometry> createCube(Device* device) {
-			shared_ptr<VertexLayout> layout = device->createVertexLayout(BasicVertex::getVertexLayout());
-
-			BasicVertex vertices[] = {
-				BasicVertex(Vector3(-1.0f,  1.0f, -1.0f)),
-				BasicVertex(Vector3( 1.0f,  1.0f, -1.0f)),
-				BasicVertex(Vector3(-1.0f,  1.0f,  1.0f)),
-				BasicVertex(Vector3( 1.0f,  1.0f,  1.0f)),
-				BasicVertex(Vector3(-1.0f, -1.0f, -1.0f)),
-				BasicVertex(Vector3( 1.0f, -1.0f, -1.0f)),
-				BasicVertex(Vector3( 1.0f, -1.0f,  1.0f)),
-				BasicVertex(Vector3(-1.0f, -1.0f,  1.0f)),
+		static std::shared_ptr<Geometry> createCube(Device* device) {
+			std::array<BasicVertex, 8u> vertices = {
+				BasicVertex(-1.0f,  1.0f, -1.0f),
+				BasicVertex( 1.0f,  1.0f, -1.0f),
+				BasicVertex(-1.0f,  1.0f,  1.0f),
+				BasicVertex( 1.0f,  1.0f,  1.0f),
+				BasicVertex(-1.0f, -1.0f, -1.0f),
+				BasicVertex( 1.0f, -1.0f, -1.0f),
+				BasicVertex( 1.0f, -1.0f,  1.0f),
+				BasicVertex(-1.0f, -1.0f,  1.0f),
 			};
 
-			uint8_t indices[] = {
+			std::array<uint16_t, 14u> indices = {
 				3u, 2u,
 				6u, 7u,
 				4u, 2u,
@@ -82,13 +80,16 @@ namespace RBX {
 				1u, 0u,
 			};
 
-			shared_ptr<VertexBuffer> vb = device->createVertexBuffer(sizeof(Vector3), ARRAYSIZE(vertices), GeometryBuffer::Usage_Static);
-			shared_ptr<IndexBuffer>  ib = device->createIndexBuffer(sizeof(uint8_t), ARRAYSIZE(indices), GeometryBuffer::Usage_Static);
+			std::shared_ptr<VertexBuffer> vertexBuffer = device->createVertexBuffer(sizeof(MaterialVertex), vertices.size(), GeometryBuffer::Usage_Static);
+			std::shared_ptr<IndexBuffer> indexBuffer = device->createIndexBuffer(sizeof(uint16_t), indices.size(), GeometryBuffer::Usage_Static);
 
-			vb->upload(0u, vertices, sizeof(vertices));
-			ib->upload(0u, indices, sizeof(indices));
+			vertexBuffer->upload(0u, vertices.data(), vertices.size() * sizeof(MaterialVertex));
+			indexBuffer->upload(0u, indices.data(), vertices.size() * sizeof(uint16_t));
 			
-			return device->createGeometry(layout, vb, ib);
+			return device->createGeometry(
+				device->createVertexLayout(BasicVertex::getVertexLayout()),
+				vertexBuffer,
+				indexBuffer);
 		}
 
 		/*void Sky::StarData::resize(Sky* sky, unsigned int count, bool dynamic)
@@ -118,15 +119,14 @@ namespace RBX {
 			, starTwinkleCounter(0)
 			, readyState(false)*/
 		{
-			cube.reset(new GeometryBatch(createCube(visualEngine->getDevice()), Geometry::Primitive_TriangleStrip, 14u, 8u, 14u));
+			cube.reset(new GeometryBatch(createCube(visualEngine->getDevice()), Geometry::Primitive_TriangleStrip, 14u, 0u, 0u));
 
 			// preload default skybox so that we can show it even while fetching custom skies over HTTP
-			//if (!FFlag::DebugRenderDownloadAssets)
 			loadSkyBoxDefault();
 
 			// preload sun/moon
-			sun = visualEngine->getTextureManager()->load(ContentId("rbxasset://sky/sun.dds"), TextureManager::Fallback_BlackTransparent);
-			moon = visualEngine->getTextureManager()->load(ContentId("rbxasset://sky/moon.dds"), TextureManager::Fallback_BlackTransparent);
+			sun = visualEngine->getTextureManager()->load(ContentId("rbxasset://sky/sun.dds"), TextureManager::Fallback_BlackTransparent).getTexture();
+			moon = visualEngine->getTextureManager()->load(ContentId("rbxasset://sky/moon.dds"), TextureManager::Fallback_BlackTransparent).getTexture();
 		}
 
 		Sky::~Sky()
@@ -208,7 +208,7 @@ namespace RBX {
 
 		void Sky::RenderSkyboxEnvMapCube(DeviceContext* context, uint32_t face, uint32_t size) {
 			if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "SkyCubeFaceFS", BlendState::Mode_None, size, size)) {
-				context->bindTexture(0u, skybox[face].getTexture().get(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+				context->bindTexture(0u, skybox[face]);
 
 				ScreenSpaceEffect::renderFullscreenEnd(context, visualEngine);
 			}
@@ -224,7 +224,7 @@ namespace RBX {
 				context->setDepthState(DepthState(DepthState::Function_Always, false));
 				context->setBlendState(BlendState::Mode_None);
 
-				context->bindTexture(0u, skyboxHDRI.getTexture().get(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+				context->bindTexture(0u, skyboxHDRI);
 			}
 		}
 
@@ -232,7 +232,7 @@ namespace RBX {
 			context->draw(*cube);
 		}
 
-		void Sky::render(DeviceContext* context, const RenderCamera& camera, Texture* texture, bool drawStars) {
+		void Sky::render(DeviceContext* context, const RenderCamera& camera, const std::shared_ptr<Texture>& texture, bool drawStars) {
 			RBXPROFILER_SCOPE("Render", "Sky");
 			RBXPROFILER_SCOPE("GPU", "Sky");
 			PIX_SCOPE(context, "Sky");
@@ -254,7 +254,7 @@ namespace RBX {
 				context->setDepthState(DepthState(DepthState::Function_GreaterEqual, false));
 				context->setBlendState(BlendState::Mode_None);
 
-				context->bindTexture(0u, texture, SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Wrap));
+				context->bindTexture(0u, texture);
 
 				context->draw(*cube);
 			}
@@ -331,13 +331,13 @@ namespace RBX {
 		void Sky::loadSkyBox(const ContentId& rt, const ContentId& lf, const ContentId& bk, const ContentId& ft, const ContentId& up, const ContentId& dn, const ContentId& hdri) {
 			TextureManager* tm = visualEngine->getTextureManager();
 
-			skybox[NORM_X_POS] = tm->load(rt, TextureManager::Fallback_Black, "Sky.Back");
-			skybox[NORM_X_NEG] = tm->load(lf, TextureManager::Fallback_Black, "Sky.Front");
-			skybox[NORM_Y_POS] = tm->load(up, TextureManager::Fallback_Black, "Sky.Up");
-			skybox[NORM_Y_NEG] = tm->load(dn, TextureManager::Fallback_Black, "Sky.Down");
-			skybox[NORM_Z_POS] = tm->load(bk, TextureManager::Fallback_Black, "Sky.Left");
-			skybox[NORM_Z_NEG] = tm->load(ft, TextureManager::Fallback_Black, "Sky.Right");
-			skyboxHDRI = tm->load(hdri, TextureManager::Fallback_Black, "Sky.Right");
+			skybox[NORM_X_POS] = tm->load(rt, TextureManager::Fallback_Black, "Sky.Back").getTexture();
+			skybox[NORM_X_NEG] = tm->load(lf, TextureManager::Fallback_Black, "Sky.Front").getTexture();
+			skybox[NORM_Y_POS] = tm->load(up, TextureManager::Fallback_Black, "Sky.Up").getTexture();
+			skybox[NORM_Y_NEG] = tm->load(dn, TextureManager::Fallback_Black, "Sky.Down").getTexture();
+			skybox[NORM_Z_POS] = tm->load(bk, TextureManager::Fallback_Black, "Sky.Left").getTexture();
+			skybox[NORM_Z_NEG] = tm->load(ft, TextureManager::Fallback_Black, "Sky.Right").getTexture();
+			skyboxHDRI		   = tm->load(hdri, TextureManager::Fallback_Black, "Sky.HDRI").getTexture();
 		}
 
 		/*void Sky::createStarField(int starCount)

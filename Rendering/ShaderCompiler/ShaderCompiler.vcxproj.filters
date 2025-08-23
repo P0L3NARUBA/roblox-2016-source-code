@@ -1,15 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="hlsl2glslfork">
-      <UniqueIdentifier>{2f19b302-96ea-497f-baaf-4d2f024d8fc3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="glsl-optimizer">
-      <UniqueIdentifier>{3745b052-7dfb-40c8-924f-673e83970734}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="mojoshader">
-      <UniqueIdentifier>{eb1bfbad-7cfb-435f-96f9-cdcd3c894a26}</UniqueIdentifier>
-    </Filter>
     <Filter Include="md5">
       <UniqueIdentifier>{80b5cfa2-e61e-4f87-888d-a923801b0ee3}</UniqueIdentifier>
     </Filter>
@@ -18,18 +9,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="md5\md5.c">
       <Filter>md5</Filter>
-    </ClCompile>
-    <ClCompile Include="mojoshader\mojoshader.c">
-      <Filter>mojoshader</Filter>
-    </ClCompile>
-    <ClCompile Include="mojoshader\mojoshader_common.c">
-      <Filter>mojoshader</Filter>
-    </ClCompile>
-    <ClCompile Include="mojoshader\mojoshader_lexer.c">
-      <Filter>mojoshader</Filter>
-    </ClCompile>
-    <ClCompile Include="mojoshader\mojoshader_preprocessor.c">
-      <Filter>mojoshader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

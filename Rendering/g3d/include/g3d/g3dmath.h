@@ -28,7 +28,7 @@
 #include <ctype.h>
 #include <float.h>
 #include <limits>
-#include <stdlib.h>
+#include <cstdlib>
 #include <cstdint>
 
 #ifdef _MSC_VER

@@ -68,7 +68,7 @@ namespace RBX {
 			return config;
 		}
 
-		static uint32_t getTextureSize(const shared_ptr<Texture>& tex) {
+		static uint32_t getTextureSize(const std::shared_ptr<Texture>& tex) {
 			return tex ? Texture::getImageSize(tex->getFormat(), tex->getWidth(), tex->getHeight()) : 0u;
 		}
 
@@ -151,7 +151,7 @@ namespace RBX {
 				layout = visualEngine->getDevice()->createVertexLayout(elements);
 			}
 
-			const shared_ptr<GeometryBatch>* requestMesh(const MeshId& meshId) {
+			const std::shared_ptr<GeometryBatch>* requestMesh(const MeshId& meshId) {
 				// Check mesh cache first; it's likely to have the mesh loaded
 				Meshes::iterator it = meshes.find(meshId);
 
@@ -167,7 +167,7 @@ namespace RBX {
 				if (result == AsyncHttpQueue::Waiting)
 					return nullptr;
 
-				shared_ptr<GeometryBatch>& cache = meshes[meshId];
+				std::shared_ptr<GeometryBatch>& cache = meshes[meshId];
 
 				if (result == AsyncHttpQueue::Succeeded) {
 					// Fill cache with new mesh
@@ -182,14 +182,14 @@ namespace RBX {
 		private:
 			VisualEngine* visualEngine;
 
-			shared_ptr<VertexLayout> layout;
+			std::shared_ptr<VertexLayout> layout;
 
-			typedef boost::unordered_map<MeshId, shared_ptr<GeometryBatch> > Meshes;
+			typedef boost::unordered_map<MeshId, std::shared_ptr<GeometryBatch> > Meshes;
 			Meshes meshes;
 
 			GeometryBatch createMesh(Device* device, FileMeshData* data) {
 				// Create and fill vertex buffer
-				shared_ptr<VertexBuffer> vbuf = device->createVertexBuffer(sizeof(BasicVertex), data->vnts.size(), GeometryBuffer::Usage_Static);
+				std::shared_ptr<VertexBuffer> vbuf = device->createVertexBuffer(sizeof(BasicVertex), data->vnts.size(), GeometryBuffer::Usage_Static);
 
 				BasicVertex* vbptr = static_cast<BasicVertex*>(vbuf->lock());
 
@@ -204,7 +204,7 @@ namespace RBX {
 				vbuf->unlock();
 
 				// Create and fill index buffer
-				shared_ptr<IndexBuffer> ibuf = device->createIndexBuffer(sizeof(uint16_t), data->faces.size() * 3u, GeometryBuffer::Usage_Static);
+				std::shared_ptr<IndexBuffer> ibuf = device->createIndexBuffer(sizeof(uint16_t), data->faces.size() * 3u, GeometryBuffer::Usage_Static);
 
 				uint16_t* ibptr = static_cast<uint16_t*>(ibuf->lock());
 
@@ -219,7 +219,7 @@ namespace RBX {
 				ibuf->unlock();
 
 				// Create geometry batch
-				shared_ptr<Geometry> geometry = device->createGeometry(layout, vbuf, ibuf);
+				std::shared_ptr<Geometry> geometry = device->createGeometry(layout, vbuf, ibuf);
 
 				return GeometryBatch(geometry, Geometry::Primitive_Triangles, data->faces.size() * 3, data->vnts.size());
 			}
@@ -267,7 +267,7 @@ namespace RBX {
 				readyCount = ready;
 			}
 
-			void render(DeviceContext* context, const shared_ptr<Framebuffer>& framebuffer) {
+			void render(DeviceContext* context, const std::shared_ptr<Framebuffer>& framebuffer) {
 				RBXASSERT(isReady());
 
 				const DeviceCaps& caps = visualEngine->getDevice()->getCaps();
@@ -313,7 +313,7 @@ namespace RBX {
 
 						context->bindProgram(program.get());
 
-						context->bindTexture(0u, ld.texture.getTexture().get(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+						context->bindTexture(0u, ld.texture.getTexture());
 
 						//float colorData[] = { ld.desc.color.r, ld.desc.color.g, ld.desc.color.b, (ld.desc.mode == TextureCompositorLayer::Composit_BlitTextureAlphaMagnify4x) ? 4.f : 1.f };
 						//context->setConstant(program->getConstantHandle("Color"), colorData, 1);
@@ -335,7 +335,7 @@ namespace RBX {
 
 				TextureCompositorLayer desc;
 
-				const shared_ptr<GeometryBatch>* mesh;
+				const std::shared_ptr<GeometryBatch>* mesh;
 				TextureRef texture;
 			};
 
@@ -354,7 +354,7 @@ namespace RBX {
 		{
 		}
 
-		TextureCompositor::RenderedJob::RenderedJob(const shared_ptr<Job>& job, const shared_ptr<Framebuffer>& framebuffer, int cooldown)
+		TextureCompositor::RenderedJob::RenderedJob(const shared_ptr<Job>& job, const std::shared_ptr<Framebuffer>& framebuffer, int cooldown)
 			: job(job)
 			, framebuffer(framebuffer)
 			, cooldown(cooldown)
@@ -527,7 +527,7 @@ namespace RBX {
 
 				for (size_t i = orphanedJobs.size(); i > 0u; --i) {
 					const shared_ptr<Job>& job = orphanedJobs[i - 1];
-					const shared_ptr<Texture>& texture = job->texture;
+					const std::shared_ptr<Texture>& texture = job->texture;
 
 					if (texture && texture->getWidth() < job->desc.width && keepAlive > 0u) {
 						keepAlive--;
@@ -537,7 +537,7 @@ namespace RBX {
 
 				// sweep!
 				for (size_t i = 0u; i < sweep.size(); ++i) {
-					shared_ptr<Texture>& texture = orphanedJobs[i]->texture;
+					std::shared_ptr<Texture>& texture = orphanedJobs[i]->texture;
 
 					if (sweep[i] && texture) {
 						FASTLOG1(FLog::RenderTextureCompositor, "TC Destroy texture %p", texture.get());
@@ -575,7 +575,7 @@ namespace RBX {
 
 			for (size_t i = 0u; i < sortedJobs.size(); ++i) {
 				const shared_ptr<Job>& job = sortedJobs[i];
-				const shared_ptr<Texture>& texture = job->texture;
+				const std::shared_ptr<Texture>& texture = job->texture;
 
 				if (texture) {
 					if (texture->getWidth() < job->desc.width)
@@ -618,7 +618,7 @@ namespace RBX {
 			updatePrioritiesAndOrphanJobs(Vector3());
 
 			for (size_t i = 0u; i < orphanedJobs.size(); ++i) {
-				shared_ptr<Texture>& texture = orphanedJobs[i]->texture;
+				std::shared_ptr<Texture>& texture = orphanedJobs[i]->texture;
 
 				if (texture) {
 					FASTLOG1(FLog::RenderTextureCompositor, "TC Destroy texture %p", texture.get());
@@ -729,11 +729,11 @@ namespace RBX {
 			job.job->update(*meshCache);
 		}
 
-		void TextureCompositor::renderJobFinalize(Job& job, const shared_ptr<Framebuffer>& framebuffer, DeviceContext* context) {
-			const shared_ptr<Texture>& texture = job.texture;
+		void TextureCompositor::renderJobFinalize(Job& job, const std::shared_ptr<Framebuffer>& framebuffer, DeviceContext* context) {
+			const std::shared_ptr<Texture>& texture = job.texture;
 			RBXASSERT(texture);
 
-			if (texture->getUsage() != Texture::Usage_Renderbuffer) {
+			if (texture->getUsage() != Texture::Usage_Colorbuffer) {
 				try {
 					Timer<Time::Precise> timer;
 
@@ -780,8 +780,8 @@ namespace RBX {
 
 				FASTLOG5(FLog::RenderTextureCompositor, "TC Job[%p]: render (totalSize %d, pendingSize %d, budget %d -> width %d)", &job, totalSize, pendingSize, config.budget, width);
 
-				shared_ptr<Texture> texture = getOrCreateTexture(width, height);
-				shared_ptr<Framebuffer> framebuffer = getOrCreateFramebufer(texture);
+				std::shared_ptr<Texture> texture = getOrCreateTexture(width, height);
+				std::shared_ptr<Framebuffer> framebuffer = getOrCreateFramebufer(texture);
 
 				job.job->render(context, framebuffer);
 
@@ -849,9 +849,9 @@ namespace RBX {
 			return result;
 		}
 
-		shared_ptr<Framebuffer> TextureCompositor::getOrCreateFramebufer(const shared_ptr<Texture>& texture) {
+		std::shared_ptr<Framebuffer> TextureCompositor::getOrCreateFramebufer(const std::shared_ptr<Texture>& texture) {
 			// we can render into the texture if it's a render target itself
-			if (texture->getUsage() == Texture::Usage_Renderbuffer)
+			if (texture->getUsage() == Texture::Usage_Colorbuffer)
 				return visualEngine->getDevice()->createFramebuffer(texture->getRenderbuffer(0u, 0u));
 
 			// look for matching framebuffer in cache
@@ -861,8 +861,8 @@ namespace RBX {
 			}
 
 			// create a new framebuffer
-			shared_ptr<Texture> rt = visualEngine->getDevice()->createTexture(Texture::Type_2D, Texture::Format_RGBA16f, texture->getWidth(), texture->getHeight(), 1u, 1u, Texture::Usage_Renderbuffer);
-			shared_ptr<Framebuffer> framebuffer = visualEngine->getDevice()->createFramebuffer(rt->getRenderbuffer(0u, 0u));
+			std::shared_ptr<Texture> rt = visualEngine->getDevice()->createTexture(Texture::Type_2D, Texture::Format_RGBA16f, texture->getWidth(), texture->getHeight(), 1u, 1u, Texture::Usage_Colorbuffer);
+			std::shared_ptr<Framebuffer> framebuffer = visualEngine->getDevice()->createFramebuffer(rt->getRenderbuffer(0u, 0u));
 
 			// we make sure RTs are always alive to minimize stalls (there should be <3 Mb of them anyway)
 			framebuffers.push_back(framebuffer);
@@ -870,10 +870,10 @@ namespace RBX {
 			return framebuffer;
 		}
 
-		shared_ptr<Texture> TextureCompositor::getOrCreateTexture(uint32_t width, uint32_t height) {
+		std::shared_ptr<Texture> TextureCompositor::getOrCreateTexture(uint32_t width, uint32_t height) {
 			// try to steal a texture from orphaned queue
 			for (size_t i = 0u; i < orphanedJobs.size(); ++i) {
-				shared_ptr<Texture> texture = orphanedJobs[i]->texture;
+				std::shared_ptr<Texture> texture = orphanedJobs[i]->texture;
 
 				if (texture && texture->getWidth() == width && texture->getHeight() == height) {
 					FASTLOG1(FLog::RenderTextureCompositor, "TC Reuse texture %p", texture.get());
@@ -885,9 +885,9 @@ namespace RBX {
 			}
 
 			Texture::Format format = config.bpp == 16u ? Texture::Format_BGR5A1 : Texture::Format_RGBA8;
-			Texture::Usage usage = kTextureCompositorUseRenderTextures ? Texture::Usage_Renderbuffer : Texture::Usage_Static;
+			Texture::Usage usage = kTextureCompositorUseRenderTextures ? Texture::Usage_Colorbuffer : Texture::Usage_Static;
 
-			shared_ptr<Texture> texture = visualEngine->getDevice()->createTexture(Texture::Type_2D, format, width, height, 1u, 1u, usage);
+			std::shared_ptr<Texture> texture = visualEngine->getDevice()->createTexture(Texture::Type_2D, format, width, height, 1u, 1u, usage);
 
 			FASTLOG1(FLog::RenderTextureCompositor, "TC Create texture %p", texture.get());
 
@@ -899,7 +899,7 @@ namespace RBX {
 
 			for (JobMap::const_iterator it = jobs.begin(); it != jobs.end(); ++it) {
 				const shared_ptr<Job>& job = it->second;
-				const shared_ptr<Texture>& texture = job->texture;
+				const std::shared_ptr<Texture>& texture = job->texture;
 
 				if (!texture)
 					continue;

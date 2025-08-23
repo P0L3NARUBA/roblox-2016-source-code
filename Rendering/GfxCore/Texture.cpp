@@ -2,6 +2,8 @@
 
 #include "rbx/Profiler.h"
 
+#include <array>
+
 FASTFLAGVARIABLE(GraphicsTextureCommitChanges, false)
 
 namespace RBX {
@@ -13,8 +15,8 @@ namespace RBX {
 			bool depth;
 		};
 
-		static const FormatDescription gTextureFormats[Texture::Format_Count] = {
-			{ 8u,  false, false }, /* R8         */
+		static const std::array<FormatDescription, Texture::Format_Count> gTextureFormats = { {
+			{  8u, false, false }, /* R8         */
 			{ 16u, false, false }, /* RG8        */
 			{ 32u, false, false }, /* RGBA8      */
 			{ 16u, false, false }, /* BGR5A1     */
@@ -23,23 +25,23 @@ namespace RBX {
 			{ 32u, false, false }, /* RG16f      */
 			{ 64u, false, false }, /* RGBA16f    */
 
-			{ 4u,  true,  false }, /* BC1        */
-			{ 4u,  true,  false }, /* BC1_sRGB   */
-			{ 8u,  true,  false }, /* BC2        */
-			{ 8u,  true,  false }, /* BC2_sRGB   */
-			{ 8u,  true,  false }, /* BC3        */
-			{ 8u,  true,  false }, /* BC3_sRGB   */
-			{ 4u,  true,  false }, /* BC4        */
-			{ 8u,  true,  false }, /* BC5        */
-			{ 8u,  true,  false }, /* BC6f       */
-			{ 8u,  true,  false }, /* BC7        */
-			{ 8u,  true,  false }, /* BC7_sRGB   */
+			{  4u,  true, false }, /* BC1        */
+			{  4u,  true, false }, /* BC1_sRGB   */
+			{  8u,  true, false }, /* BC2        */
+			{  8u,  true, false }, /* BC2_sRGB   */
+			{  8u,  true, false }, /* BC3        */
+			{  8u,  true, false }, /* BC3_sRGB   */
+			{  4u,  true, false }, /* BC4        */
+			{  8u,  true, false }, /* BC5        */
+			{  8u,  true, false }, /* BC6f       */
+			{  8u,  true, false }, /* BC7        */
+			{  8u,  true, false }, /* BC7_sRGB   */
 
-			{ 16u, false, true  }, /* D16        */
-			{ 32u, false, true  }, /* D24S8      */
-			{ 32u, false, true  }, /* D32f       */
-			{ 64u, false, true  }, /* D32fS8X24  */
-		};
+			{ 16u, false,  true }, /* D16        */
+			{ 32u, false,  true }, /* D24S8      */
+			{ 32u, false,  true }, /* D32f       */
+			{ 64u, false,  true }, /* D32fS8X24  */
+		} };
 
 		TextureRegion::TextureRegion()
 			: x(0u)
@@ -71,6 +73,18 @@ namespace RBX {
 		{
 		}
 
+		Texture::Texture()
+			: Resource()
+			, type(Type_Count)
+			, format(Format_Count)
+			, width(0u)
+			, height(0u)
+			, depth(0u)
+			, mipLevels(0u)
+			, usage(Usage_Count)
+		{
+		}
+
 		Texture::Texture(Device* device, Type type, Format format, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevels, Usage usage)
 			: Resource(device)
 			, type(type)
@@ -85,13 +99,13 @@ namespace RBX {
 			RBXASSERT(mipLevels > 0u && mipLevels <= getMaxMipCount(width, height, depth));
 			RBXASSERT(type == Type_3D || depth == 1u);
 
-			if (usage != Usage_Renderbuffer) {
+			if (usage != Usage_Colorbuffer) {
 				RBXPROFILER_COUNTER_ADD("memory/gpu/texture", getTextureSize(type, format, width, height, depth, mipLevels));
 			}
 		}
 
 		Texture::~Texture() {
-			if (usage != Usage_Renderbuffer) {
+			if (usage != Usage_Colorbuffer) {
 				RBXPROFILER_COUNTER_SUB("memory/gpu/texture", getTextureSize(type, format, width, height, depth, mipLevels));
 			}
 		}

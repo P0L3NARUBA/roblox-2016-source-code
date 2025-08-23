@@ -11,10 +11,10 @@ namespace RBX {
 
 		struct RenderOperationCompareByMaterial {
 			bool operator()(const RenderOperation& lhs, const RenderOperation& rhs) const {
-				const ShaderProgram* lp = lhs.technique->getProgram();
-				const ShaderProgram* rp = rhs.technique->getProgram();
+				//const ShaderProgram* lp = lhs.technique->getProgram();
+				//const ShaderProgram* rp = rhs.technique->getProgram();
 
-				return (lp == rp) ? lhs.technique < rhs.technique : lp < rp;
+				return false;//(lp == rp) ? lhs.technique < rhs.technique : lp < rp;
 			}
 		};
 
@@ -38,11 +38,11 @@ namespace RBX {
 				break;
 
 			case Sort_Material:
-				std::sort(operations.begin(), operations.end(), RenderOperationCompareByMaterial());
+				//std::sort(operations.begin(), operations.end(), RenderOperationCompareByMaterial());
 				break;
 
 			case Sort_Distance:
-				std::sort(operations.begin(), operations.end(), RenderOperationCompareByDistance());
+				//std::sort(operations.begin(), operations.end(), RenderOperationCompareByDistance());
 				break;
 
 			default:
@@ -55,7 +55,7 @@ namespace RBX {
 		}
 
 		void RenderQueue::clear() {
-			for (size_t flag = 0u; flag < Flag_Max; ++flag)
+			for (size_t flag = 0u; flag < 4u; ++flag)
 				groups[flag].clear();
 		}
 

@@ -178,8 +178,8 @@ namespace RBX
 					for (size_t i = 0u; i < techniques.size(); ++i) {
 						Technique& t = techniques[i];
 
-						t.setTexture(0u, getNormalMap(frame1), SamplerState::Filter_Linear);
-						t.setTexture(1u, getNormalMap(frame2), SamplerState::Filter_Linear);
+						t.setTexture(0u, getNormalMap(frame1).getTexture());
+						t.setTexture(1u, getNormalMap(frame2).getTexture());
 
 						//t.setConstant("WaveParams", Vector4(waveFrequency, wavePhase, waveHeight, ratio));
 						//t.setConstant("WaterColor", Vector4(Color4(waterColor)));
@@ -219,8 +219,8 @@ namespace RBX
 					for (size_t i = 0u; i < techniques.size(); ++i) {
 						Technique& t = techniques[i];
 
-						t.setTexture(0u, getNormalMap(frame1), SamplerState::Filter_Linear);
-						t.setTexture(1u, getNormalMap(frame2), SamplerState::Filter_Linear);
+						t.setTexture(0u, getNormalMap(frame1).getTexture());
+						t.setTexture(1u, getNormalMap(frame2).getTexture());
 
 						//t.setConstant("waveParams", Vector4(freq, phase, height, 0));
 						//t.setConstant("nmAnimLerp", Vector4(ratio, 0, 0, 0));
@@ -236,9 +236,9 @@ namespace RBX
 
 			technique.setRasterizerState(RasterizerState(RasterizerState::Cull_None, 4));
 
-			technique.setTexture(0, nm0, SamplerState::Filter_Linear);
-			technique.setTexture(1, nm1, SamplerState::Filter_Linear);
-			technique.setTexture(2, visualEngine->getSceneManager()->getEnvMap()->getOutdoorTexture(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+			technique.setTexture(0, nm0.getTexture());
+			technique.setTexture(1, nm1.getTexture());
+			technique.setTexture(2, visualEngine->getSceneManager()->getEnvMap()->getOutdoorTexture());
 
 			/*if (lightGrid)
 			{
@@ -247,12 +247,12 @@ namespace RBX
 			}*/
 		}
 
-		const shared_ptr<Material>& Water::getLegacyMaterial()
+		const std::shared_ptr<Material>& Water::getLegacyMaterial()
 		{
 			if (legacyMaterial)
 				return legacyMaterial;
 
-			legacyMaterial = shared_ptr<Material>(new Material());
+			legacyMaterial = std::shared_ptr<Material>(new Material());
 
 			const char* vsNameHQ = "WaterHQVS";
 			const char* psNameHQ = "WaterHQFS";
@@ -283,7 +283,7 @@ namespace RBX
 				Technique technique(program, 3);
 
 				TextureManager* tm = visualEngine->getTextureManager();
-				technique.setTexture(0, tm->load(ContentId("rbxasset://textures/water_Subsurface.dds"), TextureManager::Fallback_White), SamplerState::Filter_Linear);
+				technique.setTexture(0, tm->load(ContentId("rbxasset://textures/water_Subsurface.dds"), TextureManager::Fallback_White).getTexture());
 
 				legacyMaterial->addTechnique(technique);
 			}
@@ -291,12 +291,12 @@ namespace RBX
 			return legacyMaterial;
 		}
 
-		const shared_ptr<Material>& Water::getSmoothMaterial()
+		const std::shared_ptr<Material>& Water::getSmoothMaterial()
 		{
 			if (smoothMaterial)
 				return smoothMaterial;
 
-			smoothMaterial = shared_ptr<Material>(new Material());
+			smoothMaterial = std::shared_ptr<Material>(new Material());
 
 			/*if (shared_ptr<ShaderProgram> program = visualEngine->getShaderManager()->getProgram("SmoothWaterHQVS", "SmoothWaterHQGBufferFS"))
 			{

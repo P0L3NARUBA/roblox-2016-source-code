@@ -1,36 +1,33 @@
-#define PI ( 3.14159 )
-#define EPSILON ( 0.0001 )
-#define INV_EPSILON ( 1.0 - EPSILON )
+#define PI ( 3.14159f )
+#define EPSILON ( 0.0001f )
+#define INV_EPSILON ( 1.0f - EPSILON )
 
-#define GRAYSCALE float3(0.2126, 0.7152, 0.0722)
+#define GRAYSCALE float3(0.2126f, 0.7152f, 0.0722f)
 
 #ifndef EXCLUDE_COMMON
 #define EXCLUDE_COMMON
 
-#define TEX_DECLARE1D(type, name, slot)                \
-    Texture1D<##type> name##Texture : register(t##slot); \
-    SamplerState name##Sampler : register(s##slot)
-#define TEX_DECLARE1DARRAY(type, name, slot)                \
-    Texture1DArray<##type> name##Texture : register(t##slot); \
-    SamplerState name##Sampler : register(s##slot)
-#define TEX_DECLARE2D(type, name, slot)                \
-    Texture2D<##type> name##Texture : register(t##slot); \
-    SamplerState name##Sampler : register(s##slot)
-#define TEX_DECLARE2DMS(type, name, slot)                \
-    Texture2DMS<##type> name##Texture : register(t##slot); \
-    SamplerState name##Sampler : register(s##slot)
-#define TEX_DECLARE2DARRAY(type, name, slot)                \
-    Texture2DArray<##type> name##Texture : register(t##slot); \
-    SamplerState name##Sampler : register(s##slot)
-#define TEX_DECLARE3D(type, name, slot)                \
-    Texture3D<##type> name##Texture : register(t##slot); \
-    SamplerState name##Sampler : register(s##slot)
-#define TEX_DECLARECUBE(type, name, slot)                \
-    TextureCube<##type> name##Texture : register(t##slot); \
-    SamplerState name##Sampler : register(s##slot)
-#define TEX_DECLARECUBEARRAY(type, name, slot)                \
-    TextureCubeArray<##type> name##Texture : register(t##slot); \
-    SamplerState name##Sampler : register(s##slot)
+#define TEX_DECLARE1D(type, name, slot)        Texture1D<##type> name##Texture : register(t##slot);
+#define TEX_DECLARE1DARRAY(type, name, slot)   Texture1DArray<##type> name##Texture : register(t##slot);
+#define TEX_DECLARE2D(type, name, slot)        Texture2D<##type> name##Texture : register(t##slot);
+#define TEX_DECLARE2DMS(type, name, slot)      Texture2DMS<##type> name##Texture : register(t##slot);
+#define TEX_DECLARE2DARRAY(type, name, slot)   Texture2DArray<##type> name##Texture : register(t##slot);
+#define TEX_DECLARE2DMSARRAY(type, name, slot) Texture2DMSArray<##type> name##Texture : register(t##slot);
+#define TEX_DECLARE3D(type, name, slot)        Texture3D<##type> name##Texture : register(t##slot);
+#define TEX_DECLARECUBE(type, name, slot)      TextureCube<##type> name##Texture : register(t##slot);
+#define TEX_DECLARECUBEARRAY(type, name, slot) TextureCubeArray<##type> name##Texture : register(t##slot);
+
+SamplerState PointWrap : register(s0);
+SamplerState PointClamp : register(s1);
+SamplerState PointBorder : register(s2);
+
+SamplerState LinearWrap : register(s3);
+SamplerState LinearClamp : register(s4);
+SamplerState LinearBorder : register(s5);
+
+SamplerState AnisotropicWrap : register(s6);
+SamplerState AnisotropicClamp : register(s7);
+SamplerState AnisotropicBorder : register(s8);
 
 struct BasicAppData /* size 12 */ {
     float3 Position : POSITION; // size 12, offset 0

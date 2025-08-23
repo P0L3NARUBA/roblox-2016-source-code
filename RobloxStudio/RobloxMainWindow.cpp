@@ -739,10 +739,10 @@ void RobloxMainWindow::setupLogging()
 	RBX::Log::setLogProvider(&mainLogManager);
 	mainLogManager.WriteCrashDump();
 
-	dumpErrorUploader.reset(new DumpErrorUploader(true, "Studio"));
-	std::string dmpHandlerUrl =  GetDmpUrl(::GetBaseURL(), true);
-	dumpErrorUploader->InitCrashEvent(dmpHandlerUrl, mainLogManager.getCrashEventName());
-	dumpErrorUploader->Upload(dmpHandlerUrl);
+	//dumpErrorUploader.reset(new DumpErrorUploader(true, "Studio"));
+	//std::string dmpHandlerUrl =  GetDmpUrl(::GetBaseURL(), true);
+	//dumpErrorUploader->InitCrashEvent(dmpHandlerUrl, mainLogManager.getCrashEventName());
+	//dumpErrorUploader->Upload(dmpHandlerUrl);
 #endif
 
 #ifdef __APPLE__

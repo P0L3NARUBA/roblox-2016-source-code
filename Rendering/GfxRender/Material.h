@@ -1,9 +1,9 @@
 #pragma once
 
+#include "GfxCore/Texture.h"
 #include "GfxCore/States.h"
 #include "g3d/Vector4.h"
 
-#include "TextureRef.h"
 #include "RenderQueue.h"
 
 #include <vector>
@@ -28,11 +28,8 @@ namespace RBX {
 			void setBlendState(const BlendState& state);
 			const BlendState& getBlendState() const { return blendState; }
 
-			void setTexture(uint32_t stage, const TextureRef& texture, const SamplerState& state);
-			const TextureRef& getTexture(uint32_t stage) const;
-
-			//void setConstant(uint32_t handle, const Vector4& value);
-			//void setConstant(const char* name, const Vector4& value);
+			void setTexture(uint32_t stage, const std::shared_ptr<Texture>& texture);
+			std::shared_ptr<Texture> getTexture(uint32_t stage) const;
 
 			void apply(DeviceContext* context) const;
 
@@ -42,16 +39,6 @@ namespace RBX {
 			const ShaderProgram* getProgram() const { return program.get(); }
 
 		private:
-			struct TextureUnit {
-				TextureRef texture;
-				SamplerState state;
-			};
-
-			/*struct Constant {
-				uint32_t handle;
-				Vector4 value;
-			};*/
-
 			uint32_t lodIndex;
 			RenderQueue::Pass pass;
 
@@ -61,8 +48,8 @@ namespace RBX {
 
 			shared_ptr<ShaderProgram> program;
 
-			std::vector<TextureUnit> textures;
-			//std::vector<Constant> constants;
+			std::vector<Texture::TextureStage> textures;
+
 		};
 
 		class Material {

@@ -52,7 +52,7 @@ namespace RBX
 				bool* textFits
 				) const;
 
-			virtual const shared_ptr<Texture>& getTexture() const;
+			virtual const std::shared_ptr<Texture>& getTexture() const;
             virtual void loadResources(RBX::Graphics::TextureManager* textureManager, RBX::Graphics::TextureAtlas* glyphAtlas);
             virtual void releaseResources();
 
@@ -68,7 +68,7 @@ namespace RBX
 		private:
 
             GlyphProvider* glyphProvider;
-            shared_ptr<Texture> fallbackWhiteTexture;
+			std::shared_ptr<Texture> fallbackWhiteTexture;
 
 			struct GlyphLine
 			{

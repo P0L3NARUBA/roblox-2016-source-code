@@ -65,7 +65,7 @@
 #include "rbx/Log.h"
 #include "tool/ToolsArrow.h"
 #include "Util/RobloxGoogleAnalytics.h"
-#include "GeometryGenerator.h"
+//#include "GeometryGenerator.h"
 #include "../CSG/CSGKernel.h"
 #include "RobloxServicesTools.h"
 #include "tool/MoveResizeJoinTool.h"

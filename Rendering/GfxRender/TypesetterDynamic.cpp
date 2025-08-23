@@ -114,7 +114,7 @@ FASTINTVARIABLE(FontSizePadding, 1)
                 FT_Property_Set(library, "truetype", "interpreter-version", &interpreter_version );
             }
 
-            const shared_ptr<Texture>& getTexture() const { return textureAtlas ? textureAtlas->getTexture() : errorTex; }
+            const std::shared_ptr<Texture>& getTexture() const { return textureAtlas ? textureAtlas->getTexture() : errorTex; }
 
             unsigned roundToPixelsSigned(int size)
             {
@@ -283,7 +283,7 @@ FASTINTVARIABLE(FontSizePadding, 1)
 
             TypesetterDynamic::Glyph errorGlyph;
             TextureRegion errorTexRegion;
-            shared_ptr<Texture> errorTex;
+            std::shared_ptr<Texture> errorTex;
 			SizeSpecificData errorSizeData;
 
 			unsigned fontId;
@@ -384,7 +384,7 @@ FASTINTVARIABLE(FontSizePadding, 1)
             glyphProvider->releaseAtlas();
         }
 
-		const shared_ptr<Texture>& TypesetterDynamic::getTexture() const
+		const std::shared_ptr<Texture>& TypesetterDynamic::getTexture() const
 		{
 			return glyphProvider->getTexture();
 		}
@@ -402,7 +402,7 @@ FASTINTVARIABLE(FontSizePadding, 1)
             float startx, float starty, float height, 
             const Rect2D& clippingRect, const Rotation2D& rotation) const
         {
-            shared_ptr<Texture> texture = glyphProvider->getTexture();
+            std::shared_ptr<Texture> texture = glyphProvider->getTexture();
             if (!texture)
                 return;
             bool useClipping = (clippingRect != RBX::Rect2D::xyxy(-1,-1,-1,-1));
@@ -495,7 +495,7 @@ FASTINTVARIABLE(FontSizePadding, 1)
                 starty = fontAdjustY(round_int(position.y), intSize.y, scale, yalign);
             }
 
-            shared_ptr<Texture> texture = glyphProvider->getTexture();
+            std::shared_ptr<Texture> texture = glyphProvider->getTexture();
             if (!texture)
                 return Vector2::zero();
 
@@ -546,7 +546,7 @@ FASTINTVARIABLE(FontSizePadding, 1)
 			float startx = position.x;
 			float starty = fontAdjustY(position.y, measuredSize.y, floatIntSizeRatio, yalign);
 
-            shared_ptr<Texture> texture = glyphProvider->getTexture();
+            std::shared_ptr<Texture> texture = glyphProvider->getTexture();
             if (!texture)
                 return Vector2::zero();
 

@@ -143,7 +143,7 @@ namespace RBX {
 			boost::shared_ptr<FrameRateManagerStatsItem> frameRateManagerStatsItem;
 
 			scoped_ptr<VertexStreamer> vrVertexStreamer;
-			shared_ptr<Texture> vrDebugTexture;
+			std::shared_ptr<Texture> vrDebugTexture;
 		};
 	}
 }

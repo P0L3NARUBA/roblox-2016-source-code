@@ -177,3 +177,7 @@ RobloxStudio/ui_PairRbxDevDialog.h
 RobloxStudio/ui_RBXMainWindow.h
 RobloxStudio/ui_Roblox Studio 2013 dialog.h
 RobloxStudio/ui_TeamCreate.h
+*.ipdb
+*.iobj
+*.recipe
+*.lastbuildstate

@@ -10,7 +10,7 @@ namespace RBX {
 
 		struct GlobalShaderData {
 			/* Camera */
-			Matrix4 ViewProjection[2];	/* Index 0 = View Projection || Index 1 = Inverse View Projection */
+			std::array<Matrix4, 2u> ViewProjection; /* Index 0 = View Projection || Index 1 = Inverse View Projection */
 			Vector4 ViewRight;
 			Vector4 ViewUp;
 			Vector4 ViewDirection;
@@ -23,11 +23,11 @@ namespace RBX {
 			/* Sun */
 			Vector4 KeyColor_KeyShadowDistance;
 			Vector4 KeyDirection_unused;
-			Vector4 KeyCascade[4];
+			std::array<Vector4, 4u> KeyCascade;
 
 			/* Fog */
 			Vector4 FogColor_Density; /* x = Color.r,       y = Color.g,     z = Color.b,        w = Density */
-			Vector4 FogParams;		  /* x = Sun Influence, y = Uses Skybox, z = Affects Skybox, w = 0.0     */
+			Vector4 FogParams;		  /* x = Sun Influence, y = Uses Skybox, z = Affects Skybox, w = 0.0f    */
 
 			/* Misc */
 			Vector4 ViewportSize_ViewportScale;
@@ -67,7 +67,7 @@ namespace RBX {
 		3 - Inherit color from dedicated map */
 
 		struct GlobalMaterialData {
-			MaterialData Materials[256];
+			std::array<MaterialData, 256u> Materials;
 
 			static void define(Device* device);
 		};

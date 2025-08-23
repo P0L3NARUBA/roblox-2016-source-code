@@ -59,7 +59,9 @@ namespace RBX {
 			//virtual void setWorldTransforms4x3(const float* data, size_t matrixCount) = 0;
 			//virtual void setConstant(int handle, const float* data, size_t vectorCount) = 0;
 
-			virtual void bindTexture(uint32_t stage, Texture* texture, const SamplerState& state) = 0;
+			virtual void bindTexture(uint32_t stage, const std::shared_ptr<Texture>& texture) = 0;
+			virtual void bindTextures(std::vector<Texture::TextureStage> textureStages) = 0;
+			virtual void bindSamplers() = 0;
 
 			virtual void setRasterizerState(const RasterizerState& state) = 0;
 			virtual void setBlendState(const BlendState& state) = 0;
@@ -100,8 +102,19 @@ namespace RBX {
 
 			uint32_t maxDrawBuffers;
 			uint32_t maxSamples;
-			uint32_t maxTextureSize;
+
+			uint32_t max1DTextureSize;
+			uint32_t max1DArraySize;
+
+			uint32_t max2DTextureSize;
+			uint32_t max2DArraySize;
+
+			uint32_t max3DTextureSize;
+
+			uint32_t maxCubeTextureSize;
+
 			uint32_t maxTextureUnits;
+			uint32_t maxSamplerSlots;
 
 			bool colorOrderBGR;
 			bool needsHalfPixelOffset;
@@ -190,18 +203,18 @@ namespace RBX {
 			virtual shared_ptr<ShaderProgram> createShaderProgram(const shared_ptr<ComputeShader>& computeShader) = 0;
 			virtual shared_ptr<ShaderProgram> createShaderProgramFFP() = 0;
 
-			virtual shared_ptr<VertexBuffer> createVertexBuffer(size_t elementSize, size_t elementCount, GeometryBuffer::Usage usage) = 0;
-			virtual shared_ptr<IndexBuffer> createIndexBuffer(size_t elementSize, size_t elementCount, GeometryBuffer::Usage usage) = 0;
-			virtual shared_ptr<VertexLayout> createVertexLayout(const std::vector<VertexLayout::Element>& elements) = 0;
+			virtual std::shared_ptr<VertexBuffer> createVertexBuffer(size_t elementSize, size_t elementCount, GeometryBuffer::Usage usage) = 0;
+			virtual std::shared_ptr<IndexBuffer> createIndexBuffer(size_t elementSize, size_t elementCount, GeometryBuffer::Usage usage) = 0;
+			virtual std::shared_ptr<VertexLayout> createVertexLayout(const std::vector<VertexLayout::Element>& elements) = 0;
 
-			shared_ptr<Geometry> createGeometry(const shared_ptr<VertexLayout>& layout, const shared_ptr<VertexBuffer>& vertexBuffer, const shared_ptr<IndexBuffer>& indexBuffer, uint32_t baseVertexIndex = 0);
+			std::shared_ptr<Geometry> createGeometry(const std::shared_ptr<VertexLayout>& layout, const std::shared_ptr<VertexBuffer>& vertexBuffer, const std::shared_ptr<IndexBuffer>& indexBuffer, uint32_t baseVertexIndex = 0);
 
-			virtual shared_ptr<Texture> createTexture(Texture::Type type, Texture::Format format, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevels, Texture::Usage usage) = 0;
+			virtual std::shared_ptr<Texture> createTexture(Texture::Type type, Texture::Format format, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevels, Texture::Usage usage) = 0;
 
-			virtual shared_ptr<Renderbuffer> createRenderbuffer(Texture::Format format, uint32_t width, uint32_t height, uint32_t samples) = 0;
+			virtual std::shared_ptr<Renderbuffer> createRenderbuffer(Texture::Format format, uint32_t width, uint32_t height, uint32_t samples) = 0;
 
-			shared_ptr<Framebuffer> createFramebuffer(const shared_ptr<Renderbuffer>& color, const shared_ptr<Renderbuffer>& depth = shared_ptr<Renderbuffer>());
-			shared_ptr<Framebuffer> createFramebuffer(const std::vector<shared_ptr<Renderbuffer> >& color, const shared_ptr<Renderbuffer>& depth = shared_ptr<Renderbuffer>());
+			std::shared_ptr<Framebuffer> createFramebuffer(const std::shared_ptr<Renderbuffer>& color, const std::shared_ptr<Renderbuffer>& depth = std::shared_ptr<Renderbuffer>());
+			std::shared_ptr<Framebuffer> createFramebuffer(const std::vector<std::shared_ptr<Renderbuffer> >& color, const std::shared_ptr<Renderbuffer>& depth = std::shared_ptr<Renderbuffer>());
 
 			virtual const DeviceCaps& getCaps() const = 0;
 
@@ -216,8 +229,8 @@ namespace RBX {
 
 			Device();
 
-			virtual shared_ptr<Geometry> createGeometryImpl(const shared_ptr<VertexLayout>& layout, const shared_ptr<VertexBuffer>& vertexBuffers, const shared_ptr<IndexBuffer>& indexBuffer, uint32_t baseVertexIndex) = 0;
-			virtual shared_ptr<Framebuffer> createFramebufferImpl(const std::vector<shared_ptr<Renderbuffer> >& color, const shared_ptr<Renderbuffer>& depth) = 0;
+			virtual std::shared_ptr<Geometry> createGeometryImpl(const std::shared_ptr<VertexLayout>& layout, const std::shared_ptr<VertexBuffer>& vertexBuffers, const std::shared_ptr<IndexBuffer>& indexBuffer, uint32_t baseVertexIndex) = 0;
+			virtual std::shared_ptr<Framebuffer> createFramebufferImpl(const std::vector<std::shared_ptr<Renderbuffer> >& color, const std::shared_ptr<Renderbuffer>& depth) = 0;
 
 			void fireDeviceLost();
 			void fireDeviceRestored();

@@ -92,7 +92,7 @@ namespace RBX {
 			void resetBounds();
 			void resetBounds(const Vector3& min, const Vector3& max);
 
-			GeometryPair generateGeometry(PartInstance* part);
+			static GeometryPair generateGeometry(PartInstance* part);
 
 			void addInstance(PartInstance* part, Decal* decal, const Options& options, const Resources& resources, const HumanoidIdentifier* humanoidIdentifier = nullptr);
 			void addCSGPrimitive(PartInstance* part);
@@ -132,11 +132,6 @@ namespace RBX {
 			void addFileMesh(FileMeshData* data, DataModelMesh* specialShape, PartInstance* part, Decal* decal, const HumanoidIdentifier* humanoidIdentifier, const Options& options);
 			void addOperation(PartInstance* part, Decal* decal, const Options& options, const Resources& resources, uint32_t randomSeed);
 			void addOperationDecompositionDebug(PartOperation* operation, PartInstance* part, Decal* decal, const Options& options, uint32_t randomSeed);
-
-			GeometryPair generateBlock();
-			GeometryPair generateSphere();
-			GeometryPair generateCylinder();
-			GeometryPair generateWedge(bool corner);
 
 			void fillDecompShapeDebug(PartOperation* operation, PartInstance* part, const Options& options);
 			void fillBlockShapeDebug(PartInstance* part, const Options& options);

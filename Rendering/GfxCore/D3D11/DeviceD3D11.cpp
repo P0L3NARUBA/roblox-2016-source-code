@@ -88,10 +88,21 @@ namespace RBX {
 
 			caps.supportsTexturePartialMipChain = true;
 
-			caps.maxDrawBuffers = 8u;
+			caps.maxDrawBuffers = D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT;
 			caps.maxSamples = getMaxSamplesSupported(device11);
-			caps.maxTextureSize = D3D11_REQ_TEXTURE2D_U_OR_V_DIMENSION;
-			caps.maxTextureUnits = 32u;
+
+			caps.max1DTextureSize = D3D11_REQ_TEXTURE1D_U_DIMENSION;
+			caps.max1DArraySize = D3D11_REQ_TEXTURE1D_ARRAY_AXIS_DIMENSION;
+
+			caps.max2DTextureSize = D3D11_REQ_TEXTURE2D_U_OR_V_DIMENSION;
+			caps.max2DArraySize = D3D11_REQ_TEXTURE2D_ARRAY_AXIS_DIMENSION;
+
+			caps.max3DTextureSize = D3D11_REQ_TEXTURE3D_U_V_OR_W_DIMENSION;
+
+			caps.maxCubeTextureSize = D3D11_REQ_TEXTURECUBE_DIMENSION;
+
+			caps.maxTextureUnits = D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT;
+			caps.maxSamplerSlots = D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT;
 
 			caps.colorOrderBGR = false;
 			caps.needsHalfPixelOffset = false;
@@ -156,8 +167,8 @@ namespace RBX {
 			HRESULT hr = swapChain11->GetBuffer(0u, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
 			RBXASSERT(SUCCEEDED(hr));
 
-			shared_ptr<Renderbuffer> backBufferRB = shared_ptr<Renderbuffer>(new RenderbufferD3D11(this, Texture::Format_RGBA8, width, height, 1u, backBuffer));
-			std::vector<shared_ptr<Renderbuffer>> colorBuffers;
+			std::shared_ptr<Renderbuffer> backBufferRB = std::shared_ptr<Renderbuffer>(new RenderbufferD3D11(this, Texture::Format_RGBA8, width, height, 1u, backBuffer));
+			std::vector<std::shared_ptr<Renderbuffer>> colorBuffers;
 			colorBuffers.push_back(backBufferRB);
 
 			// create frame buffer
@@ -299,28 +310,28 @@ namespace RBX {
 			return result;
 		}
 
-		shared_ptr<Texture> DeviceD3D11::createTexture(Texture::Type type, Texture::Format format, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevels, Texture::Usage usage) {
-			return shared_ptr<Texture>(new TextureD3D11(this, type, format, width, height, depth, mipLevels, usage));
+		std::shared_ptr<Texture> DeviceD3D11::createTexture(Texture::Type type, Texture::Format format, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevels, Texture::Usage usage) {
+			return std::shared_ptr<Texture>(new TextureD3D11(this, type, format, width, height, depth, mipLevels, usage));
 		}
 
-		shared_ptr<VertexBuffer> DeviceD3D11::createVertexBuffer(size_t elementSize, size_t elementCount, GeometryBuffer::Usage usage) {
-			return shared_ptr<VertexBuffer>(new VertexBufferD3D11(this, elementSize, elementCount, usage));
+		std::shared_ptr<VertexBuffer> DeviceD3D11::createVertexBuffer(size_t elementSize, size_t elementCount, GeometryBuffer::Usage usage) {
+			return std::shared_ptr<VertexBuffer>(new VertexBufferD3D11(this, elementSize, elementCount, usage));
 		}
 
-		shared_ptr<IndexBuffer> DeviceD3D11::createIndexBuffer(size_t elementSize, size_t elementCount, GeometryBuffer::Usage usage) {
-			return shared_ptr<IndexBuffer>(new IndexBufferD3D11(this, elementSize, elementCount, usage));
+		std::shared_ptr<IndexBuffer> DeviceD3D11::createIndexBuffer(size_t elementSize, size_t elementCount, GeometryBuffer::Usage usage) {
+			return std::shared_ptr<IndexBuffer>(new IndexBufferD3D11(this, elementSize, elementCount, usage));
 		}
 
-		shared_ptr<VertexLayout> DeviceD3D11::createVertexLayout(const std::vector<VertexLayout::Element>& elements) {
-			return shared_ptr<VertexLayout>(new VertexLayoutD3D11(this, elements));
+		std::shared_ptr<VertexLayout> DeviceD3D11::createVertexLayout(const std::vector<VertexLayout::Element>& elements) {
+			return std::shared_ptr<VertexLayout>(new VertexLayoutD3D11(this, elements));
 		}
 
-		shared_ptr<Geometry> DeviceD3D11::createGeometryImpl(const shared_ptr<VertexLayout>& layout, const shared_ptr<VertexBuffer>& vertexBuffers, const shared_ptr<IndexBuffer>& indexBuffer, uint32_t baseVertexIndex) {
-			return shared_ptr<Geometry>(new GeometryD3D11(this, layout, vertexBuffers, indexBuffer));
+		std::shared_ptr<Geometry> DeviceD3D11::createGeometryImpl(const std::shared_ptr<VertexLayout>& layout, const std::shared_ptr<VertexBuffer>& vertexBuffers, const std::shared_ptr<IndexBuffer>& indexBuffer, uint32_t baseVertexIndex) {
+			return std::shared_ptr<Geometry>(new GeometryD3D11(this, layout, vertexBuffers, indexBuffer));
 		}
 
-		shared_ptr<Framebuffer> DeviceD3D11::createFramebufferImpl(const std::vector<shared_ptr<Renderbuffer> >& color, const shared_ptr<Renderbuffer>& depth) {
-			return shared_ptr<Framebuffer>(new FramebufferD3D11(this, color, depth));
+		std::shared_ptr<Framebuffer> DeviceD3D11::createFramebufferImpl(const std::vector<std::shared_ptr<Renderbuffer>>& color, const std::shared_ptr<Renderbuffer>& depth) {
+			return std::shared_ptr<Framebuffer>(new FramebufferD3D11(this, color, depth));
 		}
 
 		Framebuffer* DeviceD3D11::getMainFramebuffer() {
@@ -335,8 +346,9 @@ namespace RBX {
 			vrEnabled = enabled;
 		}
 
-		shared_ptr<Renderbuffer> DeviceD3D11::createRenderbuffer(Texture::Format format, uint32_t width, uint32_t height, uint32_t samples) {
-			return shared_ptr<Renderbuffer>(new RenderbufferD3D11(this, format, width, height, samples));
+		// @deprecated Use a Colorbuffer/Depthbuffer texture and getRenderbuffer instead.
+		std::shared_ptr<Renderbuffer> DeviceD3D11::createRenderbuffer(Texture::Format format, uint32_t width, uint32_t height, uint32_t samples) {
+			return std::shared_ptr<Renderbuffer>(new RenderbufferD3D11(this, format, width, height, samples));
 		}
 
 		std::string DeviceD3D11::createShaderSource(const std::string& path, const std::string& defines, boost::function<std::string(const std::string&)> fileCallback) {

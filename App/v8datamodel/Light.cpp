@@ -160,8 +160,7 @@ namespace RBX {
 	{
 	}
 
-	void SpotLight::setOuterAngle(float value)
-	{
+	void SpotLight::setOuterAngle(float value) {
 		value = std::min(std::max(value, 0.0f), 180.0f);
 
 		if (outerAngle != value) {
@@ -174,8 +173,7 @@ namespace RBX {
 		}
 	}
 
-	void SpotLight::setInnerAngle(float value)
-	{
+	void SpotLight::setInnerAngle(float value) {
 		value = std::min(std::max(value, 0.0f), 180.0f);
 
 		if (innerAngle != value) {
@@ -188,8 +186,7 @@ namespace RBX {
 		}
 	}
 
-	void SpotLight::setFace(NormalId value)
-	{
+	void SpotLight::setFace(NormalId value) {
 		if (face != value) {
 			face = value;
 			raisePropertyChanged(prop_Face);
@@ -208,8 +205,7 @@ namespace RBX {
 	{
 	}
 
-	void AreaLight::setOuterAngle(float value)
-	{
+	void AreaLight::setOuterAngle(float value) {
 		value = std::min(std::max(value, 0.0f), 180.0f);
 
 		if (outerAngle != value) {
@@ -222,8 +218,7 @@ namespace RBX {
 		}
 	}
 
-	void AreaLight::setInnerAngle(float value)
-	{
+	void AreaLight::setInnerAngle(float value) {
 		value = std::min(std::max(value, 0.0f), 180.0f);
 
 		if (innerAngle != value) {
@@ -236,8 +231,7 @@ namespace RBX {
 		}
 	}
 
-	void AreaLight::setFace(NormalId value)
-	{
+	void AreaLight::setFace(NormalId value) {
 		if (face != value) {
 			face = value;
 			raisePropertyChanged(prop_Face);

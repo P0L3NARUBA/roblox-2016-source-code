@@ -15,7 +15,7 @@ namespace RBX {
 			ShaderProgram* program = visualEngine->getShaderManager()->getProgram(vsName, fsName).get();
 
 			if (program) {
-				context->setRasterizerState(RasterizerState::Cull_None);
+				context->setRasterizerState(RasterizerState::Cull_Back);
 				context->setDepthState(DepthState(DepthState::Function_Always, false));
 				context->setBlendState(blendState);
 

@@ -256,9 +256,9 @@ int main(int argc, char *argv[])
 				mainLogManager->EnableImmediateCrashUpload(false);
 			}
 
-			boost::scoped_ptr<DumpErrorUploader> dumpErrorUploader;
-			dumpErrorUploader.reset(new DumpErrorUploader(false, "Studio"));
-			dumpErrorUploader->Upload(GetDmpUrl(RobloxSettings::getBaseURL().toStdString(), true));
+			//boost::scoped_ptr<DumpErrorUploader> dumpErrorUploader;
+			//dumpErrorUploader.reset(new DumpErrorUploader(false, "Studio"));
+			//dumpErrorUploader->Upload(GetDmpUrl(RobloxSettings::getBaseURL().toStdString(), true));
 			return retVal;
 		}
 

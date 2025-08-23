@@ -111,8 +111,8 @@ namespace RBX {
 
 			MaterialGenerator* getMaterialGenerator() { return materialGenerator.get(); }
 
-			shared_ptr<VertexLayout>& getFastClusterLayout() { return fastClusterLayout; }
-			shared_ptr<VertexLayout>& getFastClusterShadowLayout() { return fastClusterShadowLayout; }
+			std::shared_ptr<VertexLayout>& getFastClusterLayout() { return fastClusterLayout; }
+			std::shared_ptr<VertexLayout>& getFastClusterShadowLayout() { return fastClusterShadowLayout; }
 
 			TextureAtlas* getGlyphAtlas() const { return glyphAtlas.get(); }
 
@@ -158,8 +158,8 @@ namespace RBX {
 
 			scoped_ptr<MaterialGenerator> materialGenerator;
 
-			shared_ptr<VertexLayout> fastClusterLayout;
-			shared_ptr<VertexLayout> fastClusterShadowLayout;
+			std::shared_ptr<VertexLayout> fastClusterLayout;
+			std::shared_ptr<VertexLayout> fastClusterShadowLayout;
 
 			typedef boost::unordered_map<std::string, unsigned> FilenameCountdown;
 			FilenameCountdown assetsToReload;

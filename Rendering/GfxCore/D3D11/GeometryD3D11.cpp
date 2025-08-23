@@ -189,7 +189,7 @@ namespace RBX {
 		IndexBufferD3D11::IndexBufferD3D11(Device* device, size_t elementSize, size_t elementCount, Usage usage)
 			: GeometryBufferD3D11<IndexBuffer>(device, elementSize, elementCount, usage)
 		{
-			if (elementSize != 1u && elementSize != 2u && elementSize != 4u)
+			if (elementSize != 2u && elementSize != 4u)
 				throw RBX::runtime_error("Invalid element size: %d", (int)elementSize);
 
 			create(D3D11_BIND_INDEX_BUFFER);
@@ -199,7 +199,7 @@ namespace RBX {
 		{
 		}
 
-		GeometryD3D11::GeometryD3D11(Device* device, const shared_ptr<VertexLayout>& layout, const shared_ptr<VertexBuffer>& vertexBuffer, const shared_ptr<IndexBuffer>& indexBuffer)
+		GeometryD3D11::GeometryD3D11(Device* device, const std::shared_ptr<VertexLayout>& layout, const std::shared_ptr<VertexBuffer>& vertexBuffer, const std::shared_ptr<IndexBuffer>& indexBuffer)
 			: Geometry(device, layout, vertexBuffer, indexBuffer)
 		{
 		}
@@ -211,8 +211,6 @@ namespace RBX {
 		void GeometryD3D11::draw(Geometry::Primitive primitive, uint32_t vertexCount, uint32_t vertexOffset, uint32_t indexOffset, VertexLayoutD3D11** layoutCache, GeometryD3D11** geometryCache, ShaderProgramD3D11** programCache) {
 			ID3D11DeviceContext* context11 = static_cast<DeviceD3D11*>(device)->getImmediateContext11();
 
-			context11->IASetPrimitiveTopology(gGeometryPrimitiveD3D11[primitive]);
-
 			if (*layoutCache != layout.get()) {
 				auto* vertexLayout = static_cast<VertexLayoutD3D11*>(layout.get());
 				*layoutCache = vertexLayout;
@@ -222,6 +220,8 @@ namespace RBX {
 
 			if (*geometryCache != this) {
 				*geometryCache = this;
+
+				context11->IASetPrimitiveTopology(gGeometryPrimitiveD3D11[primitive]);
 
 				/* Vertex Buffer */
 				{
@@ -234,20 +234,8 @@ namespace RBX {
 				}
 
 				/* Index Buffer */
-				if (indexBuffer) {
-					DXGI_FORMAT format;
-
-					switch (indexBuffer->getElementSize()) {
-					case (1u):
-						format = DXGI_FORMAT_R8_UINT;
-					case (2u):
-						format = DXGI_FORMAT_R16_UINT;
-					default:
-						format = DXGI_FORMAT_R32_UINT;
-					}
-
-					context11->IASetIndexBuffer(static_cast<IndexBufferD3D11*>(indexBuffer.get())->getObject(), format, 0u);
-				}
+				if (indexBuffer)
+					context11->IASetIndexBuffer(static_cast<IndexBufferD3D11*>(indexBuffer.get())->getObject(), indexBuffer->getElementSize() == 2u ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT, 0u);
 			}
 
 			if (indexBuffer)
@@ -282,20 +270,8 @@ namespace RBX {
 				}
 
 				/* Index Buffer */
-				if (indexBuffer) {
-					DXGI_FORMAT format;
-
-					switch (indexBuffer->getElementSize()) {
-					case (1u):
-						format = DXGI_FORMAT_R8_UINT;
-					case (2u):
-						format = DXGI_FORMAT_R16_UINT;
-					default:
-						format = DXGI_FORMAT_R32_UINT;
-					}
-
-					context11->IASetIndexBuffer(static_cast<IndexBufferD3D11*>(indexBuffer.get())->getObject(), format, 0u);
-				}
+				if (indexBuffer)
+					context11->IASetIndexBuffer(static_cast<IndexBufferD3D11*>(indexBuffer.get())->getObject(), indexBuffer->getElementSize() == 2u ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT, 0u);
 			}
 
 			if (indexBuffer)

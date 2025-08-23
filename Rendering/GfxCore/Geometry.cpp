@@ -30,6 +30,7 @@ namespace RBX {
 			, elementSize(elementSize)
 			, elementCount(elementCount)
 			, usage(usage)
+			, dataSize(0u)
 		{
 		}
 
@@ -57,7 +58,7 @@ namespace RBX {
 			RBXPROFILER_COUNTER_SUB("memory/gpu/indexbuffer", elementSize * elementCount);
 		}
 
-		Geometry::Geometry(Device* device, const shared_ptr<VertexLayout>& layout, const shared_ptr<VertexBuffer>& vertexBuffer, const shared_ptr<IndexBuffer>& indexBuffer)
+		Geometry::Geometry(Device* device, const std::shared_ptr<VertexLayout>& layout, const std::shared_ptr<VertexBuffer>& vertexBuffer, const std::shared_ptr<IndexBuffer>& indexBuffer)
 			: Resource(device)
 			, layout(layout)
 			, vertexBuffer(vertexBuffer)
@@ -69,12 +70,12 @@ namespace RBX {
 		{
 		}
 
-		inline bool isCountValid(Geometry::Primitive primitive, uint32_t count) {
+		inline static bool isCountValid(Geometry::Primitive primitive, uint32_t count) {
 			switch (primitive) {
-			case Geometry::Primitive_Triangles: return count % 3u == 0u;
-			case Geometry::Primitive_Lines: return count % 2u == 0u;
+			case Geometry::Primitive_Triangles: return count % 3u == 0u && count >= 3u;
+			case Geometry::Primitive_Lines: return count % 2u == 0u && count >= 2u;
 			case Geometry::Primitive_Points: return true;
-			case Geometry::Primitive_TriangleStrip: return count != 1u && count != 2u;
+			case Geometry::Primitive_TriangleStrip: return count >= 3u;
 			default: return false;
 			}
 		}
@@ -88,7 +89,7 @@ namespace RBX {
 		{
 		}
 
-		GeometryBatch::GeometryBatch(const shared_ptr<Geometry>& geometry, Geometry::Primitive primitive, uint32_t vertexCount, uint32_t vertexOffset)
+		GeometryBatch::GeometryBatch(const std::shared_ptr<Geometry>& geometry, Geometry::Primitive primitive, uint32_t vertexCount, uint32_t vertexOffset)
 			: geometry(geometry)
 			, primitive(primitive)
 			, vertexCount(vertexCount)
@@ -98,10 +99,10 @@ namespace RBX {
 			RBXASSERT(geometry && isCountValid(primitive, vertexCount));
 		}
 
-		GeometryBatch::GeometryBatch(const shared_ptr<Geometry>& geometry, Geometry::Primitive primitive, uint32_t vertexCount, uint32_t vertexOffset, uint32_t indexOffset)
+		GeometryBatch::GeometryBatch(const std::shared_ptr<Geometry>& geometry, Geometry::Primitive primitive, uint32_t indexCount, uint32_t vertexOffset, uint32_t indexOffset)
 			: geometry(geometry)
 			, primitive(primitive)
-			, vertexCount(vertexCount)
+			, vertexCount(indexCount)
 			, vertexOffset(vertexOffset)
 			, indexOffset(indexOffset)
 		{

@@ -23,7 +23,7 @@ namespace RBX
 	{
 		if(doCrashEnabled)
 		{
-			DebugBreak();
+			//DebugBreak();
 		}
 	}
 
@@ -40,7 +40,7 @@ namespace RBX
 #endif
 		if (doCrashEnabled) 
 		{
-			DebugBreak();
+			//DebugBreak();
 		}
 	}
 

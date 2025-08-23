@@ -48,8 +48,7 @@ namespace Graphics
 			bool* textFits
 			) const;
 	
-		const shared_ptr<Texture>& getTexture() const
-		{
+		const std::shared_ptr<Texture>& getTexture() const {
 			return texture.getTexture();
 		}
 

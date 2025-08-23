@@ -1727,8 +1727,8 @@ namespace RBX {
 
 						fillVertex(vertices[vertexOffset + faceCounter * 4u + 0u], start0 + offset, uvs[0] * surfaceTiling, color, normals[face], tangents[face]);
 						fillVertex(vertices[vertexOffset + faceCounter * 4u + 1u], start1 + offset, uvs[1] * surfaceTiling, color, normals[face], tangents[face]);
-						fillVertex(vertices[vertexOffset + faceCounter * 4u + 2u], corners[desc.end0], uv2* surfaceTiling, color, normals[face], tangents[face]);
-						fillVertex(vertices[vertexOffset + faceCounter * 4u + 3u], corners[desc.end1], uv3* surfaceTiling, color, normals[face], tangents[face]);
+						fillVertex(vertices[vertexOffset + faceCounter * 4u + 2u], corners[desc.end0], uv2 * surfaceTiling, color, normals[face], tangents[face]);
+						fillVertex(vertices[vertexOffset + faceCounter * 4u + 3u], corners[desc.end1], uv3 * surfaceTiling, color, normals[face], tangents[face]);
 
 						fillQuadIndices(&indices[indexOffset + faceCounter * 6u], vertexOffset + faceCounter * 4u, 0u, 1u, 2u, 3u);
 						faceCounter++;
@@ -1859,25 +1859,90 @@ namespace RBX {
 			}
 		}
 
-		GeometryGenerator::GeometryPair generateBlock() {
+		static GeometryGenerator::GeometryPair generateBlock() {
+			GeometryGenerator::GeometryPair geometry;
+
+			static const FACEDESC facesDesc[] = {
+				{ 6u, 7u, 4u, 5u, false, true,  }, // Face 0
+				{ 3u, 7u, 2u, 6u, true,  false, }, // Face 1
+				{ 7u, 3u, 5u, 1u, false, false, }, // Face 2
+				{ 3u, 2u, 1u, 0u, false, true,  }, // Face 3
+				{ 0u, 4u, 1u, 5u, true,  false, }, // Face 4
+				{ 2u, 6u, 0u, 4u, false, false, }, // Face 5
+			};
+
+			Vector3 axisX = Vector3(1.0f, 0.0f, 0.0f);
+			Vector3 axisY = Vector3(0.0f, 1.0f, 0.0f);
+			Vector3 axisZ = Vector3(0.0f, 0.0f, 1.0f);
+
+			Vector3 corners[] = {
+				Vector3(0.0f),
+				axisZ,
+				axisY,
+				axisY + axisZ,
+				axisX,
+				axisX + axisZ,
+				axisX + axisY,
+				axisX + axisY + axisZ,
+			};
+
+			Vector3 normals[] = {
+				  axisX,  axisY,  axisZ,
+				 -axisX, -axisY, -axisZ,
+			};
+
+			Vector3 tangents[] = {
+				-axisZ, -axisX,  axisX,
+				 axisZ, -axisX, -axisX,
+			};
+
+			Vector3 facesDir[] = {
+				-axisY, -axisZ, -axisY,
+				-axisY,  axisZ, -axisY
+			};
+
+			Vector2 uvs[] = {
+				Vector2(0.0f, 0.0f),
+				Vector2(0.0f, 1.0f),
+				Vector2(1.0f, 0.0f),
+				Vector2(1.0f, 1.0f),
+			};
+
+			for (size_t face = 0u; face < 6u; ++face) {
+				const FACEDESC& desc = facesDesc[face];
+
+				geometry.vertices.push_back(MaterialVertex(corners[desc.start0], uvs[0], Color4::one(), normals[face], tangents[face]));
+				geometry.vertices.push_back(MaterialVertex(corners[desc.start1], uvs[1], Color4::one(), normals[face], tangents[face]));
+				geometry.vertices.push_back(MaterialVertex(corners[desc.end0],   uvs[2], Color4::one(), normals[face], tangents[face]));
+				geometry.vertices.push_back(MaterialVertex(corners[desc.end1],   uvs[3], Color4::one(), normals[face], tangents[face]));
+
+				uint32_t indexOffset = face * 4u;
+
+				geometry.indices.push_back(indexOffset + 0u);
+				geometry.indices.push_back(indexOffset + 1u);
+				geometry.indices.push_back(indexOffset + 2u);
+
+				geometry.indices.push_back(indexOffset + 2u);
+				geometry.indices.push_back(indexOffset + 1u);
+				geometry.indices.push_back(indexOffset + 3u);
+			}
+
+			return geometry;
+		}
+
+		static GeometryGenerator::GeometryPair generateSphere() {
 			GeometryGenerator::GeometryPair geometry;
 
 			return geometry;
 		}
 
-		GeometryGenerator::GeometryPair generateSphere() {
+		static GeometryGenerator::GeometryPair generateCylinder() {
 			GeometryGenerator::GeometryPair geometry;
 
 			return geometry;
 		}
 
-		GeometryGenerator::GeometryPair generateCylinder() {
-			GeometryGenerator::GeometryPair geometry;
-
-			return geometry;
-		}
-
-		GeometryGenerator::GeometryPair generateWedge(bool corner) {
+		static GeometryGenerator::GeometryPair generateWedge(bool corner) {
 			GeometryGenerator::GeometryPair geometry;
 
 			return geometry;
@@ -2099,7 +2164,7 @@ namespace RBX {
 
 			AsyncHttpQueue::RequestResult reqResult;
 			boost::shared_ptr<AssetType> meshData = boost::static_pointer_cast<AssetType>(mcp->requestContent(meshFile, ContentProvider::PRIORITY_MESH, true, reqResult));
-			
+
 			switch (reqResult) {
 			case AsyncHttpQueue::Succeeded:
 				return meshData;
@@ -2194,26 +2259,11 @@ namespace RBX {
 			mBboxMax = max;
 		}
 
-		GeometryGenerator::GeometryPair GeometryGenerator::generateBlock() {
-			return GeometryPair();
-		};
-
-		GeometryGenerator::GeometryPair GeometryGenerator::generateSphere() {
-			return GeometryPair();
-		};
-
-		GeometryGenerator::GeometryPair GeometryGenerator::generateCylinder() {
-			return GeometryPair();
-		};
-
-		GeometryGenerator::GeometryPair GeometryGenerator::generateWedge(bool corner) {
-			return GeometryPair();
-		};
-
 		GeometryGenerator::GeometryPair GeometryGenerator::generateGeometry(PartInstance* part) {
 			switch (part->getPartType()) {
 			case BALL_PART:
-				return generateSphere();
+				return generateBlock();
+				//return generateSphere();
 			case BLOCK_PART:
 				return generateBlock();
 			case CYLINDER_PART:

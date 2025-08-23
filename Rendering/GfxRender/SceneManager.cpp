@@ -109,13 +109,12 @@ namespace RBX {
 
 		static void renderInstancedObjectsImpl(DeviceContext* context, const RenderQueueGroup& group, RenderPassStats& stats, const char* dbgname) {
 			const Technique* cachedTechnique = nullptr;
-			const InstancedModels* cachedModels = nullptr;
 
 			PIX_SCOPE(context, "Render: %s", dbgname);
 
 			for (size_t i = 0u; i < group.size(); ++i) {
 				const RenderOperation& rop = group[i];
-				uint32_t instanceCount = 0u;
+				size_t instanceCount = rop.models->Models.size();
 
 				if (cachedTechnique != rop.technique) {
 					cachedTechnique = rop.technique;
@@ -125,18 +124,12 @@ namespace RBX {
 					stats.passChanges++;
 				}
 
-				if (cachedModels != rop.models) {
-					cachedModels = rop.models;
-					instanceCount = cachedModels->Models.size();
-
-					context->updateInstancedModels(cachedModels->Models.data(), instanceCount * sizeof(InstancedModel));
-				}
-
-				context->drawInstanced(*rop.geometry, instanceCount);
+				context->updateInstancedModels(rop.models->Models.data(), instanceCount * sizeof(InstancedModel));
+				context->drawInstanced(rop.geometry, instanceCount);
 
 				stats.batches++;
-				stats.vertices += rop.geometry->getVertexCount() * instanceCount;
-				stats.faces += rop.geometry->getVertexCount() / 3u * instanceCount;
+				stats.vertices += rop.geometry.getVertexCount() * instanceCount;
+				stats.faces += rop.geometry.getVertexCount() / 3u * instanceCount;
 			}
 		}
 
@@ -163,25 +156,25 @@ namespace RBX {
 			}
 		}
 
-		static shared_ptr<Geometry> createFullscreenTriangle(Device* device) {
-			shared_ptr<VertexLayout> layout = device->createVertexLayout(BasicVertex::getVertexLayout());
-
-			/* 1 - - 2 */
-			/* - - - - */
-			/* - - - - */
-			/* 3 - - 4 */
-
-			BasicVertex vertices[] = {
-				BasicVertex(Vector3(-1.0f, -1.0f, 0.0f)),
-				BasicVertex(Vector3( 3.0f, -1.0f, 0.0f)),
-				BasicVertex(Vector3(-1.0f,  3.0f, 0.0f)),
+		static std::shared_ptr<Geometry> createFullscreenTriangle(Device* device) {
+			std::array<BasicVertex, 3u> vertices = {
+				BasicVertex(-1.0f,  1.0f, 0.0f),
+				BasicVertex(3.0f,  1.0f, 0.0f),
+				BasicVertex(-1.0f, -3.0f, 0.0f),
 			};
 
-			shared_ptr<VertexBuffer> vb = device->createVertexBuffer(sizeof(BasicVertex), ARRAYSIZE(vertices), GeometryBuffer::Usage_Static);
+			/* 1 - 2 */
+			/* - - - */
+			/* 3 - - */
 
-			vb->upload(0u, vertices, sizeof(vertices));
+			std::shared_ptr<VertexBuffer> vertexBuffer = device->createVertexBuffer(sizeof(BasicVertex), vertices.size(), GeometryBuffer::Usage_Static);
 
-			return device->createGeometry(layout, vb, shared_ptr<IndexBuffer>());
+			vertexBuffer->upload(0u, vertices.data(), vertices.size() * sizeof(BasicVertex));
+
+			return device->createGeometry(
+				device->createVertexLayout(BasicVertex::getVertexLayout()),
+				vertexBuffer,
+				std::shared_ptr<IndexBuffer>());
 		}
 
 		class Blur {
@@ -231,8 +224,8 @@ namespace RBX {
 
 		private:
 			struct Data {
-				shared_ptr<Texture> intermediateTex[2];
-				shared_ptr<Framebuffer> intermediateFB[2];
+				std::shared_ptr<Texture> intermediateTex[2];
+				std::shared_ptr<Framebuffer> intermediateFB[2];
 				unsigned width;
 				unsigned height;
 			};
@@ -242,10 +235,10 @@ namespace RBX {
 
 				Device* device = visualEngine->getDevice();
 
-				data->intermediateTex[0u] = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16f, width, height, 1u, 1u, Texture::Usage_Renderbuffer);
+				data->intermediateTex[0u] = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16f, width, height, 1u, 1u, Texture::Usage_Colorbuffer);
 				data->intermediateFB[0u] = device->createFramebuffer(data->intermediateTex[0u]->getRenderbuffer(0u, 0u));
 
-				data->intermediateTex[1u] = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16f, width, height, 1u, 1u, Texture::Usage_Renderbuffer);
+				data->intermediateTex[1u] = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16f, width, height, 1u, 1u, Texture::Usage_Colorbuffer);
 				data->intermediateFB[1u] = device->createFramebuffer(data->intermediateTex[1u]->getRenderbuffer(0u, 0u));
 
 				data->width = width;
@@ -286,17 +279,11 @@ namespace RBX {
 				tonemapper = pps.tonemapper;
 			}
 
-			void render(DeviceContext* context, Texture* source, Bloom* bloom, GlobalProcessingData globalProcessingData) {
-				std::string nameFS = "Tonemap";
+			void render(DeviceContext* context, std::shared_ptr<Texture> source, Bloom* bloom, GlobalProcessingData globalProcessingData) {
+				std::string nameFS = "Tonemap" + getTonemapper(tonemapper);
 
 				float bloomIntensity = 0.0f;
 
-				if (true) {
-					nameFS += getTonemapper(tonemapper);
-				}
-				/*if (processingNeeded()) {
-					nameFS += "ColorCorrection";
-				}*/
 				if (bloom) {
 					nameFS += "Bloom";
 
@@ -308,23 +295,28 @@ namespace RBX {
 				uint32_t width = source->getWidth();
 				uint32_t height = source->getHeight();
 
-				globalProcessingData.TextureSize_ViewportScale = Vector4(width, height, 1.0f / float(width), 1.0f / float(height));
+				globalProcessingData.TextureSize_ViewportScale = Vector4(width, height, 1.0f / static_cast<float>(width), 1.0f / static_cast<float>(height));
 				globalProcessingData.Parameters1 = Vector4(brightness - 1.0f, contrast, grayscaleLevel, bloomIntensity);
 				globalProcessingData.Parameters2 = Vector4(tintColor.r, tintColor.g, tintColor.b, 0.0f);
 				context->updateGlobalProcessingData(&globalProcessingData, sizeof(globalProcessingData));
-
+				
 				if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", nameFS.c_str(), BlendState::Mode_None, width, height)) {
-					context->bindTexture(0u, source, SamplerState(SamplerState::Filter_Point, SamplerState::Address_Clamp));
+					if (bloom) {
+						std::vector<Texture::TextureStage> textures;
 
-					if (bloom)
-						context->bindTexture(1u, bloom->getTexture(), SamplerState(SamplerState::Filter_Point, SamplerState::Address_Clamp));
+						textures.push_back(Texture::TextureStage(0u, source));
+						textures.push_back(Texture::TextureStage(1u, bloom->getTexture()));
+
+						context->bindTextures(textures);
+					}
+					else
+						context->bindTexture(0u, source);
 
 					ScreenSpaceEffect::renderFullscreenEnd(context, visualEngine);
 				}
 			}
 
 		private:
-
 			std::string getTonemapper(TonemapperMode mode) {
 				switch (mode) {
 				case(REINHARD):
@@ -353,52 +345,6 @@ namespace RBX {
 			TonemapperMode tonemapper;
 		};
 
-
-		class MSAA {
-		public:
-			MSAA(VisualEngine* visualEngine, uint32_t width, uint32_t height, uint32_t samples)
-				: visualEngine(visualEngine)
-				, samples(samples)
-			{
-				Device* device = visualEngine->getDevice();
-
-				shared_ptr<Renderbuffer> msaaColor = device->createRenderbuffer(Texture::Format_RGBA16f, width, height, samples);
-				shared_ptr<Renderbuffer> msaaDepth = device->createRenderbuffer(Texture::Format_D32f, width, height, samples);
-
-				msaaFB = device->createFramebuffer(msaaColor, msaaDepth);
-			}
-
-			void renderResolve(DeviceContext* context, Framebuffer* source, Framebuffer* target) {
-				context->resolveFramebuffer(source, target, DeviceContext::Buffer_Color);
-			}
-
-			Framebuffer* getFramebuffer() const {
-				return msaaFB.get();
-			}
-
-			uint32_t getWidth() const {
-				return msaaFB->getWidth();
-			}
-
-			uint32_t getHeight() const {
-				return msaaFB->getHeight();
-			}
-
-			uint32_t getSamples() const {
-				return samples;
-			}
-
-		private:
-			VisualEngine* visualEngine;
-
-			shared_ptr<Framebuffer> msaaFB;
-
-			shared_ptr<Texture> msaaResolved;
-			shared_ptr<Framebuffer> msaaResolvedFB;
-
-			uint32_t samples;
-		};
-
 		/*class ShadowMap
 		{
 		public:
@@ -406,8 +352,8 @@ namespace RBX {
 			{
 				Device* device = visualEngine->getDevice();
 
-				shadowMap[0] = device->createTexture(Texture::Type_2D, format, size, size, 1, 1, Texture::Usage_Renderbuffer);
-				shadowMap[1] = device->createTexture(Texture::Type_2D, format, size, size, 1, 1, Texture::Usage_Renderbuffer);
+				shadowMap[0] = device->createTexture(Texture::Type_2D, format, size, size, 1, 1, Texture::Usage_Colorbuffer);
+				shadowMap[1] = device->createTexture(Texture::Type_2D, format, size, size, 1, 1, Texture::Usage_Colorbuffer);
 
 				shadowMapFB[0] = device->createFramebuffer(shadowMap[0]->getRenderbuffer(0, 0));
 				shadowMapFB[1] = device->createFramebuffer(shadowMap[1]->getRenderbuffer(0, 0));
@@ -433,7 +379,6 @@ namespace RBX {
 			, visualEngine(visualEngine)
 			, sqMinPartDistance(FLT_MAX)
 			, skyEnabled(true)
-			, msaaError(false)
 			, clearColor(Color4::zero())
 			, postProcessSettings(PostProcessSettings())
 		{
@@ -442,7 +387,7 @@ namespace RBX {
 			spatialHashedScene.reset(new SpatialHashedScene());
 			renderQueue.reset(new RenderQueue());
 
-			fullscreenTriangle.reset(new GeometryBatch(createFullscreenTriangle(device), Geometry::Primitive_TriangleStrip, 4u, 0u));
+			fullscreenTriangle.reset(new GeometryBatch(createFullscreenTriangle(device), Geometry::Primitive_TriangleStrip, 3u, 0u));
 
 			sky.reset(new Sky(visualEngine));
 			//ssao.reset(new SSAO(visualEngine));
@@ -480,9 +425,9 @@ namespace RBX {
 			gbufferDepth = shared_ptr<Texture>();
 			shadowMapTexture = shared_ptr<Texture>();*/
 
-			shadowMapAtlas = shared_ptr<Texture>();
-			shadowMapArray = shared_ptr<Texture>();
-			ambientOcclusion = shared_ptr<Texture>();
+			shadowMapAtlas = std::shared_ptr<Texture>();
+			shadowMapArray = std::shared_ptr<Texture>();
+			ambientOcclusion = std::shared_ptr<Texture>();
 		}
 
 		SceneManager::~SceneManager()
@@ -520,6 +465,7 @@ namespace RBX {
 			// prepare UI
 			//visualEngine->getVertexStreamer()->renderPrepare();
 
+			context->bindSamplers();
 			context->setGlobalConstantData();
 
 			/* Environment Map */
@@ -537,7 +483,6 @@ namespace RBX {
 			sqMinPartDistance = FLT_MAX;
 
 			// Get all visible ROPs
-
 			renderNodes.clear();
 			spatialHashedScene->getAllNodes();//queryFrustumOrdered(renderNodes, camera, pointOfInterest, frm);
 
@@ -552,8 +497,8 @@ namespace RBX {
 					if (lobj)
 						if (lobj->getType() != LightObject::Type_None && lobj->getBrightness() > FLT_EPSILON && lobj->getRange() > FLT_EPSILON && !lobj->getColor().isZero())
 							lights.push_back(lobj);
-					else
-						node->updateRenderQueue(*renderQueue, camera, RenderQueue::Pass_Default);
+					//else
+						//node->updateRenderQueue(*renderQueue, camera, RenderQueue::Pass_Default);
 				}
 
 				// TODO: Assign light counter to a temporary variable in globals for now
@@ -562,7 +507,9 @@ namespace RBX {
 				context->updateGlobalLightList(globalLightList.LightList.data(), lightCount);
 			}
 
-			visualEngine->getMeshInstancer()->updateRenderQueue(*renderQueue, camera, RenderQueue::Flag_Opaque);
+			visualEngine->getMeshInstancer()->updateRenderQueue(*renderQueue, camera);
+
+			StandardOut::singleton()->printf(MESSAGE_INFO, "Opaque renderables: %i", renderQueue->getGroup(0u).size());
 
 			// Flush particle vertex buffer; it's being filled in particle emitter updateRenderQueue
 			//visualEngine->getEmitterSharedState()->flush();
@@ -605,25 +552,25 @@ namespace RBX {
 				RBXPROFILER_SCOPE("GPU", "Clear");
 
 				if (msaa) {
-					context->bindFramebuffer(msaa->getFramebuffer());
+					context->bindFramebuffer(msaa->framebuffer.get());
 					context->clearFramebuffer(DeviceContext::Buffer_Color | DeviceContext::Buffer_Depth | DeviceContext::Buffer_Stencil, &clearColor.r, 0.0f, 0u);
 				}
 				else {
-					context->bindFramebuffer(main->mainFB.get());
+					context->bindFramebuffer(main->framebuffer.get());
 					context->clearFramebuffer(DeviceContext::Buffer_Color | DeviceContext::Buffer_Depth | DeviceContext::Buffer_Stencil, &clearColor.r, 0.0f, 0u);
 				}
 			}
 
 			context->setGlobalMaterialData();
-			context->setInstancedModels();
 			context->setGlobalLightList();
+			context->setInstancedModels();
 
 			/* Opaque Geometry */
 			{
 				RBXPROFILER_SCOPE("Render", "Opaque Geometry");
 				RBXPROFILER_SCOPE("GPU", "Opaque Geometry");
 
-				renderInstancedObjects(context, renderQueue->getGroup(RenderQueue::Flag_Opaque), RenderQueueGroup::Sort_Material, stats->passScene, "Id_Opaque");
+				//renderInstancedObjects(context, renderQueue->getGroup(RenderQueue::Flag_Opaque), RenderQueueGroup::Sort_Material, stats->passScene, "Id_Opaque");
 			}
 
 			/* Opaque Decals */
@@ -639,7 +586,7 @@ namespace RBX {
 				RBXPROFILER_SCOPE("Render", "Sky");
 				RBXPROFILER_SCOPE("GPU", "Sky");
 
-				sky->render(context, camera, envMap->getOutdoorTexture().getTexture().get());
+				sky->render(context, camera, envMap->getOutdoorTexture());
 			}
 
 			/* Transparent Geometry */
@@ -683,10 +630,10 @@ namespace RBX {
 
 			/* MSAA Resolve */
 			if (msaa) {
-				RBXPROFILER_SCOPE("Render", "MSAA");
-				RBXPROFILER_SCOPE("GPU", "MSAA");
+				RBXPROFILER_SCOPE("Render", "MSAA Resolve");
+				RBXPROFILER_SCOPE("GPU", "MSAA Resolve");
 
-				msaa->renderResolve(context, msaa->getFramebuffer(), main->mainFB.get());
+				context->resolveFramebuffer(msaa->framebuffer.get(), main->framebuffer.get(), DeviceContext::Buffer_Color);
 			}
 
 			context->setGlobalProcessingData();
@@ -706,7 +653,7 @@ namespace RBX {
 				RBXPROFILER_SCOPE("Render", "Bloom");
 				RBXPROFILER_SCOPE("GPU", "Bloom");
 
-				bloom->render(context, main->mainColor.get(), globalProcessingData);
+				bloom->render(context, main->mainColor, globalProcessingData);
 			}*/
 
 			/* Tonemapping */
@@ -716,7 +663,7 @@ namespace RBX {
 
 				context->bindFramebuffer(mainFramebuffer);
 
-				imageProcess->render(context, main->mainColor.get(), nullptr /*bloom.get()*/, globalProcessingData);
+				imageProcess->render(context, main->color, nullptr /*bloom.get()*/, globalProcessingData);
 			}
 
 			/* Screen UI */
@@ -774,7 +721,7 @@ namespace RBX {
 
 		void SceneManager::setFog(const Color3& color, float density, float sunInfluence, bool usesSkybox, bool affectsSkybox) {
 			globalShaderData.FogColor_Density = Color4(color, density);
-			globalShaderData.FogParams = Vector4(sunInfluence, float(usesSkybox), float(affectsSkybox), 0.0f);
+			globalShaderData.FogParams = Vector4(sunInfluence, static_cast<float>(usesSkybox), static_cast<float>(affectsSkybox), 0.0f);
 		}
 
 		void SceneManager::setLighting(const Color3& ambient, const Color3& outdoorAmbient, const Vector3& keyDirection, const Color3& keyColor) {
@@ -802,70 +749,47 @@ namespace RBX {
 		}
 
 		void SceneManager::updateMain(uint32_t width, uint32_t height) {
-			FrameRateManager* frm = visualEngine->getFrameRateManager();
-
-			if (!main || (main->mainColor->getWidth() != width || main->mainColor->getHeight() != height)) {
-				main.reset();
-				main.reset(new Main());
-
+			if (!main || (main->framebuffer->getWidth() != width || main->framebuffer->getHeight() != height)) {
 				Device* device = visualEngine->getDevice();
 
 				try {
-					shared_ptr<Renderbuffer> mainDepth = device->createRenderbuffer(Texture::Format_D32f, width, height, 1u);
+					main.reset(new RenderTarget());
 
-					main->mainColor = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16f, width, height, 1u, 1u, Texture::Usage_Renderbuffer);
-
-					std::vector<shared_ptr<Renderbuffer>> mainTextures;
-					mainTextures.push_back(main->mainColor->getRenderbuffer(0u, 0u));
-
-					main->mainFB = device->createFramebuffer(mainTextures, mainDepth);
+					main->color = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16f, width, height, 1u, 1u, Texture::Usage_Colortexture);
+					main->depth = device->createTexture(Texture::Type_2D, Texture::Format_D32f, width, height, 1u, 1u, Texture::Usage_Depthtexture);
+					
+					main->framebuffer = device->createFramebuffer(main->color->getRenderbuffer(0u, 0u), main->depth->getRenderbuffer(0u, 0u));
 				}
 				catch (RBX::base_exception& e) {
-					FASTLOGS(FLog::Graphics, "Error initializing Main: %s", e.what());
-
 					main.reset();
+
+					throw RBX::runtime_error("Error initializing main: %s", e.what());
 				}
 			}
 		}
 
 		void SceneManager::updateMSAA(uint32_t width, uint32_t height) {
-			if (msaaError)
-				return;
-			if (device->getCaps().maxSamples <= 1u)
-				return;
-
-			try {
-				FrameRateManager* frm = visualEngine->getFrameRateManager();
-
-				if (device->getVR()) {
-					if (!frm->getGBufferSetting()) {
-						uint32_t frmSamples = (frm->GetQualityLevel() >= 19u) ? 8u : (frm->GetQualityLevel() >= 17u) ? 4u : 2u;
-						uint32_t samples = std::min(device->getCaps().maxSamples, frmSamples);
-
-						if (!msaa || msaa->getWidth() != width || msaa->getHeight() != height || msaa->getSamples() != samples) {
-							msaa.reset();
-							msaa.reset(new MSAA(visualEngine, width, height, samples));
-						}
-					}
-					else {
-						msaa.reset();
-					}
-				}
-				else if (device->getCaps().maxSamples >= 4u) {
-					if (!msaa || msaa->getWidth() != width || msaa->getHeight() != height) {
-						msaa.reset();
-						msaa.reset(new MSAA(visualEngine, width, height, 4u));
-					}
-				}
-				else {
+			if (device->getCaps().maxSamples <= 1u) {
+				if (msaa)
 					msaa.reset();
-				}
-			}
-			catch (RBX::base_exception& e) {
-				FASTLOGS(FLog::Graphics, "Error initializing MSAA: %s", e.what());
 
-				msaa.reset();
-				msaaError = true;
+				return;
+			}
+
+			if (!msaa || msaa->framebuffer->getWidth() != width || msaa->framebuffer->getHeight() != height) {
+				try {
+					msaa.reset(new RenderTarget());
+
+					msaa->color = device->createTexture(Texture::Type_2DMS, Texture::Format_RGBA16f, width, height, 1u, 1u, Texture::Usage_Colorbuffer);
+					msaa->depth = device->createTexture(Texture::Type_2DMS, Texture::Format_D32f, width, height, 1u, 1u, Texture::Usage_Depthbuffer);
+
+					msaa->framebuffer = device->createFramebuffer(msaa->color->getRenderbuffer(0u, 0u), msaa->depth->getRenderbuffer(0u, 0u));
+				}
+				catch (RBX::base_exception& e) {
+					msaa.reset();
+
+					throw RBX::runtime_error("Error initializing MSAA: %s", e.what());
+				}
 			}
 		}
 
@@ -895,13 +819,13 @@ namespace RBX {
 				try {
 					std::shared_ptr<Renderbuffer> mainDepth = device->createRenderbuffer(Texture::Format_D32f, width, height, 1);
 
-					gbuffer->mainColor = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, width, height, 1, 1, Texture::Usage_Renderbuffer);
+					gbuffer->mainColor = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, width, height, 1, 1, Texture::Usage_Colorbuffer);
 					gbuffer->mainFB = device->createFramebuffer(gbuffer->mainColor->getRenderbuffer(0, 0), mainDepth);
 
-					gbuffer->gbufferColor = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, width, height, 1, 1, Texture::Usage_Renderbuffer);
+					gbuffer->gbufferColor = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, width, height, 1, 1, Texture::Usage_Colorbuffer);
 					gbuffer->gbufferColorFB = device->createFramebuffer(gbuffer->gbufferColor->getRenderbuffer(0, 0), mainDepth);
 
-					gbuffer->gbufferDepth = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, width, height, 1, 1, Texture::Usage_Renderbuffer);
+					gbuffer->gbufferDepth = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16F, width, height, 1, 1, Texture::Usage_Colorbuffer);
 					gbuffer->gbufferDepthFB = device->createFramebuffer(gbuffer->gbufferDepth->getRenderbuffer(0, 0));
 
 					std::vector<std::shared_ptr<Renderbuffer> > gbufferTextures;

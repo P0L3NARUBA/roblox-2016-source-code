@@ -30,46 +30,36 @@ namespace RBX {
 			EnvMap(VisualEngine* ve);
 			~EnvMap();
 
-			const TextureRef& getOutdoorTexture() const { return outdoorTexture; }
-			const TextureRef& getIndoorTextures() const { return indoorTextures; }
-			const TextureRef& getIrradianceTextures() const { return irradianceTextures; }
+			const std::shared_ptr<Texture>& getOutdoorTexture() const { return intermediateOutdoorTexture; }
+			const std::shared_ptr<Texture>& getIndoorTextures() const { return indoorTextures; }
+			const std::shared_ptr<Texture>& getIrradianceTextures() const { return irradianceTextures; }
 
 			void update(DeviceContext* context, double gameTime);
-			//void markDirty(bool veryDirty = false);
 
 			void setUpdateRequired(bool value) {
 				updateRequired = value;
 			}
 
 		private:
-
-			/*enum DirtyState {
-				Ready,       // ready for business
-				Dirty,       // update has been scheduled
-				BusyDirty,   // update has been scheduled but another update is already in progress
-				DirtyWait,   // full update has been scheduled, but waiting for the sky to finish loading 
-				VeryDirty,   // full update has been scheduled,
-			};*/
-
 			struct CubemapFace {
-				shared_ptr<Framebuffer> mips[cubemapMips];
+				std::array<std::shared_ptr<Framebuffer>, cubemapMips> mips;
 			};
 			
 			VisualEngine* visualEngine;
 
-			TextureRef outdoorTexture; // Outdoor cubemap texture
-			TextureRef indoorTextures; // Indoor cubemap textures
-			TextureRef irradianceTextures; // Irradiance cubemap textures
+			std::shared_ptr<Texture> outdoorTexture;     // Outdoor cubemap texture
+			std::shared_ptr<Texture> indoorTextures;     // Indoor cubemap textures
+			std::shared_ptr<Texture> irradianceTextures; // Irradiance cubemap textures
 
-			TextureRef intermediateOutdoorTexture; // Intermediate outdoor cubemap texture
-			TextureRef intermediateIndoorTexture; // Intermediate indoor cubemap texture
+			std::shared_ptr<Texture> intermediateOutdoorTexture; // Intermediate outdoor cubemap texture
+			std::shared_ptr<Texture> intermediateIndoorTexture;  // Intermediate indoor cubemap texture
 
-			CubemapFace				 outFaces[6]; // Outdoor cubemap framebuffers
-			std::vector<CubemapFace> inFaces; // Indoor cubemaps framebuffers
-			shared_ptr<Framebuffer>  irradianceFaces[indoorCubemapTextureCount + 6u]; // Irradiance cubemap framebuffers
+			std::array<CubemapFace, 6u>												 outFaces;        // Outdoor cubemap framebuffers
+			std::vector<CubemapFace>												 inFaces;         // Indoor cubemaps framebuffers
+			std::array<std::shared_ptr<Framebuffer>, indoorCubemapTextureCount + 6u> irradianceFaces; // Irradiance cubemap framebuffers
 
-			shared_ptr<Framebuffer> intermediateOutFaces[11]; // Intermediate outdoor cubemap framebuffers
-			shared_ptr<Framebuffer> intermediateInFaces[10]; // Intermediate indoor cubemap framebuffers
+			std::array<std::shared_ptr<Framebuffer>, 11u> intermediateOutFaces; // Intermediate outdoor cubemap framebuffers
+			std::array<std::shared_ptr<Framebuffer>, 10u> intermediateInFaces;  // Intermediate indoor cubemap framebuffers
 
 			bool   updateRequired;
 			double envmapLastTimeOfDay;

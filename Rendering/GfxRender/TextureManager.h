@@ -57,7 +57,7 @@ namespace RBX {
 			void reloadImage(const ContentId& id, const std::string& context = "");
 			TextureRef load(const ContentId& id, Fallback fallback, const std::string& context = "");
 
-			const shared_ptr<Texture>& getFallbackTexture(Fallback fallback) { return fallbackTextures[fallback]; }
+			const std::shared_ptr<Texture>& getFallbackTexture(Fallback fallback) { return fallbackTextures[fallback]; }
 			bool isFallbackTexture(const shared_ptr<Texture>& tex);
 
 			bool isQueueEmpty() const { return outstandingRequests == 0u; }
@@ -87,11 +87,11 @@ namespace RBX {
 
 				TextureData();
 
-				TextureRef addExternalRef(const shared_ptr<Texture>& fallback);
+				TextureRef addExternalRef(const std::shared_ptr<Texture>& fallback);
 
 				void removeUnusedExternalRefs();
 
-				void updateAllRefsToLoaded(const shared_ptr<Texture>& texture, const ImageInfo& info);
+				void updateAllRefsToLoaded(const std::shared_ptr<Texture>& texture, const ImageInfo& info);
 				void updateAllRefsToFailed();
 				void updateAllRefsToWaiting();
 			};
@@ -101,7 +101,7 @@ namespace RBX {
 			typedef boost::unordered_map<ContentId, TextureData> Textures;
 			Textures textures;
 
-			shared_ptr<Texture> fallbackTextures[Fallback_Count];
+			std::shared_ptr<Texture> fallbackTextures[Fallback_Count];
 
 			shared_ptr<rbx::safe_queue<LoadedImage> > pendingImages;
 			shared_ptr<ThreadPool> loadingPool;
@@ -130,8 +130,8 @@ namespace RBX {
 			void addToOrphanedTail(TextureData* data);
 			void removeFromOrphaned(TextureData* data);
 
-			shared_ptr<Texture> createSingleColorTexture(unsigned char r, unsigned char g, unsigned char b, unsigned char a, bool cube = false);
-			shared_ptr<Texture> createTexture(const Image& image);
+			std::shared_ptr<Texture> createSingleColorTexture(unsigned char r, unsigned char g, unsigned char b, unsigned char a, bool cube = false);
+			std::shared_ptr<Texture> createTexture(const Image& image);
 
 			static void loadImageHttpCallback(const weak_ptr<ThreadPool>& loadingPool, const weak_ptr<rbx::safe_queue<LoadedImage> >& pendingImages, const shared_ptr<const std::string>& content, const ContentId& id, uint32_t maxTextureSize, uint32_t flags, const std::string& context);
 

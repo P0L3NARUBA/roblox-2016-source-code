@@ -28,21 +28,18 @@ namespace RBX {
 
 			Device* device = ve->getDevice();
 
-			outdoorTexture = device->createTexture(Texture::Type_Cube, Texture::Format_R11G11B10f, outdoorCubemapSize, outdoorCubemapSize, 1u, cubemapMips, Texture::Usage_Renderbuffer);
-			indoorTextures = device->createTexture(Texture::Type_Cube_Array, Texture::Format_RGBA16f, indoorCubemapSize, indoorCubemapSize, indoorCubemapCount, cubemapMips, Texture::Usage_Renderbuffer);
-			irradianceTextures = device->createTexture(Texture::Type_Cube_Array, Texture::Format_RGBA16f, irradianceCubemapSize, irradianceCubemapSize, indoorCubemapCount + 1u, 1u, Texture::Usage_Renderbuffer);
+			outdoorTexture = device->createTexture(Texture::Type_Cube, Texture::Format_R11G11B10f, outdoorCubemapSize, outdoorCubemapSize, 1u, cubemapMips, Texture::Usage_Colortexture);
+			indoorTextures = device->createTexture(Texture::Type_Cube_Array, Texture::Format_RGBA16f, indoorCubemapSize, indoorCubemapSize, indoorCubemapCount, cubemapMips, Texture::Usage_Colortexture);
+			irradianceTextures = device->createTexture(Texture::Type_Cube_Array, Texture::Format_RGBA16f, irradianceCubemapSize, irradianceCubemapSize, indoorCubemapCount + 1u, 1u, Texture::Usage_Colortexture);
 
-			intermediateOutdoorTexture = device->createTexture(Texture::Type_Cube, Texture::Format_R11G11B10f, outdoorCubemapSize, outdoorCubemapSize, 1u, 11u, Texture::Usage_Renderbuffer);
-			intermediateIndoorTexture = device->createTexture(Texture::Type_Cube, Texture::Format_RGBA16f, indoorCubemapSize, indoorCubemapSize, 1u, 10u, Texture::Usage_Renderbuffer);
+			intermediateOutdoorTexture = device->createTexture(Texture::Type_Cube, Texture::Format_R11G11B10f, outdoorCubemapSize, outdoorCubemapSize, 1u, 11u, Texture::Usage_Colortexture);
+			intermediateIndoorTexture = device->createTexture(Texture::Type_Cube, Texture::Format_RGBA16f, indoorCubemapSize, indoorCubemapSize, 1u, 10u, Texture::Usage_Colortexture);
 
 			for (uint32_t i = 0u; i < 6u; ++i) {
 				CubemapFace cubemapFace;
 
-				for (uint32_t m = 0u; m < cubemapMips; ++m) {
-					shared_ptr<Renderbuffer> rb = outdoorTexture.getTexture()->getRenderbuffer(i, m);
-
-					cubemapFace.mips[m] = device->createFramebuffer(rb);
-				}
+				for (uint32_t m = 0u; m < cubemapMips; ++m)
+					cubemapFace.mips[m] = device->createFramebuffer(outdoorTexture->getRenderbuffer(i, m));
 
 				outFaces[i] = cubemapFace;
 			}
@@ -50,32 +47,20 @@ namespace RBX {
 			for (uint32_t i = 0u; i < 6u; ++i) {
 				CubemapFace cubemapFace;
 
-				for (uint32_t m = 0u; m < cubemapMips; ++m) {
-					shared_ptr<Renderbuffer> rb = indoorTextures.getTexture()->getRenderbuffer(i, m);
-
-					cubemapFace.mips[m] = device->createFramebuffer(rb);
-				}
-
+				for (uint32_t m = 0u; m < cubemapMips; ++m)
+					cubemapFace.mips[m] = device->createFramebuffer(indoorTextures->getRenderbuffer(i, m));
+				
 				inFaces.push_back(cubemapFace);
 			}
 
-			for (uint32_t i = 0u; i < indoorCubemapTextureCount + 6u; ++i) {
-				shared_ptr<Renderbuffer> irradiancerb = irradianceTextures.getTexture()->getRenderbuffer(i, 0u);
+			for (uint32_t i = 0u; i < indoorCubemapTextureCount + 6u; ++i)
+				irradianceFaces[i] = device->createFramebuffer(irradianceTextures->getRenderbuffer(i, 0u));
 
-				irradianceFaces[i] = device->createFramebuffer(irradiancerb);
-			}
+			for (uint32_t i = 0u; i < 6u; ++i)
+				intermediateOutFaces[i] = device->createFramebuffer(intermediateOutdoorTexture->getRenderbuffer(i, 0u));
 
-			for (uint32_t i = 0u; i < 6u; ++i) {
-				shared_ptr<Renderbuffer> rb = intermediateOutdoorTexture.getTexture()->getRenderbuffer(i, 0u);
-
-				intermediateOutFaces[i] = device->createFramebuffer(rb);
-			}
-
-			for (uint32_t i = 0u; i < 6u; ++i) {
-				shared_ptr<Renderbuffer> rb = intermediateIndoorTexture.getTexture()->getRenderbuffer(i, 0u);
-
-				intermediateInFaces[i] = device->createFramebuffer(rb);
-			}
+			for (uint32_t i = 0u; i < 6u; ++i)
+				intermediateInFaces[i] = device->createFramebuffer(intermediateIndoorTexture->getRenderbuffer(i, 0u));
 		}
 
 		EnvMap::~EnvMap()
@@ -85,9 +70,8 @@ namespace RBX {
 		static const double kEnvmapGameTimePeriod = 120.0;
 		static const double kEnvmapRealtimePeriod = 30.0;
 
-
 		void EnvMap::update(DeviceContext* context, double gameTime) {
-			if ((updateRequired || visualEngine->getSettings()->getEagerBulkExecution()) && outdoorTexture.getTexture() && intermediateOutdoorTexture.getTexture()) {
+			if ((updateRequired || visualEngine->getSettings()->getEagerBulkExecution()) && outdoorTexture && intermediateOutdoorTexture) {
 				double realTime = RBX::Time::nowFastSec();
 
 				//if (visualEngine->getSettings()->getEagerBulkExecution() || fabs(envmapLastTimeOfDay - gameTime) > kEnvmapGameTimePeriod || fabs(envmapLastRealTime - realTime) > kEnvmapRealtimePeriod) {
@@ -174,11 +158,11 @@ namespace RBX {
 
 		static Matrix4 view[6] = {
 			lookAt(Vector3(-1.0f,  0.0f,  0.0f), Vector3(0.0f,  1.0f,  0.0f)),
-			lookAt(Vector3(1.0f,  0.0f,  0.0f), Vector3(0.0f,  1.0f,  0.0f)),
-			lookAt(Vector3(0.0f, -1.0f,  0.0f), Vector3(0.0f,  0.0f, -1.0f)),
-			lookAt(Vector3(0.0f,  1.0f,  0.0f), Vector3(0.0f,  0.0f,  1.0f)),
-			lookAt(Vector3(0.0f,  0.0f, -1.0f), Vector3(0.0f,  1.0f,  0.0f)),
-			lookAt(Vector3(0.0f,  0.0f,  1.0f), Vector3(0.0f,  1.0f,  0.0f)),
+			lookAt(Vector3( 1.0f,  0.0f,  0.0f), Vector3(0.0f,  1.0f,  0.0f)),
+			lookAt(Vector3( 0.0f, -1.0f,  0.0f), Vector3(0.0f,  0.0f, -1.0f)),
+			lookAt(Vector3( 0.0f,  1.0f,  0.0f), Vector3(0.0f,  0.0f,  1.0f)),
+			lookAt(Vector3( 0.0f,  0.0f, -1.0f), Vector3(0.0f,  1.0f,  0.0f)),
+			lookAt(Vector3( 0.0f,  0.0f,  1.0f), Vector3(0.0f,  1.0f,  0.0f)),
 		};
 
 		void EnvMap::setFilter(DeviceContext* context, std::string type) {
@@ -213,7 +197,7 @@ namespace RBX {
 			Sky* sky = sceneManager->getSky();
 			GlobalShaderData globalShaderData = sceneManager->writeGlobalShaderData();
 
-			Texture* texture = intermediateOutdoorTexture.getTexture().get();
+			std::shared_ptr<Texture> texture = intermediateOutdoorTexture;
 			uint32_t width = texture->getWidth();
 			uint32_t height = texture->getHeight();
 
@@ -244,14 +228,9 @@ namespace RBX {
 				}
 			}
 
-			// TODO: Find some other way to copy faces, this is expensive. May not even be required.
-			/*for (uint32_t i = 0u; i < 6u; ++i) {
-				context->copyFramebuffer(intermediateOutFaces[i].get(), outdoorTexture.getTexture().get());
-			}*/
+			texture->generateMipmaps();
 
-			intermediateOutdoorTexture.getTexture().get()->generateMipmaps();
-
-			context->bindTexture(0u, texture, SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Wrap));
+			context->bindTexture(0u, texture);
 
 			/* Irradiance - Diffuse */
 			setFilter(context, "Irradiance");

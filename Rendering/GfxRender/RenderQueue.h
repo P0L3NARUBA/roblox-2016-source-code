@@ -27,9 +27,16 @@ namespace RBX {
 		};
 
 		struct RenderOperation {
-			const GeometryBatch* geometry;
+			RenderOperation(const GeometryBatch& geometry, Technique* technique, std::shared_ptr<InstancedModels> models)
+				: geometry(geometry)
+				, technique(technique)
+				, models(models)
+			{
+			};
+
+			const GeometryBatch& geometry;
 			const Technique* technique;
-			const InstancedModels* models;
+			const std::shared_ptr<InstancedModels> models;
 		};
 
 		class RenderQueueGroup {
@@ -86,20 +93,23 @@ namespace RBX {
 			};
 
 			enum Flag {
+				Flag_None = 0u,
 				Flag_Opaque = 1u << 0u,
 				Flag_Transparent = 1u << 1u,
 				Flag_DepthPrepass = 1u << 2u,
 				Flag_ShadowPass = 1u << 3u,
-
-				Flag_Max = (Flag_Opaque | Flag_Transparent | Flag_DepthPrepass | Flag_ShadowPass) + 1u,
 			};
 
 			RenderQueue();
 
 			void clear();
 
-			RenderQueueGroup& getGroup(uint8_t flag) {
-				return groups[flag];
+			RenderQueueGroup& getGroup(Flag flag) {
+				return groups[getIndex(flag)];
+			}
+
+			RenderQueueGroup& getGroup(uint8_t index) {
+				return groups[index];
 			}
 
 			static uint8_t getIndex(Flag flag) {
@@ -120,7 +130,7 @@ namespace RBX {
 			void setFeature(uint32_t feature) { features |= feature; }
 
 		private:
-			RenderQueueGroup groups[4];
+			std::array<RenderQueueGroup, 4u> groups;
 			uint32_t features;
 		};
 

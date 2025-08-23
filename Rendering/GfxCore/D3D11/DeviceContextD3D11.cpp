@@ -11,7 +11,7 @@ FASTFLAG(GraphicsDebugMarkersEnable)
 
 namespace RBX {
 	namespace Graphics {
-		static const D3D11_CULL_MODE gCullModeD3D11[RasterizerState::Cull_Count] = {
+		static const std::array<D3D11_CULL_MODE, RasterizerState::Cull_Count> gCullModeD3D11 = {
 			D3D11_CULL_NONE,
 			D3D11_CULL_BACK,
 			D3D11_CULL_FRONT
@@ -21,7 +21,7 @@ namespace RBX {
 			D3D11_BLEND src, dst;
 		};
 
-		static const D3D11_BLEND gBlendFactors[BlendState::Factor_Count] = {
+		static const std::array<D3D11_BLEND, BlendState::Factor_Count> gBlendFactors = {
 			D3D11_BLEND_ONE,
 			D3D11_BLEND_ZERO,
 			D3D11_BLEND_DEST_COLOR,
@@ -31,7 +31,7 @@ namespace RBX {
 			D3D11_BLEND_INV_DEST_ALPHA
 		};
 
-		static const D3D11_COMPARISON_FUNC gDepthFuncD3D11[DepthState::Function_Count] = {
+		static const std::array<D3D11_COMPARISON_FUNC, DepthState::Function_Count> gDepthFuncD3D11 = {
 			D3D11_COMPARISON_ALWAYS,
 			D3D11_COMPARISON_LESS,
 			D3D11_COMPARISON_LESS_EQUAL,
@@ -39,13 +39,13 @@ namespace RBX {
 			D3D11_COMPARISON_GREATER_EQUAL
 		};
 
-		static const D3D11_FILTER gSamplerFilterD3D11[SamplerState::Filter_Count] = {
+		static const std::array<D3D11_FILTER, SamplerState::Filter_Count> gSamplerFilterD3D11 = {
 			D3D11_FILTER_MIN_MAG_MIP_POINT,
 			D3D11_FILTER_MIN_MAG_MIP_LINEAR,
 			D3D11_FILTER_ANISOTROPIC,
 		};
 
-		static const D3D11_TEXTURE_ADDRESS_MODE gSamplerAddressD3D11[SamplerState::Address_Count] = {
+		static const std::array<D3D11_TEXTURE_ADDRESS_MODE, SamplerState::Address_Count> gSamplerAddressD3D11 = {
 			D3D11_TEXTURE_ADDRESS_WRAP,
 			D3D11_TEXTURE_ADDRESS_CLAMP,
 			D3D11_TEXTURE_ADDRESS_BORDER
@@ -114,19 +114,22 @@ namespace RBX {
 			ReleaseCheck(globalsLightListBuffer);
 			ReleaseCheck(globalsLightListResource);
 
-			for (RasterizerStateHash::iterator it = rasterizerStateHash.begin(); it != rasterizerStateHash.end(); ++it)
-				ReleaseCheck(it->second);
-			for (BlendStateHash::iterator it = blendStateHash.begin(); it != blendStateHash.end(); ++it)
-				ReleaseCheck(it->second);
-			for (DepthStateHash::iterator it = depthStateHash.begin(); it != depthStateHash.end(); ++it)
-				ReleaseCheck(it->second);
-			for (SamplerStateHash::iterator it = samplerStateHash.begin(); it != samplerStateHash.end(); ++it)
-				ReleaseCheck(it->second);
+			for (auto& rasterizerState : rasterizerStateHash)
+				ReleaseCheck(rasterizerState.second);
+			for (auto& blendState : blendStateHash)
+				ReleaseCheck(blendState.second);
+			for (auto& depthState : depthStateHash)
+				ReleaseCheck(depthState.second);
+
+			for (size_t i = 0u; i < cachedSamplers.size(); ++i)
+				ReleaseCheck(cachedSamplers[i]);
 
 			rasterizerStateHash.clear();
-			samplerStateHash.clear();
 			depthStateHash.clear();
 			blendStateHash.clear();
+
+			cachedTextures.clear();
+			cachedSamplers.clear();
 		}
 
 		void DeviceContextD3D11::defineGlobalConstants(size_t dataSize) {
@@ -206,7 +209,7 @@ namespace RBX {
 			bd.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
 
 			HRESULT hr = device11->CreateBuffer(&bd, nullptr, &instancedModelsBuffer);
-			//RBXASSERT(SUCCEEDED(hr));
+
 			if (FAILED(hr))
 				throw std::runtime_error("Failed to create instanced model matrix buffer.");
 
@@ -217,7 +220,7 @@ namespace RBX {
 			srvd.Buffer.NumElements = MAX_INSTANCES;
 
 			hr = device11->CreateShaderResourceView(instancedModelsBuffer, &srvd, &instancedModelsResource);
-			//RBXASSERT(SUCCEEDED(hr));
+
 			if (FAILED(hr))
 				throw std::runtime_error("Failed to create instanced model matrix shader resource view.");
 		}
@@ -289,7 +292,7 @@ namespace RBX {
 		void DeviceContextD3D11::updateInstancedModels(const void* data, size_t dataSize) {
 			D3D11_MAPPED_SUBRESOURCE mappedResource2;
 			HRESULT hr = immediateContext11->Map(instancedModelsBuffer, 0u, D3D11_MAP_WRITE_DISCARD, 0u, &mappedResource2);
-			//RBXASSERT(SUCCEEDED(hr));
+
 			if (FAILED(hr))
 				throw std::runtime_error("Mapping instanced models resource failed.");
 
@@ -321,8 +324,8 @@ namespace RBX {
 		void DeviceContextD3D11::bindFramebuffer(Framebuffer* buffer) {
 			FramebufferD3D11* buffer11 = static_cast<FramebufferD3D11*>(buffer);
 
-			const std::vector<shared_ptr<Renderbuffer> >& color = buffer11->getColor();
-			const shared_ptr<Renderbuffer>& depth = buffer11->getDepth();
+			const std::vector<std::shared_ptr<Renderbuffer>>& color = buffer11->getColor();
+			const std::shared_ptr<Renderbuffer>& depth = buffer11->getDepth();
 
 			ID3D11RenderTargetView* rtArray[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT] = {};
 
@@ -331,21 +334,18 @@ namespace RBX {
 				rtArray[i] = static_cast<ID3D11RenderTargetView*>(rb->getObject());
 
 				// unbind texture if bound as SRV
-				const shared_ptr<TextureD3D11>& ownerTex = rb->getOwner();
+				const std::shared_ptr<TextureD3D11>& ownerTex = rb->getOwner();
 
-				if (ownerTex) {
-					for (size_t i = 0u; i < ARRAYSIZE(cachedTextureUnits); ++i) {
-						TextureUnit& u = cachedTextureUnits[i];
+				if (ownerTex)
+					for (auto& texture : cachedTextures) {
+						if (texture == ownerTex.get()) {
+							immediateContext11->PSSetShaderResources(i, 1u, nullptr);
 
-						if (u.texture == ownerTex.get()) {
-							ID3D11ShaderResourceView* nullSRV = nullptr;
+							texture = nullptr;
 
-							immediateContext11->PSSetShaderResources(i, 1u, &nullSRV);
-
-							u.texture = nullptr;
+							break;
 						}
 					}
-				}
 			}
 
 			RenderbufferD3D11* dsBuffer = static_cast<RenderbufferD3D11*>(depth.get());
@@ -356,8 +356,8 @@ namespace RBX {
 			cachedFramebuffer = buffer;
 
 			D3D11_VIEWPORT vp = {};
-			vp.Width = (FLOAT)buffer->getWidth();
-			vp.Height = (FLOAT)buffer->getHeight();
+			vp.Width = static_cast<float>(buffer->getWidth());
+			vp.Height = static_cast<float>(buffer->getHeight());
 			vp.MinDepth = 0.0f;
 			vp.MaxDepth = 1.0f;
 			vp.TopLeftX = 0.0f;
@@ -394,7 +394,7 @@ namespace RBX {
 
 					rastStateDesc.FillMode = D3D11_FILL_SOLID;
 					rastStateDesc.CullMode = gCullModeD3D11[realState.getCullMode()];
-					rastStateDesc.FrontCounterClockwise = true;
+					rastStateDesc.FrontCounterClockwise = false;
 					rastStateDesc.DepthBias = 0;//realState.getDepthBias();;
 					rastStateDesc.DepthBiasClamp = 0.0f;
 					rastStateDesc.SlopeScaledDepthBias = 0.0f;//slopeBias;
@@ -535,87 +535,108 @@ namespace RBX {
 		}
 
 		void DeviceContextD3D11::clearStates() {
-			// Clear framebuffer cache
 			cachedFramebuffer = nullptr;
-
-			// Clear program cache
 			cachedProgram = nullptr;
-
-			// Clear vertex layout cache
 			cachedVertexLayout = nullptr;
-
-			// Clear geometry cache
 			cachedGeometry = nullptr;
 
-			// Clear texture cache
-			for (size_t i = 0u; i < ARRAYSIZE(cachedTextureUnits); ++i) {
-				TextureUnit& u = cachedTextureUnits[i];
+			cachedTextures.clear();
+			cachedSamplers.clear();
 
-				u.texture = nullptr;
-
-				// Clear state to an invalid value to guarantee a cache miss on the next setup
-				u.samplerState = SamplerState::Filter_Count;
-			}
-
-			// unset all textures (SRVs) from shader
-			ID3D11ShaderResourceView* nullSRVs[ARRAYSIZE(cachedTextureUnits)] = {};
-
-			immediateContext11->PSSetShaderResources(0u, ARRAYSIZE(cachedTextureUnits), nullSRVs);
-
-			// Clear states to invalid values to guarantee a cache miss on the next setup
-			cachedRasterizerState = RasterizerState(RasterizerState::Cull_Count);
-			cachedBlendState = BlendState(BlendState::Mode_Count);
-			cachedDepthState = DepthState(DepthState::Function_Count, false);
+			immediateContext11->ClearState();
 		}
 
 		void DeviceContextD3D11::setDefaultAnisotropy(uint32_t value) {
 			defaultAnisotropy = value;
 		}
 
-		void DeviceContextD3D11::bindTexture(uint32_t stage, Texture* texture, const SamplerState& state) {
-			SamplerState realState =
-				(state.getFilter() == SamplerState::Filter_Anisotropic && state.getAnisotropy() == 0u)
-				? SamplerState(state.getFilter(), state.getAddress(), defaultAnisotropy)
-				: state;
+		void DeviceContextD3D11::bindTexture(uint32_t stage, const std::shared_ptr<Texture>& texture) {
+			TextureD3D11* texture11 = static_cast<TextureD3D11*>(texture.get());
+			bool needsUpdate = false;
 
-			RBXASSERT(stage < device->getCaps().maxTextureUnits);
-			RBXASSERT(stage < ARRAYSIZE(cachedTextureUnits));
+			if (stage >= cachedTextures.size()) {
+				cachedTextures.resize(stage + 1u);
+				cachedTextures[stage] = texture11;
 
-			TextureUnit& u = cachedTextureUnits[stage];
+				needsUpdate = true;
+			}
+			else if (cachedTextures[stage] != texture11) {
+				cachedTextures[stage] = texture11;
 
-			TextureD3D11* texture11 = static_cast<TextureD3D11*>(texture);
-
-			if (u.texture != texture11) {
-				ID3D11ShaderResourceView* srv = texture11->getSRV();
-				immediateContext11->PSSetShaderResources(stage, 1u, &srv);
-
-				u.texture = texture11;
+				needsUpdate = true;
 			}
 
-			if (u.samplerState != realState) {
-				ID3D11SamplerState* samplerState = samplerStateHash[realState];
+			if (needsUpdate) {
+				ID3D11ShaderResourceView* srv = texture11->getSRV();
 
-				if (!samplerState) {
-					D3D11_SAMPLER_DESC samplerDesc = {};
+				immediateContext11->PSSetShaderResources(stage, 1u, &srv);
+			}
+		}
 
-					samplerDesc.AddressU = gSamplerAddressD3D11[realState.getAddress()];
-					samplerDesc.AddressV = gSamplerAddressD3D11[realState.getAddress()];
-					samplerDesc.AddressW = gSamplerAddressD3D11[realState.getAddress()];
-					samplerDesc.Filter = gSamplerFilterD3D11[realState.getFilter()];
-					samplerDesc.MaxAnisotropy = realState.getAnisotropy();
-					samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-					samplerDesc.MaxLOD = FLT_MAX;
+		void DeviceContextD3D11::bindTextures(std::vector<Texture::TextureStage> textureStages) {
+			std::vector<ID3D11ShaderResourceView*> textureSRVs;
+			bool needsUpdate = false;
 
-					HRESULT hr = device11->CreateSamplerState(&samplerDesc, &samplerState);
-					RBXASSERT(SUCCEEDED(hr));
+			for (auto& textureStage : textureStages) {
+				if (!textureStage.texture)
+					continue;
 
-					checkDuplicates(samplerStateHash, samplerState);
-					samplerStateHash[realState] = samplerState;
+				TextureD3D11* texture11 = static_cast<TextureD3D11*>(textureStage.texture.get());
+
+				if (textureStage.stage >= cachedTextures.size()) {
+					cachedTextures.resize(textureStage.stage + 1u);
+					cachedTextures[textureStage.stage] = texture11;
+
+					needsUpdate = true;
+				}
+				else if (cachedTextures[textureStage.stage] != texture11) {
+					cachedTextures[textureStage.stage] = texture11;
+
+					needsUpdate = true;
 				}
 
-				immediateContext11->PSSetSamplers(stage, 1u, &samplerState);
-				u.samplerState = realState;
+				if (textureStage.stage >= textureSRVs.size())
+					textureSRVs.resize(textureStage.stage + 1u);
+
+				textureSRVs.emplace(textureSRVs.begin() + textureStage.stage, texture11->getSRV());
 			}
+
+			if (needsUpdate)
+				immediateContext11->PSSetShaderResources(0u, textureSRVs.size(), textureSRVs.data());
+		}
+
+		void DeviceContextD3D11::bindSamplers() {
+			if (cachedSamplers.size() == 0u) {
+				for (size_t filter = 0u; filter < static_cast<size_t>(SamplerState::Filter_Count); ++filter) {
+					for (size_t address = 0u; address < static_cast<size_t>(SamplerState::Address_Count); ++address) {
+						D3D11_SAMPLER_DESC samplerDesc = {};
+
+						samplerDesc.AddressU = gSamplerAddressD3D11[address];
+						samplerDesc.AddressV = gSamplerAddressD3D11[address];
+						samplerDesc.AddressW = gSamplerAddressD3D11[address];
+						samplerDesc.BorderColor[0] = 0.0f;
+						samplerDesc.BorderColor[1] = 0.0f;
+						samplerDesc.BorderColor[2] = 0.0f;
+						samplerDesc.BorderColor[3] = 0.0f;
+						samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+						samplerDesc.Filter = gSamplerFilterD3D11[filter];
+						samplerDesc.MaxAnisotropy = (filter == 2u) ? 8u : 0u;
+						samplerDesc.MaxLOD = FLT_MAX;
+						samplerDesc.MinLOD = 0.0f;
+						samplerDesc.MipLODBias = 0.0f;
+
+						ID3D11SamplerState* samplerState = nullptr;
+						HRESULT hr = device11->CreateSamplerState(&samplerDesc, &samplerState);
+
+						if (FAILED(hr))
+							throw RBX::runtime_error("Failed to create default sampler state: %x.", hr);
+
+						cachedSamplers.push_back(samplerState);
+					}
+				}
+			}
+
+			immediateContext11->PSSetSamplers(0u, cachedSamplers.size(), cachedSamplers.data());
 		}
 
 		void DeviceContextD3D11::drawImpl(Geometry* geometry, Geometry::Primitive primitive, uint32_t vertexCount, uint32_t vertexOffset, uint32_t indexOffset) {
@@ -643,7 +664,7 @@ namespace RBX {
 			FramebufferD3D11* buffer11 = static_cast<FramebufferD3D11*>(cachedFramebuffer);
 
 			if (mask & Buffer_Color) {
-				const std::vector<shared_ptr<Renderbuffer> >& colorBuf = buffer11->getColor();
+				const std::vector<std::shared_ptr<Renderbuffer>>& colorBuf = buffer11->getColor();
 
 				for (size_t i = 0u; i < colorBuf.size(); ++i) {
 					RenderbufferD3D11* rb = static_cast<RenderbufferD3D11*>(colorBuf[i].get());
@@ -697,13 +718,16 @@ namespace RBX {
 				RBXASSERT(msaaBuffer11->getColor().size() > 0u);
 				RBXASSERT(msaaBuffer11->getColor().size() == buffer11->getColor().size());
 
-				for (size_t i = 0u; i < msaaBuffer11->getColor().size(); ++i) {
-					RenderbufferD3D11* msaaColor = static_cast<RenderbufferD3D11*>(msaaBuffer11->getColor()[i].get());
-					RenderbufferD3D11* color = static_cast<RenderbufferD3D11*>(buffer11->getColor()[i].get());
+				std::vector<std::shared_ptr<Renderbuffer>> msaaRenderbuffers = msaaBuffer11->getColor();
+				std::vector<std::shared_ptr<Renderbuffer>> renderbuffers = buffer11->getColor();
+
+				for (size_t i = 0u; i < renderbuffers.size(); ++i) {
+					RenderbufferD3D11* msaaColor = static_cast<RenderbufferD3D11*>(renderbuffers[i].get());
+					RenderbufferD3D11* color = static_cast<RenderbufferD3D11*>(renderbuffers[i].get());
 
 					RBXASSERT(msaaColor->getFormat() == color->getFormat());
 
-					context11->ResolveSubresource(color->getResource(), 0u, msaaColor->getResource(), 0u, static_cast<DXGI_FORMAT>(TextureD3D11::getInternalFormat(msaaColor->getFormat())));
+					context11->ResolveSubresource(color->getResource(), 0u, msaaColor->getResource(), 0u, TextureD3D11::getInternalFormat(msaaColor->getFormat()));
 				}
 			}
 
@@ -715,7 +739,7 @@ namespace RBX {
 
 				RBXASSERT(msaaDepth->getFormat() == depth->getFormat());
 
-				context11->ResolveSubresource(depth->getResource(), 0, msaaDepth->getResource(), 0, static_cast<DXGI_FORMAT>(TextureD3D11::getInternalFormat(msaaDepth->getFormat())));
+				context11->ResolveSubresource(depth->getResource(), 0u, msaaDepth->getResource(), 0u, TextureD3D11::getInternalFormat(msaaDepth->getFormat()));
 			}
 		}
 
@@ -736,11 +760,14 @@ namespace RBX {
 		}
 
 		void DeviceContextD3D11::invalidateCachedTexture(Texture* texture) {
-			for (size_t stage = 0u; stage < ARRAYSIZE(cachedTextureUnits); ++stage) {
-				TextureUnit& u = cachedTextureUnits[stage];
+			for (size_t i = 0u; i < cachedTextures.size(); ++i) {
+				if (cachedTextures[i] == texture) {
+					cachedTextures[i] = nullptr;
 
-				if (u.texture == texture)
-					u.texture = nullptr;
+					immediateContext11->PSSetShaderResources(i, 1u, nullptr);
+
+					break;
+				}
 			}
 		}
 

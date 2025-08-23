@@ -13,6 +13,8 @@
 
 #include "VisualEngine.h"
 
+#include "rbx/Profiler.h"
+
 namespace RBX {
 	namespace Graphics {
 
@@ -23,8 +25,24 @@ namespace RBX {
 		{
 			bindProperties(part);
 
-			RBXASSERT(part->getGfxPart() == nullptr);
 			part->setGfxPart(this);
+
+			Vector3 scaleVector = partInstance->getPartSizeUi();
+			Matrix4 scaleMatrix = Matrix4::identity();
+			scaleMatrix[0][0] = scaleVector.x;
+			scaleMatrix[1][1] = scaleVector.y;
+			scaleMatrix[2][2] = scaleVector.z;
+
+			transforms.scale = scaleMatrix;
+			transforms.cframe = partInstance->getCoordinateFrame().toMatrix4();
+
+			instance.Model = transforms.scale * transforms.cframe;
+			instance.Color = Color4(partInstance->getColor(), 1.0f);
+			instance.MaterialID = part->getRenderMaterial();
+
+			flags = RenderQueue::Flag_None;
+
+			onTransparencyChanged();
 		}
 
 		void MeshInstanceBinding::invalidateEntity() {
@@ -38,7 +56,13 @@ namespace RBX {
 		}
 
 		void MeshInstanceBinding::onMaterialChanged() {
-			subCluster->updatePart(index, true);
+			instance.MaterialID = partInstance->getRenderMaterial();
+
+			MaterialGenerator* materialGenerator = subCluster->getCluster()->getInstancer()->getMaterialGenerator();
+			MaterialGenerator::Result materialResult = materialGenerator->createMaterial(partInstance.get(), nullptr, materialGenerator->createFlags(partInstance.get(), false));
+
+			if (subCluster->getMaterialKey() != materialResult.key)
+				subCluster->updatePart(index, true);
 		}
 
 		void MeshInstanceBinding::onColorChanged() {
@@ -66,7 +90,7 @@ namespace RBX {
 		void MeshInstanceBinding::onTransparencyChanged() {
 			float transparency = std::max(partInstance->getTransparencyUi(), 0.0f);
 
-			instance.Color = Color4(instance.Color.rgb(), transparency);
+			instance.Color = Color4(instance.Color.rgb(), 1.0f - transparency);
 
 			if (transparency < FLT_EPSILON && !(flags & RenderQueue::Flag::Flag_Opaque)) {
 				flags |= RenderQueue::Flag::Flag_Opaque;
@@ -112,9 +136,7 @@ namespace RBX {
 			subCluster->removePart(index);
 		}
 
-		void MeshInstanceBinding::updateModelMatrix() {
-			instance.Model = transforms.scale * transforms.cframe;
-
+		void MeshInstanceBinding::updateInstances() {
 			if (flags & RenderQueue::Flag::Flag_Opaque)
 				subCluster->updateInstances(0u);
 
@@ -126,6 +148,12 @@ namespace RBX {
 
 			if (flags & RenderQueue::Flag::Flag_ShadowPass)
 				subCluster->updateInstances(3u);
+		}
+
+		void MeshInstanceBinding::updateModelMatrix() {
+			instance.Model = transforms.scale * transforms.cframe;
+
+			updateInstances();
 		};
 
 		MeshInstanceSubCluster::MeshInstanceSubCluster()
@@ -133,16 +161,21 @@ namespace RBX {
 		{
 		}
 
-		MeshInstanceSubCluster::MeshInstanceSubCluster(MeshInstanceCluster* cluster, const shared_ptr<Material>& materials)
+		MeshInstanceSubCluster::MeshInstanceSubCluster(MeshInstanceCluster* cluster, uint32_t materialKey, const std::shared_ptr<Material>& materials)
 			: cluster(cluster)
+			, materialKey(materialKey)
 		{
 			material[0] = materials;
+
+			for (auto& instance : instances)
+				instance.reset(new InstancedModels());
 		}
 
 		void MeshInstanceSubCluster::addPart(const shared_ptr<PartInstance>& part) {
-			Part partInstance = {};
-			partInstance.instance = part;
-			partInstance.binding = new MeshInstanceBinding(this, part, parts.size());
+			Part partInstance = {
+				part,
+				MeshInstanceBinding(this, part, parts.size())
+			};
 
 			parts.push_back(partInstance);
 		}
@@ -151,17 +184,14 @@ namespace RBX {
 			Part& instance = parts[index];
 			shared_ptr<PartInstance>& partInstance = instance.instance;
 
-			removePart(index);
+			instance.binding.unbind();
 
 			cluster->updatePart(partInstance, materialUpdate);
 		}
 
 		void MeshInstanceSubCluster::removePart(uint32_t index) {
 			Part& instance = parts[index];
-			uint8_t flags = instance.binding->getFlags();
-
-			delete instance.binding;
-			instance.binding = nullptr;
+			uint8_t flags = instance.binding.getFlags();
 
 			parts.erase(parts.begin() + index);
 
@@ -187,25 +217,20 @@ namespace RBX {
 		void MeshInstanceSubCluster::updatePartIndexes() {
 			// TODO: Find a better method than to manually store index values in each instance binding. May not be necessary, though.
 			for (size_t i = 0u; i < parts.size(); ++i)
-				parts[i].binding->updateIndex(i);
+				parts[i].binding.updateIndex(i);
 		}
 
 		void MeshInstanceSubCluster::updateInstances(uint8_t index) {
-			instances[index].Models.clear();
+			instances[index]->Models.clear();
 
 			for (auto& part : parts)
-				instances[index].Models.push_back(part.binding->getInstanceData());
+				instances[index]->Models.push_back(part.binding.getInstanceData());
 		}
 
 		void MeshInstanceSubCluster::clearSubCluster() {
 			for (size_t i = 0u; i < 4u; ++i) {
 				material[i].reset();
-				instances[i].Models.clear();
-			}
-
-			for (auto& part : parts) {
-				delete part.binding;
-				part.binding = nullptr;
+				instances[i].reset();
 			}
 
 			parts.clear();
@@ -216,10 +241,10 @@ namespace RBX {
 		{
 		}
 
-		MeshInstanceCluster::MeshInstanceCluster(MeshInstancer* instancer, const GeometryBatch& geometry)
+		MeshInstanceCluster::MeshInstanceCluster(MeshInstancer* instancer, const std::shared_ptr<Geometry>& geometry, uint32_t indexCount, uint32_t vertexOffset, uint32_t indexOffset)
 			: instancer(instancer)
-			, geometry(geometry)
 		{
+			geometryBatch.reset(new GeometryBatch(geometry, Geometry::Primitive_Triangles, indexCount, vertexOffset, indexOffset));
 		}
 
 		void MeshInstanceCluster::addPart(const shared_ptr<PartInstance>& part) {
@@ -227,7 +252,7 @@ namespace RBX {
 			MaterialGenerator::Result materialResult = materialGenerator->createMaterial(part.get(), nullptr, materialGenerator->createFlags(part.get(), false));
 
 			if (!subClusters.count(materialResult.key))
-				subClusters.emplace(std::make_pair(materialResult.key, MeshInstanceSubCluster(this, materialResult.material)));
+				subClusters.emplace(std::make_pair(materialResult.key, MeshInstanceSubCluster(this, materialResult.key, materialResult.material)));
 
 			subClusters[materialResult.key].addPart(part);
 		}
@@ -251,22 +276,23 @@ namespace RBX {
 		{
 			materialGenerator.reset(new MaterialGenerator(visualEngine));
 
+			initialiseBuffers();
+
 			dataModel->getWorkspace()->visitDescendants(boost::bind(&MeshInstancer::onWorkspaceDescendantAdded, this, _1));
 			workspaceDescendantAddedConnection = dataModel->getWorkspace()->onDemandWrite()->descendantAddedSignal.connect(boost::bind(&MeshInstancer::onWorkspaceDescendantAdded, this, _1));
-
-			initialiseBuffers();
 		}
 
 		void MeshInstancer::addPart(const shared_ptr<PartInstance>& part) {
-			size_t clusterIndex = uint32_t(part->getPartType());
+			size_t clusterIndex = static_cast<uint32_t>(part->getPartType());
 
 			// Check if geometry cluster exists. If it doesn't, create a new one.
 			if (!partClusters.count(clusterIndex)) {
-				GeometryGenerator geometryGenerator;
+				GeometryGenerator::GeometryPair geometryPair = GeometryGenerator::generateGeometry(part.get());
 
-				GeometryGenerator::GeometryPair geometryPair = geometryGenerator.generateGeometry(part.get());
+				if (geometryPair.vertices.size() == 0u || geometryPair.indices.size() == 0u)
+					return;
 
-				partClusters.emplace(std::make_pair(clusterIndex, MeshInstanceCluster(this, GeometryBatch(geometry, Geometry::Primitive_Triangles, geometryPair.indices.size(), vertices.size(), indices.size()))));
+				partClusters.emplace(std::make_pair(clusterIndex, MeshInstanceCluster(this, geometry, geometryPair.indices.size(), vertices.size(), indices.size())));
 
 				std::copy(geometryPair.vertices.begin(), geometryPair.vertices.end(), std::back_inserter(vertices));
 				std::copy(geometryPair.indices.begin(), geometryPair.indices.end(), std::back_inserter(indices));
@@ -277,39 +303,50 @@ namespace RBX {
 			partClusters[clusterIndex].addPart(part);
 		}
 
-		void MeshInstancer::updateRenderQueue(RenderQueue& queue, const RenderCamera& camera, RenderQueue::Flag flag) const {
+		void MeshInstancer::updateClusters() {
+			RBXPROFILER_SCOPE("Render", "UpdateClusters");
+
+			PartInstanceSet localCopy;
+
+			{
+				RBX::mutex::scoped_lock scoped_lock(queue_mutex);
+
+				localCopy.swap(pendingParts);
+			}
+
+			for (PartInstanceSet::iterator it = localCopy.begin(); it != localCopy.end(); ++it) {
+				shared_ptr<PartInstance> partInstance = it->second.lock();
+
+				if (partInstance && GfxPart::isInWorkspace(partInstance.get()))
+					addPart(partInstance);
+			}
+		}
+
+		void MeshInstancer::updateRenderQueue(RenderQueue& queue, const RenderCamera& camera) {
 			// TODO: Find a way to push render operations into the render queue in a material contiguous manner.
 			for (const auto& clustersPair : partClusters) {
-				auto& subClusters = clustersPair.second.getSubClusters();
-				auto& clusterGeometry = clustersPair.second.getGeometry();
+				const auto& subClusters = clustersPair.second.getSubClusters();
+				const auto& clusterGeometry = clustersPair.second.getGeometry();
 
 				for (const auto& subClusterPair : subClusters) {
-					auto& subCluster = subClusterPair.second;
+					const auto& subCluster = subClusterPair.second;
 
-					if (subCluster.isSubClusterActive()) {
-						uint8_t index = RenderQueue::getIndex(flag);
-
-						RenderOperation rop = { &clusterGeometry, &subCluster.getMaterial(index).get()->getTechniques()[0], &subCluster.getInstances(index) };
-
-						queue.getGroup(index).push(rop);
-					}
+					for (size_t i = 0u; i < 1u; ++i)
+						if (subCluster.isSubClusterActive(i))
+							queue.getGroup(i).push(RenderOperation(clusterGeometry, &subCluster.getMaterial(i).get()->getTechniques()[0], subCluster.getInstances(i)));
 				}
 			}
 
 			for (const auto& clustersPair : meshClusters) {
-				auto& subClusters = clustersPair.second.getSubClusters();
-				auto& clusterGeometry = clustersPair.second.getGeometry();
+				const auto& subClusters = clustersPair.second.getSubClusters();
+				const auto& clusterGeometry = clustersPair.second.getGeometry();
 
 				for (const auto& subClusterPair : subClusters) {
-					auto& subCluster = subClusterPair.second;
+					const auto& subCluster = subClusterPair.second;
 
-					if (subCluster.isSubClusterActive()) {
-						uint8_t index = RenderQueue::getIndex(flag);
-
-						RenderOperation rop = { &clusterGeometry, &subCluster.getMaterial(index).get()->getTechniques()[0], &subCluster.getInstances(index) };
-
-						queue.getGroup(index).push(rop);
-					}
+					for (size_t i = 0u; i < 1u; ++i)
+						if (subCluster.isSubClusterActive(i))
+							queue.getGroup(i).push(RenderOperation(clusterGeometry, &subCluster.getMaterial(i).get()->getTechniques()[0], subCluster.getInstances(i)));
 				}
 			}
 		}
@@ -317,7 +354,7 @@ namespace RBX {
 		void MeshInstancer::unbind() {
 			workspaceDescendantAddedConnection.disconnect();
 
-			materialGenerator.release();
+			materialGenerator.reset();
 
 			for (auto& cluster : partClusters)
 				cluster.second.clearCluster();
@@ -329,37 +366,34 @@ namespace RBX {
 			indices.clear();
 
 			geometry.reset();
-			vertexBuffer.reset();
-			indexBuffer.reset();
 		}
 
 		void MeshInstancer::initialiseBuffers() {
-			shared_ptr<VertexLayout> layout = device->createVertexLayout(MaterialVertex::getVertexLayout());
-
-			updateBuffers();
-
-			geometry = device->createGeometry(layout, vertexBuffer, indexBuffer);
+			geometry = device->createGeometry(
+				device->createVertexLayout(MaterialVertex::getVertexLayout()),
+				device->createVertexBuffer(sizeof(MaterialVertex), 3u, GeometryBuffer::Usage_Static),
+				device->createIndexBuffer(sizeof(uint32_t), 3u, GeometryBuffer::Usage_Static));
 		}
 
-		// Recreating the buffer seems like a lot for simply updating the vertex and index buffers, but from what I can tell the byte width of a buffer can't be changed post-creation
 		void MeshInstancer::updateBuffers() {
-			vertexBuffer.reset();
-			indexBuffer.reset();
+			std::shared_ptr<VertexBuffer> vertexBuffer = device->createVertexBuffer(sizeof(MaterialVertex), vertices.size(), GeometryBuffer::Usage_Static);
+			std::shared_ptr<IndexBuffer> indexBuffer = device->createIndexBuffer(sizeof(uint32_t), indices.size(), GeometryBuffer::Usage_Static);
 
-			vertexBuffer = device->createVertexBuffer(sizeof(MaterialVertex), vertices.size(), GeometryBuffer::Usage_Static);
-			indexBuffer = device->createIndexBuffer(sizeof(uint32_t), indices.size(), GeometryBuffer::Usage_Static);
+			vertexBuffer->upload(0u, vertices.data(), vertices.size() * sizeof(MaterialVertex));
+			indexBuffer->upload(0u, indices.data(), vertices.size() * sizeof(uint32_t));
 
-			vertexBuffer->upload(0u, vertices.data(), vertices.size());
-			indexBuffer->upload(0u, indices.data(), indices.size());
+			geometry->updateBuffers(vertexBuffer, indexBuffer);
 		}
 
 		void MeshInstancer::onWorkspaceDescendantAdded(shared_ptr<RBX::Instance> descendant) {
 			// See if the new instance is a PartInstance
 			RBX::PartInstance* partInstance = RBX::Instance::fastDynamicCast<RBX::PartInstance>(descendant.get());
 
-			// TODO: Implement buffering to defer part updates to happen at once, rather than immediately whenever a new part is added
-			if (partInstance != nullptr)
-				addPart(shared_from(partInstance));
+			if (partInstance != nullptr) {
+				RBX::mutex::scoped_lock scoped_lock(queue_mutex);
+
+				pendingParts[partInstance] = shared_from(partInstance);
+			}
 		}
 
 	}

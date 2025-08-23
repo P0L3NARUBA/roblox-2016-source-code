@@ -224,9 +224,9 @@ LONG RobloxCrashReporter::ProcessException(struct _EXCEPTION_POINTERS *info, boo
 
 	LogManager::ReportEvent(EVENTLOG_INFORMATION_TYPE, "DoneProcessException");
 
-	LogManager::ReportEvent(EVENTLOG_INFORMATION_TYPE, "Uploading .crashevent...");
+	/*LogManager::ReportEvent(EVENTLOG_INFORMATION_TYPE, "Uploading .crashevent...");
 	DumpErrorUploader::UploadCrashEventFile(info);
-	LogManager::ReportEvent(EVENTLOG_INFORMATION_TYPE, "Done uploading .crashevent...");
+	LogManager::ReportEvent(EVENTLOG_INFORMATION_TYPE, "Done uploading .crashevent...");*/
 
 	return result;	
 }

@@ -11,7 +11,7 @@
 namespace RBX {
 	namespace Graphics {
 
-		RenderEntity::RenderEntity(RenderNode* node, const GeometryBatch& geometry, const shared_ptr<Material>& material, RenderQueue::Id renderQueueId, unsigned char lodMask)
+		RenderEntity::RenderEntity(RenderNode* node, const GeometryBatch& geometry, const std::shared_ptr<Material>& material, RenderQueue::Id renderQueueId, unsigned char lodMask)
 			: node(node)
 			, renderQueueId(renderQueueId)
 			, lodMask(lodMask)
@@ -24,45 +24,9 @@ namespace RBX {
 		{
 		}
 
-		void RenderEntity::updateRenderQueue(RenderQueue& queue, const RenderCamera& camera, uint32_t lodIndex, RenderQueue::Pass pass) {
-			const shared_ptr<Material>& m = material;
-
-			if (const Technique* technique = m->getBestTechnique(lodIndex, pass)) {
-				RenderOperation rop = { &geometry, technique, nullptr };
-
-				queue.getGroup(renderQueueId).push(rop);
-			}
+		void RenderEntity::updateRenderQueue(RenderQueue& queue, const RenderCamera& camera, uint32_t lodIndex, RenderQueue::Pass pass)
+		{
 		}
-
-		/*uint32_t RenderEntity::getWorldTransforms4x3(float* buffer, uint32_t maxTransforms, const void** cacheKey) const {
-			if (useCache(cacheKey, node)) return 0u;
-
-			RBXASSERT(maxTransforms >= 1u);
-
-			const CoordinateFrame& cframe = node->getCoordinateFrame();
-
-			buffer[0] = cframe.rotation[0][0];
-			buffer[1] = cframe.rotation[1][0];
-			buffer[2] = cframe.rotation[2][0];
-			buffer[3] = 0.0f;
-
-			buffer[4] = cframe.rotation[0][1];
-			buffer[5] = cframe.rotation[1][1];
-			buffer[6] = cframe.rotation[2][1];
-			buffer[7] = 0.0f;
-
-			buffer[8] = cframe.rotation[0][2];
-			buffer[9] = cframe.rotation[1][2];
-			buffer[10] = cframe.rotation[2][2];
-			buffer[11] = 0.0f;
-
-			buffer[12] = cframe.translation.x;
-			buffer[13] = cframe.translation.y;
-			buffer[14] = cframe.translation.z;
-			buffer[15] = 1.0f;
-
-			return 1;
-		}*/
 
 		float RenderEntity::getViewDepth(const RenderCamera& camera) const {
 			return computeViewDepth(camera, node->getCoordinateFrame().translation);

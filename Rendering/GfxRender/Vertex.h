@@ -7,8 +7,13 @@ namespace RBX {
 
 	namespace Graphics {
 
-		/* Position || 12 bytes */
+		/* Position | 12 bytes */
 		struct BasicVertex {
+			BasicVertex(float x, float y, float z)
+				: Position(Vector3(x, y, z))
+			{
+			}
+
 			BasicVertex(const RBX::Vector3& Position)
 				: Position(Position)
 			{
@@ -19,7 +24,7 @@ namespace RBX {
 			{
 			}
 
-			static inline std::vector<VertexLayout::Element> getVertexLayout() {
+			static std::vector<VertexLayout::Element> getVertexLayout() {
 				std::vector<VertexLayout::Element> elements;
 				elements.push_back(VertexLayout::Element(VertexLayout::Semantic_Position, 0u, VertexLayout::Format_Float3, 0u, VertexLayout::Input_Vertex));
 
@@ -29,7 +34,7 @@ namespace RBX {
 			RBX::Vector3 Position;
 		};
 
-		/* Position, UV, Color, Normal || 48 bytes */
+		/* Position, UV, Color, Normal | 48 bytes */
 		struct BasicMaterialVertex {
 			BasicMaterialVertex(const RBX::Vector3& Position, const RBX::Vector2& UV, const RBX::Color4& Color, const RBX::Vector3& Normal)
 				: Position(Position)
@@ -47,12 +52,12 @@ namespace RBX {
 			{
 			}
 
-			static inline std::vector<VertexLayout::Element> getVertexLayout() {
+			static std::vector<VertexLayout::Element> getVertexLayout() {
 				std::vector<VertexLayout::Element> elements;
-				elements.push_back(VertexLayout::Element(VertexLayout::Semantic_Position, 0u, VertexLayout::Format_Float3, 0u, VertexLayout::Input_Vertex));
-				elements.push_back(VertexLayout::Element(VertexLayout::Semantic_Texture, 0u, VertexLayout::Format_Float2, 12u, VertexLayout::Input_Vertex));
-				elements.push_back(VertexLayout::Element(VertexLayout::Semantic_Color, 0u, VertexLayout::Format_Float4, 20u, VertexLayout::Input_Vertex));
-				elements.push_back(VertexLayout::Element(VertexLayout::Semantic_Normal, 0u, VertexLayout::Format_Float3, 36u, VertexLayout::Input_Vertex));
+				elements.push_back(VertexLayout::Element(VertexLayout::Semantic_Position, 0u, VertexLayout::Format_Float3,  0u, VertexLayout::Input_Vertex));
+				elements.push_back(VertexLayout::Element(VertexLayout::Semantic_Texture,  0u, VertexLayout::Format_Float2, 12u, VertexLayout::Input_Vertex));
+				elements.push_back(VertexLayout::Element(VertexLayout::Semantic_Color,    0u, VertexLayout::Format_Float4, 20u, VertexLayout::Input_Vertex));
+				elements.push_back(VertexLayout::Element(VertexLayout::Semantic_Normal,   0u, VertexLayout::Format_Float3, 36u, VertexLayout::Input_Vertex));
 
 				return elements;
 			}
@@ -63,7 +68,7 @@ namespace RBX {
 			RBX::Vector3 Normal;
 		};
 
-		/* Position, UV, Color, Normal, Tangent || 60 bytes */
+		/* Position, UV, Color, Normal, Tangent | 60 bytes */
 		struct MaterialVertex {
 			MaterialVertex(const RBX::Vector3& Position, const RBX::Vector2& UV, const RBX::Color4& Color, const RBX::Vector3& Normal, const RBX::Vector3& Tangent)
 				: Position(Position)
@@ -77,19 +82,19 @@ namespace RBX {
 			MaterialVertex()
 				: Position(Vector3::zero())
 				, UV(Vector2::zero())
-				, Color(Color4::one())
+				, Color(Color4::zero())
 				, Normal(Vector3::zero())
-				, Tangent(Vector3::normal())
+				, Tangent(Vector3::zero())
 			{
 			}
 
-			static inline std::vector<VertexLayout::Element> getVertexLayout() {
+			static std::vector<VertexLayout::Element> getVertexLayout() {
 				std::vector<VertexLayout::Element> elements;
-				elements.push_back(VertexLayout::Element(VertexLayout::Semantic_Position, 0u, VertexLayout::Format_Float3, 0u, VertexLayout::Input_Vertex));
-				elements.push_back(VertexLayout::Element(VertexLayout::Semantic_Texture, 0u, VertexLayout::Format_Float2, 12u, VertexLayout::Input_Vertex));
-				elements.push_back(VertexLayout::Element(VertexLayout::Semantic_Color, 0u, VertexLayout::Format_Float4, 20u, VertexLayout::Input_Vertex));
-				elements.push_back(VertexLayout::Element(VertexLayout::Semantic_Normal, 0u, VertexLayout::Format_Float3, 36u, VertexLayout::Input_Vertex));
-				elements.push_back(VertexLayout::Element(VertexLayout::Semantic_Tangent, 0u, VertexLayout::Format_Float3, 48u, VertexLayout::Input_Vertex));
+				elements.push_back(VertexLayout::Element(VertexLayout::Semantic_Position, 0u, VertexLayout::Format_Float3,  0u, VertexLayout::Input_Vertex));
+				elements.push_back(VertexLayout::Element(VertexLayout::Semantic_Texture,  0u, VertexLayout::Format_Float2, 12u, VertexLayout::Input_Vertex));
+				elements.push_back(VertexLayout::Element(VertexLayout::Semantic_Color,    0u, VertexLayout::Format_Float4, 20u, VertexLayout::Input_Vertex));
+				elements.push_back(VertexLayout::Element(VertexLayout::Semantic_Normal,   0u, VertexLayout::Format_Float3, 36u, VertexLayout::Input_Vertex));
+				elements.push_back(VertexLayout::Element(VertexLayout::Semantic_Tangent,  0u, VertexLayout::Format_Float3, 48u, VertexLayout::Input_Vertex));
 
 				return elements;
 			}

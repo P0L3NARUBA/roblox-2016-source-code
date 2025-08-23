@@ -12,6 +12,7 @@ namespace RBX {
 			friend class Device;
 
 		public:
+			Resource();
 			explicit Resource(Device* device);
 			virtual ~Resource();
 

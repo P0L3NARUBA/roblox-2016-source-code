@@ -8,6 +8,7 @@
 #include "GfxCore/Device.h"
 #include "GfxCore/Texture.h"
 #include "GfxCore/States.h"
+#include "GfxCore/Framebuffer.h"
 
 namespace RBX {
 	namespace Graphics {
@@ -26,7 +27,7 @@ namespace RBX {
 			if (data && !needBloom)
 				data.reset();
 			else {
-				if (!error && needBloom && (!data.get() || data->width[0] != width || data->height[0] != height || size != newSize)) {
+				if (!error && needBloom && (!data.get() || data->width != width || data->height != height || size != newSize)) {
 					intensity = newIntensity;
 					size = newSize;
 
@@ -44,61 +45,70 @@ namespace RBX {
 			}
 		}
 
-		void Bloom::render(DeviceContext* context, Texture* source, GlobalProcessingData globalProcessingData) {
+		void Bloom::render(DeviceContext* context, const std::shared_ptr<Texture>& source, GlobalProcessingData globalProcessingData) {
 			float totalBloomSize = size + 1.0f;
+			float filterSize = 0.0005f * totalBloomSize;
+			float aspectRatio = data->aspectRatio;
 
 			globalProcessingData.Parameters1 = Vector4(totalBloomSize, 0.0f, 0.0f, 0.0f);
 
-			uint32_t width = source->getWidth();
-			uint32_t height = source->getHeight();
+			uint32_t iWidth = source->getWidth();
+			uint32_t iHeight = source->getHeight();
+			float fWidth = static_cast<float>(iWidth);
+			float fHeight = static_cast<float>(iHeight);
 
 			/* Initial Fetch */
 			{
-				context->bindFramebuffer(data->bloomFBs[0].get());
+				context->bindFramebuffer(data->bloomFB.get());
 
-				if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "InitialBloomDownsampleFS", BlendState::Mode_None, width, height)) {
-					globalProcessingData.TextureSize_ViewportScale = Vector4((float)width, (float)height, 1.0f / (float)width, 1.0f / (float)height);
+				if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "InitialBloomDownsampleFS", BlendState::Mode_None, iWidth, iHeight)) {
+					globalProcessingData.TextureSize_ViewportScale = Vector4(fWidth, fHeight, 1.0f / fWidth, 1.0f / fHeight);
 					context->updateGlobalProcessingData(&globalProcessingData, sizeof(globalProcessingData));
 
-					context->bindTexture(0u, source, SamplerState(SamplerState::Filter_Point, SamplerState::Address_Border));
+					context->bindTexture(0u, source);
 
 					ScreenSpaceEffect::renderFullscreenEnd(context, visualEngine);
 				}
 			}
-
-			context->bindTexture(0u, data->bloomBuffer.get(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Border));
 
 			/* Downsampling */
-			for (uint32_t i = 1u; i == size; ++i) {
+			for (uint32_t i = 0u; i < size; ++i) {
 				context->bindFramebuffer(data->bloomFBs[i].get());
 
-				width = data->width[i];
-				height = data->height[i];
+				std::shared_ptr<Texture> texture = (i == 0u) ? data->bloomTexture : data->bloomTextures[i - 1u];
+				iWidth = texture->getWidth();
+				iHeight = texture->getHeight();
+				fWidth = static_cast<float>(iWidth);
+				fHeight = static_cast<float>(iHeight);
 
-				if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "BloomDownsampleFS", BlendState::Mode_None, width, height)) {
-					globalProcessingData.TextureSize_ViewportScale = Vector4((float)width, (float)height, 1.0f / (float)data->width[i - 1u], 1.0f / (float)data->height[i - 1u]);
-					globalProcessingData.Parameters1 = Vector4(totalBloomSize, float(i - 1u), 0.0f, 0.0f);
+				if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "BloomDownsampleFS", BlendState::Mode_None, iWidth, iHeight)) {
+					globalProcessingData.TextureSize_ViewportScale = Vector4(fWidth, fHeight, 1.0f / fWidth, 1.0f / fHeight);
+					globalProcessingData.Parameters1 = Vector4(totalBloomSize, 0.0f, 0.0f, 0.0f);
 					context->updateGlobalProcessingData(&globalProcessingData, sizeof(globalProcessingData));
+
+					context->bindTexture(0u, texture);
 
 					ScreenSpaceEffect::renderFullscreenEnd(context, visualEngine);
 				}
 			}
-
-			float filterSize = 0.0005f * totalBloomSize;
-
-			context->bindTexture(0u, data->bloomBuffer.get(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
 
 			/* Upsampling */
 			for (uint32_t i = size - 1u; i > 0u; --i) {
-				context->bindFramebuffer(data->bloomFBs[i].get());
+				Framebuffer* framebuffer = data->bloomFBs[i - 1u].get();
 
-				width = data->width[i];
-				height = data->height[i];
+				context->bindFramebuffer(framebuffer);
 
-				if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "BloomUpsampleFS", BlendState::Mode_Additive, width, height)) {
-					globalProcessingData.TextureSize_ViewportScale = Vector4((float)width, (float)height, filterSize, filterSize * ((float)width / (float)height));
-					globalProcessingData.Parameters1 = Vector4(totalBloomSize, float(i + 1u), 0.0f, 0.0f);
+				iWidth = framebuffer->getWidth();
+				iHeight = framebuffer->getHeight();
+				fWidth = static_cast<float>(iWidth);
+				fHeight = static_cast<float>(iHeight);
+
+				if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "BloomUpsampleFS", BlendState::Mode_Additive, iWidth, iHeight)) {
+					globalProcessingData.TextureSize_ViewportScale = Vector4(fWidth, fHeight, filterSize, filterSize * aspectRatio);
+					globalProcessingData.Parameters1 = Vector4(totalBloomSize, 0.0f, 0.0f, 0.0f);
 					context->updateGlobalProcessingData(&globalProcessingData, sizeof(globalProcessingData));
+
+					context->bindTexture(0u, data->bloomTextures[i]);
 
 					ScreenSpaceEffect::renderFullscreenEnd(context, visualEngine);
 				}
@@ -106,17 +116,21 @@ namespace RBX {
 				filterSize *= 0.5f;
 			}
 
-			width = data->width[0];
-			height = data->height[0];
+			iWidth = data->width;
+			iHeight = data->height;
+			fWidth = static_cast<float>(iWidth);
+			fHeight = static_cast<float>(iHeight);
 
 			/* Final Upsample */
 			{
-				context->bindFramebuffer(data->bloomFBs[0].get());
+				context->bindFramebuffer(data->bloomFB.get());
 
-				if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "BloomUpsampleFS", BlendState::Mode_Additive, width, height)) {
-					globalProcessingData.TextureSize_ViewportScale = Vector4((float)width, (float)height, filterSize, filterSize * ((float)width / (float)height));
-					globalProcessingData.Parameters1 = Vector4(totalBloomSize, 1.0f, 0.0f, 0.0f);
+				if (ShaderProgram* program = ScreenSpaceEffect::renderFullscreenBegin(context, visualEngine, "PassThroughVS", "BloomUpsampleFS", BlendState::Mode_Additive, iWidth, iHeight)) {
+					globalProcessingData.TextureSize_ViewportScale = Vector4(fWidth, fHeight, filterSize, filterSize * aspectRatio);
+					globalProcessingData.Parameters1 = Vector4(totalBloomSize, 0.0f, 0.0f, 0.0f);
 					context->updateGlobalProcessingData(&globalProcessingData, sizeof(globalProcessingData));
+
+					context->bindTexture(0u, data->bloomTextures[0]);
 
 					ScreenSpaceEffect::renderFullscreenEnd(context, visualEngine);
 				}
@@ -128,23 +142,24 @@ namespace RBX {
 
 			Device* device = visualEngine->getDevice();
 
-			data->bloomBuffer = device->createTexture(Texture::Type_2D, Texture::Format_RGBA16f, width, height, 1u, size + 1u, Texture::Usage_Renderbuffer);
-			data->bloomFBs.push_back(device->createFramebuffer(data->bloomBuffer->getRenderbuffer(0u, 0u)));
+			data->bloomTexture = device->createTexture(Texture::Type_2D, Texture::Format_R11G11B10f, width, height, 1u, 1u, Texture::Usage_Colortexture);
+			data->bloomFB = device->createFramebuffer(data->bloomTexture->getRenderbuffer(0u, 0u));
 
-			data->width.push_back(width);
-			data->height.push_back(height);
+			data->width = width;
+			data->height = height;
+			data->aspectRatio = static_cast<float>(width) / static_cast<float>(height);
 
 			uint32_t newWidth = width;
 			uint32_t newHeight = height;
 
-			for (uint32_t i = 1u; i == size; ++i) {
-				newWidth = uint32_t((float)newWidth / 2.0f);
-				newHeight = uint32_t((float)newHeight / 2.0f);
+			data->bloomTextures.reserve(size);
 
-				data->width.push_back(newWidth);
-				data->height.push_back(newHeight);
-
-				data->bloomFBs.push_back(device->createFramebuffer(data->bloomBuffer->getRenderbuffer(0u, i)));
+			for (uint32_t i = 0u; i < size; ++i) {
+				newWidth = newWidth / 2u;
+				newHeight = newHeight / 2u;
+				
+				data->bloomTextures.push_back(device->createTexture(Texture::Type_2D, Texture::Format_R11G11B10f, newWidth, newHeight, 1u, 1u, Texture::Usage_Colortexture));
+				data->bloomFBs.push_back(device->createFramebuffer(data->bloomTextures[i]->getRenderbuffer(0u, 0u)));
 			}
 
 			return data;

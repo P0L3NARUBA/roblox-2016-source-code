@@ -58,7 +58,7 @@ namespace RBX
 		class SmoothClusterRenderEntity : public RenderEntity
 		{
 		public:
-			SmoothClusterRenderEntity(RenderNode* node, const GeometryBatch& geometry, const shared_ptr<Material>& material, RenderQueue::Id renderQueueId, std::vector<float>* constantTable, const Vector4& unpackInfo)
+			SmoothClusterRenderEntity(RenderNode* node, const GeometryBatch& geometry, const std::shared_ptr<Material>& material, RenderQueue::Id renderQueueId, std::vector<float>* constantTable, const Vector4& unpackInfo)
 				: RenderEntity(node, geometry, material, renderQueueId)
 				, constantTable(constantTable)
 				, unpackInfo(unpackInfo)
@@ -125,7 +125,7 @@ namespace RBX
 			{
 				grid->disconnectListener(this);
 
-				grid = NULL;
+				grid = nullptr;
 			}
 		}
 
@@ -134,11 +134,11 @@ namespace RBX
 			visualEngine->getSceneUpdater()->queueFullInvalidateMegaCluster(this);
 		}
 
-		static shared_ptr<IndexBuffer> uploadIndices(Device* device, const std::vector<unsigned int>& indices, bool needIndex32)
+		static std::shared_ptr<IndexBuffer> uploadIndices(Device* device, const std::vector<unsigned int>& indices, bool needIndex32)
 		{
 			if (needIndex32)
 			{
-				shared_ptr<IndexBuffer> ibuf = device->createIndexBuffer(sizeof(unsigned int), indices.size(), GeometryBuffer::Usage_Static);
+				std::shared_ptr<IndexBuffer> ibuf = device->createIndexBuffer(sizeof(unsigned int), indices.size(), GeometryBuffer::Usage_Static);
 
 				ibuf->upload(0, &indices[0], sizeof(unsigned int) * indices.size());
 
@@ -146,7 +146,7 @@ namespace RBX
 			}
 			else
 			{
-				shared_ptr<IndexBuffer> ibuf = device->createIndexBuffer(sizeof(unsigned short), indices.size(), GeometryBuffer::Usage_Static);
+				std::shared_ptr<IndexBuffer> ibuf = device->createIndexBuffer(sizeof(unsigned short), indices.size(), GeometryBuffer::Usage_Static);
 
 				std::vector<unsigned short> ibdata(indices.begin(), indices.end());
 
@@ -172,7 +172,7 @@ namespace RBX
 			if (!caps.supportsShaders || (needIndex32 && !caps.supportsIndex32))
 				return std::pair<RenderEntity*, RenderEntity*>();
 
-			shared_ptr<VertexBuffer> vbuf = device->createVertexBuffer(vertexSize, vertexCount, GeometryBuffer::Usage_Static);
+			std::shared_ptr<VertexBuffer> vbuf = device->createVertexBuffer(vertexSize, vertexCount, GeometryBuffer::Usage_Static);
 
 			vbuf->upload(0, vertices, vertexSize * vertexCount);
 
@@ -180,20 +180,20 @@ namespace RBX
 
 			if (!solidIndices.empty())
 			{
-				shared_ptr<IndexBuffer> ibuf = uploadIndices(device, solidIndices, needIndex32);
-				shared_ptr<Material> material = getSolidMaterial();
-				shared_ptr<Geometry> geometry = device->createGeometry(getVertexLayout(), vbuf, ibuf);
+				std::shared_ptr<IndexBuffer> ibuf = uploadIndices(device, solidIndices, needIndex32);
+				std::shared_ptr<Material> material = getSolidMaterial();
+				std::shared_ptr<Geometry> geometry = device->createGeometry(getVertexLayout(), vbuf, ibuf);
 
 				solidEntity = new SmoothClusterRenderEntity(node, GeometryBatch(geometry, Geometry::Primitive_Triangles, ibuf->getElementCount(), vbuf->getElementCount()), material, RenderQueue::Id_Opaque, &materialConstants, unpackInfo);
 			}
 
-			RenderEntity* waterEntity = NULL;
+			RenderEntity* waterEntity = nullptr;
 
 			if (!waterIndices.empty())
 			{
-				shared_ptr<IndexBuffer> ibuf = uploadIndices(visualEngine->getDevice(), waterIndices, needIndex32);
-				shared_ptr<Material> material = visualEngine->getWater()->getSmoothMaterial();
-				shared_ptr<Geometry> geometry = device->createGeometry(getVertexLayout(), vbuf, ibuf);
+				std::shared_ptr<IndexBuffer> ibuf = uploadIndices(visualEngine->getDevice(), waterIndices, needIndex32);
+				std::shared_ptr<Material> material = visualEngine->getWater()->getSmoothMaterial();
+				std::shared_ptr<Geometry> geometry = device->createGeometry(getVertexLayout(), vbuf, ibuf);
 
 				waterEntity = new SmoothClusterRenderEntity(node, GeometryBatch(geometry, Geometry::Primitive_Triangles, ibuf->getElementCount(), vbuf->getElementCount()), material, RenderQueue::Id_TransparentUnsorted, &materialConstants, unpackInfo);
 			}
@@ -201,7 +201,7 @@ namespace RBX
 			return std::make_pair(solidEntity, waterEntity);
 		}
 
-		const shared_ptr<VertexLayout>& SmoothClusterBase::getVertexLayout()
+		const std::shared_ptr<VertexLayout>& SmoothClusterBase::getVertexLayout()
 		{
 			if (!vertexLayout)
 			{
@@ -237,26 +237,16 @@ namespace RBX
 
 			int lodIndex = technique.getLodIndex();
 
-			technique.setTexture(0, tm->load(ContentId("rbxasset://terrain/diffuse" + kTextureExtension), TextureManager::Fallback_White), lodIndex < 2 ? SamplerState::Filter_Anisotropic : SamplerState::Filter_Linear);
+			technique.setTexture(0, tm->load(ContentId("rbxasset://terrain/diffuse" + kTextureExtension), TextureManager::Fallback_White).getTexture());
 
 			if (lodIndex < 1)
-				technique.setTexture(1, tm->load(ContentId("rbxasset://terrain/normal" + kTextureExtension), TextureManager::Fallback_NormalMap), SamplerState::Filter_Linear);
+				technique.setTexture(1, tm->load(ContentId("rbxasset://terrain/normal" + kTextureExtension), TextureManager::Fallback_NormalMap).getTexture());
 
 			if (lodIndex < 2)
-				technique.setTexture(2, tm->load(ContentId("rbxasset://terrain/specular" + kTextureExtension), TextureManager::Fallback_Black), SamplerState::Filter_Linear);
-
-			technique.setTexture(3, sceneManager->getEnvMap()->getOutdoorTexture(), SamplerState::Filter_Linear);
-
-			/*if (lightGrid)
-			{
-				technique.setTexture(4, lightGrid->getTexture(), SamplerState::Filter_Linear);
-				technique.setTexture(5, lightGrid->getLookupTexture(), SamplerState(SamplerState::Filter_Point, SamplerState::Address_Clamp));
-			}*/
-
-			technique.setTexture(6, sceneManager->getShadowMapAtlas(), SamplerState(SamplerState::Filter_Linear, SamplerState::Address_Clamp));
+				technique.setTexture(2, tm->load(ContentId("rbxasset://terrain/specular" + kTextureExtension), TextureManager::Fallback_Black).getTexture());
 		}
 
-		const shared_ptr<Material>& SmoothClusterBase::getSolidMaterial()
+		const std::shared_ptr<Material>& SmoothClusterBase::getSolidMaterial()
 		{
 			if (solidMaterial)
 				return solidMaterial;
@@ -265,7 +255,7 @@ namespace RBX
 
 			Vector4 layerScale = Vector4(float(atlas.tileSize) / float(atlas.width), float(atlas.tileSize) / float(atlas.height), 0, 0);
 
-			solidMaterial = shared_ptr<Material>(new Material());
+			solidMaterial = std::shared_ptr<Material>(new Material());
 
 			if (shared_ptr<ShaderProgram> program = visualEngine->getShaderManager()->getProgram("SmoothClusterHQVS", "SmoothClusterHQGBufferFS"))
 			{

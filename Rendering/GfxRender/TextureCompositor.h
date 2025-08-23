@@ -120,7 +120,7 @@ namespace RBX {
 				float priority;
 				std::string context;
 
-				shared_ptr<Texture> texture;
+				std::shared_ptr<Texture> texture;
 				TextureRef textureRef;
 
 				shared_ptr<TextureCompositorJob> job;
@@ -128,11 +128,11 @@ namespace RBX {
 
 			struct RenderedJob {
 				shared_ptr<Job> job;
-				shared_ptr<Framebuffer> framebuffer;
+				std::shared_ptr<Framebuffer> framebuffer;
 				int32_t cooldown;
 
 				RenderedJob();
-				RenderedJob(const shared_ptr<Job>& job, const shared_ptr<Framebuffer>& framebuffer, int32_t cooldown);
+				RenderedJob(const shared_ptr<Job>& job, const std::shared_ptr<Framebuffer>& framebuffer, int32_t cooldown);
 			};
 
 			VisualEngine* visualEngine;
@@ -149,7 +149,7 @@ namespace RBX {
 
 			RenderedJob renderedJob;
 
-			std::vector<shared_ptr<Framebuffer> > framebuffers;
+			std::vector<std::shared_ptr<Framebuffer> > framebuffers;
 
 			Time lastActiveTime;
 
@@ -159,7 +159,7 @@ namespace RBX {
 
 			void updateJob(Job& job);
 			void renderJobIfNecessary(Job& job, size_t activePosition, DeviceContext* context);
-			void renderJobFinalize(Job& job, const shared_ptr<Framebuffer>& framebuffer, DeviceContext* context);
+			void renderJobFinalize(Job& job, const std::shared_ptr<Framebuffer>& framebuffer, DeviceContext* context);
 
 			void orphanTextureFromJob(Job& job);
 
@@ -169,8 +169,8 @@ namespace RBX {
 			uint32_t getProjectedPendingTextureSize();
 			uint32_t getProjectedActiveTextureSize(size_t begin, size_t end);
 
-			shared_ptr<Framebuffer> getOrCreateFramebufer(const shared_ptr<Texture>& texture);
-			shared_ptr<Texture> getOrCreateTexture(uint32_t width, uint32_t height);
+			std::shared_ptr<Framebuffer> getOrCreateFramebufer(const std::shared_ptr<Texture>& texture);
+			std::shared_ptr<Texture> getOrCreateTexture(uint32_t width, uint32_t height);
 		};
 
 	}

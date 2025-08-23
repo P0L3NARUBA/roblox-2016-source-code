@@ -315,7 +315,7 @@ struct tag_inner_PROPVARIANT
         /* [case()] */ FLOAT fltVal;
         /* [case()] */ DOUBLE dblVal;
         /* [case()] */ VARIANT_BOOL boolVal;
-        /* [case()] */ _VARIANT_BOOL bool;
+        /* [case()] */ // bool;
         /* [case()] */ SCODE scode;
         /* [case()] */ CY cyVal;
         /* [case()] */ DATE date;

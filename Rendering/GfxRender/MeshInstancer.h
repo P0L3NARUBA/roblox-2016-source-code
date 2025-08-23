@@ -23,6 +23,8 @@ namespace RBX {
 		class MeshInstanceCluster;
 		class MeshInstancer;
 
+		typedef std::unordered_map<uint32_t, MeshInstanceCluster> Clusters;
+
 		class MeshInstanceBinding : public GfxPart {
 		public:
 			MeshInstanceBinding(MeshInstanceSubCluster* subCluster, const shared_ptr<PartInstance>& part, uint32_t index);
@@ -36,10 +38,12 @@ namespace RBX {
 			virtual void unbind();
 
 			void updateIndex(uint32_t newIndex) { index = newIndex; };
+
 			uint8_t getFlags() const { return flags; };
 			InstancedModel getInstanceData() const { return instance; };
 
 		private:
+			void updateInstances();
 			void updateModelMatrix();
 
 		private:
@@ -60,7 +64,7 @@ namespace RBX {
 		class MeshInstanceSubCluster {
 		public:
 			MeshInstanceSubCluster();
-			MeshInstanceSubCluster(MeshInstanceCluster* cluster, const shared_ptr<Material>& materials);
+			MeshInstanceSubCluster(MeshInstanceCluster* cluster, uint32_t materialKey, const std::shared_ptr<Material>& materials);
 
 			// Add a new instance binding
 			void addPart(const shared_ptr<PartInstance>& part);
@@ -72,14 +76,16 @@ namespace RBX {
 			// Front to back sorting by default. Use reversed for transparent instance sorting.
 			void sortInstances(uint8_t index, Vector3 cameraPosition, bool reversed);
 
-			shared_ptr<Material> getMaterial(uint8_t index) const { return material[index]; };
-			InstancedModels getInstances(uint8_t index) const { return instances[index]; };
+			std::shared_ptr<Material> getMaterial(uint8_t index) const { return material[index]; };
+			std::shared_ptr<InstancedModels> getInstances(uint8_t index) const { return instances[index]; };
+			uint32_t getMaterialKey() const { return materialKey; };
+			MeshInstanceCluster* getCluster() { return cluster; };
 			bool getDepthPrepassEnabled() const { return depthPrepassEnabled; };
 
 			void updateInstances(uint8_t index);
 			void clearSubCluster();
 
-			bool isSubClusterActive() const { return parts.size() > 0u; };
+			bool isSubClusterActive(uint8_t index) const { return instances[index]->Models.size() != 0u; };
 
 		private:
 			void updatePartIndexes();
@@ -89,22 +95,23 @@ namespace RBX {
 
 			struct Part {
 				shared_ptr<PartInstance> instance;
-				MeshInstanceBinding* binding;
+				MeshInstanceBinding binding;
 			};
 
 			std::vector<Part> parts;
 
 			bool depthPrepassEnabled;
 			
-			shared_ptr<Material> material[4];
-			InstancedModels instances[4];
+			uint32_t materialKey;
+			std::array<std::shared_ptr<Material>, 4u> material;
+			std::array< std::shared_ptr<InstancedModels>, 4u> instances;
 
 		};
 
 		class MeshInstanceCluster {
 		public:
 			MeshInstanceCluster();
-			MeshInstanceCluster(MeshInstancer* instancer, const GeometryBatch& geometry);
+			MeshInstanceCluster(MeshInstancer* instancer, const std::shared_ptr<Geometry>& geometry, uint32_t indexCount, uint32_t vertexOffset, uint32_t indexOffset);
 
 			// Add a new instance binding
 			void addPart(const shared_ptr<PartInstance>& part);
@@ -112,7 +119,8 @@ namespace RBX {
 			void updatePart(const shared_ptr<PartInstance>& part, bool materialUpdate);
 
 			std::unordered_map<uint8_t, MeshInstanceSubCluster> getSubClusters() const { return subClusters; };
-			GeometryBatch getGeometry() const { return geometry; };
+			const GeometryBatch& getGeometry() const { return *geometryBatch; };
+			MeshInstancer* getInstancer() { return instancer; };
 
 			void clearCluster();
 
@@ -122,7 +130,7 @@ namespace RBX {
 			// Index by material
 			std::unordered_map<uint8_t, MeshInstanceSubCluster> subClusters;
 
-			GeometryBatch geometry;
+			std::shared_ptr<GeometryBatch> geometryBatch;
 
 		};
 
@@ -131,8 +139,9 @@ namespace RBX {
 			MeshInstancer(shared_ptr<RBX::DataModel> dataModel, VisualEngine* visualEngine);
 
 			void addPart(const shared_ptr<PartInstance>& part);
+			void updateClusters();
 
-			void updateRenderQueue(RenderQueue& queue, const RenderCamera& camera, RenderQueue::Flag flag) const;
+			void updateRenderQueue(RenderQueue& queue, const RenderCamera& camera);
 
 			MaterialGenerator* getMaterialGenerator() { return materialGenerator.get(); };
 
@@ -148,6 +157,8 @@ namespace RBX {
 			VisualEngine* visualEngine;
 			Device* device;
 
+			RBX::mutex queue_mutex;
+
 			shared_ptr<RBX::DataModel> dataModel;
 
 			rbx::signals::scoped_connection workspaceDescendantAddedConnection;
@@ -155,17 +166,19 @@ namespace RBX {
 			std::unique_ptr<MaterialGenerator> materialGenerator;
 
 			// Regular parts and part operations
-			std::unordered_map<uint32_t, MeshInstanceCluster> partClusters;
+			Clusters partClusters;
 			// Custom meshes
-			std::unordered_map<uint32_t, MeshInstanceCluster> meshClusters;
+			Clusters meshClusters;
+
+			typedef std::unordered_map<RBX::PartInstance*, weak_ptr<RBX::PartInstance>> PartInstanceSet;
+
+			PartInstanceSet pendingParts;
 
 			std::vector<MaterialVertex> vertices;
 			std::vector<uint32_t> indices;
-			// If we ever need to handle more than 1.43 million triangles, we can always use uint64_t for a small 6.14 quintillion triangles
+			// If we ever need to handle more than 1.43 million triangles in a single mesh, we can always use uint64_t for a small 6.14 quintillion triangles
 
-			shared_ptr<Geometry> geometry;
-			shared_ptr<VertexBuffer> vertexBuffer;
-			shared_ptr<IndexBuffer> indexBuffer;
+			std::shared_ptr<Geometry> geometry;
 
 		};
 	}

@@ -470,7 +470,7 @@ struct tagVARIANT
                 FLOAT fltVal;
                 DOUBLE dblVal;
                 VARIANT_BOOL boolVal;
-                _VARIANT_BOOL bool;
+                // bool;
                 SCODE scode;
                 CY cyVal;
                 DATE date;
@@ -485,7 +485,7 @@ struct tagVARIANT
                 FLOAT *pfltVal;
                 DOUBLE *pdblVal;
                 VARIANT_BOOL *pboolVal;
-                _VARIANT_BOOL *pbool;
+                // *pbool;
                 SCODE *pscode;
                 CY *pcyVal;
                 DATE *pdate;

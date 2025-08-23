@@ -47,7 +47,7 @@ namespace RBX {
 				callback(shared_ptr<const std::string>());
 		}
 
-		static uint32_t getTextureSize(const shared_ptr<Texture>& tex) {
+		static uint32_t getTextureSize(const std::shared_ptr<Texture>& tex) {
 			uint32_t result = 0u;
 
 			for (uint32_t mip = 0u; mip < tex->getMipLevels(); ++mip)
@@ -62,9 +62,9 @@ namespace RBX {
 			if (isLocal) {
 				// Even if your hardware supports 4k textures, we don't want to use them unless you have enough VRAM
 				if (totalBudget < uint32_t(FInt::RenderTextureManagerBudgetFor4k))
-					return std::min(2048u, caps.maxTextureSize);
+					return std::min(2048u, caps.max2DTextureSize);
 				else
-					return caps.maxTextureSize;
+					return caps.max2DTextureSize;
 			}
 			else {
 				// We limit all asssets we fetch by either 1024 or 512, depending on whether we may need to upscale
@@ -80,7 +80,7 @@ namespace RBX {
 		{
 		}
 
-		TextureRef TextureManager::TextureData::addExternalRef(const shared_ptr<Texture>& fallback) {
+		TextureRef TextureManager::TextureData::addExternalRef(const std::shared_ptr<Texture>& fallback) {
 			if (object.getStatus() == TextureRef::Status_Loaded) {
 				// All refs should be equivalent so just return any object
 				if (external.empty())
@@ -114,7 +114,7 @@ namespace RBX {
 			external.erase(std::remove_if(external.begin(), external.end(), TextureRefUniquePredicate()), external.end());
 		}
 
-		void TextureManager::TextureData::updateAllRefsToLoaded(const shared_ptr<Texture>& texture, const ImageInfo& info) {
+		void TextureManager::TextureData::updateAllRefsToLoaded(const std::shared_ptr<Texture>& texture, const ImageInfo& info) {
 			for (size_t i = 0u; i < external.size(); ++i)
 				external[i].updateAllRefsToLoaded(texture, info);
 
@@ -196,7 +196,7 @@ namespace RBX {
 					try {
 						Timer<Time::Precise> timer;
 
-						shared_ptr<Texture> texture = createTexture(*image);
+						std::shared_ptr<Texture> texture = createTexture(*image);
 
 						texture->setDebugName(li.id.toString());
 
@@ -473,8 +473,8 @@ namespace RBX {
 			orphanedSize -= textureSize;
 		}
 
-		shared_ptr<Texture> TextureManager::createSingleColorTexture(unsigned char r, unsigned char g, unsigned char b, unsigned char a, bool cube) {
-			shared_ptr<Texture> result = visualEngine->getDevice()->createTexture(cube ? Texture::Type_Cube : Texture::Type_2D, Texture::Format_RGBA8, 1u, 1u, 1u, 1u, Texture::Usage_Static);
+		std::shared_ptr<Texture> TextureManager::createSingleColorTexture(unsigned char r, unsigned char g, unsigned char b, unsigned char a, bool cube) {
+			std::shared_ptr<Texture> result = visualEngine->getDevice()->createTexture(cube ? Texture::Type_Cube : Texture::Type_2D, Texture::Format_RGBA8, 1u, 1u, 1u, 1u, Texture::Usage_Static);
 			RBXASSERT(result);
 
 			unsigned char data[] = { r, g, b, a };
@@ -488,8 +488,8 @@ namespace RBX {
 			return result;
 		}
 
-		shared_ptr<Texture> TextureManager::createTexture(const Image& image) {
-			shared_ptr<Texture> texture = visualEngine->getDevice()->createTexture(image.getType(), image.getFormat(), image.getWidth(), image.getHeight(), image.getDepth(), image.getMipLevels(), Texture::Usage_Static);
+		std::shared_ptr<Texture> TextureManager::createTexture(const Image& image) {
+			std::shared_ptr<Texture> texture = visualEngine->getDevice()->createTexture(image.getType(), image.getFormat(), image.getWidth(), image.getHeight(), image.getDepth(), image.getMipLevels(), Texture::Usage_Static);
 
 			uint32_t faces = (image.getType() == Texture::Type_Cube) ? 6u : 1u;
 

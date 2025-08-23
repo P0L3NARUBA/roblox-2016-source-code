@@ -86,7 +86,7 @@ namespace RBX {
 		}
 
 		const Primitive* otherConstPrimitive(uint32_t i) const {
-			RBXASSERT_VERY_FAST((i == 0u) || (i == u1));
+			RBXASSERT_VERY_FAST(i == 0u);
 			return (&prim0)[(i + 1u) % 2u];
 		}
 

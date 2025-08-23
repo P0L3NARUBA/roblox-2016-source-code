@@ -8,7 +8,7 @@
 BasicVertexOutput DepthOnlyVS(InstancedBasicAppData IN) {
     BasicVertexOutput OUT;
 
-    OUT.Position = mul(mul(float4(IN.Position, 1.0), InstancedModels[IN.InstanceID].Model), ViewProjection[0]);
+    OUT.Position = mul(mul(float4(IN.Position, 1.0f), InstancedModels[IN.InstanceID].Model), ViewProjection[0]);
 
     return OUT;
 }
@@ -21,10 +21,10 @@ BasicMaterialVertexOutput BasicMaterialVS(InstancedBasicMaterialAppData IN) {
     OUT.UV = IN.UV;
     OUT.Color = IN.Color * InstancedModels[IN.InstanceID].Color;
     OUT.Normal = normalize(mul(IN.Normal, (float3x3)ModelMatrix));
-    OUT.WorldPosition = mul(float4(IN.Position, 1.0), ModelMatrix).xyz;
+    OUT.WorldPosition = mul(float4(IN.Position, 1.0f), ModelMatrix).xyz;
     OUT.MaterialID = InstancedModels[IN.InstanceID].MaterialID;
 
-    OUT.Position = mul(float4(OUT.WorldPosition, 1.0), ViewProjection[0]);
+    OUT.Position = mul(float4(OUT.WorldPosition, 1.0f), ViewProjection[0]);
 
     return OUT;
 }
@@ -44,10 +44,10 @@ MaterialVertexOutput MaterialVS(InstancedMaterialAppData IN) {
     OUT.Tangent = Tangent;
     OUT.Bitangent = cross(Normal, Tangent);
     OUT.Normal = Normal;
-    OUT.WorldPosition = mul(float4(IN.Position, 1.0), ModelMatrix).xyz;
+    OUT.WorldPosition = mul(float4(IN.Position, 1.0f), ModelMatrix).xyz;
     OUT.MaterialID = InstancedModels[IN.InstanceID].MaterialID;
 
-    OUT.Position = mul(float4(OUT.WorldPosition, 1.0), ViewProjection[0]);
+    OUT.Position = mul(float4(OUT.WorldPosition, 1.0f), ViewProjection[0]);
 
     return OUT;
 }
@@ -57,7 +57,7 @@ void BlankPS(BasicVertexOutput IN) {
 }
 
 float4 DefaultPS(BasicMaterialVertexOutput IN) : SV_TARGET {
-    return float4(1.0, 0.0, 1.0, IN.Color.a);
+    return float4(1.0f, 0.0f, 1.0f, IN.Color.a);
 }
 
 /*void DefaultMaterialPS(VertexOutput IN, out float4 OUT : SV_TARGET) {

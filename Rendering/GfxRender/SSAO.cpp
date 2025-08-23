@@ -24,11 +24,11 @@ namespace RBX
 
 		struct SSAO::Data
 		{
-			shared_ptr<Texture> ssao[2];
-			shared_ptr<Framebuffer> ssaoFB[2];
+			std::shared_ptr<Texture> ssao[2];
+			std::shared_ptr<Framebuffer> ssaoFB[2];
 
-			shared_ptr<Texture> depthHalf;
-			shared_ptr<Framebuffer> depthHalfFB;
+			std::shared_ptr<Texture> depthHalf;
+			std::shared_ptr<Framebuffer> depthHalfFB;
 
 			unsigned width, height;
 		};
@@ -56,10 +56,10 @@ namespace RBX
 					noiseData[y][x] = packColor(Color4(rsin, rcos, 0, 1), visualEngine->getDevice()->getCaps().colorOrderBGR);
 				}
 
-			noise = visualEngine->getDevice()->createTexture(Texture::Type_2D, Texture::Format_RGBA8, 4, 4, 1, 1, Texture::Usage_Static);
+			//noise = visualEngine->getDevice()->createTexture(Texture::Type_2D, Texture::Format_RGBA8, 4, 4, 1, 1, Texture::Usage_Static);
 			RBXASSERT(noise);
 
-			noise->upload(0, 0, TextureRegion(0, 0, 4, 4), noiseData, sizeof(noiseData));
+			//noise->upload(0, 0, TextureRegion(0, 0, 4, 4), noiseData, sizeof(noiseData));
 		}
 
 		SSAO::~SSAO()
@@ -215,11 +215,11 @@ namespace RBX
 
 			for (int i = 0; i < 2; ++i)
 			{
-				result->ssao[i] = device->createTexture(Texture::Type_2D, Texture::Format_RGBA8, widthHalf, heightHalf, 1, 1, Texture::Usage_Renderbuffer);
+				result->ssao[i] = device->createTexture(Texture::Type_2D, Texture::Format_RGBA8, widthHalf, heightHalf, 1, 1, Texture::Usage_Colorbuffer);
 				result->ssaoFB[i] = device->createFramebuffer(result->ssao[i]->getRenderbuffer(0, 0));
 			}
 
-			result->depthHalf = device->createTexture(Texture::Type_2D, Texture::Format_RG16, widthHalf, heightHalf, 1, 1, Texture::Usage_Renderbuffer);
+			result->depthHalf = device->createTexture(Texture::Type_2D, Texture::Format_RG16, widthHalf, heightHalf, 1, 1, Texture::Usage_Colorbuffer);
 			result->depthHalfFB = device->createFramebuffer(result->depthHalf->getRenderbuffer(0, 0));
 			result->width = width;
 			result->height = height;

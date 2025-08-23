@@ -71,7 +71,7 @@ namespace RBX
 			{
 				std::string				    name;
 				Color4uint8				    color;
-				shared_ptr<Texture>		    texture;
+				std::shared_ptr<Texture>	texture;
 				float					    specularIntensity;
 				float					    specularPower;
 				std::vector<const Model*>   models;
@@ -82,7 +82,7 @@ namespace RBX
 					name = "";
 				}
 
-				ExporterMaterial(const std::string& nameIn, const Color4uint8& colorIn, float specularIntensityIn, float specularPowerIn, shared_ptr<Texture> textureIn) :
+				ExporterMaterial(const std::string& nameIn, const Color4uint8& colorIn, float specularIntensityIn, float specularPowerIn, std::shared_ptr<Texture> textureIn) :
 					name(nameIn)
 					, color(colorIn)
 					, texture(textureIn)

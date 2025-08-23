@@ -98,7 +98,7 @@ namespace Graphics
 	{
 		static const int kMaxCount = 4;
 
-		shared_ptr<Framebuffer> fb[kMaxCount];
+		std::shared_ptr<Framebuffer> fb[kMaxCount];
 		ovrSwapTextureSet* textureSet;
 
 		VRTexture(): textureSet(NULL)
@@ -243,7 +243,7 @@ namespace Graphics
 			unsigned int width = std::max(idealSizeLeft.w, idealSizeRight.w);
 			unsigned int height = std::max(idealSizeLeft.h, idealSizeRight.h);
 
-			shared_ptr<Renderbuffer> depthStencil = shared_ptr<Renderbuffer>(new RenderbufferD3D11(device, Texture::Format_D24S8, width, height, 1));
+			std::shared_ptr<Renderbuffer> depthStencil = std::shared_ptr<Renderbuffer>(new RenderbufferD3D11(device, Texture::Format_D24S8, width, height, 1u));
 
 			for (int eye = 0; eye < 2; ++eye)
 			{
@@ -272,7 +272,7 @@ namespace Graphics
 
 					tex->D3D11.pTexture->AddRef();
 
-					shared_ptr<Renderbuffer> colorBuffer(new RenderbufferD3D11(device, Texture::Format_RGBA8, width, height, 1, tex->D3D11.pTexture));
+					std::shared_ptr<Renderbuffer> colorBuffer(new RenderbufferD3D11(device, Texture::Format_RGBA8, width, height, 1u, tex->D3D11.pTexture));
 
 					textures[eye].fb[i] = device->createFramebuffer(colorBuffer, depthStencil);
 				}

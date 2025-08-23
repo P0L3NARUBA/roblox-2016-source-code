@@ -16,15 +16,15 @@ namespace RBX
 		}
 
 		void GlobalShaderData::setCamera(const RenderCamera& camera) {
-			Matrix3 camMat = camera.getViewMatrix().upper3x3().transpose();
+			Matrix3 camMat = camera.getViewMatrix().upper3x3();
 
 			Matrix4 viewProjMatrix = camera.getViewProjectionMatrix();
 
 			ViewProjection[0] = viewProjMatrix;
 			ViewProjection[1] = viewProjMatrix.inverse();
-			ViewRight = Vector4(camMat.column(0u), 0.0f);
-			ViewUp = Vector4(camMat.column(1u), 0.0f);
-			ViewDirection = Vector4(camMat.column(2u), 0.0f);
+			ViewRight = Vector4(camMat.row(0u), 0.0f);
+			ViewUp = Vector4(camMat.row(1u), 0.0f);
+			ViewDirection = Vector4(camMat.row(2u), 0.0f);
 			CameraPosition = Vector4(camera.getPosition(), 1.0f);
 		}
 		

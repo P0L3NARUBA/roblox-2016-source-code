@@ -69,7 +69,7 @@ namespace RBX {
 
 			// load shaders
 			shaderManager.reset(new ShaderManager(this));
-			shaderManager->loadShaders(ContentProvider::assetFolder() + "../shaders", device->getShadingLanguage(), /* consoleOutput= */ false);
+			shaderManager->loadShaders(ContentProvider::assetFolder() + "../shaders", device->getShadingLanguage(), true);
 
 			// initialize texture manager
 			textureManager.reset(new TextureManager(this));
@@ -203,8 +203,7 @@ namespace RBX {
 			}
 		}
 
-		void VisualEngine::setViewport(uint32_t width, uint32_t height)
-		{
+		void VisualEngine::setViewport(uint32_t width, uint32_t height) {
 			viewWidth = width;
 			viewHeight = height;
 		}
@@ -219,8 +218,8 @@ namespace RBX {
 
 			sceneManager->setPointOfInterest(poi);
 
-			if (sceneUpdater)
-				sceneUpdater->setPointOfInterest(poi);
+			/*if (sceneUpdater)
+				sceneUpdater->setPointOfInterest(poi);*/
 
 			// get frustum with the far clip plane to max block distance
 			/*float updateFarPlaneZ;
@@ -253,11 +252,11 @@ namespace RBX {
 			// update camera for FRM culling
 			cameraCullFrm = cameraCull;
 
-			cameraCullFrm.changeProjectionPerspectiveZ(-value.nearPlaneZ(), -value.farPlaneZ()); //std::min(-value.farPlaneZ(), sqrtf(frameRateManager->GetRenderCullSqDistance())));
+			cameraCullFrm.changeProjectionPerspectiveZ(-value.nearPlaneZ(), -value.farPlaneZ());
 		}
 
 		void VisualEngine::reloadShaders() {
-			shaderManager->loadShaders(ContentProvider::assetFolder() + "../shaders", device->getShadingLanguage(), /* consoleOutput= */ true);
+			shaderManager->loadShaders(ContentProvider::assetFolder() + "../shaders", device->getShadingLanguage(), true);
 		}
 
 		void VisualEngine::reloadQueuedAssets() {
@@ -288,17 +287,18 @@ namespace RBX {
 
 		void VisualEngine::immediateAssetReload(const std::string& filePath) {
 			if (filePath.find("rbxasset://") == 0 || filePath.find("rbxgameasset://") == 0 || filePath.find("rbxapp://") == 0) {
-				if (filePath == "rbxasset://terrain/materials.json") {
+				/*if (filePath == "rbxasset://terrain/materials.json")
 					if (MegaClusterInstance* mci = Instance::fastDynamicCast<MegaClusterInstance>(sceneUpdater->getDataModel()->getWorkspace()->getTerrain()))
-						DataModel::get(mci)->submitTask(boost::bind(reloadMaterialTable, mci), DataModelJob::Write);
-				}
+						DataModel::get(mci)->submitTask(boost::bind(reloadMaterialTable, mci), DataModelJob::Write);*/
 
 				getTextureManager()->reloadImage(ContentId(filePath));
 			}
 			else {
 				std::string extension = filePath.substr(std::min(filePath.find_last_of(".") + 1u, filePath.size()));
+
 				if (extension == "hlsl" || extension == "hlsli") {
 					StandardOut::singleton()->printf(MESSAGE_INFO, "Reloading shaders");
+
 					reloadShaders();
 				}
 			}

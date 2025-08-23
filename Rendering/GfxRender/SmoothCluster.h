@@ -34,9 +34,9 @@ namespace Graphics
             size_t vertexSize, const void* vertices, size_t vertexCount,
             const std::vector<unsigned int>& solidIndices, const std::vector<unsigned int>& waterIndices);
 
-		const shared_ptr<VertexLayout>& getVertexLayout();
+		const std::shared_ptr<VertexLayout>& getVertexLayout();
 		
-        const shared_ptr<Material>& getSolidMaterial();
+        const std::shared_ptr<Material>& getSolidMaterial();
 
         void updateMaterialConstants();
 
@@ -44,9 +44,9 @@ namespace Graphics
 		
 		Voxel2::Grid* grid;
 
-        shared_ptr<VertexLayout> vertexLayout;
+		std::shared_ptr<VertexLayout> vertexLayout;
 
-        shared_ptr<Material> solidMaterial;
+		std::shared_ptr<Material> solidMaterial;
 
 		Voxel2::MaterialTable* materialTable;
 
@@ -78,7 +78,7 @@ namespace Graphics
 			RenderEntity* solidEntity;
 			RenderEntity* waterEntity;
 			
-			ChunkData(): solidEntity(NULL), waterEntity(NULL), dirty(false)
+			ChunkData(): solidEntity(nullptr), waterEntity(nullptr), dirty(false)
 			{
 			}
 		};
@@ -132,7 +132,7 @@ namespace Graphics
 			RenderEntity* solidEntity;
 			RenderEntity* waterEntity;
 			
-			Chunk(): flags(0), solidEntity(NULL), waterEntity(NULL)
+			Chunk(): flags(0), solidEntity(nullptr), waterEntity(nullptr)
 			{
 			}
 

@@ -192,7 +192,7 @@ namespace RBX {
 					sharedGeometry.reset();
 
 				// Create as few geometry objects as we can
-				shared_ptr<Geometry> geometry;
+				std::shared_ptr<Geometry> geometry;
 				uint32_t geometryBaseVertex = 0u;
 
 				// Create entities in groups
@@ -345,8 +345,8 @@ namespace RBX {
 				return batch.instances.back().part;
 			}
 
-			const shared_ptr<VertexLayout>& getVertexLayout() {
-				shared_ptr<VertexLayout>& p = visualEngine->getFastClusterLayout();
+			const std::shared_ptr<VertexLayout>& getVertexLayout() {
+				std::shared_ptr<VertexLayout>& p = visualEngine->getFastClusterLayout();
 
 				if (!p) {
 					std::vector<VertexLayout::Element> elements;
@@ -478,7 +478,7 @@ namespace RBX {
 			}
 		};
 
-		FastClusterEntity::FastClusterEntity(FastCluster* cluster, const GeometryBatch& geometry, const shared_ptr<Material>& material, const shared_ptr<Material>& decalMaterialOpaque,
+		FastClusterEntity::FastClusterEntity(FastCluster* cluster, const GeometryBatch& geometry, const std::shared_ptr<Material>& material, const std::shared_ptr<Material>& decalMaterialOpaque,
 			RenderQueue::Id renderQueueId, uint8_t lodMask, const std::vector<uint32_t>& bones, const Extents& localBounds, uint32_t extraFeatures)
 			: RenderEntity(cluster, geometry, material, renderQueueId, lodMask)
 			, decalMaterialOpaque(decalMaterialOpaque)
