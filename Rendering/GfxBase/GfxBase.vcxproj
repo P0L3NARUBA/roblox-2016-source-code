@@ -89,7 +89,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(CONTRIB_PATH)\SDL2\include;..\..\TBB_4_1\include;..\SDL-1.2.6\include;..\G3D\png;..\g3d\include;.\include;..\..\Base\include;..\g3d\include\zlib;$(CONTRIB_PATH)\boost_1_56_0\include;..\..\app\include;..\App\include;..\GfxBase\include;..\AppDraw\include;..\RbxG3D\include;..\..\Log\include;..\..\App.BulletPhysics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CONTRIB_PATH)\SDL2\include;..\G3D\png;..\g3d\include;.\include;..\..\Base\include;..\g3d\include\zlib;$(CONTRIB_PATH)\boost_1_56_0\include;..\..\app\include;..\App\include;..\GfxBase\include;..\AppDraw\include;..\RbxG3D\include;..\..\Log\include;..\..\App.BulletPhysics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>

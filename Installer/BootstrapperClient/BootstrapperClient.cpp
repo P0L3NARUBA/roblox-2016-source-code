@@ -487,7 +487,7 @@ bool BootstrapperClient::NeedPreDeployRun()
 	}
 
 	CRegKey key;
-	if (SUCCEEDED(key.Open(HKEY_CURRENT_USER, _T("Software\\ROBLOX Corporation\\Roblox"), KEY_READ)))
+	if (SUCCEEDED(key.Open(HKEY_CURRENT_USER, _T("Software\\ROBLOX Corporation 2016\\Roblox"), KEY_READ)))
 	{
 		TCHAR buf[MAX_PATH];
 		ULONG bufSize = MAX_PATH;
@@ -539,7 +539,7 @@ void BootstrapperClient::RunPreDeploy()
 		DeployComponents(true, false);
 
 		CRegKey key;
-		if (SUCCEEDED(key.Create(HKEY_CURRENT_USER, _T("Software\\ROBLOX Corporation\\Roblox"))))
+		if (SUCCEEDED(key.Create(HKEY_CURRENT_USER, _T("Software\\ROBLOX Corporation 2016\\Roblox"))))
 		{
 			key.SetStringValue(_T("LastPreVersion"), convert_s2w(preVersion).c_str());
 			LOG_ENTRY("Setting last pre deploy version entry");

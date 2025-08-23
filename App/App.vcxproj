@@ -212,7 +212,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(CONTRIB_PATH)\SDL2\Include;$(CONTRIB_PATH)\boost_1_56_0\include;$(CONTRIB_PATH)\cpp-netlib-0.11.0-final;$(CONTRIB_PATH)\windows\x86\curl\curl-7.43.0\include;$(CONTRIB_PATH)\VMProtectWin_2.13;$(CONTRIB_PATH)\w3c-libwww-5.4.0\Library\src;.\include;..\Base\include;..\fmod\include;.\lua-5.1.4\src;..\Rendering;..\Rendering\g3d\include;..\Rendering\g3d\zlib;..\Rendering\RbxG3D\include;..\Rendering\AppDraw\include;..\Rendering\GfxBase\include;..\Network\include;..\RBXCookies;..\Log\Include;..\ClientShared;..\App.BulletPhysics;..\Win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CONTRIB_PATH)\SDL2\Include;$(CONTRIB_PATH)\boost_1_56_0\include;$(CONTRIB_PATH)\cpp-netlib-0.11.0-final;$(CONTRIB_PATH)\windows\x86\curl\curl-7.43.0\include;$(CONTRIB_PATH)\VMProtectWin_2.13\include\VMProtect;$(CONTRIB_PATH)\w3c-libwww-5.4.0\Library\src;.\include;..\Base\include;..\fmod\include;.\lua-5.1.4\src;..\Rendering;..\Rendering\g3d\include;..\Rendering\g3d\zlib;..\Rendering\RbxG3D\include;..\Rendering\AppDraw\include;..\Rendering\GfxBase\include;..\Network\include;..\RBXCookies;..\Log\Include;..\ClientShared;..\App.BulletPhysics;..\Win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;CURL_STATICLIB;WWW_MSWINDOWS;_DEBUG;_LIB;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -253,7 +253,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugRcc|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(CONTRIB_PATH)\SDL2\Include;$(CONTRIB_PATH)\boost_1_56_0\include;$(CONTRIB_PATH)\cpp-netlib-0.11.0-final;$(CONTRIB_PATH)\windows\x86\curl\curl-7.43.0\include;$(CONTRIB_PATH)\VMProtectWin_2.13;$(CONTRIB_PATH)\w3c-libwww-5.4.0\Library\src;.\include;..\Base\include;..\fmod\include;.\lua-5.1.4\src;..\Rendering;..\Rendering\g3d\include;..\Rendering\g3d\zlib;..\Rendering\RbxG3D\include;..\Rendering\AppDraw\include;..\Rendering\GfxBase\include;..\Network\include;..\RBXCookies;..\Log\Include;..\ClientShared;..\App.BulletPhysics;..\Win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CONTRIB_PATH)\SDL2\Include;$(CONTRIB_PATH)\boost_1_56_0\include;$(CONTRIB_PATH)\cpp-netlib-0.11.0-final;$(CONTRIB_PATH)\windows\x86\curl\curl-7.43.0\include;$(CONTRIB_PATH)\VMProtectWin_2.13\include\VMProtect;$(CONTRIB_PATH)\w3c-libwww-5.4.0\Library\src;.\include;..\Base\include;..\fmod\include;.\lua-5.1.4\src;..\Rendering;..\Rendering\g3d\include;..\Rendering\g3d\zlib;..\Rendering\RbxG3D\include;..\Rendering\AppDraw\include;..\Rendering\GfxBase\include;..\Network\include;..\RBXCookies;..\Log\Include;..\ClientShared;..\App.BulletPhysics;..\Win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;CURL_STATICLIB;WWW_MSWINDOWS;_DEBUG;_LIB;_SCL_SECURE_NO_WARNINGS;RBX_RCC_SECURITY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -292,7 +292,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugStudio|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(CONTRIB_PATH)\SDL2\Include;$(CONTRIB_PATH)\boost_1_56_0\include;$(CONTRIB_PATH)\cpp-netlib-0.11.0-final;$(CONTRIB_PATH)\windows\x86\curl\curl-7.43.0\include;$(CONTRIB_PATH)\VMProtectWin_2.13;$(CONTRIB_PATH)\w3c-libwww-5.4.0\Library\src;.\include;..\Base\include;..\fmod\include;.\lua-5.1.4\src;..\Rendering;..\Rendering\g3d\include;..\Rendering\g3d\zlib;..\Rendering\RbxG3D\include;..\Rendering\AppDraw\include;..\Rendering\GfxBase\include;..\Network\include;..\RBXCookies;..\Log\Include;..\ClientShared;..\App.BulletPhysics;..\Win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CONTRIB_PATH)\SDL2\Include;$(CONTRIB_PATH)\boost_1_56_0\include;$(CONTRIB_PATH)\cpp-netlib-0.11.0-final;$(CONTRIB_PATH)\windows\x86\curl\curl-7.43.0\include;$(CONTRIB_PATH)\VMProtectWin_2.13\include\VMProtect;$(CONTRIB_PATH)\w3c-libwww-5.4.0\Library\src;.\include;..\Base\include;..\fmod\include;.\lua-5.1.4\src;..\Rendering;..\Rendering\g3d\include;..\Rendering\g3d\zlib;..\Rendering\RbxG3D\include;..\Rendering\AppDraw\include;..\Rendering\GfxBase\include;..\Network\include;..\RBXCookies;..\Log\Include;..\ClientShared;..\App.BulletPhysics;..\Win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;CURL_STATICLIB;WWW_MSWINDOWS;_DEBUG;_LIB;_SCL_SECURE_NO_WARNINGS;RBX_STUDIO_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -344,7 +344,7 @@
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <OmitFramePointers>false</OmitFramePointers>
-      <AdditionalIncludeDirectories>$(CONTRIB_PATH)\SDL2\Include;$(CONTRIB_PATH)\boost_1_56_0\include;$(CONTRIB_PATH)\cpp-netlib-0.11.0-final;$(CONTRIB_PATH)\windows\x86\curl\curl-7.43.0\include;$(CONTRIB_PATH)\VMProtectWin_2.13;$(CONTRIB_PATH)\w3c-libwww-5.4.0\Library\src;.\include;..\Base\include;..\fmod\include;.\lua-5.1.4\src;..\Rendering;..\Rendering\g3d\include;..\Rendering\g3d\zlib;..\Rendering\RbxG3D\include;..\Rendering\AppDraw\include;..\Rendering\GfxBase\include;..\Network\include;..\RBXCookies;..\Log\Include;..\ClientShared;..\App.BulletPhysics;..\Win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CONTRIB_PATH)\SDL2\Include;$(CONTRIB_PATH)\boost_1_56_0\include;$(CONTRIB_PATH)\cpp-netlib-0.11.0-final;$(CONTRIB_PATH)\windows\x86\curl\curl-7.43.0\include;$(CONTRIB_PATH)\VMProtectWin_2.13\include\VMProtect;$(CONTRIB_PATH)\w3c-libwww-5.4.0\Library\src;.\include;..\Base\include;..\fmod\include;.\lua-5.1.4\src;..\Rendering;..\Rendering\g3d\include;..\Rendering\g3d\zlib;..\Rendering\RbxG3D\include;..\Rendering\AppDraw\include;..\Rendering\GfxBase\include;..\Network\include;..\RBXCookies;..\Log\Include;..\ClientShared;..\App.BulletPhysics;..\Win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;CURL_STATICLIB;WWW_MSWINDOWS;NDEBUG;_LIB;_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -438,7 +438,7 @@ cmd /c "exit /b 0"</Command>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <OmitFramePointers>false</OmitFramePointers>
-      <AdditionalIncludeDirectories>$(CONTRIB_PATH)\SDL2\Include;$(CONTRIB_PATH)\boost_1_56_0\include;$(CONTRIB_PATH)\cpp-netlib-0.11.0-final;$(CONTRIB_PATH)\windows\x86\curl\curl-7.43.0\include;$(CONTRIB_PATH)\VMProtectWin_2.13;$(CONTRIB_PATH)\w3c-libwww-5.4.0\Library\src;.\include;..\Base\include;..\fmod\include;.\lua-5.1.4\src;..\Rendering;..\Rendering\g3d\include;..\Rendering\g3d\zlib;..\Rendering\RbxG3D\include;..\Rendering\AppDraw\include;..\Rendering\GfxBase\include;..\Network\include;..\RBXCookies;..\Log\Include;..\ClientShared;..\App.BulletPhysics;..\Win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CONTRIB_PATH)\SDL2\Include;$(CONTRIB_PATH)\boost_1_56_0\include;$(CONTRIB_PATH)\cpp-netlib-0.11.0-final;$(CONTRIB_PATH)\windows\x86\curl\curl-7.43.0\include;$(CONTRIB_PATH)\VMProtectWin_2.13\include\VMProtect;$(CONTRIB_PATH)\w3c-libwww-5.4.0\Library\src;.\include;..\Base\include;..\fmod\include;.\lua-5.1.4\src;..\Rendering;..\Rendering\g3d\include;..\Rendering\g3d\zlib;..\Rendering\RbxG3D\include;..\Rendering\AppDraw\include;..\Rendering\GfxBase\include;..\Network\include;..\RBXCookies;..\Log\Include;..\ClientShared;..\App.BulletPhysics;..\Win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;CURL_STATICLIB;WWW_MSWINDOWS;NDEBUG;_LIB;_RELEASE;RBX_RCC_SECURITY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -518,7 +518,7 @@ cmd /c "exit /b 0"</Command>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <OmitFramePointers>false</OmitFramePointers>
-      <AdditionalIncludeDirectories>$(CONTRIB_PATH)\SDL2\Include;$(CONTRIB_PATH)\boost_1_56_0\include;$(CONTRIB_PATH)\cpp-netlib-0.11.0-final;$(CONTRIB_PATH)\windows\x86\curl\curl-7.43.0\include;$(CONTRIB_PATH)\VMProtectWin_2.13\include\VMProtect;$(CONTRIB_PATH)\VMProtectWin_2.13;$(CONTRIB_PATH)\w3c-libwww-5.4.0\Library\src;.\include;..\Base\include;..\fmod\include;.\lua-5.1.4\src;..\Rendering;..\Rendering\g3d\include;..\Rendering\g3d\zlib;..\Rendering\RbxG3D\include;..\Rendering\AppDraw\include;..\Rendering\GfxBase\include;..\Network\include;..\RBXCookies;..\Log\Include;..\ClientShared;..\App.BulletPhysics;..\Win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CONTRIB_PATH)\SDL2\Include;$(CONTRIB_PATH)\boost_1_56_0\include;$(CONTRIB_PATH)\cpp-netlib-0.11.0-final;$(CONTRIB_PATH)\windows\x86\curl\curl-7.43.0\include;$(CONTRIB_PATH)\VMProtectWin_2.13\include\VMProtect;$(CONTRIB_PATH)\w3c-libwww-5.4.0\Library\src;.\include;..\Base\include;..\fmod\include;.\lua-5.1.4\src;..\Rendering;..\Rendering\g3d\include;..\Rendering\g3d\zlib;..\Rendering\RbxG3D\include;..\Rendering\AppDraw\include;..\Rendering\GfxBase\include;..\Network\include;..\RBXCookies;..\Log\Include;..\ClientShared;..\App.BulletPhysics;..\Win;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;CURL_STATICLIB;WWW_MSWINDOWS;NDEBUG;_LIB;_RELEASE;RBX_STUDIO_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>

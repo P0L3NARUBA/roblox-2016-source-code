@@ -564,6 +564,7 @@ local function createChatOutput()
 	end
 
 	function this:OnPlayerChatMessage(chatType, sourcePlayer, message, targetPlayer)
+		if not this:BubbleChatEnabled() then return end
 
 		-- eliminate display of commands
 		if string.sub(message, 1, 1) == '/' then return end

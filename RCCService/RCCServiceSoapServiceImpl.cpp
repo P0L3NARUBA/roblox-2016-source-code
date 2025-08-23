@@ -1388,7 +1388,7 @@ std::string CWebService::GetSettingsKey()
 	if (settingsKey.length() == 0)
 	{
 		CRegKey key;
-		if (SUCCEEDED(key.Open(HKEY_LOCAL_MACHINE, "Software\\ROBLOX Corporation\\Roblox\\", KEY_READ))) 
+		if (SUCCEEDED(key.Open(HKEY_LOCAL_MACHINE, "Software\\ROBLOX Corporation 2016\\Roblox\\", KEY_READ))) 
 		{
 			CHAR keyData[MAX_PATH];
 			ULONG bufLen = MAX_PATH-1;

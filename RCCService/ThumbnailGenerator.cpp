@@ -71,7 +71,7 @@ static void thumbRenderWorker()
 
     ViewBase::InitPluginModules();
 
-    dummyView.reset(ViewBase::CreateView(CRenderSettings::Direct3D11, &dummyContext, &dummySettings)); // you can use OpenGL with: CRenderSettings::OpenGL
+    dummyView.reset(ViewBase::CreateView(CRenderSettings::Direct3D11, &dummyContext, &dummySettings));
 	
 	while (true)
 	{

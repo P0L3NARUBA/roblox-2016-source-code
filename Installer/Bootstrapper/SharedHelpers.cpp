@@ -193,7 +193,7 @@ void deleteCurVersionKeys(simple_logger<wchar_t> &logger, bool isPerUser, const 
 {
 	CRegKey key;
 	LOG_ENTRY("deleteCurVersionKeys");
-	if(!FAILED(key.Open(isPerUser ? HKEY_CURRENT_USER : HKEY_LOCAL_MACHINE, _T("Software\\ROBLOX Corporation\\Roblox"), KEY_WRITE)))
+	if(!FAILED(key.Open(isPerUser ? HKEY_CURRENT_USER : HKEY_LOCAL_MACHINE, _T("Software\\ROBLOX Corporation 2016\\Roblox"), KEY_WRITE)))
 	{
 		LOG_ENTRY("deleteCurVersionKeys - key Opened");
 		key.DeleteValue(buildVersionKey(component).c_str());
@@ -205,7 +205,7 @@ void setCurrentVersion(simple_logger<wchar_t> &logger, bool isPerUser, const TCH
 {
 	CRegKey key;
 	LOG_ENTRY3("setCurrentVersion - opening write registry key component=%S, version=%S, url=%S", componentCode, version, baseUrl);
-	if (ERROR_SUCCESS == key.Create(isPerUser ? HKEY_CURRENT_USER : HKEY_LOCAL_MACHINE, _T("Software\\ROBLOX Corporation\\Roblox")))
+	if (ERROR_SUCCESS == key.Create(isPerUser ? HKEY_CURRENT_USER : HKEY_LOCAL_MACHINE, _T("Software\\ROBLOX Corporation 2016\\Roblox")))
 	{
 		std::wstring vKey = buildVersionKey(componentCode);
 		std::wstring uKey = buildUrlKey(componentCode);
@@ -226,7 +226,7 @@ void getCurrentVersion(simple_logger<wchar_t> &logger, bool isPerUser, const TCH
 	LOG_ENTRY1("getCurrentVersion - opening read registry key component=%S", componentCode);
 	version[0] = 0;
 	baseUrl[0] = 0;
-	if (ERROR_SUCCESS == key.Open(isPerUser ? HKEY_CURRENT_USER : HKEY_LOCAL_MACHINE, _T("Software\\ROBLOX Corporation\\Roblox"), KEY_READ))
+	if (ERROR_SUCCESS == key.Open(isPerUser ? HKEY_CURRENT_USER : HKEY_LOCAL_MACHINE, _T("Software\\ROBLOX Corporation 2016\\Roblox"), KEY_READ))
 	{
 		std::wstring vKey = buildVersionKey(componentCode);
 		std::wstring uKey = buildUrlKey(componentCode);

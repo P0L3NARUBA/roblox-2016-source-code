@@ -39,7 +39,7 @@ namespace {
 namespace RBX {
 
 static const char* kSavedScreenSizeRegistryKey =
-	"HKEY_CURRENT_USER\\Software\\ROBLOX Corporation\\Roblox\\Settings\\RobloxPlayerV4WindowSizeAndPosition";
+	"HKEY_CURRENT_USER\\Software\\ROBLOX Corporation 2016\\Roblox\\Settings\\RobloxPlayerV4WindowSizeAndPosition";
 
 View::View(HWND h)
 	: fullscreen(false)

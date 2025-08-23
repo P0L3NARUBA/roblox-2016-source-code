@@ -1141,7 +1141,7 @@ local function OnCoreGuiChanged(coreGuiType, enabled)
 		end
 	end
 	if coreGuiType == Enum.CoreGuiType.Chat or coreGuiType == Enum.CoreGuiType.All then
-		if enabled then
+		if enabled and Player.ChatMode == Enum.ChatMode.TextAndMenu then
 			if chatIcon then
 				AddItemInOrder(LeftMenubar, chatIcon, LEFT_ITEM_ORDER)
 			end
@@ -1149,6 +1149,9 @@ local function OnCoreGuiChanged(coreGuiType, enabled)
 				AddItemInOrder(LeftMenubar, mobileShowChatIcon, LEFT_ITEM_ORDER)
 			end
 		else
+			if chatIcon then
+				LeftMenubar:RemoveItem(chatIcon)
+			end
 			if mobileShowChatIcon then
 				LeftMenubar:RemoveItem(mobileShowChatIcon)
 			end

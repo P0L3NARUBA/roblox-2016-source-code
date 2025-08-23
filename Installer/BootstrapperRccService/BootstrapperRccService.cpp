@@ -115,15 +115,15 @@ void BootstrapperRccService::installService()
 		throw std::runtime_error("RCCService.exe -stop -uninstall timed out");
 	
 	// Write the installation dir to the registry
-	const TCHAR rbxRegPath[] = _T("Software\\ROBLOX Corporation\\Roblox");
+	const TCHAR rbxRegPath[] = _T("Software\\ROBLOX Corporation 2016\\Roblox");
 	CRegKey pathKey;
 	pathKey.Create(HKEY_LOCAL_MACHINE, rbxRegPath);
 	if (pathKey.m_hKey == NULL)
-		throw std::runtime_error("Unable to create/open reg key: 'Software\\ROBLOX Corporation\\Roblox'");
+		throw std::runtime_error("Unable to create/open reg key: 'Software\\ROBLOX Corporation 2016\\Roblox'");
 
 	LONG res = pathKey.SetStringValue(_T("RccServicePath"), (LPCTSTR)ProgramDirectory().c_str());
 	if (res != ERROR_SUCCESS)
-		throw std::runtime_error("Failed writing to registry: 'Software\\ROBLOX Corporation\\Roblox\\RccServicePath'");
+		throw std::runtime_error("Failed writing to registry: 'Software\\ROBLOX Corporation 2016\\Roblox\\RccServicePath'");
 }
 void BootstrapperRccService::uninstallService()
 {

@@ -295,7 +295,7 @@ bool Application::requestPlaceInfo(int placeId, std::string& authenticationUrl, 
 void Application::InferredCrashReportingThreadImpl()
 {
 	int crash = 0;
-	if (RBX::RegistryUtil::read32bitNumber("HKEY_CURRENT_USER\\Software\\ROBLOX Corporation\\Roblox\\InferredCrash", crash)) 
+	if (RBX::RegistryUtil::read32bitNumber("HKEY_CURRENT_USER\\Software\\ROBLOX Corporation 2016\\Roblox\\InferredCrash", crash)) 
 	{
 		// We did not had a clean exit last time, report a crash
 		RBX::Analytics::InfluxDb::Points points;
@@ -304,7 +304,7 @@ void Application::InferredCrashReportingThreadImpl()
 		RBX::Analytics::EphemeralCounter::reportCounter(crash ? "Windows-ROBLOXPlayer-Session-Inferred-Crash" : "Windows-ROBLOXPlayer-Session-Inferred-Success", 1, true);
 	}
 	
-	RBX::RegistryUtil::write32bitNumber("HKEY_CURRENT_USER\\Software\\ROBLOX Corporation\\Roblox\\InferredCrash", 1);
+	RBX::RegistryUtil::write32bitNumber("HKEY_CURRENT_USER\\Software\\ROBLOX Corporation 2016\\Roblox\\InferredCrash", 1);
 }
 
 void Application::LaunchPlaceThreadImpl(const std::string& placeLauncherUrl)
@@ -806,7 +806,7 @@ bool Application::LoadAppSettings(HINSTANCE hInstance)
 
 		// Crash reporting.  Can be set in the registry but not AppSettings
 		CRegKey key;
-		bool validRegKey = (key.Open(HKEY_CURRENT_USER, "Software\\ROBLOX Corporation\\Roblox", KEY_READ) == ERROR_SUCCESS);
+		bool validRegKey = (key.Open(HKEY_CURRENT_USER, "Software\\ROBLOX Corporation 2016\\Roblox", KEY_READ) == ERROR_SUCCESS);
 		if (validRegKey)
 		{
 			DWORD value = TRUE;
@@ -940,7 +940,7 @@ void Application::Shutdown()
 		FunctionMarshaller::ReleaseWindow(marshaller);
 	}
 
-	RBX::RegistryUtil::write32bitNumber("HKEY_CURRENT_USER\\Software\\ROBLOX Corporation\\Roblox\\InferredCrash", 0);
+	RBX::RegistryUtil::write32bitNumber("HKEY_CURRENT_USER\\Software\\ROBLOX Corporation 2016\\Roblox\\InferredCrash", 0);
 
 }
 

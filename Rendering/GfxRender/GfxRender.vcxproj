@@ -313,7 +313,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(CONTRIB_PATH)\SDL2\include;.\include;.\freetype\include;$(CONTRIB_PATH)\boost_1_56_0\include;..\..\Base\include;..\..\TBB_4_1\include;..\..\App\Include;..\..\ClientShared;..\GfxBase\include;..\GfxCore\include;..\g3d\include;..\g3d\zlib;..\AppDraw\include;..\RbxG3D\include;$(CONTRIB_PATH)\SDK\Include;..\..\Log\include;..\..\App.BulletPhysics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CONTRIB_PATH)\SDL2\include;.\include;.\freetype\include;$(CONTRIB_PATH)\boost_1_56_0\include;..\..\Base\include;..\..\App\Include;..\..\ClientShared;..\GfxBase\include;..\GfxCore\include;..\g3d\include;..\g3d\zlib;..\AppDraw\include;..\RbxG3D\include;$(CONTRIB_PATH)\SDK\Include;..\..\Log\include;..\..\App.BulletPhysics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;FT2_BUILD_LIBRARY;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>

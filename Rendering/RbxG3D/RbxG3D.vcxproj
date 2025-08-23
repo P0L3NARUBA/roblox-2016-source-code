@@ -87,7 +87,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.\include;..\..\Base\include;..\RbxG3D\include;..\GfxBase;..\GfxBase\include;..\RenderLibNew\include;..\G3D\png;..\g3d\include;..\g3d\include\zlib;$(CONTRIB_PATH)\boost_1_56_0\include;..\..\TBB_4_1\include;..\..\app\include;..\..\Rendering\AppDraw;..\..\Rendering\AppDraw\include;..\..\log\include;$(CONTRIB_PATH)\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\include;..\..\Base\include;..\RbxG3D\include;..\GfxBase;..\GfxBase\include;..\G3D\png;..\g3d\include;..\g3d\include\zlib;$(CONTRIB_PATH)\boost_1_56_0\include;..\..\app\include;..\..\Rendering\AppDraw;..\..\Rendering\AppDraw\include;..\..\log\include;$(CONTRIB_PATH)\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -139,7 +139,7 @@
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <OmitFramePointers>false</OmitFramePointers>
-      <AdditionalIncludeDirectories>.\include;..\..\Base\include;..\RbxG3D\include;..\GfxBase;..\GfxBase\include;..\RenderLibNew\include;..\G3D\png;..\g3d\include;..\g3d\include\zlib;$(CONTRIB_PATH)\boost_1_56_0\include;..\..\app\include;..\..\Rendering\AppDraw;..\..\Rendering\AppDraw\include;..\..\log\include;$(CONTRIB_PATH)\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\include;..\..\Base\include;..\RbxG3D\include;..\GfxBase;..\GfxBase\include;..\G3D\png;..\g3d\include;..\g3d\include\zlib;$(CONTRIB_PATH)\boost_1_56_0\include;..\..\app\include;..\..\Rendering\AppDraw;..\..\Rendering\AppDraw\include;..\..\log\include;$(CONTRIB_PATH)\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>

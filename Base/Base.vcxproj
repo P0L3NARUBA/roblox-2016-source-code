@@ -90,7 +90,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(CONTRIB_PATH)\SDL2\Include;include;$(CONTRIB_PATH)\boost_1_56_0\include;..\TBB_4_1\include;..\Log\include;$(CONTRIB_PATH)\Telemetry\Telemetry2SDKWin32_20M\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CONTRIB_PATH)\SDL2\Include;include;$(CONTRIB_PATH)\boost_1_56_0\include;..\Log\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_WIN32_WINNT=0x0501;NTDDI_VERSION=0x05010100;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions);RBX_TEST_BUILD</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>

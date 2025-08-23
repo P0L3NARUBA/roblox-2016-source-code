@@ -47,7 +47,7 @@ boost::filesystem::path getUserDirectory(bool create, FileSystemDir dir, const c
 	}
 
 	DWORD flags = create ? CSIDL_FLAG_CREATE : 0;
-    boost::filesystem::path robloxDir = "Roblox SRC";
+    boost::filesystem::path robloxDir = "Roblox 2016";
 	if (subDirectory)
 		robloxDir /= subDirectory;
 

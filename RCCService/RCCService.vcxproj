@@ -97,7 +97,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\fmod\include;$(CONTRIB_PATH)\SDL2\include;$(CONTRIB_PATH)\boost_1_56_0\include;..\Base\include;.;gSOAP;..\App\include;..\TBB_4_1\include;..\Win;..\Network\include;..\Rendering;..\Rendering\AppDraw\include;..\Rendering\GfxBase\include;..\Rendering\RbxG3D\include;..\Rendering\g3d\include;..\Rendering\g3d;..\Rendering\g3d\png;..\RobloxInstall\src;$(CONTRIB_PATH)\SDK\Include;..\Log\include;..\ClientShared;$(CONTRIB_PATH);..\App.BulletPhysics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\fmod\include;$(CONTRIB_PATH)\SDL2\include;$(CONTRIB_PATH)\boost_1_56_0\include;..\Base\include;.;gSOAP;..\App\include;..\Win;..\Network\include;..\Rendering;..\Rendering\AppDraw\include;..\Rendering\GfxBase\include;..\Rendering\RbxG3D\include;..\Rendering\g3d\include;..\Rendering\g3d;..\Rendering\g3d\png;$(CONTRIB_PATH)\SDK\Include;..\Log\include;..\ClientShared;$(CONTRIB_PATH);..\App.BulletPhysics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>BOOST_THREAD_BUILD_LIB;WIN32;_DEBUG;_CONSOLE;RBX_RCC_SECURITY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -110,7 +110,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>dxerr9.lib;zlib.lib;libcurl_a.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>.\libraries;..\fmod\win32\lib;.\Mesa-7.8.1\lib;$(CONTRIB_PATH)\SDK\Lib;$(CONTRIB_PATH)\..\SDL2\Win\2.0.4;$(CONTRIB_PATH)\windows\x86\curl\curl-7.43.0\build\Win32\VC11\DLL Debug - DLL OpenSSL;$(CONTRIB_PATH)\..\zlib\win\bin\Debug;$(CONTRIB_PATH)\VMProtectWin_2.13\lib;$(CONTRIB_PATH)\boost_1_56_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>.\libraries;..\fmod\win32\lib;$(CONTRIB_PATH)\SDK\Lib;$(CONTRIB_PATH)\..\SDL2\Win\2.0.4;$(CONTRIB_PATH)\windows\x86\curl\curl-7.43.0\build\Win32\VC11\DLL Debug - DLL OpenSSL;$(CONTRIB_PATH)\..\zlib\win\bin\Debug;$(CONTRIB_PATH)\VMProtectWin_2.13\lib;$(CONTRIB_PATH)\boost_1_56_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <LinkTimeCodeGeneration />
@@ -197,7 +197,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <OmitFramePointers>false</OmitFramePointers>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\fmod\include;$(CONTRIB_PATH)\SDL2\include;$(CONTRIB_PATH)\boost_1_56_0\include;..\Base\include;.;gSOAP;..\App\include;..\TBB_4_1\include;..\Win;..\Network\include;..\Rendering;..\Rendering\AppDraw\include;..\Rendering\GfxBase\include;..\Rendering\RbxG3D\include;..\Rendering\g3d\include;..\Rendering\g3d;..\Rendering\g3d\png;..\RobloxInstall\src;$(CONTRIB_PATH)\SDK\Include;..\Log\include;..\ClientShared;$(CONTRIB_PATH);..\App.BulletPhysics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\fmod\include;$(CONTRIB_PATH)\SDL2\include;$(CONTRIB_PATH)\boost_1_56_0\include;..\Base\include;.;gSOAP;..\App\include;..\Win;..\Network\include;..\Rendering;..\Rendering\AppDraw\include;..\Rendering\GfxBase\include;..\Rendering\RbxG3D\include;..\Rendering\g3d\include;..\Rendering\g3d;..\Rendering\g3d\png;$(CONTRIB_PATH)\SDK\Include;..\Log\include;..\ClientShared;$(CONTRIB_PATH);..\App.BulletPhysics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>BOOST_THREAD_BUILD_LIB;WIN32;NDEBUG;_CONSOLE;RBX_RCC_SECURITY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -211,7 +211,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>dxerr9.lib;zlib.lib;libcurl_a.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>.\libraries;..\fmod\win32\lib;.\Mesa-7.8.1\lib;$(CONTRIB_PATH)\SDK\Lib;$(CONTRIB_PATH)\..\SDL2\Win\2.0.4;$(CONTRIB_PATH)\windows\x86\curl\curl-7.43.0\build\Win32\VC11\DLL Release - DLL OpenSSL;$(CONTRIB_PATH)\..\zlib\win\bin\Release;$(CONTRIB_PATH)\VMProtectWin_2.13\lib;$(CONTRIB_PATH)\boost_1_56_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>.\libraries;..\fmod\win32\lib;$(CONTRIB_PATH)\SDK\Lib;$(CONTRIB_PATH)\..\SDL2\Win\2.0.4;$(CONTRIB_PATH)\windows\x86\curl\curl-7.43.0\build\Win32\VC11\DLL Release - DLL OpenSSL;$(CONTRIB_PATH)\..\zlib\win\bin\Release;$(CONTRIB_PATH)\VMProtectWin_2.13\lib;$(CONTRIB_PATH)\boost_1_56_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <LargeAddressAware>true</LargeAddressAware>
@@ -315,54 +315,6 @@
   <ItemGroup>
     <PublishDLLDependency Include="gameserver.txt" />
     <PublishDLLDependency Include="..\fmod\win32\fmod.dll" />
-    <PublishDLLDependency Include="Mesa-7.8.1\lib\Debug\GLU32.dll">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='NoOpt|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseTest|Win32'">true</ExcludedFromBuild>
-    </PublishDLLDependency>
-    <PublishDLLDependency Include="Mesa-7.8.1\lib\Debug\GLU32.pdb">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='NoOpt|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseTest|Win32'">true</ExcludedFromBuild>
-    </PublishDLLDependency>
-    <PublishDLLDependency Include="Mesa-7.8.1\lib\Debug\OPENGL32.dll">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='NoOpt|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseTest|Win32'">true</ExcludedFromBuild>
-    </PublishDLLDependency>
-    <PublishDLLDependency Include="Mesa-7.8.1\lib\Debug\OPENGL32.pdb">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='NoOpt|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseTest|Win32'">true</ExcludedFromBuild>
-    </PublishDLLDependency>
-    <PublishDLLDependency Include="Mesa-7.8.1\lib\Debug\OSMESA32.dll">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='NoOpt|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseTest|Win32'">true</ExcludedFromBuild>
-    </PublishDLLDependency>
-    <PublishDLLDependency Include="Mesa-7.8.1\lib\Debug\OSMESA32.pdb">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='NoOpt|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseTest|Win32'">true</ExcludedFromBuild>
-    </PublishDLLDependency>
-    <PublishDLLDependency Include="Mesa-7.8.1\lib\Release\GLU32.dll">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </PublishDLLDependency>
-    <PublishDLLDependency Include="Mesa-7.8.1\lib\Release\GLU32.pdb">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </PublishDLLDependency>
-    <PublishDLLDependency Include="Mesa-7.8.1\lib\Release\OPENGL32.dll">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </PublishDLLDependency>
-    <PublishDLLDependency Include="Mesa-7.8.1\lib\Release\OPENGL32.pdb">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </PublishDLLDependency>
-    <PublishDLLDependency Include="Mesa-7.8.1\lib\Release\OSMESA32.dll">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </PublishDLLDependency>
-    <PublishDLLDependency Include="Mesa-7.8.1\lib\Release\OSMESA32.pdb">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </PublishDLLDependency>
     <PublishDLLDependency Include="..\openssl\libeay32.dll" />
     <PublishDLLDependency Include="..\openssl\ssleay32.dll" />
     <PublishDLLDependency Include="..\VMProtect\VMProtectSDK32.dll" />

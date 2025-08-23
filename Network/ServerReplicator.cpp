@@ -2035,7 +2035,7 @@ void CheatHandlingServerReplicator::processHashStats(unsigned int hashStats)
             | getSecurityMask(DFString::US30605p2, kGoldReportChar, &configError);
         if (hashStats & mask)
         {
-            players->onRemoteSysStats(remotePlayer->getUserID(), "1920x1200", "hector");
+            //players->onRemoteSysStats(remotePlayer->getUserID(), "1920x1200", "hector");
         }
         mask |= getSecurityMask(DFString::US30605p2, kReportChar, &configError);
         if (hashStats & mask)
@@ -2093,9 +2093,6 @@ void CheatHandlingServerReplicator::processSendStats(unsigned int sendStats, uns
 		doRemoteSysStats(maskedSendStats, HATE_IMPOSSIBLE_ERROR, "impala", "Impossible Error (31)");
 		if (maskedSendStats && ((maskedSendStats & HATE_IMPOSSIBLE_ERROR) == 0))
 		{
-			// Not the perfect fix but should prevent it from false triggering.
-			// FFLags can trigger one of these (robert iirc)
-			// If I figure out more in the future I'll fix it
 
 			//doRemoteSysStats(maskedSendStats,  HATE_CE_ASM, "robert", "WriteCopy changed (30)");
 			//doRemoteSysStats(maskedSendStats,  HATE_NEW_AV_CHECK, "moded", "Stealth Edit Revival (29)");
@@ -2132,7 +2129,7 @@ void CheatHandlingServerReplicator::processSendStats(unsigned int sendStats, uns
 			//doRemoteSysStats(maskedSendStats,  HATE_MEMORY_HASH_CHANGED, "imogen", "Memory hash changed (5)");
 			doRemoteSysStats(maskedSendStats, HATE_ILLEGAL_SCRIPTS, "ivan", "Illegal scripts (4)");
 
-			doRemoteSysStats(maskedSendStats, HATE_SIGNATURE, "omar", "Bad signature (3)");
+			//doRemoteSysStats(maskedSendStats, HATE_SIGNATURE, "omar", "Bad signature (3)");
 			doDelayedSysStats(maskedSendStats, HATE_NEW_HWBP, "moe", "detected HWBP (2)");
 			doRemoteSysStats(maskedSendStats, HATE_XXHASH_BROKEN, "lafayette", "xxhash broken (1)");
 			doRemoteSysStats(maskedSendStats, HATE_CHEATENGINE_OLD, "murdle", "Cheat Engine Stable Methods (0)");
